@@ -29,6 +29,7 @@ setup(name=NAME,
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'eea.googlecharts'
       ],
       entry_points="""
       # -*- Entry points: -*-

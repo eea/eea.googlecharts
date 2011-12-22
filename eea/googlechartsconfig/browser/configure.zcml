@@ -5,5 +5,20 @@
 
   <include package="plone.app.contentmenu" />
 
+    <browser:page
+        for="eea.googlechartsconfig.interfaces.IGoogleChart"
+        name="google-chart.json"
+        class=".googlechart.GoogleChart"
+        attribute="chartSettingsAndData"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        for="eea.googlechartsconfig.interfaces.IGoogleChart"
+        name="chart_view"
+        class=".googlechart.GoogleChart"
+        permission="zope2.View"
+        template="chart_view.pt"
+        />
 
 </configure>

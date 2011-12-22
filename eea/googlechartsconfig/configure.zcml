@@ -7,7 +7,7 @@
 
   <five:registerPackage package="." initialize=".initialize" />
 
-  <!--include package=".browser" /-->
+  <include package=".browser" />
   <include package=".content" />
 
   <!-- Register the installation GenericSetup extension profile -->

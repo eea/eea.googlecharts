@@ -6,7 +6,50 @@ from Products.ATContentTypes.content import schemata, base
 from eea.googlechartsconfig.interfaces import IGoogleChart
 from eea.googlechartsconfig.config import PROJECTNAME
 
-GoogleChartSchema = schemata.ATContentTypeSchema.copy()
+from Products.Archetypes.atapi import TextField, TextAreaWidget, \
+                                    IntegerField, IntegerWidget, \
+                                    StringField, StringWidget
+#GoogleChartSchema = schemata.ATContentTypeSchema.copy()
+
+GoogleChartSchema = schemata.ATContentTypeSchema.copy() + \
+            atapi.Schema((
+    StringField(
+        name='chart_title',
+        widget=StringWidget(
+            label="Chart Title",
+        ),
+        required=1
+    ),
+
+    IntegerField(
+        name='width',
+        widget=IntegerWidget(
+            label="Width",
+        ),
+        required=0
+    ),
+    
+    IntegerField(
+        name='height',
+        widget=IntegerWidget(
+            label="Height",
+        ),
+        required=0
+    ),
+
+    TextField(
+        name='data',
+        default_content_type = 'text/plain',
+        allowable_content_types = ('text/plain',),
+
+        widget=TextAreaWidget(
+            label="Data",
+        ),
+        required=1
+    ),
+))
+
+
 
 GoogleChartSchema['title'].storage = atapi.AnnotationStorage()
 GoogleChartSchema['description'].storage = atapi.AnnotationStorage()
