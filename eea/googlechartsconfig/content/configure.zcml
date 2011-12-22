@@ -1,0 +1,13 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    i18n_domain="eea.googlechartsconfig">
+
+  <class class=".googlechart.GoogleChart">
+    <require
+        permission="zope2.View"
+        interface="..interfaces.IGoogleChart"
+        />
+  </class>
+
+</configure>

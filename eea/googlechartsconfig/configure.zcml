@@ -1,0 +1,22 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="eea.googlechartsconfig">
+
+  <five:registerPackage package="." initialize=".initialize" />
+
+  <!--include package=".browser" /-->
+  <include package=".content" />
+
+  <!-- Register the installation GenericSetup extension profile -->
+  <genericsetup:registerProfile
+      name="default"
+      title="EEA GoogleCharts Configurator"
+      directory="profiles/default"
+      description="Configurator for Google Charts"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+</configure>
