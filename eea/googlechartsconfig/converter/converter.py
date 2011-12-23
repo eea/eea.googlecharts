@@ -64,7 +64,7 @@ def csv2json(csvdata):
     out = []
     properties = {}
 
-    reader = csv.reader(StringIO.StringIO(csvdata), delimiter=',',quotechar='"',escapechar='\\',lineterminator='\r\n')
+    reader = csv.reader(csvdata, delimiter=',',quotechar='"',escapechar='\\',lineterminator='\r\n')
     for index, row in enumerate(reader):
         if row == []:
             continue
@@ -92,5 +92,5 @@ def csv2json(csvdata):
 
         out.append(datarow)
 
-    columns = (column_type(col) for col in columns)
+    columns = [column_type(col) for col in columns]
     return columns, out

@@ -1,6 +1,5 @@
 import json
 from Products.Five import BrowserView
-from eea.googlechartsconfig.converter import converter
 
 class GoogleChart(BrowserView):
     def chartSettingsAndData(self):
@@ -20,9 +19,10 @@ class GoogleChart(BrowserView):
         options["colors"] = colors
         options["width"] = "500"
         settings["options"] = options
-        dataTable = self.context.chartdata()
-        settings["dataTable"] = converter.csv2json(self.context.csvdata())[1]
-
+        titles = [column[0] for column in self.context.columns]
+        dataTable = list(self.context.jsondata)
+        dataTable.insert(0,titles)
+        settings["dataTable"] = dataTable
         return json.dumps(settings)
 
 

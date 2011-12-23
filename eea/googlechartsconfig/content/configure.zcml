@@ -10,4 +10,8 @@
         />
   </class>
 
+  <subscriber
+        for="eea.googlechartsconfig.interfaces.IGoogleChart Products.Archetypes.event.ObjectInitializedEvent"
+        handler=".googlechart.handle_object_initialized"/>
+
 </configure>

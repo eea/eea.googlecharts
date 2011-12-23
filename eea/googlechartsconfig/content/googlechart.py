@@ -1,3 +1,4 @@
+import StringIO
 from zope.interface import implements
 
 from Products.Archetypes import atapi
@@ -9,7 +10,8 @@ from eea.googlechartsconfig.config import PROJECTNAME
 from Products.Archetypes.atapi import TextField, TextAreaWidget, \
                                     IntegerField, IntegerWidget, \
                                     StringField, StringWidget
-#GoogleChartSchema = schemata.ATContentTypeSchema.copy()
+
+from eea.googlechartsconfig.converter import converter
 
 GoogleChartSchema = schemata.ATContentTypeSchema.copy() + \
             atapi.Schema((
@@ -19,7 +21,7 @@ GoogleChartSchema = schemata.ATContentTypeSchema.copy() + \
         allowable_content_types = ('text/plain',),
 
         widget=TextAreaWidget(
-            label="CSVData",
+            label="CSV Data",
         ),
         required=1
     ),
@@ -42,6 +44,9 @@ class GoogleChart(base.ATCTContent):
     title = atapi.ATFieldProperty('title')
     description = atapi.ATFieldProperty('description')
 
-    def loadCSVData(self):
-        return "A"
 atapi.registerType(GoogleChart, PROJECTNAME)
+
+def handle_object_initialized(obj, event):
+    data = converter.csv2json(StringIO.StringIO(obj.csvdata()))
+    obj.jsondata = data[1]
+    obj.columns = data[0]
