@@ -21,4 +21,12 @@
         template="chart_view.pt"
         />
 
+    <browser:page
+        for="*"
+        name="edit_chart"
+        class=".googlechart.GoogleChart"
+        permission="zope.Public"
+        template="edit_chart.pt"
+        />
+
 </configure>
