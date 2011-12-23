@@ -8,7 +8,7 @@
     <browser:page
         for="eea.googlechartsconfig.interfaces.IGoogleChart"
         name="google-chart.json"
-        class=".googlechart.GoogleChart"
+        class=".app.googlechart.GoogleChart"
         attribute="chartSettingsAndData"
         permission="zope2.View"
         />
@@ -16,17 +16,33 @@
     <browser:page
         for="eea.googlechartsconfig.interfaces.IGoogleChart"
         name="chart_view"
-        class=".googlechart.GoogleChart"
+        class=".app.googlechart.GoogleChart"
         permission="zope2.View"
-        template="chart_view.pt"
+        template="zpt/chart_view.pt"
         />
 
     <browser:page
-        for="*"
+        for="eea.googlechartsconfig.interfaces.IGoogleChart"
         name="edit_chart"
-        class=".googlechart.GoogleChart"
+        class=".app.googlechart.GoogleChart"
         permission="zope.Public"
-        template="edit_chart.pt"
+        template="zpt/edit_chart.pt"
+        />
+
+    <browser:page
+        for="eea.googlechartsconfig.interfaces.IGoogleChart"
+        name="googlechart-edit.views.html"
+        template="zpt/edit-views.pt"
+        class=".app.edit.Edit"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="eea.googlechartsconfig.interfaces.IGoogleChart"
+        name="googlechart-edit.facets.html"
+        template="zpt/edit-facets.pt"
+        class=".app.edit.Edit"
+        permission="cmf.ModifyPortalContent"
         />
 
 </configure>
