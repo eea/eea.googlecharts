@@ -1,6 +1,6 @@
 <configure
   xmlns="http://namespaces.zope.org/browser"
-  i18n_domain="eea.googlechartsconfig">
+  i18n_domain="eea">
 
   <include package="eea.googlecharts" />
   <include package="p4a.z2utils" />
