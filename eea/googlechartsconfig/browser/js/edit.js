@@ -220,7 +220,7 @@ GoogleChartEdit.FacetAdd.prototype = {
     self.facet = facet;
     self.form = jQuery('form', facet);
     self.action = self.form.attr('action');
-    self.button = jQuery('input[type=submit]', this.form).hide();
+    self.button = jQuery('input[type="submit"]', this.form).hide();
 
     self.form.submit(function(){
       return false;
@@ -288,11 +288,11 @@ GoogleChartEdit.Facet.prototype = {
     this.facet = facet;
     this.form = jQuery('form', facet);
     this.action = this.form.attr('action');
-    this.button = jQuery('input[type=submit]', this.form);
+    this.button = jQuery('input[type="submit"]', this.form);
     this.button.hide();
 
-    var show = jQuery("div.field:has([id$=.show])", this.form).hide();
-    this.show = jQuery("[id$=.show]", show);
+    var show = jQuery('div.field:has([id$=".show"])', this.form).hide();
+    this.show = jQuery('[id$=".show"]', show);
     this.visible = this.show.attr('checked');
 
     var title = jQuery('h1', this.form);
@@ -443,7 +443,7 @@ GoogleChartEdit.View.prototype = {
     var self = this;
     self.view = view;
     self.form = jQuery('form', self.view);
-    self.table = jQuery('div.field:has(label[for=googlechart.properties.sources]) table', self.form);
+    self.table = jQuery('div.field:has(label[for="googlechart.properties.sources"]) table', self.form);
     if(self.table.length){
       self.table.addClass('googlechart-sources-table');
       var table = new GoogleChartEdit.SourceTable(self.table);
@@ -487,7 +487,7 @@ GoogleChartEdit.View.prototype = {
       }
     });
 
-    var button = jQuery('.actionButtons input[type=submit]', self.form);
+    var button = jQuery('.actionButtons input[type="submit"]', self.form);
     var name = button.attr('name');
     query[name] = 'ajax';
 
@@ -519,15 +519,15 @@ GoogleChartEdit.SourceTable.prototype = {
   initialize: function(table){
     var self = this;
     self.table = table;
-    self.count = jQuery('input[name=googlechart.properties.sources.count]', table.parent());
+    self.count = jQuery('input[name="googlechart.properties.sources.count"]', table.parent());
 
-    self.button_add = jQuery('input[name=googlechart.properties.sources.add]', table);
+    self.button_add = jQuery('input[name="googlechart.properties.sources.add"]', table);
     self.button_add.click(function(){
       self.add(jQuery(this));
       return false;
     });
 
-    self.button_remove = jQuery('input[name=googlechart.properties.sources.remove]', table);
+    self.button_remove = jQuery('input[name="googlechart.properties.sources.remove"]', table);
     if (!self.button_remove.length){
       self.button_remove = jQuery('<input>').attr('type', 'submit')
         .attr('name', 'googlechart.properties.sources.remove')
@@ -567,7 +567,7 @@ GoogleChartEdit.SourceTable.prototype = {
     var self = this;
     button.removeClass('submitting');
 
-    var checked = jQuery('input[type=checkbox]:checked', self.table);
+    var checked = jQuery('input[type="checkbox"]:checked', self.table);
     checked.each(function(){
       jQuery(this).parent().parent('tr').remove();
     });
