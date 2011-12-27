@@ -6,6 +6,7 @@ __docformat__ = 'plaintext'
 __credits__ = """contributions: Zoltan Szabo"""
 
 import json
+import urllib
 
 from zope.interface import implements
 from zope.component import queryAdapter
@@ -87,8 +88,9 @@ class View(ViewForm):
         options["width"] = "500"
         settings["options"] = options
         anno = IAnnotations(self.context)
+        result = json.load(urllib.urlopen(self.context.absolute_url()+'/googlechart-view.json'))
+        dataTable = result['dataTable']
         titles = [title['label'] for title in anno[ANNO_FACETS]]
-        dataTable = list(anno[ANNO_JSON]['dataTable'])
         dataTable.insert(0,titles)
         settings["dataTable"] = dataTable
         return json.dumps(settings)

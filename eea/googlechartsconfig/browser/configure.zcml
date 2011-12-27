@@ -26,7 +26,7 @@
     name="googlechart-view.json"
     class=".app.view.View"
     attribute="json"
-    permission="zope2.View"
+    permission="zope.Public"
     />
 
   <browser:page

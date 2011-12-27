@@ -25,11 +25,6 @@ class View(BrowserView):
     def json(self):
         """ Returns json dump of result
         """
-#        import pdb; pdb.set_trace()
-#        f = open('/home/zotya/Desktop/json1.txt', 'r')
-#        data = f.read()
-#        return data
-        
         res = self.accessor.json
         return simplejson.dumps(dict(res))
 
