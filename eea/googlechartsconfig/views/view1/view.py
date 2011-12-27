@@ -87,10 +87,11 @@ class View(ViewForm):
         options["colors"] = colors
         options["width"] = "500"
         settings["options"] = options
-        anno = IAnnotations(self.context)
-        result = json.load(urllib.urlopen(self.context.absolute_url()+'/googlechart-view.json'))
+
+        accessor = queryAdapter(self.context, IGoogleChartConfig)
+        result = accessor.json
         dataTable = result['dataTable']
-        titles = [title['label'] for title in anno[ANNO_FACETS]]
+        titles = [title['label'] for title in accessor.facets]
         dataTable.insert(0,titles)
         settings["dataTable"] = dataTable
         return json.dumps(settings)
