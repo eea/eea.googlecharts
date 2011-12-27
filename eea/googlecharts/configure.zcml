@@ -1,7 +1,8 @@
 <configure
   xmlns:browser="http://namespaces.zope.org/browser"
-  i18n_domain="eea.exhibit">
+  i18n_domain="eea">
 
+  <include file="profiles.zcml" />
   <browser:resource
     name="googlechart.js"
     file="./googlechart/googlechart.js"
