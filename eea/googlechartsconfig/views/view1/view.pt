@@ -1,0 +1,7 @@
+<script tal:content="string:url='${context/absolute_url}';"> </script>
+
+<script type="text/javascript">
+    drawChart(url+"/googlechart.view1.json", "view1")
+</script>
+
+<div id="view1">View1</div>

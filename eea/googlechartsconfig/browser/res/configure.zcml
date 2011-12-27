@@ -1,0 +1,32 @@
+<configure xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="eea.googlechartsconfig">
+
+  <browser:page
+    for="*"
+    name="googlechart-view.js"
+    class=".javascript.ViewJavascript"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="googlechart-edit.js"
+    class=".javascript.EditJavascript"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="googlechart-view.css"
+    class=".css.ViewCSS"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="googlechart-edit.css"
+    class=".css.EditCSS"
+    permission="zope.Public"
+    />
+
+</configure>

@@ -1,0 +1,24 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:zcml="http://namespaces.zope.org/zcml"
+  i18n_domain="eea.googlechartsconfig">
+
+  <adapter
+    for="eea.googlechartsconfig.interfaces.IPossibleGoogleChartJson"
+    provides=".interfaces.IAnnotations"
+    factory=".interfaces.AttributeAnnotations"
+    />
+
+  <!-- Plone -->
+  <class class="Products.ATContentTypes.content.file.ATFile">
+    <implements interface="eea.googlechartsconfig.interfaces.IPossibleGoogleChartJson" />
+  </class>
+
+  <configure zcml:condition="installed plone.app.blob">
+    <class class="plone.app.blob.content.ATBlob">
+      <implements interface="eea.googlechartsconfig.interfaces.IPossibleGoogleChartJson" />
+    </class>
+  </configure>
+
+
+</configure>

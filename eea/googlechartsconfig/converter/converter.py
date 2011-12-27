@@ -1,96 +1,213 @@
+# -*- coding: utf-8 -*-
+""" Converter module responsible for converting from cvs to json
+"""
+__author__ = """European Environment Agency (EEA)"""
+__docformat__ = 'plaintext'
+__credits__ = """contributions: Alec Ghica"""
+
 import re
 import logging
 import csv
-import StringIO
+from zope.interface import implements
+from eea.googlechartsconfig.converter.interfaces import IGoogleChartJsonConverter
 from Products.CMFPlone.utils import normalizeString
 
-logger = logging.getLogger("eea.daviz.converter")
-
+logger = logging.getLogger("eea.googlechartsconfig.converter")
 REGEX = re.compile(r"[\W]+")
 
-def column_type(column):
-    if ":" not in column:
-        column = normalizeString(column, encoding='utf-8')
-        column = REGEX.sub('_', column)
-        return column, "text"
+class EEADialectTab(csv.Dialect):
+    """ CSV dialect having tab as delimiter
+    """
+    delimiter = '\t'
+    quotechar = '"'
+    # Should be set to quotechar = csv.QUOTE_NONE when we will use Python 2.5
+    # as setting quotechar to nothing does not work in Python 2.4.
+    # For more details see
+    # http://stackoverflow.com/questions/494054/
+    # how-can-i-disable-quoting-in-the-python-2-4-csv-reader/494126
+    escapechar = '\\'
+    doublequote = False
+    skipinitialspace = False
+    lineterminator = '\r\n'
+    quoting = csv.QUOTE_NONE
 
-    typo = column.split(":")[-1]
-    column = ":".join(column.split(":")[:-1])
-    column = normalizeString(column, encoding='utf-8')
-    column = REGEX.sub('_', column)
-    return column, typo
+csv.register_dialect("eea-tab", EEADialectTab)
 
-def text2list(key, value):
-    if ":list" not in key:
+class GoogleChartJsonConverter(object):
+    """ Utility to convert csv to json
+
+        >>> from zope.component import getUtility
+        >>> from eea.googlechartsconfig.interfaces import IGoogleChartJsonConverter
+
+        >>> converter = getUtility(IGoogleChartJsonConverter)
+        >>> converter
+        <eea.googlechartsconfig.converter.converter.GoogleChartJsonConverter object at ...>
+
+    """
+    implements(IGoogleChartJsonConverter)
+
+    def text2list(self, key, value):
+        """ Detect lists in value
+
+            Works with ","
+            >>> converter.text2list("animals:list", "Pig, Goat, Cow")
+            ['Pig', 'Goat', 'Cow']
+
+            Also with ";"
+            >>> converter.text2list("animals:list", "Pig; Goat; Cow")
+            ['Pig', 'Goat', 'Cow']
+
+            If it can't find any comma or semicolon it will return a list of one
+            item
+            >>> converter.text2list("animals:list", "Pig")
+            ['Pig']
+
+            It will not work if you don't specify :list type in the key
+            >>> converter.text2list("animals", "Pig, Goat, Cow")
+            'Pig, Goat, Cow'
+
+        """
+        if ":list" not in key:
+            return value
+
+        if "," in value:
+            value = value.split(",")
+        elif ";" in value:
+            value = value.split(";")
+        else:
+            value = [value, ]
+
+        value = [item.strip() for item in value]
         return value
 
-    if "," in value:
-        value = value.split(",")
-    elif ";" in value:
-        value = value.split(";")
-    else:
-        value = [value, ]
+    def text2number(self, key, value):
+        """ Detect numbers in value
 
-    value = [item.strip() for item in value]
-    return value
+            >>> converter.text2number("year:number", "2011")
+            2011
 
-def text2number(key, value):
-    if ":number" not in key:
-        return value
+            >>> converter.text2number("price:number", "9.99")
+            9.9...
 
-    try:
-        value = int(value)
-    except Exception:
+            It fails silently if the provided value is not a number
+            >>> converter.text2number("phone:number", "9-99")
+            '9-99'
+
+            It will not work if you don't provide :number type in the key
+            >>> converter.text2number("price", "9.99")
+            '9.99'
+
+        """
+        if ":number" not in key:
+            return value
+
         try:
-            value = float(value)
+            value = int(value)
+        except Exception:
+            try:
+                value = float(value)
+            except Exception, err:
+                logger.debug(err)
+        return value
+
+    def text2boolean(self, key, value):
+        """ Detect boolean in string
+
+            >>> converter.text2boolean("year:boolean", "2011")
+            True
+
+            Be carefull, "False" is a True in python as it's not an emtry string
+            >>> converter.text2boolean("year:boolean", "False")
+            True
+
+            So use :bool only when you test if value is empty or not
+            >>> converter.text2boolean("year:boolean", "")
+            False
+
+            It will not work if you don't specify :boolean type in the key
+            >>> converter.text2boolean("year", "2345")
+            '2345'
+
+        """
+        if ":boolean" not in key:
+            return value
+
+        try:
+            value = bool(value)
         except Exception, err:
             logger.debug(err)
-    return value
-
-def text2boolean(key, value):
-    if ":boolean" not in key:
         return value
 
-    try:
-        value = bool(value)
-    except Exception, err:
-        logger.debug(err)
-    return value
+    def column_type(self, column):
+        """ Get column and type from column
 
-def csv2json(csvdata):
+            >>> converter.column_type("start:date")
+            ('start', 'date')
 
-    columns = []
-    hasLabel = False
-    out = []
-    properties = {}
+            >>> converter.column_type("Website:url")
+            ('website', 'url')
 
-    reader = csv.reader(csvdata, delimiter=',',quotechar='"',escapechar='\\',lineterminator='\r\n')
-    for index, row in enumerate(reader):
-        if row == []:
-            continue
+            >>> converter.column_type("Items: one, two:list")
+            ('items_one_two', 'list')
 
-        if columns == []:
-            for name in row:
-                name = name.replace(' ', '+')
-                if name.lower().endswith('label'):
-                    name = "label"
-                    hasLabel = True
-                columns.append(name)
-            continue
+            >>> converter.column_type("Title")
+            ('title', 'text')
 
-        row = iter(row)
-        datarow = []
+            >>> converter.column_type("Title is some-thing. + something @lse")
+            ('title_is_some_thing_something_lse', 'text')
 
-        for col in columns:
-            text = row.next()
+        """
 
-            text = text2list(col, text)
-            text = text2number(col, text)
-            text = text2boolean(col, text)
+        if ":" not in column:
+            column = normalizeString(column, encoding='utf-8')
+            column = REGEX.sub('_', column)
+            return column, "text"
 
-            datarow.append(text)
+        typo = column.split(":")[-1]
+        column = ":".join(column.split(":")[:-1])
+        column = normalizeString(column, encoding='utf-8')
+        column = REGEX.sub('_', column)
+        return column, typo
 
-        out.append(datarow)
+    def __call__(self, datafile):
+        """ Returns JSON output after converting source data.
+        """
 
-    columns = [column_type(col) for col in columns]
-    return columns, out
+        columns = []
+        hasLabel = False
+        out = []
+        properties = {}
+
+        reader = csv.reader(datafile, dialect='eea-tab')
+        for index, row in enumerate(reader):
+            if row == []:
+                continue
+
+            if columns == []:
+                for name in row:
+                    name = name.replace(' ', '+')
+                    if name.lower().endswith('label'):
+                        name = "label"
+                        hasLabel = True
+                    columns.append(name)
+                continue
+
+            row = iter(row)
+            datarow = []
+
+            for col in columns:
+                text = row.next()
+
+                text = self.text2list(col, text)
+                text = self.text2number(col, text)
+                text = self.text2boolean(col, text)
+
+                datarow.append(text)
+
+            out.append(datarow)
+
+        columns = (self.column_type(col) for col in columns)
+
+        return columns, {"dataTable":out}
+
+

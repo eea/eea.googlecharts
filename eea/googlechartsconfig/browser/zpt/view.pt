@@ -1,0 +1,40 @@
+<tal:left define="hidden python:request.set('disable_plone.leftcolumn', 1)" />
+<tal:right define="hidden python:request.set('disable_plone.rightcolumn', 1)" />
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+  lang="en-US"
+  metal:use-macro="here/main_template/macros/master"
+  i18n:domain="eea.googlechartsconfig">
+
+<metal:jsslot fill-slot="javascript_head_slot">
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="++resource++googlechart.js"></script>
+</metal:jsslot>
+
+<body>
+
+<div metal:fill-slot="main">
+
+
+  <p class="documentDescription"
+    tal:content="here/Description"
+    tal:condition="here/Description">
+  News summary
+  </p>
+
+
+<div style="float: left; width: 100%">
+  <!-- GoogleChart views -->
+  <div class="googlechart-views" ex:role="viewPanel">
+    <tal:views define="views python:view.views;">
+      <tal:view repeat="view_name views">
+        <div tal:define="view_page python:view.get_view(view_name)"
+          tal:replace="structure view_page" />
+      </tal:view>
+    </tal:views>
+  </div>
+</div>
+<div style="clear: both"></div>
+
+</div>
+</body>
+</html>

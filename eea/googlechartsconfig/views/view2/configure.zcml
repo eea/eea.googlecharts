@@ -1,0 +1,29 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:googlechartsconfig="http://namespaces.zope.org/googlechartsconfig"
+  xmlns:browser="http://namespaces.zope.org/browser">
+
+  <googlechartsconfig:view name="googlechart.view2" />
+
+  <browser:page
+    name="googlechart.view2"
+    for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
+    template="view.pt"
+    class=".view.View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="googlechart.view2.edit"
+    for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
+    class=".edit.Edit"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <subscriber
+    for="eea.googlechartsconfig.interfaces.IGoogleChartJson
+         eea.googlechartsconfig.interfaces.IGoogleChartFacetDeletedEvent"
+    handler=".events.view2_facet_deleted"
+    />
+
+</configure>

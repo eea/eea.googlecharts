@@ -1,0 +1,317 @@
+/* Update ui images path
+*/
+.ui-icon, .ui-widget-content .ui-icon, .ui-widget-header .ui-icon {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-icons_222222_256x240.png);
+  cursor: pointer;
+}
+
+.ui-state-default .ui-icon {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-icons_888888_256x240.png);
+  cursor: pointer;
+}
+
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon, .ui-state-active .ui-icon {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-icons_454545_256x240.png);
+  cursor: pointer;
+}
+.ui-state-highlight .ui-icon {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-icons_2e83ff_256x240.png);
+  cursor: pointer;
+}
+
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-icons_cd0a0a_256x240.png);
+  cursor: pointer;
+}
+
+.ui-widget-content {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-bg_flat_75_ffffff_40x100.png);
+}
+
+.ui-widget-header {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-bg_highlight-soft_75_cccccc_1x100.png);
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-bg_glass_75_e6e6e6_1x400.png);
+}
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-bg_glass_75_dadada_1x400.png);
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-bg_glass_65_ffffff_1x400.png);
+}
+
+.ui-state-highlight, .ui-widget-content .ui-state-highlight {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-bg_glass_55_fbf9ee_1x400.png);
+}
+
+.ui-state-error, .ui-widget-content .ui-state-error {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-bg_glass_95_fef1ec_1x400.png);
+}
+
+.ui-widget-overlay {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-bg_flat_0_aaaaaa_40x100.png);
+}
+
+.ui-widget-shadow {
+  background-image: url(../../++resource++jquery.ui.theme/images/ui-bg_flat_0_aaaaaa_40x100.png);
+}
+
+.googlechart-facet-edit .ui-icon {
+  float: right;
+  cursor: pointer;
+}
+
+.googlechart-facet-edit .ui-icon-show {
+  background-image: url(../../++resource++eea.googlechartsconfig.images/show.png);
+}
+
+.googlechart-facet-edit .ui-icon-hide {
+  background-image: url(../../++resource++eea.googlechartsconfig.images/hide.png);
+}
+
+.googlechart-facet-add input[type=text] {
+  width: 100%;
+}
+
+.googlechart-facet-add .ui-icon-plus {
+  border: 2px solid #CCC;
+  float: right;
+  margin-bottom: 1em;
+}
+
+/* Customize jquery.ui
+*/
+.ui-widget-header {
+  background: none;
+  border: none;
+}
+
+.ui-widget-content {
+  border: none;
+}
+
+.ui-tabs .ui-tabs-panel {
+  padding: 1em;
+  border: 1px solid #ccc;
+}
+
+.ui-tabs .ui-tabs-nav li a {
+  border-bottom: none;
+}
+
+/* Copied from plone 3
+*/
+dl.portalMessage {
+  background-color:#FFFFFF;
+  background-image: none;
+  padding: 0px;
+  border: none;
+  font-size: 12px;
+  clear: both;
+}
+dl.portalMessage a {
+  color: black;
+  border: none !important;
+  text-decoration: underline;
+}
+dl.portalMessage dt {
+  background-color: #996;
+  border: 1px solid #996;
+  font-weight: normal !important;
+  float: left;
+  margin: 0 0.5em 0 0;
+  padding: 0.5em 0.75em;
+  color: White;
+  line-height: 1em;
+}
+dl.portalMessage dd {
+  background-color: #ffffe3;
+  border: 1px solid #996;
+  padding: 0.5em 0.5em;
+  margin: 0;
+  line-height: 1em;
+}
+
+/* googlechart
+*/
+.googlechart-edit-fieldset {
+  margin: 0px;
+  border: none;
+  padding: 0px;
+}
+
+.googlechart-facets-edit {
+}
+
+.googlechart-facets-edit-ajax {
+  float: right;
+  width: 29%;
+}
+
+.googlechart-facet-edit {
+  margin-top: 1em;
+  clear: right;
+}
+
+.googlechart-facet-edit h1 {
+  font-size: 1.2em;
+  background-color: #CDE2A7;
+  color: black;
+  margin: 0 2px;
+  border: 2px groove threedface;
+  padding: 0.2em 0.5em;
+  cursor: move;
+}
+
+.googlechart-facet-edit h1.hidden {
+  background-color: #E6E6E6;
+}
+
+.googlechart-facet-edit h1 .facet-title {
+  overflow: hidden;
+  width: 80%;
+  height: 20px;
+}
+
+.googlechart-facet-edit fieldset {
+  border: 1px solid #cccccc;
+}
+
+.googlechart-facet-edit input[type=text] {
+  width: 100%;
+}
+
+.googlechart-views-edit {
+}
+
+.googlechart-views-edit-ajax {
+  width: 70%;
+  float: left;
+}
+
+.googlechart-views-edit ul {
+  margin:0.5em 0 0 1.5em;
+}
+
+.googlechart-view-edit textarea {
+  width: 100%;
+}
+
+.googlechart-sources-table {
+  width: 100%;
+}
+
+.googlechart-sources-table input[type=text] {
+  width: 90%;
+}
+
+.googlechart-ajax-loader {
+  background-image: url(../../++resource++eea.googlechartsconfig.images/loading.gif);
+  background-position:left center;
+  background-repeat:no-repeat;
+  margin: 0 4em;
+  padding: 4em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.ui-widget-overlay {
+  background: none ! important;
+}
+
+.googlechart-loading-overlay {
+  background: none ! important;
+  border: none ! important;
+  width: 400px ! important;
+}
+
+.googlechart-loading-overlay .ui-dialog-titlebar {
+  display: none ! important;
+}
+
+.googlechart-loading-overlay .ui-resizable-handle {
+  display: none ! important;
+}
+
+.googlechart-status-lock {
+  background: transparent url(../../++resource++eea.googlechartsconfig.images/background.png) no-repeat center ! important;
+}
+
+/* Tabs */
+.googlechart-edit-tabs ul.formTabs {
+  background-color: #ddd;
+  border: 0.3em solid #ddd;
+}
+
+.googlechart-edit-tabs ul.formTabs {
+  display: block;
+  border-style: solid solid none solid;
+  margin-left: 0;
+  border-top-right-radius: 0.5em;
+  border-top-left-radius: 0.5em;
+  -webkit-border-top-right-radius: 0.5em;
+  -webkit-border-top-left-radius: 0.5em;
+  -moz-border-radius-topleft: 0.5em;
+  -moz-border-radius-topright: 0.5em;
+}
+
+.googlechart-edit-tabs li.formTab {
+    display: inline;
+    margin-right:0.25em;
+}
+
+.googlechart-edit-tabs li.formTab a {
+    /* this isn't supported by all browsers, so we keep it in a separate rule */
+    display: inline-block;
+}
+
+.googlechart-edit-tabs li.formTab a {
+    line-height: 2em;
+    padding: 0 0.75em;
+    text-decoration: none;
+    border: none;
+    margin: 0 ;
+}
+
+.googlechart-edit-tabs li.formTab a.current {
+    font-weight: bold;
+}
+
+.googlechart-edit-tabs li.formTab a.current,
+.googlechart-edit-tabs li.formTab a:hover {
+    background: White;
+    color: Black;
+}
+
+.googlechart-edit-tabs .panes {
+  border-width: 0px 1px 1px 1px;
+  border-style: solid;
+  border-color: #DDDDDD;
+  padding: 0.5em;
+}
+
+#googlechart-views-edit fieldset {
+  border: none;
+}
+
+#googlechart-properties-edit fieldset {
+ border: none;
+}
+
+.googlechart-cleanup {
+  clear: both;
+}
+
+.googlechart-confirm-overlay .ui-dialog-titlebar,
+.googlechart-facet-add-overlay .ui-dialog-titlebar {
+  background-color:#CDE2A7;
+  border:2px groove threedface;
+  color:black;
+  font-size:1.2em;
+  margin:0 2px;
+  padding:0.2em 0.5em;
+}

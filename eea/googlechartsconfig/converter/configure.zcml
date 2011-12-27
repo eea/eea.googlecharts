@@ -1,0 +1,24 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="eea.googlechartsconfig">
+
+ <utility factory=".converter.GoogleChartJsonConverter" />
+
+  <browser:page
+    name="googlechart_support"
+    for="zope.interface.Interface"
+    class=".browser.GoogleChartPublicSupport"
+    permission="zope.Public"
+    allowed_interface="eea.googlechartsconfig.subtypes.interfaces.IGoogleChartSubtyper"
+    />
+
+  <browser:page
+    name="googlechart_support"
+    for="eea.googlechartsconfig.interfaces.IPossibleGoogleChartJson"
+    class=".browser.GoogleChartSupport"
+    permission="zope.Public"
+    allowed_interface="eea.googlechartsconfig.subtypes.interfaces.IGoogleChartSubtyper"
+    />
+
+</configure>

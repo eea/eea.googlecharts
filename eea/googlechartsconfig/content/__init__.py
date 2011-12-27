@@ -1,2 +1,0 @@
-""" Content init module 
-"""

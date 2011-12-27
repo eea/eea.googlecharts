@@ -1,48 +1,102 @@
 <configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:browser="http://namespaces.zope.org/browser"
-    i18n_domain="eea.googlechartsconfig">
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="eea.googlechartsconfig">
 
-  <include package="plone.app.contentmenu" />
+  <include package=".res" />
+  <adapter factory=".app.displays.DynamicViews" />
 
-    <browser:page
-        for="eea.googlechartsconfig.interfaces.IGoogleChart"
-        name="google-chart.json"
-        class=".app.googlechart.GoogleChart"
-        attribute="chartSettingsAndData"
-        permission="zope2.View"
-        />
+  <adapter
+    for=".app.properties.EditForm"
+    factory="plone.app.form.default_subpage_template"
+    name="default"
+    provides="zope.formlib.namedtemplate.INamedTemplate"
+    />
 
-    <browser:page
-        for="eea.googlechartsconfig.interfaces.IGoogleChart"
-        name="chart_view"
-        class=".app.googlechart.GoogleChart"
-        permission="zope2.View"
-        template="zpt/chart_view.pt"
-        />
+  <browser:page
+    for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
+    name="googlechart-view.html"
+    template="zpt/view.pt"
+    class=".app.view.View"
+    permission="zope2.View"
+    />
 
-    <browser:page
-        for="eea.googlechartsconfig.interfaces.IGoogleChart"
-        name="edit_chart"
-        class=".app.googlechart.GoogleChart"
-        permission="zope.Public"
-        template="zpt/edit_chart.pt"
-        />
+  <browser:page
+    for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
+    name="googlechart-view.json"
+    class=".app.view.View"
+    attribute="json"
+    permission="zope2.View"
+    />
 
-    <browser:page
-        for="eea.googlechartsconfig.interfaces.IGoogleChart"
-        name="googlechart-edit.views.html"
-        template="zpt/edit-views.pt"
-        class=".app.edit.Edit"
-        permission="cmf.ModifyPortalContent"
-        />
+  <browser:page
+    for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
+    name="googlechart-edit.html"
+    template="zpt/edit.pt"
+    class=".app.edit.Edit"
+    permission="cmf.ModifyPortalContent"
+    />
 
-    <browser:page
-        for="eea.googlechartsconfig.interfaces.IGoogleChart"
-        name="googlechart-edit.facets.html"
-        template="zpt/edit-facets.pt"
-        class=".app.edit.Edit"
-        permission="cmf.ModifyPortalContent"
-        />
+  <browser:page
+    for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
+    name="googlechart-add.facets.html"
+    template="zpt/add-facets.pt"
+    class=".app.edit.Edit"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
+    name="googlechart-edit.facets.html"
+    template="zpt/edit-facets.pt"
+    class=".app.edit.Edit"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
+    name="googlechart-edit.views.html"
+    template="zpt/edit-views.pt"
+    class=".app.edit.Edit"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    name="googlechart.properties.edit"
+    for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
+    class=".app.properties.EditForm"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
+    name="googlechart-edit.save"
+    class=".app.edit.Configure"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:resource
+    name="eea.googlechartsconfig.view.css"
+    file="./css/view.css"
+   />
+
+  <browser:resource
+      name="eea.googlechartsconfig.edit.css"
+      file="./css/edit.css"
+     />
+
+  <browser:resource
+    name="eea.googlechartsconfig.view.js"
+    file="./js/view.js"
+   />
+
+  <browser:resource
+    name="eea.googlechartsconfig.edit.js"
+    file="./js/edit.js"
+   />
+
+  <browser:resourceDirectory
+    name="eea.googlechartsconfig.images"
+    directory="./img" />
 
 </configure>
