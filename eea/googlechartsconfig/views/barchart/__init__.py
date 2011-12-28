@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" view1
+""" barchart view package
 """
 __author__ = """European Environment Agency (EEA)"""
 __docformat__ = 'plaintext'

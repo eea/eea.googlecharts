@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" view1 interfaces
+""" barchart interfaces
 """
 __author__ = """European Environment Agency (EEA)"""
 __docformat__ = 'plaintext'
@@ -10,12 +10,12 @@ from zope.interface import Interface
 from eea.googlechartsconfig.views.interfaces import IGoogleChartView
 
 
-class IGoogleChartView1(IGoogleChartView):
-    """ GoogleChart view1
+class IGoogleChartBarChart(IGoogleChartView):
+    """ GoogleChart BarChart
     """
 
-class IGoogleChartView1Edit(Interface):
-    """ GoogleChart view1 edit
+class IGoogleChartBarChartEdit(Interface):
+    """ GoogleChart BarChart edit
     """
     columns = schema.List(
         title=u'Columns',

@@ -3,10 +3,10 @@
   xmlns:googlechartsconfig="http://namespaces.zope.org/googlechartsconfig"
   xmlns:browser="http://namespaces.zope.org/browser">
 
-  <googlechartsconfig:view name="googlechart.view1" />
+  <googlechartsconfig:view name="googlechart.barchart" />
 
   <browser:page
-    name="googlechart.view1"
+    name="googlechart.barchart"
     for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
     template="view.pt"
     class=".view.View"
@@ -14,14 +14,14 @@
     />
 
   <browser:page
-    name="googlechart.view1.edit"
+    name="googlechart.barchart.edit"
     for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
     class=".edit.Edit"
     permission="cmf.ModifyPortalContent"
     />
 
   <browser:page
-    name="googlechart.view1.json"
+    name="googlechart.barchart.json"
     for="eea.googlechartsconfig.interfaces.IGoogleChartJson"
     class=".view.View"
     attribute="settingsAndData"
@@ -32,7 +32,7 @@
   <subscriber
     for="eea.googlechartsconfig.interfaces.IGoogleChartJson
          eea.googlechartsconfig.interfaces.IGoogleChartFacetDeletedEvent"
-    handler=".events.view1_facet_deleted"
+    handler=".events.barchart_facet_deleted"
     />
 
 </configure>

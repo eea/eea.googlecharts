@@ -24,7 +24,7 @@ def create_default_views(obj, evt):
     mutator.delete_views()
 
     # Add default view: View1 view
-    mutator.add_view(name=u'googlechart.view1')
+    mutator.add_view(name=u'googlechart.barchart')
 
 def facet_deleted(obj, evt, googlechart_view):
     """ Cleanup removed facet from view properties

@@ -29,7 +29,7 @@ class ViewsVocabulary(object):
         """ See IVocabularyFactory interface
 
         views = [
-          (u'googlechart.view1', 'View1'),
+          (u'googlechart.barchart', 'BarChart'),
           (u'googlechart.view2', 'View2')
         ]
         """

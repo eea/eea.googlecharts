@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" View1
+""" BarChart View
 """
 __author__ = """European Environment Agency (EEA)"""
 __docformat__ = 'plaintext'
@@ -14,15 +14,15 @@ from zope.annotation.interfaces import IAnnotations
 
 from eea.googlechartsconfig.interfaces import IGoogleChartConfig
 from eea.googlechartsconfig.views.view import ViewForm
-from eea.googlechartsconfig.views.view1.interfaces import IGoogleChartView1
+from eea.googlechartsconfig.views.barchart.interfaces import IGoogleChartBarChart
 from eea.googlechartsconfig.config import ANNO_VIEWS, ANNO_FACETS, ANNO_JSON, ANNO_SOURCES
 
 
 class View(ViewForm):
-    """ view1
+    """ BarChartView
     """
-    label = 'View1'
-    implements(IGoogleChartView1)
+    label = 'BarChart'
+    implements(IGoogleChartBarChart)
 
     @property
     def details(self):
