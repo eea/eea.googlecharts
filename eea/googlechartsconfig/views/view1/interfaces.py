@@ -9,6 +9,7 @@ from zope import schema
 from zope.interface import Interface
 from eea.googlechartsconfig.views.interfaces import IGoogleChartView
 
+
 class IGoogleChartView1(IGoogleChartView):
     """ GoogleChart view1
     """
@@ -23,9 +24,11 @@ class IGoogleChartView1Edit(Interface):
         value_type=schema.Choice(
             vocabulary="eea.googlechartsconfig.vocabularies.FacetsVocabulary")
     )
-    details = schema.Bool(
-        title=u'Display details column',
-        description=(u"Select this if you want to display a column with "
-                     "a 'more' link to item details"),
-        required=False
+
+    charttype = schema.List(
+        title=u'Chart Type',
+        description=u'Select type of chart',
+        required=True, unique=True,
+        value_type=schema.Choice(
+            vocabulary = "eea.googlechartsconfig.vocabularies.ChartTypesVocabulary")
     )

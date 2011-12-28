@@ -71,8 +71,12 @@ class View(ViewForm):
             yield 'Details'
 
     def settingsAndData(self):
+        accessor = queryAdapter(self.context, IGoogleChartConfig)
+        acc_settings = accessor.views[0]
         settings = {}
-        settings["chartType"] = "BarChart"
+        chart_type = acc_settings.get('charttype', [])
+        chart_type = chart_type.pop() if chart_type else ''
+        settings["chartType"] = "ImageChart" if chart_type == "ImageChart" else "BarChart"
         vAxis = {}
         vAxis["title"] = "Year"
         titleTextStyle={}
@@ -88,7 +92,6 @@ class View(ViewForm):
         options["width"] = "500"
         settings["options"] = options
 
-        accessor = queryAdapter(self.context, IGoogleChartConfig)
         result = accessor.json
         dataTable = result['dataTable']
         titles = [title['label'] for title in accessor.facets]

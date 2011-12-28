@@ -8,6 +8,10 @@
     component=".vocabularies.ViewsVocabularyFactory"
     name="eea.googlechartsconfig.vocabularies.ViewsVocabulary" />
 
+  <utility
+    component=".vocabularies.ChartTypesVocabularyFactory"
+    name="eea.googlechartsconfig.vocabularies.ChartTypesVocabulary" />
+
   <subscriber
     for="..interfaces.IGoogleChartJson
          ..interfaces.IGoogleChartEnabledEvent"

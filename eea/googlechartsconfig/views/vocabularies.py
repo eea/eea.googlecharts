@@ -8,6 +8,10 @@ from zope.schema.vocabulary import SimpleVocabulary
 from zope.schema.vocabulary import SimpleTerm
 from eea.googlechartsconfig.views.interfaces import IGoogleChartViews
 
+from zope.i18nmessageid import MessageFactory
+
+_ = MessageFactory("eea.googlechartsconfig")
+
 class ViewsVocabulary(object):
     """ Available registered googlechart views
     """
@@ -35,3 +39,16 @@ class ViewsVocabulary(object):
         return SimpleVocabulary(views)
 
 ViewsVocabularyFactory = ViewsVocabulary()
+
+
+class ChartTypesVocabulary(object):
+    """ Simple vocabulary for Chart Types ( HTML or PNG )
+    """
+    implements(IVocabularyFactory)
+    def __call__(self, context=None):
+        chartType = SimpleVocabulary(
+            [SimpleTerm(value=u'ImageChart', title=_(u'ImageChart')),
+             SimpleTerm(value=u'HTMLChart', title=_(u'HTMLChart'))])
+        return chartType
+
+ChartTypesVocabularyFactory = ChartTypesVocabulary()
