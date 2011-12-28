@@ -25,7 +25,25 @@ class IGoogleChartView1Edit(Interface):
             vocabulary="eea.googlechartsconfig.vocabularies.FacetsVocabulary")
     )
 
-    charttype = schema.List(
+    chartTitle = schema.TextLine(
+        title=u'Chart Title',
+        description=u'Select Title for the chart',
+        required=True
+    )
+
+    horizontalTitle = schema.TextLine(
+        title=u'Horizontal Title',
+        description=u'Select Title for horizontal axis',
+        required=True
+    )
+
+    verticalTitle = schema.TextLine(
+        title=u'Vertical Title',
+        description=u'Select Title for vertical axis',
+        required=True
+    )
+
+    chartType = schema.List(
         title=u'Chart Type',
         description=u'Select type of chart',
         required=True, unique=True,

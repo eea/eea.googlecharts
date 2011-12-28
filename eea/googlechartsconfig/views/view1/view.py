@@ -74,21 +74,20 @@ class View(ViewForm):
         accessor = queryAdapter(self.context, IGoogleChartConfig)
         acc_settings = accessor.views[0]
         settings = {}
-        chart_type = acc_settings.get('charttype', [])
+        chart_type = acc_settings.get('chartType', [])
         chart_type = chart_type.pop() if chart_type else ''
         settings["chartType"] = "ImageChart" if chart_type == "ImageChart" else "BarChart"
+        options = {}
         vAxis = {}
-        vAxis["title"] = "Year"
+        vAxis["title"] = acc_settings.get('verticalTitle', 'Vertical Title')
         titleTextStyle={}
         titleTextStyle["color"] = "red"
+        hAxis = {}
         vAxis["titleTextStyle"] = titleTextStyle
-        settings["vAxis"] = vAxis
-        options = {}
-        options["title"] = "Bar"
-        colors = []
-        colors.append("AAAAAA")
-        colors.append("BBBBBB")
-        options["colors"] = colors
+        hAxis["title"] = acc_settings.get('horizontalTitle', 'Horizontal Title')
+        options["hAxis"] = hAxis
+        options["vAxis"] = vAxis
+        options["title"] = acc_settings.get('chartTitle', 'Chart Title')
         options["width"] = "500"
         settings["options"] = options
 
