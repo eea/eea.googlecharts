@@ -94,7 +94,10 @@ class View(ViewForm):
         result = accessor.json
         dataTable = result['dataTable']
         titles = [title['label'] for title in accessor.facets]
-        dataTable.insert(0,titles)
+
+        if titles[0] != dataTable[0][0]:
+            dataTable.insert(0,titles)
+
         settings["dataTable"] = dataTable
         return json.dumps(settings)
 
