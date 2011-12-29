@@ -82,9 +82,7 @@ class View(ViewForm):
         for column in acc_settings.get('columns'):
             columns.append([column, facets[column]])
 
-        import pdb; pdb.set_trace()
         result = json.load(urllib.urlopen(self.context.absolute_url()+'/@@daviz-view.json'))
-        import pdb; pdb.set_trace()
         dataTable = exhibit2googlechart(result, columns)
 
         settings = {}
