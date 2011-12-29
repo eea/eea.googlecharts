@@ -17,7 +17,7 @@ from eea.daviz.interfaces import IDavizConfig
 from eea.googlechartsconfig.views.view import ViewForm
 from eea.googlechartsconfig.views.barchart.interfaces import IGoogleChartBarChart
 from eea.googlechartsconfig.config import ANNO_VIEWS, ANNO_FACETS, ANNO_JSON, ANNO_SOURCES
-
+from eea.googlechartsconfig.converter.exhibit2googlechart import exhibit2googlechart
 
 class View(ViewForm):
     """ BarChartView
@@ -72,8 +72,21 @@ class View(ViewForm):
             yield 'Details'
 
     def settingsAndData(self):
+        columns = []
+        facets = {}
         accessor = queryAdapter(self.context, IDavizConfig)
-        acc_settings = accessor.views[0]
+        acc_settings = [view for view in accessor.views if view['name'] == 'googlechart.charts'][0]
+
+        for facet in accessor.facets:
+            facets[facet['name']] = facet['label']
+        for column in acc_settings.get('columns'):
+            columns.append([column, facets[column]])
+
+        import pdb; pdb.set_trace()
+        result = json.load(urllib.urlopen(self.context.absolute_url()+'/@@daviz-view.json'))
+        import pdb; pdb.set_trace()
+        dataTable = exhibit2googlechart(result, columns)
+
         settings = {}
         chart_type = acc_settings.get('chartType', [])
         chart_type = chart_type.pop() if chart_type else ''
@@ -91,15 +104,6 @@ class View(ViewForm):
         options["title"] = acc_settings.get('chartTitle', 'Chart Title')
         options["width"] = "500"
         settings["options"] = options
-
-        #result = accessor.json
-        result = json.load(urllib.urlopen(self.context.absolute_url()+'/googlechart-view.json'))
-        dataTable = result['dataTable']
-        titles = [title['label'] for title in accessor.facets]
-
-        #if titles[0] != dataTable[0][0]:
-        
-        dataTable.insert(0,titles)
 
         settings["dataTable"] = dataTable
         return json.dumps(settings)
