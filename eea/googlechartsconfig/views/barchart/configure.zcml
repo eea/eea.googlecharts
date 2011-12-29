@@ -28,10 +28,10 @@
     permission="zope2.View"
     />
 
-  <subscriber
-    for="eea.googlechartsconfig.interfaces.IGoogleChartJson
-         eea.googlechartsconfig.interfaces.IGoogleChartFacetDeletedEvent"
-    handler=".events.barchart_facet_deleted"
-    />
+  <!--<subscriber-->
+  <!--  for="eea.googlechartsconfig.interfaces.IGoogleChartJson-->
+  <!--       eea.googlechartsconfig.interfaces.IGoogleChartFacetDeletedEvent"-->
+  <!--  handler=".events.barchart_facet_deleted"-->
+  <!--  />-->
 
 </configure>

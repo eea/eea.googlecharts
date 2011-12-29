@@ -8,7 +8,7 @@ __credits__ = """contributions: Zoltan Szabo"""
 
 from zope.component import queryAdapter
 from Products.Five.browser import BrowserView
-from eea.googlechartsconfig.interfaces import IGoogleChartConfig
+from eea.daviz.app.interfaces import IDavizConfig
 
 class ViewForm(BrowserView):
     """ Basic layer for googlechart views. For more details on how to use this,
@@ -24,6 +24,6 @@ class ViewForm(BrowserView):
         if self._data:
             return self._data
 
-        accessor = queryAdapter(self.context, IGoogleChartConfig)
+        accessor = queryAdapter(self.context, IDavizConfig)
         self._data = accessor.view(self.__name__, {})
         return self._data

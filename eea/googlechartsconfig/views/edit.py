@@ -9,8 +9,7 @@ from zope.component import queryAdapter
 from zope.formlib.form import SubPageForm
 from Products.statusmessages.interfaces import IStatusMessage
 from zope.formlib.form import action, setUpWidgets, haveInputWidgets
-from eea.googlechartsconfig.interfaces import IGoogleChartConfig
-
+from eea.daviz.app.interfaces import IDavizConfig
 from zope.i18nmessageid import MessageFactory
 _ = MessageFactory("eea.googlechartsconfig")
 
@@ -38,7 +37,7 @@ class EditForm(SubPageForm):
     def _data(self):
         """ Return view
         """
-        accessor = queryAdapter(self.context, IGoogleChartConfig)
+        accessor = queryAdapter(self.context, IDavizConfig)
         return accessor.view(self.prefix, {})
 
     def setUpWidgets(self, ignore_request=False):
@@ -54,7 +53,7 @@ class EditForm(SubPageForm):
     def save(self, saction, data):
         """ Handle save action
         """
-        mutator = queryAdapter(self.context, IGoogleChartConfig)
+        mutator = queryAdapter(self.context, IDavizConfig)
         mutator.edit_view(self.prefix, **data)
 
         name = saction.__name__.encode('utf-8')

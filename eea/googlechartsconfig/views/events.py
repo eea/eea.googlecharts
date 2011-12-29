@@ -7,16 +7,16 @@ __credits__ = """contributions: Zoltan Szabo"""
 
 import logging
 from zope.component import queryAdapter
-from eea.googlechartsconfig.interfaces import IGoogleChartConfig
+from eea.daviz.app.interfaces import IDavizConfig
 logger = logging.getLogger('eea.googlechartsconfig.views.events')
 
 def create_default_views(obj, evt):
     """ Create default views
     """
 
-    mutator = queryAdapter(obj, IGoogleChartConfig)
+    mutator = queryAdapter(obj, IDavizConfig)
     if not mutator:
-        logger.warn("Couldn't find any IGoogleChartConfig adapter for %s",
+        logger.warn("Couldn't find any IDavizConfig adapter for %s",
                     obj.absolute_url(1))
         return
 
@@ -30,9 +30,9 @@ def facet_deleted(obj, evt, googlechart_view):
     """ Cleanup removed facet from view properties
     """
     facet = evt.facet
-    mutator = queryAdapter(obj, IGoogleChartConfig)
+    mutator = queryAdapter(obj, IDavizConfig)
     if not mutator:
-        logger.warn("Couldn't find any IGoogleChartConfig adapter for %s",
+        logger.warn("Couldn't find any IDavizConfig adapter for %s",
                     obj.absolute_url(1))
         return
 

@@ -10,13 +10,13 @@ import urllib
 
 from zope.interface import implements
 from zope.component import queryAdapter
-from zope.annotation.interfaces import IAnnotations
+#from zope.annotation.interfaces import IAnnotations
 
-from eea.googlechartsconfig.interfaces import IGoogleChartConfig
+#from eea.googlechartsconfig.interfaces import IGoogleChartConfig
 from eea.daviz.interfaces import IDavizConfig
 from eea.googlechartsconfig.views.view import ViewForm
 from eea.googlechartsconfig.views.barchart.interfaces import IGoogleChartBarChart
-from eea.googlechartsconfig.config import ANNO_VIEWS, ANNO_FACETS, ANNO_JSON, ANNO_SOURCES
+#from eea.googlechartsconfig.config import ANNO_VIEWS, ANNO_FACETS, ANNO_JSON, ANNO_SOURCES
 from eea.googlechartsconfig.converter.exhibit2googlechart import exhibit2googlechart
 
 class View(ViewForm):
