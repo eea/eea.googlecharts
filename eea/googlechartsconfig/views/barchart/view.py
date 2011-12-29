@@ -10,13 +10,10 @@ import urllib
 
 from zope.interface import implements
 from zope.component import queryAdapter
-#from zope.annotation.interfaces import IAnnotations
 
-#from eea.googlechartsconfig.interfaces import IGoogleChartConfig
 from eea.daviz.interfaces import IDavizConfig
 from eea.googlechartsconfig.views.view import ViewForm
 from eea.googlechartsconfig.views.barchart.interfaces import IGoogleChartBarChart
-#from eea.googlechartsconfig.config import ANNO_VIEWS, ANNO_FACETS, ANNO_JSON, ANNO_SOURCES
 from eea.googlechartsconfig.converter.exhibit2googlechart import exhibit2googlechart
 
 class View(ViewForm):
@@ -24,52 +21,6 @@ class View(ViewForm):
     """
     label = 'BarChart'
     implements(IGoogleChartBarChart)
-
-    @property
-    def details(self):
-        """ Show details column?
-        """
-        return self.data.get('details', False)
-
-    @property
-    def columns(self):
-        """ Returns columns property for view1
-        """
-        columns = self.data.get('columns', [])
-        for column in columns:
-            yield '.%s' % column
-
-        if self.details:
-            yield '!label'
-
-    @property
-    def formats(self):
-        """ Column formats
-        """
-        accessor = queryAdapter(self.context, IDavizConfig)
-        columns = self.data.get('columns', [])
-        for column in columns:
-            facet = accessor.facet(column, {})
-            itype = facet.get('item_type', 'text')
-            yield itype
-
-        if self.details:
-            yield "item {title: expression('more')}"
-
-    @property
-    def labels(self):
-        """ Returns labels property for view1
-        """
-        accessor = queryAdapter(self.context, IDavizConfig)
-        columns = self.data.get('columns', [])
-
-        for column in columns:
-            facet = accessor.facet(column, {})
-            label = facet.get('label', column)
-            yield label
-
-        if self.details:
-            yield 'Details'
 
     def settingsAndData(self):
         columns = []
