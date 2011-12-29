@@ -12,7 +12,8 @@ from zope.interface import implements
 from zope.component import queryAdapter
 
 from eea.daviz.interfaces import IDavizConfig
-from eea.googlechartsconfig.views.view import ViewForm
+from eea.daviz.views.view import ViewForm
+
 from eea.googlechartsconfig.views.barchart.interfaces import IGoogleChartBarChart
 from eea.googlechartsconfig.converter.exhibit2googlechart import exhibit2googlechart
 

@@ -7,10 +7,9 @@ __credits__ = """contributions: Zoltan Szabo"""
 
 from zope import schema
 from zope.interface import Interface
-from eea.googlechartsconfig.views.interfaces import IGoogleChartView
+from eea.daviz.views.interfaces import IExhibitView
 
-
-class IGoogleChartBarChart(IGoogleChartView):
+class IGoogleChartBarChart(IExhibitView):
     """ GoogleChart BarChart
     """
 

@@ -31,7 +31,7 @@
   <subscriber
     for="eea.daviz.interfaces.IExhibitJson
          eea.daviz.interfaces.IDavizFacetDeletedEvent"
-    handler=".events.timeline_facet_deleted"
+    handler=".events.barchart_facet_deleted"
     />
 
 </configure>
