@@ -3,19 +3,15 @@
   i18n_domain="eea">
 
   <include package="eea.googlecharts" />
+  <include package="eea.daviz" />
   <include package="p4a.z2utils" />
   <include package="collective.js.jqueryui" />
 
   <include file="profiles.zcml" />
 
-  <!--include package=".babel" /-->
-  <include package=".subtypes" />
   <include package=".converter" />
   <include package=".browser" />
-  <include package=".app" />
-  <include package=".facets" />
   <include package=".views" />
 
-  <!--include package=".upgrades" /-->
 
 </configure>
