@@ -22,7 +22,7 @@ class IGoogleChartBarChartEdit(Interface):
         description=u'Select columns to be shown in table view',
         required=False, unique=True,
         value_type=schema.Choice(
-            vocabulary="eea.googlechartsconfig.vocabularies.FacetsVocabulary")
+            vocabulary="eea.daviz.vocabularies.FacetsVocabulary")
     )
 
     chartTitle = schema.TextLine(

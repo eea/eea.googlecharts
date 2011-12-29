@@ -2,11 +2,12 @@
 """
 from zope.interface import implements
 from eea.googlechartsconfig.views.interfaces import IGoogleChartViews
+from eea.daviz.views.interfaces import IDavizViews
 
 class GoogleChartViews(object):
     """ Registry for googlechart views registered via ZCML
     """
-    implements(IGoogleChartViews)
+    implements(IDavizViews)
     _views = []
 
     @property

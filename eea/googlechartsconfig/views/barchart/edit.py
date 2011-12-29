@@ -7,7 +7,7 @@ __credits__ = """contributions: Zoltan Szabo"""
 
 from zope.formlib.form import Fields
 from eea.googlechartsconfig.views.barchart.interfaces import IGoogleChartBarChartEdit
-from eea.googlechartsconfig.views.edit import EditForm
+from eea.daviz.views.edit import EditForm
 
 class Edit(EditForm):
     """ Edit BarChart form

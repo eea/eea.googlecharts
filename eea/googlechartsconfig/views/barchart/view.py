@@ -13,6 +13,7 @@ from zope.component import queryAdapter
 from zope.annotation.interfaces import IAnnotations
 
 from eea.googlechartsconfig.interfaces import IGoogleChartConfig
+from eea.daviz.interfaces import IDavizConfig
 from eea.googlechartsconfig.views.view import ViewForm
 from eea.googlechartsconfig.views.barchart.interfaces import IGoogleChartBarChart
 from eea.googlechartsconfig.config import ANNO_VIEWS, ANNO_FACETS, ANNO_JSON, ANNO_SOURCES
@@ -45,7 +46,7 @@ class View(ViewForm):
     def formats(self):
         """ Column formats
         """
-        accessor = queryAdapter(self.context, IGoogleChartConfig)
+        accessor = queryAdapter(self.context, IDavizConfig)
         columns = self.data.get('columns', [])
         for column in columns:
             facet = accessor.facet(column, {})
@@ -59,7 +60,7 @@ class View(ViewForm):
     def labels(self):
         """ Returns labels property for view1
         """
-        accessor = queryAdapter(self.context, IGoogleChartConfig)
+        accessor = queryAdapter(self.context, IDavizConfig)
         columns = self.data.get('columns', [])
 
         for column in columns:
@@ -71,7 +72,7 @@ class View(ViewForm):
             yield 'Details'
 
     def settingsAndData(self):
-        accessor = queryAdapter(self.context, IGoogleChartConfig)
+        accessor = queryAdapter(self.context, IDavizConfig)
         acc_settings = accessor.views[0]
         settings = {}
         chart_type = acc_settings.get('chartType', [])
@@ -91,12 +92,14 @@ class View(ViewForm):
         options["width"] = "500"
         settings["options"] = options
 
-        result = accessor.json
+        #result = accessor.json
+        result = json.load(urllib.urlopen(self.context.absolute_url()+'/googlechart-view.json'))
         dataTable = result['dataTable']
         titles = [title['label'] for title in accessor.facets]
 
-        if titles[0] != dataTable[0][0]:
-            dataTable.insert(0,titles)
+        #if titles[0] != dataTable[0][0]:
+        
+        dataTable.insert(0,titles)
 
         settings["dataTable"] = dataTable
         return json.dumps(settings)
