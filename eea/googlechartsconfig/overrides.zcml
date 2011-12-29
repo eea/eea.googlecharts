@@ -1,6 +1,15 @@
-<configure xmlns="http://namespaces.zope.org/zope"
-           i18n_domain="eea">
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="eea">
 
-  <include package=".browser" file="overrides.zcml" />
+
+  <browser:page
+    for="eea.daviz.interfaces.IExhibitJson"
+    name="daviz-view.json"
+    class="eea.daviz.browser.app.view.View"
+    attribute="json"
+    permission="zope.Public"
+    />
 
 </configure>

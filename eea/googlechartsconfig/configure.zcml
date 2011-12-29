@@ -9,8 +9,6 @@
   <include file="profiles.zcml" />
 
   <include package=".converter" />
-  <include package=".browser" />
   <include package=".views" />
-
 
 </configure>

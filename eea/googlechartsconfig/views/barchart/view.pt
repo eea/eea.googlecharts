@@ -1,5 +1,6 @@
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="++resource++googlechart.js"></script>
 <script tal:content="string:url='${context/absolute_url}';"> </script>
-
 <script type="text/javascript">
     drawChart(url+"/googlechart.barchart.json", "view1")
 </script>
