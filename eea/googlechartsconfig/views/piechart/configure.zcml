@@ -1,0 +1,37 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:daviz="http://namespaces.zope.org/daviz"
+  xmlns:browser="http://namespaces.zope.org/browser">
+
+  <daviz:view name="googlechart.piechart" />
+
+  <browser:page
+    name="googlechart.piechart"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="view.pt"
+    class=".view.View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="googlechart.piechart.edit"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".edit.Edit"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    name="googlechart.piechart.json"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".view.View"
+    attribute="settingsAndData"
+    permission="zope2.View"
+    />
+
+  <subscriber
+    for="eea.daviz.interfaces.IExhibitJson
+         eea.daviz.interfaces.IDavizFacetDeletedEvent"
+    handler=".events.piechart_facet_deleted"
+    />
+
+</configure>
