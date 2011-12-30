@@ -3,10 +3,10 @@
   xmlns:daviz="http://namespaces.zope.org/daviz"
   xmlns:browser="http://namespaces.zope.org/browser">
 
-  <daviz:view name="googlechart.charts" />
+  <daviz:view name="googlechart.barchart" />
 
   <browser:page
-    name="googlechart.charts"
+    name="googlechart.barchart"
     for="eea.daviz.interfaces.IExhibitJson"
     template="view.pt"
     class=".view.View"
@@ -14,7 +14,7 @@
     />
 
   <browser:page
-    name="googlechart.charts.edit"
+    name="googlechart.barchart.edit"
     for="eea.daviz.interfaces.IExhibitJson"
     class=".edit.Edit"
     permission="cmf.ModifyPortalContent"

@@ -6,5 +6,6 @@
 
   <include package=".barchart" />
   <include package=".piechart" />
+  <include package=".charts" />
 
 </configure>

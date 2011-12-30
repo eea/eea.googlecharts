@@ -14,21 +14,21 @@ from zope.component import queryAdapter
 from eea.daviz.interfaces import IDavizConfig
 from eea.daviz.views.view import ViewForm
 
-from eea.googlechartsconfig.views.barchart.interfaces import IGoogleChartBarChart
+from eea.googlechartsconfig.views.charts.interfaces import IGoogleCharts
 from eea.googlechartsconfig.converter.exhibit2googlechart import exhibit2googlechart
 
 class View(ViewForm):
-    """ BarChartView
+    """ ChartsView
     """
-    label = 'BarChart'
-    implements(IGoogleChartBarChart)
+    label = 'Charts'
+    implements(IGoogleCharts)
 
     def settingsAndData(self):
         columns = []
         facets = {}
         accessor = queryAdapter(self.context, IDavizConfig)
 
-        acc_settings = [view for view in accessor.views if view['name'] == 'googlechart.barchart'][0]
+        acc_settings = [view for view in accessor.views if view['name'] == 'googlechart.charts'][0]
 
         for facet in accessor.facets:
             facets[facet['name']] = facet['label']

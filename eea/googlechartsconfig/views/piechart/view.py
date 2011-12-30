@@ -27,6 +27,7 @@ class View(ViewForm):
         columns = []
         facets = {}
         accessor = queryAdapter(self.context, IDavizConfig)
+        #import pdb; pdb.set_trace( )
         acc_settings = [view for view in accessor.views if view['name'] == 'googlechart.piechart'][0]
 
         for facet in accessor.facets:
