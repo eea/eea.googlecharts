@@ -54,6 +54,7 @@ class View(ViewForm):
         options["vAxis"] = vAxis
         options["title"] = acc_settings.get('chartTitle', 'Chart Title')
         options["width"] = "500"
+        options["height"] = "400"
         options["cht"] = "bhg"
         settings["options"] = options
 

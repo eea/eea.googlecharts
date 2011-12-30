@@ -26,7 +26,8 @@ class View(view.View):
         """ Returns views for a category
         """
         views = self.accessor.views
-        views = [view for view in views if view.get('name').split('.')[0] == category]
-        for view in views:
-            yield view.get('name')
+        views = [view.get('name') for view in views if view.get('name').split('.')[0] == category]
+        return views
+#        for view in views:
+#            yield view.get('name')
 

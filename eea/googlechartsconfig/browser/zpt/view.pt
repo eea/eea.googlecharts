@@ -56,7 +56,7 @@
         <tal:block tal:condition="python:len(view.viewCategories) > 1">
         <ul class="chart-tabs">
             <li tal:repeat="view_category python:view.viewCategories">
-                <a href="#" tal:attributes="href string:#tab-${view_category}" tal:content="view_category">
+                <a tal:attributes="href string:#tab-${view_category}" tal:content="view_category">
                 </a>
             </li>
         </ul>
@@ -66,7 +66,7 @@
             <tal:block metal:use-macro="context/@@daviz/daviz"> </tal:block>
         </tal:block>
         <div class="chart-panes">
-            <div tal:repeat="view_category python:view.viewCategories" tal:attributes="id string:tab-${view_category}" class="ui-tabs-panel">
+            <div tal:repeat="view_category python:view.viewCategories" tal:attributes="id string:tab-${view_category}">
                 <tal:block tal:condition="python:view_category=='daviz'">
                     <tal:block metal:use-macro="context/@@daviz/daviz"> </tal:block>
                 </tal:block>
