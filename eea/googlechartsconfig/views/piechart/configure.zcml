@@ -4,6 +4,7 @@
   xmlns:browser="http://namespaces.zope.org/browser">
 
   <daviz:view name="googlechart.piechart" />
+  <daviz:chart name="googlechart.piechart" />
 
   <browser:page
     name="googlechart.piechart"

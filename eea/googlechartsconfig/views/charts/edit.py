@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Edit BarChart
+""" Edit Charts
 """
 __author__ = """European Environment Agency (EEA)"""
 __docformat__ = 'plaintext'

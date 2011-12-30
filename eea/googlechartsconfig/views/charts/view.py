@@ -14,14 +14,14 @@ from zope.component import queryAdapter
 from eea.daviz.interfaces import IDavizConfig
 from eea.daviz.views.view import ViewForm
 
-from eea.googlechartsconfig.views.charts.interfaces import IGoogleCharts
+from eea.googlechartsconfig.views.charts.interfaces import IGoogleChartsView
 from eea.googlechartsconfig.converter.exhibit2googlechart import exhibit2googlechart
 
 class View(ViewForm):
     """ ChartsView
     """
     label = 'Charts'
-    implements(IGoogleCharts)
+    implements(IGoogleChartsView)
 
     def settingsAndData(self):
         columns = []
