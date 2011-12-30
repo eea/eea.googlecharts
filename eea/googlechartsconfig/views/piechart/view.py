@@ -36,7 +36,8 @@ class View(ViewForm):
         columns.append([acc_settings.get('values'), facets[acc_settings.get('values')]])
         result = json.load(urllib.urlopen(self.context.absolute_url()+'/@@daviz-view.json'))
 
-        filters = [[key.lstrip('filter_'), acc_settings[key]] for key in acc_settings.keys() if key.startswith('filter') and acc_settings[key]]
+        filters = [[key[7:], acc_settings[key]] for key in acc_settings.keys() if key.startswith('filter') and acc_settings[key] and key[7:] in facets.keys()]
+
         dataTable = exhibit2googlechart(result, columns, filters)
 
         settings = {}
