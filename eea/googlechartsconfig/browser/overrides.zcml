@@ -3,15 +3,12 @@
   xmlns:browser="http://namespaces.zope.org/browser"
   i18n_domain="eea">
 
-
   <browser:page
     for="eea.daviz.interfaces.IExhibitJson"
-    name="daviz-view.json"
-    class="eea.daviz.browser.app.view.View"
-    attribute="json"
-    permission="zope.Public"
+    name="daviz-view.html"
+    template="zpt/view.pt"
+    class=".app.view.View"
+    permission="zope2.View"
     />
-
-  <include package=".browser" file="overrides.zcml" />
 
 </configure>

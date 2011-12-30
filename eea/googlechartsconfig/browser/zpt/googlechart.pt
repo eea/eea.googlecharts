@@ -1,0 +1,8 @@
+<metal:googlechart define-macro="googlechart">
+    <tal:views define="views python:view.get_viewsforcategory('googlechart');">
+      <tal:view repeat="view_name views">
+        <div tal:define="view_page python:view.get_view(view_name)"
+          tal:replace="structure view_page" />
+      </tal:view>
+    </tal:views>
+</metal:googlechart>

@@ -1,0 +1,87 @@
+<tal:left define="hidden python:request.set('disable_plone.leftcolumn', 1)" />
+<tal:right define="hidden python:request.set('disable_plone.rightcolumn', 1)" />
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+  lang="en-US"
+  metal:use-macro="here/main_template/macros/master"
+  i18n:domain="eea.daviz">
+
+<metal:jsslot fill-slot="javascript_head_slot">
+
+  <!-- Custom babel-translators -->
+  <link rel="exhibit/babel-translator"
+    tal:attributes="href string:${here/absolute_url}/@@babel-translator" />
+
+  <link rel="exhibit/data" type="application/json"
+    tal:attributes="href string:${here/absolute_url}/@@daviz-view.json" />
+
+  <tal:additional repeat="source python:view.sources">
+  <link rel="exhibit/data"
+    tal:attributes="
+    type string:application/${source/type};
+    href string:${source/name};
+    ex:converter python:source.get('converter', None) or None;" />
+  </tal:additional>
+
+  <!-- include exhibit api -->
+  <script type="text/javascript">
+  <!--
+    var daviz_jQuery = window.jQuery;
+    var daviz_$ = window.$;
+  //-->
+  </script>
+  <script tal:attributes="src string:++resource++eea.simile.exhibit/exhibit-api.js" type="text/javascript"></script>
+  <script tal:attributes="src string:++resource++eea.simile.exhibit/extensions/time/time-extension.js"></script>
+  <script tal:attributes="src string:++resource++eea.simile.exhibit/extensions/map/map-extension.js?gmapkey=${view/gmapkey}"></script>
+  <script type="text/javascript">
+  <!--
+    window.jQuery = daviz_jQuery;
+    window.$ = daviz_$;
+  //-->
+  </script>
+
+</metal:jsslot>
+
+<body>
+
+<div metal:fill-slot="main">
+
+  <p class="documentDescription"
+    tal:content="here/Description"
+    tal:condition="here/Description">
+  News summary
+  </p>
+
+<div tal:define="views python:view.views">
+    <div>
+        <tal:block tal:condition="python:len(view.viewCategories) > 1">
+        <ul class="chart-tabs">
+            <li tal:repeat="view_category python:view.viewCategories">
+                <a href="#" tal:attributes="href string:#tab-${view_category}" tal:content="view_category">
+                </a>
+            </li>
+        </ul>
+        </tal:block>
+        <div style="clear: both"></div>
+        <tal:block tal:condition="python:len(view.viewCategories) == 0">
+            <tal:block metal:use-macro="context/@@daviz/daviz"> </tal:block>
+        </tal:block>
+        <div class="chart-panes">
+            <div tal:repeat="view_category python:view.viewCategories" tal:attributes="id string:tab-${view_category}" class="ui-tabs-panel">
+                <tal:block tal:condition="python:view_category=='daviz'">
+                    <tal:block metal:use-macro="context/@@daviz/daviz"> </tal:block>
+                </tal:block>
+                <tal:block tal:condition="python:view_category=='googlechart'">
+                    <tal:block metal:use-macro="context/@@googlechart/googlechart"> </tal:block>
+                </tal:block>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            $("ul.chart-tabs").tabs("div.chart-panes > div");
+        });
+    </script>
+</div>
+</div>
+</body>
+</html>

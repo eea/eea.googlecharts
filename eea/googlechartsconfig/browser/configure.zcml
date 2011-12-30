@@ -1,0 +1,25 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="eea">
+
+  <browser:page
+    for="eea.daviz.interfaces.IExhibitJson"
+    name="daviz"
+    template="zpt/daviz.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="eea.daviz.interfaces.IExhibitJson"
+    name="googlechart"
+    template="zpt/googlechart.pt"
+    permission="zope2.View"
+    />
+
+  <browser:resource
+    name="eea.googlecharts.view.css"
+    file="./css/view.css"
+   />
+
+</configure>

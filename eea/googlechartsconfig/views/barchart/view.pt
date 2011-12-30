@@ -2,8 +2,8 @@
 <script type="text/javascript" src="++resource++googlechart.js"></script>
 <script tal:content="string:url='${context/absolute_url}';"> </script>
 <script type="text/javascript">
-    drawChart(url+"/googlechart.barchart.json", "view1")
+    drawChart(url+"/googlechart.barchart.json", "barchart_view")
 </script>
 
-<div id="view1" style="width:500px; height:400px">View1</div>
+<div id="barchart_view" style="width:500px; height:400px"></div>
 
