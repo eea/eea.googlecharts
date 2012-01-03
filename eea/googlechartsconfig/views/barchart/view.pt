@@ -5,5 +5,5 @@
     drawChart(url+"/googlechart.barchart.json", "barchart_view")
 </script>
 
-<div id="barchart_view" style="width:500px; height:400px"></div>
+<div id="barchart_view"></div>
 

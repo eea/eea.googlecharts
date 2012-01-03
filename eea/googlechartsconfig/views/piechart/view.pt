@@ -5,5 +5,5 @@
     drawChart(url+"/googlechart.piechart.json", "piechart_view")
 </script>
 
-<div id="piechart_view" style="width:500px; height:400px"></div>
+<div id="piechart_view"></div>
 

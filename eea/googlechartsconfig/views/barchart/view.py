@@ -18,50 +18,39 @@ from eea.daviz.views.view import ViewForm
 
 from eea.googlechartsconfig.views.barchart.interfaces import IGoogleChartBarChart
 from eea.googlechartsconfig.converter.exhibit2googlechart import exhibit2googlechart
+from eea.googlechartsconfig.views import view
 
-class View(ViewForm):
+class View(view.View):
     """ BarChartView
     """
     label = 'BarChart'
     implements(IGoogleChartBarChart)
+    view_name = "googlechart.barchart"
 
     def settingsAndData(self):
-        columns = []
-        facets = {}
         accessor = queryAdapter(self.context, IDavizConfig)
+        acc_settings = [view for view in accessor.views if view['name'] == self.view_name][0]
 
-        acc_settings = [view for view in accessor.views if view['name'] == 'googlechart.barchart'][0]
-
+        facets = {}
         for facet in accessor.facets:
             facets[facet['name']] = facet['label']
+
+        self.columns = []
         for column in acc_settings.get('columns'):
-            columns.append([column, facets[column]])
+            self.columns.append([column, facets[column]])
 
-        #result = json.load(urllib.urlopen(self.context.absolute_url()+'/@@daviz-view.json'))
-        result = json.load(StringIO(getMultiAdapter((self.context, self.request), name="daviz-view.json")()))
+        settings = json.load(StringIO(super(View, self).settingsAndData()))
 
-        dataTable = exhibit2googlechart(result, columns)
-
-        settings = {}
-        chart_type = acc_settings.get('chartType', [])
-        chart_type = chart_type.pop() if chart_type else ''
+        chart_type = acc_settings.get('chartType')
         settings["chartType"] = "ImageChart" if chart_type == "ImageChart" else "BarChart"
-        options = {}
+
         vAxis = {}
         vAxis["title"] = acc_settings.get('verticalTitle', 'Vertical Title')
-        titleTextStyle={}
-        titleTextStyle["color"] = "red"
         hAxis = {}
-        vAxis["titleTextStyle"] = titleTextStyle
         hAxis["title"] = acc_settings.get('horizontalTitle', 'Horizontal Title')
-        options["hAxis"] = hAxis
-        options["vAxis"] = vAxis
-        options["title"] = acc_settings.get('chartTitle', 'Chart Title')
-        options["width"] = "500"
-        options["height"] = "400"
-        options["cht"] = "bhg"
-        settings["options"] = options
+        settings["options"]["hAxis"] = hAxis
+        settings["options"]["vAxis"] = vAxis
+        settings["options"]["cht"] = "bhg"
 
-        settings["dataTable"] = dataTable
         return json.dumps(settings)
 

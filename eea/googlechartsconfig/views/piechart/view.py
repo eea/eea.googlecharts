@@ -6,63 +6,40 @@ __docformat__ = 'plaintext'
 __credits__ = """contributions: Zoltan Szabo"""
 
 import json
-import urllib
+from StringIO import StringIO
 
 from zope.interface import implements
 from zope.component import queryAdapter
-from zope.component import getMultiAdapter
-from StringIO import StringIO
 
 from eea.daviz.interfaces import IDavizConfig
-from eea.daviz.views.view import ViewForm
 
 from eea.googlechartsconfig.views.piechart.interfaces import IGoogleChartPieChart
-from eea.googlechartsconfig.converter.exhibit2googlechart import exhibit2googlechart
+from eea.googlechartsconfig.views import view
 
-class View(ViewForm):
+class View(view.View):
     """ PieChartView
     """
     label = 'PieChart'
+    view_name = "googlechart.piechart"
     implements(IGoogleChartPieChart)
 
     def settingsAndData(self):
-        columns = []
-        facets = {}
         accessor = queryAdapter(self.context, IDavizConfig)
-        #import pdb; pdb.set_trace( )
-        acc_settings = [view for view in accessor.views if view['name'] == 'googlechart.piechart'][0]
+        acc_settings = [view for view in accessor.views if view['name'] == self.view_name][0]
 
+        facets = {}
         for facet in accessor.facets:
             facets[facet['name']] = facet['label']
 
-        columns.append([acc_settings.get('labels'), facets[acc_settings.get('labels')]])
-        columns.append([acc_settings.get('values'), facets[acc_settings.get('values')]])
+        self.columns = []
+        self.columns.append([acc_settings.get('labels'), facets[acc_settings.get('labels')]])
+        self.columns.append([acc_settings.get('values'), facets[acc_settings.get('values')]])
 
+        settings = json.load(StringIO(super(View, self).settingsAndData()))
 
-        result = json.load(StringIO(getMultiAdapter((self.context, self.request), name="daviz-view.json")()))
-
-        filters = [[key[7:], acc_settings[key]] for key in acc_settings.keys() if key.startswith('filter') and acc_settings[key] and key[7:] in facets.keys()]
-
-        dataTable = exhibit2googlechart(result, columns, filters)
-
-        settings = {}
 
         chart_type = acc_settings.get('chartType')
         settings["chartType"] = "ImagePieChart" if chart_type == "ImageChart" else "PieChart"
 
-        options = {}
-        vAxis = {}
-        vAxis["title"] = acc_settings.get('verticalTitle', 'Vertical Title')
-        titleTextStyle={}
-        titleTextStyle["color"] = "red"
-        hAxis = {}
-        vAxis["titleTextStyle"] = titleTextStyle
-        hAxis["title"] = acc_settings.get('horizontalTitle', 'Horizontal Title')
-        options["title"] = acc_settings.get('chartTitle', 'Chart Title')
-        options["width"] = "500"
-        options["height"] = "400"
-        settings["options"] = options
-
-        settings["dataTable"] = dataTable
         return json.dumps(settings)
 

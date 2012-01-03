@@ -6,14 +6,14 @@ __docformat__ = 'plaintext'
 __credits__ = """contributions: Zoltan Szabo"""
 
 from zope import schema
-from zope.interface import Interface
 from eea.daviz.views.interfaces import IExhibitView
+from eea.googlechartsconfig.views.interfaces import IGoogleChartEdit
 
 class IGoogleChartPieChart(IExhibitView):
     """ GoogleChart PieChart
     """
 
-class IGoogleChartPieChartEdit(Interface):
+class IGoogleChartPieChartEdit(IGoogleChartEdit):
     """ GoogleChart PieChart edit
     """
     labels = schema.Choice(
@@ -28,12 +28,5 @@ class IGoogleChartPieChartEdit(Interface):
         description=u'Select column to be used as slice values',
         required=True,
         vocabulary="eea.daviz.vocabularies.FacetsVocabulary"
-    )
-
-    chartType = schema.Choice(
-        title=u'Chart Type',
-        description=u'Select type of chart',
-        required=True,
-        vocabulary = "eea.googlechartsconfig.vocabularies.ChartTypesVocabulary"
     )
 
