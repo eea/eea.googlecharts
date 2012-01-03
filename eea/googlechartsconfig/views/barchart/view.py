@@ -10,6 +10,8 @@ import urllib
 
 from zope.interface import implements
 from zope.component import queryAdapter
+from zope.component import getMultiAdapter
+from StringIO import StringIO
 
 from eea.daviz.interfaces import IDavizConfig
 from eea.daviz.views.view import ViewForm
@@ -35,7 +37,9 @@ class View(ViewForm):
         for column in acc_settings.get('columns'):
             columns.append([column, facets[column]])
 
-        result = json.load(urllib.urlopen(self.context.absolute_url()+'/@@daviz-view.json'))
+        #result = json.load(urllib.urlopen(self.context.absolute_url()+'/@@daviz-view.json'))
+        result = json.load(StringIO(getMultiAdapter((self.context, self.request), name="daviz-view.json")()))
+
         dataTable = exhibit2googlechart(result, columns)
 
         settings = {}

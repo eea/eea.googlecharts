@@ -77,8 +77,8 @@
         </div>
     </div>
     <script>
-        $(function(){
-            $("ul.chart-tabs").tabs("div.chart-panes > div");
+        jQuery(function(){
+            jQuery("ul.chart-tabs").tabs("div.chart-panes > div");
         });
     </script>
 </div>

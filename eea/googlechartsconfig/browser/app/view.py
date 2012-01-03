@@ -28,6 +28,4 @@ class View(view.View):
         views = self.accessor.views
         views = [view.get('name') for view in views if view.get('name').split('.')[0] == category]
         return views
-#        for view in views:
-#            yield view.get('name')
 

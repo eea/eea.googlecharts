@@ -10,6 +10,8 @@ import urllib
 
 from zope.interface import implements
 from zope.component import queryAdapter
+from zope.component import getMultiAdapter
+from StringIO import StringIO
 
 from eea.daviz.interfaces import IDavizConfig
 from eea.daviz.views.view import ViewForm
@@ -35,7 +37,9 @@ class View(ViewForm):
 
         columns.append([acc_settings.get('labels'), facets[acc_settings.get('labels')]])
         columns.append([acc_settings.get('values'), facets[acc_settings.get('values')]])
-        result = json.load(urllib.urlopen(self.context.absolute_url()+'/@@daviz-view.json'))
+
+
+        result = json.load(StringIO(getMultiAdapter((self.context, self.request), name="daviz-view.json")()))
 
         filters = [[key[7:], acc_settings[key]] for key in acc_settings.keys() if key.startswith('filter') and acc_settings[key] and key[7:] in facets.keys()]
 

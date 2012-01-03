@@ -4,13 +4,13 @@
   i18n_domain="eea">
 
 
-  <browser:page
+  <!--browser:page
     for="eea.daviz.interfaces.IExhibitJson"
     name="daviz-view.json"
     class="eea.daviz.browser.app.view.View"
     attribute="json"
     permission="zope.Public"
-    />
+    /-->
 
   <include package=".browser" file="overrides.zcml" />
 
