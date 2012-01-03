@@ -21,11 +21,11 @@
     <script>
         jQuery(function(){
             jQuery("ul.googlechart-tabs").tabs("div.googlechart-panes > div");
-            var api = $("ul.googlechart-tabs").data("tabs");
+/*            var api = $("ul.googlechart-tabs").data("tabs");
             api.onClick(function(e, index) {
                 //alert(1);
                 //handle click
-            });
+            });*/
         });
 
     </script>
