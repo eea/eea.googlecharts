@@ -12,9 +12,17 @@
     component=".vocabularies.ChartsVocabularyFactory"
     name="eea.googlechartsconfig.vocabularies.ChartsVocabulary" />
 
+  <adapter
+    for=".edit.EditForm"
+    factory="plone.app.form.default_subpage_template"
+    name="default"
+    provides="zope.formlib.namedtemplate.INamedTemplate"
+    />
+
   <include file="meta.zcml" />
   <include package=".barchart" />
   <include package=".piechart" />
+  <include package=".testchart" />
   <include package=".charts" />
 
 </configure>

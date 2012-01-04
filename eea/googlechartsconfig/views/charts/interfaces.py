@@ -32,7 +32,7 @@ class IChartViews(Interface):
 class IGoogleChartsEdit(Interface):
     """ Charts Edit
     """
-    columns = schema.List(
+    views = schema.List(
         title=u'Chart Types',
         description=u'Select type of chart to implement',
         required=False, unique=True,

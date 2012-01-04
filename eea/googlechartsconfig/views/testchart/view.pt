@@ -1,0 +1,9 @@
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="++resource++googlechart.js"></script>
+<script tal:content="string:url='${context/absolute_url}';"> </script>
+<script type="text/javascript">
+    drawChart(url+"/googlechart.testchart.json", "testchart_view")
+</script>
+
+<div id="testchart_view"></div>
+
