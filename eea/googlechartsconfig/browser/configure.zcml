@@ -22,4 +22,15 @@
     file="./css/view.css"
    />
 
+   <configure package="eea.daviz.browser">
+
+  <browser:page
+    for="eea.daviz.interfaces.IExhibitJson"
+    name="googlecharts-edit.html"
+    template="zpt/edit.pt"
+    class=".app.edit.Edit"
+    permission="cmf.ModifyPortalContent"
+    />
+    </configure>
+
 </configure>

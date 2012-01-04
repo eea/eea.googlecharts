@@ -30,6 +30,8 @@ class View(ViewForm):
 
         dataTable = exhibit2googlechart(result, self.columns, filters)
 
+        import pdb; pdb.set_trace()
+        
         settings = {}
 
         options = {}
