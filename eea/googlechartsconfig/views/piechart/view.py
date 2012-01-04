@@ -25,7 +25,7 @@ class View(view.View):
 
     def settingsAndData(self):
         accessor = queryAdapter(self.context, IDavizConfig)
-        acc_settings = [view for view in accessor.views if view['name'] == self.view_name][0]
+        acc_settings = [v for v in accessor.views if v['name'] == self.view_name][0]
 
         facets = {}
         for facet in accessor.facets:

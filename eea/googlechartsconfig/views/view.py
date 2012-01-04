@@ -1,5 +1,4 @@
 import json
-import urllib
 from StringIO import StringIO
 
 from zope.component import queryAdapter

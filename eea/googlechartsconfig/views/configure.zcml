@@ -1,20 +1,6 @@
 <configure xmlns="http://namespaces.zope.org/zope">
 
-  <utility
-    provides=".charts.interfaces.IChartViews"
-    factory=".meta.ChartViews" />
-
-  <utility
-    component=".vocabularies.ChartTypesVocabularyFactory"
-    name="eea.googlechartsconfig.vocabularies.ChartTypesVocabulary" />
-
-  <utility
-    component=".vocabularies.ChartsVocabularyFactory"
-    name="eea.googlechartsconfig.vocabularies.ChartsVocabulary" />
-
-  <include file="meta.zcml" />
   <include package=".barchart" />
   <include package=".piechart" />
-  <include package=".charts" />
 
 </configure>

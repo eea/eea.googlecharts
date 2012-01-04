@@ -6,8 +6,8 @@ def exhibit2googlechart(data, columns, filters=None):
         datarow = []
         oktoadd = True
         if filters:
-            for filter in filters:
-                if row[filter[0]] != filter[1]:
+            for exfilter in filters:
+                if row[exfilter[0]] != exfilter[1]:
                     oktoadd = False
         if oktoadd:
             for column in columns:

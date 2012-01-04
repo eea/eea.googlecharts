@@ -15,7 +15,7 @@ class IGoogleChartEdit(Interface):
         title=u'Chart Type',
         description=u'Select type of chart',
         required=True,
-        vocabulary = "eea.googlechartsconfig.vocabularies.ChartTypesVocabulary"
+        values=(u"ImageChart", u"HTMLChart")
     )
 
     chartWidth = schema.Int(
