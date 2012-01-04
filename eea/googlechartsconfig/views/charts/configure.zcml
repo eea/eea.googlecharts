@@ -20,8 +20,5 @@
     permission="cmf.ModifyPortalContent"
     />
 
-    <adapter
-        factory=".edit.subpage_template"
-        name="charts.edit" />
 
 </configure>

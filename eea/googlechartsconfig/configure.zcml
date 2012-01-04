@@ -8,7 +8,7 @@
 
   <include file="profiles.zcml" />
   <include package=".browser" />
-  <include package=".app" />
+
   <include package=".views" />
 
 </configure>

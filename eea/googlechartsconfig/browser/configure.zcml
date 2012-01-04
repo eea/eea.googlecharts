@@ -17,28 +17,6 @@
     permission="zope2.View"
     />
 
-  <browser:page
-    for="eea.daviz.interfaces.IExhibitJson"
-    name="charts-edit.views.html"
-    template="zpt/edit-views.pt"
-    class=".app.edit.Edit"
-    permission="cmf.ModifyPortalContent"
-    />
-
-  <adapter
-    for=".app.properties.EditForm"
-    factory="plone.app.form.default_subpage_template"
-    name="default"
-    provides="zope.formlib.namedtemplate.INamedTemplate"
-    />
-
-  <browser:page
-    name="googlechart.properties.edit"
-    for="eea.daviz.interfaces.IExhibitJson"
-    class=".app.properties.EditForm"
-    permission="cmf.ModifyPortalContent"
-    />
-
   <browser:resource
     name="eea.googlecharts.view.css"
     file="./css/view.css"
