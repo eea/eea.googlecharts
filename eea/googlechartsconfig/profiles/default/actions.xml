@@ -5,7 +5,7 @@
     <action-provider name="portal_actions">
         <action title="Edit GoogleCharts View" action_id="googlecharts.edit" category="object"
            condition_expr="object/@@daviz_support/is_exhibit"
-            url_expr="string:${object/absolute_url}/googlecharts-edit.html"
+            url_expr="string:${object/absolute_url}/googlecharts-daviz-edit.html"
             visible="True">
             <permission>Modify portal content</permission>
         </action>

@@ -26,7 +26,7 @@
 
   <browser:page
     for="eea.daviz.interfaces.IExhibitJson"
-    name="googlecharts-edit.html"
+    name="googlecharts-daviz-edit.html"
     template="zpt/edit.pt"
     class=".app.edit.Edit"
     permission="cmf.ModifyPortalContent"
