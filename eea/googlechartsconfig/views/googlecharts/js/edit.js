@@ -1,11 +1,39 @@
+var chartEditor = null;
+var chartId = '';
+
+function openEditor(elementId) {
+    chartId = elementId;
+        // Create the chart to edit.
+    var wrapper = new google.visualization.ChartWrapper({
+           'chartType':'LineChart',
+           "dataTable": [["column1", "column2"], ["A", 1], ["B", 2], ["C", 3], ["D", 2]],
+           'options': {'title':'Chart Title', 'legend':'none'}
+    });
+
+    chartEditor = new google.visualization.ChartEditor();
+    google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
+    chartEditor.openDialog(wrapper, {});
+}
+
+function redrawChart(){
+    jsonString = JSON.stringify(chartEditor.getChartWrapper().toJSON());
+//    console.log(JSON.stringify(chartEditor.getChartWrapper().toJSON()));
+    jQuery("#googlechartid_"+chartId+" .googlechart-configjson").attr('value',jsonString);
+    chartEditor.getChartWrapper().draw(jQuery("#googlechartid_"+chartId+" .chart_div")[0]);
+}
+
 jQuery(document).ready(function($){
     function addChart(id, name){
         googlechart = 
             "<li class='googlechart daviz-facet-edit' id='googlechartid_"+id+"'>\
                 <input class='googlechart-id' type='hidden' value='"+id+"'/>\
                 <input class='googlechart-name' type='hidden' value='"+name+"'/>\
+                <input class='googlechart-configjson' type='hidden' value=''/>\
                 <h1 class='googlechart-handle'>"+name+"<div class='ui-icon ui-icon-trash' title='Delete chart'>x</div></h1>\
-                <div>content</div>\
+                <div>\
+                    <div class='chart_div' style='max-height: 200px; max-width: 400px'></div>\
+                </div>\
+                <input type='button' value='Edit Chart' onclick='openEditor(\""+id+"\");'/>\
             </li>";
         jQuery(googlechart).appendTo("#googlecharts-list");
     }
@@ -138,7 +166,7 @@ jQuery(document).ready(function($){
         jsonObj.charts = charts;
         jsonStr = JSON.stringify(jsonObj);
         query = {'charts':jsonStr};
-        console.log(JSON.stringify(jsonObj));
+//        console.log(JSON.stringify(jsonObj));
         jQuery.ajax({
             url:ajax_baseurl+"/googlechart.submit_charts",
             type:'post',
@@ -155,7 +183,7 @@ jQuery(document).ready(function($){
             type:'post',
             success:function(data){
                 if (data){
-                    console.log(data);
+//                    console.log(data);
                     jsonObj = JSON.parse(data);
                     charts = jsonObj.charts;
                     jQuery(charts).each(function(index,chart){
@@ -168,7 +196,8 @@ jQuery(document).ready(function($){
 
     }
     jQuery("#googlecharts-list").sortable({ 
-        handle : '.googlechart-handle'
+        handle : '.googlechart-handle',
+        stop: function(event,ui){console.log(ui.item[0]);}
     }); 
     jQuery("#addgooglechart").click(openAddDialog);
     jQuery("#googlecharts-list").delegate(".ui-icon-trash","click",function(){
