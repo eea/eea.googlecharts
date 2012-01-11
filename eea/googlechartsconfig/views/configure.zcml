@@ -2,5 +2,6 @@
 
   <include package=".barchart" />
   <include package=".piechart" />
+  <include package=".googlecharts" />
 
 </configure>

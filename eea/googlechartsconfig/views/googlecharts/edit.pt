@@ -1,0 +1,15 @@
+<div id="googlecharts-config" tal:define="ajax_baseurl string:${view/context/absolute_url}">
+    <script type="text/javascript" tal:content="string:ajax_baseurl = '${ajax_baseurl}';">
+    </script>
+
+    <span class="ui-icon ui-icon-plus ui-corner-all" title="Add new chart" id="addgooglechart">+</span>
+    <form id="googlecharts-form">
+        <ul id="googlecharts-list">
+        </ul>
+        <div id="googlecharts-actionsView">
+            <span class="actionButtons">
+                <input id="googlecharts-submit" type="button" value="Save" class="context"/>
+            </span>
+        </div>
+    </form>
+</div>

@@ -4,4 +4,8 @@
     cookable="True" enabled="on"
     expression="python:'daviz-view.html' in request.URL0"
     id="++resource++eea.googlecharts.view.css" media="all" rel="stylesheet" rendering="import"/>
+ <stylesheet title="GoogleCharts View CSS" cacheable="True" compression="none"
+    cookable="True" enabled="on"
+    expression="python:'daviz-edit.html' in request.URL0"
+    id="++resource++eea.googlecharts.edit.css" media="all" rel="stylesheet" rendering="import"/>
 </object>

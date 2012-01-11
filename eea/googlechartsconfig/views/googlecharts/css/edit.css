@@ -1,0 +1,54 @@
+#googlecharts-config #googlecharts-actionsView{
+    margin-top:1em;
+}
+
+#googlecharts-submit{
+    color:#fff !important;
+    background:#346F83;
+    background-image: -webkit-gradient(linear,0% 40%,0% 70%,from(#478EA5),to(#346F83));
+    background: -webkit-linear-gradient(#478EA5, #346F83); /* Safari 5.1+, Chrome 10+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#478EA5', endColorstr='#346F83'); /* IE6 & IE7 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#478EA5', endColorstr='#346F83')"; /* IE8+ */
+    background-image: -moz-linear-gradient(270deg, #478EA5, #346F83);
+    background-image: -ms-linear-gradient(top,#478EA5,#346F83);
+    background-image: -o-linear-gradient(top,#478EA5,#346F83);
+    background-image: linear-gradient(top,#478EA5,#346F83);
+    font: bold 12px Verdana, Arial, sans-serif;
+    padding: 7px 12px;
+    position: relative;
+    display: inline-block;
+    text-shadow: 0 1px 1px #000;
+    -webkit-transition: border-color .218s;
+       -moz-transition: border .218s;
+       -ms-transition: border-color .218s;
+         -o-transition: border-color .218s;
+            transition: border-color .218s;
+    -webkit-transition: box-shadow .218s;
+       -moz-transition: box-shadow .218s;
+       -ms-transition: box-shadow .218s;
+         -o-transition: box-shadow .218s;
+            transition: box-shadow .218s;
+    border: 1px solid #346F83;
+    -webkit-border-radius: 2px;
+       -moz-border-radius: 2px;
+            border-radius: 2px;
+}
+
+#googlecharts-config .ui-icon-plus{
+    float-left;
+    border: 2px solid #CCCCCC;
+}
+
+.googlechart-handle{
+    cursor:move;
+}
+
+#googlecharts-list{
+    list-style-type:none !important;
+    list-style-image:none !important;
+    margin:0 !important;
+}
+
+/*.googlechart-dialog-chartid-div label{
+    font-weight:bold;
+}*/

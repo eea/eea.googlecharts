@@ -20,22 +20,3 @@ class Edit(EditForm):
     """
     label = u"PieChart settings"
     form_fields = Fields(IGoogleChartPieChartEdit)
-    def update(self):
-        accessor = queryAdapter(self.context, IDavizConfig)
-        for facet in accessor.facets:
-            filter_name = unicode('filter_'+facet['name'])
-            filter_title = unicode(facet['label'])
-
-            if not self.form_fields.get(filter_name):
-                if facet['item_type'] == 'text':
-                    field = schema.TextLine(__name__=filter_name,
-                                title=filter_title,
-                                required=False)
-                if facet['item_type'] == 'number':
-                    field = schema.Float(__name__=filter_name,
-                                title=filter_title,
-                                required=False)
-                self.form_fields = self.form_fields + form.Fields(field)
-            else:
-                self.form_fields.get(filter_name).field.title = filter_title
-        super(Edit, self).update()

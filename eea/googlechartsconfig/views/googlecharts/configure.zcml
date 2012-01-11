@@ -1,0 +1,75 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:daviz="http://namespaces.zope.org/daviz"
+  xmlns:browser="http://namespaces.zope.org/browser">
+
+  <daviz:view name="googlechart.googlecharts" />
+  
+  <browser:page
+    name="googlechart.googlecharts"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="view.pt"
+    class=".view.View"
+    permission="zope2.View"
+    />
+
+  <!--browser:page
+    name="googlechart.googlecharts.edit"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".edit.Edit"
+    permission="cmf.ModifyPortalContent"
+    /-->
+
+  <browser:resource
+    name="eea.googlecharts.edit.js"
+    file="./js/edit.js"
+  />
+
+  <browser:resource
+    name="json2.js"
+    file="./js/json2.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.edit.css"
+    file="./css/edit.css"
+  />
+
+  <browser:page
+    name="googlechart.googlecharts.edit"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="edit.pt"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    name="googlechart.submit_charts"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".edit.Edit"
+    attribute="submit_charts"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    name="googlechart.get_charts"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".edit.Edit"
+    attribute="get_charts"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    name="googlechart.googlecharts.json"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".view.View"
+    attribute="settingsAndData"
+    permission="zope2.View"
+    />
+
+  <subscriber
+    for="eea.daviz.interfaces.IExhibitJson
+         eea.daviz.interfaces.IDavizFacetDeletedEvent"
+    handler=".events.googlechart_facet_deleted"
+    />
+
+</configure>
