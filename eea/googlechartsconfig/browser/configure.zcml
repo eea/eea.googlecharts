@@ -5,7 +5,7 @@
 
   <browser:page
     for="eea.daviz.interfaces.IExhibitJson"
-    name="googlechart"
+    name="charts"
     template="zpt/googlechart.pt"
     class=".app.view.View"
     permission="zope2.View"

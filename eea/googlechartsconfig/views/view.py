@@ -14,6 +14,7 @@ class View(ViewForm):
     """ GoogleChartView
     """
     columns=[]
+    section = 'Charts'
     view_name = "googlechart.view"
 
     def settingsAndData(self):
