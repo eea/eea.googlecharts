@@ -39,6 +39,7 @@
     name="googlechart.googlecharts.edit"
     for="eea.daviz.interfaces.IExhibitJson"
     template="edit.pt"
+    class=".edit.Edit"
     permission="cmf.ModifyPortalContent"
     />
 

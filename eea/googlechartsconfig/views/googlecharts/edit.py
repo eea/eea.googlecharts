@@ -5,9 +5,12 @@ __author__ = """European Environment Agency (EEA)"""
 __docformat__ = 'plaintext'
 __credits__ = """contributions: Zoltan Szabo"""
 
+import json
+
 from Products.Five import BrowserView
 
-from zope.component import queryAdapter
+from zope.component import queryAdapter, getUtility
+from zope.schema.interfaces import IVocabularyFactory
 from eea.daviz.interfaces import IDavizConfig
 
 class Edit(BrowserView):
@@ -29,3 +32,10 @@ class Edit(BrowserView):
             if (view.get('chartsconfig')):
                 config = view.get('chartsconfig')
         return config
+
+    @property
+    def get_columns(self):
+        vocab = getUtility(IVocabularyFactory, 
+                               name="eea.daviz.vocabularies.FacetsVocabulary")
+        terms = [[term.token, term.title] for term in vocab(self.context)]
+        return json.dumps(terms);
