@@ -1,33 +1,29 @@
-<metal:googlechart define-macro="googlechart">
+<div class="googlechart-panes" style="float:left;">
+  <tal:views define="views python:view.section_views('googlechart');">
+    <tal:view repeat="view_name views">
+      <div tal:define="name python:view_name.split('.')[1]"
+        tal:attributes="id python:'#' + name">
+        <div tal:define="view_page python:view.get_view(view_name)"
+          tal:replace="structure view_page" />
+      </div>
+    </tal:view>
+  </tal:views>
+</div>
 
-    <div class="googlechart-panes" style="float:left;">
-    <tal:views define="views python:view.get_viewsforcategory('googlechart');">
-      <tal:view repeat="view_name views">
-        <div tal:attributes="id python:'#'+view_name.split('.')[1]">
-            <div tal:define="view_page python:view.get_view(view_name)"
-              tal:replace="structure view_page" />
-        </div>
-      </tal:view>
-    </tal:views>
-    </div>
-    <tal:block tal:condition="python:len(view.get_viewsforcategory('googlechart')) > 1">
-    <ul class="googlechart-tabs" style="float:right">
-      <li tal:repeat="view_name python:view.get_viewsforcategory('googlechart')">
-          <a tal:content="python:view_name.split('.')[1]" tal:attributes="href python:'#'+view_name.split('.')[1]"></a>
-      </li>
-    </ul>
-    </tal:block>
-    <div style="clear: both"></div>
-    <script>
-        jQuery(function(){
-            jQuery("ul.googlechart-tabs").tabs("div.googlechart-panes > div");
-/*            var api = $("ul.googlechart-tabs").data("tabs");
-            api.onClick(function(e, index) {
-                //alert(1);
-                //handle click
-            });*/
-        });
+<tal:block tal:condition="python:len(view.section_views('googlechart')) > 1">
+  <ul class="googlechart-tabs" style="float:right">
+    <li tal:repeat="view_name python:view.section_views('googlechart')">
+      <a tal:define="name python:view_name.split('.')[1]"
+         tal:content="name"
+         tal:attributes="href python:'#' + name"></a>
+    </li>
+  </ul>
+</tal:block>
 
-    </script>
+<div style="clear: both"></div>
 
-</metal:googlechart>
+<script>
+  jQuery(function(){
+    jQuery("ul.googlechart-tabs").tabs("div.googlechart-panes > div");
+  });
+</script>
