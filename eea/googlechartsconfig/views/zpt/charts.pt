@@ -15,6 +15,8 @@
             </a>
         </li>
     </ul>
+    <div style="clear:both">
+    </div>
     <div class="googlechart_tab_panes">
         <tal:block tal:repeat="chart charts">
             <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}',${chart/config},${chart/columns}]);">
