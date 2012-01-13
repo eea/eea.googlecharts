@@ -1,0 +1,32 @@
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript">
+    google.load('visualization', '1.0', {packages: ['charteditor']});
+    googlechart_config_array = [];
+</script>
+
+<script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}">
+</script>
+
+<tal:block tal:define="charts view/get_charts">
+    <ul class="googlechart_tabs">
+        <li tal:repeat="chart charts">
+            <a tal:attributes="href string:#${chart/id}" tal:content="chart/name">
+            </a>
+        </li>
+    </ul>
+    <div class="googlechart_tab_panes">
+        <tal:block tal:repeat="chart charts">
+            <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}',${chart/config},${chart/columns}]);">
+            </script>
+            <div>
+            <!--div style="width:1000px" tal:content="chart/config">
+            </div-->
+            <div tal:attributes="id string:googlechart_view_${chart/id}" class="googlechart">
+            </div>
+            <!--div tal:attributes="id string:googlechart_image_view_${chart/id}" class="googlechart">
+            </div-->
+            </div>
+        </tal:block>
+    </div>
+</tal:block>

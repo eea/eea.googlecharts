@@ -3,6 +3,11 @@
  <javascript cacheable="True" compression="safe" cookable="True"
     enabled="on" expression="python:'daviz-edit.html' in request.URL0" 
     id="++resource++eea.googlecharts.edit.js" inline="False"/>
+
+ <javascript cacheable="True" compression="safe" cookable="True"
+    enabled="on" expression="python:'daviz-view.html' in request.URL0" 
+    id="++resource++eea.googlecharts.view.js" inline="False"/>
+
  <javascript cacheable="True" compression="safe" cookable="True"
     enabled="on" expression="python:'daviz-edit.html' in request.URL0" 
     id="++resource++json2.js" inline="False"/>

@@ -383,14 +383,6 @@ jQuery(document).ready(function($){
         saveCharts();
     });
 
-    var api = jQuery("#daviz-views-edit ul.formTabs").data("tabs");
-    api.onClick(function(e, index) {
-        if (jQuery(api.getTabs()[index]).attr('href').indexOf('googlechart-googlecharts') != -1){
-            if (jQuery(api.getTabs()[index]).attr('loaded') != 'loaded'){
-                jQuery(api.getTabs()[index]).attr('loaded','loaded');
-                loadCharts();
-            }
-        }
-    });
+    loadCharts();
 });
 

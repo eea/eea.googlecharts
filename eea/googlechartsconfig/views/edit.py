@@ -16,7 +16,7 @@ from eea.daviz.interfaces import IDavizConfig
 class Edit(BrowserView):
     """ Edit GoogleCharts form
     """
-
+    label = "Googlechart Edit"
     def submit_charts(self):
         mutator = queryAdapter(self.context, IDavizConfig)
         data = {}

@@ -1,32 +1,14 @@
+# -*- coding: utf-8 -*-
+""" googlecharts interfaces
+"""
+__author__ = """European Environment Agency (EEA)"""
+__docformat__ = 'plaintext'
+__credits__ = """contributions: Zoltan Szabo"""
+
 from zope import schema
+from eea.daviz.views.interfaces import IExhibitView
 
-from zope.interface import Interface
-
-class IGoogleChartEdit(Interface):
-    """ GoogleChartedit
+class IGoogleCharts(IExhibitView):
+    """ GoogleCharts
     """
-    chartTitle = schema.TextLine(
-        title=u'Chart Title',
-        description=u'The title of the chart',
-        required=False
-    )
-
-    chartType = schema.Choice(
-        title=u'Chart Type',
-        description=u'Select type of chart',
-        required=True,
-        values=(u"ImageChart", u"HTMLChart")
-    )
-
-    chartWidth = schema.Int(
-        title=u'Width',
-        description=u'The width of the chart',
-        required=False
-    )
-
-    chartHeight = schema.Int(
-        title=u'Height',
-        description=u'The height of the chart',
-        required=False
-    )
 
