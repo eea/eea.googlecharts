@@ -30,6 +30,8 @@ class View(ViewForm):
         for view in mutator.views:
             if (view.get('chartsconfig')):
                 config = view.get('chartsconfig')
+        if config == "":
+            return []
         return json.load(StringIO(config))['charts']
 
     @property

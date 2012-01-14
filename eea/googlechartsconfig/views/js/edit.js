@@ -178,7 +178,6 @@ function openEditColumns(id){
 }
 
 jQuery(document).ready(function($){
-
     function addChart(id, name, config, columns){
         config = typeof(config) != 'undefined' ? config : "";
         columns = typeof(columns) != 'undefined' ? columns : "";
@@ -204,9 +203,11 @@ jQuery(document).ready(function($){
         jQuery(googlechart).appendTo("#googlecharts-list");
         drawChart(id);
     }
+
     function removeChart(id){
         jQuery("#"+id).remove()
     }
+
     function isValidAddDialog(){
         errorMsgMissing = 
             "<div class='googlechart-dialog-errormsg'>\
@@ -281,6 +282,7 @@ jQuery(document).ready(function($){
 
         return isValid;
     }
+
     function openAddDialog(){
         jQuery(".googlecharts-addchart-dialog").remove();
         addchartdialog=
@@ -363,26 +365,43 @@ jQuery(document).ready(function($){
         });
 
     }
-    jQuery("#googlecharts-list").sortable({ 
-        handle : '.googlechart-handle',
-        stop: function(event,ui){
-            draggedItem = jQuery(ui.item[0]).attr('id');
-            liName = "googlechartid";
-            if (draggedItem.substr(0,liName.length) == liName){
-                id = draggedItem.substr(liName.length+1)
-                drawChart(id);
-            }
-        }
-    }); 
-    jQuery("#addgooglechart").click(openAddDialog);
-    jQuery("#googlecharts-list").delegate(".ui-icon-trash","click",function(){
-                    removeChart(jQuery(this).closest('.googlechart').attr('id')); 
+
+    function init_googlecharts_edit(){
+
+        jQuery(".formTab").live("click",function(){
+            if (jQuery("#googlecharts-config").is(":visible")){
+                if (jQuery("#googlecharts-config").attr('loaded')!='loaded'){
+                    jQuery("#googlecharts-config").attr('loaded','loaded');
+
+                    jQuery("#googlecharts-list").sortable({ 
+                        handle : '.googlechart-handle',
+                        stop: function(event,ui){
+                            draggedItem = jQuery(ui.item[0]).attr('id');
+                            liName = "googlechartid";
+                            if (draggedItem.substr(0,liName.length) == liName){
+                                id = draggedItem.substr(liName.length+1)
+                                drawChart(id);
+                            }
+                        }
+                    }); 
+
+                    jQuery("#addgooglechart").click(openAddDialog);
+                    jQuery("#googlecharts-list").delegate(".ui-icon-trash","click",function(){
+                        removeChart(jQuery(this).closest('.googlechart').attr('id')); 
                     });
 
-    jQuery('#googlecharts-submit').click(function(e){
-        saveCharts();
-    });
+                    jQuery('#googlecharts-submit').click(function(e){
+                        saveCharts();
+                    });
+                    loadCharts();
+                }
+            }
+        });
+    }
 
-    loadCharts();
+    init_googlecharts_edit();
+    jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
+        init_googlecharts_edit();
+    });
 });
 
