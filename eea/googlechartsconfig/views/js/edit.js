@@ -7,55 +7,11 @@ defaultChart = {
            'options': {'legend':'none'},
     };
 
-col0 = ["A", "B", "C", "D"];
-cols = [[1, 8, 2, 4],
-        [4, 1, 5, 7],
-        [9, 3, 4, 6],
-        [8, 4, 2, 6],
-        [5, 2, 7, 1]];
 
 function openEditor(elementId) {
     chartId = elementId;
     title = jQuery("#googlechartid_"+elementId+" .googlechart-name").attr("value");
 
-    chartColumns_str = jQuery("#googlechartid_"+elementId+" .googlechart-columns").val();
-    if (chartColumns_str == ""){
-        chartColumns = []
-    }
-    else{
-        chartColumns = JSON.parse(chartColumns_str);
-    }
-
-    if (chartColumns.length > 0){
-        dataTable = [];
-
-        available_column_values = [];
-        available_column_labels = [];
-
-        jQuery(available_columns).each(function(index,value){
-            available_column_values.push(value[0]);
-            available_column_labels.push(value[1]);
-        });
-        columnHeaders = [];
-        jQuery(chartColumns).each(function(index,value){
-            pos = available_column_values.find(value);
-            if (pos){
-                columnHeaders.push(available_column_labels[pos[0]]);
-            }
-        });
-        dataTable.push(columnHeaders)
-
-        columns_nr = columnHeaders.length;
-
-        for (i = 0; i < 4; i++){
-            row = [];
-            row.push(col0[i]);
-            for (j = 0; j < columns_nr -1; j++){
-                row.push(cols[j%5][i]+Math.floor(j/5));
-            }
-            dataTable.push(row);
-        }
-    }
 
     wrapperString = jQuery("#googlechartid_"+elementId+" .googlechart-configjson").attr('value');
     if (wrapperString.length > 0){
@@ -67,9 +23,34 @@ function openEditor(elementId) {
     }
 
 
-    if (chartColumns.length > 0){
-        chart.dataTable = dataTable;
+    dataTable=[];
+    chartColumns_str = jQuery("#googlechartid_"+elementId+" .googlechart-columns").val();
+    if (chartColumns_str == ""){
+        chartColumns = []
     }
+    else{
+        chartColumns = JSON.parse(chartColumns_str);
+    }
+    if (chartColumns.length > 0){
+
+        columnlabels = []
+        jQuery(chartColumns).each(function(index,chart_token){
+            columnlabels.push(available_columns[chart_token]);
+        });
+        dataTable = [];
+        dataTable.push(columnlabels);
+        jQuery(merged_rows.items).each(function(index, merged_row){
+            row = []
+            jQuery(chartColumns).each(function(index,chart_token){
+                row.push(merged_row[chart_token]);
+            });
+            dataTable.push(row);
+        });
+    }
+
+
+    chart.dataTable = dataTable;
+
     chart.options.title = title;
     var wrapper = new google.visualization.ChartWrapper(chart);
 
@@ -155,26 +136,19 @@ function openEditColumns(id){
         chartColumns = JSON.parse(chartColumns_str);
     }
 
-    available_column_values = [];
-    available_column_labels = [];
-
-    jQuery(available_columns).each(function(index,value){
-        if (!chartColumns.find(value[0])){
-            column = '<option value="'+value[0]+'">'+value[1]+'</option>';
+    jQuery.each(available_columns,function(key,value){
+        if (!chartColumns.find(key)){
+            column = '<option value="'+key+'">'+value+'</option>';
             jQuery(column).appendTo(".googlecharts-columns-from");
         }
-        else{
-            available_column_values.push(value[0]);
-            available_column_labels.push(value[1]);
-        }
     });
-    jQuery(chartColumns).each(function(index,value){
-        pos = available_column_values.find(value);
-        if (pos){
-            column = '<option value="'+value+'">'+available_column_labels[pos[0]]+'</option>';
+    jQuery(chartColumns).each(function(index,key){
+        if (available_columns[key]){
+            column = '<option value="'+key+'">'+available_columns[key]+'</option>';
             jQuery(column).appendTo(".googlecharts-columns-to");
         }
     });
+
 }
 
 jQuery(document).ready(function($){

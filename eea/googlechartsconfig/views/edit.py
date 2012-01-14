@@ -38,7 +38,7 @@ class Edit(BrowserView):
         vocab = getUtility(IVocabularyFactory, 
                                name="eea.daviz.vocabularies.FacetsVocabulary")
         terms = [[term.token, term.title] for term in vocab(self.context)]
-        return json.dumps(terms);
+        return json.dumps(dict(terms));
 
     def get_rows(self):
         result = getMultiAdapter((self.context, self.request), name="daviz-relateditems.json")()
