@@ -32,11 +32,9 @@ jQuery(document).ready(function($){
         var chart = new google.visualization.ChartWrapper(chart_json);
         chart.draw();
 
-        hasImg = false;
         chartType = chart_json.chartType;
         switch(chartType){
             case 'BarChart':
-                hasImg = true;
                 chart_json.chartType = "ImageChart";
                 if (chart_json.options.isStacked){
                     chart_json.options.cht = "bhs";
@@ -46,7 +44,6 @@ jQuery(document).ready(function($){
                 }
                 break;
             case 'ColumnChart':
-                hasImg = true;
                 chart_json.chartType = "ImageChart";
                 if (chart_json.options.isStacked){
                     chart_json.options.cht = "bvs";
@@ -56,7 +53,6 @@ jQuery(document).ready(function($){
                 }
                 break;
             case 'PieChart':
-                hasImg = true;
                 chart_json.chartType = "ImageChart";
                 if (chart_json.options.is3D){
                     chart_json.options.cht = "p3";
@@ -64,8 +60,27 @@ jQuery(document).ready(function($){
                 else{
                     chart_json.options.cht = "p";
                 }
+                break;
+            case 'LineChart':
+                chart_json.chartType = "ImageChart";
+                chart_json.options.cht = "lc";
+                break;
+
+            case 'AreaChart':
+                if (!chart_json.options.isStacked){
+                    chart_json.chartType = "ImageAreaChart";
+                }
+                break;
+            case 'ScatterChart':
+                if (!chart_json.options.isStacked){
+                    chart_json.chartType = "ImageChart";
+                    chart_json.options.cht = "s";
+                }
+                break;
+                
+            
         }
-        if (hasImg){
+        if (chartType != chart_json.chartType){
             chart_json['containerId']="googlechart_image_view_"+chart_id;
             var chart = new google.visualization.ChartWrapper(chart_json);
             chart.draw();

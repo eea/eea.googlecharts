@@ -9,7 +9,7 @@ import json
 
 from Products.Five import BrowserView
 
-from zope.component import queryAdapter, getUtility
+from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from eea.daviz.interfaces import IDavizConfig
 
@@ -39,3 +39,7 @@ class Edit(BrowserView):
                                name="eea.daviz.vocabularies.FacetsVocabulary")
         terms = [[term.token, term.title] for term in vocab(self.context)]
         return json.dumps(terms);
+
+    def get_rows(self):
+        result = getMultiAdapter((self.context, self.request), name="daviz-relateditems.json")()
+        return result;

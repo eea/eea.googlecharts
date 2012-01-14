@@ -197,8 +197,8 @@ jQuery(document).ready(function($){
                 <div>\
                     <div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 350px; max-width:600px'></div>\
                 </div>\
-                <input type='button' value='Edit Chart' onclick='openEditor(\""+id+"\");'/>\
                 <input type='button' value='Edit Columns' onclick='openEditColumns(\""+id+"\");'/>\
+                <input type='button' value='Edit Chart' onclick='openEditor(\""+id+"\");'/>\
             </li>";
         jQuery(googlechart).appendTo("#googlecharts-list");
         drawChart(id);
