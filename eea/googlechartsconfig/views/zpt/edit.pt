@@ -3,6 +3,10 @@
 
     <script type="text/javascript">
         google.load('visualization', '1.0', {packages: ['charteditor']});
+
+        jQuery(document).ready(function($){
+            init_googlecharts_edit();
+        });
     </script>
 
 
