@@ -224,10 +224,20 @@ function openAddChartFilterDialog(id){
             used_columns.push(jQuery("#"+value+" .googlechart-filteritem-column").attr("value"));
     });
 
+    chartColumns_str = jQuery("#googlechartid_"+id+" .googlechart-columns").val();
+    if (chartColumns_str == ""){
+        chartColumns = []
+    }
+    else{
+        chartColumns = JSON.parse(chartColumns_str);
+    }
+
     jQuery.each(available_columns,function(key,value){
         if (!used_columns.find(key)){
-            column = '<option value="'+key+'">'+value+'</option>';
-            jQuery(column).appendTo(".googlecharts-filter-columns");
+            if (chartColumns.find(key)){
+                column = '<option value="'+key+'">'+value+'</option>';
+                jQuery(column).appendTo(".googlecharts-filter-columns");
+            }
         }
     });
 
@@ -241,7 +251,7 @@ function openAddChartFilterDialog(id){
 function addChart(id, name, config, columns, filters){
     config = typeof(config) != 'undefined' ? config : "";
     columns = typeof(columns) != 'undefined' ? columns : "";
-    filters = typeof(filters) != 'undefined' ? filters : [];
+    filters = typeof(filters) != 'undefined' ? filters : {};
 
     if (config == ""){
         chart = defaultChart;
@@ -278,8 +288,8 @@ function addChart(id, name, config, columns, filters){
 
     drawChart(id);
 
-    jQuery(filters).each(function(index,value){
-        addFilter(id, value[1], value[0]);
+    jQuery.each(filters,function(key,value){
+        addFilter(id, key, value);
     });
 }
 
@@ -404,14 +414,15 @@ function saveCharts(){
 
         id = "googlechart_filters_"+chart.id;
         var orderedFilter = jQuery("#googlechart_filters_"+chart.id).sortable('toArray');
-        filters = []
+        filters = {}
 
         jQuery(orderedFilter).each(function(index,value){
-            filter = [jQuery("#"+value+" .googlechart-filteritem-type").attr("value"),
+/*            filter = [jQuery("#"+value+" .googlechart-filteritem-type").attr("value"),
                     jQuery("#"+value+" .googlechart-filteritem-column").attr("value")];
-            filters.push(filter);
+            filters.push(filter);*/
+            filters[jQuery("#"+value+" .googlechart-filteritem-column").attr("value")] = jQuery("#"+value+" .googlechart-filteritem-type").attr("value");
         })
-        chart.filters = filters;
+        chart.filters = JSON.stringify(filters);
         charts.push(chart);
     })
     jsonObj.charts = charts;
@@ -437,7 +448,7 @@ function loadCharts(){
                 jsonObj = JSON.parse(data);
                 charts = jsonObj.charts;
                 jQuery(charts).each(function(index,chart){
-                    addChart(chart.id,chart.name,chart.config,chart.columns,chart.filters);
+                    addChart(chart.id,chart.name,chart.config,chart.columns,JSON.parse(chart.filters));
                 })
             }
             DavizEdit.Status.stop("Done");
