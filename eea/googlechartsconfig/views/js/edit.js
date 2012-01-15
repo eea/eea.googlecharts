@@ -7,11 +7,9 @@ defaultChart = {
            'options': {'legend':'none'},
     };
 
-
 function openEditor(elementId) {
     chartId = elementId;
     title = jQuery("#googlechartid_"+elementId+" .googlechart-name").attr("value");
-
 
     wrapperString = jQuery("#googlechartid_"+elementId+" .googlechart-configjson").attr('value');
     if (wrapperString.length > 0){
@@ -22,7 +20,6 @@ function openEditor(elementId) {
         chart = defaultChart;
     }
 
-
     dataTable=[];
     chartColumns_str = jQuery("#googlechartid_"+elementId+" .googlechart-columns").val();
     if (chartColumns_str == ""){
@@ -32,7 +29,6 @@ function openEditor(elementId) {
         chartColumns = JSON.parse(chartColumns_str);
     }
     if (chartColumns.length > 0){
-
         columnlabels = []
         jQuery(chartColumns).each(function(index,chart_token){
             columnlabels.push(available_columns[chart_token]);
@@ -47,7 +43,6 @@ function openEditor(elementId) {
             dataTable.push(row);
         });
     }
-
 
     chart.dataTable = dataTable;
 
@@ -168,13 +163,31 @@ jQuery(document).ready(function($){
                 <input class='googlechart-configjson' type='hidden' value='"+config+"'/>\
                 <input class='googlechart-columns' type='hidden' value='"+columns+"'/>\
                 <h1 class='googlechart-handle'>"+name+"<div class='ui-icon ui-icon-trash' title='Delete chart'>x</div></h1>\
-                <div>\
+                <div style='float:left'>\
                     <div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 350px; max-width:600px'></div>\
                 </div>\
+                <div style='float:right'>\
+                    Filters\
+                    <ul id='googlechart_filters_"+id+"'>\
+                        <li>\
+                            <h1 class='googlechart-filteritem_"+id+"'>filter1</h1>\
+                            a\
+                        </li>\
+                        <li>\
+                            <h1 class='googlechart-filteritem_"+id+"'>filter2</h1>\
+                            a\
+                        </li>\
+                    </ul>\
+                </div>\
+                <div style='clear:both'> </div>\
                 <input type='button' value='Edit Columns' onclick='openEditColumns(\""+id+"\");'/>\
                 <input type='button' value='Edit Chart' onclick='openEditor(\""+id+"\");'/>\
             </li>";
         jQuery(googlechart).appendTo("#googlecharts-list");
+
+        jQuery("#googlechart_filters_"+id).sortable({ 
+            handle : '.googlechart-filteritem_'+id
+        }); 
         drawChart(id);
     }
 
