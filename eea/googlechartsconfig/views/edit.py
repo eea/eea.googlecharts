@@ -33,7 +33,6 @@ class Edit(BrowserView):
                 config = view.get('chartsconfig')
         return config
 
-    @property
     def get_columns(self):
         vocab = getUtility(IVocabularyFactory, 
                                name="eea.daviz.vocabularies.FacetsVocabulary")

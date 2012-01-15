@@ -43,7 +43,8 @@
     cursor:move;
 }
 
-#googlecharts-list{
+#googlecharts-list,
+.googlechart_filters_list{
     list-style-type:none !important;
     list-style-image:none !important;
     margin:0 !important;

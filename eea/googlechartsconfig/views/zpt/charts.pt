@@ -24,6 +24,8 @@
             <div>
                 <!--div style="width:1000px" tal:content="chart/config">
                 </div-->
+                <!--div style="width:1000px" tal:content="chart/filters">
+                </div-->
                 <ul tal:attributes="id string:googlechart_types_tabs_${chart/id}">
                     <li>
                         Original

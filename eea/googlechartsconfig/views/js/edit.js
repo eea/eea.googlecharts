@@ -7,6 +7,11 @@ defaultChart = {
            'options': {'legend':'none'},
     };
 
+available_filter_types = {  0:'Number Range Filter',
+                            1:'String Filter',
+                            2:'Simple Category Filter',
+                            3:'Multiple Category Filter'};
+
 function openAddDialog(){
     jQuery(".googlecharts-addchart-dialog").remove();
     addchartdialog=
@@ -170,9 +175,73 @@ function openEditor(elementId) {
     chartEditor.openDialog(wrapper, {});
 }
 
-function addChart(id, name, config, columns){
+function openAddChartFilterDialog(id){
+    jQuery(".googlecharts-filter-config").remove();
+
+    addfilterdialog = 
+    '<div class="googlecharts-filter-config">\
+        <div class="field">\
+            <label>Column</label>\
+            <span class="required" style="color: #f00;" title="Required"> ■ </span>\
+            <div class="formHelp">Filter Column</div>\
+            <select class="googlecharts-filter-columns">\
+            </select>\
+        </div>\
+        <div class="field">\
+            <label>Type</label>\
+            <span class="required" style="color: #f00;" title="Required"> ■ </span>\
+            <div class="formHelp">Filter Type</div>\
+            <select class="googlecharts-filter-type">\
+            </select>\
+        </div>\
+    </div>';
+
+    jQuery(addfilterdialog).dialog({title:"Add Filter",
+                modal:true,
+                buttons:[
+                    {
+                        text: "Save",
+                        click: function(){
+                            addFilter(id, jQuery(".googlecharts-filter-columns").val(),
+                                jQuery(".googlecharts-filter-type").val());
+
+                            jQuery(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "Cancel",
+                        click: function(){ 
+                            jQuery(this).dialog("close");
+                        }
+                    },
+                ]});
+
+
+    var orderedFilter = jQuery("#googlechart_filters_"+id).sortable('toArray');
+    used_columns = [];
+
+    jQuery(orderedFilter).each(function(index,value){
+            used_columns.push(jQuery("#"+value+" .googlechart-filteritem-column").attr("value"));
+    });
+
+    jQuery.each(available_columns,function(key,value){
+        if (!used_columns.find(key)){
+            column = '<option value="'+key+'">'+value+'</option>';
+            jQuery(column).appendTo(".googlecharts-filter-columns");
+        }
+    });
+
+    jQuery.each(available_filter_types,function(key,value){
+        column = '<option value="'+key+'">'+value+'</option>';
+        jQuery(column).appendTo(".googlecharts-filter-type");
+    });
+
+}
+
+function addChart(id, name, config, columns, filters){
     config = typeof(config) != 'undefined' ? config : "";
     columns = typeof(columns) != 'undefined' ? columns : "";
+    filters = typeof(filters) != 'undefined' ? filters : [];
 
     if (config == ""){
         chart = defaultChart;
@@ -185,21 +254,14 @@ function addChart(id, name, config, columns){
             <input class='googlechart-name' type='hidden' value='"+name+"'/>\
             <input class='googlechart-configjson' type='hidden' value='"+config+"'/>\
             <input class='googlechart-columns' type='hidden' value='"+columns+"'/>\
-            <h1 class='googlechart-handle'>"+name+"<div class='ui-icon ui-icon-trash' title='Delete chart'>x</div></h1>\
+            <h1 class='googlechart-handle'>"+name+"<div class='ui-icon ui-icon-trash remove-chart-icon' title='Delete chart'>x</div></h1>\
             <div style='float:left'>\
                 <div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 350px; max-width:600px'></div>\
             </div>\
-            <div style='float:right'>\
+            <div style='float:right; width:250px'>\
                 Filters\
-                <ul id='googlechart_filters_"+id+"'>\
-                    <li>\
-                        <h1 class='googlechart-filteritem_"+id+"'>filter1</h1>\
-                        a\
-                    </li>\
-                    <li>\
-                        <h1 class='googlechart-filteritem_"+id+"'>filter2</h1>\
-                        a\
-                    </li>\
+                <span class='ui-icon ui-icon-plus ui-corner-all addgooglechartfilter' title='Add new filter'></span>\
+                <ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>\
                 </ul>\
             </div>\
             <div style='clear:both'> </div>\
@@ -212,7 +274,23 @@ function addChart(id, name, config, columns){
         handle : '.googlechart-filteritem_'+id
     });
 
+    jQuery("#addgooglechartfilter_"+id).click(openAddDialog);
+
     drawChart(id);
+
+    jQuery(filters).each(function(index,value){
+        addFilter(id, value[1], value[0]);
+    });
+}
+
+function addFilter(id, column, filtertype){
+    filter = "<li class='googlechart-filteritem' id='googlechart-filter_"+id+"_"+column+"'>\
+                <h1 class='googlechart-filteritem_"+id+"'>"+available_columns[column]+"<div class='ui-icon ui-icon-trash remove-filter-icon' title='Delete filter'>x</div></h1>\
+                "+available_filter_types[filtertype]+"\
+                <input type='hidden' class='googlechart-filteritem-type' value='"+filtertype+"'/>\
+                <input type='hidden' class='googlechart-filteritem-column' value='"+column+"'/>\
+             </li>"
+    jQuery(filter).appendTo("#googlechart_filters_"+id);
 }
 
 function removeChart(id){
@@ -319,7 +397,21 @@ function saveCharts(){
         chart.id = jQuery("#"+value+" .googlechart-id").attr("value");
         chart.name = jQuery("#"+value+" .googlechart-name").attr("value");
         chart.config = jQuery("#"+value+" .googlechart-configjson").attr("value");
+/*        config = JSON.parse(chart.config);
+        config.dataTable = [];
+        chart.config = JSON.stringify(config);*/
         chart.columns = jQuery("#"+value+" .googlechart-columns").attr("value");
+
+        id = "googlechart_filters_"+chart.id;
+        var orderedFilter = jQuery("#googlechart_filters_"+chart.id).sortable('toArray');
+        filters = []
+
+        jQuery(orderedFilter).each(function(index,value){
+            filter = [jQuery("#"+value+" .googlechart-filteritem-type").attr("value"),
+                    jQuery("#"+value+" .googlechart-filteritem-column").attr("value")];
+            filters.push(filter);
+        })
+        chart.filters = filters;
         charts.push(chart);
     })
     jsonObj.charts = charts;
@@ -345,7 +437,7 @@ function loadCharts(){
                 jsonObj = JSON.parse(data);
                 charts = jsonObj.charts;
                 jQuery(charts).each(function(index,chart){
-                    addChart(chart.id,chart.name,chart.config,chart.columns);
+                    addChart(chart.id,chart.name,chart.config,chart.columns,chart.filters);
                 })
             }
             DavizEdit.Status.stop("Done");
@@ -367,8 +459,19 @@ function init_googlecharts_edit(){
     }); 
 
     jQuery("#addgooglechart").click(openAddDialog);
-    jQuery("#googlecharts-list").delegate(".ui-icon-trash","click",function(){
+    jQuery("#googlecharts-list").delegate(".remove-chart-icon","click",function(){
         removeChart(jQuery(this).closest('.googlechart').attr('id')); 
+    });
+
+    jQuery("#googlecharts-list").delegate(".remove-filter-icon","click",function(){
+        jQuery(this).closest('.googlechart-filteritem').remove();
+    });
+
+    jQuery("#googlecharts-list").delegate(".addgooglechartfilter","click",function(){
+        chartId = jQuery(this).closest('.googlechart').attr('id');
+        liName = "googlechartid";
+        id = chartId.substr(liName.length+1);
+        openAddChartFilterDialog(id); 
     });
 
     jQuery('#googlecharts-submit').click(function(e){
