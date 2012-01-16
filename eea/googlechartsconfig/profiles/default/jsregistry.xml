@@ -9,6 +9,6 @@
     id="++resource++eea.googlecharts.view.js" inline="False"/>
 
  <javascript cacheable="True" compression="safe" cookable="True"
-    enabled="on" expression="python:'daviz-edit.html' in request.URL0" 
+    enabled="on" expression="python:'daviz' in request.URL0" 
     id="++resource++json2.js" inline="False"/>
 </object>

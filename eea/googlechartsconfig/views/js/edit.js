@@ -381,11 +381,39 @@ function isValidAddDialog(){
     return isValid;
 }
 
-function drawChart(elementId){
+function drawChart(elementId, add){
+    add = typeof(add) != 'undefined' ? add : "";
+
     wrapperString = jQuery("#googlechartid_"+elementId+" .googlechart-configjson").attr('value');
     if (wrapperString.length > 0){
         wrapperJSON = JSON.parse(wrapperString);
         wrapperJSON['containerId']="googlechart_chart_div_"+elementId;
+
+        dataTable=[];
+        chartColumns_str = jQuery("#googlechartid_"+elementId+" .googlechart-columns").val();
+        if (chartColumns_str == ""){
+            chartColumns = []
+        }
+        else{
+            chartColumns = JSON.parse(chartColumns_str);
+        }
+        if (chartColumns.length > 0){
+            columnlabels = []
+            jQuery(chartColumns).each(function(index,chart_token){
+                columnlabels.push(available_columns[chart_token]);
+            });
+            dataTable.push(columnlabels);
+            jQuery(merged_rows.items).each(function(index, merged_row){
+                row = []
+                jQuery(chartColumns).each(function(index,chart_token){
+                    row.push(merged_row[chart_token]);
+                });
+                dataTable.push(row);
+            });
+        }
+
+        wrapperJSON.dataTable = dataTable;
+
         var wrapper = new google.visualization.ChartWrapper(wrapperJSON);
         wrapper.draw();
     }
@@ -407,9 +435,9 @@ function saveCharts(){
         chart.id = jQuery("#"+value+" .googlechart-id").attr("value");
         chart.name = jQuery("#"+value+" .googlechart-name").attr("value");
         chart.config = jQuery("#"+value+" .googlechart-configjson").attr("value");
-/*        config = JSON.parse(chart.config);
+        config = JSON.parse(chart.config);
         config.dataTable = [];
-        chart.config = JSON.stringify(config);*/
+        chart.config = JSON.stringify(config);
         chart.columns = jQuery("#"+value+" .googlechart-columns").attr("value");
 
         id = "googlechart_filters_"+chart.id;
