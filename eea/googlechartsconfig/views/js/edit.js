@@ -266,7 +266,7 @@ function addChart(id, name, config, columns, filters){
             <input class='googlechart-columns' type='hidden' value='"+columns+"'/>\
             <h1 class='googlechart-handle'>"+name+"<div class='ui-icon ui-icon-trash remove-chart-icon' title='Delete chart'>x</div></h1>\
             <div style='float:left'>\
-                <div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 350px; max-width:600px'></div>\
+                <div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 350px; max-width:600px; overflow:auto'></div>\
             </div>\
             <div style='float:right; width:250px'>\
                 Filters\
