@@ -7,6 +7,8 @@ __credits__ = """contributions: Zoltan Szabo"""
 
 import json
 
+from StringIO import StringIO
+
 from Products.Five import BrowserView
 
 from zope.component import queryAdapter, getUtility, getMultiAdapter
@@ -41,4 +43,8 @@ class Edit(BrowserView):
 
     def get_rows(self):
         result = getMultiAdapter((self.context, self.request), name="daviz-relateditems.json")()
-        return result;
+        result_json = json.load(StringIO(result));
+        stripped_result = {}
+        stripped_result['properties'] = result_json['properties']
+        stripped_result['items'] = result_json['items'][:5]
+        return json.dumps(stripped_result);
