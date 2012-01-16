@@ -29,10 +29,10 @@
                 </div-->
                 <ul tal:attributes="id string:googlechart_types_tabs_${chart/id}" class="googlechart_tabs">
                     <li>
-                        Original
+                        <a href="#">Original</a>
                     </li>
                     <li>
-                        Image version
+                        <a href="#">Image version</a>
                     </li>
                 </ul>
                 <div style="clear:both">

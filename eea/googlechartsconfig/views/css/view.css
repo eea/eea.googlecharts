@@ -11,7 +11,6 @@ ul.googlechart_tabs li a{
     color:#000000 !important;
 }
 
-ul.googlechart_tabs li.current,
 ul.googlechart_tabs li a.current{
     font-weight:bold;
 }
