@@ -4,7 +4,7 @@ var chartId = '';
 defaultChart = {
            'chartType':'LineChart',
            "dataTable": [["column1", "column2"], ["A", 1], ["B", 2], ["C", 3], ["D", 2]],
-           'options': {'legend':'none'},
+           'options': {'legend':'none'}
     };
 
 available_filter_types = {  0:'Number Range Filter',
@@ -266,9 +266,9 @@ function addChart(id, name, config, columns, filters){
             <input class='googlechart-columns' type='hidden' value='"+columns+"'/>\
             <h1 class='googlechart-handle'>"+name+"<div class='ui-icon ui-icon-trash remove-chart-icon' title='Delete chart'>x</div></h1>\
             <div style='float:left'>\
-                <div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 350px; max-width:600px; overflow:auto'></div>\
+                <div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 350px; max-width:500px; overflow:auto'></div>\
             </div>\
-            <div style='float:right; width:250px'>\
+            <div style='float:right; width:180px'>\
                 Filters\
                 <span class='ui-icon ui-icon-plus ui-corner-all addgooglechartfilter' title='Add new filter'></span>\
                 <ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>\
