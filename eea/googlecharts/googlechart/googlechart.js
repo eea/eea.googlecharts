@@ -9,7 +9,7 @@ function loadJSON(settings_and_data_url, container_id){
     jQuery.ajax({
         url: settings_and_data_url,
         success: function(data){
-            drawVisualization (data, container_id);
+            drawVisualization(data, container_id);
         }
     });
 }
