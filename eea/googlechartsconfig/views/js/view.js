@@ -7,19 +7,19 @@ jQuery(document).ready(function($){
     jQuery(googlechart_config_array).each(function(index, value){
         jQuery("#googlechart_types_tabs_"+value[0]).tabs("#googlechart_types_panes_"+value[0]+" > div");
 
-        chart_id = value[0]
-        chart_json = value[1]
-        chart_columns = value[2]
-        chart_filters = value[3]
+        chart_id = value[0];
+        chart_json = value[1];
+        chart_columns = value[2];
+        chart_filters = value[3];
 
-        columnlabels = []
+        columnlabels = [];
         jQuery(chart_columns).each(function(index,chart_token){
             columnlabels.push(available_columns[chart_token]);
         });
         dataTable = [];
         dataTable.push(columnlabels);
         jQuery(merged_rows.items).each(function(index, merged_row){
-            row = []
+            row = [];
             jQuery(chart_columns).each(function(index,chart_token){
                 row.push(merged_row[chart_token]);
             });
@@ -27,7 +27,7 @@ jQuery(document).ready(function($){
         });
         chart_json.options.width = 800;
         chart_json.options.height = 600;
-        chart_json.dataTable = []
+        chart_json.dataTable = [];
 
         chart_json.containerId = "googlechart_view_"+chart_id;
         var originalChart = new google.visualization.ChartWrapper(
@@ -93,10 +93,10 @@ jQuery(document).ready(function($){
            charts_array.push(imageChart);
         }
         else{
-            jQuery("#googlechart_types_tabs_"+value[0]).hide()
+            jQuery("#googlechart_types_tabs_"+value[0]).hide();
         }
 
-        filters_array = []
+        filters_array = [];
         if (chart_filters){
             jQuery.each(chart_filters,function(key, value){
                 filters_div = "googlechart_filters_"+chart_id;
@@ -126,7 +126,7 @@ jQuery(document).ready(function($){
                         filterSettings.options.ui.allowMultiple = true;
                         filterSettings.options.ui.selectedValuesLayout = 'belowStacked';
                         break;
-                };
+                }
                 filter = new google.visualization.ControlWrapper(filterSettings);
                 filters_array.push(filter);
             });
@@ -142,7 +142,7 @@ jQuery(document).ready(function($){
         }
 
         else{
-            chart_json_simple = value[1]
+            chart_json_simple = value[1];
             chart_json_simple.options.width = 800;
             chart_json_simple.options.height = 600;
             chart_json_simple.containerId = "googlechart_view_"+chart_id;
