@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ GoogleCharts View
 """
 __author__ = """European Environment Agency (EEA)"""
@@ -6,8 +5,6 @@ __docformat__ = 'plaintext'
 __credits__ = """contributions: Zoltan Szabo"""
 
 import json
-
-from zope.interface import implements
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 
@@ -25,6 +22,8 @@ class View(ViewForm):
     section = "Charts"
 
     def get_charts(self):
+        """ Charts
+        """
         mutator = queryAdapter(self.context, IDavizConfig)
         config = ''
         for view in mutator.views:
@@ -36,11 +35,16 @@ class View(ViewForm):
 
     @property
     def get_columns(self):
-        vocab = getUtility(IVocabularyFactory, 
+        """ Columns
+        """
+        vocab = getUtility(IVocabularyFactory,
                                name="eea.daviz.vocabularies.FacetsVocabulary")
         terms = [[term.token, term.title] for term in vocab(self.context)]
-        return json.dumps(dict(terms));
+        return json.dumps(dict(terms))
 
     def get_rows(self):
-        result = getMultiAdapter((self.context, self.request), name="daviz-relateditems.json")()
-        return result;
+        """ Rows
+        """
+        result = getMultiAdapter((self.context, self.request),
+                                 name="daviz-relateditems.json")()
+        return result
