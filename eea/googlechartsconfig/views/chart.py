@@ -33,7 +33,6 @@ class View(ViewForm):
             return []
         return json.load(StringIO(config))['charts']
 
-    @property
     def get_columns(self):
         """ Columns
         """
@@ -48,3 +47,13 @@ class View(ViewForm):
         result = getMultiAdapter((self.context, self.request),
                                  name="daviz-relateditems.json")()
         return result
+
+    def get_full_chart(self):
+        chart = {}
+        chart['json'] = self.request['json']
+        chart['width'] = self.request['width']
+        chart['height'] = self.request['height']
+        chart['columns'] = self.request['columns']
+        chart['data'] = self.get_rows()
+        chart['available_columns'] = self.get_columns
+        return chart

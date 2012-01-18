@@ -35,7 +35,7 @@ jQuery(document).ready(function($){
         );
 
 
-        chart_json_img = JSON.parse(JSON.stringify(chart_json));
+/*        chart_json_img = JSON.parse(JSON.stringify(chart_json));
 
         chartType = chart_json_img.chartType;
         charts_array = [];
@@ -95,7 +95,7 @@ jQuery(document).ready(function($){
         else{
             jQuery("#googlechart_types_tabs_"+value[0]).hide();
         }
-
+*/
         filters_array = [];
         if (chart_filters){
             jQuery.each(chart_filters,function(key, value){
@@ -136,7 +136,7 @@ jQuery(document).ready(function($){
             var dashboard = new google.visualization.Dashboard(
               document.getElementById('googlechart_types_panes_'+chart_id));
 
-            dashboard.bind(filters_array, charts_array);
+            dashboard.bind(filters_array, originalChart);
 
             dashboard.draw(dataTable);
         }
@@ -154,13 +154,13 @@ jQuery(document).ready(function($){
 
             originalChart_simple.draw();
 
-            if (charts_array.length == 2){
+  /*          if (charts_array.length == 2){
                 chart_json_img.dataTable = dataTable;
                 var imageChart_simple = new google.visualization.ChartWrapper(
                     chart_json_img
                 );
                 imageChart_simple.draw();
-            }
+            }*/
         }
     });
 });

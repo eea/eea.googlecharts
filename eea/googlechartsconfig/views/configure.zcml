@@ -14,6 +14,14 @@
     />
 
   <browser:page
+    name="chart-full"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="zpt/chart-full.pt"
+    class=".chart.View"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="googlechart.googlecharts"
     for="eea.daviz.interfaces.IExhibitJson"
     template="zpt/charts.pt"

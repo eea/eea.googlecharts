@@ -173,10 +173,12 @@ function drawChart(elementId, add){
     }
 }
 
-function addChart(id, name, config, columns, filters){
+function addChart(id, name, config, columns, filters, width, height){
     config = typeof(config) != 'undefined' ? config : "";
     columns = typeof(columns) != 'undefined' ? columns : "";
     filters = typeof(filters) != 'undefined' ? filters : {};
+    width = typeof(width) != 'undefined' ? width : 800;
+    height = typeof(height) != 'undefined' ? width : 600;
 
     if (config === ""){
         chart = defaultChart;
@@ -186,10 +188,35 @@ function addChart(id, name, config, columns, filters){
     googlechart = "" +
         "<li class='googlechart daviz-facet-edit' id='googlechartid_"+id+"'>" +
             "<input class='googlechart-id' type='hidden' value='"+id+"'/>" +
-            "<input class='googlechart-name' type='hidden' value='"+name+"'/>" +
             "<input class='googlechart-configjson' type='hidden' value='"+config+"'/>" +
             "<input class='googlechart-columns' type='hidden' value='"+columns+"'/>" +
-            "<h1 class='googlechart-handle'>"+name+"<div class='ui-icon ui-icon-trash remove-chart-icon' title='Delete chart'>x</div></h1>" +
+            "<h1 class='googlechart-handle'>"+id+"<div class='ui-icon ui-icon-trash remove-chart-icon' title='Delete chart'>x</div></h1>" +
+            "<table>"+
+                "<tr>"+
+                    "<td>"+
+                        "Friendly name:"+
+                    "</td>"+
+                    "<td>"+
+                        "<input class='googlechart-name' type='text' value='"+name+"' style='width:100px'/>" +
+                    "</td>"+
+                "</tr>"+
+                "<tr>"+
+                    "<td>"+
+                        "Width:"+
+                    "</td>"+
+                    "<td>"+
+                        "<input class='googlechart-width' type='text' value='"+width+"' style='width:100px'/>" +
+                    "</td>"+
+                "</tr>"+
+                "<tr>"+
+                    "<td>"+
+                        "Height:"+
+                    "</td>"+
+                    "<td>"+
+                        "<input class='googlechart-height' type='text' value='"+height+"' style='width:100px'/>" +
+                    "</td>"+
+                "</tr>"+
+            "</table>"+
             "<div style='float:left'>" +
                 "<div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 350px; max-width:500px; overflow:auto'></div>" +
             "</div>" +
@@ -202,6 +229,7 @@ function addChart(id, name, config, columns, filters){
             "<div style='clear:both'> </div>" +
             "<input type='button' value='Edit Columns' onclick='openEditColumns(\""+id+"\");'/>" +
             "<input type='button' value='Edit Chart' onclick='openEditor(\""+id+"\");'/>" +
+            "<a class='preview-button'>preview Chart</a>"+
         "</li>";
     jQuery(googlechart).appendTo("#googlecharts-list");
 
@@ -298,6 +326,7 @@ function openEditColumns(id){
 function redrawChart(){
     jsonString = chartEditor.getChartWrapper().toJSON();
     jQuery("#googlechartid_"+chartId+" .googlechart-configjson").attr('value',jsonString);
+    jQuery("#googlechartid_"+chartId+" .googlechart-name").attr('value',chartEditor.getChartWrapper().getOption('title'));
     chartEditor.getChartWrapper().draw(jQuery("#googlechart_chart_div_"+chartId)[0]);
 }
 
@@ -516,6 +545,20 @@ function init_googlecharts_edit(){
     jQuery('#googlecharts-submit').click(function(e){
         saveCharts();
     });
+
+    jQuery("#googlecharts-list").delegate("a.preview-button", "hover", function(){
+        console.log("hover");
+        width = jQuery("#googlechartid_chart1 .googlechart-width").attr("value");
+        height = jQuery("#googlechartid_chart1 .googlechart-height").attr("value");
+        params = "?json="+encodeURIComponent(jQuery("#googlechartid_chart1 .googlechart-configjson").attr("value"));
+        params += "&columns="+encodeURIComponent(jQuery("#googlechartid_chart1 .googlechart-columns").attr("value"));
+        params += "&width="+width;
+        params += "&height="+height;
+        console.log(params);
+        jQuery(this).attr("href", "chart-full"+params);
+        jQuery(this).fancybox({type:'iframe', width:parseInt(width), height:parseInt(height), autoDimensions:false});
+    });
+
     loadCharts();
 }
 
