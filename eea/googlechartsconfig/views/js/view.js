@@ -1,5 +1,5 @@
 jQuery(document).ready(function($){
-    jQuery(".googlechart_tab_panes").delegate("a.fullscreen-button", "hover", function(){
+    jQuery(".googlechart_tab_panes").delegate("a.fullsize-button", "hover", function(){
         var width, height, name, configjson, columns;
         id = jQuery(this).closest('.googlechart').attr('chart_id'); 
         var aobj = this;
@@ -49,8 +49,8 @@ jQuery(document).ready(function($){
             });
             dataTable.push(row);
         });
-        chart_json.options.width = 800;
-        chart_json.options.height = 600;
+        chart_json.options.width = 600;
+        chart_json.options.height = 400;
         chart_json.dataTable = [];
 
         chart_json.containerId = "googlechart_view_"+chart_id;
@@ -98,7 +98,7 @@ jQuery(document).ready(function($){
             var dashboard = new google.visualization.Dashboard(
               document.getElementById('googlechart_types_panes_'+chart_id));
 
-            dashboard.bind(filters_array, originalChart);
+            dashboard.bind(filters_array, chart);
 
             dashboard.draw(dataTable);
         }

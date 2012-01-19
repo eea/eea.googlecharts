@@ -173,12 +173,13 @@ function drawChart(elementId, add){
     }
 }
 
-function addChart(id, name, config, columns, filters, width, height){
-    config = typeof(config) != 'undefined' ? config : "";
-    columns = typeof(columns) != 'undefined' ? columns : "";
-    filters = typeof(filters) != 'undefined' ? filters : {};
-    width = typeof(width) != 'undefined' ? width : 800;
-    height = typeof(height) != 'undefined' ? width : 600;
+function addChart(id, name, config, columns, filters, width, height, filter_pos){
+    config = typeof(config) !== 'undefined' ? config : "";
+    columns = typeof(columns) !== 'undefined' ? columns : "";
+    filters = typeof(filters) !== 'undefined' ? filters : {};
+    width = typeof(width) !== 'undefined' ? width : 800;
+    height = typeof(height) !== 'undefined' ? height : 600;
+    filter_pos = typeof(filter_pos) !== 'undefined' ? filter_pos : 0;
 
     if (config === ""){
         chart = defaultChart;
@@ -200,17 +201,17 @@ function addChart(id, name, config, columns, filters, width, height){
                         "<input class='googlechart-name' type='text' value='"+name+"' style='width:100px'/>" +
                     "</td>"+
                     "<td>"+
-                        "Width:"+
+                        "Width: "+
                     "</td>"+
                     "<td>"+
                         "<input class='googlechart-width' type='text' value='"+width+"' style='width:100px'/>" +
                     "</td>"+
                     "<td>"+
                         "Filter position:"+
-                        "Top:<input type='radio' name='aaa' value='0'/>" +
-                        "Left:<input type='radio' name='aaa' value='0'/>" +
-                        "Bottom:<input type='radio' name='aaa' value='0'/>" +
-                        "Right:<input type='radio' name='aaa' value='0'/>" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='0' "+((filter_pos == 0)?"checked='checked'":"")+"'/>Top" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='1' "+((filter_pos == 1)?"checked='checked'":"")+"'/>Left" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='2' "+((filter_pos == 2)?"checked='checked'":"")+"'/>Bottom" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='3' "+((filter_pos == 3)?"checked='checked'":"")+"'/>Right" +
                     "</td>"+
                 "</tr>"+
                 "<tr>"+
@@ -232,17 +233,13 @@ function addChart(id, name, config, columns, filters, width, height){
             "<div style='float:right; width:180px'>" +
                 "Filters" +
                 "<span class='ui-icon ui-icon-plus ui-corner-all addgooglechartfilter' title='Add new filter'></span>" +
-                "Top<input type='radio' name='a' value='0'"+
-                "Left<input type='radio' name='a' value='1'"+
-                "Bottom<input type='radio' name='a' value='2'"+
-                "Right<input type='radio' name='a' value='3'"+
                 "<ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>" +
                 "</ul>" +
             "</div>" +
             "<div style='clear:both'> </div>" +
             "<input type='button' value='Edit Columns' onclick='openEditColumns(\""+id+"\");'/>" +
             "<input type='button' value='Edit Chart' onclick='openEditor(\""+id+"\");'/>" +
-            "<a class='preview-button'>Preview Chart</a>"+
+            "<a style='float:right' class='preview-button'>Preview Chart</a>"+
         "</li>";
     jQuery(googlechart).appendTo("#googlecharts-list");
 
@@ -479,6 +476,8 @@ function saveCharts(){
         chart.config = jQuery("#"+value+" .googlechart-configjson").attr("value");
         chart.width = jQuery("#"+value+" .googlechart-width").attr("value");
         chart.height = jQuery("#"+value+" .googlechart-height").attr("value");
+        chart.filterposition = jQuery("#"+value+" .googlechart-filterposition:checked").attr("value");
+        console.log(chart.filterposition);
         config = JSON.parse(chart.config);
         config.options.title = chart.name;
         config.dataTable = [];
@@ -517,7 +516,7 @@ function loadCharts(){
                 jsonObj = JSON.parse(data);
                 charts = jsonObj.charts;
                 jQuery(charts).each(function(index,chart){
-                    addChart(chart.id,chart.name,chart.config,chart.columns,JSON.parse(chart.filters), chart.width, chart.height);
+                    addChart(chart.id,chart.name,chart.config,chart.columns,JSON.parse(chart.filters), chart.width, chart.height, chart.filterposition);
                 });
             }
             DavizEdit.Status.stop("Done");

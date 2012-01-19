@@ -58,7 +58,7 @@
                                             name = '${chart/name}'">
     </script>
 
-    <form id="export" action='batik-url' method="POST">
+    <form id="export" action='http://unicorn.eea.europa.eu/highcharts/exporting-server/' method="POST">
         <input type="hidden" id="svg" name="svg"/>
         <input type="hidden" id="filename" name="filename"/>
         <input type="hidden" id="type" name="type"/>

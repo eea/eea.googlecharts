@@ -22,11 +22,32 @@
             <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}',${chart/config},${chart/columns},${chart/filters},${chart/width}, ${chart/height}]);">
             </script>
             <div tal:attributes="chart_id chart/id" class="googlechart">
-                <a class="fullscreen-button">Full Screen</a>
-                <div tal:attributes="id string:googlechart_filters_${chart/id}"></div>
-                <div tal:attributes="id string:googlechart_types_panes_${chart/id}">
-                    <div tal:attributes="id string:googlechart_view_${chart/id}" class="googlechart">
-                    </div>
+                <a class="fullsize-button">Full Size</a>
+                <div tal:attributes="id string:googlechart_types_panes_${chart/id}" tal:define="filterpos python:int(chart['filterposition'])">
+                    <tal:block tal:condition="python:filterpos==0">
+                        <div tal:attributes="id string:googlechart_filters_${chart/id}">
+                        </div>
+                        <div tal:attributes="id string:googlechart_view_${chart/id}" class="googlechart">
+                        </div>
+                    </tal:block>
+                    <tal:block tal:condition="python:filterpos==1">
+                        <div tal:attributes="id string:googlechart_filters_${chart/id}" style="float:left;">
+                        </div>
+                        <div tal:attributes="id string:googlechart_view_${chart/id}" class="googlechart" style="float:left;">
+                        </div>
+                    </tal:block>
+                    <tal:block tal:condition="python:filterpos==2">
+                        <div tal:attributes="id string:googlechart_view_${chart/id}" class="googlechart">
+                        </div>
+                        <div tal:attributes="id string:googlechart_filters_${chart/id}">
+                        </div>
+                    </tal:block>
+                    <tal:block tal:condition="python:filterpos==3">
+                        <div tal:attributes="id string:googlechart_view_${chart/id}" class="googlechart"  style="float:left;">
+                        </div>
+                        <div tal:attributes="id string:googlechart_filters_${chart/id}" style="float:left;">
+                        </div>
+                    </tal:block>
                 </div>
             </div>
         </tal:block>
