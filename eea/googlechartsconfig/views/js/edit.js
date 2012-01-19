@@ -477,7 +477,6 @@ function saveCharts(){
         chart.width = jQuery("#"+value+" .googlechart-width").attr("value");
         chart.height = jQuery("#"+value+" .googlechart-height").attr("value");
         chart.filterposition = jQuery("#"+value+" .googlechart-filterposition:checked").attr("value");
-        console.log(chart.filterposition);
         config = JSON.parse(chart.config);
         config.options.title = chart.name;
         config.dataTable = [];

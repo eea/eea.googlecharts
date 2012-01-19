@@ -19,7 +19,7 @@
     </div>
     <div class="googlechart_tab_panes" >
         <tal:block tal:repeat="chart charts">
-            <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}',${chart/config},${chart/columns},${chart/filters},${chart/width}, ${chart/height}]);">
+            <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}',${chart/config},${chart/columns},${chart/filters},${chart/width}, ${chart/height}, ${chart/filterposition}]);">
             </script>
             <div tal:attributes="chart_id chart/id" class="googlechart">
                 <a class="fullsize-button">Full Size</a>

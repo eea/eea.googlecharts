@@ -1,6 +1,7 @@
+<html>
+<head>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="http://localhost:8080/www/portal_javascripts/EEADesign2006/jquery.js"></script>
-<script type="text/javascript" src="http://localhost:8080/www/portal_javascripts/EEADesign2006/++resource++json2.js"></script>
 <script type="text/javascript">
     google.load('visualization', '1.0', {packages: ['controls']});
 
@@ -24,16 +25,61 @@
         chart_json.options.width = width;
         chart_json.options.height = height;
         chart_json.options.chma = '0';
-        chart_json.dataTable = dataTable;
 
         chart_json.containerId = "googlechart-full";
-        var originalChart = new google.visualization.ChartWrapper(
+        var chart = new google.visualization.ChartWrapper(
             chart_json
         );
-        jQuery("#filename").attr("value",encodeURIComponent(originalChart.getOption("title")));
+        jQuery("#filename").attr("value",encodeURIComponent(chart.getOption("title")));
         jQuery("#width").attr("value",width);
 
-        originalChart.draw();
+        filters_array = []
+        if (chart_filters){
+            jQuery.each(chart_filters,function(key, value){
+                filter_div_id = "googlechart_filter_"+key;
+                filter_div = "<div id='"+filter_div_id+"'><"+"/div>";
+                jQuery(filter_div).appendTo("#googlechart-filters");
+                filterSettings = {};
+                filterSettings.options = {};
+                filterSettings.options.ui = {};
+                filterSettings.options.filterColumnLabel = available_columns[key];
+                filterSettings.containerId = filter_div_id;
+                switch(value){
+                    case "0":
+                        filterSettings.controlType = 'NumberRangeFilter';
+                        break;
+                    case "1":
+                        filterSettings.controlType = 'StringFilter';
+                        break;
+                    case "2":
+                        filterSettings.controlType = 'CategoryFilter';
+                        filterSettings.options.ui.allowTyping = false;
+                        filterSettings.options.ui.allowMultiple = false;
+                        break;
+                    case "3":
+                        filterSettings.controlType = 'CategoryFilter';
+                        filterSettings.options.ui.allowTyping = false;
+                        filterSettings.options.ui.allowMultiple = true;
+                        filterSettings.options.ui.selectedValuesLayout = 'belowStacked';
+                        break;
+                }
+                filter = new google.visualization.ControlWrapper(filterSettings);
+                filters_array.push(filter);
+            });
+        }
+
+        if (filters_array.length > 0){
+            var dashboard = new google.visualization.Dashboard(
+              document.getElementById('googlechart-dashboard'));
+
+            dashboard.bind(filters_array, chart);
+
+            dashboard.draw(dataTable);
+        }
+        else{
+            chart.setDataTable(dataTable);
+            chart.draw();
+        }
     });
     function exportToPng(){
         var svgobj = jQuery("#googlechart-full").find("iframe").contents().find("#chart");
@@ -47,7 +93,7 @@
     }
 
 </script>
-
+</head>
 <body tal:define="chart view/get_full_chart">
     <script type="text/javascript" tal:content="string:chart_columns = ${chart/columns};
                                             merged_rows = ${chart/data};
@@ -55,7 +101,8 @@
                                             chart_json = ${chart/json}; 
                                             width = ${chart/width}; 
                                             height = ${chart/height}; 
-                                            name = '${chart/name}'">
+                                            name = '${chart/name}';
+                                            chart_filters = ${chart/filters};">
     </script>
 
     <form id="export" action='http://unicorn.eea.europa.eu/highcharts/exporting-server/' method="POST">
@@ -65,7 +112,12 @@
         <input type="hidden" id="width" name="width"/>
     </form>
     <input type="button" value="export to png" onClick="exportToPng();"/>
-    <div id="googlechart-full">
+    <div id="googlechart-dashboard">
+        <div id="googlechart-filters">
+        </div>
+        <div id="googlechart-full">
+        </div>
     </div>
 </body>
 
+</html>

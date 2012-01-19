@@ -1,4 +1,7 @@
 jQuery(document).ready(function($){
+    if (typeof(googlechart_config_array) == 'undefined'){
+        return;
+    }
     jQuery(".googlechart_tab_panes").delegate("a.fullsize-button", "hover", function(){
         var width, height, name, configjson, columns;
         id = jQuery(this).closest('.googlechart').attr('chart_id'); 
@@ -10,22 +13,21 @@ jQuery(document).ready(function($){
                 name = value[1].options.title;
                 configjson = JSON.stringify(value[1]);
                 columns = JSON.stringify(value[2]);
+                filters = JSON.stringify(value[3]);
+                filterposition = value[6];
                 params = "?json="+encodeURIComponent(configjson);
                 params += "&columns="+encodeURIComponent(columns);
                 params += "&width="+width;
                 params += "&height="+height;
                 params += "&name="+encodeURIComponent(name);
+                params += "&filters="+encodeURIComponent(filters);
+                params += "&filterposition="+filterposition;
                 jQuery(aobj).attr("href", "chart-full"+params);
                 jQuery(aobj).fancybox({type:'iframe', width:parseInt(width), height:parseInt(height), autoDimensions:false});
             }
         });
     });
 
-
-
-    if (typeof(googlechart_config_array) == 'undefined'){
-        return;
-    }
     jQuery("ul.googlechart_tabs").tabs("div.googlechart_tab_panes > div");
 
     jQuery(googlechart_config_array).each(function(index, value){
@@ -64,7 +66,7 @@ jQuery(document).ready(function($){
                 filters_div = "googlechart_filters_"+chart_id;
                 filter_div_id = "googlechart_filters_"+chart_id+"_"+key;
                 filter_div = "<div id='"+filter_div_id+"'></div>";
-                jQuery("#"+filter_div).appendTo("#"+filters_div);
+                jQuery(filter_div).appendTo("#"+filters_div);
                 filterSettings = {};
                 filterSettings.options = {};
                 filterSettings.options.ui = {};
@@ -97,21 +99,14 @@ jQuery(document).ready(function($){
         if (filters_array.length > 0){
             var dashboard = new google.visualization.Dashboard(
               document.getElementById('googlechart_types_panes_'+chart_id));
-
             dashboard.bind(filters_array, chart);
 
             dashboard.draw(dataTable);
         }
 
         else{
-//            chart_json_simple.dataTable = dataTable;
             chart.setDataTable(dataTable);
-/*            var simpleChart = new google.visualization.ChartWrapper(
-                chart_json_simple
-            );*/
-
             chart.draw();
-
         }
     });
 });

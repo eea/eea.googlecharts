@@ -57,4 +57,6 @@ class View(ViewForm):
         chart['columns'] = self.request['columns']
         chart['data'] = self.get_rows()
         chart['available_columns'] = self.get_columns
+        chart['filters'] = self.request.get("filters",None)
+        chart['filterposition'] = self.request.get("filterposition",0)
         return chart
