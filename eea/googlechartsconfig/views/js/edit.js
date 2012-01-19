@@ -199,21 +199,30 @@ function addChart(id, name, config, columns, filters, width, height){
                     "<td>"+
                         "<input class='googlechart-name' type='text' value='"+name+"' style='width:100px'/>" +
                     "</td>"+
-                "</tr>"+
-                "<tr>"+
                     "<td>"+
                         "Width:"+
                     "</td>"+
                     "<td>"+
                         "<input class='googlechart-width' type='text' value='"+width+"' style='width:100px'/>" +
                     "</td>"+
+                    "<td>"+
+                        "Filter position:"+
+                        "Top:<input type='radio' name='aaa' value='0'/>" +
+                        "Left:<input type='radio' name='aaa' value='0'/>" +
+                        "Bottom:<input type='radio' name='aaa' value='0'/>" +
+                        "Right:<input type='radio' name='aaa' value='0'/>" +
+                    "</td>"+
                 "</tr>"+
                 "<tr>"+
+                    "<td></td>"+
+                    "<td></td>"+
                     "<td>"+
                         "Height:"+
                     "</td>"+
                     "<td>"+
                         "<input class='googlechart-height' type='text' value='"+height+"' style='width:100px'/>" +
+                    "</td>"+
+                    "<td>"+
                     "</td>"+
                 "</tr>"+
             "</table>"+
@@ -223,13 +232,17 @@ function addChart(id, name, config, columns, filters, width, height){
             "<div style='float:right; width:180px'>" +
                 "Filters" +
                 "<span class='ui-icon ui-icon-plus ui-corner-all addgooglechartfilter' title='Add new filter'></span>" +
+                "Top<input type='radio' name='a' value='0'"+
+                "Left<input type='radio' name='a' value='1'"+
+                "Bottom<input type='radio' name='a' value='2'"+
+                "Right<input type='radio' name='a' value='3'"+
                 "<ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>" +
                 "</ul>" +
             "</div>" +
             "<div style='clear:both'> </div>" +
             "<input type='button' value='Edit Columns' onclick='openEditColumns(\""+id+"\");'/>" +
             "<input type='button' value='Edit Chart' onclick='openEditor(\""+id+"\");'/>" +
-            "<a class='preview-button'>preview Chart</a>"+
+            "<a class='preview-button'>Preview Chart</a>"+
         "</li>";
     jQuery(googlechart).appendTo("#googlecharts-list");
 
@@ -464,19 +477,18 @@ function saveCharts(){
         chart.id = jQuery("#"+value+" .googlechart-id").attr("value");
         chart.name = jQuery("#"+value+" .googlechart-name").attr("value");
         chart.config = jQuery("#"+value+" .googlechart-configjson").attr("value");
+        chart.width = jQuery("#"+value+" .googlechart-width").attr("value");
+        chart.height = jQuery("#"+value+" .googlechart-height").attr("value");
         config = JSON.parse(chart.config);
+        config.options.title = chart.name;
         config.dataTable = [];
         chart.config = JSON.stringify(config);
         chart.columns = jQuery("#"+value+" .googlechart-columns").attr("value");
-
         id = "googlechart_filters_"+chart.id;
         var orderedFilter = jQuery("#googlechart_filters_"+chart.id).sortable('toArray');
         filters = {};
 
         jQuery(orderedFilter).each(function(index,value){
-/*            filter = [jQuery("#"+value+" .googlechart-filteritem-type").attr("value"),
-                    jQuery("#"+value+" .googlechart-filteritem-column").attr("value")];
-            filters.push(filter);*/
             filters[jQuery("#"+value+" .googlechart-filteritem-column").attr("value")] = jQuery("#"+value+" .googlechart-filteritem-type").attr("value");
         });
         chart.filters = JSON.stringify(filters);
@@ -505,7 +517,7 @@ function loadCharts(){
                 jsonObj = JSON.parse(data);
                 charts = jsonObj.charts;
                 jQuery(charts).each(function(index,chart){
-                    addChart(chart.id,chart.name,chart.config,chart.columns,JSON.parse(chart.filters));
+                    addChart(chart.id,chart.name,chart.config,chart.columns,JSON.parse(chart.filters), chart.width, chart.height);
                 });
             }
             DavizEdit.Status.stop("Done");
@@ -547,14 +559,15 @@ function init_googlecharts_edit(){
     });
 
     jQuery("#googlecharts-list").delegate("a.preview-button", "hover", function(){
-        console.log("hover");
-        width = jQuery("#googlechartid_chart1 .googlechart-width").attr("value");
-        height = jQuery("#googlechartid_chart1 .googlechart-height").attr("value");
-        params = "?json="+encodeURIComponent(jQuery("#googlechartid_chart1 .googlechart-configjson").attr("value"));
-        params += "&columns="+encodeURIComponent(jQuery("#googlechartid_chart1 .googlechart-columns").attr("value"));
+        id = jQuery(this).closest('.googlechart').attr('id'); 
+        width = jQuery("#"+id+" .googlechart-width").attr("value");
+        height = jQuery("#"+id+" .googlechart-height").attr("value");
+        name = jQuery("#"+id+" .googlechart-name").attr("value");
+        params = "?json="+encodeURIComponent(jQuery("#"+id+" .googlechart-configjson").attr("value"));
+        params += "&columns="+encodeURIComponent(jQuery("#"+id+" .googlechart-columns").attr("value"));
         params += "&width="+width;
         params += "&height="+height;
-        console.log(params);
+        params += "&name="+encodeURIComponent(name);
         jQuery(this).attr("href", "chart-full"+params);
         jQuery(this).fancybox({type:'iframe', width:parseInt(width), height:parseInt(height), autoDimensions:false});
     });

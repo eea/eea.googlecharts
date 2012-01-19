@@ -51,6 +51,7 @@ class View(ViewForm):
     def get_full_chart(self):
         chart = {}
         chart['json'] = self.request['json']
+        chart['name'] = self.request['name']
         chart['width'] = self.request['width']
         chart['height'] = self.request['height']
         chart['columns'] = self.request['columns']

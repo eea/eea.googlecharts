@@ -1,4 +1,28 @@
 jQuery(document).ready(function($){
+    jQuery(".googlechart_tab_panes").delegate("a.fullscreen-button", "hover", function(){
+        var width, height, name, configjson, columns;
+        id = jQuery(this).closest('.googlechart').attr('chart_id'); 
+        var aobj = this;
+        jQuery(googlechart_config_array).each(function(index, value){
+            if (value[0] == id){
+                width = value[4];
+                height = value[5];
+                name = value[1].options.title;
+                configjson = JSON.stringify(value[1]);
+                columns = JSON.stringify(value[2]);
+                params = "?json="+encodeURIComponent(configjson);
+                params += "&columns="+encodeURIComponent(columns);
+                params += "&width="+width;
+                params += "&height="+height;
+                params += "&name="+encodeURIComponent(name);
+                jQuery(aobj).attr("href", "chart-full"+params);
+                jQuery(aobj).fancybox({type:'iframe', width:parseInt(width), height:parseInt(height), autoDimensions:false});
+            }
+        });
+    });
+
+
+
     if (typeof(googlechart_config_array) == 'undefined'){
         return;
     }
@@ -30,72 +54,10 @@ jQuery(document).ready(function($){
         chart_json.dataTable = [];
 
         chart_json.containerId = "googlechart_view_"+chart_id;
-        var originalChart = new google.visualization.ChartWrapper(
+        var chart = new google.visualization.ChartWrapper(
             chart_json
         );
 
-
-/*        chart_json_img = JSON.parse(JSON.stringify(chart_json));
-
-        chartType = chart_json_img.chartType;
-        charts_array = [];
-        charts_array.push(originalChart);
-        switch(chartType){
-            case 'BarChart':
-                chart_json_img.chartType = "ImageChart";
-                if (chart_json_img.options.isStacked){
-                    chart_json_img.options.cht = "bhs";
-                }
-                else{
-                    chart_json_img.options.cht = "bhg";
-                }
-                break;
-            case 'ColumnChart':
-                chart_json_img.chartType = "ImageChart";
-                if (chart_json_img.options.isStacked){
-                    chart_json_img.options.cht = "bvs";
-                }
-                else{
-                    chart_json_img.options.cht = "bvg";
-                }
-                break;
-            case 'PieChart':
-                chart_json_img.chartType = "ImageChart";
-                if (chart_json_img.options.is3D){
-                    chart_json_img.options.cht = "p3";
-                }
-                else{
-                    chart_json_img.options.cht = "p";
-                }
-                break;
-            case 'LineChart':
-                chart_json_img.chartType = "ImageChart";
-                chart_json_img.options.cht = "lc";
-                break;
-
-            case 'AreaChart':
-                if (!chart_json_img.options.isStacked){
-                    chart_json_img.chartType = "ImageAreaChart";
-                }
-                break;
-            case 'ScatterChart':
-                if (!chart_json_img.options.isStacked){
-                    chart_json_img.chartType = "ImageChart";
-                    chart_json_img.options.cht = "s";
-                }
-                break;
-        }
-        if (chartType != chart_json_img.chartType){
-            chart_json_img.containerId = "googlechart_image_view_"+chart_id;
-            var imageChart = new google.visualization.ChartWrapper(
-                chart_json_img
-            );
-           charts_array.push(imageChart);
-        }
-        else{
-            jQuery("#googlechart_types_tabs_"+value[0]).hide();
-        }
-*/
         filters_array = [];
         if (chart_filters){
             jQuery.each(chart_filters,function(key, value){
@@ -142,25 +104,14 @@ jQuery(document).ready(function($){
         }
 
         else{
-            chart_json_simple = value[1];
-            chart_json_simple.options.width = 800;
-            chart_json_simple.options.height = 600;
-            chart_json_simple.containerId = "googlechart_view_"+chart_id;
-
-            chart_json_simple.dataTable = dataTable;
-            var originalChart_simple = new google.visualization.ChartWrapper(
+//            chart_json_simple.dataTable = dataTable;
+            chart.setDataTable(dataTable);
+/*            var simpleChart = new google.visualization.ChartWrapper(
                 chart_json_simple
-            );
+            );*/
 
-            originalChart_simple.draw();
+            chart.draw();
 
-  /*          if (charts_array.length == 2){
-                chart_json_img.dataTable = dataTable;
-                var imageChart_simple = new google.visualization.ChartWrapper(
-                    chart_json_img
-                );
-                imageChart_simple.draw();
-            }*/
         }
     });
 });

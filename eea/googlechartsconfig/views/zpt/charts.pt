@@ -19,29 +19,14 @@
     </div>
     <div class="googlechart_tab_panes" >
         <tal:block tal:repeat="chart charts">
-            <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}',${chart/config},${chart/columns},${chart/filters}]);">
+            <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}',${chart/config},${chart/columns},${chart/filters},${chart/width}, ${chart/height}]);">
             </script>
-            <div>
-
-                <!--div style="width:1000px" tal:content="chart/config">
-                </div-->
-                <!--div style="width:1000px" tal:content="chart/filters">
-                </div-->
-                <ul tal:attributes="id string:googlechart_types_tabs_${chart/id}" class="googlechart_tabs">
-                    <li>
-                        <a href="#">Original</a>
-                    </li>
-                    <li>
-                        <a href="#">Image version</a>
-                    </li>
-                </ul>
-                <div style="clear:both"> </div>
+            <div tal:attributes="chart_id chart/id" class="googlechart">
+                <a class="fullscreen-button">Full Screen</a>
                 <div tal:attributes="id string:googlechart_filters_${chart/id}"></div>
                 <div tal:attributes="id string:googlechart_types_panes_${chart/id}">
                     <div tal:attributes="id string:googlechart_view_${chart/id}" class="googlechart">
                     </div>
-                    <!--div tal:attributes="id string:googlechart_image_view_${chart/id}" class="googlechart">
-                    </div-->
                 </div>
             </div>
         </tal:block>
