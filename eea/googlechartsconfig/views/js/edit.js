@@ -222,10 +222,10 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos)
                     "</td>"+
                     "<td>"+
                         "Filter position:"+
-                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='0' "+((filter_pos == 0)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Top" +
-                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='1' "+((filter_pos == 1)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Left" +
-                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='2' "+((filter_pos == 2)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Bottom" +
-                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='3' "+((filter_pos == 3)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Right" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='0' "+((filter_pos === 0)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Top" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='1' "+((filter_pos === 1)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Left" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='2' "+((filter_pos === 2)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Bottom" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='3' "+((filter_pos === 3)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Right" +
                     "</td>"+
                 "</tr>"+
                 "<tr>"+
@@ -599,7 +599,7 @@ function init_googlecharts_edit(){
         params += "&height="+height;
         params += "&name="+encodeURIComponent(name);
         jQuery(this).attr("href", "chart-full"+params);
-        jQuery(this).fancybox({type:'iframe', width:parseInt(width), height:parseInt(height), autoDimensions:false});
+        jQuery(this).fancybox({type:'iframe', width:parseInt(width, 10), height:parseInt(height, 10), autoDimensions:false});
     });
 
     loadCharts();

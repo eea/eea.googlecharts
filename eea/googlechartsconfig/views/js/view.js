@@ -4,7 +4,7 @@ jQuery(document).ready(function($){
     }
     jQuery(".googlechart_tab_panes").delegate("a.fullsize-button", "hover", function(){
         var width, height, name, configjson, columns;
-        id = jQuery(this).closest('.googlechart').attr('chart_id'); 
+        id = jQuery(this).closest('.googlechart').attr('chart_id');
         var aobj = this;
         jQuery(googlechart_config_array).each(function(index, value){
             if (value[0] == id){
@@ -23,7 +23,7 @@ jQuery(document).ready(function($){
                 params += "&filters="+encodeURIComponent(filters);
                 params += "&filterposition="+filterposition;
                 jQuery(aobj).attr("href", "chart-full"+params);
-                jQuery(aobj).fancybox({type:'iframe', width:parseInt(width), height:parseInt(height), autoDimensions:false});
+                jQuery(aobj).fancybox({type:'iframe', width:parseInt(width, 10), height:parseInt(height, 10), autoDimensions:false});
             }
         });
     });

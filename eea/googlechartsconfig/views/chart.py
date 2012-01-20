@@ -1,7 +1,6 @@
 """ GoogleCharts View
 """
 import json
-from zope.component import getUtility
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from Products.Five.browser import BrowserView
