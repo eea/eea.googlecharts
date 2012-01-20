@@ -260,7 +260,6 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos)
     jQuery("#googlechart_filters_"+id).sortable({
         handle : '.googlechart-filteritem_'+id,
         stop: function(event,ui){
-            console.log(id);
             markChartAsModified(id);
         }
     });
@@ -441,7 +440,6 @@ function openAddChartFilterDialog(id){
                         click: function(){
                             addFilter(id, jQuery(".googlecharts-filter-columns").val(),
                                 jQuery(".googlecharts-filter-type").val());
-                            console.log(id);
                             markChartAsModified(id);
                             jQuery(this).dialog("close");
                         }
