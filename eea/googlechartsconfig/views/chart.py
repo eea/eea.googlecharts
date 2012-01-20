@@ -1,18 +1,16 @@
 """ GoogleCharts View
 """
-__author__ = """European Environment Agency (EEA)"""
-__docformat__ = 'plaintext'
-__credits__ = """contributions: Zoltan Szabo"""
-
 import json
+from zope.component import getUtility
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
-
+from Products.Five.browser import BrowserView
 from StringIO import StringIO
 
 from eea.daviz.interfaces import IDavizConfig
-
 from eea.daviz.views.view import ViewForm
+from eea.converter.interfaces import IConvert
+from eea.googlechartsconfig.config import EEAMessageFactory as _
 
 class View(ViewForm):
     """ GoogleChartsView
@@ -49,6 +47,8 @@ class View(ViewForm):
         return result
 
     def get_full_chart(self):
+        """ Full chart
+        """
         chart = {}
         chart['json'] = self.request['json']
         chart['name'] = self.request['name']
@@ -57,6 +57,34 @@ class View(ViewForm):
         chart['columns'] = self.request['columns']
         chart['data'] = self.get_rows()
         chart['available_columns'] = self.get_columns
-        chart['filters'] = self.request.get("filters",{})
-        chart['filterposition'] = self.request.get("filterposition",0)
+        chart['filters'] = self.request.get("filters", {})
+        chart['filterposition'] = self.request.get("filterposition", 0)
         return chart
+
+class Export(BrowserView):
+    """ Export chart to png
+    """
+    def __call__(self, **kwargs):
+        form = getattr(self.request, 'form', {})
+        kwargs.update(form)
+
+        convert = getUtility(IConvert)
+        img = convert(
+            data=kwargs.get('svg', ''),
+            data_from='svg',
+            data_to='png'
+        )
+
+        if not img:
+            return _("ERROR: An error occured while exporting your image. "
+                     "Please try again later.")
+
+        ctype = kwargs.get('type', 'image/png')
+        filename = kwargs.get('filename', 'export')
+
+        self.request.response.setHeader('content-type', ctype)
+        self.request.response.setHeader(
+            'content-disposition',
+            'attachment; filename="%s.png"' % filename
+        )
+        return img

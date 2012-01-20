@@ -97,15 +97,15 @@
 <body tal:define="chart view/get_full_chart">
     <script type="text/javascript" tal:content="string:chart_columns = ${chart/columns};
                                             merged_rows = ${chart/data};
-                                            available_columns = ${chart/available_columns}; 
-                                            chart_json = ${chart/json}; 
-                                            width = ${chart/width}; 
-                                            height = ${chart/height}; 
+                                            available_columns = ${chart/available_columns};
+                                            chart_json = ${chart/json};
+                                            width = ${chart/width};
+                                            height = ${chart/height};
                                             name = '${chart/name}';
                                             chart_filters = ${chart/filters};">
     </script>
 
-    <form id="export" action='http://unicorn.eea.europa.eu/highcharts/exporting-server/' method="POST">
+    <form id="export" action='@@googlechart.export' method="POST">
         <input type="hidden" id="svg" name="svg"/>
         <input type="hidden" id="filename" name="filename"/>
         <input type="hidden" id="type" name="type"/>

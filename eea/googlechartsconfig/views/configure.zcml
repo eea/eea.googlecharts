@@ -29,6 +29,12 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    name="googlechart.export"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".chart.Export"
+    permission="zope2.View"
+    />
 
   <browser:page
     name="googlechart.submit_charts"

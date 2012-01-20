@@ -30,7 +30,8 @@ setup(name=NAME,
       install_requires=[
           'setuptools',
           'eea.googlecharts',
-          'eea.daviz'
+          'eea.daviz',
+          'eea.converter',
       ],
       entry_points="""
       # -*- Entry points: -*-
