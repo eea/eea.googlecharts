@@ -173,6 +173,17 @@ function drawChart(elementId, add){
     }
 }
 
+function markAllChartsAsModified(){
+    jQuery(".googlechart").each(function(){
+        jQuery(this).addClass("googlechart-modified");
+    });
+}
+
+function markChartAsModified(id){
+    chartObj = jQuery("#googlechartid_"+id);
+    chartObj.addClass("googlechart-modified");
+}
+
 function addChart(id, name, config, columns, filters, width, height, filter_pos){
     config = typeof(config) !== 'undefined' ? config : "";
     columns = typeof(columns) !== 'undefined' ? columns : "";
@@ -181,7 +192,9 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos)
     height = typeof(height) !== 'undefined' ? height : 600;
     filter_pos = typeof(filter_pos) !== 'undefined' ? filter_pos : 0;
 
+    shouldMark = false;
     if (config === ""){
+        shouldMark = true;
         chart = defaultChart;
         chart.options.title = name;
         config = JSON.stringify(chart);
@@ -191,6 +204,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos)
             "<input class='googlechart-id' type='hidden' value='"+id+"'/>" +
             "<input class='googlechart-configjson' type='hidden' value='"+config+"'/>" +
             "<input class='googlechart-columns' type='hidden' value='"+columns+"'/>" +
+
             "<h1 class='googlechart-handle'>"+id+"<div class='ui-icon ui-icon-trash remove-chart-icon' title='Delete chart'>x</div></h1>" +
             "<table>"+
                 "<tr>"+
@@ -198,20 +212,20 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos)
                         "Friendly name:"+
                     "</td>"+
                     "<td>"+
-                        "<input class='googlechart-name' type='text' value='"+name+"' style='width:100px'/>" +
+                        "<input class='googlechart-name' type='text' value='"+name+"' style='width:100px' onchange='markChartAsModified(\""+id+"\");'/>" +
                     "</td>"+
                     "<td>"+
                         "Width: "+
                     "</td>"+
                     "<td>"+
-                        "<input class='googlechart-width' type='text' value='"+width+"' style='width:100px'/>" +
+                        "<input class='googlechart-width' type='text' value='"+width+"' style='width:100px' onchange='markChartAsModified(\""+id+"\");'/>" +
                     "</td>"+
                     "<td>"+
                         "Filter position:"+
-                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='0' "+((filter_pos == 0)?"checked='checked'":"")+"'/>Top" +
-                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='1' "+((filter_pos == 1)?"checked='checked'":"")+"'/>Left" +
-                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='2' "+((filter_pos == 2)?"checked='checked'":"")+"'/>Bottom" +
-                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='3' "+((filter_pos == 3)?"checked='checked'":"")+"'/>Right" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='0' "+((filter_pos == 0)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Top" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='1' "+((filter_pos == 1)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Left" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='2' "+((filter_pos == 2)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Bottom" +
+                        "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='3' "+((filter_pos == 3)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Right" +
                     "</td>"+
                 "</tr>"+
                 "<tr>"+
@@ -221,7 +235,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos)
                         "Height:"+
                     "</td>"+
                     "<td>"+
-                        "<input class='googlechart-height' type='text' value='"+height+"' style='width:100px'/>" +
+                        "<input class='googlechart-height' type='text' value='"+height+"' style='width:100px' onchange='markChartAsModified(\""+id+"\");'/>" +
                     "</td>"+
                     "<td>"+
                     "</td>"+
@@ -244,7 +258,11 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos)
     jQuery(googlechart).appendTo("#googlecharts-list");
 
     jQuery("#googlechart_filters_"+id).sortable({
-        handle : '.googlechart-filteritem_'+id
+        handle : '.googlechart-filteritem_'+id,
+        stop: function(event,ui){
+            console.log(id);
+            markChartAsModified(id);
+        }
     });
 
     jQuery("#addgooglechartfilter_"+id).click(openAddDialog);
@@ -254,6 +272,10 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos)
     jQuery.each(filters,function(key,value){
         addFilter(id, key, value);
     });
+    if (shouldMark){
+        markChartAsModified(id);
+    }
+
 }
 
 function openEditColumns(id){
@@ -300,6 +322,7 @@ function openEditColumns(id){
                             });
                             columns_str = JSON.stringify(columns);
                             jQuery("#googlechartid_"+id+" .googlechart-columns").val(columns_str);
+                            markChartAsModified(id);
                             jQuery(this).dialog("close");
                         }
                     },
@@ -330,21 +353,23 @@ function openEditColumns(id){
             jQuery(column).appendTo(".googlecharts-columns-to");
         }
     });
-
 }
 
 function redrawChart(){
     jsonString = chartEditor.getChartWrapper().toJSON();
-    jQuery("#googlechartid_"+chartId+" .googlechart-configjson").attr('value',jsonString);
-    jQuery("#googlechartid_"+chartId+" .googlechart-name").attr('value',chartEditor.getChartWrapper().getOption('title'));
+    chartObj = jQuery("#googlechartid_"+chartId);
+    chartObj.find(".googlechart-configjson").attr('value',jsonString);
+    chartObj.find(".googlechart-name").attr('value',chartEditor.getChartWrapper().getOption('title'));
     chartEditor.getChartWrapper().draw(jQuery("#googlechart_chart_div_"+chartId)[0]);
+    markChartAsModified(chartId);
 }
 
 function openEditor(elementId) {
     chartId = elementId;
-    title = jQuery("#googlechartid_"+elementId+" .googlechart-name").attr("value");
+    chartObj = jQuery("#googlechartid_"+elementId);
+    title = chartObj.find(".googlechart-name").attr("value");
 
-    wrapperString = jQuery("#googlechartid_"+elementId+" .googlechart-configjson").attr('value');
+    wrapperString = chartObj.find(".googlechart-configjson").attr('value');
     if (wrapperString.length > 0){
         wrapperJSON = JSON.parse(wrapperString);
         chart = wrapperJSON;
@@ -416,7 +441,8 @@ function openAddChartFilterDialog(id){
                         click: function(){
                             addFilter(id, jQuery(".googlecharts-filter-columns").val(),
                                 jQuery(".googlecharts-filter-type").val());
-
+                            console.log(id);
+                            markChartAsModified(id);
                             jQuery(this).dialog("close");
                         }
                     },
@@ -462,6 +488,7 @@ function openAddChartFilterDialog(id){
 
 function removeChart(id){
     jQuery("#"+id).remove();
+    markAllChartsAsModified();
 }
 
 function saveCharts(){
@@ -470,24 +497,26 @@ function saveCharts(){
     var jsonObj = {};
     charts = [];
     jQuery(ordered).each(function(index, value){
-        chart = {};
-        chart.id = jQuery("#"+value+" .googlechart-id").attr("value");
-        chart.name = jQuery("#"+value+" .googlechart-name").attr("value");
-        chart.config = jQuery("#"+value+" .googlechart-configjson").attr("value");
-        chart.width = jQuery("#"+value+" .googlechart-width").attr("value");
-        chart.height = jQuery("#"+value+" .googlechart-height").attr("value");
-        chart.filterposition = jQuery("#"+value+" .googlechart-filterposition:checked").attr("value");
+        var chartObj = jQuery("#"+value);
+        chartObj.removeClass("googlechart-modified");
+        var chart = {};
+        chart.id = chartObj.find(".googlechart-id").attr("value");
+        chart.name = chartObj.find(".googlechart-name").attr("value");
+        chart.config = chartObj.find(".googlechart-configjson").attr("value");
+        chart.width = chartObj.find(".googlechart-width").attr("value");
+        chart.height = chartObj.find(".googlechart-height").attr("value");
+        chart.filterposition = chartObj.find(".googlechart-filterposition:checked").attr("value");
         config = JSON.parse(chart.config);
         config.options.title = chart.name;
         config.dataTable = [];
         chart.config = JSON.stringify(config);
-        chart.columns = jQuery("#"+value+" .googlechart-columns").attr("value");
+        chart.columns = chartObj.find(".googlechart-columns").attr("value");
         id = "googlechart_filters_"+chart.id;
         var orderedFilter = jQuery("#googlechart_filters_"+chart.id).sortable('toArray');
         filters = {};
 
-        jQuery(orderedFilter).each(function(index,value){
-            filters[jQuery("#"+value+" .googlechart-filteritem-column").attr("value")] = jQuery("#"+value+" .googlechart-filteritem-type").attr("value");
+        jQuery(orderedFilter).each(function(index,filter){
+            filters[jQuery("#"+filter+" .googlechart-filteritem-column").attr("value")] = jQuery("#"+filter+" .googlechart-filteritem-type").attr("value");
         });
         chart.filters = JSON.stringify(filters);
         charts.push(chart);
@@ -532,6 +561,7 @@ function init_googlecharts_edit(){
             if (draggedItem.substr(0,liName.length) == liName){
                 id = draggedItem.substr(liName.length+1);
                 drawChart(id);
+                markChartAsModified(id);
             }
         }
     });
@@ -542,6 +572,10 @@ function init_googlecharts_edit(){
     });
 
     jQuery("#googlecharts-list").delegate(".remove-filter-icon","click",function(){
+        chartId = jQuery(this).closest('.googlechart').attr('id');
+        liName = "googlechartid";
+        id = chartId.substr(liName.length+1);
+        markChartAsModified(id);
         jQuery(this).closest('.googlechart-filteritem').remove();
     });
 
@@ -557,12 +591,12 @@ function init_googlecharts_edit(){
     });
 
     jQuery("#googlecharts-list").delegate("a.preview-button", "hover", function(){
-        id = jQuery(this).closest('.googlechart').attr('id'); 
-        width = jQuery("#"+id+" .googlechart-width").attr("value");
-        height = jQuery("#"+id+" .googlechart-height").attr("value");
-        name = jQuery("#"+id+" .googlechart-name").attr("value");
-        params = "?json="+encodeURIComponent(jQuery("#"+id+" .googlechart-configjson").attr("value"));
-        params += "&columns="+encodeURIComponent(jQuery("#"+id+" .googlechart-columns").attr("value"));
+        chartObj = jQuery(this).closest('.googlechart');
+        width = chartObj.find(".googlechart-width").attr("value");
+        height = chartObj.find(".googlechart-height").attr("value");
+        name = chartObj.find(".googlechart-name").attr("value");
+        params = "?json="+encodeURIComponent(chartObj.find(".googlechart-configjson").attr("value"));
+        params += "&columns="+encodeURIComponent(chartObj.find(".googlechart-columns").attr("value"));
         params += "&width="+width;
         params += "&height="+height;
         params += "&name="+encodeURIComponent(name);

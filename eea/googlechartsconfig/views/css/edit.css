@@ -49,3 +49,10 @@
     list-style-image:none !important;
     margin:0 !important;
 }
+
+.googlechart{
+    background-color:#FFFFFF;
+}
+.googlechart-modified{
+    background-color:#FFFFBB;
+}
