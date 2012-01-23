@@ -206,6 +206,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos)
             "<input class='googlechart-columns' type='hidden' value='"+columns+"'/>" +
 
             "<h1 class='googlechart-handle'>"+id+"<div class='ui-icon ui-icon-trash remove-chart-icon' title='Delete chart'>x</div></h1>" +
+            "<fieldset>" +
             "<table>"+
                 "<tr>"+
                     "<td>"+
@@ -220,7 +221,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos)
                     "<td>"+
                         "<input class='googlechart-width' type='text' value='"+width+"' style='width:100px' onchange='markChartAsModified(\""+id+"\");'/>" +
                     "</td>"+
-                    "<td>"+
+                    "<td class='filters-position'>"+
                         "Filter position:"+
                         "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='0' "+((filter_pos === 0)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Top" +
                         "<input type='radio' class='googlechart-filterposition' name='googlechart-filterposition_"+id+"' value='1' "+((filter_pos === 1)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Left" +
@@ -251,9 +252,10 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos)
                 "</ul>" +
             "</div>" +
             "<div style='clear:both'> </div>" +
-            "<input type='button' value='Edit Columns' onclick='openEditColumns(\""+id+"\");'/>" +
-            "<input type='button' value='Edit Chart' onclick='openEditor(\""+id+"\");'/>" +
+            "<input type='button' class='context' value='Edit Columns' onclick='openEditColumns(\""+id+"\");'/>" +
+            "<input type='button' class='context' value='Edit Chart' onclick='openEditor(\""+id+"\");'/>" +
             "<a style='float:right' class='preview-button'>Preview Chart</a>"+
+            "</fieldset>" +
         "</li>";
     jQuery(googlechart).appendTo("#googlecharts-list");
 

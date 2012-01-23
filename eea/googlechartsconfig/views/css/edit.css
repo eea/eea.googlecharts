@@ -53,6 +53,19 @@
 .googlechart{
     background-color:#FFFFFF;
 }
+
 .googlechart-modified{
     background-color:#FFFFBB;
+}
+
+.googlechart fieldset {
+    padding: 0.5em 1em;
+}
+
+.googlechart table {
+    width: 100%;
+}
+
+.googlechart .filters-position {
+    text-align: right;
 }
