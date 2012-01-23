@@ -10,46 +10,23 @@
 
 <tal:block tal:define="charts view/get_charts">
     <ul class="googlechart_tabs">
-        <li tal:repeat="chart charts">
-            <a tal:attributes="href string:#${chart/id}" tal:content="chart/name">
-            </a>
-        </li>
+        <tal:block tal:repeat="chart charts">
+            <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}]);">
+            </script>
+            <tal:block tal:condition="repeat/chart/start">
+                <li class="current" tal:attributes="chart_id chart/id" tal:content="chart/name">
+                </li>
+            </tal:block>
+            <tal:block tal:condition="not:repeat/chart/start">
+                <li tal:content="chart/name" tal:attributes="chart_id chart/id">
+                </li>
+            </tal:block>
+        </tal:block>
     </ul>
     <div style="clear:both">
     </div>
-    <div class="googlechart_tab_panes" >
-        <tal:block tal:repeat="chart charts">
-            <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}',${chart/config},${chart/columns},${chart/filters},${chart/width}, ${chart/height}, ${chart/filterposition}]);">
-            </script>
-            <div tal:attributes="chart_id chart/id" class="googlechart">
-                <a class="fullsize-button">Full Size</a>
-                <div tal:attributes="id string:googlechart_types_panes_${chart/id}" tal:define="filterpos python:int(chart['filterposition'])">
-                    <tal:block tal:condition="python:filterpos==0">
-                        <div tal:attributes="id string:googlechart_filters_${chart/id}">
-                        </div>
-                        <div tal:attributes="id string:googlechart_view_${chart/id}" class="googlechart">
-                        </div>
-                    </tal:block>
-                    <tal:block tal:condition="python:filterpos==1">
-                        <div tal:attributes="id string:googlechart_filters_${chart/id}" style="float:left;">
-                        </div>
-                        <div tal:attributes="id string:googlechart_view_${chart/id}" class="googlechart" style="float:left;">
-                        </div>
-                    </tal:block>
-                    <tal:block tal:condition="python:filterpos==2">
-                        <div tal:attributes="id string:googlechart_view_${chart/id}" class="googlechart">
-                        </div>
-                        <div tal:attributes="id string:googlechart_filters_${chart/id}">
-                        </div>
-                    </tal:block>
-                    <tal:block tal:condition="python:filterpos==3">
-                        <div tal:attributes="id string:googlechart_view_${chart/id}" class="googlechart"  style="float:left;">
-                        </div>
-                        <div tal:attributes="id string:googlechart_filters_${chart/id}" style="float:left;">
-                        </div>
-                    </tal:block>
-                </div>
-            </div>
-        </tal:block>
+    <div id="googlechart_dashboard">
+        <a id="fullsize-button" style="float:left">Full Size</a>
+        <div style="clear:both"></div>
     </div>
 </tal:block>

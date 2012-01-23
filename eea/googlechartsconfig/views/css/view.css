@@ -5,12 +5,13 @@ ul.googlechart_tabs{
 ul.googlechart_tabs li{
     float:left;
     padding:5px;
+    cursor:pointer;
 }
 
 ul.googlechart_tabs li a{
     color:#000000 !important;
 }
 
-ul.googlechart_tabs li a.current{
+ul.googlechart_tabs li.current{
     font-weight:bold;
 }
