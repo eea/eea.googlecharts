@@ -12,21 +12,21 @@ function drawChart(value){
         filters = '<div id="googlechart_filters"></div>';
         view = '<div id="googlechart_view" class="googlechart"></div>';
 
-        if (position == 0){
+        if (position === 0){
             jQuery(filters).appendTo('#googlechart_dashboard');
             jQuery(view).appendTo('#googlechart_dashboard');
         }
-        if (position == 1){
+        if (position === 1){
             jQuery(filters).appendTo('#googlechart_dashboard');
             jQuery(view).appendTo('#googlechart_dashboard');
             jQuery("#googlechart_filters").attr("style","float:left");
             jQuery("#googlechart_view").attr("style","float:left");
         }
-        if (position == 2){
+        if (position === 2){
             jQuery(view).appendTo('#googlechart_dashboard');
             jQuery(filters).appendTo('#googlechart_dashboard');
         }
-        if (position == 3){
+        if (position === 3){
             jQuery(view).appendTo('#googlechart_dashboard');
             jQuery(filters).appendTo('#googlechart_dashboard');
             jQuery("#googlechart_filters").attr("style","float:left");
