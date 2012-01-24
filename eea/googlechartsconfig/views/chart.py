@@ -88,3 +88,25 @@ class Export(BrowserView):
             'attachment; filename="%s.png"' % filename
         )
         return img
+
+class SetThumb(BrowserView):
+    """ Set thumbnail
+    """
+    def __call__(self, **kwargs):
+        form = getattr(self.request, 'form', {})
+        kwargs.update(form)
+
+        convert = getUtility(IConvert)
+        img = convert(
+            data=kwargs.get('svg', ''),
+            data_from='svg',
+            data_to='png'
+        )
+
+        if not img:
+            return _("ERROR: An error occured while exporting your image. "
+                     "Please try again later.")
+
+        #TODO: Save generated image as thumbnail for daviz-presentation
+
+        return "success"

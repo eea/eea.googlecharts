@@ -37,6 +37,13 @@
     />
 
   <browser:page
+    name="googlechart.setthumb"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".chart.SetThumb"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="googlechart.submit_charts"
     for="eea.daviz.interfaces.IExhibitJson"
     class=".edit.Edit"

@@ -184,6 +184,68 @@ function addFilter(id, column, filtertype){
     jQuery(filter).appendTo("#googlechart_filters_"+id);
 }
 
+function saveThumb(value){
+    DavizEdit.Status.start("Saving Thumb");
+    chart_id = value[0];
+    chart_json = value[1];
+    chart_columns = value[2];
+    chart_filters = value[3];
+    chart_width = value[4];
+    chart_height = value[5];
+    chart_filterposition = value[6];
+    chart_options = value[7];
+
+    columnlabels = [];
+    jQuery(chart_columns).each(function(index,chart_token){
+        columnlabels.push(available_columns[chart_token]);
+    });
+
+    dataTable = [];
+    dataTable.push(columnlabels);
+
+    jQuery(all_rows.items).each(function(index, all_row){
+        row = [];
+        jQuery(chart_columns).each(function(index,chart_token){
+            row.push(all_row[chart_token]);
+        });
+        dataTable.push(row);
+    });
+    chart_json.options.width = chart_width;
+    chart_json.options.height = chart_height;
+
+    jQuery.each(chart_options,function(key,value){
+        chart_json.options[key]=value;
+    });
+
+    chart_json.containerId = "googlechart_thumb_zone";
+    var chart = new google.visualization.ChartWrapper(
+        chart_json
+    );
+
+    chart.setDataTable(dataTable);
+    chart.draw();
+
+    if (chart.getChartType() !== "Table"){
+        google.visualization.events.addListener(chart, 'ready', function(event) {
+            thumbObj = jQuery("#googlechart_thumb_form");
+            thumbObj.find("#filename").attr("value", "thumb");
+            thumbObj.find("#type").attr("value","image/png");
+            var svg = jQuery("#googlechart_thumb_zone").find("iframe").contents().find("#chartArea").html();
+            thumbObj.find("#svg").attr("value",svg);
+            jQuery.post("@@googlechart.setthumb",{"svg":svg},function(data){
+                if (data !== "success"){
+                    alert (data);
+                }
+                DavizEdit.Status.stop("Done");
+            });
+        });
+    }
+    else{
+        alert ("Can't generate thumb from the chart called: "+chart_json.options.title);
+        DavizEdit.Status.stop("Done");
+    }
+}
+
 function drawChart(elementId, add){
     add = typeof(add) != 'undefined' ? add : "";
 
@@ -233,7 +295,20 @@ function markChartAsModified(id){
     chartObj.addClass("googlechart_modified");
 }
 
-function addChart(id, name, config, columns, filters, width, height, filter_pos, options){
+function markChartAsThumb(id){
+    jQuery(".googlechart_thumb_checkbox").each(function(){
+        checkObj = jQuery(this);
+        if (checkObj.attr("id") !== "googlechart_thumb_id_"+id){
+            checkObj.attr("checked",false);
+        }
+        else {
+            checkObj.attr("checked",true);
+        }
+    });
+    markChartAsModified(id);
+}
+
+function addChart(id, name, config, columns, filters, width, height, filter_pos, options, isThumb){
     config = typeof(config) !== 'undefined' ? config : "";
     columns = typeof(columns) !== 'undefined' ? columns : "";
     filters = typeof(filters) !== 'undefined' ? filters : {};
@@ -241,6 +316,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
     height = typeof(height) !== 'undefined' ? height : 600;
     filter_pos = typeof(filter_pos) !== 'undefined' ? filter_pos : 0;
     options = typeof(options) !== 'undefined' ? options : "{}";
+    isThumb = typeof(isThumb) !== 'undefined' ? isThumb : false;
 
     filter_pos = parseInt(filter_pos,0);
     shouldMark = false;
@@ -257,7 +333,13 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
             "<input class='googlechart_columns' type='hidden' value='"+columns+"'/>" +
             "<input class='googlechart_options' type='hidden' value='"+options+"'/>" +
 
-            "<h1 class='googlechart_handle'>"+id+"<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div></h1>" +
+            "<h1 class='googlechart_handle'>"+
+            "<div style='float:left'>"+id+"</div>"+
+            "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"+
+            "<div style='float:right;font-weight:normal;font-size:0.9em;margin-right:10px'>Use this chart as thumb</div>"+
+            "<input style='float:right; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+id+"' onChange='markChartAsThumb(\""+id+"\");' "+(isThumb?"checked='checked'":"")+"/>"+
+            "<div style='clear:both'> </div>"+
+            "</h1>" +
             "<fieldset>" +
             "<table>"+
                 "<tr>"+
@@ -330,7 +412,6 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
     if (shouldMark){
         markChartAsModified(id);
     }
-
 }
 
 function openEditColumns(id){
@@ -550,6 +631,7 @@ function saveCharts(){
     var ordered = jQuery('#googlecharts_list').sortable('toArray');
     var jsonObj = {};
     charts = [];
+    var thumbId;
     jQuery(ordered).each(function(index, value){
         var chartObj = jQuery("#"+value);
         chartObj.removeClass("googlechart_modified");
@@ -561,6 +643,7 @@ function saveCharts(){
         chart.height = chartObj.find(".googlechart_height").attr("value");
         chart.filterposition = chartObj.find(".googlechart_filterposition:checked").attr("value");
         chart.options = chartObj.find(".googlechart_options").attr("value");
+        chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
         config = JSON.parse(chart.config);
         config.options.title = chart.name;
         config.dataTable = [];
@@ -575,6 +658,10 @@ function saveCharts(){
         });
         chart.filters = JSON.stringify(filters);
         charts.push(chart);
+        if ((index == 0) || (chart.isThumb)){
+            thumbId = chart.id;
+        }
+
     });
     jsonObj.charts = charts;
     jsonStr = JSON.stringify(jsonObj);
@@ -584,7 +671,20 @@ function saveCharts(){
         type:'post',
         data:query,
         success:function(data){
+            chartSettings=[];
+            chartObj = jQuery("#googlechartid_"+thumbId);
+            chartSettings[0] = thumbId;
+            chartSettings[1] = JSON.parse(chartObj.find(".googlechart_configjson").attr("value"));
+            chartSettings[2] = JSON.parse(chartObj.find(".googlechart_columns").attr("value"));
+            chartSettings[3] = "";
+            chartSettings[4] = chartObj.find(".googlechart_width").attr("value");
+            chartSettings[5] = chartObj.find(".googlechart_height").attr("value");
+            chartSettings[6] = "";
+            chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
+
             DavizEdit.Status.stop(data);
+
+            saveThumb(chartSettings);
         }
     });
 }
@@ -599,7 +699,7 @@ function loadCharts(){
                 jsonObj = JSON.parse(data);
                 charts = jsonObj.charts;
                 jQuery(charts).each(function(index,chart){
-                    addChart(chart.id,chart.name,chart.config,chart.columns,JSON.parse(chart.filters), chart.width, chart.height, chart.filterposition, chart.options);
+                    addChart(chart.id,chart.name,chart.config,chart.columns,JSON.parse(chart.filters), chart.width, chart.height, chart.filterposition, chart.options, chart.isThumb);
                 });
             }
             DavizEdit.Status.stop("Done");

@@ -110,13 +110,13 @@
                                             chart_filters = ${chart/filters};">
     </script>
 
-    <form id="export" action='@@googlechart.export' method="POST">
+    <!--form id="export" action='@@googlechart.export' method="POST">
         <input type="hidden" id="svg" name="svg"/>
         <input type="hidden" id="filename" name="filename"/>
         <input type="hidden" id="type" name="type"/>
         <input type="hidden" id="width" name="width"/>
     </form>
-    <!--input type="button" value="export to png" onClick="exportToPng();"/-->
+    <input type="button" value="export to png" onClick="exportToPng();"/-->
     <div id="googlechart_dashboard">
         <div id="googlechart_filters">
         </div>
