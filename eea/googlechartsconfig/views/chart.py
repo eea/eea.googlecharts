@@ -96,6 +96,8 @@ class SetThumb(BrowserView):
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
 
+        filename = kwargs.get('filename', 'cover.png')
+
         convert = getUtility(IConvert)
         img = convert(
             data=kwargs.get('svg', ''),
@@ -107,6 +109,10 @@ class SetThumb(BrowserView):
             return _("ERROR: An error occured while exporting your image. "
                      "Please try again later.")
 
-        #TODO: Save generated image as thumbnail for daviz-presentation
 
-        return "success"
+        if filename not in self.context.objectIds():
+            filename = self.context.invokeFactory('Image', id=filename)
+        obj = self.context._getOb(filename)
+        obj.setExcludeFromNav(True)
+        obj.getField('image').getMutator(obj)(img)
+        return _("Success")
