@@ -1,8 +1,8 @@
-#googlecharts-config #googlecharts-actionsView{
+#googlecharts_config #googlecharts_actionsView{
     margin-top:1em;
 }
 
-#googlecharts-submit{
+#googlecharts_submit{
     color:#fff !important;
     background:#346F83;
     background-image: -webkit-gradient(linear,0% 40%,0% 70%,from(#478EA5),to(#346F83));
@@ -34,16 +34,16 @@
             border-radius: 2px;
 }
 
-#googlecharts-config .ui-icon-plus{
+#googlecharts_config .ui-icon-plus{
     float-left;
     border: 2px solid #CCCCCC;
 }
 
-.googlechart-handle{
+.googlechart_handle{
     cursor:move;
 }
 
-#googlecharts-list,
+#googlecharts_list,
 .googlechart_filters_list{
     list-style-type:none !important;
     list-style-image:none !important;
@@ -54,7 +54,7 @@
     background-color:#FFFFFF;
 }
 
-.googlechart-modified{
+.googlechart_modified{
     background-color:#FFFFBB;
 }
 
@@ -66,6 +66,6 @@
     width: 100%;
 }
 
-.googlechart .filters-position {
+.googlechart .filters_position {
     text-align: right;
 }

@@ -26,7 +26,11 @@
         chart_json.options.height = height;
         chart_json.options.chma = '0';
 
-        chart_json.containerId = "googlechart-full";
+        jQuery.each(options,function(key,value){
+            chart_json.options[key]=value;
+        });
+
+        chart_json.containerId = "googlechart_full";
         var chart = new google.visualization.ChartWrapper(
             chart_json
         );
@@ -38,7 +42,7 @@
             jQuery.each(chart_filters,function(key, value){
                 filter_div_id = "googlechart_filter_"+key;
                 filter_div = "<div id='"+filter_div_id+"'><"+"/div>";
-                jQuery(filter_div).appendTo("#googlechart-filters");
+                jQuery(filter_div).appendTo("#googlechart_filters");
                 filterSettings = {};
                 filterSettings.options = {};
                 filterSettings.options.ui = {};
@@ -70,7 +74,7 @@
 
         if (filters_array.length > 0){
             var dashboard = new google.visualization.Dashboard(
-              document.getElementById('googlechart-dashboard'));
+              document.getElementById('googlechart_dashboard'));
 
             dashboard.bind(filters_array, chart);
 
@@ -82,9 +86,9 @@
         }
     });
     function exportToPng(){
-        var svgobj = jQuery("#googlechart-full").find("iframe").contents().find("#chart");
+        var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
         jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
-        var svg = jQuery("#googlechart-full").find("iframe").contents().find("#chartArea").html();
+        var svg = jQuery("#googlechart_full").find("iframe").contents().find("#chartArea").html();
 
         form = jQuery("#export");
         jQuery("#svg").attr("value",svg);
@@ -102,6 +106,7 @@
                                             width = ${chart/width};
                                             height = ${chart/height};
                                             name = '${chart/name}';
+                                            options = ${chart/options};
                                             chart_filters = ${chart/filters};">
     </script>
 
@@ -111,11 +116,11 @@
         <input type="hidden" id="type" name="type"/>
         <input type="hidden" id="width" name="width"/>
     </form>
-    <input type="button" value="export to png" onClick="exportToPng();"/>
-    <div id="googlechart-dashboard">
-        <div id="googlechart-filters">
+    <!--input type="button" value="export to png" onClick="exportToPng();"/-->
+    <div id="googlechart_dashboard">
+        <div id="googlechart_filters">
         </div>
-        <div id="googlechart-full">
+        <div id="googlechart_full">
         </div>
     </div>
 </body>

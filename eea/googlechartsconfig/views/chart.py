@@ -50,6 +50,7 @@ class View(ViewForm):
         """
         chart = {}
         chart['json'] = self.request['json']
+        chart['options'] = self.request['options']
         chart['name'] = self.request['name']
         chart['width'] = self.request['width']
         chart['height'] = self.request['height']

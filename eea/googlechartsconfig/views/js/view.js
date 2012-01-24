@@ -1,32 +1,48 @@
 var current_chart_id;
 
+function exportToPng(){
+    var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
+    jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
+    var svg = jQuery("#googlechart_view").find("iframe").contents().find("#chartArea").html();
+
+    form = jQuery("#export");
+    jQuery("#svg").attr("value",svg);
+    form.submit()
+}
+
 function drawChart(value){
         chart_id = value[0];
         chart_json = value[1];
         chart_columns = value[2];
         chart_filters = value[3];
-        position = value[6];
+        chart_width = value[4];
+        chart_height = value[5];
+        chart_filterposition = value[6];
+        chart_options = value[7];
+
+        jQuery("#filename").attr("value",chart_json.options.title);
+        jQuery("#type").attr("value","image/png");
 
         jQuery("#googlechart_filters").remove();
         jQuery("#googlechart_view").remove();
         filters = '<div id="googlechart_filters"></div>';
         view = '<div id="googlechart_view" class="googlechart"></div>';
 
-        if (position === 0){
+        if (chart_filterposition === 0){
             jQuery(filters).appendTo('#googlechart_dashboard');
             jQuery(view).appendTo('#googlechart_dashboard');
         }
-        if (position === 1){
+        if (chart_filterposition === 1){
             jQuery(filters).appendTo('#googlechart_dashboard');
             jQuery(view).appendTo('#googlechart_dashboard');
             jQuery("#googlechart_filters").attr("style","float:left");
             jQuery("#googlechart_view").attr("style","float:left");
         }
-        if (position === 2){
+        if (chart_filterposition === 2){
             jQuery(view).appendTo('#googlechart_dashboard');
             jQuery(filters).appendTo('#googlechart_dashboard');
         }
-        if (position === 3){
+        if (chart_filterposition === 3){
             jQuery(view).appendTo('#googlechart_dashboard');
             jQuery(filters).appendTo('#googlechart_dashboard');
             jQuery("#googlechart_filters").attr("style","float:left");
@@ -46,8 +62,14 @@ function drawChart(value){
             });
             dataTable.push(row);
         });
-        chart_json.options.width = 600;
-        chart_json.options.height = 400;
+        chart_json.options.width = chart_width;
+        chart_json.options.height = chart_height;
+
+        jQuery.each(chart_options,function(key,value){
+            chart_json.options[key]=value;
+        });
+
+
         chart_json.dataTable = [];
 
         chart_json.containerId = "googlechart_view";
@@ -105,22 +127,20 @@ function drawChart(value){
             chart.draw();
         }
 
-        width = value[4];
-        height = value[5];
-        name = value[1].options.title;
+/*        name = value[1].options.title;
         configjson = JSON.stringify(value[1]);
         columns = JSON.stringify(value[2]);
         filters = JSON.stringify(value[3]);
         filterposition = value[6];
         params = "?json="+encodeURIComponent(configjson);
         params += "&columns="+encodeURIComponent(columns);
-        params += "&width="+width;
-        params += "&height="+height;
+        params += "&width="+chart_width;
+        params += "&height="+chart_height;
         params += "&name="+encodeURIComponent(name);
         params += "&filters="+encodeURIComponent(filters);
         params += "&filterposition="+filterposition;
-        jQuery("#fullsize-button").attr("href", "chart-full"+params);
-        jQuery("#fullsize-button").fancybox({type:'iframe', width:parseInt(width, 10), height:parseInt(height, 10), autoDimensions:false});
+        jQuery("#fullsize_button").attr("href", "chart-full"+params);
+        jQuery("#fullsize_button").fancybox({type:'iframe', width:parseInt(width, 10), height:parseInt(height, 10), autoDimensions:false});*/
 }
 
 jQuery(document).ready(function($){

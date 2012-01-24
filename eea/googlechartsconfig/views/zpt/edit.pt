@@ -1,4 +1,4 @@
-<div id="googlecharts-config" tal:define="ajax_baseurl string:${view/context/absolute_url}">
+<div id="googlecharts_config" tal:define="ajax_baseurl string:${view/context/absolute_url}">
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 
     <script type="text/javascript">
@@ -14,12 +14,12 @@
     </script>
 
     <span class="ui-icon ui-icon-plus ui-corner-all" title="Add new chart" id="addgooglechart">+</span>
-    <form id="googlecharts-form">
-        <ul id="googlecharts-list">
+    <form id="googlecharts_form">
+        <ul id="googlecharts_list">
         </ul>
-        <div id="googlecharts-actionsView">
+        <div id="googlecharts_actionsView">
             <span class="actionButtons">
-                <input id="googlecharts-submit" type="button" value="Save" class="context"/>
+                <input id="googlecharts_submit" type="button" value="Save" class="context"/>
             </span>
         </div>
     </form>

@@ -11,7 +11,7 @@
 <tal:block tal:define="charts view/get_charts">
     <ul class="googlechart_tabs">
         <tal:block tal:repeat="chart charts">
-            <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}]);">
+            <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}]);">
             </script>
             <tal:block tal:condition="repeat/chart/start">
                 <li class="current" tal:attributes="chart_id chart/id" tal:content="chart/name">
@@ -25,8 +25,17 @@
     </ul>
     <div style="clear:both">
     </div>
+    <input type="button" value="export to png" onClick="exportToPng();"/>
     <div id="googlechart_dashboard">
-        <a id="fullsize-button" style="float:left">Full Size</a>
+        <!--a id="fullsize_button" style="float:left">Full Size</a-->
         <div style="clear:both"></div>
     </div>
+    
+    <form id="export" action='@@googlechart.export' method="POST">
+        <input type="hidden" id="svg" name="svg"/>
+        <input type="hidden" id="filename" name="filename"/>
+        <input type="hidden" id="type" name="type"/>
+        <input type="hidden" id="width" name="width"/>
+    </form>
+
 </tal:block>
