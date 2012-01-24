@@ -126,27 +126,18 @@ function drawChart(value){
             chart.setDataTable(dataTable);
             chart.draw();
         }
-
-/*        name = value[1].options.title;
-        configjson = JSON.stringify(value[1]);
-        columns = JSON.stringify(value[2]);
-        filters = JSON.stringify(value[3]);
-        filterposition = value[6];
-        params = "?json="+encodeURIComponent(configjson);
-        params += "&columns="+encodeURIComponent(columns);
-        params += "&width="+chart_width;
-        params += "&height="+chart_height;
-        params += "&name="+encodeURIComponent(name);
-        params += "&filters="+encodeURIComponent(filters);
-        params += "&filterposition="+filterposition;
-        jQuery("#fullsize_button").attr("href", "chart-full"+params);
-        jQuery("#fullsize_button").fancybox({type:'iframe', width:parseInt(width, 10), height:parseInt(height, 10), autoDimensions:false});*/
 }
 
 jQuery(document).ready(function($){
     if (typeof(googlechart_config_array) == 'undefined'){
         return;
     }
+
+    jQuery(googlechart_config_array).each(function(index, value){
+        tabsObj = jQuery(".googlechart_tabs");
+        tabsObj.find("li[chart_id='"+value[0]+"']").addClass("googlechart_class_"+value[1].chartType);
+    });
+
     jQuery(".googlechart_tabs").delegate("li", "click", function(){
         if (jQuery(this).attr("chart_id") !== current_chart_id){
             current_chart_id = jQuery(this).attr("chart_id");

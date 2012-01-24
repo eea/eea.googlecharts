@@ -1,10 +1,11 @@
 ul.googlechart_tabs{
     list-style: none outside none !important;
+    margin-bottom: 5px;
 }
 
 ul.googlechart_tabs li{
     float:left;
-    padding:5px;
+    padding:0px 10px 4px 21px;
     cursor:pointer;
 }
 
@@ -14,4 +15,48 @@ ul.googlechart_tabs li a{
 
 ul.googlechart_tabs li.current{
     font-weight:bold;
+}
+
+
+.googlechart_class_PieChart{
+    background: url("++resource++mini2.png") no-repeat scroll 0 -21px transparent;
+}
+
+.googlechart_class_LineChart{
+    background: url("++resource++mini2.png") no-repeat scroll 0 -84px transparent;
+}
+
+.googlechart_class_AreaChart{
+    background: url("++resource++mini2.png") no-repeat scroll 0 -105px transparent;
+}
+
+.googlechart_class_ColumnChart{
+    background: url("++resource++mini2.png") no-repeat scroll 0 0px transparent;
+}
+
+.googlechart_class_BarChart{
+    background: url("++resource++mini2.png") no-repeat scroll 0 -42px transparent;
+}
+
+.googlechart_class_ScatterChart{
+    background: url("++resource++mini2.png") no-repeat scroll 0 -168px transparent;
+}
+
+.googlechart_class_GeoChart{
+    background: url("++resource++mini2.png") no-repeat scroll 0 -63px transparent;
+}
+
+.googlechart_class_ImageSparkLine,
+.googlechart_class_AnnotatedTimeLine,
+.googlechart_class_MotionChart,
+.googlechart_class_CandlestickChart{
+    background: url("++resource++mini2.png") no-repeat scroll 0 -147px transparent;
+
+}
+
+.googlechart_class_Gauge,
+.googlechart_class_OrgChart,
+.googlechart_class_TreeMap,
+.googlechart_class_Table{
+    background: url("++resource++mini2.png") no-repeat scroll 0 -126px transparent;
 }

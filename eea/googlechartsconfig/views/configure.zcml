@@ -92,6 +92,11 @@
     file="./css/view.css"
   />
 
+  <browser:resource
+    name="mini2.png"
+    file="./imgs/mini2.png"
+  />
+
   <subscriber
     for="eea.daviz.interfaces.IExhibitJson
          eea.daviz.interfaces.IDavizFacetDeletedEvent"
