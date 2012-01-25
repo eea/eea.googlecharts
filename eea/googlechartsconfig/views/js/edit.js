@@ -551,6 +551,7 @@ function openEditor(elementId) {
 function openAddChartFilterDialog(id){
     jQuery(".googlecharts_filter_config").remove();
 
+
     addfilterdialog = '' +
     '<div class="googlecharts_filter_config">' +
         '<div class="field">' +
@@ -558,6 +559,7 @@ function openAddChartFilterDialog(id){
             '<span class="required" style="color: #f00;" title="Required"> ■ </span>' +
             '<div class="formHelp">Filter Column</div>' +
             '<select class="googlecharts_filter_columns">' +
+                '<option value="-1">Select Column</option>'+
             '</select>' +
         '</div>' +
         '<div class="field">' +
@@ -565,6 +567,7 @@ function openAddChartFilterDialog(id){
             '<span class="required" style="color: #f00;" title="Required"> ■ </span>' +
             '<div class="formHelp">Filter Type</div>' +
             '<select class="googlecharts_filter_type">' +
+                '<option value="-1">Select Filter Type</option>'+
             '</select>' +
         '</div>' +
     '</div>';
@@ -575,10 +578,16 @@ function openAddChartFilterDialog(id){
                     {
                         text: "Save",
                         click: function(){
-                            addFilter(id, jQuery(".googlecharts_filter_columns").val(),
-                                jQuery(".googlecharts_filter_type").val());
-                            markChartAsModified(id);
-                            jQuery(this).dialog("close");
+                            selectedColumn = jQuery(".googlecharts_filter_columns").val();
+                            selectedFilter = jQuery(".googlecharts_filter_type").val();
+                            if ((selectedColumn === '-1') || (selectedFilter === '-1')){
+                                alert ("Please select column and filter type!");
+                            }
+                            else{
+                                addFilter(id, selectedColumn,selectedFilter);
+                                markChartAsModified(id);
+                                jQuery(this).dialog("close");
+                            }
                         }
                     },
                     {
