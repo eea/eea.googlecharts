@@ -69,3 +69,7 @@
 .googlechart .filters_position {
     text-align: right;
 }
+
+#googlecharts\.columns\.toDataContainer{
+    display:none;
+}
