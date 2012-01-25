@@ -60,3 +60,11 @@ ul.googlechart_tabs li.current{
 .googlechart_class_Table{
     background: url("++resource++mini2.png") no-repeat scroll 0 -126px transparent;
 }
+
+#googlechart_filters {
+    white-space:nowrap;
+}
+
+#googlechart_filters > div{
+    margin-bottom:5px;
+}

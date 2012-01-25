@@ -27,27 +27,64 @@ function drawChart(value){
         jQuery("#googlechart_view").remove();
         filters = '<div id="googlechart_filters"></div>';
         view = '<div id="googlechart_view" class="googlechart"></div>';
-
+        var googlechart_table;
         if (chart_filterposition === 0){
-            jQuery(filters).appendTo('#googlechart_dashboard');
-            jQuery(view).appendTo('#googlechart_dashboard');
+            googlechart_table = ""+
+                "<table>"+
+                    "<tr>"+
+                        "<td>"+
+                            "<div id='googlechart_filters'></div>"+
+                        "</td>"+
+                    "</tr>"+
+                    "<tr>"+
+                        "<td>"+
+                            "<div id='googlechart_view' class='googlechart'></div>"+
+                        "</td>"+
+                    "</tr>"+
+                "</table>";
         }
         if (chart_filterposition === 1){
-            jQuery(filters).appendTo('#googlechart_dashboard');
-            jQuery(view).appendTo('#googlechart_dashboard');
-            jQuery("#googlechart_filters").attr("style","float:left");
-            jQuery("#googlechart_view").attr("style","float:left");
+            googlechart_table = ""+
+                "<table>"+
+                    "<tr>"+
+                        "<td>"+
+                            "<div id='googlechart_filters'></div>"+
+                        "</td>"+
+                        "<td>"+
+                            "<div id='googlechart_view' class='googlechart'></div>"+
+                        "</td>"+
+                    "</tr>"+
+                "</table>";
         }
         if (chart_filterposition === 2){
-            jQuery(view).appendTo('#googlechart_dashboard');
-            jQuery(filters).appendTo('#googlechart_dashboard');
+            googlechart_table = ""+
+                "<table>"+
+                    "<tr>"+
+                        "<td>"+
+                            "<div id='googlechart_view' class='googlechart'></div>"+
+                        "</td>"+
+                    "</tr>"+
+                    "<tr>"+
+                        "<td>"+
+                            "<div id='googlechart_filters'></div>"+
+                        "</td>"+
+                    "</tr>"+
+                "</table>";
         }
         if (chart_filterposition === 3){
-            jQuery(view).appendTo('#googlechart_dashboard');
-            jQuery(filters).appendTo('#googlechart_dashboard');
-            jQuery("#googlechart_filters").attr("style","float:left");
-            jQuery("#googlechart_view").attr("style","float:left");
+            googlechart_table = ""+
+                "<table>"+
+                    "<tr>"+
+                        "<td>"+
+                            "<div id='googlechart_view' class='googlechart'></div>"+
+                        "</td>"+
+                        "<td>"+
+                            "<div id='googlechart_filters'></div>"+
+                        "</td>"+
+                    "</tr>"+
+                "</table>";
         }
+        jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
         columnlabels = [];
         jQuery(chart_columns).each(function(index,chart_token){
