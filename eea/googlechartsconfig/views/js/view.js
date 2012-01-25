@@ -10,6 +10,13 @@ function exportToPng(){
     form.submit()
 }
 
+function checkSVG(){
+    var svg = jQuery("#googlechart_view").find("iframe").contents().find("#chartArea").html();
+    if ((svg) && (svg !== "")){
+        jQuery("#googlechart_export_button").show()
+    }
+}
+
 function drawChart(value){
         chart_id = value[0];
         chart_json = value[1];
@@ -23,14 +30,16 @@ function drawChart(value){
         jQuery("#filename").attr("value",chart_json.options.title);
         jQuery("#type").attr("value","image/png");
 
+        jQuery("#googlechart_export_button").hide()
         jQuery("#googlechart_filters").remove();
         jQuery("#googlechart_view").remove();
+        jQuery("#googlechart_table").remove();
         filters = '<div id="googlechart_filters"></div>';
         view = '<div id="googlechart_view" class="googlechart"></div>';
         var googlechart_table;
         if (chart_filterposition === 0){
             googlechart_table = ""+
-                "<table>"+
+                "<table id='googlechart_table'>"+
                     "<tr>"+
                         "<td>"+
                             "<div id='googlechart_filters'></div>"+
@@ -45,7 +54,7 @@ function drawChart(value){
         }
         if (chart_filterposition === 1){
             googlechart_table = ""+
-                "<table>"+
+                "<table id='googlechart_table'>"+
                     "<tr>"+
                         "<td>"+
                             "<div id='googlechart_filters'></div>"+
@@ -58,7 +67,7 @@ function drawChart(value){
         }
         if (chart_filterposition === 2){
             googlechart_table = ""+
-                "<table>"+
+                "<table id='googlechart_table'>"+
                     "<tr>"+
                         "<td>"+
                             "<div id='googlechart_view' class='googlechart'></div>"+
@@ -73,7 +82,7 @@ function drawChart(value){
         }
         if (chart_filterposition === 3){
             googlechart_table = ""+
-                "<table>"+
+                "<table id='googlechart_table'>"+
                     "<tr>"+
                         "<td>"+
                             "<div id='googlechart_view' class='googlechart'></div>"+
@@ -156,11 +165,18 @@ function drawChart(value){
 
             dashboard.bind(filters_array, chart);
 
+            google.visualization.events.addListener(dashboard, 'ready', function(event) {
+                checkSVG();
+            });
+
             dashboard.draw(dataTable);
         }
 
         else{
             chart.setDataTable(dataTable);
+            google.visualization.events.addListener(chart, 'ready', function(event) {
+                checkSVG();
+            });
             chart.draw();
         }
 }
