@@ -25,12 +25,13 @@
     </ul>
     <div style="clear:both">
     </div>
-    <input type="button" value="export to png" onClick="exportToPng();"/>
+
+    <input id="googlechart_export_button" style="display:none;" type="button" value="export to png" onClick="exportToPng();"/>
+
     <div id="googlechart_dashboard">
-        <!--a id="fullsize_button" style="float:left">Full Size</a-->
         <div style="clear:both"></div>
     </div>
-    
+
     <form id="export" action='@@googlechart.export' method="POST">
         <input type="hidden" id="svg" name="svg"/>
         <input type="hidden" id="filename" name="filename"/>
