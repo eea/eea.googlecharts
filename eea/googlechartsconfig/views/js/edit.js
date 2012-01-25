@@ -223,27 +223,27 @@ function saveThumb(value){
     );
 
     chart.setDataTable(dataTable);
-    chart.draw();
 
-    if (chart.getChartType() !== "Table"){
-        google.visualization.events.addListener(chart, 'ready', function(event) {
-            thumbObj = jQuery("#googlechart_thumb_form");
-            thumbObj.find("#filename").attr("value", "thumb");
-            thumbObj.find("#type").attr("value","image/png");
-            var svg = jQuery("#googlechart_thumb_zone").find("iframe").contents().find("#chartArea").html();
-            thumbObj.find("#svg").attr("value",svg);
-            jQuery.post("@@googlechart.setthumb",{"svg":svg},function(data){
-                if (data !== "success"){
-                    alert (data);
-                }
-                DavizEdit.Status.stop("Done");
-            });
-        });
-    }
-    else{
+    google.visualization.events.addListener(chart, 'error', function(event) {
         alert ("Can't generate thumb from the chart called: "+chart_json.options.title);
         DavizEdit.Status.stop("Done");
-    }
+    });
+
+    google.visualization.events.addListener(chart, 'ready', function(event) {
+        thumbObj = jQuery("#googlechart_thumb_form");
+        thumbObj.find("#filename").attr("value", "thumb");
+        thumbObj.find("#type").attr("value","image/png");
+        var svg = jQuery("#googlechart_thumb_zone").find("iframe").contents().find("#chartArea").html();
+        thumbObj.find("#svg").attr("value",svg);
+        jQuery.post("@@googlechart.setthumb",{"svg":svg},function(data){
+            if (data !== "Success"){
+                alert ("Can't generate thumb from the chart called: "+chart_json.options.title);
+            }
+            DavizEdit.Status.stop("Done");
+        });
+    });
+
+    chart.draw();
 }
 
 function drawChart(elementId, add){
