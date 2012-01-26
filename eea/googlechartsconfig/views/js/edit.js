@@ -176,7 +176,7 @@ function openAdvancedOptions(id){
 
 function addFilter(id, column, filtertype){
     filter = "<li class='googlechart_filteritem' id='googlechart_filter_"+id+"_"+column+"'>" +
-                "<h1 class='googlechart_filteritem_"+id+"'>"+available_columns[column]+"<div class='ui-icon ui-icon-trash remove_filter_icon' title='Delete filter'>x</div></h1>" +
+                "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden'>"+available_columns[column]+"</div><div class='ui-icon ui-icon-trash remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
                 available_filter_types[filtertype] +
                 "<input type='hidden' class='googlechart_filteritem_type' value='"+filtertype+"'/>" +
                 "<input type='hidden' class='googlechart_filteritem_column' value='"+column+"'/>" +
@@ -334,7 +334,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
             "<input class='googlechart_options' type='hidden' value='"+options+"'/>" +
 
             "<h1 class='googlechart_handle'>"+
-            "<div style='float:left'>"+id+"</div>"+
+            "<div style='float:left;width:70%;height:20px;overflow:hidden;'>"+id+"</div>"+
             "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"+
             "<div style='float:right;font-weight:normal;font-size:0.9em;margin-right:10px'>Use this chart as thumb</div>"+
             "<input style='float:right; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+id+"' onChange='markChartAsThumb(\""+id+"\");' "+(isThumb?"checked='checked'":"")+"/>"+
@@ -380,8 +380,9 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                 "<div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 350px; max-width:500px; overflow:auto'></div>" +
             "</div>" +
             "<div style='float:right; width:180px'>" +
-                "Filters" +
+                "<div style='float:left'>Filters</div>" +
                 "<span class='ui-icon ui-icon-plus ui-corner-all addgooglechartfilter' title='Add new filter'></span>" +
+                "<div style='clear:both'> </div>" +
                 "<ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>" +
                 "</ul>" +
             "</div>" +
