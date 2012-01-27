@@ -150,7 +150,6 @@ ul.googlechart_tabs li:first-of-type a:hover {
     background-image: -ms-linear-gradient(center top , #b1c748, #777c1f);
     background-image: -o-linear-gradient(center top , #b1c748, #777c1f);
     box-shadow: 0px 2px 2px #888;
-    max-width: 70%;
     max-height: 25px;
     overflow: hidden;
     margin-bottom: 1em;
@@ -162,6 +161,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
     border: 1px solid #ccc;
     text-align: center;
     min-width: 800px;
+    background: #FFFFFF;
 }
 
 /* Table

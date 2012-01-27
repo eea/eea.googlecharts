@@ -56,6 +56,7 @@ function drawChart(value){
                 "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom'>"+
                     "<div id='googlechart_view' class='googlechart'></div>"+
                     "<div id='googlechart_filters'></div>"+
+                    "<div style='clear: both'></div>" +
                 "</div>";
         }
         if (chart_filterposition === 3){
