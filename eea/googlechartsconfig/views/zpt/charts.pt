@@ -26,7 +26,10 @@
     <div style="clear:both">
     </div>
 
-    <input id="googlechart_export_button" style="display:none;" type="button" value="export to png" onClick="exportToPng();"/>
+    <div class="google_buttons_bar">
+        <input id="googlechart_export_button" style="display:none;" type="button" value="export to png" onClick="exportToPng();" class="context" />
+    </div>
+
 
     <div id="googlechart_dashboard">
         <div style="clear:both"></div>
