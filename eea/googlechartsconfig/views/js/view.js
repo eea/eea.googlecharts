@@ -39,59 +39,31 @@ function drawChart(value){
         var googlechart_table;
         if (chart_filterposition === 0){
             googlechart_table = ""+
-                "<table id='googlechart_table'>"+
-                    "<tr>"+
-                        "<td>"+
-                            "<div id='googlechart_filters'></div>"+
-                        "</td>"+
-                    "</tr>"+
-                    "<tr>"+
-                        "<td>"+
-                            "<div id='googlechart_view' class='googlechart'></div>"+
-                        "</td>"+
-                    "</tr>"+
-                "</table>";
+                "<div id='googlechart_table' class='googlechart_table googlechart_table_top'>"+
+                    "<div id='googlechart_filters'></div>"+
+                    "<div id='googlechart_view' class='googlechart'></div>"+
+                "</div>";
         }
         if (chart_filterposition === 1){
             googlechart_table = ""+
-                "<table id='googlechart_table'>"+
-                    "<tr>"+
-                        "<td>"+
-                            "<div id='googlechart_filters'></div>"+
-                        "</td>"+
-                        "<td>"+
-                            "<div id='googlechart_view' class='googlechart'></div>"+
-                        "</td>"+
-                    "</tr>"+
-                "</table>";
+                "<div id='googlechart_table' class='googlechart_table googlechart_table_left'>"+
+                    "<div id='googlechart_filters'></div>"+
+                    "<div id='googlechart_view' class='googlechart'></div>"+
+                "</div>";
         }
         if (chart_filterposition === 2){
             googlechart_table = ""+
-                "<table id='googlechart_table'>"+
-                    "<tr>"+
-                        "<td>"+
-                            "<div id='googlechart_view' class='googlechart'></div>"+
-                        "</td>"+
-                    "</tr>"+
-                    "<tr>"+
-                        "<td>"+
-                            "<div id='googlechart_filters'></div>"+
-                        "</td>"+
-                    "</tr>"+
-                "</table>";
+                "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom'>"+
+                    "<div id='googlechart_view' class='googlechart'></div>"+
+                    "<div id='googlechart_filters'></div>"+
+                "</div>";
         }
         if (chart_filterposition === 3){
             googlechart_table = ""+
-                "<table id='googlechart_table'>"+
-                    "<tr>"+
-                        "<td>"+
-                            "<div id='googlechart_view' class='googlechart'></div>"+
-                        "</td>"+
-                        "<td>"+
-                            "<div id='googlechart_filters'></div>"+
-                        "</td>"+
-                    "</tr>"+
-                "</table>";
+                "<div id='googlechart_table' class='googlechart_table googlechart_table_right'>"+
+                    "<div id='googlechart_filters'></div>"+
+                    "<div id='googlechart_view' class='googlechart'></div>"+
+                "</div>";
         }
         jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
