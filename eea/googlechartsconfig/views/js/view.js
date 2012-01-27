@@ -108,10 +108,6 @@ function drawChart(value){
             });
             dataTable.push(row);
         });
-
-        pivottedTable = pivotTable(dataTable, [1], [0,2], 3)
-        console.log(pivottedTable);
-
         chart_json.options.width = chart_width;
         chart_json.options.height = chart_height;
 
