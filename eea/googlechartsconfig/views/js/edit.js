@@ -771,7 +771,7 @@ function init_googlecharts_edit(){
         params += "&height="+height;
         params += "&name="+encodeURIComponent(name);
         jQuery(this).attr("href", "chart-full"+params);
-        jQuery(this).fancybox({type:'iframe', width:parseInt(width, 10), height:parseInt(height, 10), autoDimensions:false});
+        jQuery(this).fancybox({type:'iframe', width:parseInt(width, 10)+30, height:parseInt(height, 10)+30, autoDimensions:false});
     });
 
     loadCharts();
