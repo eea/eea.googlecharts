@@ -138,7 +138,7 @@ ul.googlechart_tabs li.current{
 }
 
 .googlechart_table_right #googlechart_filters > div {
-    max-width: 250px;
+    max-width: 200px;
     overflow: hidden;
 }
 
