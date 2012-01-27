@@ -62,8 +62,9 @@ function drawChart(value){
         if (chart_filterposition === 3){
             googlechart_table = ""+
                 "<div id='googlechart_table' class='googlechart_table googlechart_table_right'>"+
-                    "<div id='googlechart_filters'></div>"+
                     "<div id='googlechart_view' class='googlechart'></div>"+
+                    "<div id='googlechart_filters'></div>"+
+                    "<div style='clear: both'></div>" +
                 "</div>";
         }
         jQuery(googlechart_table).appendTo('#googlechart_dashboard');

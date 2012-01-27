@@ -169,7 +169,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
 
 /* Right */
 .googlechart_table_right #googlechart_filters {
-    float: right;
+    float: left;
 }
 
 .googlechart_table_right #googlechart_filters > div {
@@ -180,6 +180,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .googlechart_table_right #googlechart_view {
     max-width: 800px;
     overflow: auto;
+    float: left;
 }
 
 /* Left */
