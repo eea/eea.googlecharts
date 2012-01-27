@@ -1,64 +1,99 @@
-ul.googlechart_tabs{
-    list-style: none outside none !important;
-    margin-bottom: 5px;
-}
+/* View Google Charts
+*/
 
-ul.googlechart_tabs li{
-    float:left;
-    padding:0px 10px 4px 21px;
-    cursor:pointer;
-}
-
-ul.googlechart_tabs li a{
-    color:#000000 !important;
-}
-
-ul.googlechart_tabs li.current{
-    font-weight:bold;
-}
-
-
-.googlechart_class_PieChart{
+.googlechart_class_PieChart span {
     background: url("++resource++mini2.png") no-repeat scroll 0 -21px transparent;
 }
 
-.googlechart_class_LineChart{
+.googlechart_class_LineChart span{
     background: url("++resource++mini2.png") no-repeat scroll 0 -84px transparent;
 }
 
-.googlechart_class_AreaChart{
+.googlechart_class_AreaChart span{
     background: url("++resource++mini2.png") no-repeat scroll 0 -105px transparent;
 }
 
-.googlechart_class_ColumnChart{
+.googlechart_class_ColumnChart span{
     background: url("++resource++mini2.png") no-repeat scroll 0 0px transparent;
 }
 
-.googlechart_class_BarChart{
+.googlechart_class_BarChart span{
     background: url("++resource++mini2.png") no-repeat scroll 0 -42px transparent;
 }
 
-.googlechart_class_ScatterChart{
+.googlechart_class_ScatterChart span{
     background: url("++resource++mini2.png") no-repeat scroll 0 -168px transparent;
 }
 
-.googlechart_class_GeoChart{
+.googlechart_class_GeoChart span{
     background: url("++resource++mini2.png") no-repeat scroll 0 -63px transparent;
 }
 
-.googlechart_class_ImageSparkLine,
-.googlechart_class_AnnotatedTimeLine,
-.googlechart_class_MotionChart,
-.googlechart_class_CandlestickChart{
+.googlechart_class_ImageSparkLine span,
+.googlechart_class_AnnotatedTimeLine span,
+.googlechart_class_MotionChart span,
+.googlechart_class_CandlestickChart span{
     background: url("++resource++mini2.png") no-repeat scroll 0 -147px transparent;
 
 }
 
-.googlechart_class_Gauge,
-.googlechart_class_OrgChart,
-.googlechart_class_TreeMap,
-.googlechart_class_Table{
+.googlechart_class_Gauge span,
+.googlechart_class_OrgChart span,
+.googlechart_class_TreeMap span,
+.googlechart_class_Table span{
     background: url("++resource++mini2.png") no-repeat scroll 0 -126px transparent;
+}
+
+#tab-charts {
+    background: #F3F3F3;
+    padding-bottom: 2em;
+    border-radius: 8px 0;
+}
+
+#content ul.googlechart_tabs,
+ul.googlechart_tabs {
+    background: #2C8DA2;
+    border-radius: 10px 10px 0px 0px;
+    border: none;
+    height: 37px;
+    list-style: none;
+    list-style-image: none !important;
+    margin: 0 !important;
+    padding: 0;
+}
+
+ul.googlechart_tabs li {
+    float: left;
+    list-style-image: none !important;
+    margin: 0 !important;
+    text-indent: 0;
+}
+
+ul.googlechart_tabs span {
+  height: 21px;
+  padding-left: 30px;
+}
+
+ul.googlechart_tabs li a {
+    color: #FFF;
+    border: 0px;
+    height: 17px;
+    font-size: 125%;
+    text-decoration: none;
+    text-shadow: 1px 1px 1px #000000;
+    display: inline-block;
+    padding:10px;
+}
+
+ul.googlechart_tabs li a.current, ul.googlechart_tabs li a:hover {
+    color: #2D8EA3;
+    text-shadow: 1px 1px 1px #FFFFFF;
+    background-color: #F3F3F3;
+}
+
+ul.googlechart_tabs li:first-of-type a.current,
+ul.googlechart_tabs li:first-of-type a:hover {
+  border-radius: 8px 0 0 0;
 }
 
 /* Google Charts view */

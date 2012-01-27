@@ -14,11 +14,17 @@
             <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}]);">
             </script>
             <tal:block tal:condition="repeat/chart/start">
-                <li class="current" tal:attributes="chart_id chart/id" tal:content="chart/name">
+                <li>
+                    <a href="#" class="current" tal:attributes="chart_id chart/id">
+                     <span tal:content="chart/name" />
+                    </a>
                 </li>
             </tal:block>
             <tal:block tal:condition="not:repeat/chart/start">
-                <li tal:content="chart/name" tal:attributes="chart_id chart/id">
+                <li>
+                    <a href="#" tal:attributes="chart_id chart/id">
+                        <span tal:content="chart/name" />
+                    </a>
                 </li>
             </tal:block>
         </tal:block>

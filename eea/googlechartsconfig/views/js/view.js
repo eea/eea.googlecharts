@@ -165,13 +165,13 @@ jQuery(document).ready(function($){
 
     jQuery(googlechart_config_array).each(function(index, value){
         tabsObj = jQuery(".googlechart_tabs");
-        tabsObj.find("li[chart_id='"+value[0]+"']").addClass("googlechart_class_"+value[1].chartType);
+        tabsObj.find("a[chart_id='"+value[0]+"']").addClass("googlechart_class_"+value[1].chartType);
     });
 
-    jQuery(".googlechart_tabs").delegate("li", "click", function(){
+    jQuery(".googlechart_tabs").delegate("a", "click", function(){
         if (jQuery(this).attr("chart_id") !== current_chart_id){
             current_chart_id = jQuery(this).attr("chart_id");
-            jQuery(".googlechart_tabs li").removeClass("current");
+            jQuery(".googlechart_tabs a").removeClass("current");
             jQuery(this).addClass("current");
 
             var index_to_use;
@@ -186,6 +186,7 @@ jQuery(document).ready(function($){
 
             drawChart(googlechart_config_array[index_to_use]);
         }
+        return false;
     });
 
     value=googlechart_config_array[0];
