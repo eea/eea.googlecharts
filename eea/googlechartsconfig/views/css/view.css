@@ -1,6 +1,13 @@
 /* View Google Charts
 */
 
+.tab-charts span {
+  background-image: url("++resource++eea.googlecharts.images/charts-icon.png");
+  background-repeat: no-repeat;
+  display: block;
+  padding: 50px 5px 0;
+}
+
 .googlechart_class_PieChart span {
     background: url("++resource++mini2.png") no-repeat scroll 0 -21px transparent;
 }

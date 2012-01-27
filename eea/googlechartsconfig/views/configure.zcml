@@ -97,6 +97,10 @@
     file="./imgs/mini2.png"
   />
 
+  <browser:resourceDirectory
+    name="eea.googlecharts.images"
+    directory="./imgs" />
+
   <subscriber
     for="eea.daviz.interfaces.IExhibitJson
          eea.daviz.interfaces.IDavizFacetDeletedEvent"
