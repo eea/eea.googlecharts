@@ -73,3 +73,22 @@
 #googlecharts\.columns\.toDataContainer{
     display:none;
 }
+
+.googlechart-dialog .ui-dialog-titlebar {
+    color:black;
+    font-size:1.2em;
+    margin:0 2px;
+    padding:0.2em 0.5em;
+    background-color:#CDE2A7;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#CDE2A7));
+    background-image: -webkit-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -moz-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -ms-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -o-linear-gradient(center top , #FFFFFF, #CDE2A7);
+
+}
+
+.googlechart-dialog {
+  border-radius: 10px;
+  box-shadow: 0px 2px 2px #888;
+}

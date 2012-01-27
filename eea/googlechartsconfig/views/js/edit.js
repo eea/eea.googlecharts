@@ -105,6 +105,7 @@ function openAddDialog(){
         "</div>";
     jQuery(addchartdialog).dialog({title:"Add Chart",
             modal:true,
+            dialogClass: 'googlechart-dialog',
             buttons:[
                 {
                     text: "Add",
@@ -147,6 +148,7 @@ function openAdvancedOptions(id){
             "</div>" +
         "<div>";
     jQuery(advancedOptionsDialog).dialog({title:"Advanced Options",
+            dialogClass: 'googlechart-dialog',
             modal:true,
             buttons:[
                 {
@@ -447,6 +449,7 @@ function openEditColumns(id){
     '</div>';
 
     jQuery(editcolumnsdialog).dialog({title:"Edit Columns",
+                dialogClass: 'googlechart-dialog',
                 modal:true,
                 buttons:[
                     {
@@ -574,6 +577,7 @@ function openAddChartFilterDialog(id){
     '</div>';
 
     jQuery(addfilterdialog).dialog({title:"Add Filter",
+                dialogClass: 'googlechart-dialog',
                 modal:true,
                 buttons:[
                     {
