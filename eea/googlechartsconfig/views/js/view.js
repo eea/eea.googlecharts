@@ -81,9 +81,9 @@ function drawChart(value){
             dataTable.push(row);
         });
 
-        console.log(dataTable);
+/*        console.log(dataTable);
         pivottedTable = pivotTable(dataTable, [0], [1,2], 3)
-        console.log(pivottedTable);
+        console.log(pivottedTable);*/
 
         chart_json.options.width = chart_width;
         chart_json.options.height = chart_height;
