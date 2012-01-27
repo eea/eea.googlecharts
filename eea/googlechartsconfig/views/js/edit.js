@@ -178,7 +178,7 @@ function openAdvancedOptions(id){
 
 function addFilter(id, column, filtertype){
     filter = "<li class='googlechart_filteritem' id='googlechart_filter_"+id+"_"+column+"'>" +
-                "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden'>"+available_columns[column]+"</div><div class='ui-icon ui-icon-trash remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
+                "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden' class='googlechart_filteritem_id'>"+available_columns[column]+"</div><div class='ui-icon ui-icon-trash remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
                 available_filter_types[filtertype] +
                 "<input type='hidden' class='googlechart_filteritem_type' value='"+filtertype+"'/>" +
                 "<input type='hidden' class='googlechart_filteritem_column' value='"+column+"'/>" +
@@ -635,11 +635,6 @@ function openAddChartFilterDialog(id){
 
 }
 
-function removeChart(id){
-    jQuery("#"+id).remove();
-    markAllChartsAsModified();
-}
-
 function saveCharts(){
     DavizEdit.Status.start("Saving Charts");
     var ordered = jQuery('#googlecharts_list').sortable('toArray');
@@ -737,15 +732,63 @@ function init_googlecharts_edit(){
 
     jQuery("#addgooglechart").click(openAddDialog);
     jQuery("#googlecharts_list").delegate(".remove_chart_icon","click",function(){
-        removeChart(jQuery(this).closest('.googlechart').attr('id'));
+        chartId = jQuery(this).closest('.googlechart').attr('id');
+        chartToRemove = jQuery("#"+chartId).find(".googlechart_id").attr('value');
+        removeChartDialog = ""+
+            "<div>Are you sure you want to delete chart: "+
+            "<strong>"+chartToRemove+"</strong>"+
+            "</div>";
+        jQuery(removeChartDialog).dialog({title:"Remove Chart",
+            modal:true,
+            dialogClass: 'googlechart-dialog',
+            buttons:[
+                {
+                    text: "Remove",
+                    click: function(){
+                        jQuery("#"+chartId).remove();
+                        markAllChartsAsModified();
+                        jQuery(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    click: function(){
+                        jQuery(this).dialog("close");
+                    }
+                }
+        ]});
+
     });
 
     jQuery("#googlecharts_list").delegate(".remove_filter_icon","click",function(){
+        filterToRemove = jQuery(this).closest('.googlechart_filteritem');
         chartId = jQuery(this).closest('.googlechart').attr('id');
         liName = "googlechartid";
         id = chartId.substr(liName.length+1);
-        markChartAsModified(id);
-        jQuery(this).closest('.googlechart_filteritem').remove();
+        title = filterToRemove.find('.googlechart_filteritem_id').html();
+        removeFilterDialog = ""+
+            "<div>Are you sure you want to delete filter: "+
+            "<strong>"+title+"</strong>"+
+            "</div>";
+        jQuery(removeFilterDialog).dialog({title:"Remove Chart",
+            modal:true,
+            dialogClass: 'googlechart-dialog',
+            buttons:[
+                {
+                    text: "Remove",
+                    click: function(){
+                        filterToRemove.remove();
+                        markChartAsModified(id);
+                        jQuery(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    click: function(){
+                        jQuery(this).dialog("close");
+                    }
+                }
+        ]});
     });
 
     jQuery("#googlecharts_list").delegate(".addgooglechartfilter","click",function(){
