@@ -423,7 +423,6 @@ function populateNewTable(dataTable){
     jQuery(newColumnsRow).appendTo("#newTable");
 
     idx = 0;
-    console.log(hiddenStatus);
     jQuery(newColumns).each(function(key,value){
         newColumn = '<th>' + 
                         '<span style="float:left;margin-right:2px">' + value + '</span>';
