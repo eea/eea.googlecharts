@@ -178,7 +178,7 @@ function openAdvancedOptions(id){
 
 function addFilter(id, column, filtertype){
     filter = "<li class='googlechart_filteritem' id='googlechart_filter_"+id+"_"+column+"'>" +
-                "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden' class='googlechart_filteritem_id'>"+available_columns[column]+"</div><div class='ui-icon ui-icon-trash remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
+                "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden' class='googlechart_filteritem_id'>"+(available_columns[column]?available_columns[column]:column)+"</div><div class='ui-icon ui-icon-trash remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
                 available_filter_types[filtertype] +
                 "<input type='hidden' class='googlechart_filteritem_type' value='"+filtertype+"'/>" +
                 "<input type='hidden' class='googlechart_filteritem_column' value='"+column+"'/>" +
@@ -197,7 +197,8 @@ function saveThumb(value){
     chart_filterposition = value[6];
     chart_options = value[7];
 
-    dataTable = prepareTable(all_rows, chart_columns, available_columns);
+//    dataTable = prepareTable(all_rows, chart_columns, available_columns);
+    dataTable = prepareTableForChart(all_rows, chart_columns, available_columns);
 
     drawGoogleChart(
         '', 
@@ -248,7 +249,7 @@ function drawChart(elementId, add){
             chartColumns = JSON.parse(chartColumns_str);
         }
 
-        dataTable = prepareTable(merged_rows, chartColumns, available_columns);
+        dataTable = prepareTableForChart(all_rows, chartColumns, available_columns);
 
         wrapperJSON.dataTable = dataTable;
 
@@ -453,7 +454,6 @@ function populateNewTable(dataTable){
 
     jQuery("#newColumns").sortable({
         stop: function(event,ui){
-            console.log(dataTable);
             populateNewTable(dataTable);
         }
     });
@@ -647,7 +647,13 @@ function openEditColumns(id){
                 ]});
     columns = [];
 
-    columnsSettings = JSON.parse(jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value"));
+    columns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value");
+    if (!columns_str){
+        columnsSettings = {};
+    }
+    else{
+        columnsSettings = JSON.parse(jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value"));
+    }
     jQuery.each(available_columns,function(key,value){
         originalStatus = 0
         jQuery(columnsSettings.original).each(function(idx, original){
@@ -729,18 +735,9 @@ function openEditor(elementId) {
         chart = defaultChart;
     }
 
-    dataTable=[];
     chartColumns_str = jQuery("#googlechartid_"+elementId+" .googlechart_columns").val();
-    if (chartColumns_str === ""){
-        chartColumns = [];
-    }
-    else{
-        chartColumns = JSON.parse(chartColumns_str);
-    }
 
-    dataTable = prepareTable(merged_rows, chartColumns, available_columns);
-
-    chart.dataTable = dataTable;
+    chart.dataTable = prepareTableForChart(all_rows,JSON.parse(chartColumns_str),available_columns);
 
     chart.options.title = title;
     var wrapper = new google.visualization.ChartWrapper(chart);
@@ -806,18 +803,35 @@ function openAddChartFilterDialog(id){
     used_columns = [];
 
     jQuery(orderedFilter).each(function(index,value){
-            used_columns.push(jQuery("#"+value+" .googlechart_filteritem_column").attr("value"));
+        used_columns.push(jQuery("#"+value+" .googlechart_filteritem_column").attr("value"));
     });
 
     chartColumns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").val();
+    chartColumns = [];
     if (chartColumns_str === ""){
         chartColumns = [];
     }
     else{
-        chartColumns = JSON.parse(chartColumns_str);
+        preparedColumns = JSON.parse(chartColumns_str).prepared;
+        jQuery(preparedColumns).each(function(index, value){
+            if (value.status === 1){
+                chartColumns.push(value.name);
+            }
+        });
     }
 
+    columnsSettings = JSON.parse(jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value"));
+    availableColumns = {};
     jQuery.each(available_columns,function(key,value){
+        availableColumns[key] = value;
+    });
+    jQuery(columnsSettings.prepared).each(function(idx,value){
+        if (!available_columns[value.name]){
+            availableColumns[value.name] = value.name;
+        }
+    });
+
+    jQuery.each(availableColumns,function(key,value){
         if (!used_columns.find(key)){
             if (chartColumns.find(key)){
                 column = '<option value="'+key+'">'+value+'</option>';
@@ -830,7 +844,6 @@ function openAddChartFilterDialog(id){
         column = '<option value="'+key+'">'+value+'</option>';
         jQuery(column).appendTo(".googlecharts_filter_type");
     });
-
 }
 
 function saveCharts(){

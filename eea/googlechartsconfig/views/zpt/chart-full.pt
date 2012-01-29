@@ -8,8 +8,9 @@
     google.load('visualization', '1.0', {packages: ['controls']});
 
     jQuery(document).ready(function($){
-        dataTable = prepareTable(merged_rows, chart_columns, available_columns);
-
+//        dataTable = prepareTable(merged_rows, chart_columns, available_columns);
+        dataTable = prepareTableForChart(merged_rows, chart_columns, available_columns);
+        
         chart_json.options.title = name;
 
         drawGoogleChart(

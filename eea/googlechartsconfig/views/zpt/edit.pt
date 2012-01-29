@@ -10,7 +10,7 @@
     </script>
 
 
-    <script type="text/javascript" tal:content="string:ajax_baseurl = '${ajax_baseurl}';available_columns = ${view/get_columns};merged_rows = ${view/get_rows};all_rows = ${view/get_allrows}">
+    <script type="text/javascript" tal:content="string:ajax_baseurl = '${ajax_baseurl}';available_columns = ${view/get_columns};all_rows = ${view/get_allrows}">
     </script>
 
     <span class="ui-icon ui-icon-plus ui-corner-all" title="Add new chart" id="addgooglechart">+</span>

@@ -69,7 +69,18 @@ function drawChart(value){
         }
         jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
-        dataTable = prepareTable(merged_rows, chart_columns, available_columns);
+        dataTable = prepareTableForChart(merged_rows, chart_columns, available_columns);
+
+        availableColumns = {}
+        jQuery.each(available_columns,function(key, value){
+            availableColumns[key] = value;
+        });
+
+        jQuery(chart_columns.prepared).each(function(index, value){
+            if (!available_columns[value.name]){
+                availableColumns[value.name] = value.name;
+            }
+        });
 
         drawGoogleChart(
             'googlechart_dashboard', 
@@ -83,7 +94,7 @@ function drawChart(value){
             chart_height,
             chart_filterposition,
             chart_options,
-            available_columns,
+            availableColumns,
             checkSVG,
             function(){}
             );

@@ -1,3 +1,64 @@
+function prepareTableForChart(rows, columnSettings, originalAvailableColumns){
+    preparedColumns = columnSettings.prepared;
+    originalColumns = columnSettings.original;
+
+    allColumns = [];
+    availableColumns = {};
+    originalChartColumns = [];
+
+    normalColumns = [];
+    pivotColumns = [];
+    valueColumn = -1;
+
+    dataTable = [];
+
+    preparedColumnLabels = [];
+
+    jQuery.each(originalAvailableColumns,function(key, value){
+        availableColumns[key] = value;
+        originalChartColumns.push(key);
+    });
+
+    jQuery(preparedColumns).each(function(index, value){
+        allColumns.push(value.name);
+        if (!originalAvailableColumns[value.name]){
+            availableColumns[value.name] = value.name;
+        }
+        if (value.status === 1){
+            preparedColumnLabels.push(value.name);
+        }
+    });
+
+
+    jQuery.each(originalColumns, function(idx, value){
+        columnName = value.name;
+        columnType = value.status;
+        switch(columnType){
+            case 0:
+                break;
+            case 1:
+                normalColumns.push(idx);
+                break;
+            case 2:
+                pivotColumns.push(idx);
+                break;
+            case 3:
+                valueColumn = idx;
+                break;
+        }
+    });
+
+    if (valueColumn != -1){
+        dataTable = prepareTable(rows, originalChartColumns, availableColumns);
+        newRows = pivotTable(dataTable, normalColumns, pivotColumns, valueColumn, availableColumns, rows.properties);
+        dataTable = prepareTable(newRows, preparedColumnLabels, availableColumns);
+    }
+    else{
+        dataTable = prepareTable(rows, preparedColumnLabels, availableColumns);
+    }
+    return dataTable;
+}
+
 function prepareTable(originalDataTable, columns, availableColumns){
     columnLabels = [];
     jQuery(columns).each(function(index, chartToken){
@@ -34,9 +95,18 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
     jQuery(originalTable).each(function(row_index, row){
         if (row_index === 0){
             jQuery(row).each(function(column_index, column){
-                if (normalColumns.find(column_index)){
+                found = false;
+                jQuery(normalColumns).each(function(idx, value){
+                    if (value === column_index){
+                        found = true;
+                    }
+                });
+                if (found){
                     pivotTableColumns.push(column);
                 }
+/*                if (normalColumns.find(column_index)){
+                    pivotTableColumns.push(column);
+                }*/
             });
         }
         else {
@@ -50,18 +120,31 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
                 fixValues.push(row[column]);
             });
             jQuery(pivotingColumns).each(function(column_index, column){
-                pivotColumnName += " ";
+                pivotColumnName += "_";
                 pivotColumnName += row[column];
             });
 
-            if (!pivotTableColumns.find(pivotColumnName)){
+            found = false;
+            jQuery(pivotTableColumns).each(function(idx, value){
+                if (value === pivotColumnName){
+                    found = true;
+                }
+            });
+//            if (!pivotTableColumns.find(pivotColumnName)){
+            if (!found){
                 isNewColumn = true;
                 pivotTableColumns.push(pivotColumnName);
                 defaultNewRowValues.push(defaultNewColumnValue);
                 foundColumnIndex = pivotTableColumns.length - 1;
             }
             else {
-                foundColumnIndex = pivotTableColumns.find(pivotColumnName);
+                foundColumnIndex = -1;
+                jQuery(pivotTableColumns).each(function(idx, value){
+                    if (pivotColumnName === value){
+                        foundColumnIndex = idx;
+                    }
+                });
+//                foundColumnIndex = pivotTableColumns.find(pivotColumnName);
             }
             isNewRow = true;
             foundIndex = -1;
@@ -112,10 +195,7 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
                     }
                 });
                 pivotTableKeys.push(colKey);
-/*                pivotTableObj.properties[colValue] = originalProperties[colKey];
-                if (!pivotTableObj.properties[colKey]){*/
                     pivotTableObj.properties[colValue] = colValue;
-/*                }*/
             });
         }
         else{
