@@ -423,7 +423,10 @@ function populateNewTable(dataTable){
     jQuery(newColumnsRow).appendTo("#newTable");
 
     idx = 0;
-    jQuery(newColumns).each(function(key,value){
+//ZOTYA
+//   jQuery(newColumns).each(function(key,value){
+    jQuery(newColumnTitles).each(function(key,value){
+//ZOTYA
         newColumn = '<th>' + 
                         '<span style="float:left;margin-right:2px">' + value + '</span>';
                         if (hiddenStatus[idx]){
@@ -571,14 +574,65 @@ function openEditColumns(id){
                     {
                         text: "Save",
                         click: function(){
-/*                            selectedOptions = jQuery(".googlecharts_columns_to option");
-                            columns=[];
-                            selectedOptions.each(function(){
-                                columns.push(jQuery(this).attr('value'));
+                            columnsSettings = {};
+                            columnsSettings.original = [];
+                            columnsSettings.prepared = [];
+                            hasNormal = false;
+                            hasPivot = false;
+                            hasValue = false;
+                            jQuery("#originalColumns").find("th").each(function(){
+                                originalColumn = jQuery(this).find("span").html();
+                                originalColumnName = originalColumn;
+                                originalColumnStatus = parseInt(jQuery(this).find("select").attr("value"),10);
+                                original = {};
+
+                                jQuery.each(available_columns,function(key,value){
+                                    if (value === originalColumn){
+                                        originalColumnName = key;
+                                    }
+                                });
+
+                                original['name'] = originalColumnName;
+                                original['status'] = originalColumnStatus;
+                                if (originalColumnStatus === 1)
+                                    hasNormal = true;
+                                if (originalColumnStatus === 2)
+                                    hasPivot = true;
+                                if (originalColumnStatus === 3)
+                                    hasValue = true;
+                                columnsSettings.original.push(original);
                             });
-                            columns_str = JSON.stringify(columns);
+                            jQuery("#newColumns").find("th").each(function(){
+                                newColumn = jQuery(this).find("span").html();
+                                newColumnName = newColumn;
+                                jQuery.each(available_columns,function(key,value){
+                                    if (value === newColumn){
+                                        newColumnName = key;
+                                    }
+                                });
+
+                                preparedColumn = {};
+                                if (jQuery(this).find("div.ui-icon").hasClass("ui-icon-hide")){
+                                    newColumnStatus = 1;
+                                }
+                                else{
+                                    newColumnStatus = 0;
+                                }
+                                preparedColumn['name'] = newColumnName;
+                                preparedColumn['status'] = newColumnStatus;
+                                columnsSettings.prepared.push(preparedColumn);
+                            });
+                            if (!hasNormal){
+                                alert("At least 1 visible column must be selected!");
+                                return;
+                            }
+                            if (hasPivot != hasValue){
+                                alert("If you want pivot table, you must select at least 1 pivot volumn and 1 value column");
+                                return;
+                            }
+                            columns_str = JSON.stringify(columnsSettings);
                             jQuery("#googlechartid_"+id+" .googlechart_columns").val(columns_str);
-                            markChartAsModified(id);*/
+                            markChartAsModified(id);
                             jQuery(this).dialog("close");
                         }
                     },

@@ -112,10 +112,10 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
                     }
                 });
                 pivotTableKeys.push(colKey);
-                pivotTableObj.properties[colKey] = originalProperties[colKey];
-                if (!pivotTableObj.properties[colKey]){
-                    pivotTableObj.properties[colKey] = valueColumnType;
-                }
+/*                pivotTableObj.properties[colValue] = originalProperties[colKey];
+                if (!pivotTableObj.properties[colKey]){*/
+                    pivotTableObj.properties[colValue] = colValue;
+/*                }*/
             });
         }
         else{

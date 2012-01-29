@@ -128,3 +128,7 @@
 .googlechartTable .ui-icon-hide {
   background-image: url(../../++resource++eea.daviz.images/hide.png);
 }
+
+#newColumns th{
+    cursor:move;
+}
