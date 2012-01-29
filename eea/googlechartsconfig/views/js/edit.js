@@ -423,10 +423,8 @@ function populateNewTable(dataTable){
     jQuery(newColumnsRow).appendTo("#newTable");
 
     idx = 0;
-//ZOTYA
-//   jQuery(newColumns).each(function(key,value){
+
     jQuery(newColumnTitles).each(function(key,value){
-//ZOTYA
         newColumn = '<th>' + 
                         '<span style="float:left;margin-right:2px">' + value + '</span>';
                         if (hiddenStatus[idx]){
@@ -455,7 +453,8 @@ function populateNewTable(dataTable){
 
     jQuery("#newColumns").sortable({
         stop: function(event,ui){
-            populateNewTable(dataTable, columns);
+            console.log(dataTable);
+            populateNewTable(dataTable);
         }
     });
 
@@ -472,6 +471,7 @@ function populateNewTable(dataTable){
 
     DavizEdit.Status.stop("Done");
 
+    return dataTable;
 }
 
 function generateNewTable(){
@@ -539,8 +539,10 @@ function generateNewTable(){
         }
     });
 
-    populateNewTable(newRows);
+    newTable = populateNewTable(newRows);
+
     DavizEdit.Status.stop("Done");
+    return newTable;
 }
 
 function openEditColumns(id){
@@ -645,14 +647,21 @@ function openEditColumns(id){
                 ]});
     columns = [];
 
+    columnsSettings = JSON.parse(jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value"));
     jQuery.each(available_columns,function(key,value){
+        originalStatus = 0
+        jQuery(columnsSettings.original).each(function(idx, original){
+            if (original.name === key){
+                originalStatus = original.status;
+            }
+        });
         column = '<th>' + 
                     '<span>' + value + '</span>' +
                     '<select onchange="generateNewTable();">' +
-                        '<option value="0">Hidden</option>' +
-                        '<option value="1">Visible</option>' +
-                        '<option value="2">Pivot</option>' +
-                        '<option value="3">Value</option>' +
+                        '<option value="0" ' + ((originalStatus === 0) ? 'selected="selected"':'')+ '>Hidden</option>' +
+                        '<option value="1" ' + ((originalStatus === 1) ? 'selected="selected"':'')+ '>Visible</option>' +
+                        '<option value="2" ' + ((originalStatus === 2) ? 'selected="selected"':'')+ '>Pivot</option>' +
+                        '<option value="3" ' + ((originalStatus === 3) ? 'selected="selected"':'')+ '>Value</option>' +
                     '</select>' +
                  '</th>';
         jQuery(column).appendTo("#originalColumns");
@@ -671,6 +680,29 @@ function openEditColumns(id){
             jQuery(tableRow).appendTo("#originalTable");
         }
     });
+
+    newDataTable = generateNewTable();
+
+    jQuery("#newColumns").find("th").remove();
+    jQuery(columnsSettings.prepared).each(function(idx, prepared){
+        preparedName = available_columns[prepared.name];
+        if (!preparedName){
+            preparedName = prepared.name;
+        }
+        newColumn = '<th>' + 
+                        '<span style="float:left;margin-right:2px">' + preparedName + '</span>';
+                        if (prepared.status === 0){
+                            newColumn += '<div title="Hide facet" class="ui-icon ui-icon-show">h</div>';
+                        }
+                        else {
+                            newColumn += '<div title="Hide facet" class="ui-icon ui-icon-hide">h</div>';
+                        }
+        newColumn += '</th>';
+
+        jQuery(newColumn).appendTo("#newColumns");
+    });
+
+    populateNewTable(newDataTable);
     DavizEdit.Status.stop("Done");
 }
 

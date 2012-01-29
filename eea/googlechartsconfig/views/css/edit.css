@@ -132,3 +132,7 @@
 #newColumns th{
     cursor:move;
 }
+
+.googlechartTable .ui-icon {
+    cursor:pointer;
+}
