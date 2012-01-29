@@ -69,95 +69,24 @@ function drawChart(value){
         }
         jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
-        columnlabels = [];
-        jQuery(chart_columns).each(function(index,chart_token){
-            columnlabels.push(available_columns[chart_token]);
-        });
-        dataTable = [];
-        dataTable.push(columnlabels);
-        jQuery(merged_rows.items).each(function(index, merged_row){
-            row = [];
-            jQuery(chart_columns).each(function(index,chart_token){
-                row.push(merged_row[chart_token]);
-            });
-            dataTable.push(row);
-        });
+        dataTable = prepareTable(merged_rows, chart_columns, available_columns);
 
-/*        console.log(dataTable);
-        pivottedTable = pivotTable(dataTable, [0], [1,2], 3)
-        console.log(pivottedTable);*/
-
-        chart_json.options.width = chart_width;
-        chart_json.options.height = chart_height;
-
-        jQuery.each(chart_options,function(key,value){
-            chart_json.options[key]=value;
-        });
-
-
-        chart_json.dataTable = [];
-
-        chart_json.containerId = "googlechart_view";
-        var chart = new google.visualization.ChartWrapper(
-            chart_json
-        );
-
-        filters_array = [];
-        if (chart_filters){
-            jQuery.each(chart_filters,function(key, value){
-                filters_div = "googlechart_filters";
-                filter_div_id = "googlechart_filters_"+key;
-                filter_div = "<div id='"+filter_div_id+"'></div>";
-                jQuery(filter_div).appendTo("#"+filters_div);
-                filterSettings = {};
-                filterSettings.options = {};
-                filterSettings.options.ui = {};
-                filterSettings.options.filterColumnLabel = available_columns[key];
-                filterSettings.containerId = filter_div_id;
-                switch(value){
-                    case "0":
-                        filterSettings.controlType = 'NumberRangeFilter';
-                        break;
-                    case "1":
-                        filterSettings.controlType = 'StringFilter';
-                        break;
-                    case "2":
-                        filterSettings.controlType = 'CategoryFilter';
-                        filterSettings.options.ui.allowTyping = false;
-                        filterSettings.options.ui.allowMultiple = false;
-                        break;
-                    case "3":
-                        filterSettings.controlType = 'CategoryFilter';
-                        filterSettings.options.ui.allowTyping = false;
-                        filterSettings.options.ui.allowMultiple = true;
-                        filterSettings.options.ui.selectedValuesLayout = 'belowStacked';
-                        break;
-                }
-                filter = new google.visualization.ControlWrapper(filterSettings);
-                filters_array.push(filter);
-            });
-        }
-
-        if (filters_array.length > 0){
-            var dashboard = new google.visualization.Dashboard(
-              document.getElementById('googlechart_dashboard'));
-
-            dashboard.bind(filters_array, chart);
-
-            google.visualization.events.addListener(dashboard, 'ready', function(event) {
-                checkSVG();
-            });
-
-            dashboard.draw(dataTable);
-        }
-
-        else{
-            chart.setDataTable(dataTable);
-            google.visualization.events.addListener(chart, 'ready', function(event) {
-                checkSVG();
-            });
-            chart.draw();
-        }
+        drawGoogleChart(
+            'googlechart_dashboard', 
+            'googlechart_view', 
+            'googlechart_filters',
+            chart_id,
+            chart_json,
+            dataTable,
+            chart_filters,
+            chart_width,
+            chart_height,
+            chart_filterposition,
+            chart_options,
+            available_columns,
+            checkSVG,
+            function(){}
+            );
 }
 
 jQuery(document).ready(function($){

@@ -197,55 +197,39 @@ function saveThumb(value){
     chart_filterposition = value[6];
     chart_options = value[7];
 
-    columnlabels = [];
-    jQuery(chart_columns).each(function(index,chart_token){
-        columnlabels.push(available_columns[chart_token]);
-    });
+    dataTable = prepareTable(all_rows, chart_columns, available_columns);
 
-    dataTable = [];
-    dataTable.push(columnlabels);
-
-    jQuery(all_rows.items).each(function(index, all_row){
-        row = [];
-        jQuery(chart_columns).each(function(index,chart_token){
-            row.push(all_row[chart_token]);
-        });
-        dataTable.push(row);
-    });
-    chart_json.options.width = chart_width;
-    chart_json.options.height = chart_height;
-
-    jQuery.each(chart_options,function(key,value){
-        chart_json.options[key]=value;
-    });
-
-    chart_json.containerId = "googlechart_thumb_zone";
-    var chart = new google.visualization.ChartWrapper(
-        chart_json
-    );
-
-    chart.setDataTable(dataTable);
-
-    google.visualization.events.addListener(chart, 'error', function(event) {
-        alert ("Can't generate thumb from the chart called: "+chart_json.options.title);
-        DavizEdit.Status.stop("Done");
-    });
-
-    google.visualization.events.addListener(chart, 'ready', function(event) {
-        thumbObj = jQuery("#googlechart_thumb_form");
-        thumbObj.find("#filename").attr("value", "thumb");
-        thumbObj.find("#type").attr("value","image/png");
-        var svg = jQuery("#googlechart_thumb_zone").find("iframe").contents().find("#chartArea").html();
-        thumbObj.find("#svg").attr("value",svg);
-        jQuery.post("@@googlechart.setthumb",{"svg":svg},function(data){
-            if (data !== "Success"){
-                alert ("Can't generate thumb from the chart called: "+chart_json.options.title);
-            }
+    drawGoogleChart(
+        '', 
+        'googlechart_thumb_zone', 
+        '',
+        chart_id,
+        chart_json,
+        dataTable,
+        '',
+        chart_width,
+        chart_height,
+        '',
+        chart_options,
+        available_columns,
+        function(){
+            thumbObj = jQuery("#googlechart_thumb_form");
+            thumbObj.find("#filename").attr("value", "thumb");
+            thumbObj.find("#type").attr("value","image/png");
+            var svg = jQuery("#googlechart_thumb_zone").find("iframe").contents().find("#chartArea").html();
+            thumbObj.find("#svg").attr("value",svg);
+            jQuery.post("@@googlechart.setthumb",{"svg":svg},function(data){
+                if (data !== "Success"){
+                    alert ("Can't generate thumb from the chart called: "+chart_json.options.title);
+                }
+                DavizEdit.Status.stop("Done");
+            });
+        },
+        function(){
+            alert ("Can't generate thumb from the chart called: "+chart_json.options.title);
             DavizEdit.Status.stop("Done");
-        });
-    });
-
-    chart.draw();
+        }
+    );
 }
 
 function drawChart(elementId, add){
@@ -256,7 +240,6 @@ function drawChart(elementId, add){
         wrapperJSON = JSON.parse(wrapperString);
         wrapperJSON.containerId = "googlechart_chart_div_" + elementId;
 
-        dataTable=[];
         chartColumns_str = jQuery("#googlechartid_"+elementId+" .googlechart_columns").val();
         if (chartColumns_str === ""){
             chartColumns = [];
@@ -264,20 +247,8 @@ function drawChart(elementId, add){
         else{
             chartColumns = JSON.parse(chartColumns_str);
         }
-        if (chartColumns.length > 0){
-            columnlabels = [];
-            jQuery(chartColumns).each(function(index,chart_token){
-                columnlabels.push(available_columns[chart_token]);
-            });
-            dataTable.push(columnlabels);
-            jQuery(merged_rows.items).each(function(index, merged_row){
-                row = [];
-                jQuery(chartColumns).each(function(index,chart_token){
-                    row.push(merged_row[chart_token]);
-                });
-                dataTable.push(row);
-            });
-        }
+
+        dataTable = prepareTable(merged_rows, chartColumns, available_columns);
 
         wrapperJSON.dataTable = dataTable;
 
@@ -417,52 +388,198 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
     }
 }
 
+function populateNewTable(dataTable){
+    DavizEdit.Status.start("Updating Tables");
+    columns = jQuery("#newColumns").find("th");
+    newColumns = [];
+    newColumnTitles = [];
+    availableColumns = {};
+
+    hiddenStatus = [];
+
+    jQuery.each(columns, function(idx, value){
+        columnName = jQuery(value).find("span").html();
+        hidden = jQuery(value).find("div.ui-icon").hasClass("ui-icon-show");
+        hiddenStatus.push(hidden);
+        found = false;
+        jQuery.each(available_columns,function(key,value){
+            if (value === columnName){
+                availableColumns[key] = value;
+                newColumns.push(key);
+                newColumnTitles.push(value);
+                found = true;
+            }
+        });
+        if (!found){
+            availableColumns[columnName] = columnName;
+            newColumns.push(columnName);
+            newColumnTitles.push(columnName);
+        }
+    });
+
+    jQuery("#newTable").find("tr").remove();
+
+    newColumnsRow = "<tr id='newColumns'></tr>";
+    jQuery(newColumnsRow).appendTo("#newTable");
+
+    idx = 0;
+    console.log(hiddenStatus);
+    jQuery(newColumns).each(function(key,value){
+        newColumn = '<th>' + 
+                        '<span style="float:left;margin-right:2px">' + value + '</span>';
+                        if (hiddenStatus[idx]){
+                            newColumn += '<div title="Hide facet" class="ui-icon ui-icon-show">h</div>';
+                        }
+                        else {
+                            newColumn += '<div title="Hide facet" class="ui-icon ui-icon-hide">h</div>';
+                        }
+        newColumn += '</th>';
+        jQuery(newColumn).appendTo("#newColumns");
+        idx ++;
+    });
+
+    newDataTable = prepareTable(dataTable, newColumns, availableColumns);
+
+    jQuery.each(newDataTable, function(row_index,row){
+        if (row_index > 0){
+            tableRow = "<tr class='newRow'>";
+            jQuery.each(row, function(value_index, value){
+                tableRow += "<td>" + value + "</td>";
+            });
+            tableRow += "</tr>";
+            jQuery(tableRow).appendTo("#newTable");
+        }
+    });
+
+    jQuery("#newColumns").sortable({
+        stop: function(event,ui){
+            populateNewTable(dataTable, columns);
+        }
+    });
+
+    jQuery(".googlechartTable .ui-icon").click(function(){
+        if (jQuery(this).hasClass("ui-icon-hide")){
+            jQuery(this).removeClass("ui-icon-hide");
+            jQuery(this).addClass("ui-icon-show");
+        }
+        else{
+            jQuery(this).removeClass("ui-icon-show");
+            jQuery(this).addClass("ui-icon-hide");
+        }
+    });
+
+    DavizEdit.Status.stop("Done");
+
+}
+
+function generateNewTable(){
+    DavizEdit.Status.start("Updating Tables");
+    columns = jQuery("#originalColumns").find("th");
+    newColumns = [];
+
+    normalColumns = [];
+    pivotColumns = [];
+    valueColumn = -1;
+    allColumns = [];
+    jQuery.each(columns, function(idx, value){
+        columnType = jQuery(value).find("select").attr("value");
+        columnName = jQuery(value).find("span").html();
+
+        jQuery.each(available_columns,function(key,value){
+            if (value === columnName){
+                allColumns.push(key);
+            }
+        });
+
+        switch(columnType){
+            case "0":
+                break;
+            case "1":
+                newColumns.push(columnName);
+                normalColumns.push(idx);
+                break;
+            case "2":
+                pivotColumns.push(idx);
+                break;
+            case "3":
+                valueColumn = idx;
+                break;
+        }
+    });
+
+
+    newRows = all_rows;
+    if (valueColumn != -1){
+        dataTable = {};
+        newColumns = [];
+        dataTable.items = prepareTable(all_rows, allColumns, available_columns);
+        newRows = pivotTable(dataTable, normalColumns, pivotColumns, valueColumn, available_columns, all_rows.properties);
+        jQuery.each(newRows.properties, function(key,value){
+            newColumns.push(key);
+        });
+    }
+
+    jQuery("#newTable").find("tr").remove();
+
+    newColumnsRow = "<tr id='newColumns'></tr>";
+    jQuery(newColumnsRow).appendTo("#newTable");
+
+    jQuery(newColumns).each(function(key,value){
+        newColumn = '<th>' + 
+                        '<span>' + value + '</span>' +
+                    '</th>';
+        jQuery(newColumn).appendTo("#newColumns");
+    });
+
+    jQuery("#newColumns").sortable({
+        stop: function(event,ui){
+            populateNewTable(newRows);
+        }
+    });
+
+    populateNewTable(newRows);
+    DavizEdit.Status.stop("Done");
+}
+
 function openEditColumns(id){
+    DavizEdit.Status.start("Updating Tables");
     jQuery(".googlecharts_columns_config").remove();
     editcolumnsdialog =
     '<div class="googlecharts_columns_config">' +
-        '<table border="0" class="ordered-selection-field">' +
-            '<tr>' +
-                '<td>' +
-                    '<select id="googlecharts.columns.from" name="googlecharts.columns.from" class="googlecharts_columns_from" size="5" multiple="multiple">' +
-                    '</select>' +
-                '</td>' +
-                '<td>' +
-                    '<button name="from2toButton" type="button" value=" -&gt;" onclick="javascript:from2to(\'googlecharts.columns\')">&nbsp;-&gt;</button>' +
-                    '<br />' +
-                    '<button name="to2fromButton" type="button" value="&lt;- " onclick="javascript:to2from(\'googlecharts.columns\')">&lt;-&nbsp;</button>' +
-                '</td>' +
-                '<td>' +
-                    '<select id="googlecharts.columns.to" name="googlecharts.columns.to" class="googlecharts_columns_to" size="5" multiple="multiple">' +
-                    '</select>' +
-                    '<input name="googlecharts.columns-empty-marker" type="hidden" />' +
-                    '<span id="googlecharts.columns.toDataContainer">' +
-                    '</span>' +
-                '</td>' +
-                '<td>' +
-                    '<button name="upButton" type="button" value="^" onclick="javascript:moveUp(\'googlecharts.columns\')">^</button>' +
-                    '<br />' +
-                    '<button name="downButton" type="button" value="v" onclick="javascript:moveDown(\'googlecharts.columns\')">v</button>' +
-                '</td>' +
-            '</tr>' +
-        '</table>' +
+        '<div>' +
+            '<div style="float:left;width:48%;overflow:auto">' +
+                '<strong>Original Table</strong>'+
+                '<table id="originalTable" class="googlechartTable">'+
+                    '<tr id="originalColumns">'+
+                    '</tr>'+
+                '</table>'+
+            '</div>'+
+
+            '<div style="float:left; padding-left:10px;width:48%;overflow:auto">' +
+                '<strong>New Table</strong>'+
+                '<table id="newTable" class="googlechartTable">'+
+                '</table>'+
+            '</div>'+
+        '</div>'+
     '</div>';
 
     jQuery(editcolumnsdialog).dialog({title:"Edit Columns",
                 dialogClass: 'googlechart-dialog',
                 modal:true,
+                width:1024,
+                height:400,
                 buttons:[
                     {
                         text: "Save",
                         click: function(){
-                            selectedOptions = jQuery(".googlecharts_columns_to option");
+/*                            selectedOptions = jQuery(".googlecharts_columns_to option");
                             columns=[];
                             selectedOptions.each(function(){
                                 columns.push(jQuery(this).attr('value'));
                             });
                             columns_str = JSON.stringify(columns);
                             jQuery("#googlechartid_"+id+" .googlechart_columns").val(columns_str);
-                            markChartAsModified(id);
+                            markChartAsModified(id);*/
                             jQuery(this).dialog("close");
                         }
                     },
@@ -473,26 +590,35 @@ function openEditColumns(id){
                         }
                     }
                 ]});
-    chartColumns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").val();
-    if (chartColumns_str === ""){
-        chartColumns = [];
-    }
-    else{
-        chartColumns = JSON.parse(chartColumns_str);
-    }
+    columns = [];
 
     jQuery.each(available_columns,function(key,value){
-        if (!chartColumns.find(key)){
-            column = '<option value="'+key+'">'+value+'</option>';
-            jQuery(column).appendTo(".googlecharts_columns_from");
+        column = '<th>' + 
+                    '<span>' + value + '</span>' +
+                    '<select onchange="generateNewTable();">' +
+                        '<option value="0">Hidden</option>' +
+                        '<option value="1">Visible</option>' +
+                        '<option value="2">Pivot</option>' +
+                        '<option value="3">Value</option>' +
+                    '</select>' +
+                 '</th>';
+        jQuery(column).appendTo("#originalColumns");
+        columns.push(key);
+    });
+
+    dataTable = prepareTable(all_rows, columns, available_columns);
+
+    jQuery.each(dataTable, function(row_index,row){
+        if (row_index > 0){
+            tableRow = "<tr>";
+            jQuery.each(row, function(value_index, value){
+                tableRow += "<td>" + value + "</td>";
+            });
+            tableRow += "</tr>";
+            jQuery(tableRow).appendTo("#originalTable");
         }
     });
-    jQuery(chartColumns).each(function(index,key){
-        if (available_columns[key]){
-            column = '<option value="'+key+'">'+available_columns[key]+'</option>';
-            jQuery(column).appendTo(".googlecharts_columns_to");
-        }
-    });
+    DavizEdit.Status.stop("Done");
 }
 
 function redrawChart(){
@@ -526,21 +652,8 @@ function openEditor(elementId) {
     else{
         chartColumns = JSON.parse(chartColumns_str);
     }
-    if (chartColumns.length > 0){
-        columnlabels = [];
-        jQuery(chartColumns).each(function(index,chart_token){
-            columnlabels.push(available_columns[chart_token]);
-        });
-        dataTable = [];
-        dataTable.push(columnlabels);
-        jQuery(merged_rows.items).each(function(index, merged_row){
-            row = [];
-            jQuery(chartColumns).each(function(index,chart_token){
-                row.push(merged_row[chart_token]);
-            });
-            dataTable.push(row);
-        });
-    }
+
+    dataTable = prepareTable(merged_rows, chartColumns, available_columns);
 
     chart.dataTable = dataTable;
 

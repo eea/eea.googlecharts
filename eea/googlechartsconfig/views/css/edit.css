@@ -92,3 +92,39 @@
   border-radius: 10px;
   box-shadow: 0px 2px 2px #888;
 }
+
+.googlechartTable {
+    color:black;
+    font-size:0.8em !important;
+    border:1px solid #DDDDDD;
+}
+.googlechartTable th{
+    padding:2px;
+    border:1px solid #EEEEEE;
+    background-color:#CDE2A7;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#CDE2A7));
+    background-image: -webkit-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -moz-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -ms-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -o-linear-gradient(center top , #FFFFFF, #CDE2A7);
+
+}
+.googlechartTable td{
+    padding:2px;
+    border:1px solid #EEEEEE;
+}
+
+.googlechartTable select {
+    margin-left:3px;
+    padding:0px !important;
+    font-size:1.2em;
+    vertical-align:none;
+}
+
+.googlechartTable .ui-icon-show {
+  background-image: url(../../++resource++eea.daviz.images/show.png);
+}
+
+.googlechartTable .ui-icon-hide {
+  background-image: url(../../++resource++eea.daviz.images/hide.png);
+}

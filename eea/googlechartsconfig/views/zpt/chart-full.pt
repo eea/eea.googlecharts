@@ -1,89 +1,33 @@
 <html>
 <head>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript">
     google.load('visualization', '1.0', {packages: ['controls']});
 
     jQuery(document).ready(function($){
-        columnlabels = [];
-        jQuery(chart_columns).each(function(index,chart_token){
-            columnlabels.push(available_columns[chart_token]);
-        });
-
-        dataTable = [];
-        dataTable.push(columnlabels);
-        jQuery(merged_rows.items).each(function(index, merged_row){
-            row = [];
-            jQuery(chart_columns).each(function(index,chart_token){
-                row.push(merged_row[chart_token]);
-            });
-            dataTable.push(row);
-        });
+        dataTable = prepareTable(merged_rows, chart_columns, available_columns);
 
         chart_json.options.title = name;
-        chart_json.options.width = width;
-        chart_json.options.height = height;
-        chart_json.options.chma = '0';
 
-        jQuery.each(options,function(key,value){
-            chart_json.options[key]=value;
-        });
-
-        chart_json.containerId = "googlechart_full";
-        var chart = new google.visualization.ChartWrapper(
-            chart_json
-        );
-        jQuery("#filename").attr("value",encodeURIComponent(chart.getOption("title")));
-        jQuery("#width").attr("value",width);
-
-        filters_array = []
-        if (chart_filters){
-            jQuery.each(chart_filters,function(key, value){
-                filter_div_id = "googlechart_filter_"+key;
-                filter_div = "<div id='"+filter_div_id+"'><"+"/div>";
-                jQuery(filter_div).appendTo("#googlechart_filters");
-                filterSettings = {};
-                filterSettings.options = {};
-                filterSettings.options.ui = {};
-                filterSettings.options.filterColumnLabel = available_columns[key];
-                filterSettings.containerId = filter_div_id;
-                switch(value){
-                    case "0":
-                        filterSettings.controlType = 'NumberRangeFilter';
-                        break;
-                    case "1":
-                        filterSettings.controlType = 'StringFilter';
-                        break;
-                    case "2":
-                        filterSettings.controlType = 'CategoryFilter';
-                        filterSettings.options.ui.allowTyping = false;
-                        filterSettings.options.ui.allowMultiple = false;
-                        break;
-                    case "3":
-                        filterSettings.controlType = 'CategoryFilter';
-                        filterSettings.options.ui.allowTyping = false;
-                        filterSettings.options.ui.allowMultiple = true;
-                        filterSettings.options.ui.selectedValuesLayout = 'belowStacked';
-                        break;
-                }
-                filter = new google.visualization.ControlWrapper(filterSettings);
-                filters_array.push(filter);
-            });
-        }
-
-        if (filters_array.length > 0){
-            var dashboard = new google.visualization.Dashboard(
-              document.getElementById('googlechart_dashboard'));
-
-            dashboard.bind(filters_array, chart);
-
-            dashboard.draw(dataTable);
-        }
-        else{
-            chart.setDataTable(dataTable);
-            chart.draw();
-        }
+        drawGoogleChart(
+            '', 
+            'googlechart_full',
+            '',
+            'full',
+            chart_json,
+            dataTable,
+            '',
+            width,
+            height,
+            '',
+            options,
+            available_columns,
+            function(){},
+            function(){}
+            );
     });
     function exportToPng(){
         var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");

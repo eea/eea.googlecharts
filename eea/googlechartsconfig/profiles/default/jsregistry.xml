@@ -11,4 +11,12 @@
  <javascript cacheable="True" compression="safe" cookable="True"
     enabled="on" expression="python:'daviz' in request.URL0" 
     id="++resource++json2.js" inline="False"/>
+
+ <javascript cacheable="True" compression="safe" cookable="True"
+    enabled="on" expression="python:'daviz' in request.URL0" 
+    id="++resource++eea.googlecharts.chart.js" inline="False"/>
+
+ <javascript cacheable="True" compression="safe" cookable="True"
+    enabled="on" expression="python:'daviz' in request.URL0" 
+    id="++resource++eea.googlecharts.datatable.js" inline="False"/>
 </object>
