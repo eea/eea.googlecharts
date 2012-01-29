@@ -4,6 +4,8 @@
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
 <script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
+
 <script type="text/javascript">
     google.load('visualization', '1.0', {packages: ['controls']});
 

@@ -48,15 +48,46 @@ function prepareTableForChart(rows, columnSettings, originalAvailableColumns){
         }
     });
 
+    rowsToUse = rows;
     if (valueColumn != -1){
         dataTable = prepareTable(rows, originalChartColumns, availableColumns);
-        newRows = pivotTable(dataTable, normalColumns, pivotColumns, valueColumn, availableColumns, rows.properties);
-        dataTable = prepareTable(newRows, preparedColumnLabels, availableColumns);
+        rowsToUse = pivotTable(dataTable, normalColumns, pivotColumns, valueColumn, availableColumns, rows.properties);
+
     }
-    else{
-        dataTable = prepareTable(rows, preparedColumnLabels, availableColumns);
-    }
-    return dataTable;
+    dataTable = prepareTable(rowsToUse, preparedColumnLabels, availableColumns);
+//    return dataTable;
+
+    var finalDataTable = new google.visualization.DataTable();
+
+    colTypes = []
+    jQuery(dataTable).each(function(row_index, row){
+        if (row_index === 0){
+            jQuery(row).each(function(col_index, col){
+                coltype = rowsToUse.properties[col];
+                if (coltype === "text"){
+                    coltype = "string";
+                }
+                finalDataTable.addColumn(coltype, col);
+                colTypes.push(coltype);
+            });
+        }
+        else{
+            newRow = [];
+            jQuery(row).each(function(col_index, col){
+                newCol = col
+                if (colTypes[col_index] === "date"){
+                    newCol = jQuery.datepicker.parseDate ("yy-mm-dd",col);
+                }
+                if (colTypes[col_index] === "datetime"){
+                    newCol = jQuery.datepicker.parseDate ("yy-mm-dd",col);
+                }
+                newRow.push(newCol);
+            });
+            finalDataTable.addRow(newRow);
+        }
+    });
+
+    return finalDataTable;
 }
 
 function prepareTable(originalDataTable, columns, availableColumns){
@@ -183,6 +214,7 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
     pivotTableObj = {};
     pivotTableObj.items = [];
     pivotTableObj.properties = {};
+    pivotTableProperties = [];
     pivotTableKeys = [];
     jQuery(pivotTable).each(function(row_index, row){
         if (row_index === 0){
@@ -195,7 +227,16 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
                     }
                 });
                 pivotTableKeys.push(colKey);
-                    pivotTableObj.properties[colValue] = colValue;
+
+
+/*                jQuery.each(originalProperties,function(key,value){
+                    if (col === value) {
+                        colKey = key;
+                    }
+                });*/
+
+//                pivotTableObj.properties[colValue] = valueColumnType+colKey+colValue;
+                pivotTableObj.properties[colValue] = (originalProperties[colKey]?originalProperties[colKey]:valueColumnType);
             });
         }
         else{
