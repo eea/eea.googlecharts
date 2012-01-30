@@ -226,17 +226,10 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
                         colKey = key;
                     }
                 });
-                pivotTableKeys.push(colKey);
 
+                pivotTableKeys.push(colKey.replace(/[^A-Za-z0-9]/g, '_'));
 
-/*                jQuery.each(originalProperties,function(key,value){
-                    if (col === value) {
-                        colKey = key;
-                    }
-                });*/
-
-//                pivotTableObj.properties[colValue] = valueColumnType+colKey+colValue;
-                pivotTableObj.properties[colValue] = (originalProperties[colKey]?originalProperties[colKey]:valueColumnType);
+                pivotTableObj.properties[colValue.replace(/[^A-Za-z0-9]/g, '_')] = (originalProperties[colKey]?originalProperties[colKey]:valueColumnType);
             });
         }
         else{
