@@ -244,6 +244,8 @@ function drawChart(elementId, add){
         chartColumns_str = jQuery("#googlechartid_"+elementId+" .googlechart_columns").val();
         if (chartColumns_str === ""){
             chartColumns = [];
+            chartColumns.original = {};
+            chartColumns.prepared = {};
         }
         else{
             chartColumns = JSON.parse(chartColumns_str);
