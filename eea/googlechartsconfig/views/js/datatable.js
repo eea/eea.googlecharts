@@ -240,7 +240,7 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
             });
         }
         else{
-            item = {};
+            var item = {};
             jQuery(row).each(function(col_index, col){
                 item[pivotTableKeys[col_index]] = col;
             });
