@@ -126,6 +126,11 @@ function openAddDialog(){
             ]});
 }
 
+function markChartAsModified(id){
+    chartObj = jQuery("#googlechartid_"+id);
+    chartObj.addClass("googlechart_modified");
+}
+
 function openAdvancedOptions(id){
     var errorMsgJSON = "" +
         "<div class='googlechart_dialog_errormsg'>" +
@@ -266,10 +271,6 @@ function markAllChartsAsModified(){
     });
 }
 
-function markChartAsModified(id){
-    chartObj = jQuery("#googlechartid_"+id);
-    chartObj.addClass("googlechart_modified");
-}
 
 function markChartAsThumb(id){
     jQuery(".googlechart_thumb_checkbox").each(function(){
