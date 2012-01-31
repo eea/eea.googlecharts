@@ -59,7 +59,7 @@ function prepareTableForChart(rows, columnSettings, originalAvailableColumns){
 
     var finalDataTable = new google.visualization.DataTable();
 
-    colTypes = []
+    colTypes = [];
     jQuery(dataTable).each(function(row_index, row){
         if (row_index === 0){
             jQuery(row).each(function(col_index, col){
@@ -74,12 +74,12 @@ function prepareTableForChart(rows, columnSettings, originalAvailableColumns){
         else{
             newRow = [];
             jQuery(row).each(function(col_index, col){
-                newCol = col
+                newCol = col;
                 if (colTypes[col_index] === "date"){
-                    newCol = jQuery.datepicker.parseDate ("yy-mm-dd",col);
+                    newCol = jQuery.datepicker.parseDate("yy-mm-dd",col);
                 }
                 if (colTypes[col_index] === "datetime"){
-                    newCol = jQuery.datepicker.parseDate ("yy-mm-dd",col);
+                    newCol = jQuery.datepicker.parseDate("yy-mm-dd",col);
                 }
                 newRow.push(newCol);
             });
@@ -183,7 +183,7 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
                 if (isNewColumn){
                     pivot_row.push(defaultNewColumnValue);
                 }
-                found = true
+                found = true;
                 jQuery(fixValues).each(function(fix_column_index, fix_column){
                     if (pivot_row[fix_column_index] !== fix_column){
                         found = false;
@@ -220,7 +220,7 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
         if (row_index === 0){
             jQuery(row).each(function(col_index, col){
                 colValue = col;
-                colKey = col
+                colKey = col;
                 jQuery.each(availableColumns,function(key,value){
                     if (col === value) {
                         colKey = key;

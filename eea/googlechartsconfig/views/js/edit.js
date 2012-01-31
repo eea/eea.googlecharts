@@ -221,13 +221,13 @@ function saveThumb(value){
             thumbObj.find("#svg").attr("value",svg);
             jQuery.post("@@googlechart.setthumb",{"svg":svg},function(data){
                 if (data !== "Success"){
-                    alert ("Can't generate thumb from the chart called: "+chart_json.options.title);
+                    alert("Can't generate thumb from the chart called: "+chart_json.options.title);
                 }
                 DavizEdit.Status.stop("Done");
             });
         },
         function(){
-            alert ("Can't generate thumb from the chart called: "+chart_json.options.title);
+            alert("Can't generate thumb from the chart called: "+chart_json.options.title);
             DavizEdit.Status.stop("Done");
         }
     );
@@ -596,14 +596,17 @@ function openEditColumns(id){
                                     }
                                 });
 
-                                original['name'] = originalColumnName;
-                                original['status'] = originalColumnStatus;
-                                if (originalColumnStatus === 1)
+                                original.name = originalColumnName;
+                                original.status = originalColumnStatus;
+                                if (originalColumnStatus === 1){
                                     hasNormal = true;
-                                if (originalColumnStatus === 2)
+                                }
+                                if (originalColumnStatus === 2){
                                     hasPivot = true;
-                                if (originalColumnStatus === 3)
+                                }
+                                if (originalColumnStatus === 3){
                                     hasValue = true;
+                                }
                                 columnsSettings.original.push(original);
                             });
                             jQuery("#newColumns").find("th").each(function(){
@@ -622,8 +625,8 @@ function openEditColumns(id){
                                 else{
                                     newColumnStatus = 0;
                                 }
-                                preparedColumn['name'] = newColumnName;
-                                preparedColumn['status'] = newColumnStatus;
+                                preparedColumn.name = newColumnName;
+                                preparedColumn.status = newColumnStatus;
                                 columnsSettings.prepared.push(preparedColumn);
                             });
                             if (!hasNormal){
@@ -657,7 +660,7 @@ function openEditColumns(id){
         columnsSettings = JSON.parse(jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value"));
     }
     jQuery.each(available_columns,function(key,value){
-        originalStatus = 0
+        originalStatus = 0;
         jQuery(columnsSettings.original).each(function(idx, original){
             if (original.name === key){
                 originalStatus = original.status;
@@ -783,7 +786,7 @@ function openAddChartFilterDialog(id){
                             selectedColumn = jQuery(".googlecharts_filter_columns").val();
                             selectedFilter = jQuery(".googlecharts_filter_type").val();
                             if ((selectedColumn === '-1') || (selectedFilter === '-1')){
-                                alert ("Please select column and filter type!");
+                                alert("Please select column and filter type!");
                             }
                             else{
                                 addFilter(id, selectedColumn,selectedFilter);
@@ -880,7 +883,7 @@ function saveCharts(){
         });
         chart.filters = JSON.stringify(filters);
         charts.push(chart);
-        if ((index == 0) || (chart.isThumb)){
+        if ((index === 0) || (chart.isThumb)){
             thumbId = chart.id;
         }
 

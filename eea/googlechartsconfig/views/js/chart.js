@@ -4,7 +4,7 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
 
     jQuery.each(chartOptions, function(key, value){
         chartJson.options[key] = value;
-    })
+    });
 
     chartJson.dataTable = [];
 

@@ -7,13 +7,13 @@ function exportToPng(){
 
     form = jQuery("#export");
     jQuery("#svg").attr("value",svg);
-    form.submit()
+    form.submit();
 }
 
 function checkSVG(){
     var svg = jQuery("#googlechart_view").find("iframe").contents().find("#chartArea").html();
     if ((svg) && (svg !== "")){
-        jQuery("#googlechart_export_button").show()
+        jQuery("#googlechart_export_button").show();
     }
 }
 
@@ -30,7 +30,7 @@ function drawChart(value){
         jQuery("#filename").attr("value",chart_json.options.title);
         jQuery("#type").attr("value","image/png");
 
-        jQuery("#googlechart_export_button").hide()
+        jQuery("#googlechart_export_button").hide();
         jQuery("#googlechart_filters").remove();
         jQuery("#googlechart_view").remove();
         jQuery("#googlechart_table").remove();
@@ -71,7 +71,7 @@ function drawChart(value){
 
         dataTable = prepareTableForChart(merged_rows, chart_columns, available_columns);
 
-        availableColumns = {}
+        availableColumns = {};
         jQuery.each(available_columns,function(key, value){
             availableColumns[key] = value;
         });
