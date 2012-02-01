@@ -43,9 +43,6 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
                 if (found){
                     pivotTableColumns.push(column);
                 }
-/*                if (normalColumns.find(column_index)){
-                    pivotTableColumns.push(column);
-                }*/
             });
         }
         else {
@@ -59,7 +56,7 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
                 fixValues.push(row[column]);
             });
             jQuery(pivotingColumns).each(function(column_index, column){
-                pivotColumnName += "_";
+                pivotColumnName += " ";
                 pivotColumnName += row[column];
             });
 
@@ -122,22 +119,29 @@ function pivotTable(originalTable, normalColumns, pivotingColumns, valueColumn, 
     pivotTableObj = {};
     pivotTableObj.items = [];
     pivotTableObj.properties = {};
+    pivotTableObj.available_columns = {};
     pivotTableProperties = [];
     pivotTableKeys = [];
+    var found;
     jQuery(pivotedTable).each(function(row_index, row){
         if (row_index === 0){
             jQuery(row).each(function(col_index, col){
                 colValue = col;
                 colKey = col;
+                found = false;
                 jQuery.each(availableColumns,function(key,value){
                     if (col === value) {
                         colKey = key;
+                        found = true;
                     }
                 });
+                if (!found){
+                    colKey = colKey.replace(/[^A-Za-z0-9]/g, '_')
+                    pivotTableObj.available_columns[colKey] = colValue;
+                }
+                pivotTableKeys.push(colKey);
 
-                pivotTableKeys.push(colKey.replace(/[^A-Za-z0-9]/g, '_'));
-
-                pivotTableObj.properties[colValue.replace(/[^A-Za-z0-9]/g, '_')] = (originalProperties[colKey]?originalProperties[colKey]:valueColumnType);
+                pivotTableObj.properties[colKey] = (originalProperties[colKey]?originalProperties[colKey]:valueColumnType);
             });
         }
         else{
@@ -174,9 +178,9 @@ function prepareTableForChart(rows, columnSettings, originalAvailableColumns){
 
     jQuery(preparedColumns).each(function(index, value){
         allColumns.push(value.name);
-        if (!originalAvailableColumns[value.name]){
+/*        if (!originalAvailableColumns[value.name]){
             availableColumns[value.name] = value.name;
-        }
+        }*/
         if (value.status === 1){
             preparedColumnLabels.push(value.name);
         }
@@ -206,17 +210,26 @@ function prepareTableForChart(rows, columnSettings, originalAvailableColumns){
         dataTable = prepareTable(rows, originalChartColumns, availableColumns);
         rowsToUse = pivotTable(dataTable, normalColumns, pivotColumns, valueColumn, availableColumns, rows.properties);
 
+        jQuery.each(rowsToUse.available_columns, function(key, value){
+            availableColumns[key] = value;
+        });
     }
     dataTable = prepareTable(rowsToUse, preparedColumnLabels, availableColumns);
-//    return dataTable;
 
+    var tableWithColumns = {};
+    tableWithColumns.columns = availableColumns;
     var finalDataTable = new google.visualization.DataTable();
-
     colTypes = [];
     jQuery(dataTable).each(function(row_index, row){
         if (row_index === 0){
             jQuery(row).each(function(col_index, col){
-                coltype = rowsToUse.properties[col];
+                var colKey = col;
+                jQuery.each(availableColumns, function(key, value){
+                    if (value === col){
+                        colKey = key
+                    }
+                });
+                coltype = rowsToUse.properties[colKey];
                 if (coltype === "text"){
                     coltype = "string";
                 }
@@ -240,5 +253,7 @@ function prepareTableForChart(rows, columnSettings, originalAvailableColumns){
         }
     });
 
-    return finalDataTable;
+    tableWithColumns.table = finalDataTable;
+//    return finalDataTable;
+    return tableWithColumns;
 }

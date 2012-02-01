@@ -203,7 +203,8 @@ function saveThumb(value){
     chart_options = value[7];
 
 //    dataTable = prepareTable(all_rows, chart_columns, available_columns);
-    dataTable = prepareTableForChart(all_rows, chart_columns, available_columns);
+    //dataTable = prepareTableForChart(all_rows, chart_columns, available_columns);
+    tableWithColumns = prepareTableForChart(all_rows, chart_columns, available_columns);
 
     drawGoogleChart(
         '', 
@@ -211,13 +212,13 @@ function saveThumb(value){
         '',
         chart_id,
         chart_json,
-        dataTable,
+        tableWithColumns.table,
         '',
         chart_width,
         chart_height,
         '',
         chart_options,
-        available_columns,
+        tableWithColumns.columns,
         function(){
             thumbObj = jQuery("#googlechart_thumb_form");
             thumbObj.find("#filename").attr("value", "thumb");
@@ -256,9 +257,9 @@ function drawChart(elementId, add){
             chartColumns = JSON.parse(chartColumns_str);
         }
 
-        dataTable = prepareTableForChart(all_rows, chartColumns, available_columns);
+        tableWithColumns = prepareTableForChart(all_rows, chartColumns, available_columns);
 
-        wrapperJSON.dataTable = dataTable;
+        wrapperJSON.dataTable = tableWithColumns.table;
 
         var wrapper = new google.visualization.ChartWrapper(wrapperJSON);
         wrapper.draw();
@@ -406,20 +407,38 @@ function populateNewTable(dataTable){
         hidden = jQuery(value).find("div.ui-icon").hasClass("ui-icon-show");
         hiddenStatus.push(hidden);
         found = false;
-        jQuery.each(available_columns,function(key,value){
+        jQuery.each(available_columns,function(key, col_value){
+            if (col_value === columnName){
+                availableColumns[key] = col_value;
+                newColumns.push(key);
+                newColumnTitles.push(col_value);
+                found = true;
+            }
+        });
+
+        if (!found){
+            availableColumns[columnName] = dataTable.available_columns[columnName];
+            newColumns.push(columnName);
+            newColumnTitles.push(dataTable.available_columns[columnName]);
+        }
+/*        jQuery.each(dataTable.available_columns,function(key,value){
             if (value === columnName){
                 availableColumns[key] = value;
                 newColumns.push(key);
                 newColumnTitles.push(value);
                 found = true;
             }
-        });
-        if (!found){
+        });*/
+/*        if (!found){
             availableColumns[columnName] = columnName;
             newColumns.push(columnName);
             newColumnTitles.push(columnName);
-        }
+        }*/
     });
+
+    console.log(available_columns);
+    console.log(dataTable.available_columns);
+    console.log(newColumnTitles);
 
     jQuery("#newTable").find("tr").remove();
 
@@ -519,16 +538,15 @@ function generateNewTable(){
         newColumns = [];
         dataTable.items = prepareTable(all_rows, allColumns, available_columns);
         newRows = pivotTable(dataTable, normalColumns, pivotColumns, valueColumn, available_columns, all_rows.properties);
+        console.log(newRows);
         jQuery.each(newRows.properties, function(key,value){
             newColumns.push(key);
         });
     }
-
     jQuery("#newTable").find("tr").remove();
 
     newColumnsRow = "<tr id='newColumns'></tr>";
     jQuery(newColumnsRow).appendTo("#newTable");
-
     jQuery(newColumns).each(function(key,value){
         newColumn = '<th>' + 
                         '<span>' + value + '</span>' +
@@ -542,7 +560,7 @@ function generateNewTable(){
         }
     });
 
-    newTable = populateNewTable(newRows);
+//    newTable = populateNewTable(newRows);
 
     DavizEdit.Status.stop("Done");
     return newTable;
@@ -743,7 +761,8 @@ function openEditor(elementId) {
 
     chartColumns_str = jQuery("#googlechartid_"+elementId+" .googlechart_columns").val();
 
-    chart.dataTable = prepareTableForChart(all_rows,JSON.parse(chartColumns_str),available_columns);
+    tableWithColumns = prepareTableForChart(all_rows,JSON.parse(chartColumns_str),available_columns);
+    chart.dataTable = tableWithColumns.table;
 
     chart.options.title = title;
     var wrapper = new google.visualization.ChartWrapper(chart);
