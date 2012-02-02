@@ -14,8 +14,6 @@
 //        dataTable = prepareTable(merged_rows, chart_columns, available_columns);
         
         tableWithColumns = prepareTableForChart(merged_rows, chart_columns, available_columns);
-        x = transformTable(merged_rows,    available_columns);
-        console.log(x);
         chart_json.options.title = name;
 
         drawGoogleChart(
