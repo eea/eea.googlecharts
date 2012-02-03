@@ -106,6 +106,8 @@ function prepareForChart(originalDataTable, columns){
         });
         dataForChart.addRow(newRow);
     });
+    
+    return dataForChart;
 }
 
 function getColumnsFromSettings(columnSettings){
@@ -122,13 +124,13 @@ function getColumnsFromSettings(columnSettings){
             case 0:
                 break;
             case 1:
-                settings.normalColumns.push(idx);
+                settings.normalColumns.push(value.name);
                 break;
             case 2:
-                settings.pivotColumns.push(idx);
+                settings.pivotColumns.push(value.name);
                 break;
             case 3:
-                settings.valueColumn = idx;
+                settings.valueColumn = value.name;
                 break;
         }
     });

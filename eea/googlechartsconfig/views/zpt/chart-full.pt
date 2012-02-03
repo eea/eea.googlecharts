@@ -2,7 +2,7 @@
 <head>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
-<script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
+<!--script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script-->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.datatable2.js"></script>
@@ -11,9 +11,13 @@
     google.load('visualization', '1.0', {packages: ['controls']});
 
     jQuery(document).ready(function($){
-//        dataTable = prepareTable(merged_rows, chart_columns, available_columns);
-        
-        tableWithColumns = prepareTableForChart(merged_rows, chart_columns, available_columns);
+        columnsFromSettings = getColumnsFromSettings(chart_columns);
+        transformedTable = transformTable(merged_rows, 
+                                        columnsFromSettings.normalColumns,
+                                        columnsFromSettings.pivotColumns,
+                                        columnsFromSettings.valueColumn,
+                                        available_columns);
+        tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
         chart_json.options.title = name;
 
         drawGoogleChart(
@@ -22,13 +26,13 @@
             '',
             'full',
             chart_json,
-            tableWithColumns.table,
+            tableForChart,
             '',
             width,
             height,
             '',
             options,
-            tableWithColumns.columns,
+            transformedTable.available_columns,
             function(){},
             function(){}
             );
