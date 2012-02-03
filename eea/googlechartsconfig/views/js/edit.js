@@ -204,7 +204,15 @@ function saveThumb(value){
 
 //    dataTable = prepareTable(all_rows, chart_columns, available_columns);
     //dataTable = prepareTableForChart(all_rows, chart_columns, available_columns);
-    tableWithColumns = prepareTableForChart(all_rows, chart_columns, available_columns);
+//    tableWithColumns = prepareTableForChart(all_rows, chart_columns, available_columns);
+    columnsFromSettings = getColumnsFromSettings(chart_columns);
+    transformedTable = transformTable(all_rows, 
+                                    columnsFromSettings.normalColumns,
+                                    columnsFromSettings.pivotColumns,
+                                    columnsFromSettings.valueColumn,
+                                    available_columns);
+    tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
+
 
     drawGoogleChart(
         '', 
@@ -212,13 +220,13 @@ function saveThumb(value){
         '',
         chart_id,
         chart_json,
-        tableWithColumns.table,
+        tableForChart,
         '',
         chart_width,
         chart_height,
         '',
         chart_options,
-        tableWithColumns.columns,
+        transformedTable.available_columns,
         function(){
             thumbObj = jQuery("#googlechart_thumb_form");
             thumbObj.find("#filename").attr("value", "thumb");

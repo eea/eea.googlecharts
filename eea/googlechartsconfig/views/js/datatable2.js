@@ -106,7 +106,7 @@ function prepareForChart(originalDataTable, columns){
         });
         dataForChart.addRow(newRow);
     });
-    
+
     return dataForChart;
 }
 
