@@ -27,13 +27,12 @@ function transformTable(originalTable, normalColumns, pivotingColumns, valueColu
             var pivotColumnName = availableColumns[valueColumn];
             var pivotValue = row[valueColumn];
             var defaultPivotColumnValue = typeof(pivotValue) === 'string' ? '' : 0;
-
             jQuery(pivotingColumns).each(function(pivot_index, pivot_column){
                 pivotColumnName += " " + row[pivot_column];
             });
 
             var pivotColumn = pivotColumnName.replace(/[^A-Za-z0-9]/g, '_');
-            additionalColumns[pivotColumn] = pivotColumnName;
+            additionalColumns[pivotColumn] = defaultPivotColumnValue;
 
             pivotTable.available_columns[pivotColumn] = pivotColumnName;
             pivotTable.properties[pivotColumn] = originalTable.properties[valueColumn];
@@ -61,7 +60,6 @@ function transformTable(originalTable, normalColumns, pivotingColumns, valueColu
             pivotTable.items.push(newRow);
         }
     });
-
     return pivotTable;
 }
 
