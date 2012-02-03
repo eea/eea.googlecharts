@@ -813,7 +813,17 @@ function saveCharts(){
             var chartObj = jQuery("#googlechartid_"+thumbId);
             chartSettings[0] = thumbId;
             chartSettings[1] = JSON.parse(chartObj.find(".googlechart_configjson").attr("value"));
-            chartSettings[2] = JSON.parse(chartObj.find(".googlechart_columns").attr("value"));
+            var columns_str = chartObj.find(".googlechart_columns").attr("value");
+            var columnsSettings = {};
+            if (!columns_str){
+                columnsSettings.prepared = [];
+                columnsSettings.original = [];
+            }
+            else{
+                columnsSettings = JSON.parse(columns_str);
+            }
+            chartSettings[2] = columnsSettings;
+//            chartSettings[2] = JSON.parse(chartObj.find(".googlechart_columns").attr("value"));
             chartSettings[3] = "";
             chartSettings[4] = chartObj.find(".googlechart_width").attr("value");
             chartSettings[5] = chartObj.find(".googlechart_height").attr("value");
