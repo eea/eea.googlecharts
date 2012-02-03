@@ -2,22 +2,21 @@
 <head>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
-<!--script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script-->
+<script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
-<script type="text/javascript" src="++resource++eea.googlecharts.datatable2.js"></script>
 
 <script type="text/javascript">
     google.load('visualization', '1.0', {packages: ['controls']});
 
     jQuery(document).ready(function($){
-        columnsFromSettings = getColumnsFromSettings(chart_columns);
-        transformedTable = transformTable(merged_rows, 
+        var columnsFromSettings = getColumnsFromSettings(chart_columns);
+        var transformedTable = transformTable(merged_rows, 
                                         columnsFromSettings.normalColumns,
                                         columnsFromSettings.pivotColumns,
                                         columnsFromSettings.valueColumn,
                                         available_columns);
-        tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
+        var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
         chart_json.options.title = name;
 
         drawGoogleChart(
@@ -42,7 +41,7 @@
         jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
         var svg = jQuery("#googlechart_full").find("iframe").contents().find("#chartArea").html();
 
-        form = jQuery("#export");
+        var form = jQuery("#export");
         jQuery("#svg").attr("value",svg);
         jQuery("#type").attr("value","image/png");
         form.submit()
@@ -62,13 +61,6 @@
                                             chart_filters = ${chart/filters};">
     </script>
 
-    <!--form id="export" action='@@googlechart.export' method="POST">
-        <input type="hidden" id="svg" name="svg"/>
-        <input type="hidden" id="filename" name="filename"/>
-        <input type="hidden" id="type" name="type"/>
-        <input type="hidden" id="width" name="width"/>
-    </form>
-    <input type="button" value="export to png" onClick="exportToPng();"/-->
     <div id="googlechart_dashboard">
         <div id="googlechart_filters">
         </div>

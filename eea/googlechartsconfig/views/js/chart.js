@@ -12,15 +12,15 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
 
     var chart = new google.visualization.ChartWrapper(chartJson);
 
-    filtersArray = [];
+    var filtersArray = [];
 
     if (chartFilters){
         jQuery.each(chartFilters, function(key, value){
-            filter_div_id = chartFiltersDiv + "_" + key;
-            filter_div = "<div id='" + filter_div_id + "'></div>";
+            var filter_div_id = chartFiltersDiv + "_" + key;
+            var filter_div = "<div id='" + filter_div_id + "'></div>";
             jQuery(filter_div).appendTo("#" + chartFiltersDiv);
 
-            filterSettings = {};
+            var filterSettings = {};
             filterSettings.options = {};
             filterSettings.options.ui = {};
             filterSettings.options.filterColumnLabel = availableColumns[key];
@@ -45,7 +45,7 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
                     filterSettings.options.ui.selectedValuesLayout = 'belowStacked';
                     break;
             }
-            filter = new google.visualization.ControlWrapper(filterSettings);
+            var filter = new google.visualization.ControlWrapper(filterSettings);
             filtersArray.push(filter);
         });
     }
@@ -77,6 +77,5 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
         });
 
         chart.draw();
-
     }
 }

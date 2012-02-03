@@ -5,7 +5,7 @@ function exportToPng(){
     jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
     var svg = jQuery("#googlechart_view").find("iframe").contents().find("#chartArea").html();
 
-    form = jQuery("#export");
+    var form = jQuery("#export");
     jQuery("#svg").attr("value",svg);
     form.submit();
 }
@@ -18,14 +18,14 @@ function checkSVG(){
 }
 
 function drawChart(value){
-        chart_id = value[0];
-        chart_json = value[1];
-        chart_columns = value[2];
-        chart_filters = value[3];
-        chart_width = value[4];
-        chart_height = value[5];
-        chart_filterposition = value[6];
-        chart_options = value[7];
+        var chart_id = value[0];
+        var chart_json = value[1];
+        var chart_columns = value[2];
+        var chart_filters = value[3];
+        var chart_width = value[4];
+        var chart_height = value[5];
+        var chart_filterposition = value[6];
+        var chart_options = value[7];
 
         jQuery("#filename").attr("value",chart_json.options.title);
         jQuery("#type").attr("value","image/png");
@@ -35,7 +35,7 @@ function drawChart(value){
         jQuery("#googlechart_view").remove();
         jQuery("#googlechart_table").remove();
         filters = '<div id="googlechart_filters"></div>';
-        view = '<div id="googlechart_view" class="googlechart"></div>';
+        var view = '<div id="googlechart_view" class="googlechart"></div>';
         var googlechart_table;
         if (chart_filterposition === 0){
             googlechart_table = ""+
@@ -69,7 +69,15 @@ function drawChart(value){
         }
         jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
-        tableWithColumns = prepareTableForChart(merged_rows, chart_columns, available_columns);
+//        var tableWithColumns = prepareTableForChart(merged_rows, chart_columns, available_columns);
+        var columnsFromSettings = getColumnsFromSettings(chart_columns);
+        var transformedTable = transformTable(merged_rows, 
+                                        columnsFromSettings.normalColumns,
+                                        columnsFromSettings.pivotColumns,
+                                        columnsFromSettings.valueColumn,
+                                        available_columns);
+        var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
+
 
         drawGoogleChart(
             'googlechart_dashboard', 
@@ -77,13 +85,13 @@ function drawChart(value){
             'googlechart_filters',
             chart_id,
             chart_json,
-            tableWithColumns.table,
+            tableForChart,
             chart_filters,
             chart_width,
             chart_height,
             chart_filterposition,
             chart_options,
-            tableWithColumns.columns,
+            transformedTable.available_columns,
             checkSVG,
             function(){}
             );
@@ -95,7 +103,7 @@ jQuery(document).ready(function($){
     }
 
     jQuery(googlechart_config_array).each(function(index, value){
-        tabsObj = jQuery(".googlechart_tabs");
+        var tabsObj = jQuery(".googlechart_tabs");
         tabsObj.find("a[chart_id='"+value[0]+"']").addClass("googlechart_class_"+value[1].chartType);
     });
 
@@ -120,7 +128,7 @@ jQuery(document).ready(function($){
         return false;
     });
 
-    value=googlechart_config_array[0];
+    var value = googlechart_config_array[0];
     current_chart_id = value[0];
     drawChart(value);
 });

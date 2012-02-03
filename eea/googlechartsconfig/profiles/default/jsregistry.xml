@@ -20,7 +20,4 @@
     enabled="on" expression="python:'daviz' in request.URL0" 
     id="++resource++eea.googlecharts.datatable.js" inline="False"/>
 
- <javascript cacheable="True" compression="safe" cookable="True"
-    enabled="on" expression="python:'daviz' in request.URL0" 
-    id="++resource++eea.googlecharts.datatable2.js" inline="False"/>
 </object>
