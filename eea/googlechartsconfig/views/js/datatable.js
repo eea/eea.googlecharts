@@ -152,3 +152,62 @@ function getColumnsFromSettings(columnSettings){
 
     return settings;
 }
+
+function createMergedTable(originalTable, tableConfigs, availableColumns){
+    var mergedTable = {};
+    mergedTable.items = [];
+    mergedTable.properties = {};
+    var mergedColumns = {};
+
+    jQuery.each(originalTable.items, function(row_id, row){
+        var newRow = {};
+        jQuery.each(row, function(col_key, col){
+            newRow[col_key] = col;
+        });
+        mergedTable.items.push(newRow);
+    });
+
+    jQuery.each(originalTable.properties, function(prop_id, prop_value){
+        mergedTable.properties[prop_id] = prop_value;
+    });
+
+    jQuery.each(availableColumns, function(column_key, column_value){
+        mergedColumns[column_key] = column_value;
+    });
+
+    jQuery.each(tableConfigs, function(key, config){
+        var columnsFromSettings = getColumnsFromSettings(config);
+        var transformedTable = transformTable(originalTable,
+                                    columnsFromSettings.normalColumns,
+                                    columnsFromSettings.pivotColumns,
+                                    columnsFromSettings.valueColumn,
+                                    availableColumns);
+
+        jQuery.each(transformedTable.properties, function(prop_id, prop_value){
+            mergedTable.properties[prop_id] = prop_value;
+        });
+
+        jQuery.each(transformedTable.available_columns, function(col_id, col_value){
+            mergedColumns[col_id] = col_value;
+        });
+
+        jQuery.each(transformedTable.items, function(tr_row_id, tr_row){
+            jQuery.each(mergedTable.items, function(merged_row_id, merged_row){
+                var addToThis = true;
+                jQuery.each(columnsFromSettings.normalColumns, function(col_id, col){
+                    if (merged_row[col] !== tr_row[col]){
+                        addToThis = false;
+                    }
+                });
+                if (addToThis){
+                    jQuery.each(tr_row, function(tr_col_id, tr_col_value){
+                        merged_row[tr_col_id] = tr_col_value;
+                    });
+                }
+            });
+        });
+    });
+
+    mergedTable.available_columns = mergedColumns;
+    console.log(mergedTable);
+}

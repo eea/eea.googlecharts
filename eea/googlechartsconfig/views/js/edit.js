@@ -392,7 +392,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
         }
     });
 
-    jQuery("#addgooglechartfilter_"+id).click(openAddDialog);
+//    jQuery("#addgooglechartfilter_"+id).click(openAddDialog);
 
     drawChart(id);
 

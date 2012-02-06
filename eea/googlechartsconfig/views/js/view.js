@@ -131,4 +131,11 @@ jQuery(document).ready(function($){
     var value = googlechart_config_array[0];
     current_chart_id = value[0];
     drawChart(value);
+
+/*    var configs = [];
+    jQuery.each(googlechart_config_array,function(key, config){
+        configs.push(config[2]);
+    });
+    createMergedTable(merged_rows, configs, available_columns);*/
+
 });
