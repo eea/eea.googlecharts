@@ -11,7 +11,7 @@
 
     jQuery(document).ready(function($){
         var columnsFromSettings = getColumnsFromSettings(chart_columns);
-        var transformedTable = transformTable(merged_rows, 
+        var transformedTable = transformTable(merged_rows,
                                         columnsFromSettings.normalColumns,
                                         columnsFromSettings.pivotColumns,
                                         columnsFromSettings.valueColumn,
@@ -20,7 +20,7 @@
         chart_json.options.title = name;
 
         drawGoogleChart(
-            '', 
+            '',
             'googlechart_full',
             '',
             'full',
@@ -49,7 +49,7 @@
 
 </script>
 </head>
-<body tal:define="chart view/get_full_chart">
+<body tal:define="chart view/get_full_chart" style="margin: 0">
     <script type="text/javascript" tal:content="string:chart_columns = ${chart/columns};
                                             merged_rows = ${chart/data};
                                             available_columns = ${chart/available_columns};

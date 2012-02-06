@@ -137,3 +137,58 @@
 .googlechartTable .ui-icon {
     cursor:pointer;
 }
+
+#content ul#gcharts-dashboard-edit,
+#gcharts-dashboard-edit {
+    background: #f3f3f3;
+    list-style-type: none;
+    list-style-image: none;
+    margin: 0;
+}
+
+.dashboard-resizable-helper {
+    border: 2px dotted #E0EDFE;
+}
+
+.dashboard-mask {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.dashboard-header {
+    padding: 5px;
+    background: #E0EDFE;
+    position: absolute;
+    width: 100%;
+}
+
+.dashboard-header input {
+    width: 50px;
+}
+
+.dashboard-header span {
+    padding: 0 0.5em;
+}
+
+.dashboard-chart {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0px 5px 5px #ccc;
+    margin-top: 1em;
+    margin-right: 1em;
+    float: left;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.dashboard-chart iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.dashboard-chart iframe body {
+    overflow: hidden;
+}

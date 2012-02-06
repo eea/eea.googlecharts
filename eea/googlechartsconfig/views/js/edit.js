@@ -89,7 +89,7 @@ function saveThumb(value){
     var chart_options = value[7];
 
     var columnsFromSettings = getColumnsFromSettings(chart_columns);
-    var transformedTable = transformTable(all_rows, 
+    var transformedTable = transformTable(all_rows,
                                     columnsFromSettings.normalColumns,
                                     columnsFromSettings.pivotColumns,
                                     columnsFromSettings.valueColumn,
@@ -98,8 +98,8 @@ function saveThumb(value){
 
 
     drawGoogleChart(
-        '', 
-        'googlechart_thumb_zone', 
+        '',
+        'googlechart_thumb_zone',
         '',
         chart_id,
         chart_json,
@@ -149,7 +149,7 @@ function drawChart(elementId, add){
         }
 
         var columnsFromSettings = getColumnsFromSettings(chartColumns);
-        var transformedTable = transformTable(all_rows, 
+        var transformedTable = transformTable(all_rows,
                                         columnsFromSettings.normalColumns,
                                         columnsFromSettings.pivotColumns,
                                         columnsFromSettings.valueColumn,
@@ -485,7 +485,7 @@ function openEditColumns(id){
                 originalStatus = original.status;
             }
         });
-        var column = '<th column_id="' + column_key + '">' + 
+        var column = '<th column_id="' + column_key + '">' +
                     '<span>' + column_name + '</span>' +
                     '<select onchange="generateNewTable();">' +
                         '<option value="0" ' + ((originalStatus === 0) ? 'selected="selected"':'')+ '>Hidden</option>' +
@@ -737,6 +737,7 @@ function loadCharts(){
                 });
             }
             DavizEdit.Status.stop("Done");
+            jQuery(document).trigger('google-charts-initialized');
         }
     });
 }
@@ -880,6 +881,8 @@ function init_googlecharts_edit(){
     });
 
     loadCharts();
+
+
 }
 
 jQuery(document).ready(function($){

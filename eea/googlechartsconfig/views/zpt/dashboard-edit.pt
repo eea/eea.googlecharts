@@ -1,5 +1,1 @@
-<div id="gcharts-dashboard-edit">
-  <div id="gcharts-dashboard-filters" class="gcharts-dashboard-filters"></div>
-  <div id="gcharts-dashboard-charts" class="gcharts-dashboard-filters"></div>
-  <div tal:content="view/get_charts" />
-</div>
+<ul id="gcharts-dashboard-edit"></ul>
