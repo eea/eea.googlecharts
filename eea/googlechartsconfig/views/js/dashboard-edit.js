@@ -21,5 +21,5 @@ jQuery(document).ready(function(){
     return;
   }
   dashboard.EEAGoogleDashboard();
-  console.log('DEBUG: Dashboard initialized');
+  console.log('DEBUG: Edit Dashboard initialized');
 });
