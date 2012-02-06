@@ -4,6 +4,7 @@
   xmlns:browser="http://namespaces.zope.org/browser">
 
   <daviz:view name="googlechart.googlecharts" />
+  <daviz:view name="googlechart.googledashboard" />
 
   <browser:page
     name="charts"
@@ -27,6 +28,22 @@
     template="zpt/charts.pt"
     class=".chart.View"
     permission="zope2.View"
+    />
+
+  <browser:page
+    name="googlechart.googledashboard"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="zpt/dashboard.pt"
+    class=".chart.DashboardView"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="googlechart.googledashboard.edit"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="zpt/dashboard-edit.pt"
+    class=".edit.DashboardEdit"
+    permission="cmf.ModifyPortalContent"
     />
 
   <browser:page
@@ -60,6 +77,11 @@
     />
 
   <browser:resource
+    name="eea.googlecharts.dashboard-edit.js"
+    file="./js/dashboard-edit.js"
+  />
+
+  <browser:resource
     name="eea.googlecharts.edit.js"
     file="./js/edit.js"
   />
@@ -81,6 +103,11 @@
     class=".edit.Edit"
     permission="cmf.ModifyPortalContent"
     />
+
+  <browser:resource
+    name="eea.googlecharts.dashboard.js"
+    file="./js/dashboard.js"
+  />
 
   <browser:resource
     name="eea.googlecharts.view.js"

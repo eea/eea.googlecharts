@@ -1,0 +1,4 @@
+<div id="gcharts-dashboard-view">
+  <div id="gcharts-dashboard-filters"></div>
+  <div id="gcharts-dashboard-charts"></div>
+</div>

@@ -13,7 +13,7 @@ from eea.googlechartsconfig.config import EEAMessageFactory as _
 class View(ViewForm):
     """ GoogleChartsView
     """
-    label = 'GoogleCharts'
+    label = 'Charts'
     view_name = "googlechart.googlecharts"
     section = "Charts"
 
@@ -115,3 +115,9 @@ class SetThumb(BrowserView):
         obj.setExcludeFromNav(True)
         obj.getField('image').getMutator(obj)(img)
         return _("Success")
+
+class DashboardView(ViewForm):
+    """ Google dashboard view
+    """
+    label = 'Charts Dashboard'
+    section = "Charts"

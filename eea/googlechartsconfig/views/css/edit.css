@@ -90,7 +90,8 @@
 
 .googlechart-dialog {
   border-radius: 10px;
-  box-shadow: 0px 2px 2px #888;
+  box-shadow: 0px 5px 5px #ccc;
+  border: 1px solid #3A5774;
 }
 
 .googlechartTable {

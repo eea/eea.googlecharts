@@ -62,3 +62,7 @@ class Edit(BrowserView):
         stripped_result['properties'] = result_json['properties']
         stripped_result['items'] = result_json['items']
         return json.dumps(stripped_result)
+
+class DashboardEdit(Edit):
+    """ Edit google dashboard
+    """
