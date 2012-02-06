@@ -753,10 +753,29 @@ function addNewChart(){
             }
         }
     });
-    addChart(chartName+(max_id+1), "New Chart");
-    scrollto_id = "googlechartid_"+chartName+(max_id+1);
+    var newChartId = chartName+(max_id+1);
+
+    var newColumns = {};
+    newColumns.original = [];
+    newColumns.prepared = [];
+    jQuery.each(available_columns,function(key,value){
+        var newOriginal = {};
+        newOriginal.name = key;
+        newOriginal.status = 1;
+        newColumns.original.push(newOriginal);
+
+        var newPrepared = {};
+        newPrepared.name = key;
+        newPrepared.status = 1;
+        newPrepared.fullname = value;
+        newColumns.prepared.push(newPrepared);
+    });
+    addChart(newChartId, "New Chart",JSON.stringify({'chartType':'Table','options': {'legend':'none'}}), JSON.stringify(newColumns));
+
+    var newChart = jQuery("#googlechartid_"+newChartId);
+
     jQuery('html, body').animate({
-        scrollTop: $("#"+scrollto_id).offset().top
+        scrollTop: newChart.offset().top
     });
 }
 
@@ -774,8 +793,7 @@ function init_googlecharts_edit(){
         }
     });
 
-//    jQuery("#addgooglechart").click(openAddDialog);
-      jQuery("#addgooglechart").click(addNewChart);
+    jQuery("#addgooglechart").click(addNewChart);
     jQuery("#googlecharts_list").delegate(".remove_chart_icon","click",function(){
         chartId = jQuery(this).closest('.googlechart').attr('id');
         var chartToRemove = jQuery("#"+chartId).find(".googlechart_id").attr('value');

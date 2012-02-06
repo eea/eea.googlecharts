@@ -209,5 +209,4 @@ function createMergedTable(originalTable, tableConfigs, availableColumns){
     });
 
     mergedTable.available_columns = mergedColumns;
-    console.log(mergedTable);
 }
