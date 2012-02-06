@@ -12,120 +12,6 @@ available_filter_types = {  0:'Number Range Filter',
                             2:'Simple Category Filter',
                             3:'Multiple Category Filter'};
 
-function isValidAddDialog(){
-    var errorMsgMissing = "" +
-        "<div class='googlechart_dialog_errormsg'>" +
-            "Required input is missing" +
-        "</div>";
-    var errorMsgInvalid = "" +
-        "<div class='googlechart_dialog_errormsg'>" +
-            "Required input is not valid" +
-        "</div>";
-    var errorMsgUsed = "" +
-        "<div class='googlechart_dialog_errormsg'>" +
-            "Required input is already in use" +
-        "</div>";
-    jQuery('.googlechart_dialog_chartname_div').removeClass('error');
-    jQuery('.googlechart_dialog_chartid_div').removeClass('error');
-
-    var isValid = true;
-    var reText=/^[a-zA-Z][a-zA-Z0-9]*$/;
-    jQuery('.googlechart_dialog_errormsg').remove();
-    chartId = jQuery(".googlechart_dialog_chartid").val();
-    var chartName = jQuery(".googlechart_dialog_chartname").val();
-    var errorOnName = false;
-    var errorOnId = false;
-    if (chartName.trim().length === 0){
-        jQuery('.googlechart_dialog_chartname').before(errorMsgMissing);
-        errorOnName = true;
-        isValid = false;
-    }
-    if (chartId.trim().length === 0){
-        jQuery('.googlechart_dialog_chartid').before(errorMsgMissing);
-        errorOnId = true;
-        isValid = false;
-    }
-    else
-        if (!reText.test(chartId)){
-            jQuery('.googlechart_dialog_chartid').before(errorMsgInvalid);
-            errorOnId = true;
-            isValid = false;
-        }
-    var alreadyUsed = false;
-    var chart_id = jQuery(".googlechart > .googlechart_id");
-    var inUse = false;
-    jQuery(chart_id).each(function(){
-        if (chartId == this.value){
-            inUse = true;
-        }
-    });
-    if (inUse){
-        jQuery('.googlechart_dialog_chartid').before(errorMsgUsed);
-        errorOnId = true;
-        isValid = false;
-    }
-
-    var chart_names = jQuery(".googlechart > .googlechart_name");
-    inUse = false;
-    jQuery(chart_names).each(function(){
-        if (chartName == this.value){
-            inUse = true;
-        }
-    });
-    if (inUse){
-        jQuery('.googlechart_dialog_chartname').before(errorMsgUsed);
-        isValid = false;
-        errorOnName = true;
-    }
-    if (errorOnName){
-        jQuery('.googlechart_dialog_chartname_div').addClass('error');
-    }
-    if (errorOnId){
-        jQuery('.googlechart_dialog_chartid_div').addClass('error');
-    }
-    return isValid;
-}
-
-function openAddDialog(){
-    jQuery(".googlecharts_addchart_dialog").remove();
-    var addchartdialog = "" +
-        "<div class='googlecharts_addchart_dialog'>" +
-            "<div class='googlechart_dialog_chartid_div field'>" +
-                "<label>Id</label>" +
-                "<span class='required' style='color: #f00;' title='Required'> ■ </span>" +
-                "<div class='formHelp'>Id of the chart (e.g. firstchart)</div>" +
-                "<input class='googlechart_dialog_chartid' type='text'/>" +
-            "</div>" +
-            "<div class='googlechart_dialog_chartname_div field'>" +
-                "<label>Friendly Name</label>" +
-                "<span class='required' style='color: #f00;' title='Required'> ■ </span>" +
-                "<div class='formHelp'>Friendly name of the chart (e.g. My first chart)</div>" +
-                "<input class='googlechart_dialog_chartname' type='text'/>" +
-            "</div>" +
-        "</div>";
-    jQuery(addchartdialog).dialog({title:"Add Chart",
-            modal:true,
-            dialogClass: 'googlechart-dialog',
-            buttons:[
-                {
-                    text: "Add",
-                    click: function(){
-                        if (isValidAddDialog()){
-                            addChart(jQuery(".googlechart_dialog_chartid").val(),
-                                jQuery(".googlechart_dialog_chartname").val());
-                            jQuery(this).dialog("close");
-                        }
-                    }
-                },
-                {
-                    text: "Cancel",
-                    click: function(){
-                        jQuery(this).dialog("close");
-                    }
-                }
-            ]});
-}
-
 function markChartAsModified(id){
     var chartObj = jQuery("#googlechartid_"+id);
     chartObj.addClass("googlechart_modified");
@@ -871,7 +757,7 @@ function addNewChart(){
     scrollto_id = "googlechartid_"+chartName+(max_id+1);
     jQuery('html, body').animate({
         scrollTop: $("#"+scrollto_id).offset().top
-    }); 
+    });
 }
 
 function init_googlecharts_edit(){
