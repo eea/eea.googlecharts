@@ -4,7 +4,6 @@ import json
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from Products.Five.browser import BrowserView
-from StringIO import StringIO
 
 from eea.daviz.interfaces import IDavizConfig
 from eea.daviz.views.view import ViewForm
@@ -28,7 +27,7 @@ class View(ViewForm):
                 config = view.get('chartsconfig')
         if config == "":
             return []
-        return json.load(StringIO(config))['charts']
+        return config['charts']
 
     def get_columns(self):
         """ Columns
