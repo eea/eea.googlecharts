@@ -82,7 +82,7 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
 
 function removeDuplicated(chart, cols) {
     var columns = chart.getView().columns;
-    var dataTable = chart.getDataTable()
+    var dataTable = chart.getDataTable();
     if (!dataTable){
         return;
     }
@@ -92,7 +92,7 @@ function removeDuplicated(chart, cols) {
     var newRows = [];
     var distinctRows = [];
     for (var i = 0; i < rows_nr; i++){
-        var newRow = {}
+        var newRow = {};
         jQuery(cols).each(function(key,value){
             newRow[key] = table.getValue(i,value);
         });
@@ -103,7 +103,7 @@ function removeDuplicated(chart, cols) {
             jQuery.each(distinct_row,function(row_key, row_value){
                 if (newRow[row_key] !== row_value){
                     foundRow = false;
-                };
+                }
             });
             if (foundRow){
                 isNewRow = false;
@@ -112,8 +112,8 @@ function removeDuplicated(chart, cols) {
         if (isNewRow){
             distinctRows.push(newRow);
             newRows.push(i);
-        };
-    };
+        }
+    }
     chart.setView({"columns":columns,"rows":newRows});
 }
 

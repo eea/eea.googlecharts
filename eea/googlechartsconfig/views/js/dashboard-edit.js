@@ -3,8 +3,10 @@
 DavizEdit.Events.charts = {
     initialized: 'google-charts-initialized',
     changed: 'google-charts-changed',
+    reordered: 'google-charts-position-changed',
     resized: 'google-chart-resized',
     resizeFinished: 'google-chart-resize-finished',
+
     updated: 'google-chart-updated'
 };
 
@@ -28,7 +30,15 @@ DavizEdit.GoogleDashboard = function(context, options){
 DavizEdit.GoogleDashboard.prototype = {
   initialize: function(config, dataTable){
     var self = this;
-    var charts = jQuery('li.googlechart');
+    var charts = jQuery('li.googlechart').sort(function(a, b){
+      var order_a = jQuery.data(a, 'dashboard').order;
+      order_a = order_a ? parseInt(order_a, 10) : 50;
+      var order_b = jQuery.data(b, 'dashboard').order;
+      order_b = order_b ? parseInt(order_b, 10) : 50;
+      return (order_a < order_b) ? -1 : (order_a > order_b) ? 1 : 0;
+    });
+
+    console.log(charts);
     jQuery(charts).each(function(index){
       self.handle_chart(index, jQuery(this));
     });
@@ -39,7 +49,12 @@ DavizEdit.GoogleDashboard.prototype = {
       })
     );
     self.context.sortable({
-      items: 'li.dashboard-chart'
+      items: 'li.dashboard-chart',
+      stop: function(event, ui){
+        jQuery(self.context).trigger(DavizEdit.Events.charts.reordered, {
+          order: self.context.sortable('toArray')
+        });
+      }
     });
   },
 
@@ -69,12 +84,20 @@ DavizEdit.GoogleDashboardChart = function(context, options){
   }
 
   // Events
+
+  // Resize
   jQuery(self.settings.chart).bind(DavizEdit.Events.charts.resized, function(evt, data){
     self.handle_chart_resize(data);
   });
 
+  // After resize
   jQuery(self.settings.chart).bind(DavizEdit.Events.charts.resizeFinished, function(evt, data){
     self.handle_chart_afterResize(data);
+  });
+
+  // Position changed
+  jQuery(self.context).bind(DavizEdit.Events.charts.reordered, function(evt, data){
+    self.handle_chart_position(data.order);
   });
 
   self.initialize();
@@ -105,7 +128,10 @@ DavizEdit.GoogleDashboardChart.prototype = {
     href = href.replace(/height\=\d+/, 'height=' + height);
 
     var iframe = jQuery('<iframe>').attr('src', href);
-    var svg = jQuery('<li>').addClass('dashboard-chart').append(iframe);
+    var svg = jQuery('<li>')
+      .attr('id', self.settings.name)
+      .addClass('dashboard-chart')
+      .append(iframe);
     svg.width(width);
     svg.height(height);
     svg.resizable({
@@ -195,6 +221,18 @@ DavizEdit.GoogleDashboardChart.prototype = {
     iframe.attr('src', src);
 
     // Save changes
+    self.save();
+  },
+
+  handle_chart_position: function(order){
+    var self = this;
+    var name = self.settings.name;
+    var index = order.indexOf(name);
+    if(index === -1){
+      return;
+    }
+
+    jQuery.data(self.dashboard, 'dashboard').order = index;
     self.save();
   },
 

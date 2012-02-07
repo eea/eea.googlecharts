@@ -269,8 +269,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
             "</fieldset>" +
         "</li>");
 
-    jQuery('#googlecharts_list').append(googlechart)
-    //jQuery(googlechart).appendTo("#googlecharts_list");
+    jQuery('#googlecharts_list').append(googlechart);
     jQuery.data(googlechart[0], 'dashboard', dashboard);
 
     jQuery("#googlechart_filters_"+id).sortable({
