@@ -33,7 +33,8 @@
     background: url("++resource++mini2.png") no-repeat scroll 0 -42px transparent;
 }
 
-.googlechart_class_ScatterChart span{
+.googlechart_class_ScatterChart span,
+.googlechart_class_BubbleChart span{
     background: url("++resource++mini2.png") no-repeat scroll 0 -168px transparent;
 }
 
