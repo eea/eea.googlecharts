@@ -84,8 +84,8 @@ DavizEdit.GoogleDashboardChart.prototype = {
   initialize: function(){
     var self = this;
 
-    self.dashboard = jQuery('.googlechart_dashboard', self.settings.chart);
-    var dashboardVal = JSON.parse(self.dashboard.val());
+    self.dashboard = self.settings.chart[0];
+    var dashboardVal = jQuery.data(self.dashboard, 'dashboard');
 
     var width = dashboardVal.width ? dashboardVal.width : jQuery('.googlechart_width', self.settings.chart).val();
     var height = dashboardVal.height ? dashboardVal.height : jQuery('.googlechart_height', self.settings.chart).val();
@@ -96,7 +96,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
     dashboardVal.height = height;
     dashboardVal.order = self.order;
     dashboardVal.hidden = self.hidden;
-    self.dashboard.val(JSON.stringify(dashboardVal));
+    jQuery.data(self.dashboard, 'dashboard', dashboardVal);
 
     var href = self.settings.chart.find('a.preview_button');
     href.trigger('mouseover');
@@ -178,7 +178,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
     var height = data.height;
     var iframe = context.find('iframe');
     var src = iframe.attr('src');
-    var dashboard = JSON.parse(self.dashboard.val());
+    var dashboard = jQuery.data(self.dashboard, 'dashboard');
     if(width){
       src = src.replace(/width\=\d+/, 'width=' + width);
       dashboard.width = width;
@@ -189,7 +189,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
     }
 
     // Update dashboard
-    self.dashboard.val(JSON.stringify(dashboard));
+    jQuery.data(self.dashboard, 'dashboard', dashboard);
 
     // Update preview
     iframe.attr('src', src);
@@ -202,10 +202,11 @@ DavizEdit.GoogleDashboardChart.prototype = {
     console.log('Ops!!! Saving...');
     var self = this;
     DavizEdit.Status.start("Saving...");
+    var dashboard = jQuery.data(self.dashboard, 'dashboard');
     query = {
       action: 'chart',
       name: self.settings.name,
-      dashboard: self.dashboard.val()
+      dashboard: JSON.stringify(dashboard)
     };
     jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
       DavizEdit.Status.stop(data);

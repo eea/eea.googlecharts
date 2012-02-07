@@ -113,6 +113,7 @@ class DashboardEdit(Edit):
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
 
+        print kwargs
         if kwargs.pop('action', '') == 'chart':
             return self.chart(**kwargs)
         return self.index()

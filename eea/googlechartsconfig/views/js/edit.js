@@ -190,8 +190,8 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
     filter_pos = typeof(filter_pos) !== 'undefined' ? filter_pos : 0;
     options = typeof(options) !== 'undefined' ? options : "{}";
     isThumb = typeof(isThumb) !== 'undefined' ? isThumb : false;
-    dashboard = typeof(dashboard) !== 'undefined' ? JSON.stringify(dashboard): "{}";
-    filter_pos = parseInt(filter_pos,0);
+    dashboard = typeof(dashboard) !== 'undefined' ? dashboard: {};
+    filter_pos = parseInt(filter_pos, 0);
 
     var shouldMark = false;
     var chart;
@@ -201,13 +201,12 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
         chart.options.title = name;
         config = JSON.stringify(chart);
     }
-    var googlechart = "" +
+    var googlechart = jQuery("" +
         "<li class='googlechart daviz-facet-edit' id='googlechartid_"+id+"'>" +
             "<input class='googlechart_id' type='hidden' value='"+id+"'/>" +
             "<input class='googlechart_configjson' type='hidden' value='"+config+"'/>" +
             "<input class='googlechart_columns' type='hidden' value='"+columns+"'/>" +
             "<input class='googlechart_options' type='hidden' value='"+options+"'/>" +
-            "<input class='googlechart_dashboard' type='hidden' value='"+dashboard+"'/>" +
 
             "<h1 class='googlechart_handle'>"+
             "<div style='float:left;width:70%;height:20px;overflow:hidden;'>"+id+"</div>"+
@@ -268,9 +267,11 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
             "<input type='button' class='context' value='Advanced Options' onclick='openAdvancedOptions(\""+id+"\");'/>" +
             "<a style='float:right' class='preview_button'>Preview Chart</a>"+
             "</fieldset>" +
-        "</li>";
+        "</li>");
 
-    jQuery(googlechart).appendTo("#googlecharts_list");
+    jQuery('#googlecharts_list').append(googlechart)
+    //jQuery(googlechart).appendTo("#googlecharts_list");
+    jQuery.data(googlechart[0], 'dashboard', dashboard);
 
     jQuery("#googlechart_filters_"+id).sortable({
         handle : '.googlechart_filteritem_'+id,
@@ -749,7 +750,7 @@ function saveCharts(){
         chart.filterposition = chartObj.find(".googlechart_filterposition:checked").attr("value");
         chart.options = chartObj.find(".googlechart_options").attr("value");
         chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
-        chart.dashboard = chartObj.find('.googlechart_dashboard').attr('value');
+        chart.dashboard = jQuery.data(chartObj, 'dashboard');
         config = JSON.parse(chart.config);
         config.options.title = chart.name;
         config.dataTable = [];
