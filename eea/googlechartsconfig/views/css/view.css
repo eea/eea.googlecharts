@@ -8,6 +8,11 @@
   padding: 50px 5px 0;
 }
 
+
+.googlechart_class_Dashboard span {
+    background: url("++resource++mini2.png") no-repeat scroll 0 0px transparent;
+}
+
 .googlechart_class_PieChart span {
     background: url("++resource++mini2.png") no-repeat scroll 0 -21px transparent;
 }

@@ -16,7 +16,7 @@
                 has_dashboard = true;
             </script>
             <li>
-                <a href="#" class="current" chart_id="dashboard">
+                <a href="#" class="googlechart_class_Dashboard current" chart_id="dashboard">
                  <span>Dashboard</span>
                 </a>
             </li>
