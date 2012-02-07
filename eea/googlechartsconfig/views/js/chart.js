@@ -122,16 +122,15 @@ function drawGoogleDashboard(dashboard, chartViewsDiv, chartFiltersDiv, chartsSe
     var dashboardFilters = [];
     jQuery.each(chartsSettings, function(key, value){
         var chartContainerId = "googlechart_view_" + value[0];
-        var chartContainer = "<div id='" + chartContainerId + "'>chart</div>";
+        var chartContainer = "<div id='" + chartContainerId + "' style='float:left'>chart</div>";
         jQuery(chartContainer).appendTo('#googlechart_view');
 
-/*        var chartOpt = {}
-        chartOpt.chartType = 'Table';
-
-        var chart = new google.visualization.ChartWrapper(chartOpt);*/
         var chart = new google.visualization.ChartWrapper(value[1]);
         chart.setContainerId(chartContainerId);
-
+        chart.setOption("width",value[8].width);
+        chart.setOption("height",value[8].height);
+//        console.log(value[8].width);
+//        console.log(value[8].height);
         var column_nrs = [];
         var isTransformed = false;
         var originalColumns = [];
@@ -169,7 +168,7 @@ function drawGoogleDashboard(dashboard, chartViewsDiv, chartFiltersDiv, chartsSe
         }
         else {
             jQuery.each(dashboardFilters, function(filter_key, filter){
-                
+
             });
         }
     });

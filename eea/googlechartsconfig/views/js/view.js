@@ -1,6 +1,8 @@
 var current_chart_id;
 var tableForDashboard;
 var allColumns;
+var sortedDashboardChartsConfig;
+
 function exportToPng(){
     var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
     jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
@@ -113,7 +115,7 @@ function drawDashboard(){
     drawGoogleDashboard('googlechart_dashboard',
                         'googlechart_view',
                         'googlechart_filters',
-                        googlechart_config_array,
+                        sortedDashboardChartConfig,
                         tableForDashboard,
                         allColumns);
 
@@ -161,9 +163,26 @@ jQuery(document).ready(function($){
     }
     else {
         var configs = [];
+        sortedDashboardChartConfig = [];
+        var dashboardChartConfig = {};
+        var dashboardKeys = [];
         jQuery.each(googlechart_config_array,function(key, config){
+            var isDashboardChart = true;
+            if ((typeof(config[8].hidden) === 'undefined') || (config[8].hidden)){
+                isDashboardChart = false;
+            }
+            if (isDashboardChart){
+                dashboardChartConfig[config[8].order] = config;
+                dashboardKeys.push(config[8].order);
+            }
             configs.push(config[2]);
         });
+
+        var sortedDashboardKeys = dashboardKeys.sort();
+        jQuery.each(sortedDashboardKeys, function(key, dashboardKey){
+            sortedDashboardChartConfig.push(dashboardChartConfig[dashboardKey]);
+        });
+
         var mergedTable = createMergedTable(merged_rows, configs, available_columns);
         allColumns = [];
         jQuery.each(mergedTable.available_columns, function(key, value){
