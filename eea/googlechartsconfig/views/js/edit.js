@@ -181,7 +181,7 @@ function markChartAsThumb(id){
     markChartAsModified(id);
 }
 
-function addChart(id, name, config, columns, filters, width, height, filter_pos, options, isThumb){
+function addChart(id, name, config, columns, filters, width, height, filter_pos, options, isThumb, dashboard){
     config = typeof(config) !== 'undefined' ? config : "";
     columns = typeof(columns) !== 'undefined' ? columns : "";
     filters = typeof(filters) !== 'undefined' ? filters : {};
@@ -190,6 +190,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
     filter_pos = typeof(filter_pos) !== 'undefined' ? filter_pos : 0;
     options = typeof(options) !== 'undefined' ? options : "{}";
     isThumb = typeof(isThumb) !== 'undefined' ? isThumb : false;
+    dashboard = typeof(dashboard) !== 'undefined' ? JSON.stringify(dashboard): "{}";
     filter_pos = parseInt(filter_pos,0);
 
     var shouldMark = false;
@@ -206,6 +207,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
             "<input class='googlechart_configjson' type='hidden' value='"+config+"'/>" +
             "<input class='googlechart_columns' type='hidden' value='"+columns+"'/>" +
             "<input class='googlechart_options' type='hidden' value='"+options+"'/>" +
+            "<input class='googlechart_dashboard' type='hidden' value='"+dashboard+"'/>" +
 
             "<h1 class='googlechart_handle'>"+
             "<div style='float:left;width:70%;height:20px;overflow:hidden;'>"+id+"</div>"+
@@ -747,6 +749,7 @@ function saveCharts(){
         chart.filterposition = chartObj.find(".googlechart_filterposition:checked").attr("value");
         chart.options = chartObj.find(".googlechart_options").attr("value");
         chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
+        chart.dashboard = chartObj.find('.googlechart_dashboard').attr('value');
         config = JSON.parse(chart.config);
         config.options.title = chart.name;
         config.dataTable = [];
@@ -809,21 +812,28 @@ function saveCharts(){
 
 function loadCharts(){
     DavizEdit.Status.start("Loading Charts");
-    jQuery.ajax({
-        url:ajax_baseurl+"/googlechart.get_charts",
-        type:'post',
-        success:function(data){
-            if (data){
-                var jsonObj = JSON.parse(data);
-                var charts = jsonObj.charts;
-                jQuery(charts).each(function(index,chart){
-                    addChart(chart.id,chart.name,chart.config,chart.columns,JSON.parse(chart.filters), chart.width, chart.height, chart.filterposition, chart.options, chart.isThumb);
-                });
-            }
-            DavizEdit.Status.stop("Done");
-            jQuery(document).trigger('google-charts-initialized');
-        }
+    jQuery.getJSON(ajax_baseurl+"/googlechart.get_charts", function(data){
+        var jsonObj = data;
+        var charts = jsonObj.charts;
+        jQuery(charts).each(function(index,chart){
+            addChart(
+                chart.id,
+                chart.name,
+                chart.config,
+                chart.columns,
+                JSON.parse(chart.filters),
+                chart.width,
+                chart.height,
+                chart.filterposition,
+                chart.options,
+                chart.isThumb,
+                chart.dashboard
+            );
+        });
+        DavizEdit.Status.stop("Done");
+        jQuery(document).trigger('google-charts-initialized');
     });
+
 }
 
 function addNewChart(){

@@ -1,13 +1,15 @@
 """ Edit GoogleCharts
 """
 import json
-
+import logging
 
 from Products.Five import BrowserView
 
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from eea.daviz.interfaces import IDavizConfig
+
+logger = logging.getLogger('eea.googlecharts')
 
 class Edit(BrowserView):
     """ Edit GoogleCharts form
@@ -66,3 +68,51 @@ class Edit(BrowserView):
 class DashboardEdit(Edit):
     """ Edit google dashboard
     """
+    def chart(self, **kwargs):
+        """ Edit chart properties
+        """
+        name = kwargs.get('name', '')
+        if not name:
+            msg = 'Empty chart name provided %s' % name
+            logger.exception(msg)
+            return msg
+
+        mutator = queryAdapter(self.context, IDavizConfig)
+        dashboard = kwargs.pop('dashboard', "{}")
+        try:
+            dashboard = json.loads(dashboard)
+        except Exception, err:
+            logger.exception(err)
+            return err
+
+        view = mutator.view('googlechart.googlecharts')
+        if not view:
+            msg = 'Invalid view googlechart.googlecharts'
+            logger.exception(msg)
+            return msg
+
+        config = view.get('chartsconfig', {})
+        charts = config.get('charts', [])
+        changed = False
+        for chart in charts:
+            if chart.get('id', '') == name:
+                chart['dashboard'] = dashboard
+                changed = True
+                break
+
+        if changed:
+            mutator.edit_view('googlechart.googlecharts', **view)
+        return u"Changes saved"
+
+    def dashboard(self, **kwargs):
+        """ Edit dashboard properties
+        """
+        return "Not implemented ERROR"
+
+    def __call__(self, **kwargs):
+        form = getattr(self.request, 'form', {})
+        kwargs.update(form)
+
+        if kwargs.pop('action', '') == 'chart':
+            return self.chart(**kwargs)
+        return self.index()
