@@ -3,7 +3,8 @@
 DavizEdit.Events.charts = {
     initialized: 'google-charts-initialized',
     changed: 'google-charts-changed',
-    resized: 'google-chart-resized'
+    resized: 'google-chart-resized',
+    resizeFinished: 'google-chart-resize-finished'
 };
 
 DavizEdit.GoogleDashboards = {};
@@ -24,6 +25,10 @@ DavizEdit.GoogleDashboard = function(context, options){
   jQuery(document).bind(DavizEdit.Events.charts.resized, function(evt, data){
     self.handle_chart_resize(data);
   });
+
+  jQuery(document).bind(DavizEdit.Events.charts.resizeFinished, function(evt, data){
+    self.handle_chart_afterResize(data);
+  });
 };
 
 DavizEdit.GoogleDashboard.prototype = {
@@ -33,9 +38,10 @@ DavizEdit.GoogleDashboard.prototype = {
     jQuery(charts).each(function(){
       self.handle_chart(jQuery(this));
     });
-    self.context.append(jQuery('<li>').css({
-      'clear': 'both',
-      'padding': '2em'
+    self.context.append(
+      jQuery('<li>').css({
+        'clear': 'both',
+        'padding': '2em'
       })
     );
     self.context.sortable({
@@ -63,32 +69,69 @@ DavizEdit.GoogleDashboard.prototype = {
           context: svg, width: ui.size.width, height: ui.size.height});
       }
     });
-    svg.prepend(self.handle_chart_header(width, height));
-    svg.prepend(self.handel_chart_mask(width, height));
+    self.handle_chart_header(svg, width, height);
+    self.handel_chart_mask(svg, width, height);
     self.context.append(svg);
   },
 
-  handle_chart_header: function(width, height){
+  handle_chart_header: function(context, width, height){
     var header = jQuery('<div>').addClass('dashboard-header').html(
       '<input type="number" name="width" value=""/>' +
       '<span>X</span>' +
       '<input type="number" name="height" value=""/>' +
       '<span>px</span>'
     );
-    jQuery('input[name=width]', header).val(width);
-    jQuery('input[name=height]', header).val(height);
-    return header;
+
+    jQuery('input[name=width]', header).val(width).change(function(){
+      var width = jQuery(this).val();
+      context.width(width);
+      jQuery(document).trigger(DavizEdit.Events.charts.resizeFinished, {
+        context: context,
+        width: width
+      });
+    });
+
+    jQuery('input[name=height]', header).val(height).change(function(){
+      var height = jQuery(this).val();
+      context.height(height);
+      jQuery(document).trigger(DavizEdit.Events.charts.resizeFinished, {
+        context: context,
+        height: height
+      });
+    });
+
+    context.prepend(header);
   },
 
-  handel_chart_mask: function(width, height){
+  handel_chart_mask: function(context, width, height){
     var mask = jQuery('<div>').addClass('dashboard-mask');
-    return mask;
+    context.prepend(mask);
   },
 
   handle_chart_resize: function(data){
     var context = jQuery(data.context);
     jQuery('input[name=width]', context).val(data.width);
     jQuery('input[name=height]', context).val(data.height);
+    jQuery(document).trigger(DavizEdit.Events.charts.resizeFinished, {
+      context: context,
+      width: data.width,
+      height: data.height
+    });
+  },
+
+  handle_chart_afterResize: function(data){
+    var context = data.context;
+    var width = data.width;
+    var height = data.height;
+    var iframe = context.find('iframe');
+    var src = iframe.attr('src');
+    if(width){
+      src = src.replace(/width\=\d+/, 'width=' + width);
+    }
+    if(height){
+      src = src.replace(/height\=\d+/, 'height=' + height);
+    }
+    iframe.attr('src', src);
   }
 };
 
