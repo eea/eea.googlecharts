@@ -109,6 +109,7 @@ function drawDashboard(){
         "<div id='googlechart_table' class='googlechart_table googlechart_table_top'>"+
             "<div id='googlechart_filters'></div>"+
             "<div id='googlechart_view' class='googlechart'></div>"+
+            "<div style='clear: both'></div>" +
         "</div>";
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
@@ -168,8 +169,13 @@ jQuery(document).ready(function($){
         var dashboardKeys = [];
         jQuery.each(googlechart_config_array,function(key, config){
             var isDashboardChart = true;
-            if ((typeof(config[8].hidden) === 'undefined') || (config[8].hidden)){
+            if (typeof(config[8].hidden) === 'undefined'){
                 isDashboardChart = false;
+            }
+            else{
+                if (config[8].hidden){
+                    isDashboardChart = false;
+                }
             }
             if (isDashboardChart){
                 dashboardChartConfig[config[8].order] = config;

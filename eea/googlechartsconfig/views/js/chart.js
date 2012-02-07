@@ -127,10 +127,18 @@ function drawGoogleDashboard(dashboard, chartViewsDiv, chartFiltersDiv, chartsSe
 
         var chart = new google.visualization.ChartWrapper(value[1]);
         chart.setContainerId(chartContainerId);
-        chart.setOption("width",value[8].width);
-        chart.setOption("height",value[8].height);
-//        console.log(value[8].width);
-//        console.log(value[8].height);
+        if (value[8].width){
+            chart.setOption("width",value[8].width);
+        }
+        else{
+            chart.setOption("width",value[4]);
+        }
+        if (value[8].height){
+            chart.setOption("height",value[8].height);
+        }
+        else{
+            chart.setOption("height",value[5]);
+        }
         var column_nrs = [];
         var isTransformed = false;
         var originalColumns = [];
