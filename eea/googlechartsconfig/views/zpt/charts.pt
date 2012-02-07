@@ -3,24 +3,37 @@
 <script type="text/javascript">
     google.load('visualization', '1.0', {packages: ['controls']});
     googlechart_config_array = [];
+    var has_dashboard = false;
 </script>
 
 <script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}">
 </script>
 
-<tal:block tal:define="charts view/get_charts">
+<tal:block tal:define="charts view/get_charts; has_dashboard view/has_dashboard">
     <ul class="googlechart_tabs">
+        <tal:block tal:condition="has_dashboard">
+            <script type="text/javascript">
+                has_dashboard = true;
+            </script>
+            <li>
+                <a href="#" class="current" chart_id="dashboard">
+                 <span>Dashboard</span>
+                </a>
+            </li>
+        </tal:block>
+
         <tal:block tal:repeat="chart charts">
             <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}]);">
             </script>
-            <tal:block tal:condition="repeat/chart/start">
+            <!--tal:block tal:condition="repeat/chart/start"-->
+            <tal:block tal:condition="python: repeat['chart'].start and not has_dashboard">
                 <li>
                     <a href="#" class="current" tal:attributes="chart_id chart/id">
                      <span tal:content="chart/name" />
                     </a>
                 </li>
             </tal:block>
-            <tal:block tal:condition="not:repeat/chart/start">
+            <tal:block tal:condition="python: not repeat['chart'].start or has_dashboard">
                 <li>
                     <a href="#" tal:attributes="chart_id chart/id">
                         <span tal:content="chart/name" />

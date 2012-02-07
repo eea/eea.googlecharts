@@ -79,3 +79,98 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
         chart.draw();
     }
 }
+
+function removeDuplicated(chart, cols) {
+    var columns = chart.getView().columns;
+    var dataTable = chart.getDataTable()
+    if (!dataTable){
+        return;
+    }
+    var rows_nr = dataTable.getNumberOfRows();
+//    var table = dataTable.toDataTable();
+    var table = dataTable;
+    var newRows = [];
+    var distinctRows = [];
+    for (var i = 0; i < rows_nr; i++){
+        var newRow = {}
+        jQuery(cols).each(function(key,value){
+            newRow[key] = table.getValue(i,value);
+        });
+        var isNewRow = true;
+
+        jQuery(distinctRows).each(function(distinct_key, distinct_row){
+            var foundRow = true;
+            jQuery.each(distinct_row,function(row_key, row_value){
+                if (newRow[row_key] !== row_value){
+                    foundRow = false;
+                };
+            });
+            if (foundRow){
+                isNewRow = false;
+            }
+        });
+        if (isNewRow){
+            distinctRows.push(newRow);
+            newRows.push(i);
+        };
+    };
+    chart.setView({"columns":columns,"rows":newRows});
+}
+
+function drawGoogleDashboard(dashboard, chartViewsDiv, chartFiltersDiv, chartsSettings, chartsMergedTable, allColumns){
+    var dashboardCharts = [];
+    var dashboardFilters = [];
+    jQuery.each(chartsSettings, function(key, value){
+        var chartContainerId = "googlechart_view_" + value[0];
+        var chartContainer = "<div id='" + chartContainerId + "'>chart</div>";
+        jQuery(chartContainer).appendTo('#googlechart_view');
+
+/*        var chartOpt = {}
+        chartOpt.chartType = 'Table';
+
+        var chart = new google.visualization.ChartWrapper(chartOpt);*/
+        var chart = new google.visualization.ChartWrapper(value[1]);
+        chart.setContainerId(chartContainerId);
+
+        var column_nrs = [];
+        var isTransformed = false;
+        var originalColumns = [];
+        jQuery.each(value[2].original, function(key,column){
+            originalColumns.push(column.name);
+        });
+        var normalColumns = [];
+        jQuery.each(value[2].prepared, function(key,column){
+            if (column.status === 1){
+                column_nrs.push(allColumns.find(column.name)[0]);
+                if (originalColumns.find(column.name)){
+                    normalColumns.push(allColumns.find(column.name)[0]);
+                }
+                else{
+                    isTransformed = true;
+                }
+            }
+        });
+
+        chart.setView({"columns":column_nrs});
+        var chartObj = {};
+        chartObj.isTransformed = isTransformed;
+        chartObj.chart = chart;
+        chartObj.normalColumns = normalColumns;
+        dashboardCharts.push(chartObj);
+    });
+    var hasFilters = false;
+    jQuery.each(dashboardCharts, function(chart_key, chart){
+        if (!hasFilters){
+            chart.chart.setDataTable(chartsMergedTable);
+            if (chart.isTransformed){
+                removeDuplicated(chart.chart, chart.normalColumns);
+            }
+            chart.chart.draw();
+        }
+        else {
+            jQuery.each(dashboardFilters, function(filter_key, filter){
+                
+            });
+        }
+    });
+}

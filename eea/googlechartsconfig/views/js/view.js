@@ -1,5 +1,6 @@
 var current_chart_id;
-
+var tableForDashboard;
+var allColumns;
 function exportToPng(){
     var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
     jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
@@ -69,7 +70,6 @@ function drawChart(value){
         }
         jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
-//        var tableWithColumns = prepareTableForChart(merged_rows, chart_columns, available_columns);
         var columnsFromSettings = getColumnsFromSettings(chart_columns);
         var transformedTable = transformTable(merged_rows, 
                                         columnsFromSettings.normalColumns,
@@ -97,6 +97,28 @@ function drawChart(value){
             );
 }
 
+function drawDashboard(){
+    jQuery("#googlechart_export_button").hide();
+    jQuery("#googlechart_filters").remove();
+    jQuery("#googlechart_view").remove();
+    jQuery("#googlechart_table").remove();
+    var googlechart_table;
+    googlechart_table = ""+
+        "<div id='googlechart_table' class='googlechart_table googlechart_table_top'>"+
+            "<div id='googlechart_filters'></div>"+
+            "<div id='googlechart_view' class='googlechart'></div>"+
+        "</div>";
+    jQuery(googlechart_table).appendTo('#googlechart_dashboard');
+
+    drawGoogleDashboard('googlechart_dashboard',
+                        'googlechart_view',
+                        'googlechart_filters',
+                        googlechart_config_array,
+                        tableForDashboard,
+                        allColumns);
+
+}
+
 jQuery(document).ready(function($){
     if (typeof(googlechart_config_array) == 'undefined'){
         return;
@@ -113,29 +135,41 @@ jQuery(document).ready(function($){
             jQuery(".googlechart_tabs a").removeClass("current");
             jQuery(this).addClass("current");
 
-            var index_to_use;
+            var index_to_use = -1;
             jQuery(googlechart_config_array).each(function(index, value){
                 if (value[0] == current_chart_id){
                     index_to_use = index;
                 }
             });
+            if (index_to_use != -1){
+                jQuery("#googlechart_filters").html('');
+                jQuery("#googlechart_view").html('');
 
-            jQuery("#googlechart_filters").html('');
-            jQuery("#googlechart_view").html('');
-
-            drawChart(googlechart_config_array[index_to_use]);
+                drawChart(googlechart_config_array[index_to_use]);
+            }
+            else {
+                drawDashboard();
+            }
         }
         return false;
     });
 
-    var value = googlechart_config_array[0];
-    current_chart_id = value[0];
-    drawChart(value);
-
-/*    var configs = [];
-    jQuery.each(googlechart_config_array,function(key, config){
-        configs.push(config[2]);
-    });
-    createMergedTable(merged_rows, configs, available_columns);*/
-
+    if (!has_dashboard){
+        var value = googlechart_config_array[0];
+        current_chart_id = value[0];
+        drawChart(value);
+    }
+    else {
+        var configs = [];
+        jQuery.each(googlechart_config_array,function(key, config){
+            configs.push(config[2]);
+        });
+        var mergedTable = createMergedTable(merged_rows, configs, available_columns);
+        allColumns = [];
+        jQuery.each(mergedTable.available_columns, function(key, value){
+            allColumns.push(key);
+        });
+        tableForDashboard = prepareForChart(mergedTable, allColumns);
+        drawDashboard();
+    }
 });

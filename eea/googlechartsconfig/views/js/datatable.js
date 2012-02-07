@@ -209,4 +209,5 @@ function createMergedTable(originalTable, tableConfigs, availableColumns){
     });
 
     mergedTable.available_columns = mergedColumns;
+    return mergedTable;
 }

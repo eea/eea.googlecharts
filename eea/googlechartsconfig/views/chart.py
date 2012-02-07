@@ -60,6 +60,10 @@ class View(ViewForm):
         chart['filterposition'] = self.request.get("filterposition", 0)
         return chart
 
+    def has_dashboard(self):
+        """ Dashboard is configured """
+        return True
+
 class Export(BrowserView):
     """ Export chart to png
     """
