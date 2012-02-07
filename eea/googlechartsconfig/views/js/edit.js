@@ -803,7 +803,7 @@ function saveCharts(){
                 chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
 
                 DavizEdit.Status.stop(data);
-
+                jQuery(document).trigger('google-charts-changed');
                 saveThumb(chartSettings);
             }
         }

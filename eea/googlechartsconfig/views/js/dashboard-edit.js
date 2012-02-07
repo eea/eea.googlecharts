@@ -25,11 +25,17 @@ DavizEdit.GoogleDashboard = function(context, options){
   jQuery(document).bind(DavizEdit.Events.charts.initialized, function(evt, data){
     self.initialize();
   });
+
+  jQuery(document).bind(DavizEdit.Events.charts.changed, function(evt, data){
+    self.unload();
+    self.initialize();
+  });
 };
 
 DavizEdit.GoogleDashboard.prototype = {
-  initialize: function(config, dataTable){
+  initialize: function(){
     var self = this;
+    self.context.empty();
     var charts = jQuery('li.googlechart').sort(function(a, b){
       var order_a = jQuery.data(a, 'dashboard').order;
       order_a = order_a ? parseInt(order_a, 10) : 50;
@@ -38,7 +44,6 @@ DavizEdit.GoogleDashboard.prototype = {
       return (order_a < order_b) ? -1 : (order_a > order_b) ? 1 : 0;
     });
 
-    console.log(charts);
     jQuery(charts).each(function(index){
       self.handle_chart(index, jQuery(this));
     });
@@ -66,6 +71,11 @@ DavizEdit.GoogleDashboard.prototype = {
       name: name,
       index: index
     });
+  },
+
+  unload: function(){
+    var self = this;
+    jQuery(self.context).unbind('.dashboard');
   }
 };
 
@@ -84,19 +94,20 @@ DavizEdit.GoogleDashboardChart = function(context, options){
   }
 
   // Events
+  jQuery(self.settings.chart).unbind('.dashboard');
 
   // Resize
-  jQuery(self.settings.chart).bind(DavizEdit.Events.charts.resized, function(evt, data){
+  jQuery(self.settings.chart).bind(DavizEdit.Events.charts.resized + '.dashboard', function(evt, data){
     self.handle_chart_resize(data);
   });
 
   // After resize
-  jQuery(self.settings.chart).bind(DavizEdit.Events.charts.resizeFinished, function(evt, data){
+  jQuery(self.settings.chart).bind(DavizEdit.Events.charts.resizeFinished + '.dashboard', function(evt, data){
     self.handle_chart_afterResize(data);
   });
 
   // Position changed
-  jQuery(self.context).bind(DavizEdit.Events.charts.reordered, function(evt, data){
+  jQuery(self.context).bind(DavizEdit.Events.charts.reordered + '.dashboard', function(evt, data){
     self.handle_chart_position(data.order);
   });
 
@@ -237,7 +248,6 @@ DavizEdit.GoogleDashboardChart.prototype = {
   },
 
   save: function(){
-    console.log('Ops!!! Saving...');
     var self = this;
     DavizEdit.Status.start("Saving...");
     var dashboard = jQuery.data(self.dashboard, 'dashboard');
