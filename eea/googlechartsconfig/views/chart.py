@@ -64,6 +64,11 @@ class View(ViewForm):
         """ Dashboard is configured """
         return True
 
+    def get_dashboard_js(self, chart):
+        """ Dashboard
+        """
+        return json.dumps(chart.get('dashboard', {}))
+
 class Export(BrowserView):
     """ Export chart to png
     """

@@ -750,7 +750,7 @@ function saveCharts(){
         chart.filterposition = chartObj.find(".googlechart_filterposition:checked").attr("value");
         chart.options = chartObj.find(".googlechart_options").attr("value");
         chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
-        chart.dashboard = jQuery.data(chartObj, 'dashboard');
+        chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
         config = JSON.parse(chart.config);
         config.options.title = chart.name;
         config.dataTable = [];

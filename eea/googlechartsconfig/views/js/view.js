@@ -73,7 +73,7 @@ function drawChart(value){
         jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
         var columnsFromSettings = getColumnsFromSettings(chart_columns);
-        var transformedTable = transformTable(merged_rows, 
+        var transformedTable = transformTable(merged_rows,
                                         columnsFromSettings.normalColumns,
                                         columnsFromSettings.pivotColumns,
                                         columnsFromSettings.valueColumn,
@@ -82,8 +82,8 @@ function drawChart(value){
 
 
         drawGoogleChart(
-            'googlechart_dashboard', 
-            'googlechart_view', 
+            'googlechart_dashboard',
+            'googlechart_view',
             'googlechart_filters',
             chart_id,
             chart_json,
@@ -167,7 +167,7 @@ jQuery(document).ready(function($){
         sortedDashboardChartConfig = [];
         var dashboardChartConfig = {};
         var dashboardKeys = [];
-        jQuery.each(googlechart_config_array,function(key, config){
+        jQuery.each(googlechart_config_array, function(key, config){
             var isDashboardChart = true;
             if (typeof(config[8].hidden) === 'undefined'){
                 isDashboardChart = false;

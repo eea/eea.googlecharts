@@ -23,8 +23,9 @@
         </tal:block>
 
         <tal:block tal:repeat="chart charts">
-            <script type="text/javascript" tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}]);">
-            </script>
+            <script type="text/javascript"
+                tal:define="dashboard python:view.get_dashboard_js(chart);"
+                tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard]);"></script>
             <!--tal:block tal:condition="repeat/chart/start"-->
             <tal:block tal:condition="python: repeat['chart'].start and not has_dashboard">
                 <li>

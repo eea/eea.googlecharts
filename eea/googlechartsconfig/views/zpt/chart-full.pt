@@ -49,7 +49,7 @@
 
 </script>
 </head>
-<body tal:define="chart view/get_full_chart" style="margin: 0">
+<body tal:define="chart view/get_full_chart" style="margin: 0; overflow: hidden">
     <script type="text/javascript" tal:content="string:chart_columns = ${chart/columns};
                                             merged_rows = ${chart/data};
                                             available_columns = ${chart/available_columns};
