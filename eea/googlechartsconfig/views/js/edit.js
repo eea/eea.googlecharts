@@ -251,7 +251,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                 "</tr>"+
             "</table>"+
             "<div style='float:left'>" +
-                "<div id='googlechart_chart_div_"+id+"' class='chart_div' style='height: 220px; width:490px; overflow:auto'></div>" +
+                "<div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 400px; max-width:700px; overflow:auto'></div>" +
             "</div>" +
             "<div style='float:right; width:180px'>" +
                 "<div style='float:left'>Filters</div>" +
