@@ -201,3 +201,8 @@
 .dashboard-chart iframe body {
     overflow: hidden;
 }
+
+.chart_div > div > div {
+    overflow: hidden ! important;
+    height: 300px;
+}

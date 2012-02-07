@@ -183,7 +183,6 @@ jQuery(document).ready(function($){
             }
             configs.push(config[2]);
         });
-
         var sortedDashboardKeys = dashboardKeys.sort();
         jQuery.each(sortedDashboardKeys, function(key, dashboardKey){
             sortedDashboardChartConfig.push(dashboardChartConfig[dashboardKey]);

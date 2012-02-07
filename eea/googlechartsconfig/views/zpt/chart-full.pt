@@ -1,10 +1,14 @@
 <html>
 <head>
+<style type="text/css">
+    #googlechart_full > div > div {overflow:hidden ! important;}
+</style>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
+
 
 <script type="text/javascript">
     google.load('visualization', '1.0', {packages: ['controls']});
