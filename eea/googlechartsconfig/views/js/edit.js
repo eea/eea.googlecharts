@@ -454,23 +454,23 @@ function openEditChart(id){
             "<input class='googlechart_name' type='hidden' value='"+tmp_name+"'/>" +
             '<strong>Chart</strong>'+
             "<div style='clear:both;'> </div>"+
-            "<div id='googlechart_chart_div_tmp_chart' class='chart_div' style='height: 220px; width:490px; overflow:auto; float:left;'></div>" +
+            "<div id='googlechart_chart_div_tmp_chart' class='chart_div' style='max-height: 235px; max-width:800px; overflow:auto; float:left;'></div>" +
             "<input style='float:left' type='button' class='context' value='Change Chart' onclick='openEditor(\"tmp_chart\");'/>" +
             "<div style='clear:both;'> </div>"+
         '</div>' +
         '<div>' +
             '<div style="float:left;width:48%">' +
                 '<strong>Original Table</strong>'+
-                '<div style="height:150px;overflow:scroll">' +
+                '<div style="height:150px;overflow:auto">' +
                     '<table id="originalTable" class="googlechartTable">'+
                         '<tr id="originalColumns">'+
                         '</tr>'+
                     '</table>'+
                 '</div>'+
-            '</div>'+ 
+            '</div>'+
             '<div style="float:left; padding-left:10px;width:48%;overflow:auto">' +
                 '<strong>New Table</strong>'+
-                '<div style="height:150px;overflow:scroll">' +
+                '<div style="height:150px;overflow:auto">' +
                     '<table id="newTable" class="googlechartTable" style="height:300px;">'+
                     '</table>'+
                 '</div>'+
