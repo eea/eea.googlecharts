@@ -62,7 +62,12 @@ class View(ViewForm):
 
     def has_dashboard(self):
         """ Dashboard is configured """
-        return True
+        views = queryAdapter(self.context, IDavizConfig).views
+        hasDashboard = False
+        for view in views:
+            if view.get('name') == 'googlechart.googledashboard':
+                hasDashboard = True
+        return hasDashboard
 
     def get_dashboard_js(self, chart):
         """ Dashboard
