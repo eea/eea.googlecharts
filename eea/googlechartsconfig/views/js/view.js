@@ -178,8 +178,12 @@ jQuery(document).ready(function($){
                 }
             }
             if (isDashboardChart){
-                dashboardChartConfig[config[8].order] = config;
-                dashboardKeys.push(config[8].order);
+                var newKey = config[8].order;
+                if (dashboardKeys.find(config[8].order)){
+                    newKey = Math.max.apply(Math, dashboardKeys) + 1;
+                }
+                dashboardChartConfig[newKey] = config;
+                dashboardKeys.push(newKey);
             }
             configs.push(config[2]);
         });
