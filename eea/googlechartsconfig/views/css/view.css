@@ -177,6 +177,14 @@ ul.googlechart_tabs li:first-of-type a:hover {
     background: #FFFFFF;
 }
 
+#googlechart_view:after{
+    content: '.';
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
 /* Table
 */
 
