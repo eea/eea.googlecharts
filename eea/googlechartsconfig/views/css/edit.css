@@ -180,14 +180,13 @@
     padding: 0 0.5em;
 }
 
+#content li.dashboard-chart,
+dl.portlet li.dashboard-chart,
 .dashboard-chart {
     background-color: #fff;
-    border: 1px solid #ccc;
     text-align: center;
-    border-radius: 5px;
-    box-shadow: 0px 5px 5px #ccc;
-    margin-top: 1em;
-    margin-right: 1em;
+    box-shadow: 3px 3px 3px #ccc;
+    margin: 5px;
     float: left;
     overflow: hidden;
     cursor: pointer;

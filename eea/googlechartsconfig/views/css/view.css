@@ -241,6 +241,10 @@ ul.googlechart_tabs li:first-of-type a:hover {
     clear: left;
 }
 
+#googlechart_view > div {
+    margin: 5px;
+}
+
 #googlechart_view > div > div,
 #googlechart_view > div > div > div{
     overflow: hidden ! important;
