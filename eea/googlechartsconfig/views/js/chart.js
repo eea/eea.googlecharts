@@ -139,6 +139,11 @@ function drawGoogleDashboard(dashboard, chartViewsDiv, chartFiltersDiv, chartsSe
         else{
             chart.setOption("height",value[5]);
         }
+
+        jQuery.each(value[7], function(key, value){
+            chart.setOption(key, value);
+        });
+
         var column_nrs = [];
         var isTransformed = false;
         var originalColumns = [];
