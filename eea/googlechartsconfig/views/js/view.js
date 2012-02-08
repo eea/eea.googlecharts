@@ -168,17 +168,12 @@ jQuery(document).ready(function($){
         var dashboardChartConfig = {};
         var dashboardKeys = [];
         jQuery.each(googlechart_config_array, function(key, config){
-            var isDashboardChart = true;
-            if (typeof(config[8].hidden) === 'undefined'){
-                isDashboardChart = false;
-            }
-            else{
-                if (config[8].hidden){
-                    isDashboardChart = false;
-                }
+            var isDashboardChart = false;
+            if (!config[8].hidden){
+                isDashboardChart = true;
             }
             if (isDashboardChart){
-                var newKey = config[8].order;
+                var newKey = typeof(config[8].order) === 'undefined'?50:config[8].order;
                 if (dashboardKeys.find(config[8].order)){
                     newKey = Math.max.apply(Math, dashboardKeys) + 1;
                 }
