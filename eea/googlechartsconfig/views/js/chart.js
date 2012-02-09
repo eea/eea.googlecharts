@@ -117,9 +117,8 @@ function removeDuplicated(chart, cols) {
     chart.setView({"columns":columns,"rows":newRows});
 }
 
-function drawGoogleDashboard(dashboard, chartViewsDiv, chartFiltersDiv, chartsSettings, chartsMergedTable, allColumns){
+function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, chartsSettings, chartsMergedTable, allColumns, filters){
     var dashboardCharts = [];
-    var dashboardFilters = [];
     jQuery.each(chartsSettings, function(key, value){
         var chartContainerId = "googlechart_view_" + value[0];
         var chartContainer = "<div id='" + chartContainerId + "' style='float:left'>chart</div>";
@@ -170,19 +169,83 @@ function drawGoogleDashboard(dashboard, chartViewsDiv, chartFiltersDiv, chartsSe
         chartObj.normalColumns = normalColumns;
         dashboardCharts.push(chartObj);
     });
-    var hasFilters = false;
-    jQuery.each(dashboardCharts, function(chart_key, chart){
-        if (!hasFilters){
+    var dashboardFilters = [];
+
+    jQuery.each(filters, function(key, value){
+        var filter_div_id = chartFiltersDiv + "_" + key;
+        var filter_div = "<div id='" + filter_div_id + "'></div>";
+        jQuery(filter_div).appendTo("#" + chartFiltersDiv);
+
+        var filterSettings = {};
+        filterSettings.options = {};
+        filterSettings.options.ui = {};
+        filterSettings.options.filterColumnIndex = allColumns.find(key)[0];
+        filterSettings.containerId = filter_div_id;
+        switch(value){
+            case "0":
+                filterSettings.controlType = 'NumberRangeFilter';
+                break;
+            case "1":
+                filterSettings.controlType = 'StringFilter';
+                break;
+            case "2":
+                filterSettings.controlType = 'CategoryFilter';
+                filterSettings.options.ui.allowTyping = false;
+                filterSettings.options.ui.allowMultiple = false;
+                break;
+            case "3":
+                filterSettings.controlType = 'CategoryFilter';
+                filterSettings.options.ui.allowTyping = false;
+                filterSettings.options.ui.allowMultiple = true;
+                filterSettings.options.ui.selectedValuesLayout = 'belowStacked';
+                break;
+        }
+        var filter = new google.visualization.ControlWrapper(filterSettings);
+        dashboardFilters.push(filter);
+    });
+    if (dashboardFilters.length === 0){
+        jQuery.each(dashboardCharts, function(chart_key, chart){
             chart.chart.setDataTable(chartsMergedTable);
             if (chart.isTransformed){
                 removeDuplicated(chart.chart, chart.normalColumns);
             }
             chart.chart.draw();
-        }
-        else {
-            jQuery.each(dashboardFilters, function(filter_key, filter){
+        });
+    }
+    else{
+        var dashboard = new google.visualization.Dashboard(
+            document.getElementById(chartsDashboard));
+        var tmpDashboardCharts = [];
+        jQuery.each(dashboardCharts, function(chart_key, chart){
+            tmpDashboardCharts.push(chart.chart);
+        });
+        dashboard.bind(dashboardFilters, tmpDashboardCharts);
 
+        jQuery.each(dashboardCharts, function(chart_key, chart){
+            jQuery.each(dashboardFilters, function(filter_key, filter){
+                if (chart.isTransformed){
+                    google.visualization.events.addListener(filter, 'statechange', function(event){
+                        removeDuplicated(chart.chart, chart.normalColumns);
+                    });
+                    google.visualization.events.addListener(filter, 'ready', function(event){
+                        removeDuplicated(chart.chart, chart.normalColumns);
+                    });
+                }
             });
-        }
-    });
+            if (chart.isTransformed){
+                google.visualization.events.addListener(chart.chart, 'ready', function(event){
+                    removeDuplicated(chart.chart, chart.normalColumns);
+                });
+            }
+        });
+        google.visualization.events.addListener(dashboard, 'ready', function(event){
+            jQuery.each(dashboardCharts, function(chart_key, chart){
+                if (chart.isTransformed){
+                    removeDuplicated(chart.chart, chart.normalColumns);
+                }
+            });
+        });
+
+        dashboard.draw(chartsMergedTable);
+    }
 }

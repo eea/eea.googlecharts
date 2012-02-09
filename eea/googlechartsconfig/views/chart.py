@@ -74,6 +74,31 @@ class View(ViewForm):
         """
         return json.dumps(chart.get('dashboard', {}))
 
+    def get_dashboard_filters(self):
+        mutator = queryAdapter(self.context, IDavizConfig)
+        config = ''
+        filters = []
+        filtersposition = 0
+        filter_settings = {}
+        for view in mutator.views:
+            if view.get('name') == 'googlechart.googledashboard':
+                if view.get('filters'):
+                    filters = view.get('filters')
+                if view.get('filtersposition'):
+                    filtersposition = view.get('filtersposition')
+        filter_settings['filterposition'] = filtersposition
+        filter_settings['filters'] = filters
+
+#        filter_settings = {}
+#        filter_settings['filterposition'] = 3;
+#        filters = {}
+#        filters['sector'] = "3"
+#        filters['count'] = "0"
+#        filters['size'] = "1"
+#        filter_settings['filters'] = filters
+
+        return filter_settings
+
 class Export(BrowserView):
     """ Export chart to png
     """

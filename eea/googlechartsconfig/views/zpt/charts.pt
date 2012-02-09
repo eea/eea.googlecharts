@@ -12,6 +12,8 @@
 <tal:block tal:define="charts view/get_charts; has_dashboard view/has_dashboard">
     <ul class="googlechart_tabs">
         <tal:block tal:condition="has_dashboard">
+            <script type="text/javascript" tal:content="string: var googledashboard_filters=${view/get_dashboard_filters}">
+            </script>
             <script type="text/javascript">
                 has_dashboard = true;
             </script>
