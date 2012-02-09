@@ -173,7 +173,7 @@ jQuery(document).ready(function($){
                 isDashboardChart = true;
             }
             if (isDashboardChart){
-                var newKey = typeof(config[8].order) === 'undefined'?50:config[8].order;
+                var newKey = typeof(config[8].order) === 'undefined'? 999 : config[8].order;
                 if (dashboardKeys.find(config[8].order)){
                     newKey = Math.max.apply(Math, dashboardKeys) + 1;
                 }

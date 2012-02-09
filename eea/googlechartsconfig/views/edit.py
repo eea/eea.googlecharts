@@ -109,11 +109,42 @@ class DashboardEdit(Edit):
         """
         return "Not implemented ERROR"
 
+    def position(self, **kwargs):
+        """ Change chats position in dashboard
+        """
+        order = kwargs.get('order', [])
+        order = dict((name, index) for index, name in enumerate(order))
+
+        mutator = queryAdapter(self.context, IDavizConfig)
+        view = mutator.view('googlechart.googlecharts', {})
+        config = view.get('chartsconfig', {})
+        charts = config.get('charts', [])
+
+        changed = False
+        for chart in charts:
+            dashboard = chart.get('dashboard', {})
+            if not dashboard:
+                continue
+
+            name = chart.get('id', '')
+            new_order = order.get(name, -1)
+            my_order = dashboard.get('order', -1)
+            if my_order == new_order:
+                continue
+
+            dashboard['order'] = new_order
+            changed = True
+
+        if changed:
+            mutator.edit_view('googlechart.googlecharts', **view)
+        return u'Changed saved'
+
     def __call__(self, **kwargs):
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
-
-        print kwargs
-        if kwargs.pop('action', '') == 'chart':
+        action = kwargs.pop('action', '')
+        if action == 'chart':
             return self.chart(**kwargs)
+        elif action == 'position':
+            return self.position(**kwargs)
         return self.index()

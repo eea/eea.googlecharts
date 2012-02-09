@@ -27,8 +27,11 @@ DavizEdit.GoogleDashboard = function(context, options){
   });
 
   jQuery(document).bind(DavizEdit.Events.charts.changed, function(evt, data){
-    self.unload();
-    self.initialize();
+    self.reload();
+  });
+
+  jQuery(self.context).bind(DavizEdit.Events.charts.reordered, function(evt, data){
+    self.handle_charts_position(data.order);
   });
 };
 
@@ -38,10 +41,10 @@ DavizEdit.GoogleDashboard.prototype = {
     self.context.empty();
     var charts = jQuery('li.googlechart').sort(function(a, b){
       var order_a = jQuery.data(a, 'dashboard').order;
-      order_a = order_a ? parseInt(order_a, 10) : 50;
+      order_a = order_a !== undefined ? parseInt(order_a, 10) : 998;
       var order_b = jQuery.data(b, 'dashboard').order;
-      order_b = order_b ? parseInt(order_b, 10) : 50;
-      return (order_a < order_b) ? -1 : (order_a > order_b) ? 1 : 0;
+      order_b = order_b !== undefined ? parseInt(order_b, 10) : 999;
+      return (order_a <= order_b) ? -1 : 1;
     });
 
     jQuery(charts).each(function(index){
@@ -73,9 +76,24 @@ DavizEdit.GoogleDashboard.prototype = {
     });
   },
 
-  unload: function(){
+  handle_charts_position: function(order){
+    var self = this;
+    var query = {
+      action: 'position',
+      order: order
+    };
+
+    query = jQuery.param(query, traditional=true);
+    DavizEdit.Status.start("Saving...");
+    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+      DavizEdit.Status.stop(data);
+    });
+  },
+
+  reload: function(){
     var self = this;
     jQuery(self.context).unbind('.dashboard');
+    self.initialize();
   }
 };
 
@@ -121,9 +139,9 @@ DavizEdit.GoogleDashboardChart.prototype = {
     self.dashboard = self.settings.chart[0];
     var dashboardVal = jQuery.data(self.dashboard, 'dashboard');
 
-    var width = dashboardVal.width ? dashboardVal.width : jQuery('.googlechart_width', self.settings.chart).val();
-    var height = dashboardVal.height ? dashboardVal.height : jQuery('.googlechart_height', self.settings.chart).val();
-    self.order = dashboardVal.order ? dashboardVal.order : self.settings.index;
+    var width = dashboardVal.width !== undefined ? dashboardVal.width : jQuery('.googlechart_width', self.settings.chart).val();
+    var height = dashboardVal.height !== undefined ? dashboardVal.height : jQuery('.googlechart_height', self.settings.chart).val();
+    self.order = dashboardVal.order !== undefined ? dashboardVal.order : (self.settings.index + 1) * 50;
     self.hidden = dashboardVal.hidden ? true : false;
 
     dashboardVal.width = width;
@@ -161,6 +179,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
   handle_chart_header: function(context, width, height){
     var self = this;
     var header = jQuery('<div>').addClass('dashboard-header').html(
+      '<span class="title">' + self.settings.name + '</span>' +
       '<input type="number" name="width" value=""/>' +
       '<span>X</span>' +
       '<input type="number" name="height" value=""/>' +
@@ -244,7 +263,6 @@ DavizEdit.GoogleDashboardChart.prototype = {
     }
 
     jQuery.data(self.dashboard, 'dashboard').order = index;
-    self.save();
   },
 
   save: function(){

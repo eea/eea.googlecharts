@@ -172,6 +172,11 @@
     cursor: move;
 }
 
+.dashboard-header span.title {
+    float: left;
+    font-weight: bold;
+}
+
 .dashboard-header input {
     width: 50px;
 }
