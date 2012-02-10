@@ -147,6 +147,15 @@
     list-style-type: none;
     list-style-image: none;
     margin: 0;
+    padding-top: 5px;
+}
+
+#gcharts-dashboard-edit:after {
+    content: '.';
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
 }
 
 .dashboard-resizable-helper {
@@ -209,4 +218,26 @@ dl.portlet li.dashboard-chart,
 .chart_div > div > div {
     overflow: hidden ! important;
     height: 300px;
+}
+
+.dashboard-filters {
+    background-color: #fff;
+    box-shadow: 3px 3px 3px #ccc;
+    margin: 0 5px 5px 5px;
+}
+
+.dashboard-filters .box-title {
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    padding: 0.5em;
+}
+
+.dashboard-filters .ui-icon-plus {
+    float: right;
+    border: 2px solid #ccc;
+    cursor: pointer;
+}
+
+.dashboard-filters .box-body {
+    padding: 2em;
 }

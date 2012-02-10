@@ -47,15 +47,14 @@ DavizEdit.GoogleDashboard.prototype = {
       return (order_a <= order_b) ? -1 : 1;
     });
 
+    // Filters
+    self.handle_filters();
+
+    // Charts
     jQuery(charts).each(function(index){
       self.handle_chart(index, jQuery(this));
     });
-    self.context.append(
-      jQuery('<li>').css({
-        'clear': 'both',
-        'padding': '2em'
-      })
-    );
+
     self.context.sortable({
       items: 'li.dashboard-chart',
       stop: function(event, ui){
@@ -64,6 +63,11 @@ DavizEdit.GoogleDashboard.prototype = {
         });
       }
     });
+  },
+
+  handle_filters: function(){
+    var self = this;
+    var filters = new DavizEdit.GoogleDashboardFilters(self.context);
   },
 
   handle_chart: function(index, chart){
@@ -277,6 +281,69 @@ DavizEdit.GoogleDashboardChart.prototype = {
     jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
       DavizEdit.Status.stop(data);
     });
+  }
+};
+
+DavizEdit.GoogleDashboardFilters = function(context, options){
+  var self = this;
+  self.context = context;
+  self.settings = {};
+  if(options){
+    jQuery.extend(self.settings, options);
+  }
+
+  self.initialize();
+};
+
+DavizEdit.GoogleDashboardFilters.prototype = {
+  initialize: function(){
+    var self = this;
+    self.area = jQuery('<li>')
+      .addClass('dashboard-filters')
+      .prependTo(self.context);
+    var header = jQuery('<div>')
+      .addClass('box-title')
+      .text('Dashboard filters')
+      .prependTo(self.area);
+    var add_button = jQuery("<span>")
+      .attr('title', 'Add new filter')
+      .text('+')
+      .addClass('ui-icon').addClass('ui-icon-plus').addClass('ui-corner-all')
+      .prependTo(header);
+    var body = jQuery('<div>')
+       .addClass('box-body')
+       .appendTo(self.area);
+
+    // Get config JSON
+    var query = {action: 'json'};
+    jQuery.getJSON('@@googlechart.googledashboard.edit', query, function(data){
+      self.draw(data);
+    });
+  },
+
+  draw: function(data){
+    var self = this;
+    var filters = data.filters !== undefined ? data.filters : [];
+    jQuery.each(filters, function(index, filter){
+      var gfilter = new DavizEdit.DavizEdit.GoogleDashboardFilter(self.context, filter);
+    });
+  }
+};
+
+DavizEdit.GoogleDashboardFilter = function(context, options){
+  var self = this;
+  self.context = context;
+  self.settings = {};
+  if(options){
+    jQuery.extend(self.settings, options);
+  }
+
+  self.initialize();
+};
+
+DavizEdit.GoogleDashboardFilter.prototype = {
+  initialize: function(){
+    console.log(self.settings);
   }
 };
 

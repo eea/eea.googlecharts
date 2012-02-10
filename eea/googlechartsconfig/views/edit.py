@@ -68,6 +68,13 @@ class Edit(BrowserView):
 class DashboardEdit(Edit):
     """ Edit google dashboard
     """
+    def json(self, **kwargs):
+        """ Return config JSON
+        """
+        mutator = queryAdapter(self.context, IDavizConfig)
+        view = mutator.view(self.__name__, {})
+        return json.dumps(view)
+
     def chart(self, **kwargs):
         """ Edit chart properties
         """
@@ -143,8 +150,13 @@ class DashboardEdit(Edit):
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
         action = kwargs.pop('action', '')
-        if action == 'chart':
+        if not action:
+            return self.index()
+
+        if action == 'json':
+            return self.json(**kwargs)
+        elif action == 'chart':
             return self.chart(**kwargs)
         elif action == 'position':
             return self.position(**kwargs)
-        return self.index()
+        return 'Invalid action provided: %s' % action
