@@ -445,6 +445,7 @@ function openEditChart(id){
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
     var tmp_columns = jQuery("#googlechartid_"+id+" .googlechart_columns").attr('value');
     var tmp_name = jQuery("#googlechartid_"+id+" .googlechart_name").attr('value');
+    var tmp_options = jQuery("#googlechartid_"+id+" .googlechart_options").attr('value');
 
     DavizEdit.Status.start("Updating Tables");
     jQuery(".googlecharts_columns_config").remove();
@@ -453,6 +454,7 @@ function openEditChart(id){
         '<div id="googlechartid_tmp_chart">' +
             "<input class='googlechart_configjson' type='hidden' value='"+tmp_config+"'/>" +
             "<input class='googlechart_columns' type='hidden' value='"+tmp_columns+"'/>" +
+            "<input class='googlechart_options' type='hidden' value='"+tmp_options+"'/>" +
             "<input class='googlechart_name' type='hidden' value='"+tmp_name+"'/>" +
             '<strong>Chart</strong>'+
             "<div style='clear:both;'> </div>"+
@@ -533,9 +535,11 @@ function openEditChart(id){
                             settings_json.dataTable = [];
                             var settings_str2 = JSON.stringify(settings_json);
 
+                            var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
+
                             jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value",columns_str);
-//                            jQuery("#googlechartid_"+id+" .googlechart_configjson").attr("value",jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value"));
                             jQuery("#googlechartid_"+id+" .googlechart_configjson").attr("value",settings_str2);
+                            jQuery("#googlechartid_"+id+" .googlechart_options").attr("value",options_str);
                             markChartAsModified(id);
                             jQuery(this).dialog("close");
                             drawChart(id);
@@ -599,8 +603,12 @@ function openEditChart(id){
 function redrawChart(){
     jsonString = chartEditor.getChartWrapper().toJSON();
     var chartObj = jQuery("#googlechartid_"+chartId);
+    chartType = chartEditor.getChartWrapper().getChartType();
     chartObj.find(".googlechart_configjson").attr('value',jsonString);
     chartObj.find(".googlechart_name").attr('value',chartEditor.getChartWrapper().getOption('title'));
+    if (chartType === "MotionChart"){
+        chartObj.find(".googlechart_options").attr('value', '{"state":"{\\"showTrails\\":false}"}');
+    }
     chartEditor.getChartWrapper().draw(jQuery("#googlechart_chart_div_"+chartId)[0]);
 }
 
