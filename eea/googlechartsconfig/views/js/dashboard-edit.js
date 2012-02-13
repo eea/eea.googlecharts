@@ -6,7 +6,6 @@ DavizEdit.Events.charts = {
     reordered: 'google-charts-position-changed',
     resized: 'google-chart-resized',
     resizeFinished: 'google-chart-resize-finished',
-
     updated: 'google-chart-updated'
 };
 
@@ -29,38 +28,29 @@ DavizEdit.GoogleDashboard = function(context, options){
   jQuery(document).bind(DavizEdit.Events.charts.changed, function(evt, data){
     self.reload();
   });
-
-  jQuery(self.context).bind(DavizEdit.Events.charts.reordered, function(evt, data){
-    self.handle_charts_position(data.order);
-  });
 };
 
 DavizEdit.GoogleDashboard.prototype = {
   initialize: function(){
     var self = this;
     self.context.empty();
-    var charts = jQuery('li.googlechart').sort(function(a, b){
-      var order_a = jQuery.data(a, 'dashboard').order;
-      order_a = order_a !== undefined ? parseInt(order_a, 10) : 998;
-      var order_b = jQuery.data(b, 'dashboard').order;
-      order_b = order_b !== undefined ? parseInt(order_b, 10) : 999;
-      return (order_a <= order_b) ? -1 : 1;
-    });
 
     // Filters
     self.handle_filters();
 
     // Charts
-    jQuery(charts).each(function(index){
-      self.handle_chart(index, jQuery(this));
-    });
+    self.handle_charts();
 
     self.context.sortable({
-      items: 'li.dashboard-chart',
-      stop: function(event, ui){
-        jQuery(self.context).trigger(DavizEdit.Events.charts.reordered, {
-          order: self.context.sortable('toArray')
-        });
+      items: '.dashboard-section',
+      placeholder: 'ui-state-highlight',
+      forcePlaceholderSize: true,
+      opacity: 0.7,
+      delay: 300,
+      cursor: 'crosshair',
+      tolerance: 'pointer',
+      update: function(event, ui){
+        console.log(self.context.sortable('toArray'));
       }
     });
   },
@@ -70,10 +60,84 @@ DavizEdit.GoogleDashboard.prototype = {
     var filters = new DavizEdit.GoogleDashboardFilters(self.context);
   },
 
-  handle_chart: function(index, chart){
+  handle_charts: function(){
+    var self = this;
+    var charts = new DavizEdit.GoogleDashboardCharts(self.context);
+  },
+
+  reload: function(){
+    var self = this;
+    jQuery(self.context).unbind('.dashboard');
+    self.initialize();
+  }
+};
+
+DavizEdit.GoogleDashboardCharts = function(context, options){
+  var self = this;
+  self.context = context;
+
+  self.settings = {};
+  if(options){
+    jQuery.extend(self.settings, options);
+  }
+
+  // Events
+  jQuery(self.context).bind(DavizEdit.Events.charts.reordered + '.dashboard', function(evt, data){
+    self.handle_charts_position(data.order);
+  });
+
+  self.initialize();
+};
+
+DavizEdit.GoogleDashboardCharts.prototype = {
+  initialize: function(){
+    var self = this;
+    self.box = jQuery('<div>')
+      .attr('id', 'dashboard-charts')
+      .attr('title', 'Click and drag to reorder')
+      .addClass('dashboard-charts')
+      .addClass('dashboard-section')
+      .appendTo(self.context);
+    var header = jQuery('<div>')
+      .addClass('box-title')
+      .html('<span class="label">Dashboard charts</span>')
+      .prependTo(self.box);
+    var body = jQuery('<div>')
+       .addClass('box-body')
+       .appendTo(self.box);
+
+    var charts = jQuery('li.googlechart').sort(function(a, b){
+      var order_a = jQuery.data(a, 'dashboard').order;
+      order_a = order_a !== undefined ? parseInt(order_a, 10) : 998;
+      var order_b = jQuery.data(b, 'dashboard').order;
+      order_b = order_b !== undefined ? parseInt(order_b, 10) : 999;
+      return (order_a <= order_b) ? -1 : 1;
+    });
+
+    jQuery(charts).each(function(index){
+      self.handle_chart(index, jQuery(this), body);
+    });
+
+    self.box.sortable({
+      items: '.dashboard-chart',
+      placeholder: 'ui-state-highlight',
+      forcePlaceholderSize: true,
+      opacity: 0.7,
+      delay: 300,
+      cursor: 'crosshair',
+      tolerance: 'pointer',
+      update: function(event, ui){
+        jQuery(self.context).trigger(DavizEdit.Events.charts.reordered, {
+          order: self.context.sortable('toArray')
+        });
+      }
+    });
+  },
+
+  handle_chart: function(index, chart, context){
     var self = this;
     name = jQuery('.googlechart_id', chart).val();
-    var gchart = new DavizEdit.GoogleDashboardChart(self.context, {
+    var gchart = new DavizEdit.GoogleDashboardChart(context, {
       chart: chart,
       name: name,
       index: index
@@ -83,7 +147,7 @@ DavizEdit.GoogleDashboard.prototype = {
   handle_charts_position: function(order){
     var self = this;
     var query = {
-      action: 'position',
+      action: 'charts.position',
       order: order
     };
 
@@ -92,12 +156,6 @@ DavizEdit.GoogleDashboard.prototype = {
     jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
       DavizEdit.Status.stop(data);
     });
-  },
-
-  reload: function(){
-    var self = this;
-    jQuery(self.context).unbind('.dashboard');
-    self.initialize();
   }
 };
 
@@ -161,7 +219,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
     href = href.replace(/height\=\d+/, 'height=' + height);
 
     var iframe = jQuery('<iframe>').attr('src', href);
-    var svg = jQuery('<li>')
+    var svg = jQuery('<div>')
       .attr('id', self.settings.name)
       .addClass('dashboard-chart')
       .append(iframe);
@@ -182,13 +240,16 @@ DavizEdit.GoogleDashboardChart.prototype = {
 
   handle_chart_header: function(context, width, height){
     var self = this;
-    var header = jQuery('<div>').addClass('dashboard-header').html(
-      '<span class="title">' + self.settings.name + '</span>' +
-      '<input type="number" name="width" value=""/>' +
-      '<span>X</span>' +
-      '<input type="number" name="height" value=""/>' +
+    var header = jQuery('<div>')
+      .addClass('dashboard-header')
+      .attr('title', 'Click and drag to reorder')
+      .html([
+      '<span class="title">', self.settings.name, '</span>',
+      '<input type="number" name="width" value=""/>',
+      '<span>X</span>',
+      '<input type="number" name="height" value=""/>',
       '<span>px</span>'
-    );
+    ].join('\n'));
     if(self.hidden){
       header.addClass('dashboard-header-hidden');
     }
@@ -274,7 +335,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
     DavizEdit.Status.start("Saving...");
     var dashboard = jQuery.data(self.dashboard, 'dashboard');
     query = {
-      action: 'chart',
+      action: 'chart.edit',
       name: self.settings.name,
       dashboard: JSON.stringify(dashboard)
     };
@@ -298,26 +359,50 @@ DavizEdit.GoogleDashboardFilters = function(context, options){
 DavizEdit.GoogleDashboardFilters.prototype = {
   initialize: function(){
     var self = this;
-    self.area = jQuery('<li>')
+    self.box = jQuery('<div>')
+      .attr('id', 'dashboard-filters')
+      .attr('title', 'Click and drag to reorder')
       .addClass('dashboard-filters')
+      .addClass('dashboard-section')
       .prependTo(self.context);
     var header = jQuery('<div>')
       .addClass('box-title')
-      .text('Dashboard filters')
-      .prependTo(self.area);
+      .html('<span class="label">Dashboard filters</span>')
+      .prependTo(self.box);
+    var body = jQuery('<div>')
+       .addClass('box-body')
+       .appendTo(self.box);
     var add_button = jQuery("<span>")
       .attr('title', 'Add new filter')
       .text('+')
       .addClass('ui-icon').addClass('ui-icon-plus').addClass('ui-corner-all')
-      .prependTo(header);
-    var body = jQuery('<div>')
-       .addClass('box-body')
-       .appendTo(self.area);
+      .prependTo(header)
+      .click(function(){
+        self.new_chart(self.box);
+      });
+
+    // Annotations
+    jQuery.data(self.box, 'all_filter_columns', window.available_columns ? jQuery.extend({}, available_columns) : {});
+    jQuery.data(self.box, 'filter_columns', window.available_columns ? jQuery.extend({}, available_columns) : {});
+    jQuery.data(self.box, 'filter_types', window.available_filter_types ? jQuery.extend({}, available_filter_types): {});
 
     // Get config JSON
     var query = {action: 'json'};
     jQuery.getJSON('@@googlechart.googledashboard.edit', query, function(data){
       self.draw(data);
+    });
+
+    self.box.sortable({
+      items: '.dashboard-filter',
+      placeholder: 'ui-state-highlight',
+      forcePlaceholderSize: true,
+      opacity: 0.7,
+      delay: 300,
+      cursor: 'crosshair',
+      tolerance: 'pointer',
+      update: function(event, ui){
+        self.reorder(self.box.sortable('toArray'));
+      }
     });
   },
 
@@ -325,7 +410,97 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     var self = this;
     var filters = data.filters !== undefined ? data.filters : [];
     jQuery.each(filters, function(index, filter){
-      var gfilter = new DavizEdit.DavizEdit.GoogleDashboardFilter(self.context, filter);
+      delete jQuery.data(self.box, 'filter_columns')[filter.column];
+      var gfilter = new DavizEdit.GoogleDashboardFilter(self.box, filter);
+    });
+  },
+
+  new_chart: function(context){
+    var self = this;
+    if(!jQuery.param(jQuery.data(self.box, 'filter_columns'))){
+      return alert("You've added all possible filters!");
+    }
+
+    var ftypes = jQuery.data(self.box, 'filter_types');
+    var fcolumns = jQuery.data(self.box, 'filter_columns');
+    var widget = jQuery('<div>')
+      .html([
+      '<form>',
+        '<div class="field">',
+            '<label>Column</label>',
+            '<div class="formHelp">Filter Column</div>',
+            '<select name="column"></select>',
+        '</div>',
+        '<div class="field">',
+            '<label>Type</label>',
+            '<div class="formHelp">Filter Type</div>',
+            '<select name="type"></select>',
+        '</div>',
+      '</form>'].join('\n'));
+
+    jQuery.each(fcolumns, function(key, val){
+      var option = jQuery('<option>')
+        .val(key).text(val)
+        .appendTo(jQuery('select[name=column]', widget));
+    });
+
+    jQuery.each(ftypes, function(key, val){
+      var option = jQuery('<option>')
+        .val(key).text(val)
+        .appendTo(jQuery('select[name=type]', widget));
+    });
+
+    widget.dialog({
+      title: "Add Filter",
+      dialogClass: 'googlechart-dialog',
+      bgiframe: true,
+      modal: true,
+      closeOnEscape: true,
+      buttons: [
+        {
+          text: "Save",
+          click: function(){
+            var form = jQuery('form', widget);
+            self.new_chart_onSave(form);
+            widget.dialog("close");
+          }
+        },
+        {
+            text: "Cancel",
+            click: function(){
+                widget.dialog("close");
+            }
+        }
+      ]
+    });
+  },
+
+  new_chart_onSave: function(form){
+    var self = this;
+    var query = {};
+    jQuery.each(form.serializeArray(), function(){
+      query[this.name] = this.value;
+    });
+
+    query.action = 'filter.add';
+    DavizEdit.Status.start("Adding...");
+    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+      delete query.action;
+      self.draw({filters: [query]});
+      DavizEdit.Status.stop(data);
+    });
+  },
+
+  reorder: function(order){
+    var self = this;
+    var query = {
+      action: 'filters.position',
+      order: order
+    };
+    query = jQuery.param(query, traditional=true);
+    DavizEdit.Status.start("Saving...");
+    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+      DavizEdit.Status.stop(data);
     });
   }
 };
@@ -333,6 +508,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
 DavizEdit.GoogleDashboardFilter = function(context, options){
   var self = this;
   self.context = context;
+  self.box = jQuery('.box-body', self.context);
   self.settings = {};
   if(options){
     jQuery.extend(self.settings, options);
@@ -343,7 +519,72 @@ DavizEdit.GoogleDashboardFilter = function(context, options){
 
 DavizEdit.GoogleDashboardFilter.prototype = {
   initialize: function(){
-    console.log(self.settings);
+    var self = this;
+    var column_label = jQuery.data(self.context, 'all_filter_columns')[self.settings.column];
+    var type_label = jQuery.data(self.context, 'filter_types')[self.settings.type];
+    self.box = jQuery('<dl>')
+      .addClass('dashboard-filter')
+      .attr('id', self.settings.column)
+      .attr('title', 'Click and drag to reorder')
+      .html(['',
+      '<dt>', column_label, '<dt>',
+      '<dd>', type_label, '</dd>'
+      ].join('\n'))
+      .appendTo(self.box);
+
+    // Delete "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"
+    jQuery('<div>')
+      .addClass('ui-icon').addClass('ui-icon-trash')
+      .attr('title', 'Delete filter')
+      .text('x')
+      .prependTo(self.box)
+      .click(function(){
+        self.remove();
+      });
+  },
+
+  remove: function(){
+    var self = this;
+    jQuery('<div>')
+      .html([
+        '<span>Are you sure you want to delete:</span>',
+        '<strong>',
+          self.settings.column,
+        '</strong>'
+        ].join('\n'))
+      .dialog({
+        title: 'Remove filter',
+        modal: true,
+        dialogClass: 'googlechart-dialog',
+        buttons: {
+          Yes: function(){
+            self.onRemove();
+            jQuery(this).dialog('close');
+          },
+          No: function(){
+            jQuery(this).dialog('close');
+          }
+        }
+      });
+
+  },
+
+  onRemove: function(){
+    var self = this;
+    var query = {
+      action: 'filter.delete',
+      name: self.settings.column
+    };
+
+    DavizEdit.Status.start("Deleting...");
+    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+      // Add column type to available columns;
+      var label = jQuery.data(self.context, 'all_filter_columns')[self.settings.column];
+      jQuery.data(self.context, 'filter_columns')[self.settings.column] = label;
+
+      self.box.remove();
+      DavizEdit.Status.stop(data);
+    });
   }
 };
 

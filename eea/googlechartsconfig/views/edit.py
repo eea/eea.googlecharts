@@ -72,10 +72,10 @@ class DashboardEdit(Edit):
         """ Return config JSON
         """
         mutator = queryAdapter(self.context, IDavizConfig)
-        view = mutator.view(self.__name__, {})
-        return json.dumps(view)
+        view = mutator.view(self.__name__.replace('.edit', ''), {})
+        return json.dumps(dict(view))
 
-    def chart(self, **kwargs):
+    def chartEdit(self, **kwargs):
         """ Edit chart properties
         """
         name = kwargs.get('name', '')
@@ -111,12 +111,7 @@ class DashboardEdit(Edit):
             mutator.edit_view('googlechart.googlecharts', **view)
         return u"Changes saved"
 
-    def dashboard(self, **kwargs):
-        """ Edit dashboard properties
-        """
-        return "Not implemented ERROR"
-
-    def position(self, **kwargs):
+    def chartsPosition(self, **kwargs):
         """ Change chats position in dashboard
         """
         order = kwargs.get('order', [])
@@ -146,6 +141,51 @@ class DashboardEdit(Edit):
             mutator.edit_view('googlechart.googlecharts', **view)
         return u'Changed saved'
 
+    def filterAdd(self, **kwargs):
+        """ Add filter
+        """
+        mutator = queryAdapter(self.context, IDavizConfig)
+        view = mutator.view(self.__name__.replace('.edit', ''), {})
+        view.setdefault('filters', [])
+        view['filters'].append(kwargs)
+        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+        return u'Filter added'
+
+    def filterDelete(self, **kwargs):
+        """ Delete filter
+        """
+        name = kwargs.get('name', '')
+        if not name:
+            return u'No filter name provided'
+
+        mutator = queryAdapter(self.context, IDavizConfig)
+        view = mutator.view(self.__name__.replace('.edit', ''), {})
+        filters = [item for item in view.get('filters', [])
+                   if item.get('column', '') != name]
+        view['filters'] = filters
+        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+        return u'Filter deleted'
+
+    def filtersPosition(self, **kwargs):
+        """ Change filters position
+        """
+        mutator = queryAdapter(self.context, IDavizConfig)
+        view = mutator.view(self.__name__.replace('.edit', ''), {})
+        filters = dict((item.get('column'), item)
+                       for item in view.get('filters', []))
+        order = kwargs.get('order', [])
+        if not order:
+            return 'New order not provided'
+
+        reordered = []
+        for name in order:
+            if name not in filters:
+                continue
+            reordered.append(filters.get(name))
+        view['filters'] = reordered
+        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+        return 'Filters position changed'
+
     def __call__(self, **kwargs):
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
@@ -153,10 +193,23 @@ class DashboardEdit(Edit):
         if not action:
             return self.index()
 
+        # Edit mode
         if action == 'json':
             return self.json(**kwargs)
-        elif action == 'chart':
-            return self.chart(**kwargs)
-        elif action == 'position':
-            return self.position(**kwargs)
+
+        #   Charts
+        elif action == 'chart.edit':
+            return self.chartEdit(**kwargs)
+        elif action == 'charts.position':
+            return self.chartsPosition(**kwargs)
+
+        #   Filters
+        elif action == 'filter.add':
+            return self.filterAdd(**kwargs)
+        elif action == 'filter.delete':
+            return self.filterDelete(**kwargs)
+        elif action == 'filters.position':
+            return self.filtersPosition(**kwargs)
+
+        # View mode
         return 'Invalid action provided: %s' % action
