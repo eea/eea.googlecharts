@@ -105,7 +105,14 @@ function drawDashboard(){
     jQuery("#googlechart_view").remove();
     jQuery("#googlechart_table").remove();
     var googlechart_table;
-    if (googledashboard_filters.filterposition === 0){
+    if ((googledashboard_filters.chartsBox !== undefined) && (googledashboard_filters.chartsBox.order === 0)){
+        googlechart_table = ""+
+            "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom'>"+
+                "<div id='googlechart_view' class='googlechart'></div>"+
+                "<div id='googlechart_filters'></div>"+
+                "<div style='clear: both'></div>" +
+            "</div>";
+    }else{
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_top'>"+
                 "<div id='googlechart_filters'></div>"+
@@ -113,40 +120,20 @@ function drawDashboard(){
                 "<div style='clear: both'></div>" +
             "</div>";
     }
-    if (googledashboard_filters.filterposition === 1){
-        googlechart_table = ""+
-            "<div id='googlechart_table' class='googlechart_table googlechart_table_left'>"+
-                "<div id='googlechart_filters'></div>"+
-                "<div id='googlechart_view' class='googlechart'></div>"+
-                "<div style='clear: both'></div>" +
-            "</div>";
-    }
-    if (googledashboard_filters.filterposition === 2){
-        googlechart_table = ""+
-            "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom'>"+
-                "<div id='googlechart_view' class='googlechart'></div>"+
-                "<div id='googlechart_filters'></div>"+
-                "<div style='clear: both'></div>" +
-            "</div>";
-    }
-    if (googledashboard_filters.filterposition === 3){
-        googlechart_table = ""+
-            "<div id='googlechart_table' class='googlechart_table googlechart_table_right'>"+
-                "<div id='googlechart_view' class='googlechart'></div>"+
-                "<div id='googlechart_filters'></div>"+
-                "<div style='clear: both'></div>" +
-            "</div>";
-    }
 
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
+    var filters = {};
+    jQuery.each(googledashboard_filters.filters, function(){
+        filters[this.column] = this.type;
+    });
     drawGoogleDashboard('googlechart_dashboard',
                         'googlechart_view',
                         'googlechart_filters',
                         sortedDashboardChartConfig,
                         tableForDashboard,
                         allColumns,
-                        googledashboard_filters.filters);
+                        filters);
 
 }
 
