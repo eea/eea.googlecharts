@@ -11,20 +11,20 @@ class EEAFixture(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
         """ Setup Zope
         """
-        import eea.googlecharts
-        self.loadZCML(package=eea.googlecharts)
-        z2.installProduct(app, 'eea.googlecharts')
+        import eea.googlechartsconfig
+        self.loadZCML(package=eea.googlechartsconfig)
+        z2.installProduct(app, 'eea.googlechartsconfig')
 
     def tearDownZope(self, app):
         """ Uninstall Zope
         """
-        z2.uninstallProduct(app, 'eea.googlecharts')
+        z2.uninstallProduct(app, 'eea.googlechartsconfig')
 
     def setUpPloneSite(self, portal):
         """ Setup Plone
         """
-        #applyProfile(portal, 'eea.googlecharts:default')
+        #applyProfile(portal, 'eea.googlechartsconfig:default')
 
 EEAFIXTURE = EEAFixture()
 FUNCTIONAL_TESTING = FunctionalTesting(bases=(EEAFIXTURE,),
-            name='EEAGoogleCharts:Functional')
+            name='EEAGoogleChartsConfig:Functional')

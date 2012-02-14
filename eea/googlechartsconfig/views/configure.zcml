@@ -1,0 +1,147 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:daviz="http://namespaces.zope.org/daviz"
+  xmlns:browser="http://namespaces.zope.org/browser">
+
+  <daviz:view name="googlechart.googlecharts" />
+  <daviz:view name="googlechart.googledashboard" />
+
+  <browser:page
+    name="charts"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="zpt/view.pt"
+    class=".view.View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="chart-full"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="zpt/chart-full.pt"
+    class=".chart.View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="googlechart.googlecharts"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="zpt/charts.pt"
+    class=".chart.View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="googlechart.googledashboard"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="zpt/dashboard.pt"
+    class=".chart.DashboardView"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="googlechart.googledashboard.edit"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="zpt/dashboard-edit.pt"
+    class=".edit.DashboardEdit"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    name="googlechart.export"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".chart.Export"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="googlechart.setthumb"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".chart.SetThumb"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="googlechart.submit_charts"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".edit.Edit"
+    attribute="submit_charts"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    name="googlechart.get_charts"
+    for="eea.daviz.interfaces.IExhibitJson"
+    class=".edit.Edit"
+    attribute="get_charts"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:resource
+    name="eea.googlecharts.dashboard-edit.js"
+    file="./js/dashboard-edit.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.edit.js"
+    file="./js/edit.js"
+  />
+
+  <browser:resource
+    name="json2.js"
+    file="./js/json2.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.edit.css"
+    file="./css/edit.css"
+  />
+
+  <browser:page
+    name="googlechart.googlecharts.edit"
+    for="eea.daviz.interfaces.IExhibitJson"
+    template="zpt/edit.pt"
+    class=".edit.Edit"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:resource
+    name="eea.googlecharts.dashboard.js"
+    file="./js/dashboard.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.view.js"
+    file="./js/view.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.chart.js"
+    file="./js/chart.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.datatable.js"
+    file="./js/datatable.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.view.css"
+    file="./css/view.css"
+  />
+
+  <browser:resource
+    name="mini2.png"
+    file="./imgs/mini2.png"
+  />
+
+  <browser:resourceDirectory
+    name="eea.googlecharts.images"
+    directory="./imgs" />
+
+  <subscriber
+    for="eea.daviz.interfaces.IExhibitJson
+         eea.daviz.interfaces.IDavizFacetDeletedEvent"
+    handler=".events.googlechart_facet_deleted"
+    />
+
+</configure>

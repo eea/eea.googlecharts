@@ -1,4 +1,4 @@
-EEA GoogleCharts
-================
+EEA GoogleChart Configurator
+============================
 
 

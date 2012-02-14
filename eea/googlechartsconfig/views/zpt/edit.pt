@@ -1,0 +1,29 @@
+<div id="googlecharts_config" tal:define="ajax_baseurl string:${view/context/absolute_url}">
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+    <script type="text/javascript">
+        google.load('visualization', '1.0', {packages: ['charteditor', 'controls']});
+
+        jQuery(document).ready(function($){
+            init_googlecharts_edit();
+        });
+    </script>
+
+
+    <script type="text/javascript" tal:content="string:ajax_baseurl = '${ajax_baseurl}';available_columns = ${view/get_columns};all_rows = ${view/get_allrows}">
+    </script>
+
+    <span class="ui-icon ui-icon-plus ui-corner-all" title="Add new chart" id="addgooglechart">+</span>
+    <form id="googlecharts_form">
+        <ul id="googlecharts_list">
+        </ul>
+        <div id="googlecharts_actionsView">
+            <span class="actionButtons">
+                <input id="googlecharts_submit" type="button" value="Save" class="context"/>
+            </span>
+        </div>
+    </form>
+
+    <div id="googlechart_thumb_zone" style="display:none;">
+    </div>
+</div>

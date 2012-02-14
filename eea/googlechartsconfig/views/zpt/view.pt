@@ -1,0 +1,2 @@
+<div tal:define="view_page python:view.get_view('googlechart.googlecharts')"
+    tal:replace="structure view_page" />

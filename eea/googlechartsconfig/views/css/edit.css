@@ -1,0 +1,317 @@
+.google-visualization-charteditor-dialog{
+    z-index:2000;
+}
+#googlecharts_config #googlecharts_actionsView{
+    margin-top:1em;
+}
+
+#googlecharts_submit{
+    color:#fff !important;
+    background:#346F83;
+    background-image: -webkit-gradient(linear,0% 40%,0% 70%,from(#478EA5),to(#346F83));
+    background: -webkit-linear-gradient(#478EA5, #346F83); /* Safari 5.1+, Chrome 10+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#478EA5', endColorstr='#346F83'); /* IE6 & IE7 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#478EA5', endColorstr='#346F83')"; /* IE8+ */
+    background-image: -moz-linear-gradient(270deg, #478EA5, #346F83);
+    background-image: -ms-linear-gradient(top,#478EA5,#346F83);
+    background-image: -o-linear-gradient(top,#478EA5,#346F83);
+    background-image: linear-gradient(top,#478EA5,#346F83);
+    font: bold 12px Verdana, Arial, sans-serif;
+    padding: 7px 12px;
+    position: relative;
+    display: inline-block;
+    text-shadow: 0 1px 1px #000;
+    -webkit-transition: border-color .218s;
+       -moz-transition: border .218s;
+       -ms-transition: border-color .218s;
+         -o-transition: border-color .218s;
+            transition: border-color .218s;
+    -webkit-transition: box-shadow .218s;
+       -moz-transition: box-shadow .218s;
+       -ms-transition: box-shadow .218s;
+         -o-transition: box-shadow .218s;
+            transition: box-shadow .218s;
+    border: 1px solid #346F83;
+    -webkit-border-radius: 2px;
+       -moz-border-radius: 2px;
+            border-radius: 2px;
+}
+
+#googlecharts_config .ui-icon-plus{
+    float-left;
+    border: 2px solid #CCCCCC;
+}
+
+.googlechart_handle{
+    cursor:move;
+}
+
+#googlecharts_list,
+.googlechart_filters_list{
+    list-style-type:none !important;
+    list-style-image:none !important;
+    margin:0 !important;
+}
+
+.googlechart{
+    background-color:#FFFFFF;
+}
+
+.googlechart_modified{
+    background-color:#FFFFBB;
+}
+
+.googlechart fieldset {
+    padding: 0.5em 1em;
+}
+
+.googlechart table {
+    width: 100%;
+}
+
+.googlechart .filters_position {
+    text-align: right;
+}
+
+#googlecharts\.columns\.toDataContainer{
+    display:none;
+}
+
+.googlechart-dialog .ui-dialog-titlebar {
+    color:black;
+    font-size:1.2em;
+    margin:0 2px;
+    padding:0.2em 0.5em;
+    background-color:#CDE2A7;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#CDE2A7));
+    background-image: -webkit-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -moz-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -ms-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -o-linear-gradient(center top , #FFFFFF, #CDE2A7);
+
+}
+
+.googlechart-dialog {
+  border-radius: 10px;
+  box-shadow: 0px 5px 5px #ccc;
+  border: 1px solid #3A5774;
+}
+
+.googlechartTable {
+    color:black;
+    font-size:0.8em !important;
+    border:1px solid #DDDDDD;
+}
+.googlechartTable th{
+    padding:2px;
+    border:1px solid #EEEEEE;
+    background-color:#CDE2A7;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#CDE2A7));
+    background-image: -webkit-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -moz-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -ms-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -o-linear-gradient(center top , #FFFFFF, #CDE2A7);
+
+}
+.googlechartTable td{
+    padding:2px;
+    border:1px solid #EEEEEE;
+}
+
+.googlechartTable select {
+    margin-left:3px;
+    padding:0px !important;
+    font-size:1.2em;
+    vertical-align:none;
+}
+
+#gcharts-dashboard-edit .ui-icon-show,
+.googlechartTable .ui-icon-show {
+  background-image: url(../../++resource++eea.daviz.images/show.png);
+}
+
+#gcharts-dashboard-edit .ui-icon-hide,
+.googlechartTable .ui-icon-hide {
+  background-image: url(../../++resource++eea.daviz.images/hide.png);
+}
+
+#gcharts-dashboard-edit .ui-icon-visibility {
+    background-image: url(../../++resource++eea.daviz.images/hide.png);
+}
+
+#gcharts-dashboard-edit .dashboard-header-hidden .ui-icon-visibility {
+    background-image: url(../../++resource++eea.daviz.images/show.png);
+}
+
+#newColumns th{
+    cursor:move;
+}
+
+.googlechartTable .ui-icon {
+    cursor:pointer;
+}
+
+#content #gcharts-dashboard-edit,
+#gcharts-dashboard-edit {
+    background: #f3f3f3;
+    list-style-type: none;
+    list-style-image: none;
+    margin: 0;
+    padding-top: 5px;
+}
+
+#gcharts-dashboard-edit:after {
+    content: '.';
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+#gcharts-dashboard-edit .ui-state-highlight {
+    float: left;
+}
+
+.dashboard-resizable-helper {
+    border: 2px dotted #E0EDFE;
+}
+
+.dashboard-mask {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.dashboard-header {
+    padding: 5px;
+    background-color: #CDE2A7;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#CDE2A7));
+    background-image: -webkit-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -moz-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -ms-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    background-image: -o-linear-gradient(center top , #FFFFFF, #CDE2A7);
+    position: absolute;
+    width: 100%;
+    cursor: move;
+}
+
+.dashboard-header span.title {
+    float: left;
+    font-weight: bold;
+}
+
+.dashboard-header input {
+    width: 50px;
+}
+
+.dashboard-header span {
+    padding: 0 0.5em;
+}
+
+.dashboard-header-hidden {
+    background-color: #E6E6E6;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#E6E6E6));
+    background-image: -webkit-linear-gradient(center top , #FFFFFF, #E6E6E6);
+    background-image: -moz-linear-gradient(center top , #FFFFFF, #E6E6E6);
+    background-image: -ms-linear-gradient(center top , #FFFFFF, #E6E6E6);
+    background-image: -o-linear-gradient(center top , #FFFFFF, #E6E6E6);
+}
+
+#content .dashboard-chart,
+dl.portlet .dashboard-chart,
+.dashboard-chart {
+    background-color: #fff;
+    text-align: center;
+    box-shadow: 3px 3px 3px #ccc;
+    margin: 5px;
+    float: left;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.dashboard-chart iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.dashboard-chart iframe body {
+    overflow: hidden;
+}
+
+.chart_div > div > div {
+    overflow: hidden ! important;
+    height: 300px;
+}
+
+.dashboard-charts .box-body {
+    padding-bottom: 1em;
+}
+
+.dashboard-charts,
+.dashboard-filters {
+    border: 1px solid #ccc;
+    margin: 5px 0;
+    border-radius: 5px;
+    overflow: hidden;
+    float: left;
+}
+
+.dashboard-charts .box-title,
+.dashboard-filters .box-title {
+    padding: 0.5em;
+    cursor: move;
+    text-align: center;
+    min-width: 260px;
+    overflow: hidden;
+}
+
+.dashboard-charts .box-title input,
+.dashboard-filters .box-title input{
+    width: 50px;
+}
+
+.dashboard-charts .box-title span.label,
+.dashboard-filters .box-title span.label {
+    font-weight: bold;
+    float: left;
+}
+
+.dashboard-filters .ui-icon-plus {
+    float: right;
+    border: 2px solid #ccc;
+    cursor: pointer;
+}
+
+.dashboard-filters .box-body {
+    min-height: 5em;
+}
+
+.dashboard-charts .box-body:after,
+.dashboard-filters .box-body:after {
+    content: '.';
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.dashboard-filters .ui-state-highlight {
+    float: left;
+}
+
+.dashboard-filter {
+    float: left;
+    width: 200px;
+    border: 1px solid #eee;
+    margin: 5px;
+    padding: 1em;
+    cursor: move;
+    background: #fff;
+    box-shadow: 3px 3px 3px #ccc;
+}
+
+.dashboard-chart .ui-icon,
+.dashboard-filter .ui-icon {
+    cursor: pointer;
+    float: right;
+}

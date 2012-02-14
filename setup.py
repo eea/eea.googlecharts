@@ -1,15 +1,15 @@
-""" EEA GoogleCharts Installer
+""" EEA GoogleChart Installer
 """
 from setuptools import setup, find_packages
 import os
 
-NAME = 'eea.googlecharts'
+NAME = 'eea.googlechartsconfig'
 PATH = NAME.split('.') + ['version.txt']
 VERSION = open(os.path.join(*PATH)).read().strip()
 
 setup(name=NAME,
       version=VERSION,
-      description="Wrapper for Google Charts Api",
+      description="Configurator for GoogleCharts",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       classifiers=[
@@ -17,11 +17,11 @@ setup(name=NAME,
           "Programming Language :: Python",
           "Topic :: Software Development :: Libraries :: Python Modules",
         ],
-      keywords='eea charts google zope plone',
+      keywords='eea google chart zope plone',
       author='Zoltan Szabo, European Environment Agency',
       author_email='webadmin@eea.europa.eu',
       url='http://svn.eionet.europa.eu/projects/'
-          'Zope/browser/trunk/eea.googlecharts',
+          'Zope/browser/trunk/eea.googlechartconfigurator',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['eea'],
@@ -29,6 +29,9 @@ setup(name=NAME,
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'eea.googlecharts',
+          'eea.daviz',
+          'eea.converter',
       ],
       entry_points="""
       # -*- Entry points: -*-

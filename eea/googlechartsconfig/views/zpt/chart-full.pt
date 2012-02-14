@@ -1,0 +1,76 @@
+<html>
+<head>
+<style type="text/css">
+    #googlechart_full > div > div {overflow:hidden ! important;}
+</style>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
+
+
+<script type="text/javascript">
+    google.load('visualization', '1.0', {packages: ['controls']});
+
+    jQuery(document).ready(function($){
+        var columnsFromSettings = getColumnsFromSettings(chart_columns);
+        var transformedTable = transformTable(merged_rows,
+                                        columnsFromSettings.normalColumns,
+                                        columnsFromSettings.pivotColumns,
+                                        columnsFromSettings.valueColumn,
+                                        available_columns);
+        var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
+        chart_json.options.title = name;
+
+        drawGoogleChart(
+            '',
+            'googlechart_full',
+            '',
+            'full',
+            chart_json,
+            tableForChart,
+            '',
+            width,
+            height,
+            '',
+            options,
+            transformedTable.available_columns,
+            function(){},
+            function(){}
+            );
+    });
+    function exportToPng(){
+        var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
+        jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
+        var svg = jQuery("#googlechart_full").find("iframe").contents().find("#chartArea").html();
+
+        var form = jQuery("#export");
+        jQuery("#svg").attr("value",svg);
+        jQuery("#type").attr("value","image/png");
+        form.submit()
+    }
+
+</script>
+</head>
+<body tal:define="chart view/get_full_chart" style="margin: 0; overflow: hidden">
+    <script type="text/javascript" tal:content="string:chart_columns = ${chart/columns};
+                                            merged_rows = ${chart/data};
+                                            available_columns = ${chart/available_columns};
+                                            chart_json = ${chart/json};
+                                            width = ${chart/width};
+                                            height = ${chart/height};
+                                            name = '${chart/name}';
+                                            options = ${chart/options};
+                                            chart_filters = ${chart/filters};">
+    </script>
+
+    <div id="googlechart_dashboard">
+        <div id="googlechart_filters">
+        </div>
+        <div id="googlechart_full">
+        </div>
+    </div>
+</body>
+
+</html>
