@@ -2,7 +2,7 @@
 """
 import doctest
 import unittest
-from eea.googlechartsconfig.tests.base import FUNCTIONAL_TESTING
+from eea.googlecharts.tests.base import FUNCTIONAL_TESTING
 from plone.testing import layered
 
 OPTIONFLAGS = (doctest.REPORT_ONLY_FIRST_FAILURE |
@@ -18,7 +18,7 @@ def test_suite():
             doctest.DocFileSuite(
                 'README.txt',
                 optionflags=OPTIONFLAGS,
-                package='eea.googlechartsconfig'),
+                package='eea.googlecharts'),
             layer=FUNCTIONAL_TESTING),
     ])
     return suite

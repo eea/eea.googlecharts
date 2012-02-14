@@ -8,7 +8,7 @@ from Products.Five.browser import BrowserView
 from eea.daviz.interfaces import IDavizConfig
 from eea.daviz.views.view import ViewForm
 from eea.converter.interfaces import IConvert
-from eea.googlechartsconfig.config import EEAMessageFactory as _
+from eea.googlecharts.config import EEAMessageFactory as _
 
 class View(ViewForm):
     """ GoogleChartsView

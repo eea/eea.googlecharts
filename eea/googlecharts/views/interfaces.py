@@ -6,4 +6,3 @@ from eea.daviz.views.interfaces import IExhibitView
 class IGoogleCharts(IExhibitView):
     """ GoogleCharts
     """
-

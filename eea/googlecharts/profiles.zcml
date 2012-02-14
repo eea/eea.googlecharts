@@ -8,9 +8,9 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="EEA GoogleChartsConfig"
+      title="EEA Google Charts"
       directory="profiles/default"
-      description="Extension profile for EEA GoogleChartsConfig."
+      description="Extension profile for EEA Google Charts"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 

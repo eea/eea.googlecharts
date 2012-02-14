@@ -4,7 +4,6 @@
 
   <include package="eea.converter" />
   <include package="eea.daviz" />
-  <include package="eea.googlecharts" />
   <include package="p4a.z2utils" />
   <include package="collective.js.jqueryui" />
 

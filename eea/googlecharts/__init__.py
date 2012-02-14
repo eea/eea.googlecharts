@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Eea.googlechartsconfig init
+""" Eea.googlecharts init
 """
 __author__ = """European Environment Agency (EEA)"""
 __docformat__ = 'plaintext'
