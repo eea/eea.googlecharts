@@ -233,17 +233,26 @@ dl.portlet .dashboard-chart,
     border: 1px solid #ccc;
     margin: 5px 0;
     border-radius: 5px;
+    overflow: hidden;
+    float: left;
 }
 
 .dashboard-charts .box-title,
 .dashboard-filters .box-title {
     padding: 0.5em;
     cursor: move;
-    /*text-align: center;*/
+    text-align: center;
 }
 
+.dashboard-charts .box-title input,
+.dashboard-filters .box-title input{
+    width: 50px;
+}
+
+.dashboard-charts .box-title span.label,
 .dashboard-filters .box-title span.label {
     font-weight: bold;
+    float: left;
 }
 
 .dashboard-filters .ui-icon-plus {

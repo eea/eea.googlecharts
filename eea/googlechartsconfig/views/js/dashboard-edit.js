@@ -35,11 +35,17 @@ DavizEdit.GoogleDashboard.prototype = {
     var self = this;
     self.context.empty();
 
-    // Filters
-    self.handle_filters();
-
-    // Charts
-    self.handle_charts();
+    // Get config JSON
+    var query = {action: 'json'};
+    jQuery.getJSON('@@googlechart.googledashboard.edit', query, function(data){
+      if((data.chartsBox !== undefined) && (data.chartsBox.order === 0)){
+        self.handle_charts(data);
+        self.handle_filters(data);
+      }else{
+        self.handle_filters(data);
+        self.handle_charts(data);
+      }
+    });
 
     self.context.sortable({
       items: '.dashboard-section',
@@ -50,19 +56,32 @@ DavizEdit.GoogleDashboard.prototype = {
       cursor: 'crosshair',
       tolerance: 'pointer',
       update: function(event, ui){
-        console.log(self.context.sortable('toArray'));
+        self.reorder(self.context.sortable('toArray'));
       }
     });
   },
 
-  handle_filters: function(){
+  handle_filters: function(options){
     var self = this;
-    var filters = new DavizEdit.GoogleDashboardFilters(self.context);
+    var filters = new DavizEdit.GoogleDashboardFilters(self.context, options);
   },
 
-  handle_charts: function(){
+  handle_charts: function(options){
     var self = this;
-    var charts = new DavizEdit.GoogleDashboardCharts(self.context);
+    var charts = new DavizEdit.GoogleDashboardCharts(self.context, options);
+  },
+
+  reorder: function(order){
+    var self = this;
+    var query = {
+      action: 'sections.position',
+      order: order
+    };
+    query = jQuery.param(query, traditional=true);
+    DavizEdit.Status.start("Saving...");
+    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+      DavizEdit.Status.stop(data);
+    });
   },
 
   reload: function(){
@@ -76,9 +95,21 @@ DavizEdit.GoogleDashboardCharts = function(context, options){
   var self = this;
   self.context = context;
 
-  self.settings = {};
+  self.settings = {
+    chartsBox: {
+      width: '100%',
+      height: 'auto',
+      order: 1
+    }
+  };
   if(options){
     jQuery.extend(self.settings, options);
+    if(self.settings.chartsBox.width === undefined){
+      self.settings.chartsBox.width = '100%';
+    }
+    if(self.settings.chartsBox.height === undefined){
+      self.settings.chartsBox.height = 'auto';
+    }
   }
 
   // Events
@@ -93,18 +124,25 @@ DavizEdit.GoogleDashboardCharts.prototype = {
   initialize: function(){
     var self = this;
     self.box = jQuery('<div>')
-      .attr('id', 'dashboard-charts')
+      .attr('id', 'chartsBox')
       .attr('title', 'Click and drag to reorder')
       .addClass('dashboard-charts')
       .addClass('dashboard-section')
-      .appendTo(self.context);
-    var header = jQuery('<div>')
-      .addClass('box-title')
-      .html('<span class="label">Dashboard charts</span>')
-      .prependTo(self.box);
-    var body = jQuery('<div>')
-       .addClass('box-body')
-       .appendTo(self.box);
+      .appendTo(self.context)
+      .resizable({
+        ghost: true,
+        helper: 'dashboard-resizable-helper',
+        stop: function(event, ui){
+          self.resize(ui.size.width, ui.size.height);
+        }
+      });
+
+    var width = self.settings.chartsBox.width;
+    var height = self.settings.chartsBox.height;
+    self.box.width(width);
+    self.box.height(height);
+    self.handle_header(width, height);
+    self.handle_body();
 
     var charts = jQuery('li.googlechart').sort(function(a, b){
       var order_a = jQuery.data(a, 'dashboard').order;
@@ -115,7 +153,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     });
 
     jQuery(charts).each(function(index){
-      self.handle_chart(index, jQuery(this), body);
+      self.handle_chart(index, jQuery(this), jQuery('.box-body', self.box));
     });
 
     self.box.sortable({
@@ -132,6 +170,38 @@ DavizEdit.GoogleDashboardCharts.prototype = {
         });
       }
     });
+  },
+
+  handle_header: function(width, height){
+    var self = this;
+    var header = jQuery('<div>')
+      .addClass('box-title')
+      .html([
+        '<span class="label">Dashboard charts</span>',
+        '<input type="text" name="width" value=""/>',
+        '<span>X</span>',
+        '<input type="text" name="height" value=""/>'
+      ].join('\n'))
+      .prependTo(self.box);
+
+    jQuery('input[name=width]', header).val(width).change(function(){
+      var width = jQuery(this).val();
+      self.box.width(width);
+      self.after_resize(width, self.box.height());
+    });
+
+    jQuery('input[name=height]', header).val(height).change(function(){
+      var height = jQuery(this).val();
+      self.box.height(height);
+      self.after_resize(self.box.width(), height);
+    });
+  },
+
+  handle_body: function(){
+    var self = this;
+    jQuery('<div>')
+       .addClass('box-body')
+       .appendTo(self.box);
   },
 
   handle_chart: function(index, chart, context){
@@ -152,6 +222,24 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     };
 
     query = jQuery.param(query, traditional=true);
+    DavizEdit.Status.start("Saving...");
+    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+      DavizEdit.Status.stop(data);
+    });
+  },
+
+  resize: function(width, height){
+    jQuery('.box-title input[name=width]', self.box).val(width);
+    jQuery('.box-title input[name=height]', self.box).val(height);
+  },
+
+  after_resize: function(width, height){
+    var self = this;
+    var query = {
+      action: 'charts.size',
+      width: width,
+      height: height
+    };
     DavizEdit.Status.start("Saving...");
     jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
       DavizEdit.Status.stop(data);
@@ -348,9 +436,22 @@ DavizEdit.GoogleDashboardChart.prototype = {
 DavizEdit.GoogleDashboardFilters = function(context, options){
   var self = this;
   self.context = context;
-  self.settings = {};
+  self.settings = {
+    filtersBox: {
+      width: '100%',
+      height: 'auto',
+      order: 0
+    }
+  };
+
   if(options){
     jQuery.extend(self.settings, options);
+    if(self.settings.filtersBox.width === undefined){
+      self.settings.filtersBox.width = '100%';
+    }
+    if(self.settings.filtersBox.height === undefined){
+      self.settings.filtersBox.height = 'auto';
+    }
   }
 
   self.initialize();
@@ -360,26 +461,25 @@ DavizEdit.GoogleDashboardFilters.prototype = {
   initialize: function(){
     var self = this;
     self.box = jQuery('<div>')
-      .attr('id', 'dashboard-filters')
+      .attr('id', 'filtersBox')
       .attr('title', 'Click and drag to reorder')
       .addClass('dashboard-filters')
       .addClass('dashboard-section')
-      .prependTo(self.context);
-    var header = jQuery('<div>')
-      .addClass('box-title')
-      .html('<span class="label">Dashboard filters</span>')
-      .prependTo(self.box);
-    var body = jQuery('<div>')
-       .addClass('box-body')
-       .appendTo(self.box);
-    var add_button = jQuery("<span>")
-      .attr('title', 'Add new filter')
-      .text('+')
-      .addClass('ui-icon').addClass('ui-icon-plus').addClass('ui-corner-all')
-      .prependTo(header)
-      .click(function(){
-        self.new_chart(self.box);
+      .appendTo(self.context)
+      .resizable({
+        ghost: true,
+        helper: 'dashboard-resizable-helper',
+        stop: function(event, ui){
+          self.resize(ui.size.width, ui.size.height);
+        }
       });
+
+    var width = self.settings.filtersBox.width;
+    var height = self.settings.filtersBox.height;
+    self.box.width(width);
+    self.box.height(height);
+    self.handle_header(width, height);
+    self.handle_body();
 
     // Annotations
     jQuery.data(self.box, 'all_filter_columns', window.available_columns ? jQuery.extend({}, available_columns) : {});
@@ -387,10 +487,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     jQuery.data(self.box, 'filter_types', window.available_filter_types ? jQuery.extend({}, available_filter_types): {});
 
     // Get config JSON
-    var query = {action: 'json'};
-    jQuery.getJSON('@@googlechart.googledashboard.edit', query, function(data){
-      self.draw(data);
-    });
+    self.draw(self.settings);
 
     self.box.sortable({
       items: '.dashboard-filter',
@@ -406,6 +503,48 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     });
   },
 
+  handle_header: function(width, height){
+    var self = this;
+    var header = jQuery('<div>')
+      .addClass('box-title')
+      .html([
+        '<span class="label">Dashboard filters</span>',
+        '<input type="text" name="width" value=""/>',
+        '<span>X</span>',
+        '<input type="text" name="height" value=""/>'
+        ].join('\n'))
+      .prependTo(self.box);
+
+    // Add button
+    jQuery("<span>")
+     .attr('title', 'Add new filter')
+     .text('+')
+     .addClass('ui-icon').addClass('ui-icon-plus').addClass('ui-corner-all')
+     .prependTo(header)
+     .click(function(){
+       self.new_filter(self.box);
+     });
+
+    jQuery('input[name=width]', header).val(width).change(function(){
+      var width = jQuery(this).val();
+      self.box.width(width);
+      self.after_resize(width, self.box.height());
+    });
+
+    jQuery('input[name=height]', header).val(height).change(function(){
+      var height = jQuery(this).val();
+      self.box.height(height);
+      self.after_resize(self.box.width(), height);
+    });
+  },
+
+  handle_body: function(){
+    var self = this;
+    jQuery('<div>')
+       .addClass('box-body')
+       .appendTo(self.box);
+  },
+
   draw: function(data){
     var self = this;
     var filters = data.filters !== undefined ? data.filters : [];
@@ -415,7 +554,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     });
   },
 
-  new_chart: function(context){
+  new_filter: function(context){
     var self = this;
     if(!jQuery.param(jQuery.data(self.box, 'filter_columns'))){
       return alert("You've added all possible filters!");
@@ -461,7 +600,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
           text: "Save",
           click: function(){
             var form = jQuery('form', widget);
-            self.new_chart_onSave(form);
+            self.new_filter_onSave(form);
             widget.dialog("close");
           }
         },
@@ -475,7 +614,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     });
   },
 
-  new_chart_onSave: function(form){
+  new_filter_onSave: function(form){
     var self = this;
     var query = {};
     jQuery.each(form.serializeArray(), function(){
@@ -498,6 +637,24 @@ DavizEdit.GoogleDashboardFilters.prototype = {
       order: order
     };
     query = jQuery.param(query, traditional=true);
+    DavizEdit.Status.start("Saving...");
+    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+      DavizEdit.Status.stop(data);
+    });
+  },
+
+  resize: function(width, height){
+    jQuery('.box-title input[name=width]', self.box).val(width);
+    jQuery('.box-title input[name=height]', self.box).val(height);
+  },
+
+  after_resize: function(width, height){
+    var self = this;
+    var query = {
+      action: 'filters.size',
+      width: width,
+      height: height
+    };
     DavizEdit.Status.start("Saving...");
     jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
       DavizEdit.Status.stop(data);

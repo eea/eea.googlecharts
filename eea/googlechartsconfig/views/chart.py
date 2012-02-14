@@ -75,8 +75,10 @@ class View(ViewForm):
         return json.dumps(chart.get('dashboard', {}))
 
     def get_dashboard_filters(self):
+        """ Dashboard filters
+        """
         mutator = queryAdapter(self.context, IDavizConfig)
-        config = ''
+        #config = ''
         filters = []
         filtersposition = 0
         filter_settings = {}

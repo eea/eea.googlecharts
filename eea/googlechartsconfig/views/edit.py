@@ -141,6 +141,19 @@ class DashboardEdit(Edit):
             mutator.edit_view('googlechart.googlecharts', **view)
         return u'Changed saved'
 
+    def chartsSize(self, **kwargs):
+        """ Change filters box size
+        """
+        mutator = queryAdapter(self.context, IDavizConfig)
+        view = mutator.view(self.__name__.replace('.edit', ''), {})
+        width = kwargs.get('width', '100%')
+        height = kwargs.get('height', 'auto')
+        view.setdefault('chartsBox', {})
+        view['chartsBox']['width'] = width
+        view['chartsBox']['height'] = height
+        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+        return 'Charts box resized'
+
     def filterAdd(self, **kwargs):
         """ Add filter
         """
@@ -186,6 +199,33 @@ class DashboardEdit(Edit):
         mutator.edit_view(self.__name__.replace('.edit', ''), **view)
         return 'Filters position changed'
 
+    def filtersSize(self, **kwargs):
+        """ Change filters box size
+        """
+        mutator = queryAdapter(self.context, IDavizConfig)
+        view = mutator.view(self.__name__.replace('.edit', ''), {})
+        width = kwargs.get('width', '100%')
+        height = kwargs.get('height', 'auto')
+        view.setdefault('filtersBox', {})
+        view['filtersBox']['width'] = width
+        view['filtersBox']['height'] = height
+        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+        return 'Filters box resized'
+
+    def sectionsPosition(self, **kwargs):
+        """ Change sections position
+        """
+        order = kwargs.get('order', [])
+        if not order:
+            return u'New order not provided'
+        mutator = queryAdapter(self.context, IDavizConfig)
+        view = mutator.view(self.__name__.replace('.edit', ''), {})
+        for item in order:
+            view.setdefault(item, {})
+            view[item]['order'] = order.index(item)
+        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+        return 'Position changed'
+
     def __call__(self, **kwargs):
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
@@ -202,6 +242,8 @@ class DashboardEdit(Edit):
             return self.chartEdit(**kwargs)
         elif action == 'charts.position':
             return self.chartsPosition(**kwargs)
+        elif action == 'charts.size':
+            return self.chartsSize(**kwargs)
 
         #   Filters
         elif action == 'filter.add':
@@ -210,6 +252,13 @@ class DashboardEdit(Edit):
             return self.filterDelete(**kwargs)
         elif action == 'filters.position':
             return self.filtersPosition(**kwargs)
+        elif action == 'filters.size':
+            return self.filtersSize(**kwargs)
+
+        # Sections
+        elif action == 'sections.position':
+            return self.sectionsPosition(**kwargs)
+
 
         # View mode
         return 'Invalid action provided: %s' % action
