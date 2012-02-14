@@ -307,26 +307,25 @@ DavizEdit.GoogleDashboardChart.prototype = {
     href = href.replace(/height\=\d+/, 'height=' + height);
 
     var iframe = jQuery('<iframe>').attr('src', href);
-    var svg = jQuery('<div>')
+    self.box = jQuery('<div>')
       .attr('id', self.settings.name)
       .addClass('dashboard-chart')
-      .append(iframe);
-    svg.width(width);
-    svg.height(height);
-    svg.resizable({
-      ghost: true,
-      helper: 'dashboard-resizable-helper',
-      stop: function(event, ui){
-        jQuery(self.settings.chart).trigger(DavizEdit.Events.charts.resized, {
-          context: svg, width: ui.size.width, height: ui.size.height});
-      }
-    });
-    self.handle_chart_header(svg, width, height);
-    self.handle_chart_mask(svg, width, height);
-    self.context.append(svg);
+      .append(iframe)
+      .width(width)
+      .height(height)
+      .resizable({
+        ghost: true,
+        helper: 'dashboard-resizable-helper',
+        stop: function(event, ui){
+          jQuery(self.settings.chart).trigger(DavizEdit.Events.charts.resized, {
+            context: svg, width: ui.size.width, height: ui.size.height});
+        }
+      }).appendTo(self.context);
+    self.handle_chart_header(width, height);
+    self.handle_chart_mask();
   },
 
-  handle_chart_header: function(context, width, height){
+  handle_chart_header: function(width, height){
     var self = this;
     var header = jQuery('<div>')
       .addClass('dashboard-header')
@@ -342,30 +341,50 @@ DavizEdit.GoogleDashboardChart.prototype = {
       header.addClass('dashboard-header-hidden');
     }
 
+    self.handle_buttons(header);
+
     jQuery('input[name=width]', header).val(width).change(function(){
       var width = jQuery(this).val();
-      context.width(width);
+      self.box.width(width);
       jQuery(self.settings.chart).trigger(DavizEdit.Events.charts.resizeFinished, {
-        context: context,
+        context: self.box,
         width: width
       });
     });
 
     jQuery('input[name=height]', header).val(height).change(function(){
       var height = jQuery(this).val();
-      context.height(height);
+      self.box.height(height);
       jQuery(self.settings.chart).trigger(DavizEdit.Events.charts.resizeFinished, {
-        context: context,
+        context: self.box,
         height: height
       });
     });
 
-    context.prepend(header);
+    self.box.prepend(header);
   },
 
-  handle_chart_mask: function(context, width, height){
+  handle_buttons: function(header){
+    var self = this;
+    var title = 'Hide chart';
+    if(self.hidden){
+      title = 'Show chart';
+    }
+
+    jQuery("<span>")
+     .attr('title', title)
+     .text('h')
+     .addClass('ui-icon').addClass('ui-icon-visibility')
+     .prependTo(header)
+     .click(function(){
+       self.toggle_visibility();
+     });
+  },
+
+  handle_chart_mask: function(){
+    var self = this;
     var mask = jQuery('<div>').addClass('dashboard-mask');
-    context.prepend(mask);
+    self.box.prepend(mask);
   },
 
   handle_chart_resize: function(data){
@@ -416,6 +435,21 @@ DavizEdit.GoogleDashboardChart.prototype = {
     }
 
     jQuery.data(self.dashboard, 'dashboard').order = index;
+  },
+
+  toggle_visibility: function(){
+    var self = this;
+    if(self.hidden){
+      self.hidden = false;
+      jQuery('.dashboard-header', self.box).removeClass('dashboard-header-hidden');
+      jQuery('.ui-icon-visibility', self.box).attr('title', 'Hide chart');
+    }else{
+      self.hidden = true;
+      jQuery('.dashboard-header', self.box).addClass('dashboard-header-hidden');
+      jQuery('.ui-icon-visibility', self.box).attr('title', 'Show chart');
+    }
+    jQuery.data(self.dashboard, 'dashboard').hidden = self.hidden;
+    self.save();
   },
 
   save: function(){

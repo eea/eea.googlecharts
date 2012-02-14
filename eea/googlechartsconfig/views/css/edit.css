@@ -125,12 +125,22 @@
     vertical-align:none;
 }
 
+#gcharts-dashboard-edit .ui-icon-show,
 .googlechartTable .ui-icon-show {
   background-image: url(../../++resource++eea.daviz.images/show.png);
 }
 
+#gcharts-dashboard-edit .ui-icon-hide,
 .googlechartTable .ui-icon-hide {
   background-image: url(../../++resource++eea.daviz.images/hide.png);
+}
+
+#gcharts-dashboard-edit .ui-icon-visibility {
+    background-image: url(../../++resource++eea.daviz.images/hide.png);
+}
+
+#gcharts-dashboard-edit .dashboard-header-hidden .ui-icon-visibility {
+    background-image: url(../../++resource++eea.daviz.images/show.png);
 }
 
 #newColumns th{
@@ -198,6 +208,15 @@
     padding: 0 0.5em;
 }
 
+.dashboard-header-hidden {
+    background-color: #E6E6E6;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#E6E6E6));
+    background-image: -webkit-linear-gradient(center top , #FFFFFF, #E6E6E6);
+    background-image: -moz-linear-gradient(center top , #FFFFFF, #E6E6E6);
+    background-image: -ms-linear-gradient(center top , #FFFFFF, #E6E6E6);
+    background-image: -o-linear-gradient(center top , #FFFFFF, #E6E6E6);
+}
+
 #content .dashboard-chart,
 dl.portlet .dashboard-chart,
 .dashboard-chart {
@@ -242,6 +261,8 @@ dl.portlet .dashboard-chart,
     padding: 0.5em;
     cursor: move;
     text-align: center;
+    min-width: 260px;
+    overflow: hidden;
 }
 
 .dashboard-charts .box-title input,
@@ -289,6 +310,7 @@ dl.portlet .dashboard-chart,
     box-shadow: 3px 3px 3px #ccc;
 }
 
+.dashboard-chart .ui-icon,
 .dashboard-filter .ui-icon {
     cursor: pointer;
     float: right;
