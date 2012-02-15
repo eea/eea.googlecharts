@@ -12,6 +12,20 @@ available_filter_types = {  0:'Number Range Filter',
                             2:'Simple Category Filter',
                             3:'Multiple Category Filter'};
 
+function checkSVG(id){
+    var svg = jQuery("#googlechart_chart_div_"+id).find("iframe").contents().find("#chartArea").html();
+
+    if ((svg) && (svg !== "")){
+        jQuery("#googlechart_thumb_id_"+id).show();
+        jQuery("#googlechart_thumb_text_"+id).show();
+    }
+    else{
+        jQuery("#googlechart_thumb_id_"+id).hide();
+        jQuery("#googlechart_thumb_text_"+id).hide();
+    }
+
+}
+
 function markChartAsModified(id){
     var chartObj = jQuery("#googlechartid_"+id);
     chartObj.addClass("googlechart_modified");
@@ -130,7 +144,7 @@ function saveThumb(value){
     );
 }
 
-function drawChart(elementId){
+function drawChart(elementId, readyEvent){
     var wrapperString = jQuery("#googlechartid_"+elementId+" .googlechart_configjson").attr('value');
     var chartName = jQuery("#googlechartid_"+elementId+" .googlechart_name").attr('value');
     if (wrapperString.length > 0){
@@ -158,6 +172,10 @@ function drawChart(elementId){
         wrapperJSON.dataTable = tableForChart;
         wrapperJSON.options.title = chartName;
         var wrapper = new google.visualization.ChartWrapper(wrapperJSON);
+        google.visualization.events.addListener(wrapper, 'ready', function(event){
+            readyEvent(elementId);
+        });
+
         wrapper.draw();
     }
 }
@@ -211,7 +229,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
             "<h1 class='googlechart_handle'>"+
             "<div style='float:left;width:70%;height:20px;overflow:hidden;'>"+id+"</div>"+
             "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"+
-            "<div style='float:right;font-weight:normal;font-size:0.9em;margin-right:10px'>Use this chart as thumb</div>"+
+            "<div style='float:right;font-weight:normal;font-size:0.9em;margin-right:10px' id='googlechart_thumb_text_"+id+"'>Use this chart as thumb</div>"+
             "<input style='float:right; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+id+"' onChange='markChartAsThumb(\""+id+"\");' "+(isThumb?"checked='checked'":"")+"/>"+
             "<div style='clear:both'> </div>"+
             "</h1>" +
@@ -279,7 +297,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
         }
     });
 
-    drawChart(id);
+    drawChart(id, checkSVG);
 
     var chartColumns = {};
     if (columns === ""){
@@ -435,7 +453,7 @@ function generateNewTable(sortOrder, isFirst){
         if(isOK){
             var columns_str = JSON.stringify(columnsSettings);
             jQuery("#googlechartid_tmp_chart .googlechart_columns").val(columns_str);
-            drawChart("tmp_chart");
+            drawChart("tmp_chart", function(){});
         }
     }
     DavizEdit.Status.stop("Done");
@@ -542,7 +560,7 @@ function openEditChart(id){
                             jQuery("#googlechartid_"+id+" .googlechart_options").attr("value",options_str);
                             markChartAsModified(id);
                             jQuery(this).dialog("close");
-                            drawChart(id);
+                            drawChart(id, checkSVG);
                         }
                     },
                     {
@@ -596,7 +614,7 @@ function openEditChart(id){
     });
     generateNewTable(loadedSortOrder, true);
 
-    drawChart("tmp_chart");
+    drawChart("tmp_chart", function(){});
     DavizEdit.Status.stop("Done");
 }
 
@@ -892,7 +910,7 @@ function init_googlecharts_edit(){
             var liName = "googlechartid";
             if (draggedItem.substr(0,liName.length) == liName){
                 var id = draggedItem.substr(liName.length+1);
-                drawChart(id);
+                drawChart(id, function(){});
                 markChartAsModified(id);
             }
         }
