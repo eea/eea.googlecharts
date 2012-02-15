@@ -105,16 +105,18 @@ function drawDashboard(){
     jQuery("#googlechart_view").remove();
     jQuery("#googlechart_table").remove();
     var googlechart_table;
-    if ((googledashboard_filters.chartsBox !== undefined) && (googledashboard_filters.chartsBox.order === 0)){
+    var chartsBox = googledashboard_filters.chartsBox !== undefined ? googledashboard_filters.chartsBox: {};
+    var filtersBox = googledashboard_filters.filtersBox !== undefined ? googledashboard_filters.filtersBox: {};
+    if ((chartsBox !== undefined) && (chartsBox.order === 0)){
         googlechart_table = ""+
-            "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom'>"+
+            "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom googlechart_dashboard_table'>"+
                 "<div id='googlechart_view' class='googlechart'></div>"+
                 "<div id='googlechart_filters'></div>"+
                 "<div style='clear: both'></div>" +
             "</div>";
     }else{
         googlechart_table = ""+
-            "<div id='googlechart_table' class='googlechart_table googlechart_table_top'>"+
+            "<div id='googlechart_table' class='googlechart_table googlechart_table_top googlechart_dashboard_table'>"+
                 "<div id='googlechart_filters'></div>"+
                 "<div id='googlechart_view' class='googlechart'></div>"+
                 "<div style='clear: both'></div>" +
@@ -122,6 +124,22 @@ function drawDashboard(){
     }
 
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
+
+    // Set width, height
+    console.log(chartsBox);
+    console.log(filtersBox);
+    if(chartsBox.width){
+        jQuery('#googlechart_view', jQuery('#googlechart_dashboard')).width(chartsBox.width);
+    }
+    if(chartsBox.height){
+        jQuery('#googlechart_view', jQuery('#googlechart_dashboard')).height(chartsBox.height);
+    }
+    if(filtersBox.width){
+        jQuery('#googlechart_filters', jQuery('#googlechart_dashboard')).width(filtersBox.width);
+    }
+    if(filtersBox.height){
+        jQuery('#googlechart_filters', jQuery('#googlechart_dashboard')).height(filtersBox.height);
+    }
 
     var filters = {};
     jQuery.each(googledashboard_filters.filters, function(){
