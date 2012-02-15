@@ -2,7 +2,7 @@
 */
 
 .tab-charts span {
-  background-image: url("++resource++eea.googlecharts.images/charts-icon.png");
+  background-image: url("../../++resource++eea.googlecharts.images/charts-icon.png");
   background-repeat: no-repeat;
   display: block;
   padding: 50px 5px 0;
@@ -10,43 +10,43 @@
 
 
 .googlechart_class_Dashboard span {
-    background: url("++resource++mini2.png") no-repeat scroll 0 0px transparent;
+    background: url("../../++resource++mini2.png") no-repeat scroll 0 0px transparent;
 }
 
 .googlechart_class_PieChart span {
-    background: url("++resource++mini2.png") no-repeat scroll 0 -21px transparent;
+    background: url("../../++resource++mini2.png") no-repeat scroll 0 -21px transparent;
 }
 
 .googlechart_class_LineChart span{
-    background: url("++resource++mini2.png") no-repeat scroll 0 -84px transparent;
+    background: url("../../++resource++mini2.png") no-repeat scroll 0 -84px transparent;
 }
 
 .googlechart_class_AreaChart span{
-    background: url("++resource++mini2.png") no-repeat scroll 0 -105px transparent;
+    background: url("../../++resource++mini2.png") no-repeat scroll 0 -105px transparent;
 }
 
 .googlechart_class_ColumnChart span{
-    background: url("++resource++mini2.png") no-repeat scroll 0 0px transparent;
+    background: url("../../++resource++mini2.png") no-repeat scroll 0 0px transparent;
 }
 
 .googlechart_class_BarChart span{
-    background: url("++resource++mini2.png") no-repeat scroll 0 -42px transparent;
+    background: url("../../++resource++mini2.png") no-repeat scroll 0 -42px transparent;
 }
 
 .googlechart_class_ScatterChart span,
 .googlechart_class_BubbleChart span{
-    background: url("++resource++mini2.png") no-repeat scroll 0 -168px transparent;
+    background: url("../../++resource++mini2.png") no-repeat scroll 0 -168px transparent;
 }
 
 .googlechart_class_GeoChart span{
-    background: url("++resource++mini2.png") no-repeat scroll 0 -63px transparent;
+    background: url("../../++resource++mini2.png") no-repeat scroll 0 -63px transparent;
 }
 
 .googlechart_class_ImageSparkLine span,
 .googlechart_class_AnnotatedTimeLine span,
 .googlechart_class_MotionChart span,
 .googlechart_class_CandlestickChart span{
-    background: url("++resource++mini2.png") no-repeat scroll 0 -147px transparent;
+    background: url("../../++resource++mini2.png") no-repeat scroll 0 -147px transparent;
 
 }
 
@@ -54,7 +54,7 @@
 .googlechart_class_OrgChart span,
 .googlechart_class_TreeMap span,
 .googlechart_class_Table span{
-    background: url("++resource++mini2.png") no-repeat scroll 0 -126px transparent;
+    background: url("../../++resource++mini2.png") no-repeat scroll 0 -126px transparent;
 }
 
 #tab-charts {

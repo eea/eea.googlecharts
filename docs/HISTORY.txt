@@ -3,5 +3,7 @@ Changelog
 
 1.0dev (unreleased)
 -------------------
+ * Bug fix: properly link images in css files
+ [tiberich #4956]
 
 - Initial release
