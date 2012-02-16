@@ -125,6 +125,11 @@
     vertical-align:none;
 }
 
+.googlechart_width,
+.googlechart_height {
+    width:50px !important;
+    float:right;
+}
 #gcharts-dashboard-edit .ui-icon-show,
 .googlechartTable .ui-icon-show {
   background-image: url(../../++resource++eea.daviz.images/show.png);

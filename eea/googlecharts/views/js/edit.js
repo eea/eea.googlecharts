@@ -245,63 +245,41 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
             "<input class='googlechart_options' type='hidden' value='"+options+"'/>" +
 
             "<h1 class='googlechart_handle'>"+
-            "<div style='float:left;width:70%;height:20px;overflow:hidden;'>"+id+"</div>"+
+            "<div style='float:left;width:60%;height:20px;overflow:hidden;'>"+
+                "<input class='googlechart_name' type='text' value='"+name+"' style='width:200px' onchange='markChartAsModified(\""+id+"\");'/>" +
+                "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>px</span>"+
+                "<input class='googlechart_height' type='text' value='"+height+"' onchange='markChartAsModified(\""+id+"\");'/>" +
+                "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>X</span>"+
+                "<input class='googlechart_width' type='text' value='"+width+"' onchange='markChartAsModified(\""+id+"\");'/>" +
+            "</div>"+
             "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"+
             "<div style='float:right;font-weight:normal;font-size:0.9em;margin-right:10px' id='googlechart_thumb_text_"+id+"'>Use this chart as thumb</div>"+
             "<input style='float:right; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+id+"' onChange='markChartAsThumb(\""+id+"\");' "+(isThumb?"checked='checked'":"")+"/>"+
             "<div style='clear:both'> </div>"+
             "</h1>" +
             "<fieldset>" +
-            "<table>"+
-                "<tr>"+
-                    "<td>"+
-                        "Friendly name:"+
-                    "</td>"+
-                    "<td>"+
-                        "<input class='googlechart_name' type='text' value='"+name+"' style='width:100px' onchange='markChartAsModified(\""+id+"\");'/>" +
-                    "</td>"+
-                    "<td>"+
-                        "Width: "+
-                    "</td>"+
-                    "<td>"+
-                        "<input class='googlechart_width' type='text' value='"+width+"' style='width:100px' onchange='markChartAsModified(\""+id+"\");'/>" +
-                    "</td>"+
-                    "<td class='filters_position'>"+
-                        "Filter position:"+
-                        "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='0' "+((filter_pos === 0)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Top" +
-                        "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='1' "+((filter_pos === 1)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Left" +
-                        "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='2' "+((filter_pos === 2)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Bottom" +
-                        "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='3' "+((filter_pos === 3)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Right" +
-                    "</td>"+
-                "</tr>"+
-                "<tr>"+
-                    "<td></td>"+
-                    "<td></td>"+
-                    "<td>"+
-                        "Height:"+
-                    "</td>"+
-                    "<td>"+
-                        "<input class='googlechart_height' type='text' value='"+height+"' style='width:100px' onchange='markChartAsModified(\""+id+"\");'/>" +
-                    "</td>"+
-                    "<td>"+
-                    "</td>"+
-                "</tr>"+
-            "</table>"+
-            "<div style='float:left'>" +
-                "<div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 400px; max-width:700px; overflow:auto'></div>" +
-            "</div>" +
-            "<div style='float:right; width:180px'>" +
-                "<div style='float:left'>Filters</div>" +
-                "<span class='ui-icon ui-icon-plus ui-corner-all addgooglechartfilter' title='Add new filter'></span>" +
+                "<div style='float:left'>" +
+                    "<div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 400px; max-width:700px; overflow:auto'></div>" +
+                "</div>" +
+                "<div style='float:right; width:250px'>" +
+                    "<strong>Filters</strong><br/>"+
+                    "Position:"+
+                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='0' "+((filter_pos === 0)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Top" +
+                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='1' "+((filter_pos === 1)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Left" +
+                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='2' "+((filter_pos === 2)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Bottom" +
+                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='3' "+((filter_pos === 3)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Right" +
+                    "<br/>"+
+                    "<br/>"+
+//                    "<span class='ui-icon ui-icon-plus ui-corner-all addgooglechartfilter' title='Add new filter'></span>" +
+                    "<input type='button' value='Add New Filter' class='context addgooglechartfilter'/>"+
+                    "<div style='clear:both'> </div>" +
+                    "<ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>" +
+                    "</ul>" +
+                "</div>" +
                 "<div style='clear:both'> </div>" +
-                "<ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>" +
-                "</ul>" +
-            "</div>" +
-            "<div style='clear:both'> </div>" +
-            "<input type='button' class='context' value='Edit Chart' onclick='openEditChart(\""+id+"\");'/>" +
-//            "<input type='button' class='context' value='Edit Chart' onclick='openEditor(\""+id+"\");'/>" +
-            "<input type='button' class='context' value='Advanced Options' onclick='openAdvancedOptions(\""+id+"\");'/>" +
-            "<a style='float:right' class='preview_button'>Preview Chart</a>"+
+                "<input type='button' class='context' value='Edit Chart' onclick='openEditChart(\""+id+"\");'/>" +
+                "<input type='button' class='context' value='Advanced Options' onclick='openAdvancedOptions(\""+id+"\");'/>" +
+                "<a style='float:right' class='preview_button'>Preview Chart</a>"+
             "</fieldset>" +
         "</li>");
 
