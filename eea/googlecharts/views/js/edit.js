@@ -854,7 +854,7 @@ function saveCharts(){
             }
             else {
                 DavizEdit.Status.stop(data);
-                alert ("There is no chart selected for thumbnail");
+                alert("There is no chart selected for thumbnail");
             }
         }
     });
