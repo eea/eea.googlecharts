@@ -246,7 +246,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
 
             "<h1 class='googlechart_handle'>"+
             "<div style='float:left;width:60%;height:20px;overflow:hidden;'>"+
-                "<input class='googlechart_name' type='text' value='"+name+"' style='width:200px' onchange='markChartAsModified(\""+id+"\");'/>" +
+                "<input class='googlechart_name' type='text' value='"+name+"' style='width:200px' onchange='markChartAsModified(\""+id+"\");drawChart(\""+id+"\");'/>" +
                 "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>px</span>"+
                 "<input class='googlechart_height' type='text' value='"+height+"' onchange='markChartAsModified(\""+id+"\");'/>" +
                 "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>X</span>"+
@@ -551,9 +551,12 @@ function openEditChart(id){
 
                             var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
 
+                            var name_str = jQuery("#googlechartid_tmp_chart .googlechart_name").attr("value");
+
                             jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value",columns_str);
                             jQuery("#googlechartid_"+id+" .googlechart_configjson").attr("value",settings_str2);
                             jQuery("#googlechartid_"+id+" .googlechart_options").attr("value",options_str);
+                            jQuery("#googlechartid_"+id+" .googlechart_name").attr("value",name_str);
                             markChartAsModified(id);
                             jQuery(this).dialog("close");
                             drawChart(id, checkSVG_withThumb);
