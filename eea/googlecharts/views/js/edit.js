@@ -18,12 +18,30 @@ function checkSVG(id){
     if ((svg) && (svg !== "")){
         jQuery("#googlechart_thumb_id_"+id).show();
         jQuery("#googlechart_thumb_text_"+id).show();
+        return true;
     }
     else{
         jQuery("#googlechart_thumb_id_"+id).hide();
         jQuery("#googlechart_thumb_text_"+id).hide();
+        jQuery("#googlechart_thumb_id_"+id).attr("checked",false);
+        return false;
     }
+}
 
+function checkSVG_withThumb(id){
+    if (checkSVG(id)){
+        var charts = jQuery('#googlecharts_list').sortable('toArray');
+        hasThumb = false;
+        jQuery(charts).each(function(index, value){
+            var chartObj = jQuery("#"+value);
+            if (chartObj.find(".googlechart_thumb_checkbox").attr("checked")){
+                hasThumb = true;
+            }
+        });
+        if (!hasThumb){
+            jQuery("#googlechart_thumb_id_"+id).attr("checked",true);
+        }
+    }
 }
 
 function markChartAsModified(id){
@@ -560,7 +578,7 @@ function openEditChart(id){
                             jQuery("#googlechartid_"+id+" .googlechart_options").attr("value",options_str);
                             markChartAsModified(id);
                             jQuery(this).dialog("close");
-                            drawChart(id, checkSVG);
+                            drawChart(id, checkSVG_withThumb);
                         }
                     },
                     {
@@ -790,7 +808,7 @@ function saveCharts(){
         });
         chart.filters = JSON.stringify(filters);
         charts.push(chart);
-        if ((index === 0) || (chart.isThumb)){
+        if (chart.isThumb){
             thumbId = chart.id;
         }
 
@@ -803,34 +821,40 @@ function saveCharts(){
         type:'post',
         data:query,
         success:function(data){
-            var chartSettings=[];
-            var chartObj = jQuery("#googlechartid_"+thumbId);
-            chartSettings[0] = thumbId;
-            config_str = chartObj.find(".googlechart_configjson").attr("value");
-            if (!config_str){
-                DavizEdit.Status.stop(data);
-            }
-            else{
-                chartSettings[1] = JSON.parse(config_str);
-                var columns_str = chartObj.find(".googlechart_columns").attr("value");
-                var columnsSettings = {};
-                if (!columns_str){
-                    columnsSettings.prepared = [];
-                    columnsSettings.original = [];
+            if (thumbId){
+                var chartSettings=[];
+                var chartObj = jQuery("#googlechartid_"+thumbId);
+                chartSettings[0] = thumbId;
+                config_str = chartObj.find(".googlechart_configjson").attr("value");
+                if (!config_str){
+                    DavizEdit.Status.stop(data);
                 }
                 else{
-                    columnsSettings = JSON.parse(columns_str);
-                }
-                chartSettings[2] = columnsSettings;
-                chartSettings[3] = "";
-                chartSettings[4] = chartObj.find(".googlechart_width").attr("value");
-                chartSettings[5] = chartObj.find(".googlechart_height").attr("value");
-                chartSettings[6] = "";
-                chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
+                    chartSettings[1] = JSON.parse(config_str);
+                    var columns_str = chartObj.find(".googlechart_columns").attr("value");
+                    var columnsSettings = {};
+                    if (!columns_str){
+                        columnsSettings.prepared = [];
+                        columnsSettings.original = [];
+                    }
+                    else{
+                        columnsSettings = JSON.parse(columns_str);
+                    }
+                    chartSettings[2] = columnsSettings;
+                    chartSettings[3] = "";
+                    chartSettings[4] = chartObj.find(".googlechart_width").attr("value");
+                    chartSettings[5] = chartObj.find(".googlechart_height").attr("value");
+                    chartSettings[6] = "";
+                    chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
 
+                    DavizEdit.Status.stop(data);
+                    jQuery(document).trigger('google-charts-changed');
+                    saveThumb(chartSettings);
+                }
+            }
+            else {
                 DavizEdit.Status.stop(data);
-                jQuery(document).trigger('google-charts-changed');
-                saveThumb(chartSettings);
+                alert ("There is no chart selected for thumbnail");
             }
         }
     });
