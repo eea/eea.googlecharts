@@ -13,7 +13,8 @@
     <script type="text/javascript" tal:content="string:ajax_baseurl = '${ajax_baseurl}';available_columns = ${view/get_columns};all_rows = ${view/get_allrows}">
     </script>
 
-    <span class="ui-icon ui-icon-plus ui-corner-all" title="Add new chart" id="addgooglechart">+</span>
+    <input id="addgooglechart" type="button" value="Add Another Visualization" class="context"/>
+
     <form id="googlecharts_form">
         <ul id="googlecharts_list">
         </ul>
