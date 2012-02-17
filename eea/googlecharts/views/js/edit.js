@@ -1,16 +1,19 @@
 var chartEditor = null;
 var chartId = '';
 
-defaultChart = {
+var defaultChart = {
            'chartType':'LineChart',
            "dataTable": [["column1", "column2"], ["A", 1], ["B", 2], ["C", 3], ["D", 2]],
            'options': {'legend':'none'}
     };
 
-available_filter_types = {  0:'Number Range Filter',
+var available_filter_types = {  0:'Number Range Filter',
                             1:'String Filter',
                             2:'Simple Category Filter',
                             3:'Multiple Category Filter'};
+
+var defaultAdvancedOptions = {"fontName":"Verdana",
+                              "fontSize":7};
 
 function checkSVG(id){
     var svg = jQuery("#googlechart_chart_div_"+id).find("iframe").contents().find("#chartArea").html();
@@ -82,6 +85,7 @@ function openAdvancedOptions(id){
                             var tmpOptions = JSON.parse(advancedOptions);
                             chartObj.find(".googlechart_options").attr("value",advancedOptions);
                             markChartAsModified(id);
+                            drawChart(id);
                             jQuery(this).dialog("close");
                         }
                         catch(err){
@@ -190,6 +194,11 @@ function drawChart(elementId, readyEvent){
         wrapperJSON.dataTable = tableForChart;
         wrapperJSON.options.title = chartName;
         var wrapper = new google.visualization.ChartWrapper(wrapperJSON);
+        var chartOptions = JSON.parse(jQuery("#googlechartid_"+elementId+" .googlechart_options").attr('value'));
+        jQuery.each(chartOptions, function(key, value){
+            wrapper.setOption(key, value);
+        });
+
         google.visualization.events.addListener(wrapper, 'ready', function(event){
             readyEvent(elementId);
         });
@@ -218,13 +227,24 @@ function markChartAsThumb(id){
 }
 
 function addChart(id, name, config, columns, filters, width, height, filter_pos, options, isThumb, dashboard){
+    var defaultAdvancedOptionsStr = '{';
+    var isFirst = true;
+    jQuery.each(defaultAdvancedOptions, function(key, value){
+        if (!isFirst){
+            defaultAdvancedOptionsStr += ',';
+        }
+        isFirst = false;
+        defaultAdvancedOptionsStr += '"'+key+'":"'+value+'"';
+//        wrapper.setOption(key, value);
+    });
+    defaultAdvancedOptionsStr += '}';
     config = typeof(config) !== 'undefined' ? config : "";
     columns = typeof(columns) !== 'undefined' ? columns : "";
     filters = typeof(filters) !== 'undefined' ? filters : {};
     width = typeof(width) !== 'undefined' ? width : 800;
     height = typeof(height) !== 'undefined' ? height : 600;
     filter_pos = typeof(filter_pos) !== 'undefined' ? filter_pos : 0;
-    options = typeof(options) !== 'undefined' ? options : "{}";
+    options = typeof(options) !== 'undefined' ? options : defaultAdvancedOptionsStr;
     isThumb = typeof(isThumb) !== 'undefined' ? isThumb : false;
     dashboard = typeof(dashboard) !== 'undefined' ? dashboard: {};
     filter_pos = parseInt(filter_pos, 0);
@@ -669,6 +689,11 @@ function openEditor(elementId) {
 
     chart.options.title = title;
     var wrapper = new google.visualization.ChartWrapper(chart);
+
+    var chartOptions = JSON.parse(jQuery("#googlechartid_"+elementId+" .googlechart_options").attr('value'));
+    jQuery.each(chartOptions, function(key, value){
+        wrapper.setOption(key, value);
+    });
 
     chartEditor = new google.visualization.ChartEditor();
     google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
