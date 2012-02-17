@@ -76,56 +76,6 @@ function markChartAsModified(id){
     chartObj.addClass("googlechart_modified");
 }
 
-function openAdvancedOptions(id){
-    var errorMsgJSON = "" +
-        "<div class='googlechart_dialog_errormsg'>" +
-            "Required input must be a valid JSON" +
-        "</div>";
-
-    var chartObj = jQuery("#googlechartid_"+id);
-    var options = chartObj.find(".googlechart_options").attr("value");
-
-    jQuery(".googlecharts_advancedoptions_dialog").remove();
-
-    var advancedOptionsDialog = ""+
-        "<div class='googlecharts_advancedoptions_dialog'>"+
-            "<div class='googlechart_dialog_options_div field'>" +
-                "<label>Options</label>" +
-                "<div class='formHelp'><a href='http://code.google.com/apis/chart/interactive/docs/gallery.html'>See GoogleChart documentation</a></div>" +
-                "<textarea rows='10' cols='30' class='googlechart_dialog_options'>" +
-                options +
-                "</textarea>" +
-            "</div>" +
-        "<div>";
-    jQuery(advancedOptionsDialog).dialog({title:"Advanced Options",
-            dialogClass: 'googlechart-dialog',
-            modal:true,
-            buttons:[
-                {
-                    text: "Save",
-                    click: function(){
-                        advancedOptions = jQuery(".googlechart_dialog_options").val();
-                        try{
-                            var tmpOptions = JSON.parse(advancedOptions);
-                            chartObj.find(".googlechart_options").attr("value",advancedOptions);
-                            markChartAsModified(id);
-                            drawChart(id);
-                            jQuery(this).dialog("close");
-                        }
-                        catch(err){
-                            jQuery('.googlechart_dialog_options_div').addClass('error');
-                            jQuery('.googlechart_dialog_options').before(errorMsgJSON);
-                        }
-                    }
-                },
-                {
-                    text: "Cancel",
-                    click: function(){
-                        jQuery(this).dialog("close");
-                    }
-                }
-            ]});
-}
 
 function addFilter(id, column, filtertype, columnName){
     var filter = "<li class='googlechart_filteritem' id='googlechart_filter_"+id+"_"+column+"'>" +
@@ -229,6 +179,57 @@ function drawChart(elementId, readyEvent){
 
         wrapper.draw();
     }
+}
+
+function openAdvancedOptions(id){
+    var errorMsgJSON = "" +
+        "<div class='googlechart_dialog_errormsg'>" +
+            "Required input must be a valid JSON" +
+        "</div>";
+
+    var chartObj = jQuery("#googlechartid_"+id);
+    var options = chartObj.find(".googlechart_options").attr("value");
+
+    jQuery(".googlecharts_advancedoptions_dialog").remove();
+
+    var advancedOptionsDialog = ""+
+        "<div class='googlecharts_advancedoptions_dialog'>"+
+            "<div class='googlechart_dialog_options_div field'>" +
+                "<label>Options</label>" +
+                "<div class='formHelp'><a href='http://code.google.com/apis/chart/interactive/docs/gallery.html'>See GoogleChart documentation</a></div>" +
+                "<textarea rows='10' cols='30' class='googlechart_dialog_options'>" +
+                options +
+                "</textarea>" +
+            "</div>" +
+        "<div>";
+    jQuery(advancedOptionsDialog).dialog({title:"Advanced Options",
+            dialogClass: 'googlechart-dialog',
+            modal:true,
+            buttons:[
+                {
+                    text: "Save",
+                    click: function(){
+                        advancedOptions = jQuery(".googlechart_dialog_options").val();
+                        try{
+                            var tmpOptions = JSON.parse(advancedOptions);
+                            chartObj.find(".googlechart_options").attr("value",advancedOptions);
+                            markChartAsModified(id);
+                            drawChart(id);
+                            jQuery(this).dialog("close");
+                        }
+                        catch(err){
+                            jQuery('.googlechart_dialog_options_div').addClass('error');
+                            jQuery('.googlechart_dialog_options').before(errorMsgJSON);
+                        }
+                    }
+                },
+                {
+                    text: "Cancel",
+                    click: function(){
+                        jQuery(this).dialog("close");
+                    }
+                }
+            ]});
 }
 
 function markAllChartsAsModified(){
