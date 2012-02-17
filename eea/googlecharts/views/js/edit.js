@@ -12,8 +12,32 @@ var available_filter_types = {  0:'Number Range Filter',
                             2:'Simple Category Filter',
                             3:'Multiple Category Filter'};
 
-var defaultAdvancedOptions = {"fontName":"Verdana",
-                              "fontSize":7};
+var defaultAdvancedOptions = '{"fontName":"Verdana",'+
+                              '"fontSize":7,'+
+                              '"colors":[' + 
+                                '"#AFBC21",' + // pantone 583
+                                '"#002C56",' + // 85% pantone 296
+                                '"#6b7427",' + //pantone 385
+                                '"#844980",' + //pantone 682
+                                '"#d48625",' + //pantone 152
+                                '"#51697a",' + //pantone 5405
+                                '"#000000",' + //black
+                                '"#8a9c3a",' + //pantone 582
+                                '"#b8006b",' + //pantone 227
+                                '"#e3b73b",' + //pantone 7409
+                                '"#6c8ba2",' + //pantone 549
+                                '"#7c7c7c",' + //pantone cool grey 9
+                                '"#b4cb4c",' + //pantone 584
+                                '"#ac003e",' + //pantone 152
+                                '"#efdc1e",' + //pantone 109
+                                '"#9cc9c8",' + //pantone 570
+                                '"#c0c0c0",' + //pantone cool grey 5
+                                '"#c0cf99",' + //pantone 7492
+                                '"#d67c9d",' + //pantone 7432
+                                '"#fffabe",' + //pantone 601
+                                '"#c7e0e9",' + //pantone 317
+                                '"#eaeaea"' + //pantone cool grey 2
+                                ']}';
 
 function checkSVG(id){
     var svg = jQuery("#googlechart_chart_div_"+id).find("iframe").contents().find("#chartArea").html();
@@ -227,24 +251,13 @@ function markChartAsThumb(id){
 }
 
 function addChart(id, name, config, columns, filters, width, height, filter_pos, options, isThumb, dashboard){
-    var defaultAdvancedOptionsStr = '{';
-    var isFirst = true;
-    jQuery.each(defaultAdvancedOptions, function(key, value){
-        if (!isFirst){
-            defaultAdvancedOptionsStr += ',';
-        }
-        isFirst = false;
-        defaultAdvancedOptionsStr += '"'+key+'":"'+value+'"';
-//        wrapper.setOption(key, value);
-    });
-    defaultAdvancedOptionsStr += '}';
     config = typeof(config) !== 'undefined' ? config : "";
     columns = typeof(columns) !== 'undefined' ? columns : "";
     filters = typeof(filters) !== 'undefined' ? filters : {};
     width = typeof(width) !== 'undefined' ? width : 800;
     height = typeof(height) !== 'undefined' ? height : 600;
     filter_pos = typeof(filter_pos) !== 'undefined' ? filter_pos : 0;
-    options = typeof(options) !== 'undefined' ? options : defaultAdvancedOptionsStr;
+    options = typeof(options) !== 'undefined' ? options : defaultAdvancedOptions;
     isThumb = typeof(isThumb) !== 'undefined' ? isThumb : false;
     dashboard = typeof(dashboard) !== 'undefined' ? dashboard: {};
     filter_pos = parseInt(filter_pos, 0);
