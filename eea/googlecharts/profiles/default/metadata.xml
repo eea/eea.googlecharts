@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <metadata>
-    <description>EEA Google Charts Config profile</description>
-    <version>1.0</version>
+  <description>EEA Google Charts</description>
+  <version>4.0</version>
+  <dependencies>
+    <dependency>profile-eea.daviz:default</dependency>
+  </dependencies>
 </metadata>
