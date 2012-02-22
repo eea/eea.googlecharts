@@ -318,7 +318,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
         helper: 'dashboard-resizable-helper',
         stop: function(event, ui){
           jQuery(self.settings.chart).trigger(DavizEdit.Events.charts.resized, {
-            context: svg, width: ui.size.width, height: ui.size.height});
+            context: self.box, width: ui.size.width, height: ui.size.height});
         }
       }).appendTo(self.context);
     self.handle_chart_header(width, height);
