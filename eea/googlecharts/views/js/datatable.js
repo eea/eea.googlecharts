@@ -87,12 +87,16 @@ function tableToArray(originalDataTable, columns){
 function prepareForChart(originalDataTable, columns){
     var dataForChart = new google.visualization.DataTable();
 
-    jQuery(columns).each(function(column_index, column){
+    jQuery.each(columns, function(column_index, column){
         var colName = originalDataTable.available_columns[column];
         var colType = originalDataTable.properties[column];
-
-        if (colType === "text"){
-            colType = "string";
+        if(colType === undefined){
+            colType = 'string';
+        }else{
+            colType = colType.valueType !== undefined ? colType.valueType: colType;
+            if (colType === "text"){
+                colType = "string";
+            }
         }
         dataForChart.addColumn(colType, colName);
     });

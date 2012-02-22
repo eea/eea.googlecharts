@@ -107,6 +107,7 @@ function drawDashboard(){
     var googlechart_table;
     var chartsBox = googledashboard_filters.chartsBox !== undefined ? googledashboard_filters.chartsBox: {};
     var filtersBox = googledashboard_filters.filtersBox !== undefined ? googledashboard_filters.filtersBox: {};
+    var myFilters = googledashboard_filters.filters !== undefined ? googledashboard_filters.filters: [];
     if ((chartsBox !== undefined) && (chartsBox.order === 0)){
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom googlechart_dashboard_table'>"+
@@ -142,7 +143,7 @@ function drawDashboard(){
     }
 
     var filters = {};
-    jQuery.each(googledashboard_filters.filters, function(){
+    jQuery.each(myFilters, function(){
         filters[this.column] = this.type;
     });
     drawGoogleDashboard('googlechart_dashboard',
