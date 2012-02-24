@@ -127,8 +127,6 @@ function drawDashboard(){
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
     // Set width, height
-    console.log(chartsBox);
-    console.log(filtersBox);
     if(chartsBox.width){
         jQuery('#googlechart_view', jQuery('#googlechart_dashboard')).width(chartsBox.width);
     }
@@ -207,8 +205,8 @@ jQuery(document).ready(function($){
                 isDashboardChart = true;
             }
             if (isDashboardChart){
-                var newKey = typeof(config[8].order) === 'undefined'? 999 : config[8].order;
-                if (dashboardKeys.find(config[8].order)){
+                var newKey = config[8].order === undefined ? 999 : config[8].order;
+                if (dashboardKeys.indexOf(config[8].order!==-1)){
                     newKey = Math.max.apply(Math, dashboardKeys) + 1;
                 }
                 dashboardChartConfig[newKey] = config;

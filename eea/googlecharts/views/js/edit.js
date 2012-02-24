@@ -868,7 +868,6 @@ function saveCharts(){
                     chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
 
                     DavizEdit.Status.stop(data);
-                    jQuery(document).trigger('google-charts-changed');
                     saveThumb(chartSettings);
                 }
             }
@@ -876,6 +875,7 @@ function saveCharts(){
                 DavizEdit.Status.stop(data);
                 alert("There is no chart selected for thumbnail");
             }
+            jQuery(document).trigger('google-charts-changed');
         }
     });
 }

@@ -152,9 +152,9 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
         var normalColumns = [];
         jQuery.each(value[2].prepared, function(key,column){
             if (column.status === 1){
-                column_nrs.push(allColumns.find(column.name)[0]);
-                if (originalColumns.find(column.name)){
-                    normalColumns.push(allColumns.find(column.name)[0]);
+                column_nrs.push(allColumns.indexOf(column.name));
+                if (originalColumns.indexOf(column.name !== -1)){
+                    normalColumns.push(allColumns.indexOf(column.name));
                 }
                 else{
                     isTransformed = true;
@@ -179,7 +179,7 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
         var filterSettings = {};
         filterSettings.options = {};
         filterSettings.options.ui = {};
-        filterSettings.options.filterColumnIndex = allColumns.find(key)[0];
+        filterSettings.options.filterColumnIndex = allColumns.indexOf(key);
         filterSettings.containerId = filter_div_id;
         switch(value){
             case "0":
