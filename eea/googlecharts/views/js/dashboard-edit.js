@@ -166,7 +166,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       tolerance: 'pointer',
       update: function(event, ui){
         jQuery(self.context).trigger(DavizEdit.Events.charts.reordered, {
-          order: self.context.sortable('toArray')
+          order: self.box.sortable('toArray')
         });
       }
     });
