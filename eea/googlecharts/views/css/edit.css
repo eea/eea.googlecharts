@@ -320,3 +320,13 @@ dl.portlet .dashboard-chart,
     cursor: pointer;
     float: right;
 }
+
+.dashboard-header {
+    -webkit-transition: opacity 0.5s;
+    -moz-transition: opacity 0.5s;
+    opacity: 0.2;
+}
+
+.dashboard-chart:hover .dashboard-header {
+    opacity: 1;
+}
