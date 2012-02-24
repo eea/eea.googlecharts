@@ -14,7 +14,7 @@ var available_filter_types = {  0:'Number Range Filter',
 
 var defaultAdvancedOptions = '{"fontName":"Verdana",'+
                               '"fontSize":7,'+
-                              '"colors":[' + 
+                              '"colors":[' +
                                 '"#AFBC21",' + // pantone 583
                                 '"#002C56",' + // 85% pantone 296
                                 '"#6b7427",' + //pantone 385
@@ -1031,10 +1031,12 @@ function init_googlecharts_edit(){
         saveCharts();
     });
 
+    jQuery('<div>').attr('id', 'preview-iframe').appendTo("body");
+
     jQuery("#googlecharts_list").delegate("a.preview_button", "hover", function(){
         var chartObj = jQuery(this).closest('.googlechart');
-        var width = chartObj.find(".googlechart_width").attr("value");
-        var height = chartObj.find(".googlechart_height").attr("value");
+        var width = chartObj.find(".googlechart_width").val();
+        var height = chartObj.find(".googlechart_height").val();
         var name = chartObj.find(".googlechart_name").attr("value");
         var config_json = JSON.parse(chartObj.find(".googlechart_configjson").attr("value"));
         config_json.dataTable = [];
@@ -1045,8 +1047,21 @@ function init_googlecharts_edit(){
         params += "&width="+width;
         params += "&height="+height;
         params += "&name="+encodeURIComponent(name);
-        jQuery(this).attr("href", "chart-full"+params);
-        jQuery(this).fancybox({type:'iframe', width:parseInt(width, 10)+30, height:parseInt(height, 10)+30, autoDimensions:false});
+        var self = jQuery(this);
+        self.attr("href", "chart-full"+params);
+        self.attr('rel', '#preview-iframe');
+        self.overlay({
+            onBeforeLoad: function() {
+                var width = chartObj.find(".googlechart_width").val();
+                var height = chartObj.find(".googlechart_height").val();
+                jQuery('#preview-iframe iframe').remove();
+                jQuery('#preview-iframe').append(
+                    jQuery('<iframe>')
+                        .attr('src', self.attr('href'))
+                        .attr('width', parseInt(width, 10))
+                        .attr('height', parseInt(height, 10)));
+            }
+        });
     });
 
     loadCharts();
