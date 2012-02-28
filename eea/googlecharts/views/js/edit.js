@@ -214,7 +214,7 @@ function openAdvancedOptions(id){
                             var tmpOptions = JSON.parse(advancedOptions);
                             chartObj.find(".googlechart_options").attr("value",advancedOptions);
                             markChartAsModified(id);
-                            drawChart(id);
+                            drawChart(id, function(){});
                             jQuery(this).dialog("close");
                         }
                         catch(err){
@@ -280,7 +280,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
 
             "<h1 class='googlechart_handle'>"+
             "<div style='float:left;width:60%;height:20px;overflow:hidden;'>"+
-                "<input class='googlechart_name' type='text' value='"+name+"' style='width:200px' onchange='markChartAsModified(\""+id+"\");drawChart(\""+id+"\");'/>" +
+                "<input class='googlechart_name' type='text' value='"+name+"' style='width:200px' onchange='markChartAsModified(\""+id+"\");drawChart(\""+id+"\",function(){});'/>" +
                 "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>px</span>"+
                 "<input class='googlechart_height' type='text' value='"+height+"' onchange='markChartAsModified(\""+id+"\");'/>" +
                 "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>X</span>"+
