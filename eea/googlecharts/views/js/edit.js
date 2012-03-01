@@ -13,7 +13,7 @@ var available_filter_types = {  0:'Number Range Filter',
                             3:'Multiple Category Filter'};
 
 var defaultAdvancedOptions = '{"fontName":"Verdana",'+
-                              '"fontSize":7,'+
+                              '"fontSize":12,'+
                               '"colors":[' +
                                 '"#AFBC21",' + // pantone 583
                                 '"#002C56",' + // 85% pantone 296
