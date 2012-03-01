@@ -1,5 +1,10 @@
 /** EEA Google Dashboard
 */
+if(window.DavizEdit === undefined){
+  var DavizEdit = {'version': 'eea.googlecharts'};
+  DavizEdit.Events = {};
+}
+
 DavizEdit.Events.charts = {
     initialized: 'google-charts-initialized',
     changed: 'google-charts-changed',
