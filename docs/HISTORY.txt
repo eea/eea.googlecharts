@@ -1,6 +1,8 @@
 Changelog
 =========
 
-4.0-dev (unreleased)
---------------------
-- Initial release
+4.0 - (2012-03-05)
+------------------
+* Initial release
+  [szabozo0]
+
