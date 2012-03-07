@@ -134,6 +134,11 @@
     file="./imgs/mini2.png"
   />
 
+  <browser:resource
+    name="thumbs16.png"
+    file="./imgs/thumbs16.png"
+  />
+
   <browser:resourceDirectory
     name="eea.googlecharts.images"
     directory="./imgs" />

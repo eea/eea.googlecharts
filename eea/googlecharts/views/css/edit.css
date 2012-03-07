@@ -77,7 +77,8 @@
     display:none;
 }
 
-.googlechart-dialog .ui-dialog-titlebar {
+.googlechart-dialog .ui-dialog-titlebar,
+#googlechart_table_accordion > h3{
     color:black;
     font-size:1.2em;
     margin:0 2px;
@@ -102,7 +103,8 @@
     font-size:0.8em !important;
     border:1px solid #DDDDDD;
 }
-.googlechartTable th{
+.googlechartTable th,
+.pivotedColumn {
     padding:2px;
     border:1px solid #EEEEEE;
     background-color:#CDE2A7;
@@ -349,4 +351,273 @@ dl.portlet .dashboard-chart,
     cursor: pointer;
     height: 30px;
     width: 30px;
+}
+
+.googlechart_types_container {
+    width:270px;
+    height:300px;
+    border:4px solid #dddddd;
+    float:left;
+    overflow:auto;
+}
+
+.googlechart_type_thumbnail {
+    width:110px;
+    height:68px;
+    border:4px solid #dddddd;
+    float:left;
+    margin:4px;
+}
+
+.googlechart_type_thumbnail:hover{
+    border: 4px solid #C1D9FF;
+}
+
+.googlechart_type_thumbnail_selected{
+    width:110px;
+    height:68px;
+    float:left;
+    margin:4px;
+    border: 4px solid #6688EE;
+}
+
+.googlechart_type_thumbnail > div,
+.googlechart_type_thumbnail_selected > div {
+    width:100%;
+    height:100%;
+}
+
+.googlechart_type_LineChart {
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1615px transparent;
+}
+
+.googlechart_type_LineChart_disabled {
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2424px transparent;
+}
+
+.googlechart_type_SmoothLineChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -68px transparent;
+}
+
+.googlechart_type_SmoothLineChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2356px transparent;
+}
+
+.googlechart_type_ComboChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2764px transparent;
+}
+
+.googlechart_type_ComboChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3512px transparent;
+}
+
+.googlechart_type_RadarChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2900px transparent;
+}
+
+.googlechart_type_RadarChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -340px transparent;
+}
+
+.googlechart_type_AreaChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3444px transparent;
+}
+
+.googlechart_type_AreaChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1139px transparent;
+}
+
+.googlechart_type_StackedAreaChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3648px transparent;
+}
+
+.googlechart_type_StackedAreaChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2696px transparent;
+}
+
+.googlechart_type_SteppedAreaChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2152px transparent;
+}
+
+.googlechart_type_SteppedAreaChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -408px transparent;
+}
+
+.googlechart_type_ColumnChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1751px transparent;
+}
+
+.googlechart_type_ColumnChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1207px transparent;
+}
+
+.googlechart_type_StackedColumnChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -272px transparent;
+}
+
+.googlechart_type_StackedColumnChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1343px transparent;
+}
+
+.googlechart_type_BarChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3240px transparent;
+}
+
+.googlechart_type_BarChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1479px transparent;
+}
+
+.googlechart_type_StackedBarChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -748px transparent;
+}
+
+.googlechart_type_StackedBarChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1547px transparent;
+}
+
+.googlechart_type_ScatterChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3716px transparent;
+}
+
+.googlechart_type_ScatterChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3036px transparent;
+}
+
+.googlechart_type_BubbleChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -136px transparent;
+}
+
+.googlechart_type_BubbleChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -935px transparent;
+}
+
+.googlechart_type_PieChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2492px transparent;
+}
+
+.googlechart_type_PieChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2560px transparent;
+}
+
+.googlechart_type_Pie3dChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1003px transparent;
+}
+
+.googlechart_type_Pie3dChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3784px transparent;
+}
+
+.googlechart_type_GeoRegionsChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -544px transparent;
+}
+
+.googlechart_type_GeoRegionsChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -680px transparent;
+}
+
+.googlechart_type_GeoMarkersChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3308px transparent;
+}
+
+.googlechart_type_GeoMarkersChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3104px transparent;
+}
+
+.googlechart_type_SparklineChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2084px transparent;
+}
+
+.googlechart_type_SparklineChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2016px transparent;
+}
+
+.googlechart_type_TimelineChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3376px transparent;
+}
+
+.googlechart_type_TimelineChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2288px transparent;
+}
+
+.googlechart_type_MotionChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1275px transparent;
+}
+
+.googlechart_type_MotionChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1071px transparent;
+}
+
+.googlechart_type_CandlestickChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -476px transparent;
+}
+
+.googlechart_type_CandlestickChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1819px transparent;
+}
+
+.googlechart_type_GaugeChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3172px transparent;
+}
+
+.googlechart_type_GaugeChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2220px transparent;
+}
+
+.googlechart_type_OrganizationalChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -204px transparent;
+}
+
+.googlechart_type_OrganizationalChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1411px transparent;
+}
+
+.googlechart_type_TreeMapChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 0px transparent;
+}
+
+.googlechart_type_TreeMapChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2628px transparent;
+}
+
+.googlechart_type_TableChart{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3580px transparent;
+}
+
+.googlechart_type_TableChart_disabled{
+    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2832px transparent;
+}
+
+#googlechart_table_accordion > h3 {
+    height: 19px;
+}
+
+#googlechart_table_accordion > h3 > a{
+    color:black !important;
+    padding-top: 1px;
+}
+
+.ui-icon-triangle-1-e{
+    background: url("../../++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png") no-repeat scroll -32px -16px transparent !important;*/
+}
+
+.ui-icon-triangle-1-s{
+    background: url("../../++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png") no-repeat scroll -64px -16px transparent !important;
+}
+
+.droppable {
+    height: 20px;
+}
+
+.hoveredDrop {
+    background-color:#CDE2A6;
+}
+
+.pivotedColumn,
+.draggable {
+    height:16px;
+    font-weight:bold;
+}
+
+.draggable {
+    cursor:move;
 }

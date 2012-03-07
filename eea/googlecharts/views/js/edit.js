@@ -39,6 +39,165 @@ var defaultAdvancedOptions = '{"fontName":"Verdana",'+
                                 '"#eaeaea"' + //pantone cool grey 2
                                 ']}';
 
+var allChartTypes = [
+                        {
+                            "type":"LineChart",
+                            "checktype":"LineChart",
+                            "name":"Line Chart",
+                            "columns":[],
+                            "description":"The first column should be text, and contain the category label. Data values should appear as numeric columns. Each numeric column may be followed by one or two text columns. The text in the first column will be displayed as annotations above the data points. The text in the second column will be displayed in a hover-card when hovering over the point."
+                        },
+                        {
+                            "type":"SmoothLineChart",
+                            "checktype":"LineChart",
+                            "name":"Smooth Line Chart",
+                            "columns":[],
+                            "description":"The first column should be text, and contain the category label. Data values should appear as numeric columns. Each numeric column may be followed by one or two text columns. The text in the first column will be displayed as annotations above the data points. The text in the second column will be displayed in a hover-card when hovering over the point."
+                        },
+                        {
+                            "type":"ComboChart",
+                            "checktype":"LineChart",
+                            "name":"Combo Chart",
+                            "columns":[],
+                            "description":"The first column should be a string, and contain the category label. Any number of columns can follow, all must be numeric."
+                        },
+                        {
+                            "type":"RadarChart",
+                            "checktype":"LineChart",
+                            "name":"Radar Chart",
+                            "columns":[],
+                            "description":"The first column should be a string, and contain the category label. Any number of columns can follow, all must be numeric. Each column is displayed as a separate line."
+                        },
+                        {
+                            "type":"AreaChart",
+                            "checktype":"AreaChart",
+                            "name":"Area Chart",
+                            "columns":[],
+                            "description":"The first column should be text, and contain the category label. Data values should appear as numeric columns. Each numeric column may be followed by one or two text columns. The text in the first column will be displayed as annotations above the data points. The text in the second column will be displayed in a hover-card when hovering over the point."
+                        },
+                        {
+                            "type":"StackedAreaChart",
+                            "checktype":"AreaChart",
+                            "name":"Stacked Area Chart",
+                            "columns":[],
+                            "description":"The first column should be text, and contain the category label. Data values should appear as numeric columns. Each numeric column may be followed by one or two text columns. The text in the first column will be displayed as annotations above the data points. The text in the second column will be displayed in a hover-card when hovering over the point."
+                        },
+                        {
+                            "type":"SteppedAreaChart",
+                            "checktype":"AreaChart",
+                            "name":"Stepped Area Chart",
+                            "columns":[],
+                            "description":"The first column should be a string, and contain the category label. Any number of columns can follow, all must be numeric. Each column is displayed as a separate line."
+                        },
+                        {
+                            "type":"ColumnChart",
+                            "name":"Column Chart",
+                            "columns":[],
+                            "description":"The first column in the table should be a string, and represents the label of that group of bars. Any number of columns can follow, all numeric, each representing the bars with the same color and relative position in each group.The value at a given row and column controls the height of the single bar represented by this row and column."
+                        },
+                        {
+                            "type":"StackedColumnChart",
+                            "name":"Stacked Column Chart",
+                            "columns":[],
+                            "description":"The first column in the table should be a string, and represents the label of that group of bars. Any number of columns can follow, all numeric, each representing the bars with the same color and relative position in each group.The value at a given row and column controls the height of the single bar represented by this row and column."
+                        },
+                        {
+                            "type":"BarChart",
+                            "name":"Bar Chart",
+                            "columns":[],
+                            "description":"The first column in the table should be a string, and represents the label of that group of bars. Any number of columns can follow, all numeric, each representing the bars with the same color and relative position in each group.The value at a given row and column controls the height of the single bar represented by this row and column."
+                        },
+                        {
+                            "type":"StackedBarChart",
+                            "name":"Stacked Bar Chart",
+                            "columns":[],
+                            "description":"The first column in the table should be a string, and represents the label of that group of bars. Any number of columns can follow, all numeric, each representing the bars with the same color and relative position in each group.The value at a given row and column controls the height of the single bar represented by this row and column."
+                        },
+                        {
+                            "type":"ScatterChart",
+                            "name":"Scatter Chart",
+                            "columns":[],
+                            "description":"Two or more columns are required, all must be numeric. The values in the first column are used for the X-axis. The values in following columns are used for the Y-axis. Each column is displayed with a separate color."
+                        },
+                        {
+                            "type":"BubbleChart",
+                            "name":"Bubble Chart",
+                            "columns":[],
+                            "description":"The first column in the table should be a string, and represents the label of that bubble. The numbers in the second column are plotted on the x axis. The numbers in the third column are plotted on the y axis. The optional fourth column is either a number or a string, and determines the bubble color. The optional fifth column is numeric, and determines the size of the bubble."
+                        },
+                        {
+                            "type":"PieChart",
+                            "name":"Pie Chart",
+                            "columns":[],
+                            "description":"The first column should be a string, and contain the slice label. The second column should be a number, and contain the slice value."
+                        },
+                        {
+                            "type":"Pie3dChart",
+                            "name":"3D Pie Chart",
+                            "columns":[],
+                            "description":"The first column should be a string, and contain the slice label. The second column should be a number, and contain the slice value."
+                        },
+                        {
+                            "type":"GeoRegionsChart",
+                            "name":"Geo Chart - Regions",
+                            "columns":[],
+                            "description":"The first column should contain location names or addresses. The second column should contain numeric values."
+                        },
+                        {
+                            "type":"GeoMarkersChart",
+                            "name":"Geo Chart - Markers",
+                            "columns":[],
+                            "description":"The first column should contain location names or addresses. The second column should contain numeric values."
+                        },
+                        {
+                            "type":"SparklineChart",
+                            "name":"Spark Line",
+                            "columns":[],
+                            "description":"All columns must be numeric."
+                        },
+                        {
+                            "type":"TimelineChart",
+                            "name":"Time Line",
+                            "columns":[],
+                            "description":"The first column should contain dates. Subsequently, all columns should contain numbers or text. Each numeric column may be followed by one or two text columns."
+                        },
+                        {
+                            "type":"MotionChart",
+                            "name":"Motion Chart",
+                            "columns":[],
+                            "description":"The first column should contain entities (e.g. countries) the second is time (e.g. years) followed by 2-4 numeric or string columns."
+                        },
+                        {
+                            "type":"CandlestickChart",
+                            "name":"Candlestick Chart",
+                            "columns":[],
+                            "description":"The first column should be the names of the stocks or categories. All other columns are numbers. The second column represents the low or minimum value for the stock or category, the third column represents the opening or initial value for the stock or category, the fourth column represents the closing or final value for the stock or category, and the fifth column represents the high or maximum value for the stock or category."
+                        },
+                        {
+                            "type":"GaugeChart",
+                            "name":"Gauge",
+                            "columns":[],
+                            "description":"The first column should be the label text for the gauge. The second column should be the gauge value."
+                        },
+                        {
+                            "type":"OrganizationalChart",
+                            "name":"Organizational Chart",
+                            "columns":[],
+                            "description":"The first column is the name of an individual in the chart. The second column is the name of the individual's parent or manager. The optional third column is tooltip text"
+                        },
+                        {
+                            "type":"TreeMapChart",
+                            "name":"Tree Map",
+                            "columns":[],
+                            "description":"The first column should be the name of an entity in a hierarchy. Each entity is visualized by a box when the chart is rendered.The second column should be the name of the entity's parent entity. (The value in the second column of each row should be found in the first column of some other row.)The optional third and fourth columns should be numerical values associated with the entity. The third column is visualized as the size of the box (must be a positive number), and the fourth column is visualized as the color of the box (may be a negative number)."
+                        },
+                        {
+                            "type":"TableChart",
+                            "name":"Table",
+                            "columns":[],
+                            "description":"At least one column is required"
+                        }
+                    ];
 function checkSVG(id){
     var svg = jQuery("#googlechart_chart_div_"+id).find("iframe").contents().find("#chartArea").html();
 
@@ -105,8 +264,6 @@ function saveThumb(value){
                                     columnsFromSettings.valueColumn,
                                     available_columns);
     var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
-
-
     drawGoogleChart(
         '',
         'googlechart_thumb_zone',
@@ -489,6 +646,225 @@ function generateNewTable(sortOrder, isFirst){
     DavizEdit.Status.stop("Done");
 }
 
+function isAvailableChart(chartType){
+    return true;
+}
+
+function populateChartThumbs(){
+    var availableChartTypes = [];
+    var notAvailableChartTypes = [];
+    jQuery(allChartTypes).each(function(idx, chartType){
+        if (isAvailableChart(chartType.type)){
+            availableChartTypes.push(chartType);
+        }
+        else{
+            notAvailableChartTypes.push(chartType);
+        }
+    });
+
+    jQuery(availableChartTypes).each(function(idx, chartType){
+        var chartTypeThumb;
+        chartTypeThumb =
+            "<div class='googlechart_type_thumbnail'>"+
+                "<div class='googlechart_type_"+chartType.type+"'>"+
+                "</div>"+
+            "</div>";
+        jQuery(chartTypeThumb).appendTo(".googlechart_types_container");
+//        jQuery(".googlechart_type_"+chartType.type).qtip({content:"<strong>" + chartType.name + "</strong><br/>" + chartType.description});
+    });
+
+    jQuery(notAvailableChartTypes).each(function(idx, chartType){
+        var chartTypeThumb;
+        chartTypeThumb =
+            "<div class='googlechart_type_thumbnail'>"+
+                "<div class='googlechart_type_"+chartType.type+"_disabled'>"+
+                "</div>"+
+            "</div>";
+        jQuery(chartTypeThumb).appendTo(".googlechart_types_container");
+//        jQuery(".googlechart_type_"+chartType.type+"_disabled").qtip({content:"<strong>" + chartType.name + "</strong><br/>" + chartType.description});
+    });
+}
+
+var columnsForPivot = {};
+var pivotDragStatus = 0;
+var pivotDraggedColumn = -1;
+var pivotDroppedColumn = -1;
+var pivotTmpDroppedColumn = -1;
+
+function updateStatus(){
+    jQuery.each(columnsForPivot,function(key, value){
+        if (value.nr === parseInt(pivotDroppedColumn, 10)){
+            value.status = 1;
+        }
+        if (value.nr === parseInt(pivotDraggedColumn, 10)){
+            value.status = 2;
+        }
+    });
+}
+
+function showHeader(nr){
+    var current;
+    jQuery(".draggable").each(function(idx,value){
+        if (nr === parseInt(jQuery(value).attr("columnnr"), 10)){
+            current = value;
+        }
+    });
+    jQuery(current).show();
+    jQuery(".columnheader").each(function(idx,value){
+        if (nr === parseInt(jQuery(value).attr("columnnr"), 10)){
+            current = value;
+        }
+    });
+    jQuery(current).show();
+    jQuery(".columnpivot").each(function(idx,value){
+        if (nr === parseInt(jQuery(value).attr("columnnr"), 10)){
+            current = value;
+        }
+    });
+    jQuery(current).show();
+
+}
+
+function showDropZone(nr){
+    var current;
+    jQuery(".droppable").each(function(idx,value){
+        if (nr === parseInt(jQuery(value).attr("columnnr"), 10)){
+            current = value;
+        }
+    });
+    jQuery(current).show();
+}
+
+function hideDropZone(nr){
+    var current;
+    jQuery(".droppable").each(function(idx,value){
+        if (nr === parseInt(jQuery(value).attr("columnnr"), 10)){
+            current = value;
+        }
+    });
+    jQuery(current).hide();
+}
+
+function hideColumn(nr){
+    var current;
+    jQuery(".columnheader").each(function(idx,value){
+        if (nr === parseInt(jQuery(value).attr("columnnr"), 10)){
+            current = value;
+        }
+    });
+    jQuery(current).hide();
+
+    jQuery(".columnpivot").each(function(idx,value){
+        if (nr === parseInt(jQuery(value).attr("columnnr"), 10)){
+            current = value;
+        }
+    });
+    jQuery(current).hide();
+}
+
+function setPivotsForColumn(nr, pivots){
+    var current;
+    jQuery(".droppable").each(function(idx,value){
+        if (nr === parseInt(jQuery(value).attr("columnnr"), 10)){
+            current = value;
+        }
+    });
+    jQuery(pivots).insertBefore(current);
+}
+
+function updateWithStatus(){
+    jQuery("#originalColumns").find("th").each(function(idx, value){
+        jQuery(value).find("select").attr("value",1);
+    });
+
+    var valueColumn = -1;
+    var pivots = [];
+    jQuery("#pivots").remove();
+    var pivotsHtml = "<div id='pivots'>";
+    jQuery.each(columnsForPivot,function(key, value){
+        originalColumn = jQuery("#originalColumns").find("[column_id='"+key+"']").find("select");
+        if (value.status === 1){
+            valueColumn = value.nr;
+            jQuery(originalColumn).attr("value",3);
+        }
+        if (value.status === 2){
+            pivots.push(value.nr);
+            pivotsHtml += "<div class='pivotedColumn'>"+key+"<a style='float:right' href='#' onclick='removePivot("+value.nr+")'><span title='Delete pivot' class='ui-icon ui-icon-trash'>x</span></a></div><div style='clear:both'></div>";
+            jQuery(originalColumn).attr("value",2);
+        }
+    });
+    pivotsHtml += "</div>";
+    if (valueColumn === -1){
+        jQuery(".columnheader").each(function(idx,value){
+            jQuery(value).show();
+        });
+        jQuery(".columnpivot").each(function(idx,value){
+            jQuery(value).show();
+        });
+        jQuery(".draggable").each(function(idx,value){
+            jQuery(value).show();
+        });
+        jQuery(".droppable").each(function(idx,value){
+            jQuery(value).show();
+        });
+    }
+    else {
+        jQuery(".columnheader").each(function(idx,value){
+            columnnr = parseInt(jQuery(value).attr("columnnr"), 10);
+            if (columnnr === valueColumn){
+                setPivotsForColumn(columnnr, pivotsHtml);
+                showHeader(columnnr);
+                showDropZone(columnnr);
+            }
+            else {
+                if (pivots.indexOf(columnnr) !== -1){
+                    hideColumn(columnnr);
+                }
+                else {
+                    showHeader(columnnr);
+                    hideDropZone(columnnr);
+                }
+            }
+        });
+    }
+}
+
+function removePivot(nr){
+    var hasPivot = false;
+    var valueColumn = -1;
+    jQuery.each(columnsForPivot,function(key, value){
+        if (value.nr === nr){
+            value.status = 0;
+        }
+        if (value.status === 2){
+            hasPivot = true;
+        }
+        if (value.status === 1){
+            valueColumn = value;
+        }
+    });
+    if (!hasPivot){
+        valueColumn.status = 0;
+    }
+    updateWithStatus();
+    generateNewTable();
+}
+
+function populateTableForPivot(){
+    jQuery.each(columnsForPivot,function(key, value){
+        var th = 
+                "<th class='columnheader' columnnr='"+value.nr+"'>"+
+                "<div class='draggable' columnnr='"+value.nr+"'>"+value.name+"</div>"+
+                "</th>";
+        jQuery(th).appendTo(jQuery("#pivotConfigHeader"));
+        var td = 
+                "<td class='columnpivot' columnnr='"+value.nr+"'>"+
+                "<div class='droppable' columnnr='"+value.nr+"'>Drop here pivoting column</div>"+
+                "</td>";
+        jQuery(td).appendTo(jQuery("#pivotConfigDropZones"));
+    });
+}
+
 function openEditChart(id){
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
     var tmp_columns = jQuery("#googlechartid_"+id+" .googlechart_columns").attr('value');
@@ -504,37 +880,50 @@ function openEditChart(id){
             "<input class='googlechart_columns' type='hidden' value='"+tmp_columns+"'/>" +
             "<input class='googlechart_options' type='hidden' value='"+tmp_options+"'/>" +
             "<input class='googlechart_name' type='hidden' value='"+tmp_name+"'/>" +
-            '<strong>Chart</strong>'+
+            "<div class='googlechart_types_container'>"+
+
+            "</div>"+
+
+//            "<div id='check_preview' class='chart_div' style='height: 300px; width:300px; overflow:hidden; float:left; border:1px solid red;'></div>" +
+//            "<div id='googlechart_chart_check_available' class='chart_div' style='height: 300px; width:300px; overflow:hidden; float:left; border:4px solid #dddddd;'></div>" +
+
+            "<div id='googlechart_chart_div_tmp_chart' class='chart_div' style='height: 300px; width:700px; overflow:hidden; float:right; border:4px solid #dddddd;'></div>" +
             "<div style='clear:both;'> </div>"+
-            "<div id='googlechart_chart_div_tmp_chart' class='chart_div' style='max-height: 235px; max-width:800px; overflow:auto; float:left;'></div>" +
-            "<input style='float:left' type='button' class='context' value='Change Chart' onclick='openEditor(\"tmp_chart\");'/>" +
+            "<input style='float:right' type='button' class='context' value='Change Chart' onclick='openEditor(\"tmp_chart\");'/>" +
             "<div style='clear:both;'> </div>"+
         '</div>' +
-        '<div>' +
-            '<div style="float:left;width:48%">' +
-                '<strong>Original Table</strong>'+
-                '<div style="height:150px;overflow:auto">' +
+        '<div id="googlechart_table_accordion">' +
+            '<h3><a href="#">Original Table</a></h3>' +
+            '<div>' +
+                '<div style="height:200px;overflow:auto">' +
                     '<table id="originalTable" class="googlechartTable">'+
                         '<tr id="originalColumns">'+
                         '</tr>'+
                     '</table>'+
                 '</div>'+
             '</div>'+
-            '<div style="float:left; padding-left:10px;width:48%;overflow:auto">' +
-                '<strong>New Table</strong>'+
-                '<div style="height:150px;overflow:auto">' +
+            '<h3><a href="#">New Table</a></h3>' +
+            '<div>' +
+                '<div style="height:200px;overflow:auto">' +
+                    '<strong style="float:left;width:100px;">Table pivots:</strong>' +
+                    '<table id="pivotingTable" class="googlechartTable" style="float:left;">'+
+                        '<tr id="pivotConfigHeader"></tr>'+
+                        '<tr id="pivotConfigDropZones"></tr>'+
+                    '</table>'+
+                    '<div style="clear:both"></div>'+
+                    '<strong style="float:left;width:100px;">Table for chart:</strong>' +
                     '<table id="newTable" class="googlechartTable" style="height:300px;">'+
                     '</table>'+
+                    '<div style="clear:both"></div>'+
                 '</div>'+
             '</div>'+
         '</div>'+
     '</div>';
-
     jQuery(editcolumnsdialog).dialog({title:"Edit Columns",
                 dialogClass: 'googlechart-dialog',
                 modal:true,
                 width:1024,
-                height:500,
+                height:700,
                 buttons:[
                     {
                         text: "Save",
@@ -612,7 +1001,7 @@ function openEditChart(id){
     else{
         columnsSettings = JSON.parse(jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value"));
     }
-
+    var columnCount = 0;
     jQuery.each(available_columns, function(column_key,column_name){
         var originalStatus = 0;
         jQuery(columnsSettings.original).each(function(idx, original){
@@ -620,9 +1009,27 @@ function openEditChart(id){
                 originalStatus = original.status;
             }
         });
+        var columnSettings = {};
+        columnSettings.nr = columnCount;
+        if (originalStatus === 0){
+            columnSettings.status = 0;
+        }
+        if (originalStatus === 1){
+            columnSettings.status = 0;
+        }
+        if (originalStatus === 2){
+            columnSettings.status = 2;
+        }
+        if (originalStatus === 3){
+            columnSettings.status = 1;
+        }
+        columnSettings.name = column_name;
+        columnsForPivot[column_key] = columnSettings;
+        columnCount++;
         var column = '<th column_id="' + column_key + '">' +
                     '<span>' + column_name + '</span>' +
-                    '<select onchange="generateNewTable();">' +
+                    '<select onchange="generateNewTable();" style="display:none">' +
+//                    '<select onchange="generateNewTable();">' +
                         '<option value="0" ' + ((originalStatus === 0) ? 'selected="selected"':'')+ '>Hidden</option>' +
                         '<option value="1" ' + ((originalStatus === 1) ? 'selected="selected"':'')+ '>Visible</option>' +
                         '<option value="2" ' + ((originalStatus === 2) ? 'selected="selected"':'')+ '>Pivot</option>' +
@@ -648,6 +1055,39 @@ function openEditChart(id){
     generateNewTable(loadedSortOrder, true);
 
     drawChart("tmp_chart", function(){});
+    jQuery('#googlechart_table_accordion').accordion({active:1});
+
+    populateChartThumbs();
+
+    populateTableForPivot();
+    $(".draggable").draggable({
+            containment:"#headers",
+            revert:false,
+            start: function(event, ui){
+                pivotDraggedColumn = parseInt($(ui.helper).attr("columnnr"),10);
+                hideDropZone(pivotDraggedColumn);
+            },
+            stop:function(event, ui){
+                $(ui.helper).attr("style","position:relative");
+                if (pivotDragStatus === 1){
+                    updateStatus();
+                }
+                updateWithStatus();
+                generateNewTable();
+                pivotDragStatus = 0;
+            }
+    });
+    $(".droppable").droppable({
+      hoverClass: "hoveredDrop",
+      drop: function(event, ui){
+        pivotDragStatus = 1;
+        pivotDroppedColumn = pivotTmpDroppedColumn;
+      },
+      over: function(event, ui){
+        pivotTmpDroppedColumn = jQuery(".hoveredDrop").attr("columnnr");
+      }
+    });
+    updateWithStatus();
     DavizEdit.Status.stop("Done");
 }
 
