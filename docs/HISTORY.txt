@@ -3,7 +3,9 @@ Changelog
 
 4.1-dev - (unreleased)
 ----------------------
-
+* Bug fix: Fixed column detection in table preparation for google chart api
+  [szabozo0 #4992]
+  
 4.0 - (2012-03-05)
 ------------------
 * Initial release

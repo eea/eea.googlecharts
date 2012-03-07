@@ -105,6 +105,16 @@ function prepareForChart(originalDataTable, columns){
         jQuery(columns).each(function(column_index, column){
 
             var colType = originalDataTable.properties[column];
+
+            if(colType === undefined){
+                colType = 'string';
+            }else{
+                colType = colType.valueType !== undefined ? colType.valueType: colType;
+                if (colType === "text"){
+                    colType = "string";
+                }
+            }
+
             var newColumn = row[column];
 
             if (colType === "date"){
