@@ -6,7 +6,7 @@ from zope.schema.interfaces import IVocabularyFactory
 from Products.Five.browser import BrowserView
 
 from eea.app.visualization.interfaces import IVisualizationConfig
-from eea.daviz.views.view import ViewForm
+from eea.app.visualization.views.view import ViewForm
 from eea.converter.interfaces import IConvert
 from eea.googlecharts.config import EEAMessageFactory as _
 

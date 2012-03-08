@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-""" googlecharts interfaces
+""" Googlecharts interfaces
 """
-from eea.daviz.views.interfaces import IExhibitView
+from eea.app.visualization.views.interfaces import IVisualizationView
 
-class IGoogleCharts(IExhibitView):
+class IGoogleCharts(IVisualizationView):
     """ GoogleCharts
     """
