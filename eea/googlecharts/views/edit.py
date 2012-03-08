@@ -7,7 +7,7 @@ from Products.Five import BrowserView
 
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
-from eea.daviz.interfaces import IDavizConfig
+from eea.app.visualization.interfaces import IVisualizationConfig
 
 logger = logging.getLogger('eea.googlecharts')
 
@@ -18,7 +18,7 @@ class Edit(BrowserView):
     def submit_charts(self):
         """ Submit
         """
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         data = {}
         data['chartsconfig'] = json.loads(self.request['charts'])
         mutator.edit_view('googlechart.googlecharts', **data)
@@ -28,7 +28,7 @@ class Edit(BrowserView):
     def get_charts(self):
         """ Charts
         """
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         config = {}
         for view in mutator.views:
             if (view.get('chartsconfig')):
@@ -71,7 +71,7 @@ class DashboardEdit(Edit):
     def json(self, **kwargs):
         """ Return config JSON
         """
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         view = mutator.view(self.__name__.replace('.edit', ''), {})
         return json.dumps(dict(view))
 
@@ -84,7 +84,7 @@ class DashboardEdit(Edit):
             logger.exception(msg)
             return msg
 
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         dashboard = kwargs.pop('dashboard', "{}")
         try:
             dashboard = json.loads(dashboard)
@@ -117,7 +117,7 @@ class DashboardEdit(Edit):
         order = kwargs.get('order', [])
         order = dict((name, index) for index, name in enumerate(order))
 
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         view = mutator.view('googlechart.googlecharts', {})
         config = view.get('chartsconfig', {})
         charts = config.get('charts', [])
@@ -144,7 +144,7 @@ class DashboardEdit(Edit):
     def chartsSize(self, **kwargs):
         """ Change filters box size
         """
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         view = mutator.view(self.__name__.replace('.edit', ''), {})
         width = kwargs.get('width', '100%')
         height = kwargs.get('height', 'auto')
@@ -157,7 +157,7 @@ class DashboardEdit(Edit):
     def filterAdd(self, **kwargs):
         """ Add filter
         """
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         view = mutator.view(self.__name__.replace('.edit', ''), {})
         view.setdefault('filters', [])
         view['filters'].append(kwargs)
@@ -171,7 +171,7 @@ class DashboardEdit(Edit):
         if not name:
             return u'No filter name provided'
 
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         view = mutator.view(self.__name__.replace('.edit', ''), {})
         filters = [item for item in view.get('filters', [])
                    if item.get('column', '') != name]
@@ -182,7 +182,7 @@ class DashboardEdit(Edit):
     def filtersPosition(self, **kwargs):
         """ Change filters position
         """
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         view = mutator.view(self.__name__.replace('.edit', ''), {})
         filters = dict((item.get('column'), item)
                        for item in view.get('filters', []))
@@ -202,7 +202,7 @@ class DashboardEdit(Edit):
     def filtersSize(self, **kwargs):
         """ Change filters box size
         """
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         view = mutator.view(self.__name__.replace('.edit', ''), {})
         width = kwargs.get('width', '100%')
         height = kwargs.get('height', 'auto')
@@ -218,7 +218,7 @@ class DashboardEdit(Edit):
         order = kwargs.get('order', [])
         if not order:
             return u'New order not provided'
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         view = mutator.view(self.__name__.replace('.edit', ''), {})
         for item in order:
             view.setdefault(item, {})

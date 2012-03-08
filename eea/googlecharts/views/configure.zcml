@@ -8,7 +8,7 @@
 
   <browser:page
     name="charts"
-    for="eea.daviz.interfaces.IExhibitJson"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/view.pt"
     class=".view.View"
     permission="zope2.View"
@@ -16,7 +16,7 @@
 
   <browser:page
     name="chart-full"
-    for="eea.daviz.interfaces.IExhibitJson"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/chart-full.pt"
     class=".chart.View"
     permission="zope2.View"
@@ -24,7 +24,7 @@
 
   <browser:page
     name="googlechart.googlecharts"
-    for="eea.daviz.interfaces.IExhibitJson"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/charts.pt"
     class=".chart.View"
     permission="zope2.View"
@@ -32,7 +32,7 @@
 
   <browser:page
     name="googlechart.googledashboard"
-    for="eea.daviz.interfaces.IExhibitJson"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/dashboard.pt"
     class=".chart.DashboardView"
     permission="zope2.View"
@@ -40,7 +40,7 @@
 
   <browser:page
     name="googlechart.googledashboard.edit"
-    for="eea.daviz.interfaces.IExhibitJson"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/dashboard-edit.pt"
     class=".edit.DashboardEdit"
     permission="cmf.ModifyPortalContent"
@@ -48,21 +48,21 @@
 
   <browser:page
     name="googlechart.export"
-    for="eea.daviz.interfaces.IExhibitJson"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".chart.Export"
     permission="zope2.View"
     />
 
   <browser:page
     name="googlechart.setthumb"
-    for="eea.daviz.interfaces.IExhibitJson"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".chart.SetThumb"
     permission="zope2.View"
     />
 
   <browser:page
     name="googlechart.submit_charts"
-    for="eea.daviz.interfaces.IExhibitJson"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
     attribute="submit_charts"
     permission="cmf.ModifyPortalContent"
@@ -70,7 +70,7 @@
 
   <browser:page
     name="googlechart.get_charts"
-    for="eea.daviz.interfaces.IExhibitJson"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
     attribute="get_charts"
     permission="cmf.ModifyPortalContent"
@@ -98,7 +98,7 @@
 
   <browser:page
     name="googlechart.googlecharts.edit"
-    for="eea.daviz.interfaces.IExhibitJson"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/edit.pt"
     class=".edit.Edit"
     permission="cmf.ModifyPortalContent"
@@ -144,8 +144,8 @@
     directory="./imgs" />
 
   <subscriber
-    for="eea.daviz.interfaces.IExhibitJson
-         eea.daviz.interfaces.IDavizFacetDeletedEvent"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled
+         eea.app.visualization.interfaces.IVisualizationFacetDeletedEvent"
     handler=".events.googlechart_facet_deleted"
     />
 

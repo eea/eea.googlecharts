@@ -5,7 +5,7 @@ from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from Products.Five.browser import BrowserView
 
-from eea.daviz.interfaces import IDavizConfig
+from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.daviz.views.view import ViewForm
 from eea.converter.interfaces import IConvert
 from eea.googlecharts.config import EEAMessageFactory as _
@@ -20,7 +20,7 @@ class View(ViewForm):
     def get_charts(self):
         """ Charts
         """
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         config = ''
         for view in mutator.views:
             if (view.get('chartsconfig')):
@@ -62,7 +62,7 @@ class View(ViewForm):
 
     def has_dashboard(self):
         """ Dashboard is configured """
-        views = queryAdapter(self.context, IDavizConfig).views
+        views = queryAdapter(self.context, IVisualizationConfig).views
         hasDashboard = False
         for view in views:
             if view.get('name') == 'googlechart.googledashboard':
@@ -77,7 +77,7 @@ class View(ViewForm):
     def get_dashboard_filters(self):
         """ Dashboard filters
         """
-        mutator = queryAdapter(self.context, IDavizConfig)
+        mutator = queryAdapter(self.context, IVisualizationConfig)
         view = dict(mutator.view('googlechart.googledashboard', {}))
         return json.dumps(view)
 
