@@ -3,9 +3,13 @@ Changelog
 
 4.1-dev - (unreleased)
 ----------------------
+* Feature: Refactoring to be able to use this package as a standalone or as
+  part of eea.daviz bundle
+  [voineali #4996]
+
 * Bug fix: Fixed column detection in table preparation for google chart api
   [szabozo0 #4992]
-  
+
 4.0 - (2012-03-05)
 ------------------
 * Initial release
