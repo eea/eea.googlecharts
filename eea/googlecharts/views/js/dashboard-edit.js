@@ -686,7 +686,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
 
     query.action = 'filter.add';
 
-    var form = self.context.parents('.daviz-view-form');
+    form = self.context.parents('.daviz-view-form');
     var action = form.length ? form.attr('action') : '';
     action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
 
