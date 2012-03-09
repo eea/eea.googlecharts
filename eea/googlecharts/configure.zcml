@@ -1,13 +1,11 @@
 <configure
-  xmlns="http://namespaces.zope.org/browser"
+  xmlns="http://namespaces.zope.org/zope"
   i18n_domain="eea">
 
-  <include package="eea.converter" />
-  <include package="eea.daviz" />
-  <include package="p4a.z2utils" />
-  <include package="collective.js.jqueryui" />
+  <includeDependencies package="." />
 
   <include file="profiles.zcml" />
+
   <include package=".views" />
 
 </configure>

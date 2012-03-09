@@ -3,6 +3,6 @@
   <description>EEA Google Charts</description>
   <version>4.0</version>
   <dependencies>
-    <dependency>profile-eea.daviz:default</dependency>
+    <dependency>profile-eea.app.visualization:default</dependency>
   </dependencies>
 </metadata>
