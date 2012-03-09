@@ -283,7 +283,10 @@ function saveThumb(value){
             thumbObj.find("#type").attr("value","image/png");
             var svg = jQuery("#googlechart_thumb_zone").find("iframe").contents().find("#chartArea").html();
             thumbObj.find("#svg").attr("value",svg);
-            jQuery.post("@@googlechart.setthumb",{"svg":svg},function(data){
+            var form = jQuery('.daviz-view-form:has(#googlecharts_config)');
+            var action = form.length ? form.attr('action') : '';
+            action = action.split('@@')[0] + "@@googlechart.setthumb";
+            jQuery.post(action, {"svg":svg},function(data){
                 if (data !== "Success"){
                     alert("Can't generate thumb from the chart called: "+chart_json.options.title);
                 }
@@ -852,12 +855,12 @@ function removePivot(nr){
 
 function populateTableForPivot(){
     jQuery.each(columnsForPivot,function(key, value){
-        var th = 
+        var th =
                 "<th class='columnheader' columnnr='"+value.nr+"'>"+
                 "<div class='draggable' columnnr='"+value.nr+"'>"+value.name+"</div>"+
                 "</th>";
         jQuery(th).appendTo(jQuery("#pivotConfigHeader"));
-        var td = 
+        var td =
                 "<td class='columnpivot' columnnr='"+value.nr+"'>"+
                 "<div class='droppable' columnnr='"+value.nr+"'>Drop here pivoting column</div>"+
                 "</td>";
@@ -1488,7 +1491,12 @@ function init_googlecharts_edit(){
         params += "&height="+height;
         params += "&name="+encodeURIComponent(name);
         var self = jQuery(this);
-        self.attr("href", "chart-full"+params);
+
+        var form = jQuery('.daviz-view-form:has(#googlecharts_config)');
+        var action = form.length ? form.attr('action') : '';
+        action = action.split('@@')[0] + "chart-full";
+
+        self.attr("href", action + params);
         self.attr('rel', '#preview-iframe');
         self.overlay({
             onBeforeLoad: function() {

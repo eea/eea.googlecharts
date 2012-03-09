@@ -42,7 +42,12 @@ DavizEdit.GoogleDashboard.prototype = {
 
     // Get config JSON
     var query = {action: 'json'};
-    jQuery.getJSON('@@googlechart.googledashboard.edit', query, function(data){
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
+    jQuery.getJSON(action, query, function(data){
       if((data.chartsBox !== undefined) && (data.chartsBox.order === 0)){
         self.handle_charts(data);
         self.handle_filters(data);
@@ -83,8 +88,13 @@ DavizEdit.GoogleDashboard.prototype = {
       order: order
     };
     query = jQuery.param(query, traditional=true);
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
     DavizEdit.Status.start("Saving...");
-    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+    jQuery.post(action, query, function(data){
       DavizEdit.Status.stop(data);
     });
   },
@@ -225,10 +235,14 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       action: 'charts.position',
       order: order
     };
-
     query = jQuery.param(query, traditional=true);
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
     DavizEdit.Status.start("Saving...");
-    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+    jQuery.post(action, query, function(data){
       DavizEdit.Status.stop(data);
     });
   },
@@ -245,8 +259,13 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       width: width,
       height: height
     };
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
     DavizEdit.Status.start("Saving...");
-    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+    jQuery.post(action, query, function(data){
       DavizEdit.Status.stop(data);
     });
   }
@@ -466,7 +485,12 @@ DavizEdit.GoogleDashboardChart.prototype = {
       name: self.settings.name,
       dashboard: JSON.stringify(dashboard)
     };
-    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
+    jQuery.post(action, query, function(data){
       DavizEdit.Status.stop(data);
     });
   }
@@ -661,8 +685,13 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     });
 
     query.action = 'filter.add';
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
     DavizEdit.Status.start("Adding...");
-    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+    jQuery.post(action, query, function(data){
       delete query.action;
       self.draw({filters: [query]});
       DavizEdit.Status.stop(data);
@@ -676,8 +705,13 @@ DavizEdit.GoogleDashboardFilters.prototype = {
       order: order
     };
     query = jQuery.param(query, traditional=true);
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
     DavizEdit.Status.start("Saving...");
-    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+    jQuery.post(action, query, function(data){
       DavizEdit.Status.stop(data);
     });
   },
@@ -694,8 +728,13 @@ DavizEdit.GoogleDashboardFilters.prototype = {
       width: width,
       height: height
     };
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
     DavizEdit.Status.start("Saving...");
-    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+    jQuery.post(action, query, function(data){
       DavizEdit.Status.stop(data);
     });
   }
@@ -772,8 +811,12 @@ DavizEdit.GoogleDashboardFilter.prototype = {
       name: self.settings.column
     };
 
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
     DavizEdit.Status.start("Deleting...");
-    jQuery.post('@@googlechart.googledashboard.edit', query, function(data){
+    jQuery.post(action, query, function(data){
       // Add column type to available columns;
       var label = jQuery.data(self.context, 'all_filter_columns')[self.settings.column];
       jQuery.data(self.context, 'filter_columns')[self.settings.column] = label;

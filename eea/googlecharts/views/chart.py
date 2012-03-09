@@ -4,7 +4,7 @@ import json
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from Products.Five.browser import BrowserView
-
+from Products.CMFCore.interfaces import IFolderish
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.view import ViewForm
 from eea.converter.interfaces import IConvert
@@ -113,6 +113,9 @@ class SetThumb(BrowserView):
     """ Set thumbnail
     """
     def __call__(self, **kwargs):
+        if not IFolderish.providedBy(self.context):
+            return _("Can't set thumbnail on a non-folderish object !")
+
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
 
