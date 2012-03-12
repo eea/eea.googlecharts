@@ -510,6 +510,102 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
     }
 }
 
+var isFirstEdit = true;
+var editedChartStatus = false;
+
+function moveIfFirst(){
+    if (isFirstEdit){
+        jQuery(".google-visualization-charteditor-dialog").appendTo("#googlechart_editor_container");
+        jQuery(".google-visualization-charteditor-dialog").removeClass("modal-dialog");
+        jQuery(".google-visualization-charteditor-dialog").addClass("googlechart-editor");
+    }
+    isFirstEdit = false;
+}
+
+function redrawChart(){
+    jsonString = chartEditor.getChartWrapper().toJSON();
+    var chartObj = jQuery("#googlechartid_"+chartId);
+    chartType = chartEditor.getChartWrapper().getChartType();
+    chartObj.find(".googlechart_configjson").attr('value',jsonString);
+    chartObj.find(".googlechart_name").attr('value',chartEditor.getChartWrapper().getOption('title'));
+    if (chartType === "MotionChart"){
+        chartObj.find(".googlechart_options").attr('value', '{"state":"{\\"showTrails\\":false}"}');
+    }
+    chartEditor.getChartWrapper().draw(jQuery("#googlechart_chart_div_"+chartId)[0]);
+}
+
+function openEditor(elementId) {
+    isFirstEdit = true;
+    jQuery(".google-visualization-charteditor-dialog").remove();
+    chartId = elementId;
+    var chartObj = jQuery("#googlechartid_"+elementId);
+    var title = chartObj.find(".googlechart_name").attr("value");
+
+    var wrapperString = chartObj.find(".googlechart_configjson").attr('value');
+    var chart;
+    var wrapperJSON;
+    if (wrapperString.length > 0){
+        wrapperJSON = JSON.parse(wrapperString);
+        chart = wrapperJSON;
+    }
+    else{
+        chart = defaultChart;
+    }
+
+    var chartColumns_str = jQuery("#googlechartid_"+elementId+" .googlechart_columns").val();
+
+    var chartColumns = {};
+    if (chartColumns_str === ""){
+        chartColumns.original = {};
+        chartColumns.prepared = {};
+    }
+    else{
+        chartColumns = JSON.parse(chartColumns_str);
+    }
+
+
+    var columnsFromSettings = getColumnsFromSettings(chartColumns);
+    var transformedTable = transformTable(all_rows,
+                                    columnsFromSettings.normalColumns,
+                                    columnsFromSettings.pivotColumns,
+                                    columnsFromSettings.valueColumn,
+                                    available_columns);
+    var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
+
+    chart.dataTable = tableForChart;
+
+    chart.options.title = title;
+    var wrapper = new google.visualization.ChartWrapper(chart);
+
+    var chartOptions = JSON.parse(jQuery("#googlechartid_"+elementId+" .googlechart_options").attr('value'));
+/*    jQuery.each(chartOptions, function(key, value){
+        wrapper.setOption(key, value);
+    });*/
+
+    chartEditor = new google.visualization.ChartEditor();
+    google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
+    
+    $(document).bind('DOMSubtreeModified', function(event) {
+        if (jQuery(event.target).hasClass("google-visualization-charteditor-dialog")){
+            $(document).unbind('DOMSubtreeModified');
+            moveIfFirst();
+        }
+    });
+
+    google.visualization.events.addListener(chartEditor, 'ready', function(event){
+        var settings_str = chartEditor.getChartWrapper().toJSON();
+        jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
+        editedChartStatus = true;
+    });
+    google.visualization.events.addListener(chartEditor, 'error', function(event){
+        var settings_str = chartEditor.getChartWrapper().toJSON();
+        jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
+        editedChartStatus = false;
+    });
+
+    chartEditor.openDialog(wrapper, {});
+}
+
 function generateNewTable(sortOrder, isFirst){
     isFirst = typeof(isFirst) !== 'undefined' ? isFirst : false;
     DavizEdit.Status.start("Updating Tables");
@@ -566,7 +662,6 @@ function generateNewTable(sortOrder, isFirst){
                 sortedColumns.push([columnName, columnVisible]);
             });
             generateNewTable(sortedColumns);
-//            openEditor("tmp_chart");
         }
     });
 
@@ -589,7 +684,6 @@ function generateNewTable(sortOrder, isFirst){
             sortedColumns.push([columnName, columnVisible]);
         });
         generateNewTable(sortedColumns);
-//        openEditor("tmp_chart");
     });
 
     jQuery(transformedTable.items).each(function(row_idx, row){
@@ -836,17 +930,7 @@ function populateTableForPivot(){
     });
 }
 
-var isFirstEdit = true;
-var editedChartStatus = false;
 
-function moveIfFirst(){
-    if (isFirstEdit){
-        jQuery(".google-visualization-charteditor-dialog").appendTo("#googlechart_editor_container");
-        jQuery(".google-visualization-charteditor-dialog").removeClass("modal-dialog");
-        jQuery(".google-visualization-charteditor-dialog").addClass("googlechart-editor");
-    }
-    isFirstEdit = false;
-}
 
 function openEditChart(id){
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
@@ -904,7 +988,7 @@ function openEditChart(id){
                         text: "Save",
                         click: function(){
                             if (!editedChartStatus){
-                                alert ("Chart is not properly configured");
+                                alert("Chart is not properly configured");
                                 return;
                             }
 //                            var settings_str = chartEditor.getChartWrapper().toJSON();
@@ -1069,93 +1153,7 @@ function openEditChart(id){
     DavizEdit.Status.stop("Done");
 }
 
-function redrawChart(){
-    jsonString = chartEditor.getChartWrapper().toJSON();
-    var chartObj = jQuery("#googlechartid_"+chartId);
-    chartType = chartEditor.getChartWrapper().getChartType();
-    chartObj.find(".googlechart_configjson").attr('value',jsonString);
-    chartObj.find(".googlechart_name").attr('value',chartEditor.getChartWrapper().getOption('title'));
-    if (chartType === "MotionChart"){
-        chartObj.find(".googlechart_options").attr('value', '{"state":"{\\"showTrails\\":false}"}');
-    }
-    chartEditor.getChartWrapper().draw(jQuery("#googlechart_chart_div_"+chartId)[0]);
-}
 
-function openEditor(elementId) {
-    isFirstEdit = true;
-    jQuery(".google-visualization-charteditor-dialog").remove();
-    chartId = elementId;
-    var chartObj = jQuery("#googlechartid_"+elementId);
-    var title = chartObj.find(".googlechart_name").attr("value");
-
-    var wrapperString = chartObj.find(".googlechart_configjson").attr('value');
-    var chart;
-    var wrapperJSON;
-    if (wrapperString.length > 0){
-        wrapperJSON = JSON.parse(wrapperString);
-        chart = wrapperJSON;
-    }
-    else{
-        chart = defaultChart;
-    }
-
-    var chartColumns_str = jQuery("#googlechartid_"+elementId+" .googlechart_columns").val();
-
-    var chartColumns = {};
-    if (chartColumns_str === ""){
-        chartColumns.original = {};
-        chartColumns.prepared = {};
-    }
-    else{
-        chartColumns = JSON.parse(chartColumns_str);
-    }
-
-
-    var columnsFromSettings = getColumnsFromSettings(chartColumns);
-    var transformedTable = transformTable(all_rows,
-                                    columnsFromSettings.normalColumns,
-                                    columnsFromSettings.pivotColumns,
-                                    columnsFromSettings.valueColumn,
-                                    available_columns);
-    var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
-
-    chart.dataTable = tableForChart;
-
-    chart.options.title = title;
-    var wrapper = new google.visualization.ChartWrapper(chart);
-
-    var chartOptions = JSON.parse(jQuery("#googlechartid_"+elementId+" .googlechart_options").attr('value'));
-/*    jQuery.each(chartOptions, function(key, value){
-        wrapper.setOption(key, value);
-    });*/
-
-    chartEditor = new google.visualization.ChartEditor();
-    google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
-    
-    $(document).bind('DOMSubtreeModified', function(event) {
-        if (jQuery(event.target).hasClass("google-visualization-charteditor-dialog")){
-            $(document).unbind('DOMSubtreeModified');
-            moveIfFirst();
-        };
-    });
-
-    google.visualization.events.addListener(chartEditor, 'ready', function(event){
-        console.log("X");
-//                            var settings_str = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value");
-        var settings_str = chartEditor.getChartWrapper().toJSON();
-        jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
-        editedChartStatus = true;
-    });
-    google.visualization.events.addListener(chartEditor, 'error', function(event){
-        console.log("Y");
-        var settings_str = chartEditor.getChartWrapper().toJSON();
-        jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
-//                            var settings_str = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value");
-        editedChartStatus = false;
-    });
-
-    chartEditor.openDialog(wrapper, {});
-}
 
 function openAddChartFilterDialog(id){
     jQuery(".googlecharts_filter_config").remove();
