@@ -621,3 +621,20 @@ dl.portlet .dashboard-chart,
 .draggable {
     cursor:move;
 }
+
+.googlechart-editor{
+    position:relative !important;
+    left:0 !important;
+    top:0 !important;
+    display:block !important;
+}
+
+.googlechart-editor .modal-dialog-title,
+.googlechart-editor .modal-dialog-buttons,
+#google-visualization-charteditor-input-chart-name {
+    display:none !important;
+}
+
+.google-visualization-charteditor-dialog{
+    display:none;
+}

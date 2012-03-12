@@ -566,6 +566,7 @@ function generateNewTable(sortOrder, isFirst){
                 sortedColumns.push([columnName, columnVisible]);
             });
             generateNewTable(sortedColumns);
+//            openEditor("tmp_chart");
         }
     });
 
@@ -588,6 +589,7 @@ function generateNewTable(sortOrder, isFirst){
             sortedColumns.push([columnName, columnVisible]);
         });
         generateNewTable(sortedColumns);
+//        openEditor("tmp_chart");
     });
 
     jQuery(transformedTable.items).each(function(row_idx, row){
@@ -601,7 +603,7 @@ function generateNewTable(sortOrder, isFirst){
 
     if (!isFirst){
         var tmp_chart = jQuery("#googlechartid_tmp_chart");
-        jQuery(tmp_chart.find(".googlechart_configjson")).attr('value', JSON.stringify({'chartType':'Table','options': {'legend':'none'}}));
+//        jQuery(tmp_chart.find(".googlechart_configjson")).attr('value', JSON.stringify({'chartType':'Table','options': {'legend':'none'}}));
 
         var columnsSettings = {};
         columnsSettings.original = [];
@@ -643,49 +645,15 @@ function generateNewTable(sortOrder, isFirst){
         if(isOK){
             var columns_str = JSON.stringify(columnsSettings);
             jQuery("#googlechartid_tmp_chart .googlechart_columns").val(columns_str);
-            drawChart("tmp_chart", function(){});
+//            drawChart("tmp_chart", function(){});
         }
     }
+    openEditor("tmp_chart");
     DavizEdit.Status.stop("Done");
 }
 
 function isAvailableChart(chartType){
     return true;
-}
-
-function populateChartThumbs(){
-    var availableChartTypes = [];
-    var notAvailableChartTypes = [];
-    jQuery(allChartTypes).each(function(idx, chartType){
-        if (isAvailableChart(chartType.type)){
-            availableChartTypes.push(chartType);
-        }
-        else{
-            notAvailableChartTypes.push(chartType);
-        }
-    });
-
-    jQuery(availableChartTypes).each(function(idx, chartType){
-        var chartTypeThumb;
-        chartTypeThumb =
-            "<div class='googlechart_type_thumbnail'>"+
-                "<div class='googlechart_type_"+chartType.type+"'>"+
-                "</div>"+
-            "</div>";
-        jQuery(chartTypeThumb).appendTo(".googlechart_types_container");
-//        jQuery(".googlechart_type_"+chartType.type).qtip({content:"<strong>" + chartType.name + "</strong><br/>" + chartType.description});
-    });
-
-    jQuery(notAvailableChartTypes).each(function(idx, chartType){
-        var chartTypeThumb;
-        chartTypeThumb =
-            "<div class='googlechart_type_thumbnail'>"+
-                "<div class='googlechart_type_"+chartType.type+"_disabled'>"+
-                "</div>"+
-            "</div>";
-        jQuery(chartTypeThumb).appendTo(".googlechart_types_container");
-//        jQuery(".googlechart_type_"+chartType.type+"_disabled").qtip({content:"<strong>" + chartType.name + "</strong><br/>" + chartType.description});
-    });
 }
 
 var columnsForPivot = {};
@@ -868,12 +836,24 @@ function populateTableForPivot(){
     });
 }
 
+var isFirstEdit = true;
+var editedChartStatus = false;
+
+function moveIfFirst(){
+    if (isFirstEdit){
+        jQuery(".google-visualization-charteditor-dialog").appendTo("#googlechart_editor_container");
+        jQuery(".google-visualization-charteditor-dialog").removeClass("modal-dialog");
+        jQuery(".google-visualization-charteditor-dialog").addClass("googlechart-editor");
+    }
+    isFirstEdit = false;
+}
+
 function openEditChart(id){
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
     var tmp_columns = jQuery("#googlechartid_"+id+" .googlechart_columns").attr('value');
     var tmp_name = jQuery("#googlechartid_"+id+" .googlechart_name").attr('value');
     var tmp_options = jQuery("#googlechartid_"+id+" .googlechart_options").attr('value');
-
+    isFirstEdit = true;
     DavizEdit.Status.start("Updating Tables");
     jQuery(".googlecharts_columns_config").remove();
     var editcolumnsdialog =
@@ -883,16 +863,8 @@ function openEditChart(id){
             "<input class='googlechart_columns' type='hidden' value='"+tmp_columns+"'/>" +
             "<input class='googlechart_options' type='hidden' value='"+tmp_options+"'/>" +
             "<input class='googlechart_name' type='hidden' value='"+tmp_name+"'/>" +
-            "<div class='googlechart_types_container'>"+
 
-            "</div>"+
-
-//            "<div id='check_preview' class='chart_div' style='height: 300px; width:300px; overflow:hidden; float:left; border:1px solid red;'></div>" +
-//            "<div id='googlechart_chart_check_available' class='chart_div' style='height: 300px; width:300px; overflow:hidden; float:left; border:4px solid #dddddd;'></div>" +
-
-            "<div id='googlechart_chart_div_tmp_chart' class='chart_div' style='height: 300px; width:700px; overflow:hidden; float:right; border:4px solid #dddddd;'></div>" +
-            "<div style='clear:both;'> </div>"+
-            "<input style='float:right' type='button' class='context' value='Change Chart' onclick='openEditor(\"tmp_chart\");'/>" +
+            "<div id='googlechart_editor_container' style='height:410px'></div>" +
             "<div style='clear:both;'> </div>"+
         '</div>' +
         '<div id="googlechart_table_accordion">' +
@@ -925,12 +897,18 @@ function openEditChart(id){
     jQuery(editcolumnsdialog).dialog({title:"Edit Columns",
                 dialogClass: 'googlechart-dialog',
                 modal:true,
-                width:1024,
-                height:700,
+                width:920,
+                height:775,
                 buttons:[
                     {
                         text: "Save",
                         click: function(){
+                            if (!editedChartStatus){
+                                alert ("Chart is not properly configured");
+                                return;
+                            }
+//                            var settings_str = chartEditor.getChartWrapper().toJSON();
+                            chartEditor.closeDialog();
                             var columnsSettings = {};
                             columnsSettings.original = [];
                             columnsSettings.prepared = [];
@@ -1032,7 +1010,6 @@ function openEditChart(id){
         var column = '<th column_id="' + column_key + '">' +
                     '<span>' + column_name + '</span>' +
                     '<select onchange="generateNewTable();" style="display:none">' +
-//                    '<select onchange="generateNewTable();">' +
                         '<option value="0" ' + ((originalStatus === 0) ? 'selected="selected"':'')+ '>Hidden</option>' +
                         '<option value="1" ' + ((originalStatus === 1) ? 'selected="selected"':'')+ '>Visible</option>' +
                         '<option value="2" ' + ((originalStatus === 2) ? 'selected="selected"':'')+ '>Pivot</option>' +
@@ -1057,10 +1034,7 @@ function openEditChart(id){
     });
     generateNewTable(loadedSortOrder, true);
 
-    drawChart("tmp_chart", function(){});
     jQuery('#googlechart_table_accordion').accordion({active:1});
-
-    populateChartThumbs();
 
     populateTableForPivot();
     $(".draggable").draggable({
@@ -1091,6 +1065,7 @@ function openEditChart(id){
       }
     });
     updateWithStatus();
+    openEditor("tmp_chart");
     DavizEdit.Status.stop("Done");
 }
 
@@ -1107,6 +1082,8 @@ function redrawChart(){
 }
 
 function openEditor(elementId) {
+    isFirstEdit = true;
+    jQuery(".google-visualization-charteditor-dialog").remove();
     chartId = elementId;
     var chartObj = jQuery("#googlechartid_"+elementId);
     var title = chartObj.find(".googlechart_name").attr("value");
@@ -1148,12 +1125,35 @@ function openEditor(elementId) {
     var wrapper = new google.visualization.ChartWrapper(chart);
 
     var chartOptions = JSON.parse(jQuery("#googlechartid_"+elementId+" .googlechart_options").attr('value'));
-    jQuery.each(chartOptions, function(key, value){
+/*    jQuery.each(chartOptions, function(key, value){
         wrapper.setOption(key, value);
-    });
+    });*/
 
     chartEditor = new google.visualization.ChartEditor();
     google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
+    
+    $(document).bind('DOMSubtreeModified', function(event) {
+        if (jQuery(event.target).hasClass("google-visualization-charteditor-dialog")){
+            $(document).unbind('DOMSubtreeModified');
+            moveIfFirst();
+        };
+    });
+
+    google.visualization.events.addListener(chartEditor, 'ready', function(event){
+        console.log("X");
+//                            var settings_str = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value");
+        var settings_str = chartEditor.getChartWrapper().toJSON();
+        jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
+        editedChartStatus = true;
+    });
+    google.visualization.events.addListener(chartEditor, 'error', function(event){
+        console.log("Y");
+        var settings_str = chartEditor.getChartWrapper().toJSON();
+        jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
+//                            var settings_str = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value");
+        editedChartStatus = false;
+    });
+
     chartEditor.openDialog(wrapper, {});
 }
 
