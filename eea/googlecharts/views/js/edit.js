@@ -39,165 +39,6 @@ var defaultAdvancedOptions = '{"fontName":"Verdana",'+
                                 '"#eaeaea"' + //pantone cool grey 2
                                 ']}';
 
-var allChartTypes = [
-                        {
-                            "type":"LineChart",
-                            "checktype":"LineChart",
-                            "name":"Line Chart",
-                            "columns":[],
-                            "description":"The first column should be text, and contain the category label. Data values should appear as numeric columns. Each numeric column may be followed by one or two text columns. The text in the first column will be displayed as annotations above the data points. The text in the second column will be displayed in a hover-card when hovering over the point."
-                        },
-                        {
-                            "type":"SmoothLineChart",
-                            "checktype":"LineChart",
-                            "name":"Smooth Line Chart",
-                            "columns":[],
-                            "description":"The first column should be text, and contain the category label. Data values should appear as numeric columns. Each numeric column may be followed by one or two text columns. The text in the first column will be displayed as annotations above the data points. The text in the second column will be displayed in a hover-card when hovering over the point."
-                        },
-                        {
-                            "type":"ComboChart",
-                            "checktype":"LineChart",
-                            "name":"Combo Chart",
-                            "columns":[],
-                            "description":"The first column should be a string, and contain the category label. Any number of columns can follow, all must be numeric."
-                        },
-                        {
-                            "type":"RadarChart",
-                            "checktype":"LineChart",
-                            "name":"Radar Chart",
-                            "columns":[],
-                            "description":"The first column should be a string, and contain the category label. Any number of columns can follow, all must be numeric. Each column is displayed as a separate line."
-                        },
-                        {
-                            "type":"AreaChart",
-                            "checktype":"AreaChart",
-                            "name":"Area Chart",
-                            "columns":[],
-                            "description":"The first column should be text, and contain the category label. Data values should appear as numeric columns. Each numeric column may be followed by one or two text columns. The text in the first column will be displayed as annotations above the data points. The text in the second column will be displayed in a hover-card when hovering over the point."
-                        },
-                        {
-                            "type":"StackedAreaChart",
-                            "checktype":"AreaChart",
-                            "name":"Stacked Area Chart",
-                            "columns":[],
-                            "description":"The first column should be text, and contain the category label. Data values should appear as numeric columns. Each numeric column may be followed by one or two text columns. The text in the first column will be displayed as annotations above the data points. The text in the second column will be displayed in a hover-card when hovering over the point."
-                        },
-                        {
-                            "type":"SteppedAreaChart",
-                            "checktype":"AreaChart",
-                            "name":"Stepped Area Chart",
-                            "columns":[],
-                            "description":"The first column should be a string, and contain the category label. Any number of columns can follow, all must be numeric. Each column is displayed as a separate line."
-                        },
-                        {
-                            "type":"ColumnChart",
-                            "name":"Column Chart",
-                            "columns":[],
-                            "description":"The first column in the table should be a string, and represents the label of that group of bars. Any number of columns can follow, all numeric, each representing the bars with the same color and relative position in each group.The value at a given row and column controls the height of the single bar represented by this row and column."
-                        },
-                        {
-                            "type":"StackedColumnChart",
-                            "name":"Stacked Column Chart",
-                            "columns":[],
-                            "description":"The first column in the table should be a string, and represents the label of that group of bars. Any number of columns can follow, all numeric, each representing the bars with the same color and relative position in each group.The value at a given row and column controls the height of the single bar represented by this row and column."
-                        },
-                        {
-                            "type":"BarChart",
-                            "name":"Bar Chart",
-                            "columns":[],
-                            "description":"The first column in the table should be a string, and represents the label of that group of bars. Any number of columns can follow, all numeric, each representing the bars with the same color and relative position in each group.The value at a given row and column controls the height of the single bar represented by this row and column."
-                        },
-                        {
-                            "type":"StackedBarChart",
-                            "name":"Stacked Bar Chart",
-                            "columns":[],
-                            "description":"The first column in the table should be a string, and represents the label of that group of bars. Any number of columns can follow, all numeric, each representing the bars with the same color and relative position in each group.The value at a given row and column controls the height of the single bar represented by this row and column."
-                        },
-                        {
-                            "type":"ScatterChart",
-                            "name":"Scatter Chart",
-                            "columns":[],
-                            "description":"Two or more columns are required, all must be numeric. The values in the first column are used for the X-axis. The values in following columns are used for the Y-axis. Each column is displayed with a separate color."
-                        },
-                        {
-                            "type":"BubbleChart",
-                            "name":"Bubble Chart",
-                            "columns":[],
-                            "description":"The first column in the table should be a string, and represents the label of that bubble. The numbers in the second column are plotted on the x axis. The numbers in the third column are plotted on the y axis. The optional fourth column is either a number or a string, and determines the bubble color. The optional fifth column is numeric, and determines the size of the bubble."
-                        },
-                        {
-                            "type":"PieChart",
-                            "name":"Pie Chart",
-                            "columns":[],
-                            "description":"The first column should be a string, and contain the slice label. The second column should be a number, and contain the slice value."
-                        },
-                        {
-                            "type":"Pie3dChart",
-                            "name":"3D Pie Chart",
-                            "columns":[],
-                            "description":"The first column should be a string, and contain the slice label. The second column should be a number, and contain the slice value."
-                        },
-                        {
-                            "type":"GeoRegionsChart",
-                            "name":"Geo Chart - Regions",
-                            "columns":[],
-                            "description":"The first column should contain location names or addresses. The second column should contain numeric values."
-                        },
-                        {
-                            "type":"GeoMarkersChart",
-                            "name":"Geo Chart - Markers",
-                            "columns":[],
-                            "description":"The first column should contain location names or addresses. The second column should contain numeric values."
-                        },
-                        {
-                            "type":"SparklineChart",
-                            "name":"Spark Line",
-                            "columns":[],
-                            "description":"All columns must be numeric."
-                        },
-                        {
-                            "type":"TimelineChart",
-                            "name":"Time Line",
-                            "columns":[],
-                            "description":"The first column should contain dates. Subsequently, all columns should contain numbers or text. Each numeric column may be followed by one or two text columns."
-                        },
-                        {
-                            "type":"MotionChart",
-                            "name":"Motion Chart",
-                            "columns":[],
-                            "description":"The first column should contain entities (e.g. countries) the second is time (e.g. years) followed by 2-4 numeric or string columns."
-                        },
-                        {
-                            "type":"CandlestickChart",
-                            "name":"Candlestick Chart",
-                            "columns":[],
-                            "description":"The first column should be the names of the stocks or categories. All other columns are numbers. The second column represents the low or minimum value for the stock or category, the third column represents the opening or initial value for the stock or category, the fourth column represents the closing or final value for the stock or category, and the fifth column represents the high or maximum value for the stock or category."
-                        },
-                        {
-                            "type":"GaugeChart",
-                            "name":"Gauge",
-                            "columns":[],
-                            "description":"The first column should be the label text for the gauge. The second column should be the gauge value."
-                        },
-                        {
-                            "type":"OrganizationalChart",
-                            "name":"Organizational Chart",
-                            "columns":[],
-                            "description":"The first column is the name of an individual in the chart. The second column is the name of the individual's parent or manager. The optional third column is tooltip text"
-                        },
-                        {
-                            "type":"TreeMapChart",
-                            "name":"Tree Map",
-                            "columns":[],
-                            "description":"The first column should be the name of an entity in a hierarchy. Each entity is visualized by a box when the chart is rendered.The second column should be the name of the entity's parent entity. (The value in the second column of each row should be found in the first column of some other row.)The optional third and fourth columns should be numerical values associated with the entity. The third column is visualized as the size of the box (must be a positive number), and the fourth column is visualized as the color of the box (may be a negative number)."
-                        },
-                        {
-                            "type":"TableChart",
-                            "name":"Table",
-                            "columns":[],
-                            "description":"At least one column is required"
-                        }
-                    ];
 function checkSVG(id){
     var svg = jQuery("#googlechart_chart_div_"+id).find("iframe").contents().find("#chartArea").html();
 
@@ -234,7 +75,6 @@ function markChartAsModified(id){
     var chartObj = jQuery("#googlechartid_"+id);
     chartObj.addClass("googlechart_modified");
 }
-
 
 function addFilter(id, column, filtertype, columnName){
     var filter = "<li class='googlechart_filteritem' id='googlechart_filter_"+id+"_"+column+"'>" +
@@ -464,7 +304,6 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                     "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='3' "+((filter_pos === 3)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Right" +
                     "<br/>"+
                     "<br/>"+
-//                    "<span class='ui-icon ui-icon-plus ui-corner-all addgooglechartfilter' title='Add new filter'></span>" +
                     "<input type='button' value='Add New Filter' class='context addgooglechartfilter'/>"+
                     "<div style='clear:both'> </div>" +
                     "<ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>" +
@@ -577,14 +416,14 @@ function openEditor(elementId) {
     chart.options.title = title;
     var wrapper = new google.visualization.ChartWrapper(chart);
 
-    var chartOptions = JSON.parse(jQuery("#googlechartid_"+elementId+" .googlechart_options").attr('value'));
-/*    jQuery.each(chartOptions, function(key, value){
+/*    var chartOptions = JSON.parse(jQuery("#googlechartid_"+elementId+" .googlechart_options").attr('value'));
+    jQuery.each(chartOptions, function(key, value){
         wrapper.setOption(key, value);
     });*/
 
     chartEditor = new google.visualization.ChartEditor();
     google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
-    
+
     $(document).bind('DOMSubtreeModified', function(event) {
         if (jQuery(event.target).hasClass("google-visualization-charteditor-dialog")){
             $(document).unbind('DOMSubtreeModified');
@@ -697,7 +536,6 @@ function generateNewTable(sortOrder, isFirst){
 
     if (!isFirst){
         var tmp_chart = jQuery("#googlechartid_tmp_chart");
-//        jQuery(tmp_chart.find(".googlechart_configjson")).attr('value', JSON.stringify({'chartType':'Table','options': {'legend':'none'}}));
 
         var columnsSettings = {};
         columnsSettings.original = [];
@@ -739,7 +577,6 @@ function generateNewTable(sortOrder, isFirst){
         if(isOK){
             var columns_str = JSON.stringify(columnsSettings);
             jQuery("#googlechartid_tmp_chart .googlechart_columns").val(columns_str);
-//            drawChart("tmp_chart", function(){});
         }
     }
     openEditor("tmp_chart");
@@ -787,7 +624,6 @@ function showHeader(nr){
         }
     });
     jQuery(current).show();
-
 }
 
 function showDropZone(nr){
@@ -930,8 +766,6 @@ function populateTableForPivot(){
     });
 }
 
-
-
 function openEditChart(id){
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
     var tmp_columns = jQuery("#googlechartid_"+id+" .googlechart_columns").attr('value');
@@ -991,7 +825,6 @@ function openEditChart(id){
                                 alert("Chart is not properly configured");
                                 return;
                             }
-//                            var settings_str = chartEditor.getChartWrapper().toJSON();
                             chartEditor.closeDialog();
                             var columnsSettings = {};
                             columnsSettings.original = [];
@@ -1153,8 +986,6 @@ function openEditChart(id){
     DavizEdit.Status.stop("Done");
 }
 
-
-
 function openAddChartFilterDialog(id){
     jQuery(".googlecharts_filter_config").remove();
 
@@ -1210,7 +1041,6 @@ function openAddChartFilterDialog(id){
                         }
                     }
                 ]});
-
 
     var orderedFilters = jQuery("#googlechart_filters_"+id).sortable('toArray');
     var used_columns = [];
@@ -1344,7 +1174,6 @@ function loadCharts(){
         DavizEdit.Status.stop("Done");
         jQuery(document).trigger('google-charts-initialized');
     });
-
 }
 
 function addNewChart(){
@@ -1509,7 +1338,6 @@ function init_googlecharts_edit(){
             }
         });
     });
-
     loadCharts();
 }
 
