@@ -528,7 +528,7 @@ function generateNewTable(sortOrder, isFirst){
     jQuery(transformedTable.items).each(function(row_idx, row){
         var tableRow = "<tr>";
         jQuery(sortOrder).each(function(column_idx,column_key){
-            tableRow += "<td>" + row[column_key[0]] + "</td>";
+            tableRow += "<td class=" + ((column_key[1]==='hidden')?'column-hidden':'column-visible') + ">" + row[column_key[0]] + "</td>";
         });
         tableRow += "</tr>";
         jQuery(tableRow).appendTo("#newTable");

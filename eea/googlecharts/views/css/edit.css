@@ -638,3 +638,7 @@ dl.portlet .dashboard-chart,
 .google-visualization-charteditor-dialog{
     display:none;
 }
+
+.column-hidden {
+    background-color:#BBBBBB;
+}
