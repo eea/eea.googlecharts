@@ -24,17 +24,19 @@ function transformTable(originalTable, normalColumns, pivotingColumns, valueColu
         });
 
         if (valueColumn !== ''){
-            var pivotColumnName = availableColumns[valueColumn];
+            var pivotColumnName = valueColumn;
+            var pivotColumnLabel = availableColumns[valueColumn];
             var pivotValue = row[valueColumn];
             var defaultPivotColumnValue = typeof(pivotValue) === 'string' ? '' : 0;
             jQuery(pivotingColumns).each(function(pivot_index, pivot_column){
+                pivotColumnLabel += " " + row[pivot_column];
                 pivotColumnName += " " + row[pivot_column];
             });
 
             var pivotColumn = pivotColumnName.replace(/[^A-Za-z0-9]/g, '_');
             additionalColumns[pivotColumn] = defaultPivotColumnValue;
 
-            pivotTable.available_columns[pivotColumn] = pivotColumnName;
+            pivotTable.available_columns[pivotColumn] = pivotColumnLabel;
             pivotTable.properties[pivotColumn] = originalTable.properties[valueColumn];
 
             jQuery(pivotTable.items).each(function(pivot_row_index, pivot_row){
