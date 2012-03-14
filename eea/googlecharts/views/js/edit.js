@@ -766,6 +766,75 @@ function populateTableForPivot(){
     });
 }
 
+var editorDialog;
+
+function chartEditorSave(id){
+    if (!editedChartStatus){
+        alert("Chart is not properly configured");
+        return;
+    }
+    chartEditor.closeDialog();
+    var columnsSettings = {};
+    columnsSettings.original = [];
+    columnsSettings.prepared = [];
+    var hasNormal = false;
+    var hasPivot = false;
+    var hasValue = false;
+    jQuery("#originalColumns").find("th").each(function(){
+        var original = {};
+        original.name = jQuery(this).attr("column_id");
+        original.status = parseInt(jQuery(this).find("select").attr("value"),10);
+        if (original.status === 1){
+            hasNormal = true;
+        }
+        if (original.status === 2){
+            hasPivot = true;
+        }
+        if (original.status === 3){
+            hasValue = true;
+        }
+        columnsSettings.original.push(original);
+    });
+    jQuery("#newColumns").find("th").each(function(){
+        var preparedColumn = {};
+        preparedColumn.name = jQuery(this).attr("column_id");
+        preparedColumn.status = (jQuery(this).attr("column_visible") === 'visible'?1:0);
+        preparedColumn.fullname = jQuery(this).find("span").html();
+        columnsSettings.prepared.push(preparedColumn);
+    });
+
+    if (!hasNormal){
+        alert("At least 1 visible column must be selected!");
+        return;
+    }
+    if (hasPivot != hasValue){
+        alert("If you want pivot table, you must select at least 1 pivot volumn and 1 value column");
+        return;
+    }
+    var columns_str = JSON.stringify(columnsSettings);
+
+    var settings_str = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value");
+    var settings_json = JSON.parse(settings_str);
+    settings_json.dataTable = [];
+    var settings_str2 = JSON.stringify(settings_json);
+
+    var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
+
+    var name_str = jQuery("#googlechartid_tmp_chart .googlechart_name").attr("value");
+
+    jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value",columns_str);
+    jQuery("#googlechartid_"+id+" .googlechart_configjson").attr("value",settings_str2);
+    jQuery("#googlechartid_"+id+" .googlechart_options").attr("value",options_str);
+    jQuery("#googlechartid_"+id+" .googlechart_name").attr("value",name_str);
+    markChartAsModified(id);
+    editorDialog.dialog("close");
+    drawChart(id, checkSVG_withThumb);
+}
+
+function chartEditorCancel(){
+    editorDialog.dialog("close");
+}
+
 function openEditChart(id){
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
     var tmp_columns = jQuery("#googlechartid_"+id+" .googlechart_columns").attr('value');
@@ -776,15 +845,20 @@ function openEditChart(id){
     jQuery(".googlecharts_columns_config").remove();
     var editcolumnsdialog =
     '<div class="googlecharts_columns_config">' +
-        '<div id="googlechartid_tmp_chart">' +
+        '<div id="googlechartid_tmp_chart" style="float:left">' +
             "<input class='googlechart_configjson' type='hidden' value='"+tmp_config+"'/>" +
             "<input class='googlechart_columns' type='hidden' value='"+tmp_columns+"'/>" +
             "<input class='googlechart_options' type='hidden' value='"+tmp_options+"'/>" +
             "<input class='googlechart_name' type='hidden' value='"+tmp_name+"'/>" +
 
-            "<div id='googlechart_editor_container' style='height:410px'></div>" +
-            "<div style='clear:both;'> </div>"+
+            "<div id='googlechart_editor_container' style='height:395px'></div>" +
+//            "<div style='clear:both;'> </div>" +
         '</div>' +
+        "<div style='padding-top:20px; padding-left:5px;float:left'>"+
+        "<input type='button' class='context' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
+        "<input style='margin-left:5px;' type='button' class='context' value='Cancel' onclick='chartEditorCancel();'/>" +
+        "</div>"+
+        "<div style='clear:both;'> </div>" +
         '<div id="googlechart_table_accordion">' +
             '<h3><a href="#">Original Table</a></h3>' +
             '<div>' +
@@ -795,7 +869,7 @@ function openEditChart(id){
                     '</table>'+
                 '</div>'+
             '</div>'+
-            '<h3><a href="#">New Table</a></h3>' +
+            '<h3><a href="#">Table Editor</a></h3>' +
             '<div>' +
                 '<div style="height:200px;overflow:auto">' +
                     '<strong style="float:left;width:100px;">Table pivots:</strong>' +
@@ -812,84 +886,15 @@ function openEditChart(id){
             '</div>'+
         '</div>'+
     '</div>';
-    jQuery(editcolumnsdialog).dialog({title:"Edit Columns",
+    jQuery(editcolumnsdialog).dialog({title:"Chart Editor",
                 dialogClass: 'googlechart-dialog',
                 modal:true,
-                width:920,
-                height:775,
-                buttons:[
-                    {
-                        text: "Save",
-                        click: function(){
-                            if (!editedChartStatus){
-                                alert("Chart is not properly configured");
-                                return;
-                            }
-                            chartEditor.closeDialog();
-                            var columnsSettings = {};
-                            columnsSettings.original = [];
-                            columnsSettings.prepared = [];
-                            var hasNormal = false;
-                            var hasPivot = false;
-                            var hasValue = false;
-                            jQuery("#originalColumns").find("th").each(function(){
-                                var original = {};
-                                original.name = jQuery(this).attr("column_id");
-                                original.status = parseInt(jQuery(this).find("select").attr("value"),10);
-                                if (original.status === 1){
-                                    hasNormal = true;
-                                }
-                                if (original.status === 2){
-                                    hasPivot = true;
-                                }
-                                if (original.status === 3){
-                                    hasValue = true;
-                                }
-                                columnsSettings.original.push(original);
-                            });
-                            jQuery("#newColumns").find("th").each(function(){
-                                var preparedColumn = {};
-                                preparedColumn.name = jQuery(this).attr("column_id");
-                                preparedColumn.status = (jQuery(this).attr("column_visible") === 'visible'?1:0);
-                                preparedColumn.fullname = jQuery(this).find("span").html();
-                                columnsSettings.prepared.push(preparedColumn);
-                            });
-
-                            if (!hasNormal){
-                                alert("At least 1 visible column must be selected!");
-                                return;
-                            }
-                            if (hasPivot != hasValue){
-                                alert("If you want pivot table, you must select at least 1 pivot volumn and 1 value column");
-                                return;
-                            }
-                            var columns_str = JSON.stringify(columnsSettings);
-
-                            var settings_str = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value");
-                            var settings_json = JSON.parse(settings_str);
-                            settings_json.dataTable = [];
-                            var settings_str2 = JSON.stringify(settings_json);
-
-                            var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
-
-                            var name_str = jQuery("#googlechartid_tmp_chart .googlechart_name").attr("value");
-
-                            jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value",columns_str);
-                            jQuery("#googlechartid_"+id+" .googlechart_configjson").attr("value",settings_str2);
-                            jQuery("#googlechartid_"+id+" .googlechart_options").attr("value",options_str);
-                            jQuery("#googlechartid_"+id+" .googlechart_name").attr("value",name_str);
-                            markChartAsModified(id);
-                            jQuery(this).dialog("close");
-                            drawChart(id, checkSVG_withThumb);
-                        }
-                    },
-                    {
-                        text: "Cancel",
-                        click: function(){
-                            jQuery(this).dialog("close");
-                        }
-                    }
-                ]});
+                width:1021,
+                height:'auto',
+                resizable:true,
+                create:function(){
+                    editorDialog = jQuery(this);
+                }});
 
     var columns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value");
     var columnsSettings = {};

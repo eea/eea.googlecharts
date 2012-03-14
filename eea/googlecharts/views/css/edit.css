@@ -642,3 +642,11 @@ dl.portlet .dashboard-chart,
 .column-hidden {
     background-color:#BBBBBB;
 }
+
+.googlecharts_columns_config {
+    padding-top:0px !important;
+}
+
+#googlechartid_tmp_chart {
+    float:left;
+}
