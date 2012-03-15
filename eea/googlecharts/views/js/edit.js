@@ -37,7 +37,9 @@ var defaultAdvancedOptions = '{"fontName":"Verdana",'+
                                 '"#fffabe",' + //pantone 601
                                 '"#c7e0e9",' + //pantone 317
                                 '"#eaeaea"' + //pantone cool grey 2
-                                ']}';
+                                '],'+
+                              '"state":"{\\"showTrails\\":false}"'+
+                              '}';
 
 function checkSVG(id){
     var svg = jQuery("#googlechart_chart_div_"+id).find("iframe").contents().find("#chartArea").html();
