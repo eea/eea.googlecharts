@@ -23,6 +23,14 @@
     />
 
   <browser:page
+    name="embed-chart"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    template="zpt/embed-chart.pt"
+    class=".chart.View"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="googlechart.googlecharts"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/charts.pt"

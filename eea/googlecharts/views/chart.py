@@ -60,6 +60,20 @@ class View(ViewForm):
         chart['filterposition'] = self.request.get("filterposition", 0)
         return chart
 
+    def get_chart(self):
+        """ Get chart
+        """
+        chart_id = self.request['chart'];
+        charts = self.get_charts();
+        chart_settings = {}
+        for chart in charts:
+            if chart['id'] == chart_id:
+                chart_settings = chart;
+        if chart_settings:
+            chart_settings['data'] = self.get_rows()
+            chart_settings['available_columns'] = self.get_columns
+        return chart_settings
+
     def has_dashboard(self):
         """ Dashboard is configured """
         views = queryAdapter(self.context, IVisualizationConfig).views
