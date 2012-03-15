@@ -63,12 +63,12 @@ class View(ViewForm):
     def get_chart(self):
         """ Get chart
         """
-        chart_id = self.request['chart'];
-        charts = self.get_charts();
+        chart_id = self.request['chart']
+        charts = self.get_charts()
         chart_settings = {}
         for chart in charts:
             if chart['id'] == chart_id:
-                chart_settings = chart;
+                chart_settings = chart
         if chart_settings:
             chart_settings['data'] = self.get_rows()
             chart_settings['available_columns'] = self.get_columns
