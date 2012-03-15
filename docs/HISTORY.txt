@@ -3,6 +3,9 @@ Changelog
 
 4.1-dev - (unreleased)
 ----------------------
+* Bug fix: added default config to disable trail and chart buttons on motion 
+  chart as it is buggy and crashes on all browsers.
+  [demarant #5013]
 * Feature: Refactoring to be able to use this package as a standalone or as
   part of eea.daviz bundle
   [voineali #4996]

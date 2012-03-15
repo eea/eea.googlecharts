@@ -38,7 +38,8 @@ var defaultAdvancedOptions = '{"fontName":"Verdana",'+
                                 '"#c7e0e9",' + //pantone 317
                                 '"#eaeaea"' + //pantone cool grey 2
                                 '],'+
-                              '"state":"{\\"showTrails\\":false}"'+
+                              '"state":"{\\"showTrails\\":false}"' +
+                              ',"showChartButtons":false' +
                               '}';
 
 function checkSVG(id){
