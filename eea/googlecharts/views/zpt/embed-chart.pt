@@ -3,6 +3,7 @@
 <style type="text/css">
     #googlechart_full > div > div {overflow:hidden ! important;}
 </style>
+<link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
@@ -24,13 +25,13 @@
         chart_json.options.title = name;
 
         drawGoogleChart(
-            '',
-            'googlechart_full',
-            '',
-            'full',
+            'googlechart_dashboard',
+            'googlechart_view',
+            'googlechart_filters',
+            'embed',
             chart_json,
             tableForChart,
-            '',
+            chart_filters,
             width,
             height,
             '',
@@ -55,10 +56,12 @@
                                                 chart_filters = ${chart/filters};">
     </script>
 
-    <div id="googlechart_dashboard">
-        <div id="googlechart_filters">
-        </div>
-        <div id="googlechart_full">
+    <div id="googlechart_dashboard" class="embedded-dashboard">
+        <div id="googlechart_table" class="googlechart_table googlechart_table_top">
+            <div id="googlechart_filters" class="embedded-filters">
+            </div>
+            <div id="googlechart_view">
+            </div>
         </div>
     </div>
 </body>
