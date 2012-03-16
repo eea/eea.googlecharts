@@ -34,6 +34,7 @@ function drawChart(value){
         jQuery("#type").attr("value","image/png");
 
         jQuery("#googlechart_export_button").hide();
+        jQuery("#googlechart_embed_button").show();
         jQuery("#googlechart_filters").remove();
         jQuery("#googlechart_view").remove();
         jQuery("#googlechart_table").remove();
@@ -71,6 +72,7 @@ function drawChart(value){
                 "</div>";
         }
         jQuery(googlechart_table).appendTo('#googlechart_dashboard');
+        jQuery('#googlechart_dashboard').attr("chart_id", chart_id);
 
         var columnsFromSettings = getColumnsFromSettings(chart_columns);
         var transformedTable = transformTable(merged_rows,
@@ -101,6 +103,7 @@ function drawChart(value){
 
 function drawDashboard(){
     jQuery("#googlechart_export_button").hide();
+    jQuery("#googlechart_embed_button").hide();
     jQuery("#googlechart_filters").remove();
     jQuery("#googlechart_view").remove();
     jQuery("#googlechart_table").remove();
@@ -152,6 +155,31 @@ function drawDashboard(){
                         allColumns,
                         filters);
 
+}
+
+function showEmbed(){
+    var chartObj = jQuery("#googlechart_dashboard");
+    var iframeWidth = chartObj.width();
+    var iframeHeight = chartObj.height();
+    var iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id');
+    var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
+    var embedHtml = '<div>' +
+                        '<b>Embed code for this chart:</b>' +
+                        '<br/><br/>' +
+                        '<input style="width:100%" type="text" value="' + iframeCode + '"/>' +
+                    '</div>';
+    jQuery(embedHtml).dialog({
+        title: "Embed code",
+        modal:true,
+        buttons:[
+                {
+                    text: "OK",
+                    click: function(){
+                        jQuery(this).dialog("close");
+                        }
+                }]
+        }
+    );
 }
 
 jQuery(document).ready(function($){
