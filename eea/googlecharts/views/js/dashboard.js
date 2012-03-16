@@ -44,7 +44,7 @@ Daviz.GoogleDashboard.prototype = {
     var self = this;
     // XXX Do nothing yet
   }
-}
+};
 
 // Make EEAGoogleDashboard a jQuery plugin
 jQuery.fn.EEAGoogleDashboardView = function(options){

@@ -182,7 +182,7 @@ function showEmbed(){
     );
 }
 
-function googleChartTabClick(context){
+var googleChartTabClick = function(context){
     if (jQuery(context).attr("chart_id") !== current_chart_id){
         current_chart_id = jQuery(context).attr("chart_id");
         jQuery(".googlechart_tabs a").removeClass("current");
@@ -207,7 +207,7 @@ function googleChartTabClick(context){
     return false;
 };
 
-function googleChartOnTabClick(settings){
+var googleChartOnTabClick = function(settings){
     var tab = jQuery(settings.tab);
     var css = tab.attr('class');
     if(css.indexOf('googlechart_class') === -1){
@@ -223,7 +223,7 @@ function googleChartOnTabClick(settings){
     tab.attr('chart_id', chart_id);
     jQuery('.googlecharts_container').show();
     googleChartTabClick(tab);
-}
+};
 
 jQuery(document).ready(function($){
     if (typeof(googlechart_config_array) == 'undefined'){
