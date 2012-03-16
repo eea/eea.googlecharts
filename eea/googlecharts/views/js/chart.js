@@ -156,9 +156,9 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
                 if (originalColumns.indexOf(column.name !== -1)){
                     normalColumns.push(allColumns.indexOf(column.name));
                 }
-                else{
-                    isTransformed = true;
-                }
+            }
+            else{
+                isTransformed = true;
             }
         });
 
