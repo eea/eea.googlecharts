@@ -234,8 +234,13 @@ jQuery(document).ready(function($){
             }
             if (isDashboardChart){
                 var newKey = config[8].order === undefined ? 999 : config[8].order;
-                if (dashboardKeys.indexOf(config[8].order!==-1)){
-                    newKey = Math.max.apply(Math, dashboardKeys) + 1;
+                if (dashboardKeys.length === 0){
+                    newKey = 0;
+                }
+                else{
+                    if (dashboardKeys.indexOf(config[8].order!==-1)){
+                        newKey = Math.max.apply(Math, dashboardKeys) + 1;
+                    }
                 }
                 dashboardChartConfig[newKey] = config;
                 dashboardKeys.push(newKey);
