@@ -1,4 +1,4 @@
-<div id="gcharts-dashboard-view">
-  <div id="gcharts-dashboard-filters"></div>
-  <div id="gcharts-dashboard-charts"></div>
+<div class="daviz-tab-view eea-googlecharts-dashboard" tal:attributes="
+  id view/tabname;
+  data-link context/absolute_url">
 </div>

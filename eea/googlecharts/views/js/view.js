@@ -182,6 +182,49 @@ function showEmbed(){
     );
 }
 
+function googleChartTabClick(context){
+    if (jQuery(context).attr("chart_id") !== current_chart_id){
+        current_chart_id = jQuery(context).attr("chart_id");
+        jQuery(".googlechart_tabs a").removeClass("current");
+        jQuery(context).addClass("current");
+
+        var index_to_use = -1;
+        jQuery(googlechart_config_array).each(function(index, value){
+            if (value[0] == current_chart_id){
+                index_to_use = index;
+            }
+        });
+        if (index_to_use != -1){
+            jQuery("#googlechart_filters").html('');
+            jQuery("#googlechart_view").html('');
+
+            drawChart(googlechart_config_array[index_to_use]);
+        }
+        else {
+            drawDashboard();
+        }
+    }
+    return false;
+};
+
+function googleChartOnTabClick(settings){
+    var tab = jQuery(settings.tab);
+    var css = tab.attr('class');
+    if(css.indexOf('googlechart_class') === -1){
+        jQuery('.googlecharts_container').hide();
+        return;
+    }
+
+    var chart_id = tab.attr('href').replace('#tab-', '');
+    if(chart_id.indexOf('dashboard')!==-1){
+        chart_id = 'dashboard';
+    }
+
+    tab.attr('chart_id', chart_id);
+    jQuery('.googlecharts_container').show();
+    googleChartTabClick(tab);
+}
+
 jQuery(document).ready(function($){
     if (typeof(googlechart_config_array) == 'undefined'){
         return;
@@ -192,30 +235,9 @@ jQuery(document).ready(function($){
         tabsObj.find("a[chart_id='"+value[0]+"']").addClass("googlechart_class_"+value[1].chartType);
     });
 
-    jQuery(".googlechart_tabs").delegate("a", "click", function(){
-        if (jQuery(this).attr("chart_id") !== current_chart_id){
-            current_chart_id = jQuery(this).attr("chart_id");
-            jQuery(".googlechart_tabs a").removeClass("current");
-            jQuery(this).addClass("current");
-
-            var index_to_use = -1;
-            jQuery(googlechart_config_array).each(function(index, value){
-                if (value[0] == current_chart_id){
-                    index_to_use = index;
-                }
-            });
-            if (index_to_use != -1){
-                jQuery("#googlechart_filters").html('');
-                jQuery("#googlechart_view").html('');
-
-                drawChart(googlechart_config_array[index_to_use]);
-            }
-            else {
-                drawDashboard();
-            }
-        }
-        return false;
-    });
+    //jQuery(".googlechart_tabs").delegate("a", "click", function(){
+        //return googleChartTabClick(this);
+    //});
 
     if (!has_dashboard){
         var value = googlechart_config_array[0];
@@ -260,4 +282,20 @@ jQuery(document).ready(function($){
         tableForDashboard = prepareForChart(mergedTable, allColumns);
         drawDashboard();
     }
+
+    // Integrate google charts with daviz tabs
+    jQuery('.googlecharts_container').hide();
+    jQuery('.googlechart_tabs').hide();
+    jQuery(document).bind('eea-daviz-tab-click', function(evt, settings){
+        googleChartOnTabClick(settings);
+    });
+
+    // First tab is a google charts tab
+    var api = jQuery("ul.chart-tabs").data('tabs');
+    googleChartOnTabClick({
+        api: api,
+        tab: api.getTabs()[0],
+        index: 0
+    });
+
 });

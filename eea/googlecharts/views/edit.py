@@ -31,8 +31,9 @@ class Edit(BrowserView):
         mutator = queryAdapter(self.context, IVisualizationConfig)
         config = {}
         for view in mutator.views:
-            if (view.get('chartsconfig')):
+            if view.get('chartsconfig'):
                 config = view.get('chartsconfig')
+                break
         return json.dumps(config)
 
     def get_columns(self):

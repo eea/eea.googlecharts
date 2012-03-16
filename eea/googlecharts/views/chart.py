@@ -95,6 +95,24 @@ class View(ViewForm):
         view = dict(mutator.view('googlechart.googledashboard', {}))
         return json.dumps(view)
 
+    @property
+    def tabs(self):
+        """ Tabs in view mode
+        """
+        tabs = []
+        for chart in self.get_charts():
+            name = chart.get('id', '')
+            title = chart.get('name', '')
+            config = json.loads(chart.get('config', '{}'))
+            chartType = config.get('chartType', '')
+            tabs.append({
+                'name': name,
+                'title': title,
+                'css': 'googlechart_class_%s' % chartType,
+                'tabname': 'tab-%s' % name.replace('.', '-')
+            })
+        return tabs
+
 class Export(BrowserView):
     """ Export chart to png
     """
@@ -159,3 +177,30 @@ class DashboardView(ViewForm):
     """
     label = 'Charts Dashboard'
     section = "Charts"
+
+    @property
+    def tabs(self):
+        """ View tabs
+        """
+        return [
+            {
+            'name': self.__name__,
+            'title': 'Dashboard',
+            'css': 'googlechart_class_Dashboard',
+            'tabname': 'tab-%s' % self.__name__.replace('.', '-')
+            },
+        ]
+
+    def charts(self):
+        """ Charts config
+        """
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        charts = dict(mutator.view('googlechart.googlecharts', {}))
+        return json.dumps(charts)
+
+    def dashboard(self):
+        """ Dashboard config
+        """
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        view = dict(mutator.view('googlechart.googledashboard', {}))
+        return json.dumps(view)

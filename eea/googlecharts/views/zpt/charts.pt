@@ -1,3 +1,8 @@
+<tal:tabs repeat="tab view/tabs">
+  <div class="daviz-tab-view eea-googlecharts-charts"
+    tal:attributes="id string:tab-${tab/name}"></div>
+</tal:tabs>
+
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 <script type="text/javascript">
@@ -8,7 +13,7 @@
 
 <script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}';">
 </script>
-
+<div class="googlecharts_container">
 <tal:block tal:define="charts view/get_charts; has_dashboard view/has_dashboard">
     <ul class="googlechart_tabs">
         <tal:block tal:condition="has_dashboard">
@@ -66,3 +71,4 @@
     </form>
 
 </tal:block>
+</div>
