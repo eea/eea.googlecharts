@@ -103,7 +103,7 @@ function drawChart(value){
 
 function drawDashboard(){
     jQuery("#googlechart_export_button").hide();
-    jQuery("#googlechart_embed_button").hide();
+    jQuery("#googlechart_embed_button").show();
     jQuery("#googlechart_filters").remove();
     jQuery("#googlechart_view").remove();
     jQuery("#googlechart_table").remove();
@@ -128,6 +128,8 @@ function drawDashboard(){
     }
 
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
+
+    jQuery('#googlechart_dashboard').removeAttr("chart_id");
 
     // Set width, height
     if(chartsBox.width){
@@ -161,7 +163,13 @@ function showEmbed(){
     var chartObj = jQuery("#googlechart_dashboard");
     var iframeWidth = chartObj.width();
     var iframeHeight = chartObj.height();
-    var iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id');
+    var iframeSrc;
+    if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
+        iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id');
+    }
+    else{
+        iframeSrc = baseurl+"/embed-dashboard";
+    }
     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
     var embedHtml = '<div>' +
                         '<b>Embed code for this chart:</b>' +

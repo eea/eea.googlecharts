@@ -1,0 +1,51 @@
+<html>
+<head>
+<style type="text/css">
+    #googlechart_full > div > div {overflow:hidden ! important;}
+</style>
+<link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.embed_dashboard.js"></script>
+
+<script type="text/javascript">
+    googlechart_config_array = [];
+    var has_dashboard = false;
+</script>
+
+<script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}';">
+</script>
+<tal:block tal:define="charts view/get_charts; has_dashboard view/has_dashboard">
+    <tal:block tal:condition="has_dashboard">
+        <script type="text/javascript" tal:content="string: var googledashboard_filters=${view/get_dashboard_filters}">
+        </script>
+        <script type="text/javascript">
+            has_dashboard = true;
+        </script>
+    </tal:block>
+
+    <tal:block tal:repeat="chart charts">
+        <script type="text/javascript"
+            tal:define="dashboard python:view.get_dashboard_js(chart);"
+            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard]);"></script>
+    </tal:block>
+</tal:block>
+
+
+</head>
+<body style="margin: 0; overflow: hidden">
+
+    <div id="googlechart_dashboard" class="embedded-dashboard">
+        <div id="googlechart_table">
+            <div id="googlechart_filters" class="embedded-filters">
+            </div>
+            <div id="googlechart_view">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

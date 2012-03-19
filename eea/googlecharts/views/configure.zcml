@@ -31,6 +31,14 @@
     />
 
   <browser:page
+    name="embed-dashboard"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    template="zpt/embed-dashboard.pt"
+    class=".chart.View"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="googlechart.googlecharts"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/charts.pt"
@@ -135,6 +143,11 @@
   <browser:resource
     name="eea.googlecharts.embed_chart.js"
     file="./js/embed_chart.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.embed_dashboard.js"
+    file="./js/embed_dashboard.js"
   />
 
   <browser:resource
