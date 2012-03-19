@@ -229,12 +229,7 @@ jQuery(document).ready(function($){
         return;
     }
 
-    if (!has_dashboard){
-        var value = googlechart_config_array[0];
-        current_chart_id = value[0];
-        drawChart(value);
-    }
-    else {
+    if (has_dashboard) {
         var configs = [];
         sortedDashboardChartConfig = [];
         var dashboardChartConfig = {};
@@ -270,7 +265,6 @@ jQuery(document).ready(function($){
             allColumns.push(key);
         });
         tableForDashboard = prepareForChart(mergedTable, allColumns);
-        drawDashboard();
     }
 
     // Integrate google charts with daviz tabs
