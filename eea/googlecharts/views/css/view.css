@@ -182,6 +182,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
     height: 0;
     clear: both;
     visibility: hidden;
+    overflow:hidden;
 }
 
 /* Table

@@ -55,7 +55,7 @@ class View(ViewForm):
         chart['height'] = self.request['height']
         chart['columns'] = self.request['columns']
         chart['data'] = self.get_rows()
-        chart['available_columns'] = self.get_columns
+        chart['available_columns'] = self.get_columns()
         chart['filters'] = self.request.get("filters", {})
         chart['filterposition'] = self.request.get("filterposition", 0)
         return chart
@@ -71,7 +71,7 @@ class View(ViewForm):
                 chart_settings = chart
         if chart_settings:
             chart_settings['data'] = self.get_rows()
-            chart_settings['available_columns'] = self.get_columns
+            chart_settings['available_columns'] = self.get_columns()
         return chart_settings
 
     def has_dashboard(self):
