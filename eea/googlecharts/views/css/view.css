@@ -136,7 +136,6 @@ ul.googlechart_tabs li:first-of-type a:hover {
 
 #googlechart_filters {
     white-space:nowrap;
-    margin-top: 3em;
 }
 
 #googlechart_filters > div {
@@ -174,6 +173,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
     text-align: center;
     min-width: 800px;
     background: #FFFFFF;
+    border-top: 1px solid #eee;
 }
 
 #googlechart_view:after{
@@ -194,8 +194,9 @@ ul.googlechart_tabs li:first-of-type a:hover {
 }
 
 .googlechart_table_right #googlechart_filters > div {
-    min-width: 198px;
+    min-width: 180px;
     overflow: hidden;
+    margin: 0 0px 15px 15px;
 }
 
 .googlechart_table_right #googlechart_view {
@@ -215,8 +216,9 @@ ul.googlechart_tabs li:first-of-type a:hover {
 }
 
 .googlechart_table_left #googlechart_filters > div {
-    min-width: 198px;
+    min-width: 180px;
     overflow: hidden;
+    margin: 0 15px 15px 0;
 }
 
 /* Bottom */
