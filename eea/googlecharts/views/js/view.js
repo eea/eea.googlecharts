@@ -185,7 +185,6 @@ function showEmbed(){
 var googleChartTabClick = function(context){
     if (jQuery(context).attr("chart_id") !== current_chart_id){
         current_chart_id = jQuery(context).attr("chart_id");
-        jQuery(".googlechart_tabs a").removeClass("current");
         jQuery(context).addClass("current");
 
         var index_to_use = -1;
@@ -229,15 +228,6 @@ jQuery(document).ready(function($){
     if (typeof(googlechart_config_array) == 'undefined'){
         return;
     }
-
-    jQuery(googlechart_config_array).each(function(index, value){
-        var tabsObj = jQuery(".googlechart_tabs");
-        tabsObj.find("a[chart_id='"+value[0]+"']").addClass("googlechart_class_"+value[1].chartType);
-    });
-
-    //jQuery(".googlechart_tabs").delegate("a", "click", function(){
-        //return googleChartTabClick(this);
-    //});
 
     if (!has_dashboard){
         var value = googlechart_config_array[0];
@@ -285,7 +275,6 @@ jQuery(document).ready(function($){
 
     // Integrate google charts with daviz tabs
     jQuery('.googlecharts_container').hide();
-    jQuery('.googlechart_tabs').hide();
     jQuery(document).bind('eea-daviz-tab-click', function(evt, settings){
         googleChartOnTabClick(settings);
     });
