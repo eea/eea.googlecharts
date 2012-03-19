@@ -48,39 +48,6 @@ jQuery(document).ready(function($){
     jQuery("#googlechart_table").remove();
     var filters = '<div id="googlechart_filters"></div>';
     var view = '<div id="googlechart_view" class="googlechart"></div>';
-    var googlechart_table;
-    chart_filterposition = 0;
-    if (chart_filterposition === 0){
-        googlechart_table = ""+
-            "<div id='googlechart_table' class='googlechart_table googlechart_table_top'>"+
-                "<div id='googlechart_filters'></div>"+
-                "<div id='googlechart_view' class='googlechart'></div>"+
-            "</div>";
-    }
-    if (chart_filterposition === 1){
-        googlechart_table = ""+
-            "<div id='googlechart_table' class='googlechart_table googlechart_table_left'>"+
-                "<div id='googlechart_filters'></div>"+
-                "<div id='googlechart_view' class='googlechart'></div>"+
-            "</div>";
-    }
-    if (chart_filterposition === 2){
-        googlechart_table = ""+
-            "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom'>"+
-                "<div id='googlechart_view' class='googlechart'></div>"+
-                "<div id='googlechart_filters'></div>"+
-                "<div style='clear: both'></div>" +
-            "</div>";
-    }
-    if (chart_filterposition === 3){
-        googlechart_table = ""+
-            "<div id='googlechart_table' class='googlechart_table googlechart_table_right'>"+
-                "<div id='googlechart_view' class='googlechart'></div>"+
-                "<div id='googlechart_filters'></div>"+
-                "<div style='clear: both'></div>" +
-            "</div>";
-    }
-    jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
     var googlechart_table;
     var chartsBox = googledashboard_filters.chartsBox !== undefined ? googledashboard_filters.chartsBox: {};
@@ -120,9 +87,9 @@ jQuery(document).ready(function($){
         jQuery('#googlechart_filters', jQuery('#googlechart_dashboard')).height(filtersBox.height);
     }
 
-    var filters = {};
+    var dashboard_filters = {};
     jQuery.each(myFilters, function(){
-        filters[this.column] = this.type;
+        dashboard_filters[this.column] = this.type;
     });
     drawGoogleDashboard('googlechart_dashboard',
                         'googlechart_view',
@@ -130,7 +97,7 @@ jQuery(document).ready(function($){
                         sortedDashboardChartConfig,
                         tableForDashboard,
                         allColumns,
-                        filters);
+                        dashboard_filters);
 
 /*    var columnsFromSettings = getColumnsFromSettings(chart_columns);
     var transformedTable = transformTable(merged_rows,
