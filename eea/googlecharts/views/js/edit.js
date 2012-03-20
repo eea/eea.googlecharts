@@ -14,30 +14,6 @@ var available_filter_types = {  0:'Number Range Filter',
 
 var defaultAdvancedOptions = '{"fontName":"Verdana",'+
                               '"fontSize":12,'+
-                              '"colors":[' +
-                                '"#AFBC21",' + // pantone 583
-                                '"#002C56",' + // 85% pantone 296
-                                '"#6b7427",' + //pantone 385
-                                '"#844980",' + //pantone 682
-                                '"#d48625",' + //pantone 152
-                                '"#51697a",' + //pantone 5405
-                                '"#000000",' + //black
-                                '"#8a9c3a",' + //pantone 582
-                                '"#b8006b",' + //pantone 227
-                                '"#e3b73b",' + //pantone 7409
-                                '"#6c8ba2",' + //pantone 549
-                                '"#7c7c7c",' + //pantone cool grey 9
-                                '"#b4cb4c",' + //pantone 584
-                                '"#ac003e",' + //pantone 152
-                                '"#efdc1e",' + //pantone 109
-                                '"#9cc9c8",' + //pantone 570
-                                '"#c0c0c0",' + //pantone cool grey 5
-                                '"#c0cf99",' + //pantone 7492
-                                '"#d67c9d",' + //pantone 7432
-                                '"#fffabe",' + //pantone 601
-                                '"#c7e0e9",' + //pantone 317
-                                '"#eaeaea"' + //pantone cool grey 2
-                                '],'+
                               '"state":"{\\"showTrails\\":false}"' +
                               ',"showChartButtons":false' +
                               '}';
@@ -816,12 +792,21 @@ function chartEditorSave(id){
     var settings_str2 = JSON.stringify(settings_json);
 
     var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
+    var options_json = JSON.parse(options_str);
+
+    var selectedPalette = chartPalettes[settings_json.paletteName];
+    var newColors = [];
+    jQuery(selectedPalette).each(function(idx, color){
+        newColors.push(color);
+    });
+    options_json.colors = newColors;
+    options_str2 = JSON.stringify(options_json);
 
     var name_str = jQuery("#googlechartid_tmp_chart .googlechart_name").attr("value");
 
     jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value",columns_str);
     jQuery("#googlechartid_"+id+" .googlechart_configjson").attr("value",settings_str2);
-    jQuery("#googlechartid_"+id+" .googlechart_options").attr("value",options_str);
+    jQuery("#googlechartid_"+id+" .googlechart_options").attr("value",options_str2);
     jQuery("#googlechartid_"+id+" .googlechart_name").attr("value",name_str);
     markChartAsModified(id);
     editorDialog.dialog("close");
@@ -838,8 +823,8 @@ function updatePalette() {
     jQuery(".googlechart_preview_color").remove();
     var selectedPalette = chartPalettes[selectedPaletteName];
     jQuery(selectedPalette).each(function(idx, color){
-        var color = "<div class='googlechart_preview_color' style='background-color:"+color+"'> </div>";
-        jQuery(color).appendTo("#googlechart_preview_palette");
+        var tmp_color = "<div class='googlechart_preview_color' style='background-color:"+color+"'> </div>";
+        jQuery(tmp_color).appendTo("#googlechart_preview_palette");
     });
     var clear = "<div style='clear:both;'> </div>";
     jQuery(clear).appendTo("#googlechart_preview_palette");
