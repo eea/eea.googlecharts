@@ -651,3 +651,20 @@ dl.portlet .dashboard-chart,
 #googlechartid_tmp_chart {
     float:left;
 }
+
+#googlechart_palette_select {
+    margin:2px;
+}
+
+#googlechart_preview_palette {
+    margin-top:3px;
+    padding:6px;
+    border:2px solid #DDDDDD;
+}
+.googlechart_preview_color {
+    width:25px;
+    height:25px;
+    float:left;
+    margin:2px;
+    border:2px solid #DDDDDD;
+}

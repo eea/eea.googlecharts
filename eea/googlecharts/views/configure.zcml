@@ -151,6 +151,11 @@
   />
 
   <browser:resource
+    name="eea.googlecharts.palettes.js"
+    file="./js/palettes.js"
+  />
+
+  <browser:resource
     name="eea.googlecharts.view.css"
     file="./css/view.css"
   />

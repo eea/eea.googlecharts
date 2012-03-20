@@ -419,11 +419,6 @@ function openEditor(elementId) {
     chart.options.title = title;
     var wrapper = new google.visualization.ChartWrapper(chart);
 
-/*    var chartOptions = JSON.parse(jQuery("#googlechartid_"+elementId+" .googlechart_options").attr('value'));
-    jQuery.each(chartOptions, function(key, value){
-        wrapper.setOption(key, value);
-    });*/
-
     chartEditor = new google.visualization.ChartEditor();
     google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
 
@@ -435,7 +430,6 @@ function openEditor(elementId) {
         moveIfFirst();
         var tmpwrapper = chartEditor.getChartWrapper();
         tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
-//        google-visualization-charteditor-preview-div-chart
     });
     google.visualization.events.addListener(chartEditor, 'error', function(event){
         var settings_str = chartEditor.getChartWrapper().toJSON();
@@ -817,6 +811,7 @@ function chartEditorSave(id){
 
     var settings_str = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value");
     var settings_json = JSON.parse(settings_str);
+    settings_json.paletteName = jQuery("#googlechart_palettes").attr("value");
     settings_json.dataTable = [];
     var settings_str2 = JSON.stringify(settings_json);
 
@@ -837,8 +832,25 @@ function chartEditorCancel(){
     editorDialog.dialog("close");
 }
 
+function updatePalette() {
+    var selectedPaletteName = jQuery("#googlechart_palettes").attr("value");
+
+    jQuery(".googlechart_preview_color").remove();
+    var selectedPalette = chartPalettes[selectedPaletteName];
+    jQuery(selectedPalette).each(function(idx, color){
+        var color = "<div class='googlechart_preview_color' style='background-color:"+color+"'> </div>";
+        jQuery(color).appendTo("#googlechart_preview_palette");
+    });
+    var clear = "<div style='clear:both;'> </div>";
+    jQuery(clear).appendTo("#googlechart_preview_palette");
+
+    jQuery("#googlechartid_tmp_chart").find(".googlechart_palettename").attr("value",selectedPaletteName);
+}
+
 function openEditChart(id){
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
+    var tmp_paletteName = typeof(JSON.parse(tmp_config).paletteName) !== 'undefined' ? JSON.parse(tmp_config).paletteName : "";
+    var tmp_palettename = 'default';
     var tmp_columns = jQuery("#googlechartid_"+id+" .googlechart_columns").attr('value');
     var tmp_name = jQuery("#googlechartid_"+id+" .googlechart_name").attr('value');
     var tmp_options = jQuery("#googlechartid_"+id+" .googlechart_options").attr('value');
@@ -850,15 +862,22 @@ function openEditChart(id){
         '<div id="googlechartid_tmp_chart" style="float:left">' +
             "<input class='googlechart_configjson' type='hidden' value='"+tmp_config+"'/>" +
             "<input class='googlechart_columns' type='hidden' value='"+tmp_columns+"'/>" +
+            "<input class='googlechart_palettename' type='hidden' value='"+tmp_palettename+"'/>" +
             "<input class='googlechart_options' type='hidden' value='"+tmp_options+"'/>" +
             "<input class='googlechart_name' type='hidden' value='"+tmp_name+"'/>" +
 
             "<div id='googlechart_editor_container' style='height:395px'></div>" +
-//            "<div style='clear:both;'> </div>" +
         '</div>' +
-        "<div style='padding-top:20px; padding-left:5px;float:left'>"+
+        "<div style='padding-top:20px; padding-left:5px;float:left;width:120px'>"+
         "<input type='button' class='context' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
         "<input style='margin-left:5px;' type='button' class='context' value='Cancel' onclick='chartEditorCancel();'/>" +
+        "<div id='googlechart_palette_select'>"+
+            "<strong style='float:left;'>Select Palette:</strong>"+
+            "<select id='googlechart_palettes' style='float:left;' onchange='updatePalette();'>"+
+            "</select>"+
+            "<div style='clear:both;'> </div>" +
+            "<div id='googlechart_preview_palette'> </div>"+
+        "</div>"+
         "</div>"+
         "<div style='clear:both;'> </div>" +
         '<div id="googlechart_table_accordion">' +
@@ -891,7 +910,7 @@ function openEditChart(id){
     jQuery(editcolumnsdialog).dialog({title:"Chart Editor",
                 dialogClass: 'googlechart-dialog',
                 modal:true,
-                width:1021,
+                width:1042,
                 height:'auto',
                 resizable:true,
                 create:function(){
@@ -907,6 +926,14 @@ function openEditChart(id){
         columnsSettings = JSON.parse(jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value"));
     }
     var columnCount = 0;
+    jQuery.each(chartPalettes, function(paletteName, paletteColors){
+        if (tmp_paletteName === ""){
+            tmp_paletteName = paletteName;
+        }
+        var option = "<option value='"+paletteName+"' "+ ((tmp_paletteName === paletteName) ? 'selected="selected"':'')+">"+paletteName+"</option>";
+        jQuery(option).appendTo("#googlechart_palettes");
+    });
+    updatePalette();
     jQuery.each(available_columns, function(column_key,column_name){
         var originalStatus = 0;
         jQuery(columnsSettings.original).each(function(idx, original){
