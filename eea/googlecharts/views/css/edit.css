@@ -89,7 +89,8 @@
     background-image: -moz-linear-gradient(center top , #FFFFFF, #CDE2A7);
     background-image: -ms-linear-gradient(center top , #FFFFFF, #CDE2A7);
     background-image: -o-linear-gradient(center top , #FFFFFF, #CDE2A7);
-
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#CDE2A7'); /* IE6 & IE7 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#CDE2A7')"; /* IE8+ */
 }
 
 .googlechart-dialog {
