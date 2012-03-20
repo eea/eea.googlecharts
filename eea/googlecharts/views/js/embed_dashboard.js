@@ -13,12 +13,14 @@ jQuery(document).ready(function($){
             }
             if (isDashboardChart){
                 var newKey = config[8].order === undefined ? 999 : config[8].order;
-                if (dashboardKeys.length === 0){
-                    newKey = 0;
-                }
-                else{
-                    if (dashboardKeys.indexOf(config[8].order!==-1)){
-                        newKey = Math.max.apply(Math, dashboardKeys) + 1;
+                while (true){
+                    var foundKey = false;
+                    if (dashboardKeys.indexOf(newKey) === -1){
+                        break;
+                    }
+                    else{
+                        newKey++;
+                        continue;
                     }
                 }
                 dashboardChartConfig[newKey] = config;
@@ -26,7 +28,7 @@ jQuery(document).ready(function($){
             }
             configs.push(config[2]);
         });
-        var sortedDashboardKeys = dashboardKeys.sort();
+        var sortedDashboardKeys = dashboardKeys.sort(function(a,b){return a - b;});
         jQuery.each(sortedDashboardKeys, function(key, dashboardKey){
             sortedDashboardChartConfig.push(dashboardChartConfig[dashboardKey]);
         });
@@ -42,7 +44,6 @@ jQuery(document).ready(function($){
         return;
     }
 
-//    var chart_filterposition = 3;
     jQuery("#googlechart_filters").remove();
     jQuery("#googlechart_view").remove();
     jQuery("#googlechart_table").remove();
@@ -89,7 +90,12 @@ jQuery(document).ready(function($){
 
     var dashboard_filters = {};
     jQuery.each(myFilters, function(){
-        dashboard_filters[this.column] = this.type;
+        if (this.type === "3") {
+            dashboard_filters[this.column] = "2";
+        }
+        else {
+            dashboard_filters[this.column] = this.type;
+        }
     });
     drawGoogleDashboard('googlechart_dashboard',
                         'googlechart_view',
@@ -99,33 +105,4 @@ jQuery(document).ready(function($){
                         allColumns,
                         dashboard_filters);
 
-/*    var columnsFromSettings = getColumnsFromSettings(chart_columns);
-    var transformedTable = transformTable(merged_rows,
-                                        columnsFromSettings.normalColumns,
-                                        columnsFromSettings.pivotColumns,
-                                        columnsFromSettings.valueColumn,
-                                        available_columns);
-    var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
-    chart_json.options.title = name;
-    jQuery.each(chart_filters,function(key,value){
-            if (value === "3"){
-                chart_filters[key] = "2";
-            }
-    });
-    drawGoogleChart(
-            'googlechart_dashboard',
-            'googlechart_view',
-            'googlechart_filters',
-            'embed',
-            chart_json,
-            tableForChart,
-            chart_filters,
-            width,
-            height,
-            '',
-            options,
-            transformedTable.available_columns,
-            function(){},
-            function(){}
-    );*/
 });

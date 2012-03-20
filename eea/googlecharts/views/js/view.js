@@ -249,12 +249,14 @@ jQuery(document).ready(function($){
             }
             if (isDashboardChart){
                 var newKey = config[8].order === undefined ? 999 : config[8].order;
-                if (dashboardKeys.length === 0){
-                    newKey = 0;
-                }
-                else{
-                    if (dashboardKeys.indexOf(config[8].order!==-1)){
-                        newKey = Math.max.apply(Math, dashboardKeys) + 1;
+                while (true){
+                    var foundKey = false;
+                    if (dashboardKeys.indexOf(newKey) === -1){
+                        break;
+                    }
+                    else{
+                        newKey++;
+                        continue;
                     }
                 }
                 dashboardChartConfig[newKey] = config;
@@ -262,7 +264,7 @@ jQuery(document).ready(function($){
             }
             configs.push(config[2]);
         });
-        var sortedDashboardKeys = dashboardKeys.sort();
+        var sortedDashboardKeys = dashboardKeys.sort(function(a,b){return a - b;});
         jQuery.each(sortedDashboardKeys, function(key, dashboardKey){
             sortedDashboardChartConfig.push(dashboardChartConfig[dashboardKey]);
         });
