@@ -427,22 +427,21 @@ function openEditor(elementId) {
     chartEditor = new google.visualization.ChartEditor();
     google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
 
-    $(document).bind('DOMSubtreeModified', function(event) {
-        if (jQuery(event.target).hasClass("google-visualization-charteditor-dialog")){
-            $(document).unbind('DOMSubtreeModified');
-            moveIfFirst();
-        }
-    });
 
     google.visualization.events.addListener(chartEditor, 'ready', function(event){
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = true;
+        moveIfFirst();
+        var tmpwrapper = chartEditor.getChartWrapper();
+        tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
+//        google-visualization-charteditor-preview-div-chart
     });
     google.visualization.events.addListener(chartEditor, 'error', function(event){
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = false;
+        moveIfFirst();
     });
 
     chartEditor.openDialog(wrapper, {});
