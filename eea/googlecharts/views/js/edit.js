@@ -352,6 +352,16 @@ function redrawChart(){
     chartEditor.getChartWrapper().draw(jQuery("#googlechart_chart_div_"+chartId)[0]);
 }
 
+function redrawEditorChart() {
+    var tmpwrapper = chartEditor.getChartWrapper();
+    var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+    jQuery.each(chartOptions, function(key, value){
+        tmpwrapper.setOption(key,value);
+    });
+
+    tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
+}
+
 function openEditor(elementId) {
     isFirstEdit = true;
     jQuery(".google-visualization-charteditor-dialog").remove();
@@ -404,8 +414,7 @@ function openEditor(elementId) {
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = true;
         moveIfFirst();
-        var tmpwrapper = chartEditor.getChartWrapper();
-        tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
+        redrawEditorChart();
     });
     google.visualization.events.addListener(chartEditor, 'error', function(event){
         var settings_str = chartEditor.getChartWrapper().toJSON();
@@ -787,20 +796,20 @@ function chartEditorSave(id){
 
     var settings_str = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value");
     var settings_json = JSON.parse(settings_str);
-    settings_json.paletteName = jQuery("#googlechart_palettes").attr("value");
+    settings_json.paletteId = jQuery("#googlechart_palettes").attr("value");
     settings_json.dataTable = [];
     var settings_str2 = JSON.stringify(settings_json);
 
     var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
     var options_json = JSON.parse(options_str);
 
-    var selectedPalette = chartPalettes[settings_json.paletteName];
+    var selectedPalette = chartPalettes[settings_json.paletteId].colors;
     var newColors = [];
     jQuery(selectedPalette).each(function(idx, color){
         newColors.push(color);
     });
     options_json.colors = newColors;
-    options_str2 = JSON.stringify(options_json);
+    var options_str2 = JSON.stringify(options_json);
 
     var name_str = jQuery("#googlechartid_tmp_chart .googlechart_name").attr("value");
 
@@ -818,10 +827,10 @@ function chartEditorCancel(){
 }
 
 function updatePalette() {
-    var selectedPaletteName = jQuery("#googlechart_palettes").attr("value");
+    var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
 
     jQuery(".googlechart_preview_color").remove();
-    var selectedPalette = chartPalettes[selectedPaletteName];
+    var selectedPalette = chartPalettes[selectedPaletteId].colors;
     jQuery(selectedPalette).each(function(idx, color){
         var tmp_color = "<div class='googlechart_preview_color' style='background-color:"+color+"'> </div>";
         jQuery(tmp_color).appendTo("#googlechart_preview_palette");
@@ -829,13 +838,28 @@ function updatePalette() {
     var clear = "<div style='clear:both;'> </div>";
     jQuery(clear).appendTo("#googlechart_preview_palette");
 
-    jQuery("#googlechartid_tmp_chart").find(".googlechart_palettename").attr("value",selectedPaletteName);
+    var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
+    var options_json = JSON.parse(options_str);
+
+    var newColors = [];
+    jQuery(selectedPalette).each(function(idx, color){
+        newColors.push(color);
+    });
+    options_json.colors = newColors;
+    var options_str2 = JSON.stringify(options_json);
+
+    jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value", options_str2);
+
+    jQuery("#googlechartid_tmp_chart").find(".googlechart_paletteid").attr("value",selectedPaletteId);
+    if (chartEditor){
+        redrawEditorChart();
+    }
 }
 
 function openEditChart(id){
+    chartEditor = null;
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
-    var tmp_paletteName = typeof(JSON.parse(tmp_config).paletteName) !== 'undefined' ? JSON.parse(tmp_config).paletteName : "";
-    var tmp_palettename = 'default';
+    var tmp_paletteId = typeof(JSON.parse(tmp_config).paletteId) !== 'undefined' ? JSON.parse(tmp_config).paletteId : "";
     var tmp_columns = jQuery("#googlechartid_"+id+" .googlechart_columns").attr('value');
     var tmp_name = jQuery("#googlechartid_"+id+" .googlechart_name").attr('value');
     var tmp_options = jQuery("#googlechartid_"+id+" .googlechart_options").attr('value');
@@ -847,7 +871,7 @@ function openEditChart(id){
         '<div id="googlechartid_tmp_chart" style="float:left">' +
             "<input class='googlechart_configjson' type='hidden' value='"+tmp_config+"'/>" +
             "<input class='googlechart_columns' type='hidden' value='"+tmp_columns+"'/>" +
-            "<input class='googlechart_palettename' type='hidden' value='"+tmp_palettename+"'/>" +
+            "<input class='googlechart_paletteid' type='hidden' value='"+tmp_paletteId+"'/>" +
             "<input class='googlechart_options' type='hidden' value='"+tmp_options+"'/>" +
             "<input class='googlechart_name' type='hidden' value='"+tmp_name+"'/>" +
 
@@ -911,11 +935,11 @@ function openEditChart(id){
         columnsSettings = JSON.parse(jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value"));
     }
     var columnCount = 0;
-    jQuery.each(chartPalettes, function(paletteName, paletteColors){
-        if (tmp_paletteName === ""){
-            tmp_paletteName = paletteName;
+    jQuery.each(chartPalettes, function(paletteId, paletteSettings){
+        if (tmp_paletteId === ""){
+            tmp_paletteId = paletteId;
         }
-        var option = "<option value='"+paletteName+"' "+ ((tmp_paletteName === paletteName) ? 'selected="selected"':'')+">"+paletteName+"</option>";
+        var option = "<option value='"+paletteId+"' "+ ((tmp_paletteId === paletteId) ? 'selected="selected"':'')+">"+paletteSettings.name+"</option>";
         jQuery(option).appendTo("#googlechart_palettes");
     });
     updatePalette();

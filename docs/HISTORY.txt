@@ -3,6 +3,11 @@ Changelog
 
 4.1-dev - (unreleased)
 ----------------------
+* Feature: Added the possibility to select color palette on the chart editor
+  The palettes can be defined in palettes.js
+  Upgrade step:
+  ZMI > portal_setup > profile "EEA Google Charts" > import Javascript registry
+  [szabozo0 #4988]
 * Bug fix: added default config to disable trail and chart buttons on motion 
   chart as it is buggy and crashes on all browsers.
   [demarant #5013]
