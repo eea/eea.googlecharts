@@ -2,6 +2,7 @@
 <head>
 <style type="text/css">
     #googlechart_full > div > div {overflow:hidden ! important;}
+    #googlechart_filters {margin-top:0px !important;}
 </style>
 <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -46,6 +47,7 @@
             </div>
         </div>
     </div>
+    <a style="float:right" tal:attributes="href view/context/absolute_url" target="_top">Go to original visualization</a>
 </body>
 
 </html>

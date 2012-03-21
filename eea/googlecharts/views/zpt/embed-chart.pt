@@ -2,6 +2,7 @@
 <head>
 <style type="text/css">
     #googlechart_full > div > div {overflow:hidden ! important;}
+    #googlechart_filters {margin-top:0px !important;}
 </style>
 <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -25,7 +26,6 @@
                                                 chart_filterposition = ${chart/filterposition}
                                                 chart_filters = ${chart/filters};">
     </script>
-
     <div id="googlechart_dashboard" class="embedded-dashboard">
         <div id="googlechart_table">
             <div id="googlechart_filters" class="embedded-filters">
@@ -34,6 +34,7 @@
             </div>
         </div>
     </div>
+    <a style="float:right" tal:attributes="href view/context/absolute_url" target="_top">Go to original visualization</a>
 </body>
 
 </html>

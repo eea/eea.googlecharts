@@ -162,7 +162,7 @@ function drawDashboard(){
 function showEmbed(){
     var chartObj = jQuery("#googlechart_dashboard");
     var iframeWidth = chartObj.width();
-    var iframeHeight = chartObj.height();
+    var iframeHeight = parseInt(chartObj.height(),10) + 30;
     var iframeSrc;
     if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
         iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id');
