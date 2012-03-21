@@ -16,6 +16,9 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
 
     if (chartFilters){
         jQuery.each(chartFilters, function(key, value){
+            if (!availableColumns[key]){
+                return;
+            }
             var filter_div_id = chartFiltersDiv + "_" + key;
             var filter_div = "<div id='" + filter_div_id + "'></div>";
             jQuery(filter_div).appendTo("#" + chartFiltersDiv);
