@@ -13,10 +13,16 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
     var chart = new google.visualization.ChartWrapper(chartJson);
 
     var filtersArray = [];
-
+    var usedColumnNames = [];
+    for (i = 0; i < chartDataTable.getNumberOfColumns(); i++){
+        usedColumnNames.push(chartDataTable.getColumnLabel(i));
+    }
     if (chartFilters){
         jQuery.each(chartFilters, function(key, value){
             if (!availableColumns[key]){
+                return;
+            }
+            if (usedColumnNames.indexOf(availableColumns[key]) === -1){
                 return;
             }
             var filter_div_id = chartFiltersDiv + "_" + key;
