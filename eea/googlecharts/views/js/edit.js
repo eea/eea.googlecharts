@@ -820,6 +820,20 @@ function chartEditorSave(id){
     markChartAsModified(id);
     editorDialog.dialog("close");
     drawChart(id, checkSVG_withThumb);
+    //remove invalid filters
+    var filtersPrefix = "googlechart_filters_"+id;
+    var columnsForFilters = [];
+    jQuery(columnsSettings.prepared).each(function(idx,value){
+        if (value.status === 1){
+            columnsForFilters.push(value.name);
+        }
+    });
+    jQuery("#"+filtersPrefix).find(".googlechart_filteritem").each(function(idx,value){
+        var filterColumnName = jQuery(value).attr("id").substr(filtersPrefix.length);
+        if (columnsForFilters.indexOf(filterColumnName) === -1){
+            jQuery(value).remove();
+        }
+    });
 }
 
 function chartEditorCancel(){
