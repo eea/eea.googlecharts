@@ -628,6 +628,7 @@ dl.portlet .dashboard-chart,
     left:0 !important;
     top:0 !important;
     display:block !important;
+    z-index:999 !important;
 }
 
 .googlechart-editor .modal-dialog-title,
@@ -637,7 +638,7 @@ dl.portlet .dashboard-chart,
 }
 
 .google-visualization-charteditor-dialog{
-    display:none;
+    z-index:-1;
 }
 
 .column-hidden {
