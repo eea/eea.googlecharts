@@ -1,4 +1,39 @@
-var chartPalettes = {"default":{"name":"Default Palette",
+function toHex(int_nr){
+    var hex = Math.round(int_nr).toString(16);
+    if (hex.length < 2){
+        hex = "0" + hex;
+    }
+    return hex;
+}
+
+function getGradients(fromR, fromG, fromB, toR, toG, toB, steps){
+    var stepR = (toR - fromR) / (steps - 1);
+    var stepG = (toG - fromG) / (steps - 1);
+    var stepB = (toB - fromB) / (steps - 1);
+    var gradients = [];
+    for (i = 0; i < steps; i++){
+        gradients.push("#" + toHex(fromR) + toHex(fromG) + toHex(fromB));
+        fromR += stepR;
+        fromG += stepG;
+        fromB += stepB;
+    }
+    return gradients;
+}
+
+function getRainbow(colors, steps){
+    var rainbow = [];
+    for (var i = 0; i < colors.length - 1; i++){
+        var grad = getGradients(colors[i][0], colors[i][1], colors[i][2], colors[i + 1][0], colors[i + 1][1], colors[i + 1][2], Math.floor(steps/(colors.length - 1)));
+        for (j = 0; j < grad.length; j++){
+            if (rainbow.indexOf(grad[j]) === -1){
+                rainbow.push(grad[j]);
+            }
+        }
+    }
+    return rainbow;
+}
+
+var chartPalettes = {"default":{"name":"Company Default Palette",
                                 "colors":
                                     [
                                     "#AFBC21",  //pantone 583
@@ -32,7 +67,7 @@ var chartPalettes = {"default":{"name":"Default Palette",
                                     "#002C56"  //85% pantone 296
                                     ]
                                 },
-                    "green":{"name":"Green Gradient",
+                    "green":{"name":"Company Green Gradient",
                                 "colors":
                                     [
                                     "#6b7427",  //pantone 385
@@ -41,7 +76,7 @@ var chartPalettes = {"default":{"name":"Default Palette",
                                     "#c0cf99"  //pantone 7492
                                     ]
                                 },
-                    "red":{"name":"Red Gradient",
+                    "red":{"name":"Company Red Gradient",
                                 "colors":
                                     [
                                     "#844980",  //pantone 682
@@ -50,7 +85,7 @@ var chartPalettes = {"default":{"name":"Default Palette",
                                     "#d67c9d"  //pantone 7432
                                     ]
                                 },
-                    "yellow":{"name":"Yellow Gradient",
+                    "yellow":{"name":"Company Yellow Gradient",
                                 "colors":
                                     [
                                     "#d48625",  //pantone 152
@@ -59,7 +94,7 @@ var chartPalettes = {"default":{"name":"Default Palette",
                                     "#fffabe"  //pantone 601
                                     ]
                                 },
-                    "blue":{"name":"Blue Gradient",
+                    "blue":{"name":"Company Blue Gradient",
                                 "colors":
                                     [
                                     "#51697a",  //pantone 5405
@@ -68,7 +103,7 @@ var chartPalettes = {"default":{"name":"Default Palette",
                                     "#c7e0e9"  //pantone 317
                                     ]
                                 },
-                    "gray":{"name":"Gray Gradient",
+                    "gray":{"name":"Company Gray Gradient",
                                 "colors":
                                     [
                                     "#000000",  //black
@@ -76,5 +111,17 @@ var chartPalettes = {"default":{"name":"Default Palette",
                                     "#c0c0c0",  //pantone cool grey 5
                                     "#eaeaea"  //pantone cool grey 2
                                     ]
+                                },
+                    "redgradient":{"name":"Red Gradient",
+                                "colors":getGradients(255, 0, 0, 255, 211, 211, 30)
+                                },
+                    "greengradient":{"name":"Green Gradient",
+                                "colors":getGradients(0, 255, 0, 211, 255, 211, 30)
+                                },
+                    "bluegradient":{"name":"Blue Gradient",
+                                "colors":getGradients(0, 0, 255, 211, 211, 255, 30)
+                                },
+                    "rainbow":{"name":"Rainbow",
+                                "colors":getRainbow([[255,0,0],[0,255,0],[0,0,255],[255,0,0]],50)
                                 }
                     };
