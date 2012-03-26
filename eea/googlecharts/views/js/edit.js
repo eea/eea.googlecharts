@@ -398,7 +398,7 @@ function openEditor(elementId) {
                                     columnsFromSettings.pivotColumns,
                                     columnsFromSettings.valueColumn,
                                     available_columns);
-    var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
+    var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns, 100);
 
     chart.dataTable = tableForChart;
 

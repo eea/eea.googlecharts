@@ -86,7 +86,14 @@ function tableToArray(originalDataTable, columns){
     return tableArray;
 }
 
-function prepareForChart(originalDataTable, columns){
+function prepareForChart(originalDataTable, columns, limit){
+    limit = typeof(limit) !== 'undefined' ? limit : -1;
+
+    var itemsToDisplay = originalDataTable.items;
+    if (limit > -1){
+        itemsToDisplay = itemsToDisplay.splice(0, limit);
+    }
+
     var dataForChart = new google.visualization.DataTable();
 
     jQuery.each(columns, function(column_index, column){
@@ -102,7 +109,7 @@ function prepareForChart(originalDataTable, columns){
         }
         dataForChart.addColumn(colType, colName);
     });
-    jQuery(originalDataTable.items).each(function(row_index, row){
+    jQuery(itemsToDisplay).each(function(row_index, row){
         var newRow = [];
         jQuery(columns).each(function(column_index, column){
 
