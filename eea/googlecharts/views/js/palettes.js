@@ -115,11 +115,20 @@ var chartPalettes = {"default":{"name":"Company Default Palette",
                     "redgradient":{"name":"Red Gradient",
                                 "colors":getGradients(255, 0, 0, 255, 211, 211, 30)
                                 },
+                    "redgradientinverted":{"name":"Red Gradient - Inverted",
+                                "colors":getGradients(255, 211, 211, 255, 0, 0, 30)
+                                },
                     "greengradient":{"name":"Green Gradient",
                                 "colors":getGradients(0, 255, 0, 211, 255, 211, 30)
                                 },
+                    "greengradientinverted":{"name":"Green Gradient - Inverted",
+                                "colors":getGradients(211, 255, 211, 0, 255, 0, 30)
+                                },
                     "bluegradient":{"name":"Blue Gradient",
                                 "colors":getGradients(0, 0, 255, 211, 211, 255, 30)
+                                },
+                    "bluegradientinverted":{"name":"Blue Gradient - Inverted",
+                                "colors":getGradients(211, 211, 255, 0, 0, 255, 30)
                                 },
                     "rainbow":{"name":"Rainbow",
                                 "colors":getRainbow([[255,0,0],[0,255,0],[0,0,255],[255,0,0]],50)
