@@ -175,4 +175,10 @@
     handler=".events.googlechart_facet_deleted"
     />
 
+  <subscriber
+    for="eea.app.visualization.interfaces.IVisualizationEnabled
+         eea.app.visualization.interfaces.IVisualizationEnabledEvent"
+    handler=".events.create_default_views"
+    />
+
 </configure>
