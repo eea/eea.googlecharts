@@ -1,3 +1,5 @@
+var allowedTypesForCharts = ['string', 'number', 'boolean', 'date', 'datetime', 'timeofday'];
+
 function transformTable(originalTable, normalColumns, pivotingColumns, valueColumn, availableColumns){
     var additionalColumns = {};
 
@@ -103,10 +105,7 @@ function prepareForChart(originalDataTable, columns, limit){
             colType = 'string';
         }else{
             colType = colType.valueType !== undefined ? colType.valueType: colType;
-            if (colType === "text"){
-                colType = "string";
-            }
-            if (colType === "url"){
+            if (allowedTypesForCharts.indexOf(colType) === -1){
                 colType = "string";
             }
         }
@@ -122,7 +121,7 @@ function prepareForChart(originalDataTable, columns, limit){
                 colType = 'string';
             }else{
                 colType = colType.valueType !== undefined ? colType.valueType: colType;
-                if (colType === "text"){
+                if (allowedTypesForCharts.indexOf(colType) === -1){
                     colType = "string";
                 }
             }
