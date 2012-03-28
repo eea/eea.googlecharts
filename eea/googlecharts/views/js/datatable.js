@@ -106,6 +106,9 @@ function prepareForChart(originalDataTable, columns, limit){
             if (colType === "text"){
                 colType = "string";
             }
+            if (colType === "url"){
+                colType = "string";
+            }
         }
         dataForChart.addColumn(colType, colName);
     });
