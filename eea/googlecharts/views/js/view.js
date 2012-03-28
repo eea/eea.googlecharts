@@ -172,20 +172,20 @@ function showEmbed(){
     }
     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
     var embedHtml = '<div>' +
-                        '<b>Embed code for this chart:</b>' +
-                        '<br/><br/>' +
-                        '<input style="width:100%" type="text" value="' + iframeCode + '"/>' +
+                        '<textarea style="width:96%" rows="7">' + iframeCode + '"</textarea>' +
                     '</div>';
+
     jQuery(embedHtml).dialog({
         title: "Embed code",
         modal:true,
-        buttons:[
-                {
-                    text: "OK",
-                    click: function(){
-                        jQuery(this).dialog("close");
-                        }
-                }]
+        open: function(evt, ui){
+            jQuery('textarea', this)[0].focus();
+            jQuery('textarea', this)[0].select();
+            jQuery(this).delegate('textarea', 'click', function(){
+                this.focus();
+                this.select();
+            });
+        }
         }
     );
 }
