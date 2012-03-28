@@ -892,8 +892,10 @@ function openEditChart(id){
             "<div id='googlechart_editor_container' style='height:395px'></div>" +
         '</div>' +
         "<div style='padding-top:20px; padding-left:5px;float:left;width:168px'>"+
+        '<div class="buttons">' +
         "<input type='button' class='context' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
         "<input style='margin-left:5px;' type='button' class='context' value='Cancel' onclick='chartEditorCancel();'/>" +
+        "</div>" +
         "<div id='googlechart_palette_select'>"+
             "<strong style='float:left;'>Select Palette:</strong>"+
             "<select id='googlechart_palettes' style='float:left;' onchange='updatePalette();'>"+
@@ -930,11 +932,13 @@ function openEditChart(id){
             '</div>'+
         '</div>'+
     '</div>';
+    var width = jQuery(window).width() * 0.95;
+    var height = jQuery(window).height() * 0.95;
     jQuery(editcolumnsdialog).dialog({title:"Chart Editor",
                 dialogClass: 'googlechart-dialog',
                 modal:true,
-                width:1090,
-                height:'auto',
+                width: width,
+                height: height,
                 resizable:true,
                 create:function(){
                     editorDialog = jQuery(this);

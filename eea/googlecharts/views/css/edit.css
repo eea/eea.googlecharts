@@ -93,9 +93,17 @@
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#CDE2A7')"; /* IE8+ */
 }
 
+.googlechart-dialog .ui-dialog-titlebar:first-child {
+    background-color: #fff;
+    background-image: none;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    font-size: 16px;
+}
+
 .googlechart-dialog {
   border-radius: 10px;
-  box-shadow: 0px 5px 5px #ccc;
+  box-shadow: 0px 0px 100px #000;
   border: 1px solid #3A5774;
 }
 
@@ -655,6 +663,7 @@ dl.portlet .dashboard-chart,
 
 #googlechart_palette_select {
     margin:2px;
+    margin-top: 2em;
 }
 
 #googlechart_preview_palette {
