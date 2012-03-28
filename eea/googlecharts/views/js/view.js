@@ -172,7 +172,7 @@ function showEmbed(){
     }
     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
     var embedHtml = '<div>' +
-                        '<textarea style="width:96%" rows="7">' + iframeCode + '"</textarea>' +
+                        '<textarea style="width:96%" rows="7">' + iframeCode + '</textarea>' +
                     '</div>';
 
     jQuery(embedHtml).dialog({
