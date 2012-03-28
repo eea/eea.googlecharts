@@ -3,6 +3,9 @@ Changelog
 
 4.1-dev - (unreleased)
 ----------------------
+* Upgrade step:
+  ZMI > portal_javascripts > disable custom_datatable.js
+  ZMI > portal_skins > custom > remove custom_datatable.js
 * Feature: Automatically add Charts as a view for Daviz and create a default
   table view with all columns
   [voineali #4949]
