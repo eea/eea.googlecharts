@@ -1,26 +1,3 @@
-//define .indexOf() for Array on browsers which doesn't support it
-
-if (!Array.prototype.indexOf)
-{
-  Array.prototype.indexOf = function(elt /*, from*/)
-  {
-    var len = this.length >>> 0;
-
-    var from = Number(arguments[1]) || 0;
-    from = (from < 0) ? Math.ceil(from) : Math.floor(from);
-    if (from < 0){
-      from += len;
-    }
-    for (; from < len; from++)
-    {
-      if (from in this && this[from] === elt){
-        return from;
-      }
-    }
-    return -1;
-  };
-}
-
 function toHex(int_nr){
     var hex = Math.round(int_nr).toString(16);
     if (hex.length < 2){
@@ -48,7 +25,7 @@ function getRainbow(colors, steps){
     for (var i = 0; i < colors.length - 1; i++){
         var grad = getGradients(colors[i][0], colors[i][1], colors[i][2], colors[i + 1][0], colors[i + 1][1], colors[i + 1][2], Math.floor(steps/(colors.length - 1)));
         for (j = 0; j < grad.length; j++){
-            if (rainbow.indexOf(grad[j]) === -1){
+            if (jQuery.inArray(grad[j], rainbow) === -1){
                 rainbow.push(grad[j]);
             }
         }

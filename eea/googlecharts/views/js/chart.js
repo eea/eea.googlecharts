@@ -22,7 +22,8 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
             if (!availableColumns[key]){
                 return;
             }
-            if (usedColumnNames.indexOf(availableColumns[key]) === -1){
+//            if (usedColumnNames.indexOf(availableColumns[key]) === -1){
+            if (jQuery.inArray(availableColumns[key], usedColumnNames) === -1){
                 return;
             }
             var filter_div_id = chartFiltersDiv + "_" + key;
@@ -161,9 +162,12 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
         var normalColumns = [];
         jQuery.each(value[2].prepared, function(key,column){
             if (column.status === 1){
-                column_nrs.push(allColumns.indexOf(column.name));
-                if (originalColumns.indexOf(column.name !== -1)){
-                    normalColumns.push(allColumns.indexOf(column.name));
+//                column_nrs.push(allColumns.indexOf(column.name));
+                column_nrs.push(jQuery.inArray(column.name, allColumns));
+//                if (originalColumns.indexOf(column.name !== -1)){
+                if (jQuery.inArray(column.name, originalColumns) !== -1){
+//                    normalColumns.push(allColumns.indexOf(column.name));
+                    normalColumns.push(jQuery.inArray(column.name, allColumns));
                 }
             }
             else{
@@ -188,7 +192,8 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
         var filterSettings = {};
         filterSettings.options = {};
         filterSettings.options.ui = {};
-        filterSettings.options.filterColumnIndex = allColumns.indexOf(key);
+//        filterSettings.options.filterColumnIndex = allColumns.indexOf(key);
+        filterSettings.options.filterColumnIndex = jQuery.inArray(key, allColumns);
         filterSettings.containerId = filter_div_id;
         switch(value){
             case "0":

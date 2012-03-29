@@ -699,7 +699,8 @@ function updateWithStatus(){
                 showDropZone(columnnr);
             }
             else {
-                if (pivots.indexOf(columnnr) !== -1){
+//                if (pivots.indexOf(columnnr) !== -1){
+                if (jQuery.inArray(columnnr, pivots) !== -1){
                     hideColumn(columnnr);
                 }
                 else {
@@ -830,7 +831,8 @@ function chartEditorSave(id){
     });
     jQuery("#"+filtersPrefix).find(".googlechart_filteritem").each(function(idx,value){
         var filterColumnName = jQuery(value).attr("id").substr(filtersPrefix.length);
-        if (columnsForFilters.indexOf(filterColumnName) === -1){
+//        if (columnsForFilters.indexOf(filterColumnName) === -1){
+        if (jQuery.inArray(filterColumnName, columnsForFilters) === -1){
             jQuery(value).remove();
         }
     });

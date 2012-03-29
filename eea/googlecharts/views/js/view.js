@@ -251,7 +251,8 @@ jQuery(document).ready(function($){
                 var newKey = config[8].order === undefined ? 999 : config[8].order;
                 while (true){
                     var foundKey = false;
-                    if (dashboardKeys.indexOf(newKey) === -1){
+//                    if (dashboardKeys.indexOf(newKey) === -1){
+                    if (jQuery.inArray(newKey, dashboardKeys) === -1){
                         break;
                     }
                     else{
