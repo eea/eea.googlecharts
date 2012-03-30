@@ -1,8 +1,8 @@
 Changelog
 =========
 
-4.1-dev - (unreleased)
-----------------------
+4.1 - (2012-03-30)
+------------------
 * Upgrade step:
   ZMI > portal_javascripts > disable custom_datatable.js
   ZMI > portal_skins > custom > remove custom_datatable.js
@@ -20,7 +20,6 @@ Changelog
 * Feature: Refactoring to be able to use this package as a standalone or as
   part of eea.daviz bundle
   [voineali #4996]
-
 * Bug fix: Fixed column detection in table preparation for google chart api
   [szabozo0 #4992]
 
