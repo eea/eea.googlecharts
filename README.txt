@@ -10,6 +10,50 @@ Contents
 .. contents::
 
 
+Introduction
+============
+
+Create and configure charts and dashboards on an intuitive visualization editor.
+
+You can easily make visualizations like: 
+   2. http://code.google.com/apis/chart/
+
+
+Main features
+=============
+
+
+The main features are:
+
+  1. Intuitive visualization editor to create interactive charts.
+  2. Large amount of visualizations available: Area, Bar, \
+     Bubble, Candlestick, Column, Combo Chart, Gauge, Geo Intensity Maps, Line, Pie, Radar, Scatter, Stepped Area, Table, Tree Map, Motion Charts
+  3. Dashboard. Group charts into one dashboard.
+  4. Add filters to charts or dashboards.
+  5. Share any chart. Embeddabe visualization in any webpage.
+  6. Customizable chart options and colors
+  7. Data table manipulation via drag and drop, preparing table for chart
+  8. Pivot table (Transpose), tranform row values into columns and viceversa
+
+
+Dependecies
+===========
+
+  1. Plone 4.x
+  2. eea.converter
+  3. eea.app.visualization
+
+
+Live demos
+==========
+
+Eurostat data employment rates 2000-2010 (demo using Linked Data): 
+   http://www.eea.europa.eu/data-and-maps/daviz/data-visualization-employement-trends-eu-1
+
+Google charts demos:
+   http://code.google.com/apis/chart/
+
+
 Source code
 ===========
 
