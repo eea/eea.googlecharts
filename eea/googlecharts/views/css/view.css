@@ -17,7 +17,8 @@
     background: url("../../++resource++mini2.png") no-repeat scroll 0 -21px transparent;
 }
 
-.googlechart_class_LineChart span{
+.googlechart_class_LineChart span,
+.googlechart_class_ComboChart span{
     background: url("../../++resource++mini2.png") no-repeat scroll 0 -84px transparent;
 }
 
