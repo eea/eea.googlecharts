@@ -277,3 +277,11 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .embedded-filters {
     margin-top:0px !important;
 }
+
+.embedded-chart {
+    min-width:0px !important;
+}
+
+.embedded-side-filters {
+    max-width:200px !important;
+}

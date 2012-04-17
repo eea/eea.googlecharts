@@ -19,8 +19,8 @@
                                                 merged_rows = ${chart/data};
                                                 available_columns = ${chart/available_columns};
                                                 chart_json = ${chart/config};
-                                                width = ${chart/width};
-                                                height = ${chart/height};
+                                                width = ${chart/chartWidth};
+                                                height = ${chart/chartHeight};
                                                 name = '${chart/name}';
                                                 options = ${chart/options};
                                                 chart_filterposition = ${chart/filterposition}

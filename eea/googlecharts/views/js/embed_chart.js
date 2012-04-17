@@ -6,26 +6,26 @@ jQuery(document).ready(function($){
     jQuery("#googlechart_view").remove();
     jQuery("#googlechart_table").remove();
     var filters = '<div id="googlechart_filters"></div>';
-    var view = '<div id="googlechart_view" class="googlechart" style="min-width:0px"></div>';
+    var view = '<div id="googlechart_view" class="googlechart embedded-chart"></div>';
     var googlechart_table;
     if (chart_filterposition === 0){
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_top'>"+
                 "<div id='googlechart_filters'></div>"+
-                "<div id='googlechart_view' class='googlechart' style='min-width:0px'></div>"+
+                "<div id='googlechart_view' class='googlechart embedded-chart'></div>"+
             "</div>";
     }
     if (chart_filterposition === 1){
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_left'>"+
-                "<div id='googlechart_filters' style='max-width:200px'></div>"+
-                "<div id='googlechart_view' class='googlechart' style='min-width:0px'></div>"+
+                "<div id='googlechart_filters' class='embedded-side-filters'></div>"+
+                "<div id='googlechart_view' class='googlechart embedded-chart'></div>"+
             "</div>";
     }
     if (chart_filterposition === 2){
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom'>"+
-                "<div id='googlechart_view' class='googlechart' style='min-width:0px'></div>"+
+                "<div id='googlechart_view' class='googlechart embedded-chart'></div>"+
                 "<div id='googlechart_filters'></div>"+
                 "<div style='clear: both'></div>" +
             "</div>";
@@ -33,8 +33,8 @@ jQuery(document).ready(function($){
     if (chart_filterposition === 3){
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_right'>"+
-                "<div id='googlechart_view' class='googlechart' style='min-width:0px'></div>"+
-                "<div id='googlechart_filters' style='max-width:200px'></div>"+
+                "<div id='googlechart_view' class='googlechart embedded-chart'></div>"+
+                "<div id='googlechart_filters' class='embedded-side-filters'></div>"+
                 "<div style='clear: both'></div>" +
             "</div>";
     }

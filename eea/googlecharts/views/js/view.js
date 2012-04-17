@@ -73,6 +73,8 @@ function drawChart(value){
         }
         jQuery(googlechart_table).appendTo('#googlechart_dashboard');
         jQuery('#googlechart_dashboard').attr("chart_id", chart_id);
+        jQuery('#googlechart_dashboard').attr("chart_width", chart_width);
+        jQuery('#googlechart_dashboard').attr("chart_height", chart_height);
 
         var columnsFromSettings = getColumnsFromSettings(chart_columns);
         var transformedTable = transformTable(merged_rows,
@@ -165,7 +167,9 @@ function showEmbed(){
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
     var iframeSrc;
     if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
-        iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id');
+        iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
+                    "&chartWidth=" + chartObj.attr('chart_width') +
+                    "&chartHeight=" + chartObj.attr('chart_height')
     }
     else{
         iframeSrc = baseurl+"/embed-dashboard";

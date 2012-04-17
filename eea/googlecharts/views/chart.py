@@ -72,7 +72,12 @@ class View(ViewForm):
         if chart_settings:
             chart_settings['data'] = self.get_rows()
             chart_settings['available_columns'] = self.get_columns()
+        chart_settings['chartWidth'] = \
+            self.request.get("chartWidth",chart_settings["width"])
+        chart_settings['chartHeight'] = \
+            self.request.get("chartHeight",chart_settings["height"])
         return chart_settings
+
 
     def has_dashboard(self):
         """ Dashboard is configured """
