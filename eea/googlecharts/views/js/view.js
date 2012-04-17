@@ -169,7 +169,7 @@ function showEmbed(){
     if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
         iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
                     "&chartWidth=" + chartObj.attr('chart_width') +
-                    "&chartHeight=" + chartObj.attr('chart_height')
+                    "&chartHeight=" + chartObj.attr('chart_height');
     }
     else{
         iframeSrc = baseurl+"/embed-dashboard";
