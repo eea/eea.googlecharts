@@ -196,8 +196,9 @@ ul.googlechart_tabs li:first-of-type a:hover {
 
 .googlechart_table_right #googlechart_filters > div {
     min-width: 180px;
+    max-width: 200px
     overflow: hidden;
-    margin: 0 0px 15px 15px;
+    margin: 0 0px 15px;
 }
 
 .googlechart_table_right #googlechart_view {
@@ -218,8 +219,9 @@ ul.googlechart_tabs li:first-of-type a:hover {
 
 .googlechart_table_left #googlechart_filters > div {
     min-width: 180px;
+    max-width: 200px;
     overflow: hidden;
-    margin: 0 15px 15px 0;
+    margin: 0 0px 15px 0;
 }
 
 /* Bottom */
