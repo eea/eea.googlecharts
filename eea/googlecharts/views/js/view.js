@@ -290,10 +290,18 @@ jQuery(document).ready(function($){
 
     // First tab is a google charts tab
     var api = jQuery("ul.chart-tabs").data('tabs');
+    var index = 0;
+    jQuery.each(api.getTabs(), function(idx, tab){
+        if(jQuery(tab).attr('href') == window.location.hash){
+            index = idx;
+            return false;
+        }
+    });
+
     googleChartOnTabClick({
         api: api,
-        tab: api.getTabs()[0],
-        index: 0
+        tab: api.getTabs()[index],
+        index: index
     });
 
 });

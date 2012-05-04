@@ -3,6 +3,9 @@ Changelog
 
 4.3-dev - (unreleased)
 ----------------------
+* Feature: Added unique URLs for chart tabs in order to easily bookmark and
+  share them. Also support browser history (back and forward buttons)
+  [voineali refs #4851]
 
 4.2 - (2012-04-26)
 ------------------
