@@ -3,6 +3,8 @@ Changelog
 
 4.3-dev - (unreleased)
 ----------------------
+* Feature: Added preview images for Google Charts Views
+  [voineali refs #5024]
 * Feature: Added unique URLs for chart tabs in order to easily bookmark and
   share them. Also support browser history (back and forward buttons)
   [voineali refs #4851]

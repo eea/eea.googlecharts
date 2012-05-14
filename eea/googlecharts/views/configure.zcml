@@ -165,6 +165,16 @@
     file="./imgs/mini2.png"
   />
 
+  <browser:resource
+    name="googlechart.googlecharts.preview.png"
+    file="./imgs/preview.png"
+  />
+
+  <browser:resource
+    name="googlechart.googledashboard.preview.png"
+    file="./imgs/dashboard-preview.png"
+  />
+
   <browser:resourceDirectory
     name="eea.googlecharts.images"
     directory="./imgs" />
