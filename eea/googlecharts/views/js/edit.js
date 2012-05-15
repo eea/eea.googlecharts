@@ -1280,6 +1280,10 @@ function addNewChart(){
 }
 
 function init_googlecharts_edit(){
+    if(!jQuery("#googlecharts_list").length){
+        return;
+    }
+
     jQuery("#googlecharts_list").sortable({
         handle : '.googlechart_handle',
         stop: function(event,ui){
@@ -1360,7 +1364,8 @@ function init_googlecharts_edit(){
         openAddChartFilterDialog(id);
     });
 
-    jQuery('#googlecharts_submit').click(function(e){
+    jQuery('input[name=googlechart.googlecharts.actions.save]').unbind('click');
+    jQuery('input[name=googlechart.googlecharts.actions.save]').click(function(e){
         saveCharts();
     });
 
@@ -1404,8 +1409,10 @@ function init_googlecharts_edit(){
     loadCharts();
 }
 
-jQuery(document).ready(function($){
+
+jQuery(document).ready(function(){
+    init_googlecharts_edit();
     jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
-        location.reload();
+        init_googlecharts_edit();
     });
 });

@@ -116,7 +116,7 @@
     name="googlechart.googlecharts.edit"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/edit.pt"
-    class=".edit.Edit"
+    class=".edit.ChartsEdit"
     permission="cmf.ModifyPortalContent"
     />
 

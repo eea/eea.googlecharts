@@ -2,19 +2,19 @@
 """
 import json
 import logging
-
+from zope.formlib.form import Fields
 from Products.Five import BrowserView
 
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from eea.app.visualization.interfaces import IVisualizationConfig
-
+from eea.app.visualization.views.edit import EditForm
+from eea.googlecharts.views.interfaces import IGoogleChartsEdit
 logger = logging.getLogger('eea.googlecharts')
 
 class Edit(BrowserView):
     """ Edit GoogleCharts form
     """
-    label = "Googlechart Edit"
     def submit_charts(self):
         """ Submit
         """
@@ -66,9 +66,25 @@ class Edit(BrowserView):
         stripped_result['items'] = result_json['items']
         return json.dumps(stripped_result)
 
-class DashboardEdit(Edit):
+class ChartsEdit(EditForm, Edit):
+    """ Edit google charts
+    """
+    label = "Googlechart Edit"
+    form_fields = Fields(IGoogleChartsEdit)
+
+    def __call__(self, **kwargs):
+        index = getattr(self, 'index', '')
+        if index:
+            index = index()
+        result = super(ChartsEdit, self).__call__()
+        return '\n'.join((index, result))
+
+
+class DashboardEdit(ChartsEdit):
     """ Edit google dashboard
     """
+    form_fields = Fields(IGoogleChartsEdit)
+
     def json(self, **kwargs):
         """ Return config JSON
         """
@@ -232,7 +248,7 @@ class DashboardEdit(Edit):
         kwargs.update(form)
         action = kwargs.pop('action', '')
         if not action:
-            return self.index()
+            return super(DashboardEdit, self).__call__()
 
         # Edit mode
         if action == 'json':

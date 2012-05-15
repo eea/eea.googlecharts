@@ -14,8 +14,6 @@ DavizEdit.Events.charts = {
     updated: 'google-chart-updated'
 };
 
-DavizEdit.GoogleDashboards = {};
-
 DavizEdit.GoogleDashboard = function(context, options){
   var self = this;
   self.context = context;
@@ -26,13 +24,11 @@ DavizEdit.GoogleDashboard = function(context, options){
   }
 
   // Events
-  jQuery(document).bind(DavizEdit.Events.charts.initialized, function(evt, data){
-    self.initialize();
-  });
-
   jQuery(document).bind(DavizEdit.Events.charts.changed, function(evt, data){
     self.reload();
   });
+
+  self.initialize();
 };
 
 DavizEdit.GoogleDashboard.prototype = {
@@ -831,8 +827,8 @@ DavizEdit.GoogleDashboardFilter.prototype = {
 jQuery.fn.EEAGoogleDashboard = function(options){
   return this.each(function(){
     var context = jQuery(this).addClass('ajax');
-    var name = context.attr('id');
-    DavizEdit.GoogleDashboards[name] = new DavizEdit.GoogleDashboard(context, options);
+    var dashboard = new DavizEdit.GoogleDashboard(context, options);
+    context.data('EEAGoogleDashboard', dashboard);
   });
 };
 
@@ -840,9 +836,11 @@ jQuery.fn.EEAGoogleDashboard = function(options){
 /** On load
 */
 jQuery(document).ready(function(){
-  var dashboard = jQuery('#gcharts-dashboard-edit');
-  if(!dashboard.length){
-    return;
-  }
-  dashboard.EEAGoogleDashboard();
+  jQuery(document).bind(DavizEdit.Events.charts.initialized, function(evt, data){
+    var dashboard = jQuery('#gcharts-dashboard-edit');
+    if(!dashboard.length){
+      return;
+    }
+    dashboard.EEAGoogleDashboard();
+  });
 });

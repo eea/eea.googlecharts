@@ -3,6 +3,12 @@ Changelog
 
 4.3-dev - (unreleased)
 ----------------------
+* Bug fix: Do not do a hard refresh on "Edit visualizations" when saving
+  'Global settings' or Enable/Disable Daviz Visualizations
+  [voineali refs #5024]
+* Feature: Use the eea.app.visualization API for daviz views in edit mode. This
+  way we can use the same API to disable Google Charts views
+  [voineali refs #5024]
 * Feature: Added preview images for Google Charts Views
   [voineali refs #5024]
 * Feature: Added unique URLs for chart tabs in order to easily bookmark and
