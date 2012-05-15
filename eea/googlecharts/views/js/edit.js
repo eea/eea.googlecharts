@@ -1116,7 +1116,7 @@ function openAddChartFilterDialog(id){
     if (chartColumns_str !== ""){
         var preparedColumns = JSON.parse(chartColumns_str).prepared;
         jQuery(preparedColumns).each(function(index, value){
-            if ((value.status === 1) && (!used_columns.find(value.name))){
+            if ((value.status === 1) && (used_columns.indexOf(value.name) === -1)){
                 var column = '<option value="'+value.name+'">'+value.fullname+'</option>';
                 jQuery(column).appendTo(".googlecharts_filter_columns");
             }
