@@ -265,12 +265,16 @@ ul.googlechart_tabs li:first-of-type a:hover {
 
 .googlechart_dashboard_table #googlechart_filters {
     float: left;
+    width: 100%;
+    height: auto;
 }
 
 .googlechart_dashboard_table #googlechart_view {
     clear: none;
     min-width: 0px;
     float: left;
+    width: 100%;
+    height: auto;
 }
 
 .embedded-dashboard,

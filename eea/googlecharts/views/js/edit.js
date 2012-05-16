@@ -1326,6 +1326,7 @@ function init_googlecharts_edit(){
 
     jQuery("#googlecharts_list").sortable({
         handle : '.googlechart_handle',
+        items: 'li.googlechart',
         stop: function(event,ui){
             var draggedItem = jQuery(ui.item[0]).attr('id');
             var liName = "googlechartid";
