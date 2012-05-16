@@ -646,3 +646,10 @@ dl.portlet .dashboard-chart,
     margin:2px;
     border:2px solid #DDDDDD;
 }
+
+.column-show-hide-button {
+    padding:0 !important;
+    font: normal 11px Verdana,Arial,sans-serif !important;
+    margin-top:3px !important;
+    width:110px !important;
+}

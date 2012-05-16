@@ -426,6 +426,17 @@ function openEditor(elementId) {
     chartEditor.openDialog(wrapper, {});
 }
 
+function generateSortedColumns() {
+    var sortedColumns = [];
+    var columns_tmp = jQuery("#newColumns").find("th");
+    jQuery.each(columns_tmp, function(idx, value){
+        var columnName = jQuery(value).attr("column_id");
+        var columnVisible = jQuery(value).attr("column_visible");
+        sortedColumns.push([columnName, columnVisible]);
+    });
+    return (sortedColumns);
+}
+
 function generateNewTable(sortOrder, isFirst){
     isFirst = typeof(isFirst) !== 'undefined' ? isFirst : false;
     DavizEdit.Status.start("Updating Tables");
@@ -474,14 +485,7 @@ function generateNewTable(sortOrder, isFirst){
 
     jQuery("#newColumns").sortable({
         stop: function(event,ui){
-            var sortedColumns = [];
-            var columns_tmp = jQuery("#newColumns").find("th");
-            jQuery.each(columns_tmp, function(idx, value){
-                var columnName = jQuery(value).attr("column_id");
-                var columnVisible = jQuery(value).attr("column_visible");
-                sortedColumns.push([columnName, columnVisible]);
-            });
-            generateNewTable(sortedColumns);
+            generateNewTable(generateSortedColumns());
         }
     });
 
@@ -496,14 +500,7 @@ function generateNewTable(sortOrder, isFirst){
             jQuery(this).addClass("ui-icon-hide");
             jQuery(this).closest("th").attr("column_visible","visible");
         }
-        var sortedColumns = [];
-        var columns_tmp = jQuery("#newColumns").find("th");
-        jQuery.each(columns_tmp, function(idx, value){
-            var columnName = jQuery(value).attr("column_id");
-            var columnVisible = jQuery(value).attr("column_visible");
-            sortedColumns.push([columnName, columnVisible]);
-        });
-        generateNewTable(sortedColumns);
+        generateNewTable(generateSortedColumns());
     });
 
     jQuery(transformedTable.items).each(function(row_idx, row){
@@ -872,6 +869,44 @@ function updatePalette() {
     }
 }
 
+function columnsHideAll(){
+    jQuery("#newTable").find(".ui-icon").each(function(idx, column){
+        if (jQuery(column).hasClass("ui-icon-hide")){
+            jQuery(column).removeClass("ui-icon-hide");
+            jQuery(column).addClass("ui-icon-show");
+            jQuery(column).closest("th").attr("column_visible","hidden");
+        }
+    });
+    generateNewTable(generateSortedColumns());
+}
+
+function columnsShowAll(){
+    jQuery("#newTable").find(".ui-icon").each(function(idx, column){
+        if (!jQuery(column).hasClass("ui-icon-hide")){
+            jQuery(column).removeClass("ui-icon-show");
+            jQuery(column).addClass("ui-icon-hide");
+            jQuery(column).closest("th").attr("column_visible","visible");
+        }
+    });
+    generateNewTable(generateSortedColumns());
+}
+
+function columnsRevert(){
+    jQuery("#newTable").find(".ui-icon").each(function(idx, column){
+        if (jQuery(column).hasClass("ui-icon-hide")){
+            jQuery(column).removeClass("ui-icon-hide");
+            jQuery(column).addClass("ui-icon-show");
+            jQuery(column).closest("th").attr("column_visible","hidden");
+        }
+        else{
+            jQuery(column).removeClass("ui-icon-show");
+            jQuery(column).addClass("ui-icon-hide");
+            jQuery(column).closest("th").attr("column_visible","visible");
+        }
+    });
+    generateNewTable(generateSortedColumns());
+}
+
 function openEditChart(id){
     chartEditor = null;
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
@@ -920,13 +955,18 @@ function openEditChart(id){
             '<h3><a href="#">Table Editor</a></h3>' +
             '<div>' +
                 '<div style="height:200px;overflow:auto">' +
-                    '<strong style="float:left;width:100px;">Table pivots:</strong>' +
+                    '<strong style="float:left;width:115px;">Table pivots:</strong>' +
                     '<table id="pivotingTable" class="googlechartTable" style="float:left;">'+
                         '<tr id="pivotConfigHeader"></tr>'+
                         '<tr id="pivotConfigDropZones"></tr>'+
                     '</table>'+
                     '<div style="clear:both"></div>'+
-                    '<strong style="float:left;width:100px;">Table for chart:</strong>' +
+                    '<div style="float:left;width:115px">'+
+                        '<strong style="float:left;width:100px;">Table for chart:</strong>' +
+                        '<input type="button" class="column-show-hide-button context" value="Hide all columns" onclick="columnsHideAll();"/>' +
+                        '<input type="button" class="column-show-hide-button context" value="Show all columns" onclick="columnsShowAll();"/>' +
+                        '<input type="button" class="column-show-hide-button context" value="Revert selection" onclick="columnsRevert();"/>' +
+                    '</div>'+
                     '<table id="newTable" class="googlechartTable" style="height:300px;">'+
                     '</table>'+
                     '<div style="clear:both"></div>'+
