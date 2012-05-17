@@ -965,7 +965,7 @@ function openEditChart(id){
                         '<strong style="float:left;width:100px;">Table for chart:</strong>' +
                         '<input type="button" class="column-show-hide-button context" value="Hide all columns" onclick="columnsHideAll();"/>' +
                         '<input type="button" class="column-show-hide-button context" value="Show all columns" onclick="columnsShowAll();"/>' +
-                        '<input type="button" class="column-show-hide-button context" value="Revert selection" onclick="columnsRevert();"/>' +
+                        '<input type="button" class="column-show-hide-button context" value="Reverse selection" onclick="columnsRevert();"/>' +
                     '</div>'+
                     '<table id="newTable" class="googlechartTable" style="height:300px;">'+
                     '</table>'+

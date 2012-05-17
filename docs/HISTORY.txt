@@ -3,6 +3,9 @@ Changelog
 
 4.3-dev - (unreleased)
 ----------------------
+* Feature: Added Show All, Hide All, Reverse Selection buttons on Table
+  manipulation for easier configuration.
+  [szabozo0 #5126]
 * Bug fix: Fixed dashboard filters and canvas width and height in view mode
   when they are not provided
   [voineali]
