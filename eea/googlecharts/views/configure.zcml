@@ -156,6 +156,11 @@
   />
 
   <browser:resource
+    name="eea.googlecharts.regions.js"
+    file="./js/regions.js"
+  />
+
+  <browser:resource
     name="eea.googlecharts.view.css"
     file="./css/view.css"
   />

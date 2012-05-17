@@ -1319,6 +1319,24 @@ function addNewChart(){
     });
 }
 
+function overrideMapRegions() {
+    var dropdowns = jQuery(".goog-menuitem-content:contains('Africa')").parent().parent();
+
+    jQuery(dropdowns).each(function(idx, dropdown){
+        jQuery.each(eea_regions,function(key, value){
+            console.log(key);
+            if (jQuery(dropdown).find("li[value="+key+"]").length === 0){
+                region = '<li value="' + key + '" class="goog-menuitem" role="menuitem" id="' + key + '"><div class="goog-menuitem-content">' + value.name + '</div></li>';
+                jQuery(dropdown).append(region);
+//                console.log("added");
+            }
+            else {
+//                console.log("already exists");
+            }
+        });
+    });
+}
+
 function init_googlecharts_edit(){
     if(!jQuery("#googlecharts_list").length){
         return;
@@ -1447,6 +1465,7 @@ function init_googlecharts_edit(){
             }
         });
     });
+    jQuery(document).delegate(".google-visualization-charteditor-panel-navigation-cell:contains('Customize')", "click", function(){overrideMapRegions();});
     loadCharts();
 }
 
