@@ -1,8 +1,4 @@
 <div id="googlecharts_config" tal:define="ajax_baseurl string:${view/context/absolute_url}">
-    <script type="text/javascript">
-        google.load('visualization', '1.0', {packages: ['charteditor', 'controls']});
-    </script>
-
     <script type="text/javascript" tal:content="string:ajax_baseurl = '${ajax_baseurl}';available_columns = ${view/get_columns};all_rows = ${view/get_allrows}">
     </script>
 
