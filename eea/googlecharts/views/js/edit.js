@@ -1330,9 +1330,9 @@ function overrideMapRegions() {
                 jQuery(dropdown).append(region);
 //                console.log("added");
             }
-            else {
+//            else {
 //                console.log("already exists");
-            }
+//            }
         });
     });
 }
