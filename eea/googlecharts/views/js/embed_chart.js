@@ -51,7 +51,6 @@ jQuery(document).ready(function($){
     var chart_url = baseurl + "#tab-" + chart_id;
     var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chs=70x70&chl=" + encodeURIComponent(chart_url);
     var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
-    console.log(qr_img_url);
     jQuery(googlechart_qr).appendTo("#googlechart_qr");
 
 
