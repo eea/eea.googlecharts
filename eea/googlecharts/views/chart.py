@@ -69,6 +69,7 @@ class View(ViewForm):
         for chart in charts:
             if chart['id'] == chart_id:
                 chart_settings = chart
+                chart_settings['chart_id'] = chart_id
         if chart_settings:
             chart_settings['data'] = self.get_rows()
             chart_settings['available_columns'] = self.get_columns()

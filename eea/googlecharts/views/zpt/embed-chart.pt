@@ -12,7 +12,6 @@
 <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.embed_chart.js"></script>
 
-
 </head>
 <body tal:define="chart view/get_chart" style="margin: 0; overflow: hidden">
     <script type="text/javascript" tal:content="string:chart_columns = ${chart/columns};
@@ -24,7 +23,9 @@
                                                 name = '${chart/name}';
                                                 options = ${chart/options};
                                                 chart_filterposition = ${chart/filterposition}
-                                                chart_filters = ${chart/filters};">
+                                                chart_filters = ${chart/filters};
+                                                baseurl = '${view/context/absolute_url}'
+                                                chart_id = '${chart/chart_id}'">
     </script>
     <div id="googlechart_dashboard" class="embedded-dashboard">
         <div id="googlechart_table">
