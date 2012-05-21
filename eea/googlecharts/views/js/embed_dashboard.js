@@ -77,7 +77,7 @@ jQuery(document).ready(function($){
 
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
     var chart_url = baseurl + "#tab-googlechart-googledashboard";
-    var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chs=70x70&chl=" + encodeURIComponent(chart_url);
+    var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs=70x70&chl=" + encodeURIComponent(chart_url);
     var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
     jQuery(googlechart_qr).appendTo("#googlechart_qr");
 
