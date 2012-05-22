@@ -143,10 +143,10 @@ class Export(BrowserView):
 
         watermark = getUtility(IWatermark)
 
-        pptool = getToolByName(self.context,'portal_properties')
-        qrPosition = pptool.site_properties.getProperty('QRCode_Position', 'Top Left')
-        qrVertical = pptool.site_properties.getProperty('QRCode_Vertical_Space', 0)
-        qrHorizontal = pptool.site_properties.getProperty('QRCode_Horizontal_Space', 0)
+        sp = getToolByName(self.context,'portal_properties').site_properties
+        qrPosition = sp.getProperty('QRCode_Position', 'Top Left')
+        qrVertical = sp.getProperty('QRCode_Vertical_Space', 0)
+        qrHorizontal = sp.getProperty('QRCode_Horizontal_Space', 0)
 
 
         if qrPosition != 'Disabled':
