@@ -11,7 +11,7 @@ jQuery(document).ready(function($){
     if (chart_filterposition === 0){
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_top'>"+
-                "<div id='googlechart_qr'></div>" +
+                "<div id='googlechart_qr' class='eea-googlechart-hidden-image'></div>" +
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_filters'></div>"+
                 "<div id='googlechart_view' class='googlechart embedded-chart'></div>"+
@@ -20,7 +20,7 @@ jQuery(document).ready(function($){
     if (chart_filterposition === 1){
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_left'>"+
-                "<div id='googlechart_qr'></div>" +
+                "<div id='googlechart_qr' class='eea-googlechart-hidden-image'></div>" +
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_filters' class='embedded-side-filters'></div>"+
                 "<div id='googlechart_view' class='googlechart embedded-chart'></div>"+
@@ -29,7 +29,7 @@ jQuery(document).ready(function($){
     if (chart_filterposition === 2){
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom'>"+
-                "<div id='googlechart_qr'></div>" +
+                "<div id='googlechart_qr' class='eea-googlechart-hidden-image'></div>" +
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_view' class='googlechart embedded-chart'></div>"+
                 "<div id='googlechart_filters'></div>"+
@@ -39,7 +39,7 @@ jQuery(document).ready(function($){
     if (chart_filterposition === 3){
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_right'>"+
-                "<div id='googlechart_qr'></div>" +
+                "<div id='googlechart_qr' class='eea-googlechart-hidden-image'></div>" +
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_view' class='googlechart embedded-chart'></div>"+
                 "<div id='googlechart_filters' class='embedded-side-filters'></div>"+
@@ -47,12 +47,14 @@ jQuery(document).ready(function($){
             "</div>";
     }
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
-//    jQuery('#googlechart_dashboard').attr("chart_id", chart_id);
     var chart_url = baseurl + "#tab-" + chart_id;
     var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs=70x70&chl=" + encodeURIComponent(chart_url);
     var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
-    jQuery(googlechart_qr).appendTo("#googlechart_qr");
 
+    if (qr_pos !== "Disabled"){
+        jQuery(googlechart_qr).appendTo("#googlechart_qr");
+        jQuery("#googlechart_qr").removeClass("eea-googlechart-hidden-image");
+    }
 
     var columnsFromSettings = getColumnsFromSettings(chart_columns);
     var transformedTable = transformTable(merged_rows,

@@ -58,7 +58,7 @@ jQuery(document).ready(function($){
     if ((chartsBox !== undefined) && (chartsBox.order === 0)){
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom googlechart_dashboard_table'>"+
-                "<div id='googlechart_qr'></div>" +
+                "<div id='googlechart_qr' class='eea-googlechart-hidden-image'></div>" +
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_view' class='googlechart'></div>"+
                 "<div id='googlechart_filters'></div>"+
@@ -67,7 +67,7 @@ jQuery(document).ready(function($){
     }else{
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_top googlechart_dashboard_table'>"+
-                "<div id='googlechart_qr'></div>" +
+                "<div id='googlechart_qr' class='eea-googlechart-hidden-image'></div>" +
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_filters'></div>"+
                 "<div id='googlechart_view' class='googlechart'></div>"+
@@ -79,7 +79,10 @@ jQuery(document).ready(function($){
     var chart_url = baseurl + "#tab-googlechart-googledashboard";
     var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs=70x70&chl=" + encodeURIComponent(chart_url);
     var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
-    jQuery(googlechart_qr).appendTo("#googlechart_qr");
+    if (qr_pos !== "Disabled"){
+        jQuery(googlechart_qr).appendTo("#googlechart_qr");
+        jQuery("#googlechart_qr").removeClass("eea-googlechart-hidden-image");
+    }
 
     jQuery('#googlechart_dashboard').removeAttr("chart_id");
 

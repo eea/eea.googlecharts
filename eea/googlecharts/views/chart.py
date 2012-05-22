@@ -21,6 +21,12 @@ class View(ViewForm):
     view_name = "googlechart.googlecharts"
     section = "Charts"
 
+    def qr_position(self):
+        """ Position of QR Code
+        """
+        sp = getToolByName(self.context,'portal_properties').site_properties
+        return sp.getProperty('QRCode_Position', 'Top Left')
+
     def get_charts(self):
         """ Charts
         """
@@ -74,9 +80,11 @@ class View(ViewForm):
             if chart['id'] == chart_id:
                 chart_settings = chart
                 chart_settings['chart_id'] = chart_id
+
         if chart_settings:
             chart_settings['data'] = self.get_rows()
             chart_settings['available_columns'] = self.get_columns()
+
         chart_settings['chartWidth'] = \
             self.request.get("chartWidth",chart_settings["width"])
         chart_settings['chartHeight'] = \
@@ -147,7 +155,6 @@ class Export(BrowserView):
         qrPosition = sp.getProperty('QRCode_Position', 'Top Left')
         qrVertical = sp.getProperty('QRCode_Vertical_Space', 0)
         qrHorizontal = sp.getProperty('QRCode_Horizontal_Space', 0)
-
 
         if qrPosition != 'Disabled':
             qr_con = urllib2.urlopen(kwargs.get('qr_url'))

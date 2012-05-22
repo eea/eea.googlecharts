@@ -24,8 +24,9 @@
                                                 options = ${chart/options};
                                                 chart_filterposition = ${chart/filterposition}
                                                 chart_filters = ${chart/filters};
-                                                baseurl = '${view/context/absolute_url}'
-                                                chart_id = '${chart/chart_id}'">
+                                                baseurl = '${view/context/absolute_url}';
+                                                chart_id = '${chart/chart_id}';
+                                                qr_pos = '${view/qr_position}';">
     </script>
     <div id="googlechart_dashboard" class="embedded-dashboard">
         <div id="googlechart_table">
