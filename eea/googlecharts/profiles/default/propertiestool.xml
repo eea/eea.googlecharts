@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<object name="portal_properties">
+    <object name="site_properties" meta_type="Plone Property Sheet">
+        <property name="watermark_positions" type="lines">
+            <element value="Disabled"/>
+            <element value="Top Left"/>
+            <element value="Top Right"/>
+            <element value="Bottom Left"/>
+            <element value="Bottom Right"/>
+        </property>
+        <property name="QRCode_Position" select_variable="watermark_positions"
+            type="selection">Top Left</property>
+        <property name="QRCode_Horizontal_Space" type="int">0</property>
+        <property name="QRCode_Vertical_Space" type="int">0</property>
+        <property name="Watermark_Position" select_variable="watermark_positions"
+            type="selection">Bottom Right</property>
+        <property name="Watermark_Horizontal_Space" type="int">0</property>
+        <property name="Watermark_Vertical_Space" type="int">0</property>
+    </object>
+</object>
+

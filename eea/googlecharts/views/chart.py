@@ -4,6 +4,7 @@ import json
 import urllib2
 from PIL import Image
 from cStringIO import StringIO
+from Products.CMFCore.utils import getToolByName
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from Products.Five.browser import BrowserView
@@ -142,18 +143,37 @@ class Export(BrowserView):
 
         watermark = getUtility(IWatermark)
 
-        qr_con = urllib2.urlopen(kwargs.get('qr_url'))
-        qr_img = qr_con.read()
-        qr_con.close()
+        pptool = getToolByName(self.context,'portal_properties')
+        qrPosition = pptool.site_properties.getProperty('QRCode_Position', 'Top Left')
+        qrVertical = pptool.site_properties.getProperty('QRCode_Vertical_Space', 0)
+        qrHorizontal = pptool.site_properties.getProperty('QRCode_Horizontal_Space', 0)
 
-        pilImg = Image.open(StringIO(img))
-        pilQR = Image.open(StringIO(qr_img))
-        pilImg = watermark.placeWatermark(pilImg, pilQR, (0, 0), 0.7)
 
-        op = StringIO()
-        pilImg.save(op, 'png')
-        img = op.getvalue()
-        op.close()
+        if qrPosition != 'Disabled':
+            qr_con = urllib2.urlopen(kwargs.get('qr_url'))
+            qr_img = qr_con.read()
+            qr_con.close()
+
+            pilImg = Image.open(StringIO(img))
+            pilQR = Image.open(StringIO(qr_img))
+            pos = (0, 0)
+            if qrPosition == 'Top Left':
+                pos = (qrHorizontal, qrVertical)
+            if qrPosition == 'Top Right':
+                pos = (pilImg.size[0] - pilQR.size[0] - qrHorizontal,
+                        qrVertical)
+            if qrPosition == 'Bottom Left':
+                pos = (qrHorizontal,
+                        pilImg.size[1] - pilQR.size[1] - qrVertical)
+            if qrPosition == 'Bottom Right':
+                pos = (pilImg.size[0] - pilQR.size[0] - qrHorizontal,
+                        pilImg.size[1] - pilQR.size[1] - qrVertical)
+            pilImg = watermark.placeWatermark(pilImg, pilQR, pos, 0.7)
+
+            op = StringIO()
+            pilImg.save(op, 'png')
+            img = op.getvalue()
+            op.close()
 
         ctype = kwargs.get('type', 'image/png')
         filename = kwargs.get('filename', 'export')
