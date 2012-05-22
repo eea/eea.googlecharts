@@ -1,13 +1,16 @@
 """ GoogleCharts View
 """
 import json
+import urllib2
+from PIL import Image
+from cStringIO import StringIO
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from Products.Five.browser import BrowserView
 from Products.CMFCore.interfaces import IFolderish
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.view import ViewForm
-from eea.converter.interfaces import IConvert
+from eea.converter.interfaces import IConvert, IWatermark
 from eea.googlecharts.config import EEAMessageFactory as _
 
 class View(ViewForm):
@@ -136,6 +139,21 @@ class Export(BrowserView):
         if not img:
             return _("ERROR: An error occured while exporting your image. "
                      "Please try again later.")
+
+        watermark = getUtility(IWatermark)
+
+        qr_con = urllib2.urlopen(kwargs.get('qr_url'))
+        qr_img = qr_con.read()
+        qr_con.close()
+
+        pilImg = Image.open(StringIO(img))
+        pilQR = Image.open(StringIO(qr_img))
+        pilImg = watermark.placeWatermark(pilImg, pilQR, (0, 0), 0.7)
+
+        op = StringIO()
+        pilImg.save(op, 'png')
+        img = op.getvalue()
+        op.close()
 
         ctype = kwargs.get('type', 'image/png')
         filename = kwargs.get('filename', 'export')

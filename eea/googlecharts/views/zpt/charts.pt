@@ -46,6 +46,7 @@
         <input type="hidden" id="filename" name="filename"/>
         <input type="hidden" id="type" name="type"/>
         <input type="hidden" id="width" name="width"/>
+        <input type="hidden" id="qr_url" name="qr_url"/>
     </form>
 
 </tal:block>

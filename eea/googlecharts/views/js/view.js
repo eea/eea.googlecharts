@@ -84,6 +84,7 @@ function drawChart(value){
         var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs=70x70&chl=" + encodeURIComponent(chart_url);
         var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
         jQuery(googlechart_qr).appendTo("#googlechart_qr");
+        jQuery('#qr_url').attr('value', qr_img_url);
         jQuery('#googlechart_dashboard').attr("chart_id", chart_id);
         jQuery('#googlechart_dashboard').attr("chart_width", chart_width);
         jQuery('#googlechart_dashboard').attr("chart_height", chart_height);
