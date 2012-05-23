@@ -293,3 +293,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .eea-googlechart-hidden-image {
     display: none;
 }
+
+#googlechart_wm {
+    float: right;
+}

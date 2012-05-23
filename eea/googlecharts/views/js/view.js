@@ -48,6 +48,9 @@ function drawChart(value){
                     "<div style='clear: both'></div>" +
                     "<div id='googlechart_filters'></div>"+
                     "<div id='googlechart_view' class='googlechart'></div>"+
+                    "<div style='clear: both'></div>" +
+                    "<div id='googlechart_wm' class='eea-googlechart-hidden-image'></div>" +
+                    "<div style='clear: both'></div>" +
                 "</div>";
         }
         if (chart_filterposition === 1){
@@ -57,6 +60,9 @@ function drawChart(value){
                     "<div style='clear: both'></div>" +
                     "<div id='googlechart_filters'></div>"+
                     "<div id='googlechart_view' class='googlechart'></div>"+
+                    "<div style='clear: both'></div>" +
+                    "<div id='googlechart_wm' class='eea-googlechart-hidden-image'></div>" +
+                    "<div style='clear: both'></div>" +
                 "</div>";
         }
         if (chart_filterposition === 2){
@@ -67,6 +73,8 @@ function drawChart(value){
                     "<div id='googlechart_view' class='googlechart'></div>"+
                     "<div id='googlechart_filters'></div>"+
                     "<div style='clear: both'></div>" +
+                    "<div id='googlechart_wm' class='eea-googlechart-hidden-image'></div>" +
+                    "<div style='clear: both'></div>" +
                 "</div>";
         }
         if (chart_filterposition === 3){
@@ -76,6 +84,8 @@ function drawChart(value){
                     "<div style='clear: both'></div>" +
                     "<div id='googlechart_view' class='googlechart'></div>"+
                     "<div id='googlechart_filters'></div>"+
+                    "<div style='clear: both'></div>" +
+                    "<div id='googlechart_wm' class='eea-googlechart-hidden-image'></div>" +
                     "<div style='clear: both'></div>" +
                 "</div>";
         }
@@ -88,6 +98,13 @@ function drawChart(value){
             jQuery(googlechart_qr).appendTo("#googlechart_qr");
             jQuery("#googlechart_qr").removeClass("eea-googlechart-hidden-image");
         }
+
+        var googlechart_wm = "<img alt='Watermark' src='" + wm_path + "'/>";
+        if (wm_pos !== "Disabled"){
+            jQuery(googlechart_wm).appendTo("#googlechart_wm");
+            jQuery("#googlechart_wm").removeClass("eea-googlechart-hidden-image");
+        }
+
         jQuery('#googlechart_dashboard').attr("chart_id", chart_id);
         jQuery('#googlechart_dashboard').attr("chart_width", chart_width);
         jQuery('#googlechart_dashboard').attr("chart_height", chart_height);
@@ -137,6 +154,8 @@ function drawDashboard(){
                 "<div id='googlechart_view' class='googlechart'></div>"+
                 "<div id='googlechart_filters'></div>"+
                 "<div style='clear: both'></div>" +
+                "<div id='googlechart_wm' class='eea-googlechart-hidden-image'></div>" +
+                "<div style='clear: both'></div>" +
             "</div>";
     }else{
         googlechart_table = ""+
@@ -145,6 +164,8 @@ function drawDashboard(){
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_filters'></div>"+
                 "<div id='googlechart_view' class='googlechart'></div>"+
+                "<div style='clear: both'></div>" +
+                "<div id='googlechart_wm' class='eea-googlechart-hidden-image'></div>" +
                 "<div style='clear: both'></div>" +
             "</div>";
     }
@@ -158,6 +179,11 @@ function drawDashboard(){
         jQuery("#googlechart_qr").removeClass("eea-googlechart-hidden-image");
     }
 
+    var googlechart_wm = "<img alt='Watermark' src='" + wm_path + "'/>";
+    if (wm_pos !== "Disabled"){
+        jQuery(googlechart_wm).appendTo("#googlechart_wm");
+        jQuery("#googlechart_wm").removeClass("eea-googlechart-hidden-image");
+    }
 
     jQuery('#googlechart_dashboard').removeAttr("chart_id");
 

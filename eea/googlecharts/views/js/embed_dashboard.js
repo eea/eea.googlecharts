@@ -63,6 +63,8 @@ jQuery(document).ready(function($){
                 "<div id='googlechart_view' class='googlechart'></div>"+
                 "<div id='googlechart_filters'></div>"+
                 "<div style='clear: both'></div>" +
+                "<div id='googlechart_wm' class='eea-googlechart-hidden-image'></div>" +
+                "<div style='clear: both'></div>" +
             "</div>";
     }else{
         googlechart_table = ""+
@@ -71,6 +73,8 @@ jQuery(document).ready(function($){
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_filters'></div>"+
                 "<div id='googlechart_view' class='googlechart'></div>"+
+                "<div style='clear: both'></div>" +
+                "<div id='googlechart_wm' class='eea-googlechart-hidden-image'></div>" +
                 "<div style='clear: both'></div>" +
             "</div>";
     }
@@ -82,6 +86,12 @@ jQuery(document).ready(function($){
     if (qr_pos !== "Disabled"){
         jQuery(googlechart_qr).appendTo("#googlechart_qr");
         jQuery("#googlechart_qr").removeClass("eea-googlechart-hidden-image");
+    }
+
+    var googlechart_wm = "<img alt='Watermark' src='" + wm_path + "'/>";
+    if (wm_pos !== "Disabled"){
+        jQuery(googlechart_wm).appendTo("#googlechart_wm");
+        jQuery("#googlechart_wm").removeClass("eea-googlechart-hidden-image");
     }
 
     jQuery('#googlechart_dashboard').removeAttr("chart_id");

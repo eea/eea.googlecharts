@@ -27,6 +27,18 @@ class View(ViewForm):
         sp = getToolByName(self.context,'portal_properties').site_properties
         return sp.getProperty('QRCode_Position', 'Top Left')
 
+    def wm_position(self):
+        """ Position of Watermark
+        """
+        sp = getToolByName(self.context,'portal_properties').site_properties
+        return sp.getProperty('Watermark_Position', 'Bottom Right')
+
+    def wm_path(self):
+        """ Path to Watermark Image
+        """
+        sp = getToolByName(self.context,'portal_properties').site_properties
+        return sp.getProperty('Watermark_Image', '')
+
     def get_charts(self):
         """ Charts
         """
@@ -131,6 +143,32 @@ class View(ViewForm):
             })
         return tabs
 
+def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
+    """ Calculate position of watermark and place it over the original image
+    """
+    watermark = getUtility(IWatermark)
+    pilImg = Image.open(StringIO(img))
+    pilWM = Image.open(StringIO(wm))
+    pos = (0, 0)
+    if position == 'Top Left':
+        pos = (horizontalSpace, verticalSpace)
+    if position == 'Top Right':
+        pos = (pilImg.size[0] - pilWM.size[0] - horizontalSpace,
+                verticalSpace)
+    if position == 'Bottom Left':
+        pos = (horizontalSpace,
+                pilImg.size[1] - pilWM.size[1] - horizontalSpace)
+    if position == 'Bottom Right':
+        pos = (pilImg.size[0] - pilWM.size[0] - horizontalSpace,
+                pilImg.size[1] - pilWM.size[1] - verticalSpace)
+    pilImg = watermark.placeWatermark(pilImg, pilWM, pos, opacity)
+
+    op = StringIO()
+    pilImg.save(op, 'png')
+    img = op.getvalue()
+    op.close()
+    return img
+
 class Export(BrowserView):
     """ Export chart to png
     """
@@ -149,38 +187,38 @@ class Export(BrowserView):
             return _("ERROR: An error occured while exporting your image. "
                      "Please try again later.")
 
-        watermark = getUtility(IWatermark)
 
         sp = getToolByName(self.context,'portal_properties').site_properties
         qrPosition = sp.getProperty('QRCode_Position', 'Top Left')
         qrVertical = sp.getProperty('QRCode_Vertical_Space', 0)
         qrHorizontal = sp.getProperty('QRCode_Horizontal_Space', 0)
 
+        wmPath = sp.getProperty('Watermark_Image', '')
+        wmPosition = sp.getProperty('Watermark_Position', 'Bottom Right')
+        wmVertical = sp.getProperty('Watermark_Vertical_Space', 0)
+        wmHorizontal = sp.getProperty('Watermark_Horizontal_Space', 0)
+
         if qrPosition != 'Disabled':
             qr_con = urllib2.urlopen(kwargs.get('qr_url'))
             qr_img = qr_con.read()
             qr_con.close()
+            img = applyWatermark(img,
+                                qr_img,
+                                qrPosition,
+                                qrVertical,
+                                qrHorizontal,
+                                0.7)
 
-            pilImg = Image.open(StringIO(img))
-            pilQR = Image.open(StringIO(qr_img))
-            pos = (0, 0)
-            if qrPosition == 'Top Left':
-                pos = (qrHorizontal, qrVertical)
-            if qrPosition == 'Top Right':
-                pos = (pilImg.size[0] - pilQR.size[0] - qrHorizontal,
-                        qrVertical)
-            if qrPosition == 'Bottom Left':
-                pos = (qrHorizontal,
-                        pilImg.size[1] - pilQR.size[1] - qrVertical)
-            if qrPosition == 'Bottom Right':
-                pos = (pilImg.size[0] - pilQR.size[0] - qrHorizontal,
-                        pilImg.size[1] - pilQR.size[1] - qrVertical)
-            pilImg = watermark.placeWatermark(pilImg, pilQR, pos, 0.7)
-
-            op = StringIO()
-            pilImg.save(op, 'png')
-            img = op.getvalue()
-            op.close()
+        if wmPosition != 'Disabled':
+            wm_con = urllib2.urlopen(wmPath)
+            wm_img = wm_con.read()
+            wm_con.close()
+            img = applyWatermark(img,
+                                wm_img,
+                                wmPosition,
+                                wmVertical,
+                                wmHorizontal,
+                                0.7)
 
         ctype = kwargs.get('type', 'image/png')
         filename = kwargs.get('filename', 'export')

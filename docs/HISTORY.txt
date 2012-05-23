@@ -3,6 +3,10 @@ Changelog
 
 4.3-dev - (unreleased)
 ----------------------
+* Upgrde step:
+  ZMI > portal_setup > import > profile "EEA Google Charts" > import Plone Properties registry
+* Feature: Added QR Codes and Logo on charts
+  [szabozo0 #4940]
 * Feature: Added Show All, Hide All, Reverse Selection buttons on Table
   manipulation for easier configuration.
   [szabozo0 #5126]

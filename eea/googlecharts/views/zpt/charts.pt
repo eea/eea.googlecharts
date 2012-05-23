@@ -11,7 +11,7 @@
     var has_dashboard = false;
 </script>
 
-<script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}';">
+<script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}';">
 </script>
 <div class="googlecharts_container">
 <tal:block tal:define="charts view/get_charts; has_dashboard view/has_dashboard">
