@@ -70,9 +70,8 @@
 }
 
 .googlechart-dialog {
-  border-radius: 10px;
+  border-radius: 5px;
   box-shadow: 0px 0px 100px #000;
-  border: 1px solid #3A5774;
 }
 
 .googlechartTable {
@@ -84,13 +83,8 @@
 .pivotedColumn {
     padding:2px;
     border:1px solid #EEEEEE;
-    background-color:#CDE2A7;
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#CDE2A7));
-    background-image: -webkit-linear-gradient(center top , #FFFFFF, #CDE2A7);
-    background-image: -moz-linear-gradient(center top , #FFFFFF, #CDE2A7);
-    background-image: -ms-linear-gradient(center top , #FFFFFF, #CDE2A7);
-    background-image: -o-linear-gradient(center top , #FFFFFF, #CDE2A7);
-
+    background-color:#777c1f;
+    color: #fff;
 }
 .googlechartTable td{
     padding:2px;
