@@ -190,13 +190,13 @@ class Export(BrowserView):
 
         sp = getToolByName(self.context,'portal_properties').site_properties
         qrPosition = sp.getProperty('QRCode_Position', 'Top Left')
-        qrVertical = sp.getProperty('QRCode_Vertical_Space', 0)
-        qrHorizontal = sp.getProperty('QRCode_Horizontal_Space', 0)
+        qrVertical = sp.getProperty('QRCode_Vertical_Space_For_PNG_Export', 0)
+        qrHorizontal = sp.getProperty('QRCode_Horizontal_Space_For_PNG_Export', 0)
 
         wmPath = sp.getProperty('Watermark_Image', '')
         wmPosition = sp.getProperty('Watermark_Position', 'Bottom Right')
-        wmVertical = sp.getProperty('Watermark_Vertical_Space', 0)
-        wmHorizontal = sp.getProperty('Watermark_Horizontal_Space', 0)
+        wmVertical = sp.getProperty('Watermark_Vertical_Space_For_PNG_Export', 0)
+        wmHorizontal = sp.getProperty('Watermark_Horizontal_Space_For_PNG_Export', 0)
 
         if qrPosition != 'Disabled':
             qr_con = urllib2.urlopen(kwargs.get('qr_url'))

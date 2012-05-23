@@ -294,6 +294,10 @@ ul.googlechart_tabs li:first-of-type a:hover {
     display: none;
 }
 
-#googlechart_wm {
+.googlechart_left_image {
+    float: left;
+}
+
+.googlechart_right_image {
     float: right;
 }

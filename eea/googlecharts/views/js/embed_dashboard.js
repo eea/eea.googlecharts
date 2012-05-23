@@ -1,5 +1,29 @@
 google.load('visualization', '1.0', {packages: ['controls']});
 
+function putImageDivInPosition(div_id, position){
+    if (position === "Disabled"){
+        return;
+    }
+
+    var div = "<div id='" + div_id+ "' class='eea-googlechart-hidden-image'></div>";
+
+    if (position.indexOf("Top") > -1){
+        jQuery(div).appendTo("#googlechart_top_images");
+    }
+
+    if (position.indexOf("Bottom") > -1){
+        jQuery(div).appendTo("#googlechart_bottom_images");
+    }
+
+    if (position.indexOf("Left") > -1){
+        jQuery("#" + div_id).addClass("googlechart_left_image");
+    }
+
+    if (position.indexOf("Right") > -1){
+        jQuery("#" + div_id).addClass("googlechart_right_image");
+    }
+}
+
 jQuery(document).ready(function($){
     if (has_dashboard) {
         var configs = [];
@@ -58,35 +82,40 @@ jQuery(document).ready(function($){
     if ((chartsBox !== undefined) && (chartsBox.order === 0)){
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_bottom googlechart_dashboard_table'>"+
-                "<div id='googlechart_qr' class='eea-googlechart-hidden-image'></div>" +
+                "<div id='googlechart_top_images'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_view' class='googlechart'></div>"+
                 "<div id='googlechart_filters'></div>"+
                 "<div style='clear: both'></div>" +
-                "<div id='googlechart_wm' class='eea-googlechart-hidden-image'></div>" +
+                "<div id='googlechart_bottom_images'></div>"+
                 "<div style='clear: both'></div>" +
             "</div>";
     }else{
         googlechart_table = ""+
             "<div id='googlechart_table' class='googlechart_table googlechart_table_top googlechart_dashboard_table'>"+
-                "<div id='googlechart_qr' class='eea-googlechart-hidden-image'></div>" +
+                "<div id='googlechart_top_images'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_filters'></div>"+
                 "<div id='googlechart_view' class='googlechart'></div>"+
                 "<div style='clear: both'></div>" +
-                "<div id='googlechart_wm' class='eea-googlechart-hidden-image'></div>" +
+                "<div id='googlechart_bottom_images'></div>"+
                 "<div style='clear: both'></div>" +
             "</div>";
     }
 
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
     var chart_url = baseurl + "#tab-googlechart-googledashboard";
+
+    putImageDivInPosition("googlechart_qr", qr_pos);
+
     var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs=70x70&chl=" + encodeURIComponent(chart_url);
     var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
     if (qr_pos !== "Disabled"){
         jQuery(googlechart_qr).appendTo("#googlechart_qr");
         jQuery("#googlechart_qr").removeClass("eea-googlechart-hidden-image");
     }
+
+    putImageDivInPosition("googlechart_wm", wm_pos);
 
     var googlechart_wm = "<img alt='Watermark' src='" + wm_path + "'/>";
     if (wm_pos !== "Disabled"){
