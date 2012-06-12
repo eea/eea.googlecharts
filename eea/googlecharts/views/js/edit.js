@@ -484,6 +484,12 @@ function generateNewTable(sortOrder, isFirst){
     });
 
     jQuery("#newColumns").sortable({
+        items: 'th',
+        placeholder: 'ui-state-highlight',
+        delay: 300,
+        opacity: 0.7,
+        cursor: 'crosshair',
+        tolerance: 'pointer',
         stop: function(event,ui){
             generateNewTable(generateSortedColumns());
         }

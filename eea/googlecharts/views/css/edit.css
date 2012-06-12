@@ -121,8 +121,12 @@
     background-image: url(../../++resource++eea.daviz.images/show.png);
 }
 
-#newColumns th{
-    cursor:move;
+#newColumns th {
+    cursor: crosshair;
+}
+
+#newColumns .ui-state-highlight {
+    min-width: 50px;
 }
 
 .googlechartTable .ui-icon {
