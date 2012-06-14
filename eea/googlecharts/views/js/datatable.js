@@ -89,13 +89,27 @@ function tableToArray(originalDataTable, columns){
 }
 
 function prepareForChart(originalDataTable, columns, limit){
-    limit = typeof(limit) !== 'undefined' ? limit : -1;
+    limit = typeof(limit) !== 'undefined' ? limit : 0;
 
-    var itemsToDisplay = originalDataTable.items;
-    if (limit > -1){
-        itemsToDisplay = itemsToDisplay.splice(0, limit);
+    var tmpItemsToDisplay = originalDataTable.items;
+    var itemsToDisplay = [];
+    if (limit > 0){
+        var step = Math.round(tmpItemsToDisplay.length/limit);
+        var count = 0;
+        jQuery.each(tmpItemsToDisplay, function(idx, item){
+            if (count == step){
+                count = 0;
+            }
+            if (count === 0){
+                itemsToDisplay.push(item);
+            }
+            count++;
+        });
+//        itemsToDisplay = itemsToDisplay.slice(0, limit);
     }
-
+    else {
+        itemsToDisplay = tmpItemsToDisplay;
+    }
     var dataForChart = new google.visualization.DataTable();
 
     jQuery.each(columns, function(column_index, column){

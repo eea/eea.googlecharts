@@ -17,6 +17,36 @@ var defaultAdvancedOptions = '{"fontName":"Verdana",'+
                               '"state":"{\\"showTrails\\":false}"' +
                               ',"showChartButtons":false' +
                               '}';
+var scatterSize = 103;
+var scatterOptions = {
+            'width':scatterSize,
+            'height':scatterSize,
+            'enableInteractivity':false,
+            'pointSize':2,
+            'chartArea':{
+                'left':1,
+                'top':1,
+                'width':100,
+                'height':100
+            },
+            'legend':{
+                'position':'none',
+            },
+            'hAxis':{
+                'baselineColor':'#CCC',
+                'textPosition':'none',
+                'gridlines':{
+                    'count':2,
+                },
+            },
+            'vAxis':{
+                'baselineColor':'#CCC',
+                'textPosition':'none',
+                'gridlines':{
+                    'count':2,
+                },
+            },
+};
 
 function checkSVG(id){
     var svg = jQuery("#googlechart_chart_div_"+id).find("iframe").contents().find("#chartArea").html();
@@ -913,6 +943,102 @@ function columnsRevert(){
     generateNewTable(generateSortedColumns());
 }
 
+function columnsScatter(){
+
+    var columns = jQuery("#originalColumns").find("th");
+
+    var normalColumns = [];
+    var pivotColumns = [];
+    var valueColumn = '';
+    jQuery.each(columns, function(idx, value){
+        var columnType = jQuery(value).find("select").attr("value");
+        var columnName = jQuery(value).attr("column_id");
+        switch(columnType){
+            case "0":
+                break;
+            case "1":
+                normalColumns.push(columnName);
+                break;
+            case "2":
+                pivotColumns.push(columnName);
+                break;
+            case "3":
+                valueColumn = columnName;
+                break;
+        }
+    });
+
+    var transformedTable = transformTable(all_rows, normalColumns, pivotColumns, valueColumn, available_columns);
+
+    var columnsForMatrix = [];
+    var columns_tmp = jQuery("#newColumns").find("th");
+    var columns = [];
+    var key_idx = 0
+    jQuery.each(columns_tmp, function(idx, value){
+        var columnName = jQuery(value).attr("column_id");
+        var columnVisible = jQuery(value).attr("column_visible");
+        if ((transformedTable.properties[columnName].valueType === 'number') && (columnVisible === 'visible')){
+            //columnsForMatrix.push(jQuery.inArray(columnName, transformedTable.available_columns));
+            columnsForMatrix.push(key_idx);
+            columns.push(columnName);
+            key_idx++;
+        }
+    });
+
+    var tmp_columns = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_columns").attr("value"));
+
+    var data = prepareForChart(transformedTable, columns, 10);
+    jQuery(".scatter_dialog").remove();
+    var scatter_zone_size = (columns.length - 1) * scatterSize;
+    var scatterDialog = "" +
+        "<div class='scatter_dialog'>" +
+        "<div class='scatters_zone' style='width:" + (columns.length - 1) * scatterSize + "px'> </div>"+
+        "<div>";
+    var width = jQuery(window).width() * 0.85;
+    var height = jQuery(window).height() * 0.85;
+    jQuery(scatterDialog).dialog({title:"ScatterPlot Matrix",
+            dialogClass: 'googlechart-dialog',
+            modal:true,
+            width:width,
+            height:height,
+            create:function(){
+
+                var matrixColumns = columnsForMatrix.slice(0, columnsForMatrix.length - 1);
+                var matrixRows = columnsForMatrix.slice(1, columnsForMatrix.length);
+
+                jQuery.each(matrixRows, function(idx, rowValue){
+                    var rowPairs = [];
+                    jQuery.each(matrixColumns, function(idx, colValue){
+                        if (rowValue === colValue){
+                            return false;
+                        }
+
+                        var scatterId = "scatter_id_" + colValue + "_" + rowValue;
+                        jQuery(".scatters_zone").append("<div id='" + scatterId + "' style='float:left'></div>");
+                        jQuery("#"+scatterId).click(function(){
+                            console.log("clicked");
+                        });
+                        var tmp_scatter = new google.visualization.ChartWrapper({
+                            'chartType': 'ScatterChart',
+                            'containerId': scatterId,
+                            'options': scatterOptions,
+                        });
+                        tmp_scatter.setDataTable(data);
+                        tmp_scatter.setView({"columns":[colValue, rowValue]});
+                        tmp_scatter.draw();
+                    });
+                    jQuery(".scatters_zone").append("<div style='clear:both'></div>");
+                });
+                if (scatter_zone_size < width){
+                    jQuery('.scatter_dialog').dialog('option','width', 'auto');
+                }
+                if (scatter_zone_size < height){
+                    jQuery('.scatter_dialog').dialog('option','height', 'auto');
+                }
+            }
+    });
+}
+
 function openEditChart(id){
     chartEditor = null;
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
@@ -972,6 +1098,7 @@ function openEditChart(id){
                         '<input type="button" class="column-show-hide-button context" value="Hide all columns" onclick="columnsHideAll();"/>' +
                         '<input type="button" class="column-show-hide-button context" value="Show all columns" onclick="columnsShowAll();"/>' +
                         '<input type="button" class="column-show-hide-button context" value="Reverse selection" onclick="columnsRevert();"/>' +
+                        '<input type="button" class="column-show-hide-button context" value="Scatterplot matrix" onclick="columnsScatter();"/>' +
                     '</div>'+
                     '<table id="newTable" class="googlechartTable" style="height:300px;">'+
                     '</table>'+
