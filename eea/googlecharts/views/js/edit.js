@@ -30,22 +30,22 @@ var scatterOptions = {
                 'height':100
             },
             'legend':{
-                'position':'none',
+                'position':'none'
             },
             'hAxis':{
                 'baselineColor':'#CCC',
                 'textPosition':'none',
                 'gridlines':{
-                    'count':2,
-                },
+                    'count':2
+                }
             },
             'vAxis':{
                 'baselineColor':'#CCC',
                 'textPosition':'none',
                 'gridlines':{
-                    'count':2,
-                },
-            },
+                    'count':2
+                }
+            }
 };
 
 function checkSVG(id){
@@ -972,27 +972,27 @@ function columnsScatter(){
 
     var columnsForMatrix = [];
     var columns_tmp = jQuery("#newColumns").find("th");
-    var columns = [];
-    var key_idx = 0
+    var columnNamesForMatrix = [];
+    var key_idx = 0;
     jQuery.each(columns_tmp, function(idx, value){
         var columnName = jQuery(value).attr("column_id");
         var columnVisible = jQuery(value).attr("column_visible");
         if ((transformedTable.properties[columnName].valueType === 'number') && (columnVisible === 'visible')){
             //columnsForMatrix.push(jQuery.inArray(columnName, transformedTable.available_columns));
             columnsForMatrix.push(key_idx);
-            columns.push(columnName);
+            columnNamesForMatrix.push(columnName);
             key_idx++;
         }
     });
 
     var tmp_columns = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_columns").attr("value"));
 
-    var data = prepareForChart(transformedTable, columns, 10);
+    var data = prepareForChart(transformedTable, columnNamesForMatrix, 10);
     jQuery(".scatter_dialog").remove();
-    var scatter_zone_size = (columns.length - 1) * scatterSize;
+    var scatter_zone_size = (columnNamesForMatrix.length - 1) * scatterSize;
     var scatterDialog = "" +
         "<div class='scatter_dialog'>" +
-        "<div class='scatters_zone' style='width:" + (columns.length - 1) * scatterSize + "px'> </div>"+
+        "<div class='scatters_zone' style='width:" + scatter_zone_size + "px'> </div>"+
         "<div>";
     var width = jQuery(window).width() * 0.85;
     var height = jQuery(window).height() * 0.85;
@@ -1021,7 +1021,7 @@ function columnsScatter(){
                         var tmp_scatter = new google.visualization.ChartWrapper({
                             'chartType': 'ScatterChart',
                             'containerId': scatterId,
-                            'options': scatterOptions,
+                            'options': scatterOptions
                         });
                         tmp_scatter.setDataTable(data);
                         tmp_scatter.setView({"columns":[colValue, rowValue]});
