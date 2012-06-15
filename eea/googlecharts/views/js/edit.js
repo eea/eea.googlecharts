@@ -17,6 +17,8 @@ var defaultAdvancedOptions = '{"fontName":"Verdana",'+
                               '"state":"{\\"showTrails\\":false}"' +
                               ',"showChartButtons":false' +
                               '}';
+var scatterMatrixMaxDots = 200;
+var scatterMinDots = 30;
 var scatterSize = 103;
 var scatterOptions = {
             'width':scatterSize,
@@ -986,8 +988,13 @@ function columnsScatter(){
     });
 
     var tmp_columns = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_columns").attr("value"));
-
-    var data = prepareForChart(transformedTable, columnNamesForMatrix, 10);
+    var cols_nr = columnsForMatrix.length;
+    if (cols_nr < 2){
+        alert ("At least 2 visible numeric columns are required!");
+        return;
+    }
+    var dotsForScatter = Math.max(Math.round(scatterMatrixMaxDots / ((cols_nr * cols_nr - cols_nr) / 2)), scatterMinDots);
+    var data = prepareForChart(transformedTable, columnNamesForMatrix, dotsForScatter);
     jQuery(".scatter_dialog").remove();
     var scatter_zone_size = (columnNamesForMatrix.length - 1) * scatterSize;
     var scatterDialog = "" +
