@@ -1021,10 +1021,15 @@ function columnsScatter(){
                         }
 
                         var scatterId = "scatter_id_" + colValue + "_" + rowValue;
-                        jQuery(".scatters_zone").append("<div id='" + scatterId + "' style='float:left'></div>");
-                        jQuery("#"+scatterId).click(function(){
-                            console.log("clicked");
-                        });
+                        var scatterDiv = "<div class='scatter_container'>" +
+                                            "<div class='scatter_overlay' row_nr='" + rowValue + "' col_nr='" + colValue + "'>" +
+                                            "</div>"+
+                                            "<div class='scatter_item' id='" + scatterId + "'>" +
+                                            "</div>"+
+                                            "<div style='clear:both'></div>"+
+                                         "</div>";
+//                        jQuery(".scatters_zone").append("<div id='" + scatterId + "' style='float:left'></div>");
+                        jQuery(".scatters_zone").append(scatterDiv);
                         var tmp_scatter = new google.visualization.ChartWrapper({
                             'chartType': 'ScatterChart',
                             'containerId': scatterId,
@@ -1042,6 +1047,23 @@ function columnsScatter(){
                 if (scatter_zone_size < height){
                     jQuery('.scatter_dialog').dialog('option','height', 'auto');
                 }
+                jQuery(".scatter_overlay").click(function(){
+                    jQuery(".scatter_dialog").dialog("close");
+                    var col_nr = jQuery(this).attr("col_nr");
+                    var row_nr = jQuery(this).attr("row_nr");
+                    var sc_col_name1 = columnNamesForMatrix[col_nr];
+                    var sc_col_name2 = columnNamesForMatrix[row_nr];
+                    jQuery("#newTable").find(".ui-icon").each(function(idx, column){
+                        if (jQuery(column).hasClass("ui-icon-hide") &&
+                            (jQuery(column).closest("th").attr("column_id") != sc_col_name1) &&
+                            (jQuery(column).closest("th").attr("column_id") != sc_col_name2)){
+                            jQuery(column).removeClass("ui-icon-hide");
+                            jQuery(column).addClass("ui-icon-show");
+                            jQuery(column).closest("th").attr("column_visible","hidden");
+                        }
+                    });
+                    generateNewTable(generateSortedColumns());
+                });
             }
     });
 }
