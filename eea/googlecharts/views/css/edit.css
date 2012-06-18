@@ -671,3 +671,37 @@ dl.portlet .dashboard-chart,
 .scatter_item {
     float:left;
 }
+
+#scatters_container {
+    position:relative;
+    overflow:auto;
+    float:left;
+}
+
+#verticalscrollcontainer {
+    float:left;
+    overflow:hidden;
+}
+
+#horizontalscrollcontainer {
+    float:left;
+    overflow:hidden;
+}
+
+#scatterhorizontalscroll,
+#scatterverticalscroll {
+    position:relative;
+}
+
+.scatterScrollItem {
+    width:100px;
+    padding-right:3px;
+    height:100px;
+    padding-bottom:3px;
+    overflow:hidden;
+}
+
+.horizontalScrollItem {
+    float:left;
+}
+

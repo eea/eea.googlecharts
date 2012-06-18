@@ -945,6 +945,12 @@ function columnsRevert(){
     generateNewTable(generateSortedColumns());
 }
 
+function updateScatterScrolls(){
+    var pos = $(".scatters_zone").position();
+    $("#scatterhorizontalscroll").attr("style","left:"+pos.left+"px;");
+    $("#scatterverticalscroll").attr("style","top:"+pos.top+"px;");
+}
+
 function columnsScatter(){
 
     var columns = jQuery("#originalColumns").find("th");
@@ -975,14 +981,15 @@ function columnsScatter(){
     var columnsForMatrix = [];
     var columns_tmp = jQuery("#newColumns").find("th");
     var columnNamesForMatrix = [];
+    var columnNiceNamesForMatrix = [];
     var key_idx = 0;
     jQuery.each(columns_tmp, function(idx, value){
         var columnName = jQuery(value).attr("column_id");
         var columnVisible = jQuery(value).attr("column_visible");
         if ((transformedTable.properties[columnName].valueType === 'number') && (columnVisible === 'visible')){
-            //columnsForMatrix.push(jQuery.inArray(columnName, transformedTable.available_columns));
             columnsForMatrix.push(key_idx);
             columnNamesForMatrix.push(columnName);
+            columnNiceNamesForMatrix.push(jQuery(value).find("span").html());
             key_idx++;
         }
     });
@@ -996,22 +1003,44 @@ function columnsScatter(){
     var dotsForScatter = Math.max(Math.round(scatterMatrixMaxDots / ((cols_nr * cols_nr - cols_nr) / 2)), scatterMinDots);
     var data = prepareForChart(transformedTable, columnNamesForMatrix, dotsForScatter);
     jQuery(".scatter_dialog").remove();
-    var scatter_zone_size = (columnNamesForMatrix.length - 1) * scatterSize;
-    var scatterDialog = "" +
-        "<div class='scatter_dialog'>" +
-        "<div class='scatters_zone' style='width:" + scatter_zone_size + "px'> </div>"+
-        "<div>";
     var width = jQuery(window).width() * 0.85;
     var height = jQuery(window).height() * 0.85;
+    var scatter_zone_size = (columnNamesForMatrix.length - 1) * scatterSize + 20;
+    var container_width = (scatter_zone_size + scatterSize + 60 > width) ? width - scatterSize - 60 : scatter_zone_size;
+    var container_height = (scatter_zone_size + scatterSize + 40 > height) ? height - scatterSize - 40: scatter_zone_size;
+    var scatterDialog = "" +
+        "<div class='scatter_dialog'>" +
+            "<div id='scatters_container' style='width:" + container_width + "px;height:" + container_height + "px;'>" +
+                "<div class='scatters_zone' style='width:" + scatter_zone_size + "px;height:" + scatter_zone_size + "px;'> </div>"+
+            "</div>"+
+            "<div id='verticalscrollcontainer' style='width:" + scatterSize + "px;height:" + container_height + "px'>"+
+                "<div id='scatterverticalscroll' style='height:" + scatter_zone_size + "px;width:" + scatterSize + "px'></div>"+
+            "</div>"+
+            "<div style='clear:both'></div>"+
+            "<div id='horizontalscrollcontainer' style='height:" + scatterSize + "px;width:" + container_width + "px'>"+
+                "<div id='scatterhorizontalscroll' style='height:" + scatterSize + "px;width:" + scatter_zone_size + "px'></div>"+
+            "</div>"+
+        "</div>";
     jQuery(scatterDialog).dialog({title:"ScatterPlot Matrix",
             dialogClass: 'googlechart-dialog',
             modal:true,
             width:width,
             height:height,
+            resizable:false,
             create:function(){
 
                 var matrixColumns = columnsForMatrix.slice(0, columnsForMatrix.length - 1);
                 var matrixRows = columnsForMatrix.slice(1, columnsForMatrix.length);
+
+
+                jQuery.each(matrixRows, function(idx, rowValue){
+                    var scatterScrollDiv = "<div class='scatterScrollItem verticalScrollItem' col_nr='"+rowValue+"'>" + columnNiceNamesForMatrix[rowValue] + "</div>";
+                    jQuery("#scatterverticalscroll").append(scatterScrollDiv);
+                });
+                jQuery.each(matrixColumns, function(idx, colValue){
+                    var scatterScrollDiv = "<div class='scatterScrollItem horizontalScrollItem' col_nr='"+colValue+"'>" + columnNiceNamesForMatrix[colValue] + "</div>";
+                    jQuery("#scatterhorizontalscroll").append(scatterScrollDiv);
+                });
 
                 jQuery.each(matrixRows, function(idx, rowValue){
                     var rowPairs = [];
@@ -1019,16 +1048,14 @@ function columnsScatter(){
                         if (rowValue === colValue){
                             return false;
                         }
-
                         var scatterId = "scatter_id_" + colValue + "_" + rowValue;
                         var scatterDiv = "<div class='scatter_container'>" +
                                             "<div class='scatter_overlay' row_nr='" + rowValue + "' col_nr='" + colValue + "'>" +
                                             "</div>"+
-                                            "<div class='scatter_item' id='" + scatterId + "'>" +
+                                            "<div class='scatter_item' id='" + scatterId + "' style='width:"+scatterSize+"px;height:"+scatterSize+"px;'>" +
                                             "</div>"+
                                             "<div style='clear:both'></div>"+
                                          "</div>";
-//                        jQuery(".scatters_zone").append("<div id='" + scatterId + "' style='float:left'></div>");
                         jQuery(".scatters_zone").append(scatterDiv);
                         var tmp_scatter = new google.visualization.ChartWrapper({
                             'chartType': 'ScatterChart',
@@ -1047,6 +1074,17 @@ function columnsScatter(){
                 if (scatter_zone_size < height){
                     jQuery('.scatter_dialog').dialog('option','height', 'auto');
                 }
+                jQuery(".scatter_overlay").hover(function(){
+                    var col_nr = jQuery(this).attr("col_nr");
+                    var row_nr = jQuery(this).attr("row_nr");
+                    jQuery(".horizontalScrollItem[col_nr='"+col_nr+"']").attr("style","font-weight:bold");
+                    jQuery(".verticalScrollItem[col_nr='"+row_nr+"']").attr("style","font-weight:bold");
+                    console.log("hover");
+                },
+                function(){
+                    jQuery(".horizontalScrollItem").attr("style","font-weight:normal");
+                    jQuery(".verticalScrollItem").attr("style","font-weight:normal");
+                });
                 jQuery(".scatter_overlay").click(function(){
                     jQuery(".scatter_dialog").dialog("close");
                     var col_nr = jQuery(this).attr("col_nr");
@@ -1066,6 +1104,8 @@ function columnsScatter(){
                 });
             }
     });
+    $("#scatters_container").scroll(updateScatterScrolls);
+    updateScatterScrolls();
 }
 
 function openEditChart(id){
