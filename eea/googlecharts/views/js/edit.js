@@ -952,6 +952,7 @@ function updateScatterScrolls(){
 }
 
 function columnsScatter(){
+    DavizEdit.Status.start("Updating Tables");
 
     var columns = jQuery("#originalColumns").find("th");
 
@@ -1010,15 +1011,15 @@ function columnsScatter(){
     var container_height = (scatter_zone_size + scatterSize + 40 > height) ? height - scatterSize - 40: scatter_zone_size;
     var scatterDialog = "" +
         "<div class='scatter_dialog'>" +
-            "<div id='scatters_container' style='width:" + container_width + "px;height:" + container_height + "px;'>" +
-                "<div class='scatters_zone' style='width:" + scatter_zone_size + "px;height:" + scatter_zone_size + "px;'> </div>"+
+            "<div id='horizontalscrollcontainer' style='padding-left:103px;height:" + scatterSize + "px;width:" + container_width + "px'>"+
+                "<div id='scatterhorizontalscroll' style='height:" + scatterSize + "px;width:" + scatter_zone_size + "px'></div>"+
             "</div>"+
+            "<div style='clear:both'></div>"+
             "<div id='verticalscrollcontainer' style='width:" + scatterSize + "px;height:" + container_height + "px'>"+
                 "<div id='scatterverticalscroll' style='height:" + scatter_zone_size + "px;width:" + scatterSize + "px'></div>"+
             "</div>"+
-            "<div style='clear:both'></div>"+
-            "<div id='horizontalscrollcontainer' style='height:" + scatterSize + "px;width:" + container_width + "px'>"+
-                "<div id='scatterhorizontalscroll' style='height:" + scatterSize + "px;width:" + scatter_zone_size + "px'></div>"+
+            "<div id='scatters_container' style='width:" + container_width + "px;height:" + container_height + "px;'>" +
+                "<div class='scatters_zone' style='width:" + scatter_zone_size + "px;height:" + scatter_zone_size + "px;'> </div>"+
             "</div>"+
         "</div>";
     jQuery(scatterDialog).dialog({title:"ScatterPlot Matrix",
@@ -1034,11 +1035,11 @@ function columnsScatter(){
 
 
                 jQuery.each(matrixRows, function(idx, rowValue){
-                    var scatterScrollDiv = "<div class='scatterScrollItem verticalScrollItem' col_nr='"+rowValue+"'>" + columnNiceNamesForMatrix[rowValue] + "</div>";
+                    var scatterScrollDiv = "<div class='scatterScrollItem verticalScrollItem' col_nr='"+rowValue+"'><div style='width:103px;height:103px;' class='scrollName'>" + columnNiceNamesForMatrix[rowValue] + "</div></div>";
                     jQuery("#scatterverticalscroll").append(scatterScrollDiv);
                 });
                 jQuery.each(matrixColumns, function(idx, colValue){
-                    var scatterScrollDiv = "<div class='scatterScrollItem horizontalScrollItem' col_nr='"+colValue+"'>" + columnNiceNamesForMatrix[colValue] + "</div>";
+                    var scatterScrollDiv = "<div class='scatterScrollItem horizontalScrollItem' col_nr='"+colValue+"'><div style='width:103px;height:103px;' class='scrollName'>" + columnNiceNamesForMatrix[colValue] + "</div></div>";
                     jQuery("#scatterhorizontalscroll").append(scatterScrollDiv);
                 });
 
@@ -1077,13 +1078,12 @@ function columnsScatter(){
                 jQuery(".scatter_overlay").hover(function(){
                     var col_nr = jQuery(this).attr("col_nr");
                     var row_nr = jQuery(this).attr("row_nr");
-                    jQuery(".horizontalScrollItem[col_nr='"+col_nr+"']").attr("style","font-weight:bold");
-                    jQuery(".verticalScrollItem[col_nr='"+row_nr+"']").attr("style","font-weight:bold");
-                    console.log("hover");
+                    jQuery(".horizontalScrollItem[col_nr='"+col_nr+"']").attr("style","font-weight:bold;");
+                    jQuery(".verticalScrollItem[col_nr='"+row_nr+"']").attr("style","font-weight:bold;");
                 },
                 function(){
-                    jQuery(".horizontalScrollItem").attr("style","font-weight:normal");
-                    jQuery(".verticalScrollItem").attr("style","font-weight:normal");
+                    jQuery(".horizontalScrollItem").attr("style","font-weight:normal;");
+                    jQuery(".verticalScrollItem").attr("style","font-weight:normal;");
                 });
                 jQuery(".scatter_overlay").click(function(){
                     jQuery(".scatter_dialog").dialog("close");
@@ -1106,6 +1106,7 @@ function columnsScatter(){
     });
     $("#scatters_container").scroll(updateScatterScrolls);
     updateScatterScrolls();
+    DavizEdit.Status.stop("Done");
 }
 
 function openEditChart(id){

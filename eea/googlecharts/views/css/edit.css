@@ -705,3 +705,19 @@ dl.portlet .dashboard-chart,
     float:left;
 }
 
+.verticalScrollItem {
+}
+
+.scrollName {
+    display:table-cell;
+}
+
+.verticalScrollItem .scrollName {
+    vertical-align:middle;
+    text-align:right;
+}
+
+.horizontalScrollItem .scrollName {
+    vertical-align:bottom;
+    text-align:center;
+}
