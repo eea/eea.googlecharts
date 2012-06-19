@@ -38,7 +38,10 @@
             </div>
         </div>
     </div>
-    <a style="float:right" tal:attributes="href view/context/absolute_url" target="_top">Go to original visualization</a>
+    <a style="float:right" 
+       tal:attributes="href view/context/absolute_url"
+       i18n:translate="" 
+       target="_top">Go to original visualization</a>
 </body>
 
 </html>
