@@ -19,7 +19,7 @@ var defaultAdvancedOptions = '{"fontName":"Verdana",'+
                               '}';
 var scatterMatrixMaxDots = 200;
 var scatterMinDots = 30;
-var scatterSize = 103;
+var scatterSize = 73;
 var scatterOptions = {
             'width':scatterSize,
             'height':scatterSize,
@@ -28,8 +28,8 @@ var scatterOptions = {
             'chartArea':{
                 'left':1,
                 'top':1,
-                'width':100,
-                'height':100
+                'width':scatterSize - 3,
+                'height':scatterSize - 3
             },
             'legend':{
                 'position':'none'
@@ -1011,15 +1011,31 @@ function columnsScatter(){
     var container_height = (scatter_zone_size + scatterSize + 40 > height) ? height - scatterSize - 40: scatter_zone_size;
     var scatterDialog = "" +
         "<div class='scatter_dialog'>" +
-            "<div id='horizontalscrollcontainer' style='padding-left:103px;height:" + scatterSize + "px;width:" + container_width + "px'>"+
-                "<div id='scatterhorizontalscroll' style='height:" + scatterSize + "px;width:" + scatter_zone_size + "px'></div>"+
+            "<div id='horizontalscrollcontainer' "+
+                "style='padding-left:"+scatterSize+"px;"+
+                       "height:" + scatterSize + "px;"+
+                       "width:" + container_width + "px'>"+
+                    "<div id='scatterhorizontalscroll' "+
+                        "style='height:" + scatterSize + "px;"+
+                        "width:" + scatter_zone_size + "px'>"+
+                    "</div>"+
             "</div>"+
             "<div style='clear:both'></div>"+
-            "<div id='verticalscrollcontainer' style='width:" + scatterSize + "px;height:" + container_height + "px'>"+
-                "<div id='scatterverticalscroll' style='height:" + scatter_zone_size + "px;width:" + scatterSize + "px'></div>"+
+            "<div id='verticalscrollcontainer' "+
+                "style='width:" + scatterSize + "px;"+
+                       "height:" + container_height + "px'>"+
+                    "<div id='scatterverticalscroll' "+
+                        "style='height:" + scatter_zone_size + "px;"+
+                        "width:" + scatterSize + "px'>"+
+                    "</div>"+
             "</div>"+
-            "<div id='scatters_container' style='width:" + container_width + "px;height:" + container_height + "px;'>" +
-                "<div class='scatters_zone' style='width:" + scatter_zone_size + "px;height:" + scatter_zone_size + "px;'> </div>"+
+            "<div id='scatters_container' "+
+                "style='width:" + container_width + "px;"+
+                       "height:" + container_height + "px;'>" +
+                    "<div class='scatters_zone' "+
+                        "style='width:" + scatter_zone_size + "px;"+
+                        "height:" + scatter_zone_size + "px;'>" +
+                    "</div>"+
             "</div>"+
         "</div>";
     jQuery(scatterDialog).dialog({title:"ScatterPlot Matrix",
@@ -1035,11 +1051,29 @@ function columnsScatter(){
 
 
                 jQuery.each(matrixRows, function(idx, rowValue){
-                    var scatterScrollDiv = "<div class='scatterScrollItem verticalScrollItem' col_nr='"+rowValue+"'><div style='width:103px;height:103px;' class='scrollName'>" + columnNiceNamesForMatrix[rowValue] + "</div></div>";
+                    var scatterScrollDiv = "<div class='scatterScrollItem verticalScrollItem' "+
+                                                "style='width:"+scatterSize+"px;"+
+                                                       "height:"+scatterSize+"px'"+
+                                                "col_nr='"+rowValue+"'>"+
+                                                    "<div class='scrollName' "+
+                                                        "style='width:"+scatterSize+"px;"+
+                                                        "height:"+scatterSize+"px;' >" + 
+                                                        columnNiceNamesForMatrix[rowValue] + 
+                                                    "</div>"+
+                                            "</div>";
                     jQuery("#scatterverticalscroll").append(scatterScrollDiv);
                 });
                 jQuery.each(matrixColumns, function(idx, colValue){
-                    var scatterScrollDiv = "<div class='scatterScrollItem horizontalScrollItem' col_nr='"+colValue+"'><div style='width:103px;height:103px;' class='scrollName'>" + columnNiceNamesForMatrix[colValue] + "</div></div>";
+                    var scatterScrollDiv = "<div class='scatterScrollItem horizontalScrollItem' "+
+                                                "style='width:"+scatterSize+"px;"+
+                                                       "height:"+scatterSize+"px'"+
+                                                "col_nr='"+colValue+"'>"+
+                                                    "<div class='scrollName' "+
+                                                        "style='width:"+scatterSize+"px;"+
+                                                                "height:"+scatterSize+"px;'>" + 
+                                                                columnNiceNamesForMatrix[colValue] + 
+                                                    "</div>"+
+                                            "</div>";
                     jQuery("#scatterhorizontalscroll").append(scatterScrollDiv);
                 });
 
@@ -1051,9 +1085,16 @@ function columnsScatter(){
                         }
                         var scatterId = "scatter_id_" + colValue + "_" + rowValue;
                         var scatterDiv = "<div class='scatter_container'>" +
-                                            "<div class='scatter_overlay' row_nr='" + rowValue + "' col_nr='" + colValue + "'>" +
+                                            "<div class='scatter_overlay' "+
+                                                "row_nr='" + rowValue + "' "+
+                                                "col_nr='" + colValue + "' " +
+                                                "style='width:"+(scatterSize-3)+"px;"+
+                                                       "height:"+(scatterSize-3)+"px;'>"+
                                             "</div>"+
-                                            "<div class='scatter_item' id='" + scatterId + "' style='width:"+scatterSize+"px;height:"+scatterSize+"px;'>" +
+                                            "<div class='scatter_item' "+
+                                                "id='" + scatterId + "' "+
+                                                "style='width:"+scatterSize+"px;"+
+                                                        "height:"+scatterSize+"px;'>" +
                                             "</div>"+
                                             "<div style='clear:both'></div>"+
                                          "</div>";

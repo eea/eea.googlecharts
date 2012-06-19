@@ -658,8 +658,6 @@ dl.portlet .dashboard-chart,
 }
 
 .scatter_overlay {
-    width:100px;
-    height:100px;
     float:left;
     position:absolute;
     z-index:999;
@@ -694,10 +692,6 @@ dl.portlet .dashboard-chart,
 }
 
 .scatterScrollItem {
-    width:100px;
-    padding-right:3px;
-    height:100px;
-    padding-bottom:3px;
     overflow:hidden;
 }
 
