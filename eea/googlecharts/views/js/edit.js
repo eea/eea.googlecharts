@@ -947,8 +947,8 @@ function columnsRevert(){
 
 function updateScatterScrolls(){
     var pos = $(".scatters_zone").position();
-    $("#scatterhorizontalscroll").attr("style","left:"+pos.left+"px;");
-    $("#scatterverticalscroll").attr("style","top:"+pos.top+"px;");
+    $("#scatterhorizontalscroll").css("left",pos.left);
+    $("#scatterverticalscroll").css("top",pos.top);
 }
 
 function columnsScatter(){
@@ -1011,15 +1011,14 @@ function columnsScatter(){
     var container_height = (scatter_zone_size + scatterSize + 40 > height) ? height - scatterSize - 40: scatter_zone_size;
     var scatterDialog = "" +
         "<div class='scatter_dialog'>" +
+            "<div style='float:left;width:" + scatterSize + "px;height:" + scatterSize + "px'></div>"+
             "<div id='horizontalscrollcontainer' "+
-                "style='padding-left:"+scatterSize+"px;"+
-                       "width:" + container_width + "px;"+
-//                       "height:" + scatterSize + "px;"+
+                "style='width:" + container_width + "px;"+
+                       "height:" + scatterSize + "px;"+
                        "'>"+
                     "<div id='scatterhorizontalscroll' "+
                         "style='width:" + scatter_zone_size + "px;"+
-//                                "height:" + scatterSize + "px;"+
-                        "'>"+
+                                "height:" + scatterSize + "px;'>"+
                     "</div>"+
             "</div>"+
             "<div style='clear:both'></div>"+
@@ -1070,15 +1069,17 @@ function columnsScatter(){
                 jQuery.each(matrixColumns, function(idx, colValue){
                     var scatterScrollDiv = "<div class='scatterScrollItem horizontalScrollItem' "+
                                                 "style='width:"+(scatterSize-2)+"px;"+
-//                                                       "height:"+(scatterSize-2)+"px"+
+                                                       "height:"+(scatterSize-2)+"px"+
                                                 "'"+
                                                 "col_nr='"+colValue+"'>"+
                                                     "<div class='scrollName' "+
                                                         "style='width:"+(scatterSize-2)+"px;"+
-//                                                                "height:"+(scatterSize-2)+"px;"+
+                                                                "height:"+(scatterSize-2)+"px;"+
                                                         "'"+
-                                                        ">" + 
+                                                        ">" +
+                                                        "<div>"+
                                                                 columnNiceNamesForMatrix[colValue] + 
+                                                        "</div>"+
                                                     "</div>"+
                                             "</div>";
                     jQuery("#scatterhorizontalscroll").append(scatterScrollDiv);
@@ -1126,11 +1127,11 @@ function columnsScatter(){
                 jQuery(".scatter_overlay").hover(function(){
                     var col_nr = jQuery(this).attr("col_nr");
                     var row_nr = jQuery(this).attr("row_nr");
-                    jQuery(".horizontalScrollItem[col_nr='"+col_nr+"']").addClass("selectedScrollItem");
+                    jQuery(".horizontalScrollItem[col_nr='"+col_nr+"']").find(".scrollName").find("div").addClass("selectedScrollItem");
                     jQuery(".verticalScrollItem[col_nr='"+row_nr+"']").find(".scrollName").find("div").addClass("selectedScrollItem");
                 },
                 function(){
-                    jQuery(".horizontalScrollItem").removeClass("selectedScrollItem");
+                    jQuery(".horizontalScrollItem").find(".scrollName").find("div").removeClass("selectedScrollItem");
                     jQuery(".verticalScrollItem").find(".scrollName").find("div").removeClass("selectedScrollItem");
                 });
                 jQuery(".scatter_overlay").click(function(){
