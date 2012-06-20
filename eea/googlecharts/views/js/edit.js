@@ -1127,11 +1127,11 @@ function columnsScatter(){
                     var col_nr = jQuery(this).attr("col_nr");
                     var row_nr = jQuery(this).attr("row_nr");
                     jQuery(".horizontalScrollItem[col_nr='"+col_nr+"']").addClass("selectedScrollItem");
-                    jQuery(".verticalScrollItem[col_nr='"+row_nr+"']").find(".scrollName").find("div").addClass("selectedScrollItem")
+                    jQuery(".verticalScrollItem[col_nr='"+row_nr+"']").find(".scrollName").find("div").addClass("selectedScrollItem");
                 },
                 function(){
                     jQuery(".horizontalScrollItem").removeClass("selectedScrollItem");
-                    jQuery(".verticalScrollItem").find(".scrollName").find("div").removeClass("selectedScrollItem")
+                    jQuery(".verticalScrollItem").find(".scrollName").find("div").removeClass("selectedScrollItem");
                 });
                 jQuery(".scatter_overlay").click(function(){
                     jQuery(".scatter_dialog").dialog("close");
