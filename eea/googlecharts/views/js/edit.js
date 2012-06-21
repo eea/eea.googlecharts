@@ -998,6 +998,7 @@ function columnsScatter(){
     var tmp_columns = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_columns").attr("value"));
     var cols_nr = columnsForMatrix.length;
     if (cols_nr < 2){
+        DavizEdit.Status.stop("Done");
         alert("At least 2 visible numeric columns are required!");
         return;
     }
