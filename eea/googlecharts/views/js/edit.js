@@ -1136,21 +1136,69 @@ function columnsScatter(){
                     jQuery(".verticalScrollItem").find(".scrollName").find("div").removeClass("selectedScrollItem");
                 });
                 jQuery(".scatter_overlay").click(function(){
-                    jQuery(".scatter_dialog").dialog("close");
-                    var col_nr = jQuery(this).attr("col_nr");
-                    var row_nr = jQuery(this).attr("row_nr");
+                    jQuery("#scatter_chart_dialog").remove();
+                    var col_nr = parseInt(jQuery(this).attr("col_nr"), 10);
+                    var row_nr = parseInt(jQuery(this).attr("row_nr"), 10);
                     var sc_col_name1 = columnNamesForMatrix[col_nr];
                     var sc_col_name2 = columnNamesForMatrix[row_nr];
-                    jQuery("#newTable").find(".ui-icon").each(function(idx, column){
-                        if (jQuery(column).hasClass("ui-icon-hide") &&
-                            (jQuery(column).closest("th").attr("column_id") != sc_col_name1) &&
-                            (jQuery(column).closest("th").attr("column_id") != sc_col_name2)){
-                            jQuery(column).removeClass("ui-icon-hide");
-                            jQuery(column).addClass("ui-icon-show");
-                            jQuery(column).closest("th").attr("column_visible","hidden");
+
+                    var chart_data = prepareForChart(transformedTable, columnNamesForMatrix);
+
+                    var scatterChartDialog = ""+
+                        "<div id='scatter_chart_dialog'>"+
+                            "<div id='matrix_tmp_chart'></div>"+
+                        "</div>";
+                    var width = jQuery(window).width() * 0.80;
+                    var height = jQuery(window).height() * 0.80;
+                    jQuery(scatterChartDialog).dialog({
+                        title:sc_col_name1 + " - " + sc_col_name2,
+                        dialogClass: 'googlechart-dialog',
+                        modal:true,
+                        width:width,
+                        height:height,
+                        resizable:false,
+                        buttons:[
+                            {
+                                text: "Use this chart",
+                                click: function(){
+                                    jQuery(this).dialog("close");
+                                    jQuery(".scatter_dialog").dialog("close");
+                                    jQuery("#newTable").find(".ui-icon").each(function(idx, column){
+                                        if (jQuery(column).hasClass("ui-icon-hide") &&
+                                            (jQuery(column).closest("th").attr("column_id") != sc_col_name1) &&
+                                            (jQuery(column).closest("th").attr("column_id") != sc_col_name2)){
+                                                jQuery(column).removeClass("ui-icon-hide");
+                                                jQuery(column).addClass("ui-icon-show");
+                                                jQuery(column).closest("th").attr("column_visible","hidden");
+                                            }
+                                        });
+                                    generateNewTable(generateSortedColumns());
+                                }
+                            },
+                            {
+                                text: "Cancel",
+                                click: function(){
+                                    jQuery(this).dialog("close");
+                                }
+                            }],
+                        open:function(){
+                            var tmp_options = {};
+                            jQuery.extend(tmp_options, scatterOptions);
+                            tmp_options.width = jQuery("#matrix_tmp_chart").width();
+                            tmp_options.height = jQuery("#matrix_tmp_chart").height();
+                            tmp_options.chartArea.width = jQuery("#matrix_tmp_chart").width() - 2;
+                            tmp_options.chartArea.height = jQuery("#matrix_tmp_chart").height() - 2;
+                            var tmp_scatter = new google.visualization.ChartWrapper({
+                                'chartType': 'ScatterChart',
+                                'containerId': 'matrix_tmp_chart',
+                                'options': tmp_options
+                            });
+                            tmp_scatter.setDataTable(chart_data);
+                            tmp_scatter.setView({"columns":[col_nr, row_nr]});
+                            tmp_scatter.draw();
+
                         }
-                    });
-                    generateNewTable(generateSortedColumns());
+                        });
                 });
             }
     });

@@ -715,3 +715,7 @@ dl.portlet .dashboard-chart,
     text-align:center;
 }
 
+#matrix_tmp_chart {
+    width: 100%;
+    height: 100%;
+}
