@@ -1172,6 +1172,11 @@ function columnsScatter(){
                                                 jQuery(column).closest("th").attr("column_visible","hidden");
                                             }
                                         });
+                                    var old_conf_str = jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value");
+                                    var tmp_conf_json = JSON.parse(old_conf_str);
+                                    tmp_conf_json.chartType = "ScatterChart";
+                                    var new_conf_str = JSON.stringify (tmp_conf_json);
+                                    jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value",new_conf_str);
                                     generateNewTable(generateSortedColumns());
                                 }
                             },
@@ -1196,7 +1201,6 @@ function columnsScatter(){
                             tmp_scatter.setDataTable(chart_data);
                             tmp_scatter.setView({"columns":[col_nr, row_nr]});
                             tmp_scatter.draw();
-
                         }
                         });
                 });
