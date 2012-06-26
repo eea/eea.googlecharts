@@ -1177,6 +1177,7 @@ function columnsScatter(){
                                     tmp_conf_json.chartType = "ScatterChart";
                                     var new_conf_str = JSON.stringify(tmp_conf_json);
                                     jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value",new_conf_str);
+                                    jQuery("#googlechartid_tmp_chart").find(".googlechart_name").attr("value","Scatter Chart: " + sc_col_name1 + " - " + sc_col_name2);
                                     generateNewTable(generateSortedColumns());
                                 }
                             },
