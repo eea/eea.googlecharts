@@ -652,28 +652,28 @@ dl.portlet .dashboard-chart,
     width:110px !important;
 }
 
-.scatter_container {
+.matrixChart_container {
     float:left;
     position:relative;
 }
 
-.scatter_overlay {
+.matrixChart_overlay {
     float:left;
     position:absolute;
     z-index:999;
 }
 
-.scatter_overlay:hover,
+.matrixChart_overlay:hover,
 .selectedScrollItem {
     background-color:rgba(119, 124, 31, 0.6);
 }
 
 
-.scatter_item {
+.matrixChart_item {
     float:left;
 }
 
-#scatters_container {
+#matrixCharts_container {
     position:relative;
     overflow:auto;
     float:left;
@@ -689,12 +689,12 @@ dl.portlet .dashboard-chart,
     overflow:hidden;
 }
 
-#scatterhorizontalscroll,
-#scatterverticalscroll {
+#matrixCharthorizontalscroll,
+#matrixChartverticalscroll {
     position:relative;
 }
 
-.scatterScrollItem {
+.matrixChartScrollItem {
     overflow:hidden;
     margin-right:2px;
     margin-bottom:2px;
@@ -718,4 +718,9 @@ dl.portlet .dashboard-chart,
 #matrix_tmp_chart {
     width: 100%;
     height: 100%;
+}
+
+#matrixChart_type_selector > div{
+    display:table-cell;
+    vertical-align:middle;
 }
