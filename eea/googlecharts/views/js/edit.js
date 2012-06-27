@@ -995,6 +995,9 @@ function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
 
 function columnsMatrixChart(){
     DavizEdit.Status.start("Updating Tables");
+    var old_conf_str = jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value");
+    var tmp_conf_json = JSON.parse(old_conf_str);
+    var tmp_chart_type = tmp_conf_json.chartType;
 
     var columns = jQuery("#originalColumns").find("th");
 
@@ -1096,7 +1099,7 @@ function columnsMatrixChart(){
             resizable:false,
             create:function(){
                 jQuery.each(availableChartsForMatrix, function(key,value){
-                    var tmp_option = "<option value='" + key + "'>" + value + "</option>";
+                    var tmp_option = "<option value='" + key + "'" + ((tmp_chart_type===key)?'selected="selected"':'') +">" + value + "</option>";
                     jQuery("#matrixChart_type_selector").find("select").append(tmp_option);
                 });
 
@@ -1138,14 +1141,13 @@ function columnsMatrixChart(){
                     jQuery("#matrixCharthorizontalscroll").append(matrixChartScrollDiv);
                 });
 
-                redrawMatrixCharts(data, matrixColumns, matrixRows, 'ScatterChart');
+                redrawMatrixCharts(data, matrixColumns, matrixRows, jQuery("#matrixChart_type_selector").find("select").attr("value"));
                 if (matrixChart_zone_size < width){
                     jQuery('.matrixChart_dialog').dialog('option','width', 'auto');
                 }
                 if (matrixChart_zone_size < height){
                     jQuery('.matrixChart_dialog').dialog('option','height', 'auto');
                 }
-//                jQuery(".matrixChart_overlay").hover(function(){
                 jQuery(".matrixChart_dialog").delegate(".matrixChart_overlay","hover",function(){
                       var col_nr = jQuery(this).attr("col_nr");
                     var row_nr = jQuery(this).attr("row_nr");
@@ -1153,12 +1155,10 @@ function columnsMatrixChart(){
                     jQuery(".verticalScrollItem[col_nr='"+row_nr+"']").find(".scrollName").find("div").addClass("selectedScrollItem");
                 });
                 jQuery(".matrixChart_dialog").delegate(".matrixChart_overlay","mouseout",function(){
-//                function(){
                     jQuery(".horizontalScrollItem").find(".scrollName").find("div").removeClass("selectedScrollItem");
                     jQuery(".verticalScrollItem").find(".scrollName").find("div").removeClass("selectedScrollItem");
                 });
                 jQuery(".matrixChart_dialog").delegate(".matrixChart_overlay","click",function(){
-//                jQuery(".matrixChart_overlay").click(function(){
                     jQuery("#matrixChart_chart_dialog").remove();
                     var col_nr = parseInt(jQuery(this).attr("col_nr"), 10);
                     var row_nr = parseInt(jQuery(this).attr("row_nr"), 10);
