@@ -994,7 +994,6 @@ function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
 }
 
 function columnsMatrixChart(chartType){
-    
     DavizEdit.Status.start("Updating Tables");
     var old_conf_str = jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value");
     var tmp_conf_json = JSON.parse(old_conf_str);
@@ -1209,7 +1208,7 @@ function columnsMatrixChart(chartType){
                                         });
                                     var old_conf_str = jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value");
                                     var tmp_conf_json = JSON.parse(old_conf_str);
-                                    tmp_conf_json.chartType = jQuery("#matrixChart_type_selector").find("select").attr("value");
+                                    tmp_conf_json.chartType = typeof(chartType) !== 'undefined' ? chartType : jQuery("#matrixChart_type_selector").find("select").attr("value");
                                     var new_conf_str = JSON.stringify(tmp_conf_json);
                                     jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value",new_conf_str);
                                     jQuery("#googlechartid_tmp_chart").find(".googlechart_name").attr("value","MatrixChart Chart: " + sc_col_name1 + " - " + sc_col_name2);
@@ -1229,8 +1228,9 @@ function columnsMatrixChart(chartType){
                             tmp_options.height = jQuery("#matrix_tmp_chart").height();
                             tmp_options.chartArea.width = jQuery("#matrix_tmp_chart").width() - 2;
                             tmp_options.chartArea.height = jQuery("#matrix_tmp_chart").height() - 2;
+                            var preview_tmp_chart_type = typeof(chartType) !== 'undefined' ? chartType : jQuery("#matrixChart_type_selector").find("select").attr("value");
                             var tmp_matrixChart = new google.visualization.ChartWrapper({
-                                'chartType': jQuery("#matrixChart_type_selector").find("select").attr("value"),
+                                'chartType': preview_tmp_chart_type,
                                 'containerId': 'matrix_tmp_chart',
                                 'options': tmp_options
                             });
