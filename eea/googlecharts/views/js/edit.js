@@ -1101,7 +1101,7 @@ function columnsMatrixChart(chartType){
             resizable:false,
             create:function(){
                 if (chartType === 'ScatterChart'){
-                    jQuery("#matrixChart_type_selector").find("select").remove()
+                    jQuery("#matrixChart_type_selector").find("select").remove();
                 }
                 else{
                     jQuery.each(availableChartsForMatrix, function(key,value){
