@@ -18,10 +18,10 @@ var defaultAdvancedOptions = '{"fontName":"Verdana",'+
                               ',"showChartButtons":false' +
                               '}';
 
-var availableChartsForMatrix = {'ScatterChart':'scatter',
-                                'BarChart':'bar',
+var availableChartsForMatrix = {'BarChart':'bar',
                                 'ColumnChart':'column',
                                 'LineChart':'line'};
+
 var matrixChartMatrixMaxDots = 200;
 var matrixChartMinDots = 30;
 var matrixChartSize = 73;
@@ -993,11 +993,13 @@ function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
     });
 }
 
-function columnsMatrixChart(){
+function columnsMatrixChart(chartType){
+    
     DavizEdit.Status.start("Updating Tables");
     var old_conf_str = jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value");
     var tmp_conf_json = JSON.parse(old_conf_str);
-    var tmp_chart_type = tmp_conf_json.chartType;
+
+    var tmp_chart_type = typeof(chartType) !== 'undefined' ? chartType : tmp_conf_json.chartType;
 
     var columns = jQuery("#originalColumns").find("th");
 
@@ -1098,10 +1100,15 @@ function columnsMatrixChart(){
             height:height,
             resizable:false,
             create:function(){
-                jQuery.each(availableChartsForMatrix, function(key,value){
-                    var tmp_option = "<option value='" + key + "'" + ((tmp_chart_type===key)?'selected="selected"':'') +">" + value + "</option>";
-                    jQuery("#matrixChart_type_selector").find("select").append(tmp_option);
-                });
+                if (chartType === 'ScatterChart'){
+                    jQuery("#matrixChart_type_selector").find("select").remove()
+                }
+                else{
+                    jQuery.each(availableChartsForMatrix, function(key,value){
+                        var tmp_option = "<option value='" + key + "'" + ((tmp_chart_type===key)?'selected="selected"':'') +">" + value + "</option>";
+                        jQuery("#matrixChart_type_selector").find("select").append(tmp_option);
+                    });
+                }
 
                 jQuery("#matrixChart_type_selector").find("select").change(function(){
                     redrawMatrixCharts(data, matrixColumns, matrixRows, jQuery("#matrixChart_type_selector").find("select").attr("value"));
@@ -1141,7 +1148,12 @@ function columnsMatrixChart(){
                     jQuery("#matrixCharthorizontalscroll").append(matrixChartScrollDiv);
                 });
 
-                redrawMatrixCharts(data, matrixColumns, matrixRows, jQuery("#matrixChart_type_selector").find("select").attr("value"));
+                if (chartType === 'ScatterChart'){
+                    redrawMatrixCharts(data, matrixColumns, matrixRows, chartType);
+                }
+                else {
+                    redrawMatrixCharts(data, matrixColumns, matrixRows, jQuery("#matrixChart_type_selector").find("select").attr("value"));
+                }
                 if (matrixChart_zone_size < width){
                     jQuery('.matrixChart_dialog').dialog('option','width', 'auto');
                 }
@@ -1149,7 +1161,7 @@ function columnsMatrixChart(){
                     jQuery('.matrixChart_dialog').dialog('option','height', 'auto');
                 }
                 jQuery(".matrixChart_dialog").delegate(".matrixChart_overlay","hover",function(){
-                      var col_nr = jQuery(this).attr("col_nr");
+                    var col_nr = jQuery(this).attr("col_nr");
                     var row_nr = jQuery(this).attr("row_nr");
                     jQuery(".horizontalScrollItem[col_nr='"+col_nr+"']").find(".scrollName").find("div").addClass("selectedScrollItem");
                     jQuery(".verticalScrollItem[col_nr='"+row_nr+"']").find(".scrollName").find("div").addClass("selectedScrollItem");
@@ -1294,7 +1306,8 @@ function openEditChart(id){
                         '<input type="button" class="column-show-hide-button context" value="Hide all columns" onclick="columnsHideAll();"/>' +
                         '<input type="button" class="column-show-hide-button context" value="Show all columns" onclick="columnsShowAll();"/>' +
                         '<input type="button" class="column-show-hide-button context" value="Reverse selection" onclick="columnsRevert();"/>' +
-                        '<input type="button" class="column-show-hide-button context" value="Charts matrix" onclick="columnsMatrixChart();"/>' +
+                        '<input type="button" class="column-show-hide-button context" value="Scatterplots matrix" onclick="columnsMatrixChart(\'ScatterChart\');"/>' +
+                        '<input type="button" class="column-show-hide-button context" value="Other matrices" onclick="columnsMatrixChart();"/>' +
                     '</div>'+
                     '<table id="newTable" class="googlechartTable" style="height:300px;">'+
                     '</table>'+
