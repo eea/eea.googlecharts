@@ -1297,6 +1297,14 @@ function columnsMatrixChart(chartType){
                             tmp_options.height = jQuery("#matrix_tmp_chart").height();
                             tmp_options.chartArea.width = jQuery("#matrix_tmp_chart").width() - 2;
                             tmp_options.chartArea.height = jQuery("#matrix_tmp_chart").height() - 2;
+                            if (chartType !== 'ScatterChart'){
+                                tmp_options.chartArea.top = 'auto';
+                                tmp_options.chartArea.left = 'auto';
+                                tmp_options.chartArea.width = 'auto';
+                                tmp_options.chartArea.height = 'auto';
+                                tmp_options.hAxis.textPosition = 'out';
+                                tmp_options.vAxis.textPosition = 'out';
+                            }
                             var preview_tmp_chart_type = typeof(chartType) !== 'undefined' ? chartType : jQuery("#matrixChart_type_selector").find("select").attr("value");
                             var tmp_matrixChart = new google.visualization.ChartWrapper({
                                 'chartType': preview_tmp_chart_type,
