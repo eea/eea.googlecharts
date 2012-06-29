@@ -111,6 +111,13 @@ ul.googlechart_tabs li:first-of-type a:hover {
 }
 
 /* Google Charts view */
+#googlechart_dashboard {
+    box-shadow: 0px 5px 5px #ccc;
+    background: #FFFFFF;
+    border-top: 1px solid #eee;
+}
+
+
 #googlechart_dashboard .google-visualization-controls-slider-horizontal {
     width: 130px;
 }
@@ -170,11 +177,9 @@ ul.googlechart_tabs li:first-of-type a:hover {
 }
 
 #googlechart_view {
-    box-shadow: 0px 5px 5px #ccc;
     text-align: center;
     min-width: 800px;
     background: #FFFFFF;
-    border-top: 1px solid #eee;
 }
 
 #googlechart_view:after{
