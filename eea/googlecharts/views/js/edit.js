@@ -959,11 +959,23 @@ function updateMatrixChartScrolls(){
 function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
     jQuery(".matrixChart_container").remove();
     jQuery.each(matrixRows, function(idx, rowValue){
-        var rowPairs = [];
         jQuery.each(matrixColumns, function(idx, colValue){
-            if (rowValue === colValue){
+            if ((chartType === 'ScatterChart') && (rowValue === colValue)){
                 return false;
             }
+            if (rowValue === colValue){
+                var emptyMatrixChartId = "matrixChart_id_" + colValue + "_" + rowValue;
+                var emptyMatrixChartDiv = "<div class='matrixChart_container'>" +
+                                     "<div class='matrixChart_item' "+
+                                                "id='" + emptyMatrixChartId + "' "+
+                                                "style='width:"+matrixChartSize+"px;"+
+                                                        "height:"+matrixChartSize+"px;'>" +
+                                     "</div>"+
+                                     "</div>";
+                jQuery(".matrixCharts_zone").append(emptyMatrixChartDiv);
+                return;
+            }
+
             var matrixChartId = "matrixChart_id_" + colValue + "_" + rowValue;
             var matrixChartDiv = "<div class='matrixChart_container'>" +
                                      "<div class='matrixChart_overlay' "+
@@ -978,7 +990,7 @@ function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
                                                         "height:"+matrixChartSize+"px;'>" +
                                      "</div>"+
                                      "<div style='clear:both'></div>"+
-                                     "</div>";
+                                  "</div>";
             jQuery(".matrixCharts_zone").append(matrixChartDiv);
             var tmp_matrixChart = new google.visualization.ChartWrapper({
                             'chartType': chartType,
@@ -986,7 +998,13 @@ function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
                             'options': matrixChartOptions
             });
             tmp_matrixChart.setDataTable(data);
-            tmp_matrixChart.setView({"columns":[colValue, rowValue]});
+
+            if (chartType === 'ScatterChart'){
+                tmp_matrixChart.setView({"columns":[colValue, rowValue]});
+            }
+            else {
+                tmp_matrixChart.setView({"columns":[rowValue, colValue]});
+            }
             tmp_matrixChart.draw();
         });
         jQuery(".matrixCharts_zone").append("<div style='clear:both'></div>");
@@ -1030,32 +1048,76 @@ function columnsMatrixChart(chartType){
     var columnNamesForMatrix = [];
     var columnNiceNamesForMatrix = [];
     var key_idx = 0;
+
+    var allColumnsForMatrix = [];
+    var allColumnNamesForMatrix = [];
+    var allColumnNiceNamesForMatrix = [];
+    var allKey_idx = 0;
+
     jQuery.each(columns_tmp, function(idx, value){
         var columnName = jQuery(value).attr("column_id");
         var columnVisible = jQuery(value).attr("column_visible");
-        if ((transformedTable.properties[columnName].valueType === 'number') && (columnVisible === 'visible')){
-            columnsForMatrix.push(key_idx);
-            columnNamesForMatrix.push(columnName);
-            columnNiceNamesForMatrix.push(jQuery(value).find("span").html());
-            key_idx++;
+        if (columnVisible === 'visible'){
+            if (transformedTable.properties[columnName].valueType === 'number'){
+
+                if (chartType === 'ScatterChart'){
+                    columnsForMatrix.push(key_idx);
+                }
+                else {
+                    columnsForMatrix.push(allKey_idx);
+                }
+                columnNamesForMatrix.push(columnName);
+                columnNiceNamesForMatrix.push(jQuery(value).find("span").html());
+                key_idx++;
+            }
+            allColumnsForMatrix.push(allKey_idx);
+            allColumnNamesForMatrix.push(columnName);
+            allColumnNiceNamesForMatrix.push(jQuery(value).find("span").html());
+            allKey_idx++;
         }
     });
-
     var tmp_columns = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_columns").attr("value"));
     var cols_nr = columnsForMatrix.length;
-    if (cols_nr < 2){
+    var rows_nr = 0;
+    if ((chartType === 'ScatterChart') && (cols_nr < 2)){
         DavizEdit.Status.stop("Done");
         alert("At least 2 visible numeric columns are required!");
         return;
     }
-    var dotsForMatrixChart = Math.max(Math.round(matrixChartMatrixMaxDots / ((cols_nr * cols_nr - cols_nr) / 2)), matrixChartMinDots);
-    var data = prepareForChart(transformedTable, columnNamesForMatrix, dotsForMatrixChart);
+    if ((cols_nr < 1) && (rows_nr < 2)){
+        DavizEdit.Status.stop("Done");
+        alert("At least 2 visible columns are required and 1 of them should be numeric!");
+        return;
+    }
+
+    var dotsForMatrixChart;
+    var data;
+    if (chartType === 'ScatterChart'){
+        dotsForMatrixChart = Math.max(Math.round(matrixChartMatrixMaxDots / ((cols_nr * cols_nr - cols_nr) / 2)), matrixChartMinDots);
+        data = prepareForChart(transformedTable, columnNamesForMatrix, dotsForMatrixChart);
+    }
+    else {
+        dotsForMatrixChart = Math.max(Math.round(matrixChartMatrixMaxDots / (rows_nr * cols_nr)), matrixChartMinDots);
+        data = prepareForChart(transformedTable, allColumnNamesForMatrix, dotsForMatrixChart);
+    }
+
     jQuery(".matrixChart_dialog").remove();
     var width = jQuery(window).width() * 0.85;
     var height = jQuery(window).height() * 0.85;
-    var matrixChart_zone_size = (columnNamesForMatrix.length - 1) * matrixChartSize + 20;
-    var container_width = (matrixChart_zone_size + matrixChartSize + 60 > width) ? width - matrixChartSize - 60 : matrixChart_zone_size;
-    var container_height = (matrixChart_zone_size + matrixChartSize + 40 > height) ? height - matrixChartSize - 40: matrixChart_zone_size;
+
+    var matrixChart_zone_size_width;
+    var matrixChart_zone_size_height;
+
+    if (chartType === 'ScatterChart'){
+        matrixChart_zone_size_width = (columnNamesForMatrix.length - 1) * matrixChartSize + 20;
+        matrixChart_zone_size_height = (columnNamesForMatrix.length - 1) * matrixChartSize + 20;
+    }
+    else {
+        matrixChart_zone_size_width = columnNamesForMatrix.length * matrixChartSize + 20;
+        matrixChart_zone_size_height = allColumnNamesForMatrix.length * matrixChartSize + 20;
+    }
+    var container_width = (matrixChart_zone_size_width + matrixChartSize + 60 > width) ? width - matrixChartSize - 60 : matrixChart_zone_size_width;
+    var container_height = (matrixChart_zone_size_height + matrixChartSize + 40 > height) ? height - matrixChartSize - 40: matrixChart_zone_size_height;
     var matrixChartDialog = "" +
         "<div class='matrixChart_dialog'>" +
             "<div id='matrixChart_type_selector' style='display:table-cell;vertical-align:middle;float:left;width:" + matrixChartSize + "px;height:" + matrixChartSize + "px'>"+
@@ -1066,7 +1128,7 @@ function columnsMatrixChart(chartType){
                        "height:" + matrixChartSize + "px;"+
                        "'>"+
                     "<div id='matrixCharthorizontalscroll' "+
-                        "style='width:" + matrixChart_zone_size + "px;"+
+                        "style='width:" + matrixChart_zone_size_width + "px;"+
                                 "height:" + matrixChartSize + "px;'>"+
                     "</div>"+
             "</div>"+
@@ -1075,7 +1137,7 @@ function columnsMatrixChart(chartType){
                 "style='width:" + matrixChartSize + "px;"+
                        "height:" + container_height + "px'>"+
                     "<div id='matrixChartverticalscroll' "+
-                        "style='height:" + matrixChart_zone_size + "px;"+
+                        "style='height:" + matrixChart_zone_size_height + "px;"+
                         "width:" + matrixChartSize + "px'>"+
                     "</div>"+
             "</div>"+
@@ -1083,15 +1145,21 @@ function columnsMatrixChart(chartType){
                 "style='width:" + container_width + "px;"+
                        "height:" + container_height + "px;'>" +
                     "<div class='matrixCharts_zone' "+
-                        "style='width:" + matrixChart_zone_size + "px;"+
-                        "height:" + matrixChart_zone_size + "px;'>" +
+                        "style='width:" + matrixChart_zone_size_width + "px;"+
+                        "height:" + matrixChart_zone_size_height + "px;'>" +
                     "</div>"+
             "</div>"+
         "</div>";
-
-    var matrixColumns = columnsForMatrix.slice(0, columnsForMatrix.length - 1);
-    var matrixRows = columnsForMatrix.slice(1, columnsForMatrix.length);
-
+    var matrixColumns;
+    var matrixRows;
+    if (chartType === 'ScatterChart'){
+        matrixColumns = columnsForMatrix.slice(0, columnsForMatrix.length - 1);
+        matrixRows = columnsForMatrix.slice(1, columnsForMatrix.length);
+    }
+    else {
+        matrixColumns = columnsForMatrix;
+        matrixRows = allColumnsForMatrix;
+    }
     jQuery(matrixChartDialog).dialog({title:"MatrixChartPlot Matrix",
             dialogClass: 'googlechart-dialog',
             modal:true,
@@ -1122,7 +1190,7 @@ function columnsMatrixChart(chartType){
                                                         "style='width:"+(matrixChartSize-2)+"px;"+
                                                         "height:"+(matrixChartSize-2)+"px;' >" + 
                                                         "<div>"+
-                                                        columnNiceNamesForMatrix[rowValue] + 
+                                                        ((chartType === 'ScatterChart')?columnNiceNamesForMatrix[rowValue]:allColumnNiceNamesForMatrix[rowValue])+
                                                         "</div>"+
                                                     "</div>"+
                                             "</div>";
@@ -1140,7 +1208,8 @@ function columnsMatrixChart(chartType){
                                                         "'"+
                                                         ">" +
                                                         "<div>"+
-                                                                columnNiceNamesForMatrix[colValue] + 
+                                                                ((chartType === 'ScatterChart')?columnNiceNamesForMatrix[colValue]:allColumnNiceNamesForMatrix[colValue])+
+//                                                                columnNiceNamesForMatrix[colValue] + 
                                                         "</div>"+
                                                     "</div>"+
                                             "</div>";
@@ -1153,10 +1222,10 @@ function columnsMatrixChart(chartType){
                 else {
                     redrawMatrixCharts(data, matrixColumns, matrixRows, jQuery("#matrixChart_type_selector").find("select").attr("value"));
                 }
-                if (matrixChart_zone_size < width){
+                if (matrixChart_zone_size_width < width){
                     jQuery('.matrixChart_dialog').dialog('option','width', 'auto');
                 }
-                if (matrixChart_zone_size < height){
+                if (matrixChart_zone_size_height < height){
                     jQuery('.matrixChart_dialog').dialog('option','height', 'auto');
                 }
                 jQuery(".matrixChart_dialog").delegate(".matrixChart_overlay","hover",function(){
@@ -1235,7 +1304,12 @@ function columnsMatrixChart(chartType){
                                 'options': tmp_options
                             });
                             tmp_matrixChart.setDataTable(chart_data);
-                            tmp_matrixChart.setView({"columns":[col_nr, row_nr]});
+                            if (chartType === 'ScatterChart'){
+                                tmp_matrixChart.setView({"columns":[col_nr, row_nr]});
+                            }
+                            else{
+                                tmp_matrixChart.setView({"columns":[row_nr, col_nr]});
+                            }
                             tmp_matrixChart.draw();
                         }
                         });
