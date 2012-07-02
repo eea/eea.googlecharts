@@ -1280,9 +1280,17 @@ function columnsMatrixChart(chartType){
                             {
                                 text: "Use this chart",
                                 click: function(){
+                                    var firstCol;
+                                    var secondCol;
                                     jQuery(this).dialog("close");
                                     jQuery(".matrixChart_dialog").dialog("close");
                                     jQuery("#newTable").find(".ui-icon").each(function(idx, column){
+                                        if (jQuery(column).closest("th").attr("column_id") === sc_col1) {
+                                            firstCol = jQuery(column).closest("th");
+                                        }
+                                        if (jQuery(column).closest("th").attr("column_id") === sc_col2) {
+                                            secondCol = jQuery(column).closest("th");
+                                        }
                                         if (jQuery(column).hasClass("ui-icon-hide") &&
                                             (jQuery(column).closest("th").attr("column_id") != sc_col1) &&
                                             (jQuery(column).closest("th").attr("column_id") != sc_col2)){
@@ -1297,6 +1305,8 @@ function columnsMatrixChart(chartType){
                                     var new_conf_str = JSON.stringify(tmp_conf_json);
                                     jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value",new_conf_str);
                                     jQuery("#googlechartid_tmp_chart").find(".googlechart_name").attr("value",sc_col_name1 + " - " + sc_col_name2);
+                                    jQuery("#newColumns").prepend(secondCol);
+                                    jQuery("#newColumns").prepend(firstCol);
                                     generateNewTable(generateSortedColumns());
                                 }
                             },
