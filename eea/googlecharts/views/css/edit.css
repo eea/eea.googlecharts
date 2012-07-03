@@ -605,6 +605,9 @@ dl.portlet .dashboard-chart,
     z-index:999 !important;
 }
 
+#googlechart_editor_container {
+    height:405px;
+}
 .googlechart-editor .modal-dialog-title,
 .googlechart-editor .modal-dialog-buttons,
 #google-visualization-charteditor-input-chart-name {
@@ -655,6 +658,7 @@ dl.portlet .dashboard-chart,
 .matrixChart_container {
     float:left;
     position:relative;
+    padding:2px;
 }
 
 .matrixChart_overlay {
@@ -671,6 +675,7 @@ dl.portlet .dashboard-chart,
 
 .matrixChart_item {
     float:left;
+    border: 1px solid #CCCCCC;
 }
 
 #matrixCharts_container {

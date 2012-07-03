@@ -1379,7 +1379,7 @@ function openEditChart(id){
             "<input class='googlechart_options' type='hidden' value='"+tmp_options+"'/>" +
             "<input class='googlechart_name' type='hidden' value='"+tmp_name+"'/>" +
 
-            "<div id='googlechart_editor_container' style='height:395px'></div>" +
+            "<div id='googlechart_editor_container'></div>" +
         '</div>' +
         "<div style='padding-top:20px; padding-left:5px;float:left;width:168px'>"+
         '<div class="buttons">' +
