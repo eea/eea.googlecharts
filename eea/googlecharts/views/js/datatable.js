@@ -129,6 +129,7 @@ function prepareForChart(originalDataTable, columns, limit){
     jQuery(itemsToDisplay).each(function(row_index, row){
         var newRow = [];
         jQuery(columns).each(function(column_index, column){
+            var newColumn = row[column];
 
             var colType = originalDataTable.properties[column];
 
@@ -138,11 +139,13 @@ function prepareForChart(originalDataTable, columns, limit){
                 colType = colType.valueType !== undefined ? colType.valueType: colType;
 //                if (allowedTypesForCharts.indexOf(colType) === -1){
                 if (jQuery.inArray(colType, allowedTypesForCharts) === -1){
+                    if (colType === 'list'){
+                        newColumn = newColumn.join(", ");
+                    }
                     colType = "string";
                 }
             }
 
-            var newColumn = row[column];
 
             if (colType === "date"){
                 newColumn = jQuery.datepicker.parseDate("yy-mm-dd",newColumn);
