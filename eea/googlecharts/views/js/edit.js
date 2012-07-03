@@ -1304,6 +1304,13 @@ function columnsMatrixChart(chartType){
                                     var old_conf_str = jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value");
                                     var tmp_conf_json = JSON.parse(old_conf_str);
                                     tmp_conf_json.chartType = typeof(chartType) !== 'undefined' ? chartType : jQuery("#matrixChart_type_selector").find("select").attr("value");
+                                    if (tmp_conf_json.chartType !== 'ScatterChart'){
+                                        tmp_conf_json.options.pointSize = 0;
+                                        tmp_conf_json.options.lineWidth = 2;
+                                    }
+                                    else {
+                                        tmp_conf_json.options.pointSize = 7;
+                                    }
                                     var new_conf_str = JSON.stringify(tmp_conf_json);
                                     jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value",new_conf_str);
                                     jQuery("#googlechartid_tmp_chart").find(".googlechart_name").attr("value",sc_col_name1 + " - " + sc_col_name2);
@@ -1329,6 +1336,8 @@ function columnsMatrixChart(chartType){
                             tmp_options.hAxis.baselineColor = '#CCC';
                             tmp_options.vAxis.baselineColor = '#CCC';
                             if (chartType !== 'ScatterChart'){
+                                tmp_options.pointSize = 0;
+                                tmp_options.lineWidth = 2;
                                 tmp_options.chartArea.top = 'auto';
                                 tmp_options.chartArea.left = 'auto';
                                 tmp_options.chartArea.width = 'auto';
