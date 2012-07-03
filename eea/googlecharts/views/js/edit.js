@@ -26,15 +26,15 @@ var matrixChartMatrixMaxDots = 200;
 var matrixChartMinDots = 30;
 var matrixChartSize = 73;
 var matrixChartOptions = {
-            'width':matrixChartSize,
-            'height':matrixChartSize,
+            'width':matrixChartSize - 4,
+            'height':matrixChartSize - 4,
             'enableInteractivity':false,
             'pointSize':2,
             'chartArea':{
                 'left':1,
                 'top':1,
-                'width':matrixChartSize - 2,
-                'height':matrixChartSize - 2
+                'width':matrixChartSize - 4 - 2,
+                'height':matrixChartSize - 4 - 2
             },
             'legend':{
                 'position':'none'
@@ -970,8 +970,8 @@ function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
                 var emptyMatrixChartDiv = "<div class='matrixChart_container'>" +
                                      "<div class='matrixChart_item' "+
                                                 "id='" + emptyMatrixChartId + "' "+
-                                                "style='width:"+matrixChartSize+"px;"+
-                                                        "height:"+matrixChartSize+"px;'>" +
+                                                "style='width:"+(matrixChartSize - 4) +"px;"+
+                                                        "height:"+(matrixChartSize - 4) +"px;'>" +
                                      "</div>"+
                                      "</div>";
                 jQuery(".matrixCharts_zone").append(emptyMatrixChartDiv);
@@ -983,13 +983,13 @@ function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
                                      "<div class='matrixChart_overlay' "+
                                                 "row_nr='" + rowValue + "' "+
                                                 "col_nr='" + colValue + "' " +
-                                                "style='width:"+(matrixChartSize-2)+"px;"+
-                                                       "height:"+(matrixChartSize-2)+"px;'>"+
+                                                "style='width:"+(matrixChartSize-4)+"px;"+
+                                                       "height:"+(matrixChartSize-4)+"px;'>"+
                                      "</div>"+
                                      "<div class='matrixChart_item' "+
                                                 "id='" + matrixChartId + "' "+
-                                                "style='width:"+matrixChartSize+"px;"+
-                                                        "height:"+matrixChartSize+"px;'>" +
+                                                "style='width:"+(matrixChartSize-4)+"px;"+
+                                                        "height:"+(matrixChartSize-4)+"px;'>" +
                                      "</div>"+
                                      "<div style='clear:both'></div>"+
                                   "</div>";
@@ -1326,6 +1326,8 @@ function columnsMatrixChart(chartType){
                             tmp_options.height = jQuery("#matrix_tmp_chart").height();
                             tmp_options.chartArea.width = jQuery("#matrix_tmp_chart").width() - 2;
                             tmp_options.chartArea.height = jQuery("#matrix_tmp_chart").height() - 2;
+                            tmp_options.hAxis.baselineColor = '#CCC';
+                            tmp_options.vAxis.baselineColor = '#CCC';
                             if (chartType !== 'ScatterChart'){
                                 tmp_options.chartArea.top = 'auto';
                                 tmp_options.chartArea.left = 'auto';
