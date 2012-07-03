@@ -40,17 +40,19 @@ var matrixChartOptions = {
                 'position':'none'
             },
             'hAxis':{
-                'baselineColor':'#CCC',
+                'baselineColor':'#FFFFFF',
                 'textPosition':'none',
                 'gridlines':{
-                    'count':2
+                    'count':2,
+                    'color':'#FFFFFF'
                 }
             },
             'vAxis':{
-                'baselineColor':'#CCC',
+                'baselineColor':'#FFFFFF',
                 'textPosition':'none',
                 'gridlines':{
-                    'count':2
+                    'count':2,
+                    'color':'#FFFFFF'
                 }
             }
 };
