@@ -26,15 +26,15 @@ var matrixChartMatrixMaxDots = 200;
 var matrixChartMinDots = 30;
 var matrixChartSize = 73;
 var matrixChartOptions = {
-            'width':matrixChartSize - 4,
-            'height':matrixChartSize - 4,
+            'width':matrixChartSize - 4 - 2,
+            'height':matrixChartSize - 4 - 2,
             'enableInteractivity':false,
             'pointSize':2,
             'chartArea':{
                 'left':1,
                 'top':1,
-                'width':matrixChartSize - 4 - 2,
-                'height':matrixChartSize - 4 - 2
+                'width':matrixChartSize - 4 - 4,
+                'height':matrixChartSize - 4 - 4
             },
             'legend':{
                 'position':'none'
@@ -970,8 +970,8 @@ function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
                 var emptyMatrixChartDiv = "<div class='matrixChart_container'>" +
                                      "<div class='matrixChart_item' "+
                                                 "id='" + emptyMatrixChartId + "' "+
-                                                "style='width:"+(matrixChartSize - 4) +"px;"+
-                                                        "height:"+(matrixChartSize - 4) +"px;'>" +
+                                                "style='width:"+(matrixChartSize - 4 - 2) +"px;"+
+                                                        "height:"+(matrixChartSize - 4 - 2) +"px;'>" +
                                      "</div>"+
                                      "</div>";
                 jQuery(".matrixCharts_zone").append(emptyMatrixChartDiv);
@@ -983,13 +983,13 @@ function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
                                      "<div class='matrixChart_overlay' "+
                                                 "row_nr='" + rowValue + "' "+
                                                 "col_nr='" + colValue + "' " +
-                                                "style='width:"+(matrixChartSize-4)+"px;"+
-                                                       "height:"+(matrixChartSize-4)+"px;'>"+
+                                                "style='width:"+(matrixChartSize - 4 - 2)+"px;"+
+                                                       "height:"+(matrixChartSize - 4 - 2)+"px;'>"+
                                      "</div>"+
                                      "<div class='matrixChart_item' "+
                                                 "id='" + matrixChartId + "' "+
-                                                "style='width:"+(matrixChartSize-4)+"px;"+
-                                                        "height:"+(matrixChartSize-4)+"px;'>" +
+                                                "style='width:"+(matrixChartSize - 4 - 2)+"px;"+
+                                                        "height:"+(matrixChartSize - 4 - 2)+"px;'>" +
                                      "</div>"+
                                      "<div style='clear:both'></div>"+
                                   "</div>";
