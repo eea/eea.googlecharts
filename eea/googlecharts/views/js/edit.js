@@ -20,7 +20,8 @@ var defaultAdvancedOptions = '{"fontName":"Verdana",'+
 
 var availableChartsForMatrix = {'BarChart':'bar',
                                 'ColumnChart':'column',
-                                'LineChart':'line'};
+                                'LineChart':'line',
+                                'PieChart':'pie'};
 
 var matrixChartMatrixMaxDots = 200;
 var matrixChartMinDots = 30;
@@ -516,8 +517,9 @@ function generateNewTable(sortOrder, isFirst){
 
     jQuery(sortOrder).each(function(col_idx, col){
         var newColumn = '<th column_id="' + col[0] + '" column_visible="'+col[1]+'">' +
+                        '<div title="Hide facet" style="float:right" class="ui-icon '+((col[1]==='hidden')?'ui-icon-show':'ui-icon-hide')+'">h</div>' +
+                        '<div style="clear:both;"></div>'+
                         '<span>' + transformedTable.available_columns[col[0]] + '</span>' +
-                        '<div title="Hide facet" class="ui-icon '+((col[1]==='hidden')?'ui-icon-show':'ui-icon-hide')+'">h</div>' +
                     '</th>';
         jQuery(newColumn).appendTo("#newColumns");
     });
@@ -1313,7 +1315,7 @@ function columnsMatrixChart(chartType){
                                     }
                                     var new_conf_str = JSON.stringify(tmp_conf_json);
                                     jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value",new_conf_str);
-                                    jQuery("#googlechartid_tmp_chart").find(".googlechart_name").attr("value",sc_col_name1 + " - " + sc_col_name2);
+                                    jQuery("#googlechartid_tmp_chart").find(".googlechart_name").attr("value",sc_col_name1 + " / " + sc_col_name2);
                                     jQuery("#newColumns").prepend(secondCol);
                                     jQuery("#newColumns").prepend(firstCol);
                                     generateNewTable(generateSortedColumns());

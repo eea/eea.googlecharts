@@ -123,6 +123,7 @@
 
 #newColumns th {
     cursor: crosshair;
+    vertical-align: text-top;
 }
 
 #newColumns .ui-state-highlight {
