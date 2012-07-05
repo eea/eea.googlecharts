@@ -730,3 +730,7 @@ dl.portlet .dashboard-chart,
     display:table-cell;
     vertical-align:middle;
 }
+
+.google-visualization-charteditor-menu {
+    z-index:9999 !important;
+}
