@@ -1054,9 +1054,16 @@ function columnsMatrixChart(chartType){
     var key_idx = 0;
 
     var allColumnsForMatrix = [];
+    var allAllowedColumnsForMatrix = [];
     var allColumnNamesForMatrix = [];
     var allColumnNiceNamesForMatrix = [];
     var allKey_idx = 0;
+
+    var allAllowedColumnsForMatrix = [];
+    var allAllowedColumnNamesForMatrix = [];
+    var allAllowedColumnNiceNamesForMatrix = [];
+
+    var unAllowedTypes = ['number', 'boolean', 'date', 'datetime', 'timeofday'];
 
     jQuery.each(columns_tmp, function(idx, value){
         var columnName = jQuery(value).attr("column_id");
@@ -1074,6 +1081,13 @@ function columnsMatrixChart(chartType){
                 columnNiceNamesForMatrix.push(jQuery(value).find("span").html());
                 key_idx++;
             }
+
+            if (jQuery.inArray(transformedTable.properties[columnName].valueType, unAllowedTypes) === -1){
+                allAllowedColumnsForMatrix.push(allKey_idx);
+                allAllowedColumnNamesForMatrix.push(columnName);
+                allAllowedColumnNiceNamesForMatrix.push(jQuery(value).find("span").html());
+            }
+
             allColumnsForMatrix.push(allKey_idx);
             allColumnNamesForMatrix.push(columnName);
             allColumnNiceNamesForMatrix.push(jQuery(value).find("span").html());
@@ -1082,13 +1096,14 @@ function columnsMatrixChart(chartType){
     });
     var tmp_columns = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_columns").attr("value"));
     var cols_nr = columnsForMatrix.length;
-    var rows_nr = 0;
+    var rows_nr = allAllowedColumnsForMatrix.length;
     if ((chartType === 'ScatterChart') && (cols_nr < 2)){
         DavizEdit.Status.stop("Done");
         alert("At least 2 visible numeric columns are required!");
         return;
     }
-    if ((cols_nr < 1) && (rows_nr < 2)){
+
+    if ((cols_nr < 1) || (rows_nr < 1)){
         DavizEdit.Status.stop("Done");
         alert("At least 2 visible columns are required and 1 of them should be numeric!");
         return;
@@ -1119,7 +1134,7 @@ function columnsMatrixChart(chartType){
     }
     else {
         matrixChart_zone_size_width = columnNamesForMatrix.length * matrixChartSize + 20;
-        matrixChart_zone_size_height = allColumnNamesForMatrix.length * matrixChartSize + 20;
+        matrixChart_zone_size_height = allAllowedColumnNamesForMatrix.length * matrixChartSize + 20;
     }
     var container_width = (matrixChart_zone_size_width + matrixChartSize + 60 > width) ? width - matrixChartSize - 60 : matrixChart_zone_size_width;
     var container_height = (matrixChart_zone_size_height + matrixChartSize + 40 > height) ? height - matrixChartSize - 40: matrixChart_zone_size_height;
@@ -1163,7 +1178,7 @@ function columnsMatrixChart(chartType){
     }
     else {
         matrixColumns = columnsForMatrix;
-        matrixRows = allColumnsForMatrix;
+        matrixRows = allAllowedColumnsForMatrix;
     }
     jQuery(matrixChartDialog).dialog({title:"Charts Matrix",
             dialogClass: 'googlechart-dialog',
