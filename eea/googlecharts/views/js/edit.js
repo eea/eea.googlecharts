@@ -1054,7 +1054,6 @@ function columnsMatrixChart(chartType){
     var key_idx = 0;
 
     var allColumnsForMatrix = [];
-    var allAllowedColumnsForMatrix = [];
     var allColumnNamesForMatrix = [];
     var allColumnNiceNamesForMatrix = [];
     var allKey_idx = 0;
