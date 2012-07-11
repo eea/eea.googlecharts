@@ -157,7 +157,7 @@ def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
                 verticalSpace)
     if position == 'Bottom Left':
         pos = (horizontalSpace,
-                pilImg.size[1] - pilWM.size[1] - horizontalSpace)
+                pilImg.size[1] - pilWM.size[1] - verticalSpace)
     if position == 'Bottom Right':
         pos = (pilImg.size[0] - pilWM.size[0] - horizontalSpace,
                 pilImg.size[1] - pilWM.size[1] - verticalSpace)
@@ -201,6 +201,11 @@ class Export(BrowserView):
         wmHorizontal = sp.getProperty(
                     'Watermark_Horizontal_Space_For_PNG_Export', 0)
 
+        shiftSecondImg = False
+        hShift = 0
+        if qrPosition == wmPosition:
+            shiftSecondImg = True
+
         if qrPosition != 'Disabled':
             qr_con = urllib2.urlopen(kwargs.get('qr_url'))
             qr_img = qr_con.read()
@@ -211,6 +216,8 @@ class Export(BrowserView):
                                 qrVertical,
                                 qrHorizontal,
                                 0.7)
+            if shiftSecondImg:
+                hShift = Image.open(StringIO(qr_img)).size[0] + qrHorizontal
 
         if wmPosition != 'Disabled':
             wm_con = urllib2.urlopen(wmPath)
@@ -220,7 +227,7 @@ class Export(BrowserView):
                                 wm_img,
                                 wmPosition,
                                 wmVertical,
-                                wmHorizontal,
+                                wmHorizontal + hShift,
                                 0.7)
 
         ctype = kwargs.get('type', 'image/png')

@@ -1104,7 +1104,7 @@ function columnsMatrixChart(chartType){
 
     if ((cols_nr < 1) || (rows_nr < 1)){
         DavizEdit.Status.stop("Done");
-        alert("At least 2 visible columns are required and 1 of them should be numeric!");
+        alert("At least 1 string and 1 numeric columns have to be visible!");
         return;
     }
 

@@ -3,6 +3,8 @@ Changelog
 
 4.5-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed overlapping watermark and qr code on png export
+  [szabozo0 refs #4940]
 * Feature: Added scatterplots matrix and line, bar, column, pie matrices
   [szabozo0 refs #4952]
 * Bugfix: Fixed dropdowns in chart editor
