@@ -10,6 +10,7 @@
         </property>
         <property name="QRCode_Position" select_variable="watermark_positions"
             type="selection">Top Left</property>
+        <property name="QRCode_Size" type="int">70</property>
         <property name="QRCode_Horizontal_Space_For_PNG_Export" type="int">0</property>
         <property name="QRCode_Vertical_Space_For_PNG_Export" type="int">0</property>
         <property name="Watermark_Image" type="string">http://www.eea.europa.eu/eea-logo-no-text.gif</property>

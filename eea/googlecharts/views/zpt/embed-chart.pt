@@ -27,6 +27,7 @@
                                                 baseurl = '${view/context/absolute_url}';
                                                 chart_id = '${chart/chart_id}';
                                                 qr_pos = '${view/qr_position}';
+                                                qr_size = '${view/qr_size}';
                                                 wm_pos = '${view/wm_position}';
                                                 wm_path = '${view/wm_path}';">
     </script>

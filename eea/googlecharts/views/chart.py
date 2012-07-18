@@ -27,6 +27,12 @@ class View(ViewForm):
         sp = getToolByName(self.context,'portal_properties').site_properties
         return sp.getProperty('QRCode_Position', 'Top Left')
 
+    def qr_size(self):
+        """ Size of QR Code
+        """
+        sp = getToolByName(self.context,'portal_properties').site_properties
+        return sp.getProperty('QRCode_Size', 70)
+
     def wm_position(self):
         """ Position of Watermark
         """

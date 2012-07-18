@@ -3,6 +3,8 @@ Changelog
 
 4.6-dev - (unreleased)
 ----------------------
+* Feature: Changed size of QR code configurable from ZMI
+  [szabozo0 refs #5379]
 
 4.5 - (2012-07-13)
 ------------------
