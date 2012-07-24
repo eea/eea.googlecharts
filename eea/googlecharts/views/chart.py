@@ -149,6 +149,35 @@ class View(ViewForm):
             })
         return tabs
 
+    def get_iframe_chart(self):
+        """ Get chart for iframe
+        """
+        chart_id = self.request.get("chart", '')
+        chart_width = self.request.get('width', 0)
+        chart_height = self.request.get('height', 0)
+        config = {}
+        if chart_id == '':
+            mutator = queryAdapter(self.context, IVisualizationConfig)
+            for view in mutator.views:
+                if (view.get('chartsconfig_tmp_iframe')):
+                    config = view.get('chartsconfig_tmp_iframe')
+            config['preview_width'] = config['width']
+            config['preview_height'] = config['height']
+        else:
+            charts = self.get_charts()
+            for chart in charts:
+                if chart['id'] == chart_id:
+                    config = chart
+                    config['chart_id'] = chart_id
+                    config['json'] = config['config']
+            config['preview_width'] = chart_width
+            config['preview_height'] = chart_height
+
+        config['data'] = self.get_rows()
+        config['available_columns'] = self.get_columns()
+        return config
+
+
 def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
     """ Calculate position of watermark and place it over the original image
     """

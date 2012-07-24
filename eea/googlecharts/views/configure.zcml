@@ -92,6 +92,14 @@
     permission="cmf.ModifyPortalContent"
     />
 
+  <browser:page
+    name="googlechart.set_iframe_chart"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Edit"
+    attribute="set_iframe_chart"
+    permission="cmf.ModifyPortalContent"
+    />
+
   <browser:resource
     name="eea.googlecharts.dashboard-edit.js"
     file="./js/dashboard-edit.js"

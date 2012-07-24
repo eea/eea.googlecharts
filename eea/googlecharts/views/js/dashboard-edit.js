@@ -322,9 +322,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
 
     var href = self.settings.chart.find('a.preview_button');
     href.trigger('mouseover');
-    href = href.attr('href');
-    href = href.replace(/width\=\d+/, 'width=' + width);
-    href = href.replace(/height\=\d+/, 'height=' + height);
+    href = href.attr('href') + "?chart=" + self.settings.name + "&width=" + width + "&height=" + height;
 
     var iframe = jQuery('<iframe>').attr('src', href);
     self.box = jQuery('<div>')

@@ -53,16 +53,15 @@
 
 </script>
 </head>
-<body tal:define="chart view/get_full_chart" style="margin: 0; overflow: hidden">
+<body tal:define="chart view/get_iframe_chart" style="margin: 0; overflow: hidden">
     <script type="text/javascript" tal:content="string:chart_columns = ${chart/columns};
                                             merged_rows = ${chart/data};
                                             available_columns = ${chart/available_columns};
                                             chart_json = ${chart/json};
-                                            width = ${chart/width};
-                                            height = ${chart/height};
+                                            width = ${chart/preview_width};
+                                            height = ${chart/preview_height};
                                             name = '${chart/name}';
-                                            options = ${chart/options};
-                                            chart_filters = ${chart/filters};">
+                                            options = ${chart/options};">
     </script>
 
     <div id="googlechart_dashboard">

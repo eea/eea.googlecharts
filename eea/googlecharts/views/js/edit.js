@@ -1900,30 +1900,38 @@ function init_googlecharts_edit(){
         var config_json = JSON.parse(chartObj.find(".googlechart_configjson").attr("value"));
         config_json.dataTable = [];
         var config_str = JSON.stringify(config_json);
-        var params = "?json="+encodeURIComponent(config_str);
-        params += "&options="+encodeURIComponent(chartObj.find(".googlechart_options").attr("value"));
-        params += "&columns="+encodeURIComponent(chartObj.find(".googlechart_columns").attr("value"));
-        params += "&width="+width;
-        params += "&height="+height;
-        params += "&name="+encodeURIComponent(name);
-        var self = jQuery(this);
 
+        var self = jQuery(this);
         var form = jQuery('.daviz-view-form:has(#googlecharts_config)');
         var action = form.length ? form.attr('action') : '';
         action = action.split('@@')[0] + "chart-full";
 
-        self.attr("href", action + params);
+        self.attr("href", action);
         self.attr('rel', '#preview-iframe');
         self.overlay({
             onBeforeLoad: function() {
+                jQuery('#preview-iframe iframe').remove();
                 var width = chartObj.find(".googlechart_width").val();
                 var height = chartObj.find(".googlechart_height").val();
-                jQuery('#preview-iframe iframe').remove();
                 jQuery('#preview-iframe').append(
                     jQuery('<iframe>')
-                        .attr('src', self.attr('href'))
                         .attr('width', parseInt(width, 10))
                         .attr('height', parseInt(height, 10)));
+                var query = {'preview_tmp_chart':'{"json":"'+encodeURIComponent(config_str)+'","options":"'+encodeURIComponent(chartObj.find(".googlechart_options").attr("value"))+'","columns":"'+encodeURIComponent(chartObj.find(".googlechart_columns").attr("value"))+'","width":'+width+',"height":'+height+',"name":"'+name+'"}'};
+                jQuery.ajax({
+                    url:ajax_baseurl+"/googlechart.set_iframe_chart",
+                    type:'post',
+                    data:query,
+                    success:function(data){
+                        jQuery('#preview-iframe iframe').remove();
+                        jQuery('#preview-iframe').append(
+                            jQuery('<iframe>')
+                                .attr('src', self.attr('href'))
+                                .attr('width', parseInt(width, 10))
+                                .attr('height', parseInt(height, 10)));
+                    }
+                });
+
             }
         });
     });

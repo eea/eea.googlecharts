@@ -3,6 +3,9 @@ Changelog
 
 4.6-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed preview and dashboard iframes with error message:
+  "Request URI is too long"
+  [szabozo0 refs #5384]
 * Feature: Changed size of QR code configurable from ZMI
   [szabozo0 refs #5379]
 

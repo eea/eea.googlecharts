@@ -2,6 +2,7 @@
 """
 import json
 import logging
+import urllib2
 from zope.formlib.form import Fields
 from Products.Five import BrowserView
 
@@ -65,6 +66,22 @@ class Edit(BrowserView):
         stripped_result['properties'] = result_json['properties']
         stripped_result['items'] = result_json['items']
         return json.dumps(stripped_result)
+
+    def set_iframe_chart(self):
+        """ Set chart for iframe
+        """
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        chart = json.loads(self.request['preview_tmp_chart'])
+        chart['json'] = urllib2.unquote(chart['json'])
+        chart['options'] = urllib2.unquote(chart['options'])
+        chart['columns'] = urllib2.unquote(chart['columns'])
+
+        data = {}
+        data['chartsconfig_tmp_iframe'] = chart
+
+        mutator.edit_view('googlechart.googlecharts', **data)
+
+        return 'Changes saved'
 
 class ChartsEdit(EditForm, Edit):
     """ Edit google charts
