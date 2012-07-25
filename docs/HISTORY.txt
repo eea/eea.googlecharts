@@ -3,6 +3,8 @@ Changelog
 
 4.6-dev - (unreleased)
 ----------------------
+* Feature: Compatible with Plone 4.2
+  [voineali refs #5346]
 * Bugfix: Fixed preview and dashboard iframes with error message:
   "Request URI is too long"
   [szabozo0 refs #5384]
@@ -20,7 +22,7 @@ Changelog
 * Change: improved the boxed look of charts, now the branding and filters
   clearly look as integral part of the visualization chart itself.
   [demarant refs #4940]
-* Bug Fix: Fixed i18n missing tags in eea.googlecharts 
+* Bug Fix: Fixed i18n missing tags in eea.googlecharts
   [prospchr refs #5162]
 
 4.4 - (2012-06-12)

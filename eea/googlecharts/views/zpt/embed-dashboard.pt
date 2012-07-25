@@ -5,7 +5,8 @@
     #googlechart_filters {margin-top:0px !important;}
 </style>
 <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" tal:condition="exists:here/jquery.js" src="jquery.js"></script>
+<script type="text/javascript" tal:condition="exists:here/++resource++plone.app.jquery.js" src="++resource++plone.app.jquery.js"></script>
 <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
@@ -47,9 +48,9 @@
             </div>
         </div>
     </div>
-    <a style="float:right" 
+    <a style="float:right"
        tal:attributes="href view/context/absolute_url"
-       i18n:translate="" 
+       i18n:translate=""
        target="_top">Go to original visualization</a>
 </body>
 

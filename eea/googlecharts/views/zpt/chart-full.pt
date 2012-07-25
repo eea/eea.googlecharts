@@ -6,7 +6,8 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
-<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" tal:condition="exists:here/jquery.js" src="jquery.js"></script>
+<script type="text/javascript" tal:condition="exists:here/++resource++plone.app.jquery.js" src="++resource++plone.app.jquery.js"></script>
 <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
 
 
