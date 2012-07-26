@@ -1,4 +1,5 @@
 var charteditor_css = null;
+var previewChartObj = null;
 var chartEditor = null;
 var chartId = '';
 
@@ -1899,14 +1900,11 @@ function init_googlecharts_edit(){
     jQuery('<div>').attr('id', 'preview-iframe').appendTo("body");
 
     jQuery("#googlecharts_list").delegate("a.preview_button", "hover", function(){
-        var chartObj = jQuery(this).closest('.googlechart');
+        previewChartObj = jQuery(this).closest('.googlechart');
+        var chartObj = previewChartObj;
         var width = chartObj.find(".googlechart_width").val();
         var height = chartObj.find(".googlechart_height").val();
         var name = chartObj.find(".googlechart_name").attr("value");
-        var config_json = JSON.parse(chartObj.find(".googlechart_configjson").attr("value"));
-        config_json.dataTable = [];
-        var config_str = JSON.stringify(config_json);
-
         var self = jQuery(this);
         var form = jQuery('.daviz-view-form:has(#googlecharts_config)');
         var action = form.length ? form.attr('action') : '';
@@ -1923,7 +1921,11 @@ function init_googlecharts_edit(){
                     jQuery('<iframe>')
                         .attr('width', parseInt(width, 10))
                         .attr('height', parseInt(height, 10)));
-                var query = {'preview_tmp_chart':'{"json":"'+encodeURIComponent(config_str)+'","options":"'+encodeURIComponent(chartObj.find(".googlechart_options").attr("value"))+'","columns":"'+encodeURIComponent(chartObj.find(".googlechart_columns").attr("value"))+'","width":'+width+',"height":'+height+',"name":"'+name+'"}'};
+                var config_json = JSON.parse(previewChartObj.find(".googlechart_configjson").attr("value"));
+                config_json.dataTable = [];
+                var config_str = JSON.stringify(config_json);
+                var name = previewChartObj.find(".googlechart_name").attr("value");
+                var query = {'preview_tmp_chart':'{"json":"'+encodeURIComponent(config_str)+'","options":"'+encodeURIComponent(previewChartObj.find(".googlechart_options").attr("value"))+'","columns":"'+encodeURIComponent(previewChartObj.find(".googlechart_columns").attr("value"))+'","width":'+width+',"height":'+height+',"name":"'+name+'"}'};
                 jQuery.ajax({
                     url:ajax_baseurl+"/googlechart.set_iframe_chart",
                     type:'post',
