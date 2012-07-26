@@ -1,3 +1,4 @@
+var charteditor_css = null;
 var chartEditor = null;
 var chartId = '';
 
@@ -1386,6 +1387,7 @@ function columnsMatrixChart(chartType){
 }
 
 function openEditChart(id){
+    jQuery("html").append(charteditor_css);
     chartEditor = null;
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
     var tmp_paletteId = typeof(JSON.parse(tmp_config).paletteId) !== 'undefined' ? JSON.parse(tmp_config).paletteId : "";
@@ -1464,7 +1466,12 @@ function openEditChart(id){
                 resizable:true,
                 create:function(){
                     editorDialog = jQuery(this);
-                }});
+                },
+                close:function(){
+                    console.log("x1");
+                    charteditor_css.remove();
+                }
+                });
 
     var columns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value");
     var columnsSettings = {};
@@ -1940,6 +1947,9 @@ function init_googlecharts_edit(){
 
 
 jQuery(document).ready(function(){
+    charteditor_css = jQuery("link[rel=stylesheet][href*=charteditor]");
+    charteditor_css.remove();
+
     init_googlecharts_edit();
     jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
         init_googlecharts_edit();
