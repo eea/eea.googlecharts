@@ -1468,7 +1468,6 @@ function openEditChart(id){
                     editorDialog = jQuery(this);
                 },
                 close:function(){
-                    console.log("x1");
                     charteditor_css.remove();
                 }
                 });
