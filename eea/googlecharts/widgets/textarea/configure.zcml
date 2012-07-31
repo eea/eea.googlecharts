@@ -1,0 +1,23 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:googlecharts="http://namespaces.zope.org/googlecharts"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="eea">
+
+  <googlecharts:widget
+    name="googlecharts.widgets.textarea"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".view.View"
+    template="view.pt"
+    permission="zope2.View"
+    title="RichText area"
+    />
+
+  <browser:page
+    name="googlecharts.widgets.textarea.add"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Add"
+    permission="cmf.ModifyPortalContent"
+    />
+
+</configure>

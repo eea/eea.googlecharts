@@ -7,5 +7,6 @@
   <include file="profiles.zcml" />
 
   <include package=".views" />
+  <include package=".widgets" />
 
 </configure>

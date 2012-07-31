@@ -74,6 +74,14 @@
   box-shadow: 0px 0px 100px #000;
 }
 
+.googlechart-dialog input[type=text] {
+    width: 98%;
+}
+
+.googlechart-dialog fieldset {
+    border: none;
+}
+
 .googlechartTable {
     color:black;
     font-size:0.8em !important;
@@ -268,6 +276,7 @@ dl.portlet .dashboard-chart,
     float: left;
 }
 
+.dashboard-charts .ui-icon-plus,
 .dashboard-filters .ui-icon-plus {
     float: right;
     border: 2px solid #ccc;

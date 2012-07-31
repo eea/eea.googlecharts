@@ -1,0 +1,1 @@
+<tal:widget replace="structure python:view.text" />

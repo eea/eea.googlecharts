@@ -3,6 +3,8 @@ Changelog
 
 4.6-dev - (unreleased)
 ----------------------
+* WIP Feature: Extend daviz dashboard with HTML widget + classic portlet macro
+  [voineali refs #5365]
 * Bugfix: Fixed columns order
   [szabozo0 refs #5137]
 * Feature: Compatible with Plone 4.2

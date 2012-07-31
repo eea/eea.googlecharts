@@ -150,6 +150,36 @@ class DashboardEdit(ChartsEdit):
             mutator.edit_view('googlechart.googlecharts', **view)
         return u"Changes saved"
 
+    def widgetEdit(self, **kwargs):
+        """ Edit dashboard widget
+        """
+        name = kwargs.get('name', '')
+        if not name:
+            msg = 'Empty widget name provided %s' % name
+            logger.exception(msg)
+            return msg
+
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        dashboard = kwargs.pop('dashboard', "{}")
+        try:
+            dashboard = json.loads(dashboard)
+        except Exception, err:
+            logger.exception(err)
+            return err
+
+        viewname = self.__name__.replace('.edit', '', 1)
+        view = mutator.view(viewname, {})
+        widgets = view.get('widgets', [])
+        changed = False
+        for widget in widgets:
+            if widget.get('name', '') == name:
+                widget['dashboard'] = dashboard
+                changed = True
+
+        if changed:
+            mutator.edit_view(viewname, **view)
+        return u'Changes saved'
+
     def chartsPosition(self, **kwargs):
         """ Change chats position in dashboard
         """
@@ -161,6 +191,7 @@ class DashboardEdit(ChartsEdit):
         config = view.get('chartsconfig', {})
         charts = config.get('charts', [])
 
+        # Charts order
         changed = False
         for chart in charts:
             dashboard = chart.get('dashboard', {})
@@ -178,6 +209,29 @@ class DashboardEdit(ChartsEdit):
 
         if changed:
             mutator.edit_view('googlechart.googlecharts', **view)
+
+        # Widgets order
+        changed = False
+        viewname = self.__name__.replace('.edit', '', 1)
+        view = mutator.view(viewname, {})
+        widgets = view.get('widgets', [])
+        for widget in widgets:
+            dashboard = widget.get('dashboard', {})
+            if not dashboard:
+                continue
+
+            name = widget.get('name', '')
+            new_order = order.get(name, -1)
+            my_order = dashboard.get('order', -1)
+            if my_order == new_order:
+                continue
+
+            dashboard['order'] = new_order
+            changed = True
+
+        if changed:
+            mutator.edit_view(viewname, **view)
+
         return u'Changed saved'
 
     def chartsSize(self, **kwargs):
@@ -283,6 +337,10 @@ class DashboardEdit(ChartsEdit):
             return self.chartsPosition(**kwargs)
         elif action == 'charts.size':
             return self.chartsSize(**kwargs)
+
+        # Widgets
+        elif action == 'widget.edit':
+            return self.widgetEdit(**kwargs)
 
         #   Filters
         elif action == 'filter.add':

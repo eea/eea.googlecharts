@@ -1,0 +1,3 @@
+<tal:widget tal:on-error="structure error" tal:define="macro python:view.macro">
+  <metal:portlet use-macro="macro" />
+</tal:widget>

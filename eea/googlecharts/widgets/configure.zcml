@@ -1,0 +1,23 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="eea">
+
+  <include file="meta.zcml" />
+  <include package=".textarea" />
+  <include package=".portlet" />
+
+  <utility provides=".interfaces.IWidgetsInfo"
+    factory=".meta.WidgetsInfo" />
+
+  <utility name="eea.googlecharts.vocabularies.Widgets"
+    factory=".vocabularies.Widgets"/>
+
+  <browser:page
+    name="googlecharts.widgets.add"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Add"
+    permission="cmf.ModifyPortalContent"
+    />
+
+</configure>
