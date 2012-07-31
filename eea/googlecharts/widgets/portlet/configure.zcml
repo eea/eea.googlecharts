@@ -3,15 +3,24 @@
   xmlns:googlecharts="http://namespaces.zope.org/googlecharts"
   i18n_domain="eea">
 
+  <!-- View -->
   <googlecharts:widget
     name="googlecharts.widgets.portlet"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".view.View"
-    template="view.pt"
     permission="zope2.View"
     title="Classical portlet"
     />
 
+  <!-- Edit -->
+  <browser:page
+    name="googlecharts.widgets.portlet.edit"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".view.View"
+    permission="zope2.View"
+    />
+
+  <!-- Add -->
   <browser:page
     name="googlecharts.widgets.portlet.add"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"

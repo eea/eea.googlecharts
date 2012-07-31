@@ -174,7 +174,7 @@
 }
 
 .dashboard-header {
-    padding: 5px;
+    padding: 0.5em;
     background-color: #CDE2A7;
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#CDE2A7));
     background-image: -webkit-linear-gradient(center top , #FFFFFF, #CDE2A7);
@@ -182,7 +182,7 @@
     background-image: -ms-linear-gradient(center top , #FFFFFF, #CDE2A7);
     background-image: -o-linear-gradient(center top , #FFFFFF, #CDE2A7);
     position: absolute;
-    width: 100%;
+    width: 99%;
     cursor: move;
     opacity: 0;
     -webkit-transition: opacity .5s;
@@ -205,7 +205,7 @@
 }
 
 .dashboard-header span {
-    padding: 0 0.5em;
+    margin-right: 0.5em;
 }
 
 .dashboard-header-hidden {
@@ -227,6 +227,22 @@ dl.portlet .dashboard-chart,
     float: left;
     overflow: hidden;
     cursor: pointer;
+}
+
+#content .dashboard-widget,
+dl.portlet .dashboard-widget,
+.dashboard-widget {
+    text-align: initial;
+    margin-top: 3em;
+}
+
+.dashboard-widget {
+    overflow: auto;
+}
+
+.dashboard-widget textarea {
+    width: 600;
+    height: 600;
 }
 
 .dashboard-chart iframe {

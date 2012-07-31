@@ -180,6 +180,30 @@ class DashboardEdit(ChartsEdit):
             mutator.edit_view(viewname, **view)
         return u'Changes saved'
 
+    def widgetDelete(self, **kwargs):
+        """ Delete widget
+        """
+        name = kwargs.get('name', '')
+        if not name:
+            err = 'Empty widget name provided %s' % name
+            logger.exception(err)
+            return err
+
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        viewname = self.__name__.replace('.edit', '', 1)
+        view = mutator.view(viewname, {})
+        widgets = view.get('widgets', [])
+        changed = False
+        for index, widget in enumerate(widgets):
+            if widget.get('name', '') == name:
+                widgets.pop(index)
+                changed = True
+                break
+
+        if changed:
+            mutator.edit_view(viewname, **view)
+        return u'Widget deleted'
+
     def chartsPosition(self, **kwargs):
         """ Change chats position in dashboard
         """
@@ -341,6 +365,8 @@ class DashboardEdit(ChartsEdit):
         # Widgets
         elif action == 'widget.edit':
             return self.widgetEdit(**kwargs)
+        elif action == 'widget.delete':
+            return self.widgetDelete(**kwargs)
 
         #   Filters
         elif action == 'filter.add':

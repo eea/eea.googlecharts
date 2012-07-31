@@ -1,9 +1,9 @@
 <configure
-  xmlns="http://namespaces.zope.org/zope"
   xmlns:googlecharts="http://namespaces.zope.org/googlecharts"
   xmlns:browser="http://namespaces.zope.org/browser"
   i18n_domain="eea">
 
+  <!-- View -->
   <googlecharts:widget
     name="googlecharts.widgets.textarea"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
@@ -13,6 +13,16 @@
     title="RichText area"
     />
 
+  <!-- Edit -->
+  <browser:page
+    name="googlecharts.widgets.textarea.edit"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Edit"
+    template="edit.pt"
+    permission="zope2.View"
+    />
+
+  <!-- Add -->
   <browser:page
     name="googlecharts.widgets.textarea.add"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"

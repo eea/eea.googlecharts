@@ -1,0 +1,19 @@
+<tal:widget define="
+  name view/name;
+  settings view/dashboard;
+  width settings/width | python:800;
+  width python: '%spx' % (int(width) - 50);
+  height settings/height | python: 600;
+  height python: '%spx' % (int(height) - 100);
+  style python: 'width: %s;; height: %s' % (width, height);
+  configuration_method nocall:here/@@tinymce-jsonconfiguration;
+  configuration_json python:configuration_method(fieldname=name);
+  ">
+  <textarea tal:attributes="
+    style style;
+    id name;
+    name name;
+    title configuration_json;
+    class string:mce_editable;
+    "></textarea>
+</tal:widget>

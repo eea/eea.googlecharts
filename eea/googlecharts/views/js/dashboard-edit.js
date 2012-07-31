@@ -56,6 +56,7 @@ DavizEdit.GoogleDashboard.prototype = {
     self.context.sortable({
       items: '.dashboard-section',
       placeholder: 'ui-state-highlight',
+      handle: '.box-title',
       forcePlaceholderSize: true,
       opacity: 0.7,
       delay: 300,
@@ -136,7 +137,6 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     var self = this;
     self.box = jQuery('<div>')
       .attr('id', 'chartsBox')
-      .attr('title', 'Click and drag to reorder')
       .addClass('dashboard-charts')
       .addClass('dashboard-section')
       .appendTo(self.context)
@@ -193,6 +193,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       items: '.dashboard-chart',
       placeholder: 'ui-state-highlight',
       forcePlaceholderSize: true,
+      handle: '.dashboard-header',
       opacity: 0.7,
       delay: 300,
       cursor: 'crosshair',
@@ -209,6 +210,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     var self = this;
     var header = jQuery('<div>')
       .addClass('box-title')
+      .attr('title', 'Click and drag to reorder')
       .html([
         '<span class="label">Dashboard charts</span>',
         '<input type="text" name="width" value=""/>',
@@ -369,7 +371,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
 
     DavizEdit.Status.start("Adding...");
     jQuery.post(form.attr('action'), query, function(data){
-      console.warn('You must to trigger refresh event here');
+      jQuery(document).trigger(DavizEdit.Events.charts.changed);
       DavizEdit.Status.stop(data);
     });
   }
@@ -604,9 +606,9 @@ DavizEdit.GoogleDashboardWidget = function(context, options){
 
   self.settings = {
     dashboard: {
-      height: 400,
-      width: 400,
-      order: 0,
+      height: 600,
+      width: 800,
+      order: 997,
       hidden: false
     },
     name: '',
@@ -624,7 +626,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
   initialize: function(){
     var self = this;
     self.box = jQuery('<div>')
-      .attr('id', self.settings.name)
+      .attr('id', self.settings.name + '-widget')
       .addClass('dashboard-chart')
       .width(self.settings.dashboard.width)
       .height(self.settings.dashboard.height)
@@ -639,6 +641,32 @@ DavizEdit.GoogleDashboardWidget.prototype = {
           });
         }
       }).appendTo(self.context);
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@' + self.settings.wtype + '.edit';
+    jQuery.get(action, {name: self.settings.name}, function(data){
+      jQuery('<div>')
+        .addClass('dashboard-widget')
+        .append(data)
+        .appendTo(self.box);
+      if(jQuery('.mce_editable', self.box).length){
+        var textarea = jQuery('.mce_editable', self.box);
+        var config_json = JSON.parse(textarea.attr('title'));
+        config_json.autoresize = true;
+        config_json.resizing = false;
+        config_json.buttons = jQuery.map(config_json.buttons, function(button){
+          if(button === 'save'){
+            return;
+          }else{
+            return button;
+          }
+        });
+        textarea.attr('title', JSON.stringify(config_json));
+        var config = new TinyMCEConfig(self.settings.name);
+        config.init();
+      }
+    });
 
     self.handle_header(self.settings.dashboard.width, self.settings.dashboard.height);
 
@@ -668,7 +696,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
       .addClass('dashboard-header')
       .attr('title', 'Click and drag to reorder')
       .html([
-      '<span class="title">', self.settings.name, '</span>',
+      '<span class="title">', self.settings.title, '</span>',
       '<input type="number" name="width" value=""/>',
       '<span>X</span>',
       '<input type="number" name="height" value=""/>',
@@ -716,6 +744,15 @@ DavizEdit.GoogleDashboardWidget.prototype = {
      .click(function(){
        self.toggle_visibility();
      });
+
+    jQuery('<span>')
+      .attr('title', 'Delete')
+      .text('x')
+      .addClass('ui-icon').addClass('ui-icon-trash')
+      .prependTo(header)
+      .click(function(){
+        self.handle_delete();
+      });
   },
 
   handle_resize: function(data){
@@ -756,6 +793,49 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     }
 
     self.settings.dashboard.order = index;
+  },
+
+  handle_delete: function(){
+    var self = this;
+    jQuery('<div>')
+      .html([
+        '<span>Are you sure you want to delete:</span>',
+        '<strong>',
+          self.settings.title,
+        '</strong>'
+        ].join('\n'))
+      .dialog({
+        title: 'Remove widget',
+        modal: true,
+        dialogClass: 'googlechart-dialog',
+        buttons: {
+          Yes: function(){
+            self.onRemove();
+            jQuery(this).dialog('close');
+          },
+          No: function(){
+            jQuery(this).dialog('close');
+          }
+        }
+      });
+  },
+
+  onRemove: function(){
+    var self = this;
+    DavizEdit.Status.start("Deleting...");
+    query = {
+      name: self.settings.name,
+      action: 'widget.delete'
+    };
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
+    jQuery.post(action, query, function(data){
+      self.box.remove();
+      DavizEdit.Status.stop(data);
+    });
   },
 
   toggle_visibility: function(){
@@ -821,7 +901,6 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     var self = this;
     self.box = jQuery('<div>')
       .attr('id', 'filtersBox')
-      .attr('title', 'Click and drag to reorder')
       .addClass('dashboard-filters')
       .addClass('dashboard-section')
       .appendTo(self.context)
@@ -866,6 +945,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     var self = this;
     var header = jQuery('<div>')
       .addClass('box-title')
+      .attr('title', 'Click and drag to reorder')
       .html([
         '<span class="label">Dashboard filters</span>',
         '<input type="text" name="width" value=""/>',

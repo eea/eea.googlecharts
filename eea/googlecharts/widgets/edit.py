@@ -8,6 +8,7 @@ from zope.formlib.form import action
 from Products.statusmessages.interfaces import IStatusMessage
 from eea.app.visualization.config import EEAMessageFactory as _
 from eea.app.visualization.interfaces import IVisualizationConfig
+from zope.container.interfaces import INameChooser
 
 class EditForm(SubPageForm):
     """ Common edit form for widgets
@@ -21,15 +22,19 @@ class EditForm(SubPageForm):
         view = mutator.view(viewname, {})
         view.setdefault('widgets', [])
 
+        chooser = INameChooser(self.context)
+        name = data.get('name', 'widget')
+        data['title'] = name
+        data['name'] = chooser.chooseName(name, self.context)
         for widget in view.get('widgets', []):
             if data.get('name', '') == widget.get('name', ''):
                 return u'Invalid name. Widget not added'
 
         data['wtype'] = self.__name__.replace('.add', '', 1)
         data['dashboard'] = {
-            'width': 400,
-            'height': 400,
-            'order': 0,
+            'width': 800,
+            'height': 600,
+            'order': 997,
             'hidden': False
         }
         view['widgets'].append(data)
