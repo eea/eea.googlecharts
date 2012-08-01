@@ -37,6 +37,18 @@ class Edit(BrowserView):
                 return widget.get('dashboard', {})
         return {}
 
+    @property
+    def text(self):
+        """ Widget text
+        """
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        view = mutator.view('googlechart.googledashboard', {})
+        widgets = view.get('widgets', [])
+        for widget in widgets:
+            if widget.get('name', None) == self.widget_name:
+                return widget.get('text', '')
+        return ''
+
     def __call__(self, **kwargs):
         form = self.request.form
         form.update(kwargs)

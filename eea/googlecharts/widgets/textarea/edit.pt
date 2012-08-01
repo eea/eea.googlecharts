@@ -8,12 +8,13 @@
   style python: 'width: %s;; height: %s' % (width, height);
   configuration_method nocall:here/@@tinymce-jsonconfiguration;
   configuration_json python:configuration_method(fieldname=name);
+  text view/text;
   ">
   <textarea tal:attributes="
     style style;
-    id name;
+    id string:$name-textarea;
     name name;
     title configuration_json;
     class string:mce_editable;
-    "></textarea>
+    " tal:content="text"></textarea>
 </tal:widget>

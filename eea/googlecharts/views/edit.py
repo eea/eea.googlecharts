@@ -160,9 +160,9 @@ class DashboardEdit(ChartsEdit):
             return msg
 
         mutator = queryAdapter(self.context, IVisualizationConfig)
-        dashboard = kwargs.pop('dashboard', "{}")
+        settings = kwargs.pop('settings', "{}")
         try:
-            dashboard = json.loads(dashboard)
+            settings = json.loads(settings)
         except Exception, err:
             logger.exception(err)
             return err
@@ -173,7 +173,7 @@ class DashboardEdit(ChartsEdit):
         changed = False
         for widget in widgets:
             if widget.get('name', '') == name:
-                widget['dashboard'] = dashboard
+                widget.update(settings)
                 changed = True
 
         if changed:
