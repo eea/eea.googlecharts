@@ -2,16 +2,17 @@
 """
 from zope.component import queryAdapter
 from zope.formlib.form import Fields
-from eea.googlecharts.widgets.interfaces import IWidgetAdd
+from zope.formlib.form import action, setUpWidgets
 from zope.formlib.form import SubPageForm
 from zope.formlib.form import action
+from zope.container.interfaces import INameChooser
 from Products.statusmessages.interfaces import IStatusMessage
 from eea.app.visualization.config import EEAMessageFactory as _
 from eea.app.visualization.interfaces import IVisualizationConfig
-from zope.container.interfaces import INameChooser
+from eea.googlecharts.widgets.interfaces import IWidgetAdd
 
-class EditForm(SubPageForm):
-    """ Common edit form for widgets
+class AddForm(SubPageForm):
+    """ Common add form for widgets
     """
     @action(_('Save'))
     def save(self, saction, data):
@@ -55,7 +56,76 @@ class EditForm(SubPageForm):
         next_url = self.context.absolute_url() + '/daviz-edit.html'
         self.request.response.redirect(next_url)
 
-class Add(EditForm):
+class EditForm(SubPageForm):
+    """ Common Edit form for widgets
+    """
+    def __init__(self, context, request):
+        super(EditForm, self).__init__(context, request)
+        self.prefix = 'googlechart.googledashboard'
+        self.widget_name = ''
+
+    @action(_('Save'))
+    def save(self, saction, data):
+        """ Handle save action
+        """
+        name = saction.__name__.encode('utf-8')
+        value = self.request.form.get(name, '')
+        widgetName = self.request.form.get('name', '')
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        view = mutator.view(self.prefix, {})
+        widgets = view.get('widgets', [])
+        changed = False
+        for widget in widgets:
+            if widget.get('name', '') == widgetName:
+                widget.update(data)
+                changed = True
+                break
+
+        if changed:
+            mutator.edit_view(self.prefix, **view)
+
+        if value == 'ajax':
+            return 'Changes saved'
+
+        return self.nextUrl
+
+    @property
+    def nextUrl(self):
+        """ Redirect to daviz-edit.html as next_url
+        """
+        IStatusMessage(self.request).addStatusMessage('Changes saved',
+                                                        type='info')
+        next_url = self.context.absolute_url() + '/daviz-edit.html'
+        self.request.response.redirect(next_url)
+
+    @property
+    def _data(self):
+        """ Return view
+        """
+        accessor = queryAdapter(self.context, IVisualizationConfig)
+        view = accessor.view(self.prefix, {})
+        widgets = view.get('widgets', [])
+        for widget in widgets:
+            if widget.get('name', '') == self.widget_name:
+                return widget
+        return {}
+
+    def setUpWidgets(self, ignore_request=False):
+        """ Sets up widgets
+        """
+        self.adapters = {}
+        self.widgets = setUpWidgets(
+            self.form_fields, self.prefix, self.context, self.request,
+            form=self, data=self._data, adapters=self.adapters,
+            ignore_request=ignore_request)
+
+    def __call__(self):
+        self.widget_name = self.request.form.get('name', '')
+        return super(EditForm, self).__call__()
+#
+# Add form to select widget type
+#
+class Add(AddForm):
     """ Add widget to dashboard
     """
     form_fields = Fields(IWidgetAdd)

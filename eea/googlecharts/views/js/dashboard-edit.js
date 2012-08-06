@@ -309,11 +309,42 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     });
   },
 
+  initializeTinyMCE: function(form){
+    var self = this;
+    var textarea = jQuery('textarea', form).addClass('mce_editable');
+    var name = textarea.attr('id');
+    var exists = tinyMCE.get(name);
+    if(exists !== undefined){
+      delete InitializedTinyMCEInstances[name];
+    }
+
+    form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@tinymce-jsonconfiguration';
+
+    jQuery.getJSON(action, {fieldname: name}, function(data){
+      data.autoresize = true;
+      data.resizing = false;
+      // XXX Remove some buttons as they have bugs
+      data.buttons = jQuery.map(data.buttons, function(button){
+        if(button === 'save'){
+          return;
+        }else{
+          return button;
+        }
+      });
+      textarea.attr('title', JSON.stringify(data));
+      var config = new TinyMCEConfig(name);
+      config.init();
+    });
+  },
+
   new_widget: function(context){
     var self = this;
     var wtypes = jQuery.data(self.box, 'widget_types');
     var widget = jQuery('<form>')
       .addClass('loading')
+      .addClass('googlechart-widget-add')
       .submit(function(){
         return false;
       });
@@ -324,6 +355,8 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       bgiframe: true,
       modal: true,
       closeOnEscape: true,
+      minHeight: 600,
+      minWidth: 950,
       buttons: [
         {
           text: "Cancel",
@@ -357,6 +390,10 @@ DavizEdit.GoogleDashboardCharts.prototype = {
         widget.load(action, {}, function(){
           widget.attr('action', action);
           jQuery('#actionsView', widget).remove();
+          // Init tinyMCE
+          if(jQuery('textarea', widget).length){
+            self.initializeTinyMCE(widget);
+          }
         });
       });
     });
@@ -364,6 +401,10 @@ DavizEdit.GoogleDashboardCharts.prototype = {
 
   new_widget_onSave: function(form){
     var self = this;
+    if(jQuery('.mce_editable', form).length){
+      tinyMCE.triggerSave(true, true);
+    }
+
     var query = {};
     jQuery.each(form.serializeArray(), function(){
       query[this.name] = this.value;
@@ -639,105 +680,96 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         .addClass('dashboard-chart')
         .width(self.settings.dashboard.width)
         .height(self.settings.dashboard.height)
-        .resizable({
-          ghost: true,
-          helper: 'dashboard-resizable-helper',
-          stop: function(event, ui){
-            jQuery(self.box).trigger(DavizEdit.Events.charts.resized, {
-              context: self.box,
-              width: ui.size.width,
-              height: ui.size.height
-            });
-          }
-        }).appendTo(self.context);
+        .appendTo(self.context);
+    }else{
+      self.box.resizable("destroy");
+      self.box.empty();
     }
-    self.box.empty();
+
+    self.box.resizable({
+      ghost: true,
+      helper: 'dashboard-resizable-helper',
+      stop: function(event, ui){
+        jQuery(self.box).trigger(DavizEdit.Events.charts.resized, {
+          context: self.box,
+          width: ui.size.width,
+          height: ui.size.height
+        });
+      }
+    });
 
     var form = self.context.parents('.daviz-view-form');
     var action = form.length ? form.attr('action') : '';
-    action = action.split('@@')[0] + '@@' + self.settings.wtype + '.edit';
+    action = action.split('@@')[0] + '@@' + self.settings.wtype;
 
     jQuery.get(action, {name: self.settings.name}, function(data){
       jQuery('<div>')
         .addClass('dashboard-widget')
         .append(data)
         .appendTo(self.box);
-
-      // Init tinyMCE
-      if(jQuery('.mce_editable', self.box).length){
-        self.initializeTinyMCE();
-      }
     });
 
     self.handle_header(self.settings.dashboard.width, self.settings.dashboard.height);
 
     // Events
-    jQuery(self.box).unbind('.dashboard');
+    self.box.unbind('.dashboard');
+    self.box.unbind('dblclick');
+
+    self.box.bind('dblclick', function(){
+      self.handle_edit();
+    });
 
     // Resize
-    jQuery(self.box).bind(DavizEdit.Events.charts.resized + '.dashboard', function(evt, data){
+    self.box.bind(DavizEdit.Events.charts.resized + '.dashboard', function(evt, data){
       self.handle_resize(data);
     });
 
     // After resize
-    jQuery(self.box).bind(DavizEdit.Events.charts.resizeFinished + '.dashboard', function(evt, data){
+    self.box.bind(DavizEdit.Events.charts.resizeFinished + '.dashboard', function(evt, data){
       self.handle_afterResize(data);
     });
 
     // Position changed
-    jQuery(self.context.parents('#gcharts-dashboard-edit')).bind(DavizEdit.Events.charts.reordered + '.dashboard', function(evt, data){
+    self.context.parents('#gcharts-dashboard-edit').bind(DavizEdit.Events.charts.reordered + '.dashboard', function(evt, data){
         self.handle_position(data.order);
     });
 
   },
 
-  initializeTinyMCE: function(){
+  initializeTinyMCE: function(form){
     var self = this;
     self.isTinyMCE = true;
-    var exists = tinyMCE.get(self.settings.name + '-textarea');
+    var textarea = jQuery('textarea', form).addClass('mce_editable');
+    var name = textarea.attr('id');
+    var exists = tinyMCE.get(name);
     if(exists !== undefined){
-      delete InitializedTinyMCEInstances[self.settings.name + '-textarea'];
+      delete InitializedTinyMCEInstances[name];
     }
 
-    var textarea = jQuery('.mce_editable', self.box);
-    var config_json = JSON.parse(textarea.attr('title'));
-    config_json.autoresize = true;
-    config_json.resizing = false;
-    // XXX Remove some buttons as they have bugs
-    config_json.buttons = jQuery.map(config_json.buttons, function(button){
-      if(button === 'save' || button === 'tablecontrols'){
-        return;
-      }else{
-        return button;
-      }
-    });
-    textarea.attr('title', JSON.stringify(config_json));
-    var config = new TinyMCEConfig(self.settings.name + '-textarea');
-    config.init();
+    form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@tinymce-jsonconfiguration';
 
-    self.box.delegate('.mceEditor', 'hover', function(){
-      var editor = tinyMCE.get(self.settings.name + '-textarea');
-      if(editor.davizEnabled){
-        return;
-      }
-      editor.davizEnabled = true;
-      textarea.attr('title', '');
-
-      editor.onChange.add(function(ed, area){
-        return self.tinyMCE_onChange(ed, area);
+    jQuery.getJSON(action, {fieldname: name}, function(data){
+      data.autoresize = true;
+      data.resizing = false;
+      // XXX Remove some buttons as they have bugs
+      data.buttons = jQuery.map(data.buttons, function(button){
+        if(button === 'save'){
+          return;
+        }else{
+          return button;
+        }
       });
+      textarea.attr('title', JSON.stringify(data));
+      var config = new TinyMCEConfig(name);
+      config.init();
     });
   },
 
-  tinyMCE_onChange: function(editor, textarea){
+  tinyMCE_onChange: function(form){
     var self = this;
-    var text = textarea.content;
-    if(text === self.settings.text){
-      return;
-    }
-    self.settings.text = text;
-    var quiet = true;
-    self.save(quiet);
+    self.settings.text = jQuery('textarea', form).val();
   },
 
   handle_header: function(width, height){
@@ -787,13 +819,22 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     }
 
     jQuery("<span>")
-     .attr('title', title)
-     .text('h')
-     .addClass('ui-icon').addClass('ui-icon-visibility')
-     .prependTo(header)
-     .click(function(){
-       self.toggle_visibility();
-     });
+      .attr('title', title)
+      .text('h')
+      .addClass('ui-icon').addClass('ui-icon-visibility')
+      .prependTo(header)
+      .click(function(){
+        self.toggle_visibility();
+      });
+
+    jQuery("<span>")
+      .attr('title', 'Edit widget')
+      .text('e')
+      .addClass('ui-icon').addClass('ui-icon-pencil')
+      .prependTo(header)
+      .click(function(){
+        self.handle_edit();
+      });
 
     jQuery('<span>')
       .attr('title', 'Delete')
@@ -843,9 +884,84 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     }
 
     self.settings.dashboard.order = index;
+  },
+
+  handle_edit: function(){
+    var self = this;
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@' + self.settings.wtype + '.edit';
+
+    jQuery.get(action, {name: self.settings.name}, function(data){
+      var form = jQuery('<form>')
+        .append(data)
+        .attr('action', action)
+        .addClass('googlechart-widget-edit')
+        .submit(function(){
+          return false;
+        });
+
+      jQuery('.actionButtons', form).remove();
+
+      form.dialog({
+        title: 'Edit Widget',
+        dialogClass: 'googlechart-dialog',
+        bgiframe: true,
+        modal: true,
+        minWidth: 950,
+        minHeight: 600,
+        closeOnEscape: true,
+        open: function(){
+          // Init tinyMCE
+          if(jQuery('textarea', form).length){
+            self.initializeTinyMCE(form);
+          }
+        },
+        buttons: [
+          {
+            text: "Cancel",
+            click: function(){
+              form.remove();
+              form.dialog("close");
+            }
+          },
+          {
+            text: "Save",
+            click: function(){
+              self.onEdit(form);
+              form.dialog("close");
+            }
+          }
+        ]
+      });
+    });
+  },
+
+  onEdit: function(form){
+    var self = this;
     if(self.isTinyMCE){
-      self.reload();
+      tinyMCE.triggerSave(true, true);
+      self.tinyMCE_onChange(form);
     }
+
+    var title = jQuery('input[name*=.title]', form);
+    if(title.length){
+      self.settings.title = title.val();
+    }
+    var action = 'googlechart.googledashboard.actions.save';
+    var query = {};
+    jQuery.each(form.serializeArray(), function(){
+      query[this.name] = this.value;
+    });
+    query.name = self.settings.name;
+
+    query[action] = 'ajax';
+    DavizEdit.Status.start("Saving...");
+    jQuery.post(form.attr('action'), query, function(data){
+      self.reload();
+      form.remove();
+      DavizEdit.Status.stop(data);
+    });
   },
 
   handle_delete: function(){

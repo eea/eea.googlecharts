@@ -233,7 +233,7 @@ dl.portlet .dashboard-chart,
 dl.portlet .dashboard-widget,
 .dashboard-widget {
     text-align: initial;
-    margin-top: 3em;
+    padding: 1em;
 }
 
 .dashboard-widget {
@@ -758,4 +758,16 @@ dl.portlet .dashboard-widget,
 
 .google-visualization-charteditor-menu {
     z-index:9999 !important;
+}
+
+.googlechart-widget-add .field input[type=text],
+.googlechart-widget-add input[type=text],
+.googlechart-widget-edit .field input[type=text],
+.googlechart-widget-edit input[type=text] {
+    width: 100%;
+}
+
+.googlechart-widget-add textarea,
+.googlechart-widget-edit textarea {
+    width: 100%;
 }

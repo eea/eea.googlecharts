@@ -16,8 +16,8 @@
   <browser:page
     name="googlecharts.widgets.portlet.edit"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
-    class=".view.View"
-    permission="zope2.View"
+    class=".edit.Edit"
+    permission="cmf.ModifyPortalContent"
     />
 
   <!-- Add -->

@@ -18,8 +18,7 @@
     name="googlecharts.widgets.textarea.edit"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
-    template="edit.pt"
-    permission="zope2.View"
+    permission="cmf.ModifyPortalContent"
     />
 
   <!-- Add -->
