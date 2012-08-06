@@ -4,7 +4,6 @@ from zope.component import queryAdapter
 from zope.formlib.form import Fields
 from zope.formlib.form import action, setUpWidgets
 from zope.formlib.form import SubPageForm
-from zope.formlib.form import action
 from zope.container.interfaces import INameChooser
 from Products.statusmessages.interfaces import IStatusMessage
 from eea.app.visualization.config import EEAMessageFactory as _
