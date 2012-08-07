@@ -55,6 +55,12 @@ class AddForm(SubPageForm):
         next_url = self.context.absolute_url() + '/daviz-edit.html'
         self.request.response.redirect(next_url)
 
+    def __call__(self):
+        for key, value in self.request.form.items():
+            if isinstance(value, str):
+                self.request.form[key] = value.decode('utf-8')
+        return super(AddForm, self).__call__()
+
 class EditForm(SubPageForm):
     """ Common Edit form for widgets
     """
@@ -119,6 +125,9 @@ class EditForm(SubPageForm):
             ignore_request=ignore_request)
 
     def __call__(self):
+        for key, value in self.request.form.items():
+            if isinstance(value, str):
+                self.request.form[key] = value.decode('utf-8')
         self.widget_name = self.request.form.get('name', '')
         return super(EditForm, self).__call__()
 #
