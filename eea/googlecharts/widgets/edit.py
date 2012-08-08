@@ -22,7 +22,9 @@ class AddForm(SubPageForm):
         view = mutator.view(viewname, {})
         view.setdefault('widgets', [])
 
-        chooser = INameChooser(self.context)
+        chooser = queryAdapter(self.context, INameChooser)
+        if not chooser:
+            chooser = queryAdapter(self.context.getParentNode(), INameChooser)
         name = data.get('name', 'widget')
         data['title'] = name
         data['name'] = chooser.chooseName(name, self.context)

@@ -129,10 +129,17 @@ function removeDuplicated(chart, cols) {
 
 function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, chartsSettings, chartsMergedTable, allColumns, filters){
     var dashboardCharts = [];
+
+    // Dashboard charts
     jQuery.each(chartsSettings, function(key, value){
         var chartContainerId = "googlechart_view_" + value[0];
-        var chartContainer = "<div id='" + chartContainerId + "' style='float:left'>chart</div>";
-        jQuery(chartContainer).appendTo('#googlechart_view');
+        var chartContainer = jQuery('<div>')
+            .attr('id', chartContainerId)
+            .css('float', 'left')
+            .addClass('googledashboard-chart')
+            .text('chart')
+            .appendTo('#googlechart_view');
+        chartContainer.data('dashboard', value[8]);
 
         var chart = new google.visualization.ChartWrapper(value[1]);
         chart.setContainerId(chartContainerId);
@@ -162,11 +169,11 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
         var normalColumns = [];
         jQuery.each(value[2].prepared, function(key,column){
             if (column.status === 1){
-//                column_nrs.push(allColumns.indexOf(column.name));
+                //column_nrs.push(allColumns.indexOf(column.name));
                 column_nrs.push(jQuery.inArray(column.name, allColumns));
-//                if (originalColumns.indexOf(column.name !== -1)){
+                //if (originalColumns.indexOf(column.name !== -1)){
                 if (jQuery.inArray(column.name, originalColumns) !== -1){
-//                    normalColumns.push(allColumns.indexOf(column.name));
+                    //normalColumns.push(allColumns.indexOf(column.name));
                     normalColumns.push(jQuery.inArray(column.name, allColumns));
                 }
             }
@@ -182,8 +189,43 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
         chartObj.normalColumns = normalColumns;
         dashboardCharts.push(chartObj);
     });
-    var dashboardFilters = [];
 
+    // Dashboard widgets
+    var dashboardWidgets = googledashboard_filters.widgets;
+    dashboardWidgets = dashboardWidgets !== undefined ? dashboardWidgets : [];
+    var dashboardLink = jQuery('.eea-googlecharts-dashboard').attr('data-link');
+    dashboardLink = dashboardLink !== undefined ? dashboardLink + '/' : '';
+    jQuery.each(dashboardWidgets, function(key, widget){
+        if(widget.dashboard.hidden){
+            return;
+        }
+        var widgetDiv = jQuery('<div>')
+            .css('float', 'left')
+            .addClass('googledashboard-chart')
+            .addClass('googledashboard-widget')
+            .attr('id', widget.name)
+            .attr('title', widget.title)
+            .width(widget.dashboard.width)
+            .height(widget.dashboard.height)
+            .data('dashboard', widget.dashboard)
+            .load(dashboardLink + '@@' + widget.wtype, {name: widget.name});
+
+        var widgetAdded = false;
+        jQuery('.googledashboard-chart').each(function(){
+            var chartDashboard = jQuery(this).data('dashboard');
+            if(chartDashboard.order !== undefined && widget.dashboard.order < chartDashboard.order){
+                widgetAdded = true;
+                jQuery(this).before(widgetDiv);
+                return false;
+            }
+        });
+        if(!widgetAdded){
+            widgetDiv.appendTo('#googlechart_view');
+        }
+    });
+
+    // Dashboard filters
+    var dashboardFilters = [];
     jQuery.each(filters, function(key, value){
         var filter_div_id = chartFiltersDiv + "_" + key;
         var filter_div = "<div id='" + filter_div_id + "'></div>";
@@ -192,7 +234,7 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
         var filterSettings = {};
         filterSettings.options = {};
         filterSettings.options.ui = {};
-//        filterSettings.options.filterColumnIndex = allColumns.indexOf(key);
+        //filterSettings.options.filterColumnIndex = allColumns.indexOf(key);
         filterSettings.options.filterColumnIndex = jQuery.inArray(key, allColumns);
         filterSettings.containerId = filter_div_id;
         switch(value){

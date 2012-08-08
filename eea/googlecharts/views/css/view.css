@@ -177,7 +177,6 @@ ul.googlechart_tabs li:first-of-type a:hover {
 }
 
 #googlechart_view {
-    text-align: center;
     min-width: 800px;
     background: #FFFFFF;
 }
@@ -305,4 +304,8 @@ ul.googlechart_tabs li:first-of-type a:hover {
 
 .googlechart_right_image {
     float: right;
+}
+
+.googledashboard-widget {
+    overflow: hidden;
 }

@@ -219,9 +219,6 @@ class DashboardEdit(ChartsEdit):
         changed = False
         for chart in charts:
             dashboard = chart.get('dashboard', {})
-            if not dashboard:
-                continue
-
             name = chart.get('id', '')
             new_order = order.get(name, -1)
             my_order = dashboard.get('order', -1)
@@ -229,6 +226,7 @@ class DashboardEdit(ChartsEdit):
                 continue
 
             dashboard['order'] = new_order
+            chart['dashboard'] = dashboard
             changed = True
 
         if changed:

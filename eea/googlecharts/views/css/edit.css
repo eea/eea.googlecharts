@@ -764,10 +764,10 @@ dl.portlet .dashboard-widget,
 .googlechart-widget-add input[type=text],
 .googlechart-widget-edit .field input[type=text],
 .googlechart-widget-edit input[type=text] {
-    width: 100%;
+    width: 98%;
 }
 
 .googlechart-widget-add textarea,
 .googlechart-widget-edit textarea {
-    width: 100%;
+    width: 98%;
 }
