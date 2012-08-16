@@ -29,7 +29,7 @@ function transformTable(originalTable, normalColumns, pivotingColumns, valueColu
             var pivotColumnName = valueColumn;
             var pivotColumnLabel = availableColumns[valueColumn];
             var pivotValue = row[valueColumn];
-            var defaultPivotColumnValue = typeof(pivotValue) === 'string' ? '' : 0;
+            var defaultPivotColumnValue = undefined;
             jQuery(pivotingColumns).each(function(pivot_index, pivot_column){
                 pivotColumnLabel += " " + row[pivot_column];
                 pivotColumnName += " " + row[pivot_column];
