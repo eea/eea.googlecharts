@@ -336,7 +336,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                 "<a style='float:right' class='preview_button'>Preview Chart</a>"+
             "</fieldset>" +
         "</li>");
-    googlechart.find(".googlechart_columns").attr("value", columns)
+    googlechart.find(".googlechart_columns").attr("value", columns);
     jQuery('#googlecharts_list').append(googlechart);
     jQuery.data(googlechart[0], 'dashboard', dashboard);
 
