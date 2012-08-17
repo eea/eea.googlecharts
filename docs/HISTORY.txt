@@ -3,6 +3,11 @@ Changelog
 
 4.7-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed preview chart in chart editor
+  [szabozo0 refs #5448]
+* Bug fix: Set default pivot column value to 'undefined' instead of 0 in
+  order not to represent wrong values on charts
+  [voineali refs #5453]
 
 4.6 - (2012-08-10)
 ------------------
