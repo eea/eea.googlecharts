@@ -296,7 +296,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
         "<li class='googlechart daviz-facet-edit' id='googlechartid_"+id+"'>" +
             "<input class='googlechart_id' type='hidden' value='"+id+"'/>" +
             "<input class='googlechart_configjson' type='hidden' value='"+config+"'/>" +
-            "<input class='googlechart_columns' type='hidden' value='"+columns+"'/>" +
+            "<input class='googlechart_columns' type='hidden'/>" +
             "<input class='googlechart_options' type='hidden' value='"+options+"'/>" +
 
             "<h1 class='googlechart_handle'>"+
@@ -336,7 +336,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                 "<a style='float:right' class='preview_button'>Preview Chart</a>"+
             "</fieldset>" +
         "</li>");
-
+    googlechart.find(".googlechart_columns").attr("value", columns)
     jQuery('#googlecharts_list').append(googlechart);
     jQuery.data(googlechart[0], 'dashboard', dashboard);
 
