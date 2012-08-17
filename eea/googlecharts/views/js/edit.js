@@ -519,7 +519,7 @@ function generateNewTable(sortOrder, isFirst){
 
     jQuery(sortOrder).each(function(col_idx, col){
         var newColumn = '<th column_id="' + col[0] + '" column_visible="'+col[1]+'">' +
-                        '<div title="Hide facet" style="float:right" class="ui-icon '+((col[1]==='hidden')?'ui-icon-show':'ui-icon-hide')+'">h</div>' +
+                        '<div title="' + ((col[1]==='hidden')?'Show':'Hide')+' column" style="float:right" class="ui-icon '+((col[1]==='hidden')?'ui-icon-show':'ui-icon-hide')+'">h</div>' +
                         '<div style="clear:both;"></div>'+
                         '<span>' + transformedTable.available_columns[col[0]] + '</span>' +
                     '</th>';
@@ -538,13 +538,15 @@ function generateNewTable(sortOrder, isFirst){
         }
     });
 
-    jQuery(".googlechartTable .ui-icon").click(function(){
+    jQuery(".newGooglechartTable .ui-icon").click(function(){
         if (jQuery(this).hasClass("ui-icon-hide")){
+            jQuery(this).attr("title", "Show column");
             jQuery(this).removeClass("ui-icon-hide");
             jQuery(this).addClass("ui-icon-show");
             jQuery(this).closest("th").attr("column_visible","hidden");
         }
         else{
+            jQuery(this).attr("title", "Hide column");
             jQuery(this).removeClass("ui-icon-show");
             jQuery(this).addClass("ui-icon-hide");
             jQuery(this).closest("th").attr("column_visible","visible");
@@ -709,6 +711,7 @@ function updateWithStatus(){
     var pivots = [];
     jQuery("#pivots").remove();
     var pivotsHtml = "<div id='pivots'>";
+
     jQuery.each(columnsForPivot,function(key, value){
         originalColumn = jQuery("#originalColumns").find("[column_id='"+key+"']").find("select");
         if (value.status === 1){
@@ -719,6 +722,9 @@ function updateWithStatus(){
             pivots.push(value.nr);
             pivotsHtml += "<div class='pivotedColumn'>"+key+"<a style='float:right' href='#' onclick='removePivot("+value.nr+")'><span title='Delete pivot' class='ui-icon ui-icon-trash'>x</span></a></div><div style='clear:both'></div>";
             jQuery(originalColumn).attr("value",2);
+        }
+        if (value.status === 3){
+            jQuery(originalColumn).attr("value",0);
         }
     });
     pivotsHtml += "</div>";
@@ -783,7 +789,10 @@ function populateTableForPivot(){
     jQuery.each(columnsForPivot,function(key, value){
         var th =
                 "<th class='columnheader' columnnr='"+value.nr+"'>"+
-                "<div class='draggable' columnnr='"+value.nr+"'>"+value.name+"</div>"+
+                "<div class='draggable' columnnr='"+value.nr+"'>"+
+                "<div title='Hide column' style='float:right' class='ui-icon ui-icon-hide'>h</div>"+
+                "<div style='clear:both;'></div>"+
+                value.name+"</div>"+
                 "</th>";
         jQuery(th).appendTo(jQuery("#pivotConfigHeader"));
         var td =
@@ -791,6 +800,24 @@ function populateTableForPivot(){
                 "<div class='droppable' columnnr='"+value.nr+"'>Drop here pivoting column</div>"+
                 "</td>";
         jQuery(td).appendTo(jQuery("#pivotConfigDropZones"));
+    });
+
+    jQuery(".pivotGooglechartTable .ui-icon").click(function(){
+        var col_nr =  parseInt(jQuery(this).parent().attr("columnnr"), 10)
+        var column;
+        jQuery.each(columnsForPivot,function(key, value){
+            if (value.nr === col_nr){
+                column = value;
+            }
+        });
+        if (jQuery(this).hasClass("ui-icon-hide")){
+            column.status = 3
+        }
+        else{
+            column.status = 1
+        }
+        updateWithStatus();
+        generateNewTable();
     });
 }
 
@@ -1437,7 +1464,7 @@ function openEditChart(id){
             '<div>' +
                 '<div style="height:200px;overflow:auto">' +
                     '<strong style="float:left;width:115px;">Table pivots:</strong>' +
-                    '<table id="pivotingTable" class="googlechartTable" style="float:left;">'+
+                    '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable" style="float:left;">'+
                         '<tr id="pivotConfigHeader"></tr>'+
                         '<tr id="pivotConfigDropZones"></tr>'+
                     '</table>'+
@@ -1450,7 +1477,7 @@ function openEditChart(id){
                         '<input type="button" class="column-show-hide-button context" value="Scatterplots matrix" onclick="columnsMatrixChart(\'ScatterChart\');"/>' +
                         '<input type="button" class="column-show-hide-button context" value="Other matrices" onclick="columnsMatrixChart();"/>' +
                     '</div>'+
-                    '<table id="newTable" class="googlechartTable" style="height:300px;">'+
+                    '<table id="newTable" class="googlechartTable newGooglechartTable" style="height:300px;">'+
                     '</table>'+
                     '<div style="clear:both"></div>'+
                 '</div>'+
