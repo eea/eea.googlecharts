@@ -803,7 +803,7 @@ function populateTableForPivot(){
     });
 
     jQuery(".pivotGooglechartTable .ui-icon").click(function(){
-        var col_nr =  parseInt(jQuery(this).parent().attr("columnnr"), 10)
+        var col_nr =  parseInt(jQuery(this).parent().attr("columnnr"), 10);
         var column;
         jQuery.each(columnsForPivot,function(key, value){
             if (value.nr === col_nr){
@@ -811,10 +811,10 @@ function populateTableForPivot(){
             }
         });
         if (jQuery(this).hasClass("ui-icon-hide")){
-            column.status = 3
+            column.status = 3;
         }
         else{
-            column.status = 1
+            column.status = 1;
         }
         updateWithStatus();
         generateNewTable();
