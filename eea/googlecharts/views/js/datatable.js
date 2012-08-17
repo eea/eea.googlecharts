@@ -94,7 +94,7 @@ function prepareForChart(originalDataTable, columns, limit){
     var tmpItemsToDisplay = originalDataTable.items;
     var itemsToDisplay = [];
     if (limit > 0){
-        var step = Math.round(tmpItemsToDisplay.length/limit);
+        var step = Math.max(Math.round(tmpItemsToDisplay.length/limit), 1);
         var count = 0;
         jQuery.each(tmpItemsToDisplay, function(idx, item){
             if (count == step){
