@@ -1547,7 +1547,7 @@ function openEditChart(id){
         var columnSettings = {};
         columnSettings.nr = columnCount;
         if (originalStatus === 0){
-            columnSettings.status = 0;
+            columnSettings.status = 3;
         }
         if (originalStatus === 1){
             columnSettings.status = 0;
