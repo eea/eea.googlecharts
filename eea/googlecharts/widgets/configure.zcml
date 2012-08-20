@@ -20,4 +20,18 @@
     permission="eea.app.visualization.configure"
     />
 
+  <adapter
+    for=".edit.AddForm"
+    factory="eea.app.visualization.zopera.default_subpage_template"
+    name="default"
+    provides="zope.formlib.namedtemplate.INamedTemplate"
+    />
+
+  <adapter
+    for=".edit.EditForm"
+    factory="eea.app.visualization.zopera.default_subpage_template"
+    name="default"
+    provides="zope.formlib.namedtemplate.INamedTemplate"
+    />
+
 </configure>
