@@ -1425,11 +1425,11 @@ function openEditChart(id){
     isFirstEdit = true;
     DavizEdit.Status.start("Updating Tables");
     jQuery(".googlecharts_columns_config").remove();
-    var editcolumnsdialog =
+    var editcolumnsdialog = jQuery(
     '<div class="googlecharts_columns_config">' +
         '<div id="googlechartid_tmp_chart" style="float:left">' +
             "<input class='googlechart_configjson' type='hidden' value='"+tmp_config+"'/>" +
-            "<input class='googlechart_columns' type='hidden' value='"+tmp_columns+"'/>" +
+            "<input class='googlechart_columns' type='hidden'/>" +
             "<input class='googlechart_paletteid' type='hidden' value='"+tmp_paletteId+"'/>" +
             "<input class='googlechart_options' type='hidden' value='"+tmp_options+"'/>" +
             "<input class='googlechart_name' type='hidden' value='"+tmp_name+"'/>" +
@@ -1483,10 +1483,11 @@ function openEditChart(id){
                 '</div>'+
             '</div>'+
         '</div>'+
-    '</div>';
+    '</div>');
+    editcolumnsdialog.find(".googlechart_columns").attr("value", tmp_columns);
     var width = jQuery(window).width() * 0.95;
     var height = jQuery(window).height() * 0.95;
-    jQuery(editcolumnsdialog).dialog({title:"Chart Editor",
+    editcolumnsdialog.dialog({title:"Chart Editor",
                 dialogClass: 'googlechart-dialog',
                 modal:true,
                 width: width,
