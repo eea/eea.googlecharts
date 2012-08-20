@@ -5,7 +5,7 @@ from zope.formlib.form import Fields
 from zope.formlib.form import action, setUpWidgets
 from zope.formlib.form import SubPageForm
 from zope.container.interfaces import INameChooser
-from Products.statusmessages.interfaces import IStatusMessage
+from eea.app.visualization.zopera import IStatusMessage
 from eea.app.visualization.config import EEAMessageFactory as _
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.googlecharts.widgets.interfaces import IWidgetAdd

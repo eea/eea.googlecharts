@@ -1,33 +1,15 @@
 <?xml version="1.0"?>
-<object name="portal_javascripts" meta_type="JavaScripts Registry">
-  <javascript expression="python:'daviz-edit.html' in request.URL0"
-    id="++resource++eea.googlecharts.dashboard-edit.js"/>
-
- <javascript cacheable="True" compression="safe" cookable="True"
-    enabled="on" expression="python:'daviz-edit.html' in request.URL0"
-    id="++resource++eea.googlecharts.edit.js" inline="False"/>
-
-<javascript expression="python:'daviz-view.html' in request.URL0"
-    id="++resource++eea.googlecharts.dashboard.js"/>
-
- <javascript cacheable="True" compression="safe" cookable="True"
-    enabled="on" expression="python:'daviz-view.html' in request.URL0"
-    id="++resource++eea.googlecharts.view.js" inline="False"/>
-
- <javascript cacheable="True" compression="safe" cookable="True"
-    enabled="on" expression="python:'daviz' in request.URL0"
-    id="++resource++json2.js" inline="False"/>
-
- <javascript cacheable="True" compression="safe" cookable="True"
-    enabled="on" expression="python:'daviz' in request.URL0"
-    id="++resource++eea.googlecharts.chart.js" inline="False"/>
-
- <javascript cacheable="True" compression="safe" cookable="True"
-    enabled="on" expression="python:'daviz' in request.URL0"
-    id="++resource++eea.googlecharts.datatable.js" inline="False"/>
-
- <javascript cacheable="True" compression="safe" cookable="True"
-    enabled="on" expression="python:'daviz' in request.URL0"
-    id="++resource++eea.googlecharts.palettes.js" inline="False"/>
-
+<object name="portal_javascripts">
+ <!-- No need to register JS resources here anymore. See
+      eea.app.visualization.browser.res.interfaces.py for the new way
+      of registering visualization JS/CSS resources -->
+ <!-- Cleanup -->
+ <javascript id="++resource++eea.googlecharts.dashboard-edit.js" remove="True" />
+ <javascript id="++resource++eea.googlecharts.edit.js" remove="True" />
+ <javascript id="++resource++eea.googlecharts.dashboard.js" remove="True" />
+ <javascript id="++resource++eea.googlecharts.view.js" remove="True" />
+ <javascript id="++resource++json2.js" remove="True" />
+ <javascript id="++resource++eea.googlecharts.chart.js" remove="True" />
+ <javascript id="++resource++eea.googlecharts.datatable.js" remove="True" />
+ <javascript id="++resource++eea.googlecharts.palettes.js" remove="True"/>
 </object>

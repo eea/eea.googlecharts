@@ -18,7 +18,7 @@
     name="googlecharts.widgets.textarea.edit"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
-    permission="cmf.ModifyPortalContent"
+    permission="eea.app.visualization.configure"
     />
 
   <!-- Add -->
@@ -26,7 +26,7 @@
     name="googlecharts.widgets.textarea.add"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Add"
-    permission="cmf.ModifyPortalContent"
+    permission="eea.app.visualization.configure"
     />
 
 </configure>

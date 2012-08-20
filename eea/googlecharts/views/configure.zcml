@@ -59,7 +59,7 @@
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/dashboard-edit.pt"
     class=".edit.DashboardEdit"
-    permission="cmf.ModifyPortalContent"
+    permission="eea.app.visualization.configure"
     />
 
   <browser:page
@@ -81,7 +81,7 @@
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
     attribute="submit_charts"
-    permission="cmf.ModifyPortalContent"
+    permission="eea.app.visualization.configure"
     />
 
   <browser:page
@@ -89,7 +89,7 @@
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
     attribute="get_charts"
-    permission="cmf.ModifyPortalContent"
+    permission="eea.app.visualization.configure"
     />
 
   <browser:page
@@ -97,7 +97,7 @@
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
     attribute="set_iframe_chart"
-    permission="cmf.ModifyPortalContent"
+    permission="eea.app.visualization.configure"
     />
 
   <browser:resource
@@ -125,7 +125,7 @@
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/edit.pt"
     class=".edit.ChartsEdit"
-    permission="cmf.ModifyPortalContent"
+    permission="eea.app.visualization.configure"
     />
 
   <browser:resource

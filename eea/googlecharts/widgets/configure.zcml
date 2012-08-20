@@ -17,7 +17,7 @@
     name="googlecharts.widgets.add"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Add"
-    permission="cmf.ModifyPortalContent"
+    permission="eea.app.visualization.configure"
     />
 
 </configure>

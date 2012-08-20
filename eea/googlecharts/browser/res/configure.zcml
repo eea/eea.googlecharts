@@ -1,0 +1,15 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  i18n_domain="eea">
+
+  <utility
+    name="eea.googlecharts.resources.view"
+    provides="eea.app.visualization.interfaces.IVisualizationViewResources"
+    factory=".resources.ViewResources" />
+
+  <utility
+    name="eea.googlecharts.resources.edit"
+    provides="eea.app.visualization.interfaces.IVisualizationEditResources"
+    factory=".resources.EditResources" />
+
+</configure>
