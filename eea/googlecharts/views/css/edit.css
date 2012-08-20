@@ -615,12 +615,15 @@ dl.portlet .dashboard-widget,
 
 .pivotedColumn,
 .draggable {
-    height:16px;
     font-weight:bold;
 }
 
+.pivotedColumn {
+    height:16px;
+}
+
 .draggable {
-    cursor:move;
+    cursor: crosshair;
 }
 
 .googlechart-editor{
@@ -770,4 +773,9 @@ dl.portlet .dashboard-widget,
 .googlechart-widget-add textarea,
 .googlechart-widget-edit textarea {
     width: 98%;
+}
+
+.ui-icon-placeholder {
+    background-image: none !important;
+    width: 0 !important;
 }

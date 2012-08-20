@@ -709,6 +709,7 @@ function updateWithStatus(){
 
     var valueColumn = -1;
     var pivots = [];
+    var hidden = [];
     jQuery("#pivots").remove();
     var pivotsHtml = "<div id='pivots'>";
 
@@ -724,6 +725,7 @@ function updateWithStatus(){
             jQuery(originalColumn).attr("value",2);
         }
         if (value.status === 3){
+            hidden.push(value.nr);
             jQuery(originalColumn).attr("value",0);
         }
     });
@@ -744,14 +746,12 @@ function updateWithStatus(){
     }
     else {
         jQuery(".columnheader").each(function(idx,value){
-            columnnr = parseInt(jQuery(value).attr("columnnr"), 10);
+            var columnnr = parseInt(jQuery(value).attr("columnnr"), 10);
             if (columnnr === valueColumn){
                 setPivotsForColumn(columnnr, pivotsHtml);
                 showHeader(columnnr);
-                showDropZone(columnnr);
             }
             else {
-//                if (pivots.indexOf(columnnr) !== -1){
                 if (jQuery.inArray(columnnr, pivots) !== -1){
                     hideColumn(columnnr);
                 }
@@ -762,6 +762,25 @@ function updateWithStatus(){
             }
         });
     }
+    jQuery(".columnheader").each(function(idx,value){
+        var columnnr = parseInt(jQuery(value).attr("columnnr"), 10);
+        var pivoticonflag = jQuery(".columnheader [columnnr='"+columnnr+"']").find(".pivothidecolumn ");
+        pivoticonflag.removeClass("ui-icon-placeholder").removeClass("ui-icon-hide").removeClass("ui-icon-show");
+        if (jQuery.inArray(columnnr, hidden) !== -1){
+            pivoticonflag.addClass("ui-icon-show");
+            hideDropZone(columnnr);
+        }
+        else {
+            if (columnnr !== valueColumn){
+                pivoticonflag.addClass("ui-icon-hide");
+            }
+            else {
+                pivoticonflag.addClass("ui-icon-placeholder");
+            }
+
+        }
+    });
+
 }
 
 function removePivot(nr){
@@ -790,7 +809,7 @@ function populateTableForPivot(){
         var th =
                 "<th class='columnheader' columnnr='"+value.nr+"'>"+
                 "<div class='draggable' columnnr='"+value.nr+"'>"+
-                "<div title='Hide column' style='float:right' class='ui-icon ui-icon-hide'>h</div>"+
+                "<div style='float:right' class='pivothidecolumn ui-icon ui-icon-placeholder'><!-- --></div>"+
                 "<div style='clear:both;'></div>"+
                 value.name+"</div>"+
                 "</th>";
@@ -814,7 +833,7 @@ function populateTableForPivot(){
             column.status = 3;
         }
         else{
-            column.status = 1;
+            column.status = 0;
         }
         updateWithStatus();
         generateNewTable();
