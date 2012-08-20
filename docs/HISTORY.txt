@@ -3,6 +3,8 @@ Changelog
 
 4.7-dev - (unreleased)
 ----------------------
+* Feature: Allow columns to be hidden from pivot
+  [szabozo0 refs #5450]
 * Bug fix: Fixed preview chart in chart editor
   [szabozo0 refs #5448]
 * Bug fix: Set default pivot column value to 'undefined' instead of 0 in

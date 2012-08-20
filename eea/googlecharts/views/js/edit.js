@@ -712,9 +712,8 @@ function updateWithStatus(){
     var hidden = [];
     jQuery("#pivots").remove();
     var pivotsHtml = "<div id='pivots'>";
-
     jQuery.each(columnsForPivot,function(key, value){
-        originalColumn = jQuery("#originalColumns").find("[column_id='"+key+"']").find("select");
+        var originalColumn = jQuery("#originalColumns").find("[column_id='"+key+"']").find("select");
         if (value.status === 1){
             valueColumn = value.nr;
             jQuery(originalColumn).attr("value",3);
@@ -804,6 +803,16 @@ function removePivot(nr){
     generateNewTable();
 }
 
+function checkVisiblePivotValueColumns(){
+    var visibleColumns = 0;
+    jQuery.each(columnsForPivot,function(key, value){
+        if (value.status === 0){
+            visibleColumns++;
+        }
+    });
+    return visibleColumns;
+}
+
 function populateTableForPivot(){
     jQuery.each(columnsForPivot,function(key, value){
         var th =
@@ -830,7 +839,12 @@ function populateTableForPivot(){
             }
         });
         if (jQuery(this).hasClass("ui-icon-hide")){
-            column.status = 3;
+            if (checkVisiblePivotValueColumns() > 1){
+                column.status = 3;
+            }
+            else {
+                alert("At least one visible column is required");
+            }
         }
         else{
             column.status = 0;
@@ -1595,6 +1609,10 @@ function openEditChart(id){
             containment:"#headers",
             revert:false,
             start: function(event, ui){
+                if (checkVisiblePivotValueColumns() < 3){
+                    alert("At least 3 visible column is required");
+                    return false;
+                }
                 pivotDraggedColumn = parseInt($(ui.helper).attr("columnnr"),10);
                 hideDropZone(pivotDraggedColumn);
             },
