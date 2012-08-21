@@ -315,7 +315,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     // tinyMCE no supported
     if(!window.tinyMCE){
       return;
-    };
+    }
     if(!window.TinyMCEConfig){
       return;
     }
