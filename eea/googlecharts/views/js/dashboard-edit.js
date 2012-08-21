@@ -311,6 +311,15 @@ DavizEdit.GoogleDashboardCharts.prototype = {
 
   initializeTinyMCE: function(form){
     var self = this;
+
+    // tinyMCE no supported
+    if(!window.tinyMCE){
+      return;
+    };
+    if(!window.TinyMCEConfig){
+      return;
+    }
+
     var textarea = jQuery('textarea', form).addClass('mce_editable');
     var name = textarea.attr('id');
     var exists = tinyMCE.get(name);
@@ -738,6 +747,15 @@ DavizEdit.GoogleDashboardWidget.prototype = {
 
   initializeTinyMCE: function(form){
     var self = this;
+
+    // tinyMCE not supported
+    if(!window.tinyMCE){
+      return;
+    }
+    if(!window.TinyMCEConfig){
+      return;
+    }
+
     self.isTinyMCE = true;
     var textarea = jQuery('textarea', form).addClass('mce_editable');
     var name = textarea.attr('id');

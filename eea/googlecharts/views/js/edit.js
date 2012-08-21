@@ -149,14 +149,14 @@ function saveThumb(value){
             action = action.split('@@')[0] + "@@googlechart.setthumb";
             jQuery.post(action, {"svg":svg},function(data){
                 if (data !== "Success"){
-                    alert("Can't generate thumb from the chart called: "+chart_json.options.title);
+                    DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
+                }else{
+                    DavizEdit.Status.stop("Done");
                 }
-                DavizEdit.Status.stop("Done");
             });
         },
         function(){
-            alert("Can't generate thumb from the chart called: "+chart_json.options.title);
-            DavizEdit.Status.stop("Done");
+            DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
         }
     );
 }
@@ -226,6 +226,8 @@ function openAdvancedOptions(id){
     jQuery(advancedOptionsDialog).dialog({title:"Advanced Options",
             dialogClass: 'googlechart-dialog',
             modal:true,
+            minWidth: 600,
+            minHeight: 480,
             buttons:[
                 {
                     text: "Save",
@@ -1209,7 +1211,7 @@ function columnsMatrixChart(chartType){
                                                 "col_nr='"+rowValue+"'>"+
                                                     "<div class='scrollName' "+
                                                         "style='width:"+(matrixChartSize-2)+"px;"+
-                                                        "height:"+(matrixChartSize-2)+"px;' >" + 
+                                                        "height:"+(matrixChartSize-2)+"px;' >" +
                                                         "<div>"+
                                                         ((chartType === 'ScatterChart')?columnNiceNamesForMatrix[rowValue]:allColumnNiceNamesForMatrix[rowValue])+
                                                         "</div>"+
@@ -1230,7 +1232,7 @@ function columnsMatrixChart(chartType){
                                                         ">" +
                                                         "<div>"+
                                                                 ((chartType === 'ScatterChart')?columnNiceNamesForMatrix[colValue]:allColumnNiceNamesForMatrix[colValue])+
-//                                                                columnNiceNamesForMatrix[colValue] + 
+//                                                                columnNiceNamesForMatrix[colValue] +
                                                         "</div>"+
                                                     "</div>"+
                                             "</div>";
@@ -1733,8 +1735,7 @@ function saveCharts(){
                 }
             }
             else {
-                DavizEdit.Status.stop(data);
-                alert("There is no chart selected for thumbnail");
+                DavizEdit.Status.stop("There is no chart selected for thumbnail");
             }
             jQuery(document).trigger('google-charts-changed');
         }

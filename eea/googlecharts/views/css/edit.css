@@ -771,3 +771,28 @@ dl.portlet .dashboard-widget,
 .googlechart-widget-edit textarea {
     width: 98%;
 }
+
+.googlechart-dialog .field,
+.googlechart-widget-edit .field,
+.googlechart-widget-add .field {
+  margin-bottom: 1em;
+}
+
+.googlechart-dialog .field label,
+.googlechart-widget-edit .field label,
+.googlechart-widget-add .field label {
+  font-weight: bold;
+}
+
+.googlechart-dialog .formHelp,
+.googlechart-widget-edit .formHelp,
+.googlechart-widget-add .formHelp {
+  display: block;
+  color: #555;
+  font-weight: normal;
+}
+
+.googlechart_dialog_options {
+  width: 98%;
+  min-height: 300px;
+}
