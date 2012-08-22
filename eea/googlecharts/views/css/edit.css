@@ -872,3 +872,8 @@ dl.portlet .dashboard-widget,
 .googlechart_config_head_selected {
     font-weight: bold;
 }
+
+.googlechart_config_hover{
+    background-color: rgba(66%, 66%, 66%, 0.5);
+    border-bottom:1px solid #CCC;
+}

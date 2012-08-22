@@ -1481,7 +1481,7 @@ function openEditChart(id){
     '<div class="googlecharts_columns_config">' +
         '<div class="chart_config_tabs" style="padding-top:10px;">'+
             '<div class="googlechart_maximize_chart_config googlechart_config_head googlechart_config_head_selected" style="float:left">Chart Configurator</div>'+
-            '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:341px"> Table Configurator</div>'+
+            '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:341px" title="Click to enlarge Table Configurator">Table Configurator</div>'+
             "<div style='float:right;'>"+
             '<div class="buttons">' +
             "<input type='button' style='width:80px' class='context' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
@@ -1491,7 +1491,7 @@ function openEditChart(id){
         '</div>'+
         "<div style='clear:both;'> </div>" +
         '<div class="googlechart_config_clickable googlechart_chart_config_clickable googlechart_maximize_chart_config"> </div>' +
-        '<div class="googlechart_config_clickable googlechart_table_config_clickable googlechart_maximize_table_config"> </div>' +
+        '<div class="googlechart_config_clickable googlechart_table_config_clickable googlechart_maximize_table_config" title="Click to enlarge Table Configurator"> </div>' +
         '<div class="googlechart_chart_config_scaleable googlechart_chart_config_scaleable_maximized">'+
             '<div id="googlechartid_tmp_chart" style="float:left">' +
                 "<input class='googlechart_configjson' type='hidden'/>" +
@@ -1560,6 +1560,10 @@ function openEditChart(id){
         editcolumnsdialog.find(".googlechart_chart_config_scaleable").addClass("googlechart_transition").removeClass("googlechart_chart_config_scaleable_minimized").addClass("googlechart_chart_config_scaleable_maximized");
         jQuery(".googlechart_maximize_chart_config").addClass("googlechart_config_head_selected");
         jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_head_selected");
+        jQuery(".googlechart_maximize_chart_config").attr("title","");
+        jQuery(".googlechart_maximize_table_config").attr("title","Click to enlarge Table Configurator");
+        jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_hover");
+        jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_hover");
     });
     editcolumnsdialog.delegate(".googlechart_maximize_table_config","click", function(){
         resizeTableConfigurator(true);
@@ -1567,6 +1571,30 @@ function openEditChart(id){
         editcolumnsdialog.find(".googlechart_table_config_scaleable").addClass("googlechart_transition").removeClass("googlechart_table_config_scaleable_minimized").addClass("googlechart_table_config_scaleable_maximized");
         jQuery(".googlechart_maximize_table_config").addClass("googlechart_config_head_selected");
         jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_head_selected");
+        jQuery(".googlechart_maximize_chart_config").attr("title","Click to enlarge Chart Configurator");
+        jQuery(".googlechart_maximize_table_config").attr("title","");
+        jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_hover");
+        jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_hover");
+    });
+    editcolumnsdialog.delegate(".googlechart_maximize_chart_config", "hover", function(){
+        if (jQuery(".googlechart_chart_config_scaleable_maximized").length === 0){
+            jQuery(".googlechart_maximize_chart_config").addClass("googlechart_config_hover");
+        }
+    });
+    editcolumnsdialog.delegate(".googlechart_maximize_chart_config", "mouseout", function(){
+        if (jQuery(".googlechart_chart_config_scaleable_maximized").length === 0){
+            jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_hover");
+        }
+    });
+    editcolumnsdialog.delegate(".googlechart_maximize_table_config", "hover", function(){
+        if (jQuery(".googlechart_table_config_scaleable_maximized").length === 0){
+            jQuery(".googlechart_maximize_table_config").addClass("googlechart_config_hover");
+        }
+    });
+    editcolumnsdialog.delegate(".googlechart_maximize_table_config", "mouseout", function(){
+        if (jQuery(".googlechart_table_config_scaleable_maximized").length === 0){
+            jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_hover");
+        }
     });
     var width = jQuery(window).width() * 0.95;
     var height = jQuery(window).height() * 0.95;
