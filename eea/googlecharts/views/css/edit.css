@@ -681,6 +681,8 @@ dl.portlet .dashboard-widget,
     padding:0 !important;
     font: normal 11px Verdana,Arial,sans-serif !important;
     margin-top:3px !important;
+    margin-right:3px;
+    margin-bottom:3px;
     width:110px !important;
 }
 
@@ -778,4 +780,84 @@ dl.portlet .dashboard-widget,
 .ui-icon-placeholder {
     background-image: none !important;
     width: 0 !important;
+}
+
+.googlechart_chart_config_scaleable{
+    float:left;
+/*    border:1px solid red;*/
+    position:absolute;
+}
+
+.googlechart_table_config_scaleable{
+/*    border:1px solid red;*/
+    overflow:auto;
+    position:absolute;
+}
+
+.googlechart_transition{
+    -webkit-transition: all 1s ease;
+}
+
+.googlechart_chart_config_scaleable_maximized {
+    top:180px;
+    width:1068px;
+}
+
+.googlechart_chart_config_scaleable_minimized {
+    -webkit-transform: scale(0.3);
+    width:1068px !important;
+    height:405px !important;
+    top:-105px;
+    left:-360px;
+/*    border:3px solid red;*/
+}
+
+.googlechart_table_config_scaleable_maximized {
+    top:180px;
+    width:98%;
+}
+
+.googlechart_table_config_scaleable_minimized {
+    -webkit-transform: scale(0.3);
+    width:1068px;
+    height:405px;
+    top:-105px;
+    left:-30px;
+}
+
+.googlechart_accordion_table{
+    height:455px;
+    overflow:auto;
+}
+
+.googlechart_config_clickable{
+    position:absolute;
+    top:37px;
+    width:325px;
+    height:135px;
+    z-index:3000;
+}
+
+.googlechart_chart_config_clickable{
+    left:11px;
+    border:1px solid #CCC;
+}
+
+.googlechart_table_config_clickable{
+    left:341px;
+    border:1px solid #CCC;
+}
+
+.googlechart_config_head{
+    position:absolute;
+    border:1px solid #CCC;
+    border-bottom:1px solid white;
+    height:20px;
+    z-index:4000;
+    padding:3px;
+    font-weight: normal;
+}
+
+.googlechart_config_head_selected {
+    font-weight: bold;
 }

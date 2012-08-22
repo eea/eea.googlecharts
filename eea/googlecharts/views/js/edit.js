@@ -1453,6 +1453,18 @@ function columnsMatrixChart(chartType){
     updateMatrixChartScrolls();
     DavizEdit.Status.stop("Done");
 }
+function resizeTableConfigurator(forced){
+    if ((jQuery(".googlechart_table_config_scaleable_maximized").length > 0) || forced){
+        console.log("x");
+        var fullheight = jQuery(".googlecharts_columns_config").height();
+        var container_heightstr = 'height:'+(fullheight-200)+'px;';
+        var accordion_heightstr = 'height:'+(fullheight-260)+'px;';
+        var accordion_container_heightstr = 'height:'+(fullheight-260)+'px;';
+        jQuery(".googlechart_table_config_scaleable").removeClass("googlechart_transition").attr("style",container_heightstr);
+        jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
+        jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
+    }
+}
 
 function openEditChart(id){
     jQuery("html").append(charteditor_css);
@@ -1467,33 +1479,43 @@ function openEditChart(id){
     jQuery(".googlecharts_columns_config").remove();
     var editcolumnsdialog = jQuery(
     '<div class="googlecharts_columns_config">' +
-        '<div id="googlechartid_tmp_chart" style="float:left">' +
-            "<input class='googlechart_configjson' type='hidden'/>" +
-            "<input class='googlechart_columns' type='hidden'/>" +
-            "<input class='googlechart_paletteid' type='hidden'/>" +
-            "<input class='googlechart_options' type='hidden'/>" +
-            "<input class='googlechart_name' type='hidden'/>" +
+        '<div class="chart_config_tabs" style="padding-top:10px;">'+
+            '<div class="googlechart_maximize_chart_config googlechart_config_head googlechart_config_head_selected" style="float:left">Chart Configurator</div>'+
+            '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:341px"> Table Configurator</div>'+
+            "<div style='float:right;'>"+
+            '<div class="buttons">' +
+            "<input type='button' style='width:80px' class='context' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
+            "<input style='margin-left:5px;width:80px' type='button' class='context' value='Cancel' onclick='chartEditorCancel();'/>" +
+            "</div>" +
+            "</div>"+
+        '</div>'+
+        "<div style='clear:both;'> </div>" +
+        '<div class="googlechart_config_clickable googlechart_chart_config_clickable googlechart_maximize_chart_config"> </div>' +
+        '<div class="googlechart_config_clickable googlechart_table_config_clickable googlechart_maximize_table_config"> </div>' +
+        '<div class="googlechart_chart_config_scaleable googlechart_chart_config_scaleable_maximized">'+
+            '<div id="googlechartid_tmp_chart" style="float:left">' +
+                "<input class='googlechart_configjson' type='hidden'/>" +
+                "<input class='googlechart_columns' type='hidden'/>" +
+                "<input class='googlechart_paletteid' type='hidden'/>" +
+                "<input class='googlechart_options' type='hidden'/>" +
+                "<input class='googlechart_name' type='hidden'/>" +
 
-            "<div id='googlechart_editor_container'></div>" +
-        '</div>' +
-        "<div style='padding-top:20px; padding-left:5px;float:left;width:168px'>"+
-        '<div class="buttons">' +
-        "<input type='button' class='context' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
-        "<input style='margin-left:5px;' type='button' class='context' value='Cancel' onclick='chartEditorCancel();'/>" +
-        "</div>" +
-        "<div id='googlechart_palette_select'>"+
-            "<strong style='float:left;'>Select Palette:</strong>"+
-            "<select id='googlechart_palettes' style='float:left;' onchange='updatePalette();'>"+
-            "</select>"+
-            "<div style='clear:both;'> </div>" +
-            "<div id='googlechart_preview_palette'> </div>"+
-        "</div>"+
+                "<div id='googlechart_editor_container'></div>" +
+
+            '</div>' +
+            "<div id='googlechart_palette_select' style='width:168px;float:left'>"+
+                "<strong style='float:left;'>Select Palette:</strong>"+
+                "<select id='googlechart_palettes' style='float:left;' onchange='updatePalette();'>"+
+                "</select>"+
+                "<div style='clear:both;'> </div>" +
+                "<div id='googlechart_preview_palette'> </div>"+
+            "</div>"+
         "</div>"+
         "<div style='clear:both;'> </div>" +
-        '<div id="googlechart_table_accordion">' +
+        '<div id="googlechart_table_accordion" class="googlechart_table_config_scaleable googlechart_table_config_scaleable_minimized">' +
             '<h3><a href="#">Original Table</a></h3>' +
-            '<div>' +
-                '<div style="height:200px;overflow:auto">' +
+            '<div class="googlechart_accordion_container">' +
+                '<div class="googlechart_accordion_table">' +
                     '<table id="originalTable" class="googlechartTable">'+
                         '<tr id="originalColumns">'+
                         '</tr>'+
@@ -1501,22 +1523,24 @@ function openEditChart(id){
                 '</div>'+
             '</div>'+
             '<h3><a href="#">Table Editor</a></h3>' +
-            '<div>' +
-                '<div style="height:200px;overflow:auto">' +
+            '<div class="googlechart_accordion_container">' +
+                '<div class="googlechart_accordion_table">' +
                     '<strong style="float:left;width:115px;">Table pivots:</strong>' +
                     '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable" style="float:left;">'+
                         '<tr id="pivotConfigHeader"></tr>'+
                         '<tr id="pivotConfigDropZones"></tr>'+
                     '</table>'+
                     '<div style="clear:both"></div>'+
-                    '<div style="float:left;width:115px">'+
+                    '<div style="float:left;">'+
                         '<strong style="float:left;width:100px;">Table for chart:</strong>' +
+                        '<div style="clear:both"></div>'+
                         '<input type="button" class="column-show-hide-button context" value="Hide all columns" onclick="columnsHideAll();"/>' +
                         '<input type="button" class="column-show-hide-button context" value="Show all columns" onclick="columnsShowAll();"/>' +
                         '<input type="button" class="column-show-hide-button context" value="Reverse selection" onclick="columnsRevert();"/>' +
                         '<input type="button" class="column-show-hide-button context" value="Scatterplots matrix" onclick="columnsMatrixChart(\'ScatterChart\');"/>' +
                         '<input type="button" class="column-show-hide-button context" value="Other matrices" onclick="columnsMatrixChart();"/>' +
                     '</div>'+
+                    "<div style='clear:both;'> </div>" +
                     '<table id="newTable" class="googlechartTable newGooglechartTable" style="height:300px;">'+
                     '</table>'+
                     '<div style="clear:both"></div>'+
@@ -1530,13 +1554,27 @@ function openEditChart(id){
     editcolumnsdialog.find(".googlechart_paletteid").attr("value", tmp_paletteId);
     editcolumnsdialog.find(".googlechart_options").attr("value", tmp_options);
     editcolumnsdialog.find(".googlechart_name").attr("value", tmp_name);
-
+    editcolumnsdialog.delegate(".googlechart_maximize_chart_config","click", function(){
+        jQuery(".googlechart_table_config_scaleable").removeClass("googlechart_transition").attr("style","");
+        editcolumnsdialog.find(".googlechart_table_config_scaleable").addClass("googlechart_transition").removeClass("googlechart_table_config_scaleable_maximized").addClass("googlechart_table_config_scaleable_minimized");
+        editcolumnsdialog.find(".googlechart_chart_config_scaleable").addClass("googlechart_transition").removeClass("googlechart_chart_config_scaleable_minimized").addClass("googlechart_chart_config_scaleable_maximized");
+        jQuery(".googlechart_maximize_chart_config").addClass("googlechart_config_head_selected");
+        jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_head_selected");
+    });
+    editcolumnsdialog.delegate(".googlechart_maximize_table_config","click", function(){
+        resizeTableConfigurator(true);
+        editcolumnsdialog.find(".googlechart_chart_config_scaleable").addClass("googlechart_transition").removeClass("googlechart_chart_config_scaleable_maximized").addClass("googlechart_chart_config_scaleable_minimized");
+        editcolumnsdialog.find(".googlechart_table_config_scaleable").addClass("googlechart_transition").removeClass("googlechart_table_config_scaleable_minimized").addClass("googlechart_table_config_scaleable_maximized");
+        jQuery(".googlechart_maximize_table_config").addClass("googlechart_config_head_selected");
+        jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_head_selected");
+    });
     var width = jQuery(window).width() * 0.95;
     var height = jQuery(window).height() * 0.95;
     editcolumnsdialog.dialog({title:"Chart Editor",
                 dialogClass: 'googlechart-dialog',
                 modal:true,
                 width: width,
+                minWidth:850,
                 height: height,
                 resizable:true,
                 create:function(){
@@ -1544,6 +1582,9 @@ function openEditChart(id){
                 },
                 close:function(){
                     charteditor_css.remove();
+                },
+                resize:function(){
+                    resizeTableConfigurator(false);
                 }
                 });
 
