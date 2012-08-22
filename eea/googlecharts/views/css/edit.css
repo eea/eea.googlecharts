@@ -795,7 +795,10 @@ dl.portlet .dashboard-widget,
 }
 
 .googlechart_transition{
-    -webkit-transition: all 1s ease;
+    transition: all 1s ease;
+    -moz-transition: all 1s ease; /* Firefox 4 */
+    -webkit-transition: all 1s ease; /* Safari and Chrome */
+    -o-transition: all 1s ease; /* Opera */
 }
 
 .googlechart_chart_config_scaleable_maximized {
@@ -804,7 +807,11 @@ dl.portlet .dashboard-widget,
 }
 
 .googlechart_chart_config_scaleable_minimized {
-    -webkit-transform: scale(0.3);
+    transform: scale(0.3);
+    -ms-transform: scale(0.3); /* IE 9 */
+    -webkit-transform: scale(0.3); /* Safari and Chrome */
+    -o-transform: scale(0.3); /* Opera */
+    -moz-transform: scale(0.3); /* Firefox */
     width:1068px !important;
     height:405px !important;
     top:-105px;
@@ -818,7 +825,11 @@ dl.portlet .dashboard-widget,
 }
 
 .googlechart_table_config_scaleable_minimized {
-    -webkit-transform: scale(0.3);
+    transform: scale(0.3);
+    -ms-transform: scale(0.3); /* IE 9 */
+    -webkit-transform: scale(0.3); /* Safari and Chrome */
+    -o-transform: scale(0.3); /* Opera */
+    -moz-transform: scale(0.3); /* Firefox */
     width:1068px;
     height:405px;
     top:-105px;
