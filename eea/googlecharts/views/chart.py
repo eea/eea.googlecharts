@@ -45,6 +45,9 @@ class View(ViewForm):
         sp = getToolByName(self.context,'portal_properties').site_properties
         return sp.getProperty('Watermark_Image', '')
 
+    def get_maintitle(self):
+        return self.context.title
+
     def get_charts(self):
         """ Charts
         """

@@ -25,6 +25,10 @@ function putImageDivInPosition(div_id, position){
 }
 
 jQuery(document).ready(function($){
+    jQuery.each(googlechart_config_array, function(key, config){
+        config[1].options.title = main_title + " — " + config[1].options.title;
+    });
+
     if (has_dashboard) {
         var configs = [];
         sortedDashboardChartConfig = [];

@@ -30,7 +30,8 @@
                                                 qr_pos = '${view/qr_position}';
                                                 qr_size = '${view/qr_size}';
                                                 wm_pos = '${view/wm_position}';
-                                                wm_path = '${view/wm_path}';">
+                                                wm_path = '${view/wm_path}';
+                                                main_title = '${view/get_maintitle}';">
     </script>
     <div id="googlechart_dashboard" class="embedded-dashboard">
         <div id="googlechart_table">
