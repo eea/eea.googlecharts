@@ -46,6 +46,8 @@ class View(ViewForm):
         return sp.getProperty('Watermark_Image', '')
 
     def get_maintitle(self):
+        """ Main title of visualization
+        """
         return self.context.title
 
     def get_charts(self):
