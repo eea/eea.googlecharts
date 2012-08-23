@@ -784,12 +784,10 @@ dl.portlet .dashboard-widget,
 
 .googlechart_chart_config_scaleable{
     float:left;
-/*    border:1px solid red;*/
     position:absolute;
 }
 
 .googlechart_table_config_scaleable{
-/*    border:1px solid red;*/
     overflow:auto;
     position:absolute;
 }
@@ -816,7 +814,6 @@ dl.portlet .dashboard-widget,
     height:405px !important;
     top:-105px;
     left:-360px;
-/*    border:3px solid red;*/
 }
 
 .googlechart_table_config_scaleable_maximized {
@@ -876,4 +873,19 @@ dl.portlet .dashboard-widget,
 .googlechart_config_hover{
     background-color: rgba(66%, 66%, 66%, 0.5);
     border-bottom:1px solid #CCC;
+}
+
+.googlechart_config_messagezone{
+    position:absolute;
+    left:670px;
+    width:300px;
+}
+
+.googlechart_config_messagezone_title{
+    font-size:14px;
+    font-weight:bold;
+    padding-bottom:5px;
+}
+
+.googlechart_config_messagezone_message{
 }

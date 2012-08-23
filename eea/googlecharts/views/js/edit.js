@@ -412,6 +412,21 @@ function redrawEditorChart() {
     tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
 }
 
+function setConfiguratorMessage(message_key) {
+    var messageZone = jQuery(".googlechart_config_messagezone");
+    messageZone.html("");
+    if (message_key !== ""){
+        var message = configurator_messages[message_key];
+        if (!message){
+            message = configurator_messages['default'];
+        }
+        messageZone.append('<div class="googlechart_config_messagezone_title"></div>');
+        messageZone.append('<div class="googlechart_config_messagezone_message"></div>');
+        jQuery(".googlechart_config_messagezone_title").html(message.title);
+        jQuery(".googlechart_config_messagezone_message").html(message.message);
+    }
+}
+
 function openEditor(elementId) {
     isFirstEdit = true;
     jQuery(".google-visualization-charteditor-dialog").remove();
@@ -465,12 +480,14 @@ function openEditor(elementId) {
         editedChartStatus = true;
         moveIfFirst();
         redrawEditorChart();
+        setConfiguratorMessage("");
     });
     google.visualization.events.addListener(chartEditor, 'error', function(event){
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = false;
         moveIfFirst();
+        setConfiguratorMessage(JSON.parse(settings_str).chartType);
     });
 
     chartEditor.openDialog(wrapper, {});
@@ -1455,7 +1472,6 @@ function columnsMatrixChart(chartType){
 }
 function resizeTableConfigurator(forced){
     if ((jQuery(".googlechart_table_config_scaleable_maximized").length > 0) || forced){
-        console.log("x");
         var fullheight = jQuery(".googlecharts_columns_config").height();
         var container_heightstr = 'height:'+(fullheight-200)+'px;';
         var accordion_heightstr = 'height:'+(fullheight-260)+'px;';
@@ -1483,15 +1499,17 @@ function openEditChart(id){
             '<div class="googlechart_maximize_chart_config googlechart_config_head googlechart_config_head_selected" style="float:left">Chart Configurator</div>'+
             '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:341px" title="Click to enlarge Table Configurator">Table Configurator</div>'+
             "<div style='float:right;'>"+
-            '<div class="buttons">' +
-            "<input type='button' style='width:80px' class='context' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
-            "<input style='margin-left:5px;width:80px' type='button' class='context' value='Cancel' onclick='chartEditorCancel();'/>" +
-            "</div>" +
+                '<div class="buttons">' +
+                "<input type='button' style='width:80px' class='context' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
+                "<input style='margin-left:5px;width:80px' type='button' class='context' value='Cancel' onclick='chartEditorCancel();'/>" +
+                "</div>" +
             "</div>"+
         '</div>'+
         "<div style='clear:both;'> </div>" +
         '<div class="googlechart_config_clickable googlechart_chart_config_clickable googlechart_maximize_chart_config"> </div>' +
         '<div class="googlechart_config_clickable googlechart_table_config_clickable googlechart_maximize_table_config" title="Click to enlarge Table Configurator"> </div>' +
+        '<div class="googlechart_config_messagezone">'+
+        '</div>'+
         '<div class="googlechart_chart_config_scaleable googlechart_chart_config_scaleable_maximized">'+
             '<div id="googlechartid_tmp_chart" style="float:left">' +
                 "<input class='googlechart_configjson' type='hidden'/>" +
@@ -1602,7 +1620,7 @@ function openEditChart(id){
                 dialogClass: 'googlechart-dialog',
                 modal:true,
                 width: width,
-                minWidth:850,
+                minWidth:990,
                 height: height,
                 resizable:true,
                 create:function(){

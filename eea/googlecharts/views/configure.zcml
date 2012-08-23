@@ -164,6 +164,11 @@
   />
 
   <browser:resource
+    name="eea.googlecharts.configurator_messages.js"
+    file="./js/configurator_messages.js"
+  />
+
+  <browser:resource
     name="eea.googlecharts.view.css"
     file="./css/view.css"
   />
