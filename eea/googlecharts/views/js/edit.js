@@ -330,14 +330,14 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                     "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='3' "+((filter_pos === 3)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Right" +
                     "<br/>"+
                     "<br/>"+
-                    "<input type='button' value='Add New Filter' class='context addgooglechartfilter'/>"+
+                    "<input type='button' value='Add New Filter' class='context addgooglechartfilter btn'/>"+
                     "<div style='clear:both'> </div>" +
                     "<ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>" +
                     "</ul>" +
                 "</div>" +
                 "<div style='clear:both'> </div>" +
-                "<input type='button' class='context' value='Edit Chart' onclick='openEditChart(\""+id+"\");'/>" +
-                "<input type='button' class='context' value='Advanced Options' onclick='openAdvancedOptions(\""+id+"\");'/>" +
+                "<input type='button' class='context btn' value='Edit Chart' onclick='openEditChart(\""+id+"\");'/>" +
+                "<input type='button' class='context btn' value='Advanced Options' onclick='openAdvancedOptions(\""+id+"\");'/>" +
                 "<a style='float:right' class='preview_button'>Preview Chart</a>"+
             "</fieldset>" +
         "</li>");
@@ -1501,8 +1501,8 @@ function openEditChart(id){
             '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:341px" title="Click to enlarge Table Configurator">Table Configurator</div>'+
             "<div style='float:right;'>"+
                 '<div class="buttons">' +
-                "<input type='button' style='width:80px' class='context' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
-                "<input style='margin-left:5px;width:80px' type='button' class='context' value='Cancel' onclick='chartEditorCancel();'/>" +
+                "<input type='button' style='width:80px' class='context btn' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
+                "<input style='margin-left:5px;width:80px' type='button' class='context btn' value='Cancel' onclick='chartEditorCancel();'/>" +
                 "</div>" +
             "</div>"+
         '</div>'+
