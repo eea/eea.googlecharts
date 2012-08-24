@@ -89,10 +89,10 @@
 }
 .googlechartTable th,
 .pivotedColumn {
-    padding:2px;
-    border:1px solid #EEEEEE;
-    background-color:#777c1f;
-    color: #fff;
+    padding: 1em;
+    border:1px solid #EEE;
+    background-color: #CDE2A7;
+    color: #333;
 }
 .googlechartTable td{
     padding:2px;
@@ -202,6 +202,10 @@
 
 .dashboard-header input {
     width: 50px;
+    margin-bottom: 0px;
+    height: auto;
+    line-height: 1.2;
+    padding: 0;
 }
 
 .dashboard-header span {
@@ -606,7 +610,7 @@ dl.portlet .dashboard-widget,
 }
 
 .droppable {
-    height: 20px;
+    padding: 1em;
 }
 
 .hoveredDrop {
@@ -678,12 +682,7 @@ dl.portlet .dashboard-widget,
 }
 
 .column-show-hide-button {
-    padding:0 !important;
-    font: normal 11px Verdana,Arial,sans-serif !important;
-    margin-top:3px !important;
-    margin-right:3px;
-    margin-bottom:3px;
-    width:110px !important;
+    font-size: 12px;
 }
 
 .matrixChart_container {
@@ -913,4 +912,11 @@ dl.portlet .dashboard-widget,
 }
 
 .googlechart_config_messagezone_message{
+}
+
+.buttons-bar {
+    background-color: #CDE2A7;
+    width: 100%;
+    padding: 0.5em 0;
+    text-align: center;
 }

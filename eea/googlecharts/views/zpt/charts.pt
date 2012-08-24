@@ -32,20 +32,20 @@
     </div>
 
     <div class="google_buttons_bar">
-        <input id="googlechart_embed_button" 
-               style="display:none;" 
-               type="button" 
-               value="embed" 
+        <input id="googlechart_embed_button"
+               style="display:none;"
+               type="button"
+               value="embed"
                i18n:attributes="value"
-               onClick="showEmbed();" 
-               class="context" />
-        <input id="googlechart_export_button" 
-               style="display:none;" 
-               type="button" 
-               value="export to png" 
+               onClick="showEmbed();"
+               class="context btn" />
+        <input id="googlechart_export_button"
+               style="display:none;"
+               type="button"
+               value="export to png"
                i18n:attributes="value"
-               onClick="exportToPng();" 
-               class="context" />
+               onClick="exportToPng();"
+               class="context btn" />
     </div>
 
 

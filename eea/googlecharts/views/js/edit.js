@@ -547,7 +547,6 @@ function generateNewTable(sortOrder, isFirst){
     jQuery(sortOrder).each(function(col_idx, col){
         var newColumn = jQuery('<th column_id="' + col[0] + '" column_visible="'+col[1]+'">' +
                         '<div title="' + ((col[1]==='hidden')?'Show':'Hide')+' column" style="float:right" class="ui-icon '+((col[1]==='hidden')?'ui-icon-show':'ui-icon-hide')+'">h</div>' +
-                        '<div style="clear:both;"></div>'+
                         '<span></span>' +
                     '</th>');
         newColumn.find("span").text(transformedTable.available_columns[col[0]]);
@@ -844,9 +843,9 @@ function populateTableForPivot(){
         var th =
                 "<th class='columnheader' columnnr='"+value.nr+"'>"+
                 "<div class='draggable' columnnr='"+value.nr+"'>"+
-                "<div style='float:right' class='pivothidecolumn ui-icon ui-icon-placeholder'><!-- --></div>"+
-                "<div style='clear:both;'></div>"+
-                value.name+"</div>"+
+                  "<div style='float:right' class='pivothidecolumn ui-icon ui-icon-placeholder'><!-- --></div>"+
+                  "<div'>"+ value.name + "</div>" +
+                "</div>"+
                 "</th>";
         jQuery(th).appendTo(jQuery("#pivotConfigHeader"));
         var td =
@@ -1536,7 +1535,7 @@ function openEditChart(id){
             '<h3><a href="#">Original Table</a></h3>' +
             '<div class="googlechart_accordion_container">' +
                 '<div class="googlechart_accordion_table">' +
-                    '<table id="originalTable" class="googlechartTable">'+
+                    '<table id="originalTable" class="googlechartTable table">'+
                         '<tr id="originalColumns">'+
                         '</tr>'+
                     '</table>'+
@@ -1545,23 +1544,24 @@ function openEditChart(id){
             '<h3><a href="#">Table Editor</a></h3>' +
             '<div class="googlechart_accordion_container">' +
                 '<div class="googlechart_accordion_table">' +
-                    '<strong style="float:left;width:115px;">Table pivots:</strong>' +
-                    '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable" style="float:left;">'+
+                    '<span class="label">Table pivots</span>' +
+                    '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable table">'+
                         '<tr id="pivotConfigHeader"></tr>'+
                         '<tr id="pivotConfigDropZones"></tr>'+
                     '</table>'+
                     '<div style="clear:both"></div>'+
-                    '<div style="float:left;">'+
-                        '<strong style="float:left;width:100px;">Table for chart:</strong>' +
-                        '<div style="clear:both"></div>'+
-                        '<input type="button" class="column-show-hide-button context" value="Hide all columns" onclick="columnsHideAll();"/>' +
-                        '<input type="button" class="column-show-hide-button context" value="Show all columns" onclick="columnsShowAll();"/>' +
-                        '<input type="button" class="column-show-hide-button context" value="Reverse selection" onclick="columnsRevert();"/>' +
-                        '<input type="button" class="column-show-hide-button context" value="Scatterplots matrix" onclick="columnsMatrixChart(\'ScatterChart\');"/>' +
-                        '<input type="button" class="column-show-hide-button context" value="Other matrices" onclick="columnsMatrixChart();"/>' +
+                    '<div>'+
+                        '<span class="label">Table for chart</span>' +
+                        '<div class="buttons-bar">'+
+                        '<input type="button" class="column-show-hide-button context btn" value="Hide all columns" onclick="columnsHideAll();"/>' +
+                        '<input type="button" class="column-show-hide-button context btn" value="Show all columns" onclick="columnsShowAll();"/>' +
+                        '<input type="button" class="column-show-hide-button context btn" value="Reverse selection" onclick="columnsRevert();"/>' +
+                        '<input type="button" class="column-show-hide-button context btn" value="Scatterplots matrix" onclick="columnsMatrixChart(\'ScatterChart\');"/>' +
+                        '<input type="button" class="column-show-hide-button context btn" value="Other matrices" onclick="columnsMatrixChart();"/>' +
+                        '</div>' +
                     '</div>'+
                     "<div style='clear:both;'> </div>" +
-                    '<table id="newTable" class="googlechartTable newGooglechartTable" style="height:300px;">'+
+                    '<table id="newTable" class="googlechartTable newGooglechartTable table" style="height:300px;">'+
                     '</table>'+
                     '<div style="clear:both"></div>'+
                 '</div>'+
