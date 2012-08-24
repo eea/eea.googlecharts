@@ -1531,15 +1531,6 @@ function openEditChart(id){
         "</div>"+
         "<div style='clear:both;'> </div>" +
         '<div id="googlechart_table_accordion" class="googlechart_table_config_scaleable googlechart_table_config_scaleable_minimized">' +
-            '<h3><a href="#">Original Table</a></h3>' +
-            '<div class="googlechart_accordion_container">' +
-                '<div class="googlechart_accordion_table">' +
-                    '<table id="originalTable" class="googlechartTable">'+
-                        '<tr id="originalColumns">'+
-                        '</tr>'+
-                    '</table>'+
-                '</div>'+
-            '</div>'+
             '<h3><a href="#">Table Editor</a></h3>' +
             '<div class="googlechart_accordion_container">' +
                 '<div class="googlechart_accordion_table">' +
@@ -1562,6 +1553,15 @@ function openEditChart(id){
                     '<table id="newTable" class="googlechartTable newGooglechartTable" style="height:300px;">'+
                     '</table>'+
                     '<div style="clear:both"></div>'+
+                '</div>'+
+            '</div>'+
+            '<h3><a href="#">Original Table</a></h3>' +
+            '<div class="googlechart_accordion_container">' +
+                '<div class="googlechart_accordion_table">' +
+                    '<table id="originalTable" class="googlechartTable">'+
+                        '<tr id="originalColumns">'+
+                        '</tr>'+
+                    '</table>'+
                 '</div>'+
             '</div>'+
         '</div>'+
@@ -1702,7 +1702,7 @@ function openEditChart(id){
     });
     generateNewTable(loadedSortOrder, true);
 
-    jQuery('#googlechart_table_accordion').accordion({active:1});
+    jQuery('#googlechart_table_accordion').accordion({active:0});
 
     populateTableForPivot();
     $(".draggable").draggable({
