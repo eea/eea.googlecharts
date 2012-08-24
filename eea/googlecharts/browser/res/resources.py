@@ -42,6 +42,7 @@ class ViewResources(object):
             '++resource++eea.googlecharts.palettes.js',
             '++resource++eea.googlecharts.dashboard.js',
             '++resource++eea.googlecharts.view.js',
+            '++resource++eea.googlecharts.configurator_messages.js',
         ]
 
 class EditResources(object):
@@ -80,4 +81,5 @@ class EditResources(object):
             '++resource++eea.googlecharts.palettes.js',
             '++resource++eea.googlecharts.dashboard-edit.js',
             '++resource++eea.googlecharts.edit.js',
+            '++resource++eea.googlecharts.configurator_messages.js',
         ]

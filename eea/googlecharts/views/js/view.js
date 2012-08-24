@@ -9,7 +9,18 @@ function exportToPng(){
     var svg = jQuery("#googlechart_view").find("iframe").contents().find("#chartArea").html();
 
     var form = jQuery("#export");
-    jQuery("#svg").attr("value",svg);
+
+    jQuery(googlechart_config_array).each(function(index, value){
+        if (value[0] == current_chart_id){
+            index_to_use = index;
+        }
+    });
+
+    var old_title = googlechart_config_array[index_to_use][1].options.title;
+    var new_title = main_title + " — " + old_title;
+    updated_svg = svg.replace(old_title, new_title);
+    jQuery("#svg").attr("value",updated_svg);
+
     form.submit();
 }
 

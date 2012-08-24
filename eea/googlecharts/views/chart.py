@@ -58,6 +58,11 @@ class View(ViewForm):
         """
         return self.siteProperties.getProperty('Watermark_Image', '')
 
+    def get_maintitle(self):
+        """ Main title of visualization
+        """
+        return self.context.title
+
     def get_charts(self):
         """ Charts
         """

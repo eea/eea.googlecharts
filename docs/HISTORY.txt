@@ -10,6 +10,15 @@ Changelog
 
 4.7-dev - (unreleased)
 ----------------------
+* Feature: Use Visualization title and Chart title on PNG export and 
+  embedded charts and dashboards
+  [szabozo0 refs #5447]
+* Upgrde step:
+  ZMI > portal_setup > import > profile "EEA Google Charts" > import Javascript registry
+* Feature: Improved space usage on Chart Editor
+  [szabozo0 refs #5466]
+* Feature: Allow columns to be hidden from pivot
+  [szabozo0 refs #5450]
 * Bug fix: Fixed preview chart in chart editor
   [szabozo0 refs #5448]
 * Bug fix: Set default pivot column value to 'undefined' instead of 0 in
