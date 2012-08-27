@@ -100,7 +100,7 @@ function markChartAsModified(id){
 function addFilter(id, column, filtertype, columnName){
     var filter = jQuery("<li class='googlechart_filteritem' id='googlechart_filter_"+id+"_"+column+"'>" +
                 "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden' class='googlechart_filteritem_id'></div><div class='ui-icon ui-icon-trash remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
-                available_filter_types[filtertype] +
+                '<span>' + available_filter_types[filtertype] + '</span>' +
                 "<input type='hidden' class='googlechart_filteritem_type'/>" +
                 "<input type='hidden' class='googlechart_filteritem_column'/>" +
              "</li>");
@@ -322,14 +322,13 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                     "<div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 400px; max-width:700px; overflow:auto'></div>" +
                 "</div>" +
                 "<div style='float:right; width:250px'>" +
-                    "<strong>Filters</strong><br/>"+
-                    "Position:"+
-                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='0' "+((filter_pos === 0)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Top" +
-                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='1' "+((filter_pos === 1)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Left" +
-                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='2' "+((filter_pos === 2)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Bottom" +
-                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='3' "+((filter_pos === 3)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Right" +
-                    "<br/>"+
-                    "<br/>"+
+                    "<span class='label'>Filters position</span>"+
+                    "<select name='googlechart_filterposition' onchange='markChartAsModified(\"" + id + "\")'>" +
+                        "<option value='0' " + ((filter_pos === 0) ? "selected='selected'": "") + ">Top</option>" +
+                        "<option value='1' " + ((filter_pos === 1) ? "selected='selected'": "") + ">Left</option>" +
+                        "<option value='2' " + ((filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
+                        "<option value='3' " + ((filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
+                    "</select>" +
                     "<input type='button' value='Add New Filter' class='context addgooglechartfilter btn'/>"+
                     "<div style='clear:both'> </div>" +
                     "<ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>" +
@@ -1854,7 +1853,7 @@ function saveCharts(){
         chart.config = chartObj.find(".googlechart_configjson").attr("value");
         chart.width = chartObj.find(".googlechart_width").attr("value");
         chart.height = chartObj.find(".googlechart_height").attr("value");
-        chart.filterposition = chartObj.find(".googlechart_filterposition:checked").attr("value");
+        chart.filterposition = chartObj.find("[name=googlechart_filterposition]").val();
         chart.options = chartObj.find(".googlechart_options").attr("value");
         chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
         chart.dashboard = jQuery.data(chartObj[0], 'dashboard');

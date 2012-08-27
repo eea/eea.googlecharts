@@ -215,7 +215,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       .html([
         '<span class="label">Dashboard charts</span>',
         '<input type="text" name="width" value=""/>',
-        '<span>X</span>',
+        '<span>x</span>',
         '<input type="text" name="height" value=""/>'
       ].join('\n'))
       .prependTo(self.box);
@@ -512,7 +512,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
       .html([
       '<span class="title">', self.settings.name, '</span>',
       '<input type="number" name="width" value=""/>',
-      '<span>X</span>',
+      '<span>x</span>',
       '<input type="number" name="height" value=""/>',
       '<span>px</span>'
     ].join('\n'));
@@ -798,7 +798,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
       .html([
       '<span class="title">', self.settings.title, '</span>',
       '<input type="number" name="width" value=""/>',
-      '<span>X</span>',
+      '<span>x</span>',
       '<input type="number" name="height" value=""/>',
       '<span>px</span>'
     ].join('\n'));
@@ -1139,7 +1139,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
       .html([
         '<span class="label">Dashboard filters</span>',
         '<input type="text" name="width" value=""/>',
-        '<span>X</span>',
+        '<span>x</span>',
         '<input type="text" name="height" value=""/>'
         ].join('\n'))
       .prependTo(self.box);
