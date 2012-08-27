@@ -337,7 +337,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                 "<div style='clear:both'> </div>" +
                 "<input type='button' class='context btn' value='Edit Chart' onclick='openEditChart(\""+id+"\");'/>" +
                 "<input type='button' class='context btn' value='Advanced Options' onclick='openAdvancedOptions(\""+id+"\");'/>" +
-                "<a style='float:right' class='preview_button'>Preview Chart</a>"+
+                "<a style='float:right' class='preview_button btn'>Preview Chart</a>"+
             "</fieldset>" +
         "</li>");
     googlechart.find(".googlechart_columns").attr("value", columns);
