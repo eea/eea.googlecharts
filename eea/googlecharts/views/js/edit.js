@@ -1475,8 +1475,8 @@ function resizeTableConfigurator(forced){
     if ((jQuery(".googlechart_table_config_scaleable_maximized").length > 0) || forced){
         var fullheight = jQuery(".googlecharts_columns_config").height();
         var container_heightstr = 'height:'+(fullheight-200)+'px;';
-        var accordion_heightstr = 'height:'+(fullheight-260)+'px;';
-        var accordion_container_heightstr = 'height:'+(fullheight-260)+'px;';
+        var accordion_heightstr = 'height:'+(fullheight-200)+'px;';
+        var accordion_container_heightstr = 'height:'+(fullheight-200)+'px;';
         jQuery(".googlechart_table_config_scaleable").removeClass("googlechart_transition").attr("style",container_heightstr);
         jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
         jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
@@ -1496,6 +1496,7 @@ function openEditChart(id){
     jQuery(".googlecharts_columns_config").remove();
     var editcolumnsdialog = jQuery(
     '<div class="googlecharts_columns_config">' +
+//        '<div id="googlechart_overlay" style="display:none; background: transparent;"><div class="contentWrap" style="width:200px;height:200px; border:1px solid red; background-color:#fff">xxx</div></div>'+
         '<div class="chart_config_tabs" style="padding-top:10px;">'+
             '<div class="googlechart_maximize_chart_config googlechart_config_head googlechart_config_head_selected" style="float:left">Chart Configurator</div>'+
             '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:341px" title="Click to enlarge Table Configurator">Table Configurator</div>'+
@@ -1532,16 +1533,7 @@ function openEditChart(id){
         "</div>"+
         "<div style='clear:both;'> </div>" +
         '<div id="googlechart_table_accordion" class="googlechart_table_config_scaleable googlechart_table_config_scaleable_minimized">' +
-            '<h3><a href="#">Original Table</a></h3>' +
-            '<div class="googlechart_accordion_container">' +
-                '<div class="googlechart_accordion_table">' +
-                    '<table id="originalTable" class="googlechartTable table">'+
-                        '<tr id="originalColumns">'+
-                        '</tr>'+
-                    '</table>'+
-                '</div>'+
-            '</div>'+
-            '<h3><a href="#">Table Editor</a></h3>' +
+            '<h3 style="display:none;"><a href="#">Table Editor</a></h3>' +
             '<div class="googlechart_accordion_container">' +
                 '<div class="googlechart_accordion_table">' +
                     '<span class="label">Table pivots</span>' +
@@ -1553,6 +1545,7 @@ function openEditChart(id){
                     '<div>'+
                         '<span class="label">Table for chart</span>' +
                         '<div class="buttons-bar">'+
+                        '<input type="button" class="column-show-hide-button context btn" value="Original table" id="showOriginal"/>' +
                         '<input type="button" class="column-show-hide-button context btn" value="Hide all columns" onclick="columnsHideAll();"/>' +
                         '<input type="button" class="column-show-hide-button context btn" value="Show all columns" onclick="columnsShowAll();"/>' +
                         '<input type="button" class="column-show-hide-button context btn" value="Reverse selection" onclick="columnsRevert();"/>' +
@@ -1568,6 +1561,17 @@ function openEditChart(id){
             '</div>'+
         '</div>'+
     '</div>');
+
+    jQuery('#googlechart_overlay').remove();
+    jQuery('<div id="googlechart_overlay" style="display:none;">'+
+        '<div class="contentWrap">'+
+            '<table id="originalTable" class="googlechartTable">'+
+                '<tr id="originalColumns">'+
+                '</tr>'+
+            '</table>'+
+        '</div>'+
+    '</div>').appendTo('body');
+
 
     editcolumnsdialog.find(".googlechart_configjson").attr("value", tmp_config);
     editcolumnsdialog.find(".googlechart_columns").attr("value", tmp_columns);
@@ -1625,6 +1629,7 @@ function openEditChart(id){
                 minWidth:990,
                 height: height,
                 resizable:true,
+                closeOnEscape:false,
                 create:function(){
                     editorDialog = jQuery(this);
                 },
@@ -1704,8 +1709,6 @@ function openEditChart(id){
     });
     generateNewTable(loadedSortOrder, true);
 
-    jQuery('#googlechart_table_accordion').accordion({active:1});
-
     populateTableForPivot();
     $(".draggable").draggable({
             containment:"#headers",
@@ -1740,6 +1743,15 @@ function openEditChart(id){
     });
     updateWithStatus();
     openEditor("tmp_chart");
+
+    jQuery("#showOriginal").click(function(){
+        jQuery("#googlechart_overlay").overlay().load();
+    });
+
+    jQuery("#googlechart_overlay").overlay({
+        mask: 'black'
+    });
+
     DavizEdit.Status.stop("Done");
 }
 

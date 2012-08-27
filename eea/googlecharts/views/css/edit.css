@@ -761,7 +761,7 @@ dl.portlet .dashboard-widget,
 }
 
 .google-visualization-charteditor-menu {
-    z-index:9999 !important;
+    z-index:9000 !important;
 }
 
 .googlechart-widget-add .field input[type=text],
@@ -919,4 +919,31 @@ dl.portlet .dashboard-widget,
     width: 100%;
     padding: 0.5em 0;
     text-align: center;
+}
+
+#googlechart_overlay {
+    position:absolute;
+    width: 70%;
+    height: 70%;
+}
+
+#googlechart_overlay .close {
+    background-image: url(/++resource++close_overlay.png);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 35px;
+    height: 35px;
+}
+
+#googlechart_overlay table {
+    width: 100%;
+}
+
+#googlechart_overlay .contentWrap {
+    background: white;
+    margin: 1.5em;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
 }
