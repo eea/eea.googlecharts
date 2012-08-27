@@ -1293,7 +1293,7 @@ function columnsMatrixChart(chartType){
                                                 "col_nr='"+rowValue+"'>"+
                                                     "<div class='scrollName' "+
                                                         "style='width:"+(matrixChartSize-2)+"px;"+
-                                                        "height:"+(matrixChartSize-2)+"px;' >" + 
+                                                        "height:"+(matrixChartSize-2)+"px;' >" +
                                                         "<div>"+
                                                         ((chartType === 'ScatterChart')?columnNiceNamesForMatrix[rowValue]:allColumnNiceNamesForMatrix[rowValue])+
                                                         "</div>"+
@@ -1314,7 +1314,7 @@ function columnsMatrixChart(chartType){
                                                         ">" +
                                                         "<div>"+
                                                                 ((chartType === 'ScatterChart')?columnNiceNamesForMatrix[colValue]:allColumnNiceNamesForMatrix[colValue])+
-//                                                                columnNiceNamesForMatrix[colValue] + 
+//                                                                columnNiceNamesForMatrix[colValue] +
                                                         "</div>"+
                                                     "</div>"+
                                             "</div>";
@@ -1557,23 +1557,19 @@ function openEditChart(id){
                     '<div style="clear:both"></div>'+
                 '</div>'+
             '</div>'+
-//            '<div style="display:none;">'+
-//            '<h3><a href="#">Original Table</a></h3>' +
-//            '<div class="googlechart_accordion_container">' +
-//                '<div class="googlechart_accordion_table">' +
-                    '<div id="googlechart_overlay" style="display:none;">'+
-                        '<div class="contentWrap">'+
-                            '<table id="originalTable" class="googlechartTable">'+
-                                '<tr id="originalColumns">'+
-                                '</tr>'+
-                            '</table>'+
-                        '</div>'+
-                    '</div>'+
-//                '</div>'+
-//            '</div>'+
-//            '</div>'+
         '</div>'+
     '</div>');
+
+    jQuery('#googlechart_overlay').remove();
+    jQuery('<div id="googlechart_overlay" style="display:none;">'+
+        '<div class="contentWrap">'+
+            '<table id="originalTable" class="googlechartTable">'+
+                '<tr id="originalColumns">'+
+                '</tr>'+
+            '</table>'+
+        '</div>'+
+    '</div>').appendTo('body');
+
 
     editcolumnsdialog.find(".googlechart_configjson").attr("value", tmp_config);
     editcolumnsdialog.find(".googlechart_columns").attr("value", tmp_columns);
