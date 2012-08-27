@@ -762,7 +762,7 @@ dl.portlet .dashboard-widget,
 }
 
 .google-visualization-charteditor-menu {
-    z-index:9999 !important;
+    z-index:9000 !important;
 }
 
 .googlechart-widget-add .field input[type=text],
@@ -888,4 +888,24 @@ dl.portlet .dashboard-widget,
 }
 
 .googlechart_config_messagezone_message{
+}
+
+#googlechart_overlay {
+    position:absolute;
+}
+
+#googlechart_overlay .close {
+    background-image: url(/++resource++close_overlay.png);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 35px;
+    height: 35px;
+}
+
+#googlechart_overlay .contentWrap {
+    background: white;
+    margin: 1.5em;
+    overflow: scroll;
+    max-height:200px;
 }

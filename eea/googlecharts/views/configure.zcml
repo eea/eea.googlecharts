@@ -179,6 +179,11 @@
   />
 
   <browser:resource
+    name="close_overlay.png"
+    file="./imgs/close_overlay.png"
+  />
+
+  <browser:resource
     name="googlechart.googlecharts.preview.png"
     file="./imgs/preview.png"
   />
