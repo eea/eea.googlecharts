@@ -114,6 +114,10 @@ class View(ViewForm):
             self.request.get("chartHeight",chart_settings["height"])
         return chart_settings
 
+    def get_customstyle(self):
+        """ Get custom style for embed
+        """
+        return self.request.get("customStyle", "")
 
     def has_dashboard(self):
         """ Dashboard is configured """

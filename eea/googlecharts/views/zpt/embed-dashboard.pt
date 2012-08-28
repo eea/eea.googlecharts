@@ -36,6 +36,8 @@
     </tal:block>
 </tal:block>
 
+<style type="text/css" tal:content="view/get_customstyle">
+</style>
 
 </head>
 <body style="margin: 0; overflow: hidden">

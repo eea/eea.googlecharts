@@ -3,6 +3,8 @@ Changelog
 
 4.8-dev - (unreleased)
 ----------------------
+* Feature: Added customStyle attribute for embedded charts.
+  [szabozo0 refs #5488]
 
 4.7 - (2012-08-27)
 ------------------
