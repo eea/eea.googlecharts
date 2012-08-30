@@ -5,6 +5,9 @@ EEA Google Charts provides Google Charts framework integration for
 eea.app.visualization. See `eea.daviz`_ package for more details.
 
 
+.. image:: http://eea.github.com/_static/visualization-layers.svg
+
+
 .. contents::
 
 
@@ -36,7 +39,7 @@ Main features
 Dependecies
 ===========
 
-1. Plone 4.x
+1. Zope 2.12+
 2. eea.converter
 3. eea.app.visualization
 
