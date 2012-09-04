@@ -100,7 +100,7 @@ function markChartAsModified(id){
 function addFilter(id, column, filtertype, columnName){
     var filter = jQuery("<li class='googlechart_filteritem' id='googlechart_filter_"+id+"_"+column+"'>" +
                 "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden' class='googlechart_filteritem_id'></div><div class='ui-icon ui-icon-trash remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
-                available_filter_types[filtertype] +
+                '<span>' + available_filter_types[filtertype] + '</span>' +
                 "<input type='hidden' class='googlechart_filteritem_type'/>" +
                 "<input type='hidden' class='googlechart_filteritem_column'/>" +
              "</li>");
@@ -152,14 +152,14 @@ function saveThumb(value){
             action = action.split('@@')[0] + "@@googlechart.setthumb";
             jQuery.post(action, {"svg":svg},function(data){
                 if (data !== "Success"){
-                    alert("Can't generate thumb from the chart called: "+chart_json.options.title);
+                    DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
+                }else{
+                    DavizEdit.Status.stop("Done");
                 }
-                DavizEdit.Status.stop("Done");
             });
         },
         function(){
-            alert("Can't generate thumb from the chart called: "+chart_json.options.title);
-            DavizEdit.Status.stop("Done");
+            DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
         }
     );
 }
@@ -229,6 +229,8 @@ function openAdvancedOptions(id){
     advancedOptionsDialog.dialog({title:"Advanced Options",
             dialogClass: 'googlechart-dialog',
             modal:true,
+            minWidth: 600,
+            minHeight: 480,
             buttons:[
                 {
                     text: "Save",
@@ -320,23 +322,22 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                     "<div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 400px; max-width:700px; overflow:auto'></div>" +
                 "</div>" +
                 "<div style='float:right; width:250px'>" +
-                    "<strong>Filters</strong><br/>"+
-                    "Position:"+
-                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='0' "+((filter_pos === 0)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Top" +
-                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='1' "+((filter_pos === 1)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Left" +
-                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='2' "+((filter_pos === 2)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Bottom" +
-                    "<input type='radio' class='googlechart_filterposition' name='googlechart_filterposition_"+id+"' value='3' "+((filter_pos === 3)?"checked='checked'":"")+"' onchange='markChartAsModified(\""+id+"\");'/>Right" +
-                    "<br/>"+
-                    "<br/>"+
-                    "<input type='button' value='Add New Filter' class='context addgooglechartfilter'/>"+
+                    "<span class='label'>Filters position</span>"+
+                    "<select name='googlechart_filterposition' onchange='markChartAsModified(\"" + id + "\")'>" +
+                        "<option value='0' " + ((filter_pos === 0) ? "selected='selected'": "") + ">Top</option>" +
+                        "<option value='1' " + ((filter_pos === 1) ? "selected='selected'": "") + ">Left</option>" +
+                        "<option value='2' " + ((filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
+                        "<option value='3' " + ((filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
+                    "</select>" +
+                    "<input type='button' value='Add New Filter' class='context addgooglechartfilter btn'/>"+
                     "<div style='clear:both'> </div>" +
                     "<ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>" +
                     "</ul>" +
                 "</div>" +
                 "<div style='clear:both'> </div>" +
-                "<input type='button' class='context' value='Edit Chart' onclick='openEditChart(\""+id+"\");'/>" +
-                "<input type='button' class='context' value='Advanced Options' onclick='openAdvancedOptions(\""+id+"\");'/>" +
-                "<a style='float:right' class='preview_button'>Preview Chart</a>"+
+                "<input type='button' class='context btn' value='Edit Chart' onclick='openEditChart(\""+id+"\");'/>" +
+                "<input type='button' class='context btn' value='Advanced Options' onclick='openAdvancedOptions(\""+id+"\");'/>" +
+                "<a style='float:right' class='preview_button btn'>Preview Chart</a>"+
             "</fieldset>" +
         "</li>");
     googlechart.find(".googlechart_columns").attr("value", columns);
@@ -545,7 +546,6 @@ function generateNewTable(sortOrder, isFirst){
     jQuery(sortOrder).each(function(col_idx, col){
         var newColumn = jQuery('<th column_id="' + col[0] + '" column_visible="'+col[1]+'">' +
                         '<div title="' + ((col[1]==='hidden')?'Show':'Hide')+' column" style="float:right" class="ui-icon '+((col[1]==='hidden')?'ui-icon-show':'ui-icon-hide')+'">h</div>' +
-                        '<div style="clear:both;"></div>'+
                         '<span></span>' +
                     '</th>');
         newColumn.find("span").text(transformedTable.available_columns[col[0]]);
@@ -842,9 +842,9 @@ function populateTableForPivot(){
         var th =
                 "<th class='columnheader' columnnr='"+value.nr+"'>"+
                 "<div class='draggable' columnnr='"+value.nr+"'>"+
-                "<div style='float:right' class='pivothidecolumn ui-icon ui-icon-placeholder'><!-- --></div>"+
-                "<div style='clear:both;'></div>"+
-                value.name+"</div>"+
+                  "<div style='float:right' class='pivothidecolumn ui-icon ui-icon-placeholder'><!-- --></div>"+
+                  "<div'>"+ value.name + "</div>" +
+                "</div>"+
                 "</th>";
         jQuery(th).appendTo(jQuery("#pivotConfigHeader"));
         var td =
@@ -1501,8 +1501,8 @@ function openEditChart(id){
             '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:341px" title="Click to enlarge Table Configurator">Table Configurator</div>'+
             "<div style='float:right;'>"+
                 '<div class="buttons">' +
-                "<input type='button' style='width:80px' class='context' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
-                "<input style='margin-left:5px;width:80px' type='button' class='context' value='Cancel' onclick='chartEditorCancel();'/>" +
+                "<input type='button' style='width:80px' class='context btn' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
+                "<input style='margin-left:5px;width:80px' type='button' class='context btn' value='Cancel' onclick='chartEditorCancel();'/>" +
                 "</div>" +
             "</div>"+
         '</div>'+
@@ -1535,24 +1535,25 @@ function openEditChart(id){
             '<h3 style="display:none;"><a href="#">Table Editor</a></h3>' +
             '<div class="googlechart_accordion_container">' +
                 '<div class="googlechart_accordion_table">' +
-                    '<strong style="float:left;width:115px;">Table pivots:</strong>' +
-                    '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable" style="float:left;">'+
+                    '<span class="label">Table pivots</span>' +
+                    '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable table">'+
                         '<tr id="pivotConfigHeader"></tr>'+
                         '<tr id="pivotConfigDropZones"></tr>'+
                     '</table>'+
                     '<div style="clear:both"></div>'+
-                    '<div style="float:left;">'+
-                        '<strong style="float:left;width:100px;">Table for chart:</strong>' +
-                        '<div style="clear:both"></div>'+
-                        '<input type="button" class="column-show-hide-button context" value="Original table" id="showOriginal"/>' +
-                        '<input type="button" class="column-show-hide-button context" value="Hide all columns" onclick="columnsHideAll();"/>' +
-                        '<input type="button" class="column-show-hide-button context" value="Show all columns" onclick="columnsShowAll();"/>' +
-                        '<input type="button" class="column-show-hide-button context" value="Reverse selection" onclick="columnsRevert();"/>' +
-                        '<input type="button" class="column-show-hide-button context" value="Scatterplots matrix" onclick="columnsMatrixChart(\'ScatterChart\');"/>' +
-                        '<input type="button" class="column-show-hide-button context" value="Other matrices" onclick="columnsMatrixChart();"/>' +
+                    '<div>'+
+                        '<span class="label">Table for chart</span>' +
+                        '<div class="buttons-bar">'+
+                        '<input type="button" class="column-show-hide-button context btn" value="Original table" id="showOriginal"/>' +
+                        '<input type="button" class="column-show-hide-button context btn" value="Hide all columns" onclick="columnsHideAll();"/>' +
+                        '<input type="button" class="column-show-hide-button context btn" value="Show all columns" onclick="columnsShowAll();"/>' +
+                        '<input type="button" class="column-show-hide-button context btn" value="Reverse selection" onclick="columnsRevert();"/>' +
+                        '<input type="button" class="column-show-hide-button context btn" value="Scatterplots matrix" onclick="columnsMatrixChart(\'ScatterChart\');"/>' +
+                        '<input type="button" class="column-show-hide-button context btn" value="Other matrices" onclick="columnsMatrixChart();"/>' +
+                        '</div>' +
                     '</div>'+
                     "<div style='clear:both;'> </div>" +
-                    '<table id="newTable" class="googlechartTable newGooglechartTable" style="height:300px;">'+
+                    '<table id="newTable" class="googlechartTable newGooglechartTable table" style="height:300px;">'+
                     '</table>'+
                     '<div style="clear:both"></div>'+
                 '</div>'+
@@ -1707,8 +1708,6 @@ function openEditChart(id){
     });
     generateNewTable(loadedSortOrder, true);
 
-    jQuery('#googlechart_table_accordion').accordion({active:0});
-
     populateTableForPivot();
     $(".draggable").draggable({
             containment:"#headers",
@@ -1854,7 +1853,7 @@ function saveCharts(){
         chart.config = chartObj.find(".googlechart_configjson").attr("value");
         chart.width = chartObj.find(".googlechart_width").attr("value");
         chart.height = chartObj.find(".googlechart_height").attr("value");
-        chart.filterposition = chartObj.find(".googlechart_filterposition:checked").attr("value");
+        chart.filterposition = chartObj.find("[name=googlechart_filterposition]").val();
         chart.options = chartObj.find(".googlechart_options").attr("value");
         chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
         chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
@@ -1916,8 +1915,7 @@ function saveCharts(){
                 }
             }
             else {
-                DavizEdit.Status.stop(data);
-                alert("There is no chart selected for thumbnail");
+                DavizEdit.Status.stop("There is no chart selected for thumbnail");
             }
             jQuery(document).trigger('google-charts-changed');
         }

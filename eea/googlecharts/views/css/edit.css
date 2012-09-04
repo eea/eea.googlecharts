@@ -15,10 +15,14 @@
 }
 
 #googlecharts_list,
-.googlechart_filters_list{
+.googlechart_filters_list {
     list-style-type:none !important;
     list-style-image:none !important;
     margin:0 !important;
+}
+
+.googlechart_filteritem span {
+    margin-left: 2em;
 }
 
 .googlechart{
@@ -89,10 +93,10 @@
 }
 .googlechartTable th,
 .pivotedColumn {
-    padding:2px;
-    border:1px solid #EEEEEE;
-    background-color:#777c1f;
-    color: #fff;
+    padding: 1em;
+    border:1px solid #EEE;
+    background-color: #CDE2A7;
+    color: #333;
 }
 .googlechartTable td{
     padding:2px;
@@ -202,9 +206,13 @@
 
 .dashboard-header input {
     width: 50px;
+    margin-bottom: 0px;
+    height: auto;
+    line-height: 1.2;
+    padding: 0;
 }
 
-.dashboard-header span {
+.dashboard-header span.ui-icon {
     margin-right: 0.5em;
 }
 
@@ -606,7 +614,7 @@ dl.portlet .dashboard-widget,
 }
 
 .droppable {
-    height: 20px;
+    padding: 1em;
 }
 
 .hoveredDrop {
@@ -678,12 +686,7 @@ dl.portlet .dashboard-widget,
 }
 
 .column-show-hide-button {
-    padding:0 !important;
-    font: normal 11px Verdana,Arial,sans-serif !important;
-    margin-top:3px !important;
-    margin-right:3px;
-    margin-bottom:3px;
-    width:110px !important;
+    font-size: 12px;
 }
 
 .matrixChart_container {
@@ -775,6 +778,31 @@ dl.portlet .dashboard-widget,
 .googlechart-widget-add textarea,
 .googlechart-widget-edit textarea {
     width: 98%;
+}
+
+.googlechart-dialog .field,
+.googlechart-widget-edit .field,
+.googlechart-widget-add .field {
+  margin-bottom: 1em;
+}
+
+.googlechart-dialog .field label,
+.googlechart-widget-edit .field label,
+.googlechart-widget-add .field label {
+  font-weight: bold;
+}
+
+.googlechart-dialog .formHelp,
+.googlechart-widget-edit .formHelp,
+.googlechart-widget-add .formHelp {
+  display: block;
+  color: #555;
+  font-weight: normal;
+}
+
+.googlechart_dialog_options {
+  width: 98%;
+  min-height: 300px;
 }
 
 .ui-icon-placeholder {
@@ -890,6 +918,13 @@ dl.portlet .dashboard-widget,
 .googlechart_config_messagezone_message{
 }
 
+.buttons-bar {
+    background-color: #CDE2A7;
+    width: 100%;
+    padding: 0.5em 0;
+    text-align: center;
+}
+
 #googlechart_overlay {
     position:absolute;
     width: 70%;
@@ -915,4 +950,8 @@ dl.portlet .dashboard-widget,
     overflow: auto;
     width: 100%;
     height: 100%;
+}
+
+select[name=googlechart_filterposition] {
+    width: 100%;
 }

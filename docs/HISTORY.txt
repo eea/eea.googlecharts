@@ -1,8 +1,12 @@
 Changelog
 =========
 
-5.0-dev - (unreleased)
+6.0-dev - (unreleased)
 ----------------------
+* Upgrade step: Within "Plone > Site setup > Add-ons" click on
+  upgrade button available for eea.googlecharts
+* Feature: Made this package Plone independent (Zope2 minimal requirements)
+  [voineali refs #5422]
 
 4.9 - (2012-08-28)
 ------------------
@@ -14,7 +18,7 @@ Changelog
 
 4.7 - (2012-08-27)
 ------------------
-* Feature: Use Visualization title and Chart title on PNG export and 
+* Feature: Use Visualization title and Chart title on PNG export and
   embedded charts and dashboards
   [szabozo0 refs #5447]
 * Upgrde step:

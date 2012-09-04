@@ -1,0 +1,19 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+  i18n_domain="eea">
+
+  <!-- 4.x => 6.0 -->
+  <genericsetup:upgradeSteps
+    source="4.0"
+    destination="6.0"
+    profile="eea.googlecharts:default">
+
+    <genericsetup:upgradeDepends
+      title="Import all steps from eea.googlecharts profile"
+      import_profile="eea.googlecharts:default"
+      />
+
+  </genericsetup:upgradeSteps>
+
+</configure>

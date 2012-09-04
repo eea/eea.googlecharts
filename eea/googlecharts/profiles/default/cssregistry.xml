@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
-<object name="portal_css" meta_type="Stylesheets Registry">
- <stylesheet title="GoogleCharts View CSS" cacheable="True" compression="none"
-    cookable="True" enabled="on"
-    expression="python:'daviz-view.html' in request.URL0"
-    id="++resource++eea.googlecharts.view.css" media="all" rel="stylesheet" rendering="import"/>
- <stylesheet title="GoogleCharts View CSS" cacheable="True" compression="none"
-    cookable="True" enabled="on"
-    expression="python:'daviz-edit.html' in request.URL0"
-    id="++resource++eea.googlecharts.edit.css" media="all" rel="stylesheet" rendering="import"/>
+<object name="portal_css">
+ <!-- No need to register CSS resources here anymore. See
+      eea.app.visualization.browser.res.interfaces.py for the new way
+      of registering visualization JS/CSS resources -->
+ <!-- Cleanup -->
+ <stylesheet id="++resource++eea.googlecharts.view.css" remove="True" />
+ <stylesheet id="++resource++eea.googlecharts.edit.css" remove="True" />
 </object>

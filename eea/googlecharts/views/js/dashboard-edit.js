@@ -215,7 +215,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       .html([
         '<span class="label">Dashboard charts</span>',
         '<input type="text" name="width" value=""/>',
-        '<span>X</span>',
+        '<span>x</span>',
         '<input type="text" name="height" value=""/>'
       ].join('\n'))
       .prependTo(self.box);
@@ -311,6 +311,15 @@ DavizEdit.GoogleDashboardCharts.prototype = {
 
   initializeTinyMCE: function(form){
     var self = this;
+
+    // tinyMCE no supported
+    if(!window.tinyMCE){
+      return;
+    }
+    if(!window.TinyMCEConfig){
+      return;
+    }
+
     var textarea = jQuery('textarea', form).addClass('mce_editable');
     var name = textarea.attr('id');
     var exists = tinyMCE.get(name);
@@ -503,7 +512,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
       .html([
       '<span class="title">', self.settings.name, '</span>',
       '<input type="number" name="width" value=""/>',
-      '<span>X</span>',
+      '<span>x</span>',
       '<input type="number" name="height" value=""/>',
       '<span>px</span>'
     ].join('\n'));
@@ -738,6 +747,15 @@ DavizEdit.GoogleDashboardWidget.prototype = {
 
   initializeTinyMCE: function(form){
     var self = this;
+
+    // tinyMCE not supported
+    if(!window.tinyMCE){
+      return;
+    }
+    if(!window.TinyMCEConfig){
+      return;
+    }
+
     self.isTinyMCE = true;
     var textarea = jQuery('textarea', form).addClass('mce_editable');
     var name = textarea.attr('id');
@@ -780,7 +798,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
       .html([
       '<span class="title">', self.settings.title, '</span>',
       '<input type="number" name="width" value=""/>',
-      '<span>X</span>',
+      '<span>x</span>',
       '<input type="number" name="height" value=""/>',
       '<span>px</span>'
     ].join('\n'));
@@ -1121,7 +1139,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
       .html([
         '<span class="label">Dashboard filters</span>',
         '<input type="text" name="width" value=""/>',
-        '<span>X</span>',
+        '<span>x</span>',
         '<input type="text" name="height" value=""/>'
         ].join('\n'))
       .prependTo(self.box);

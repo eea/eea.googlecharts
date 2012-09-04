@@ -1,18 +1,21 @@
 """ GoogleCharts View
 """
 import json
+import logging
 import urllib2
 from PIL import Image
 from cStringIO import StringIO
-from Products.CMFCore.utils import getToolByName
-from zope.component import queryAdapter, getUtility, getMultiAdapter
+from zope.component import queryAdapter, getMultiAdapter
+from zope.component import getUtility, queryUtility
 from zope.schema.interfaces import IVocabularyFactory
 from Products.Five.browser import BrowserView
-from Products.CMFCore.interfaces import IFolderish
+from eea.app.visualization.zopera import IFolderish
+from eea.app.visualization.zopera import IPropertiesTool
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.view import ViewForm
 from eea.converter.interfaces import IConvert, IWatermark
 from eea.googlecharts.config import EEAMessageFactory as _
+logger = logging.getLogger('eea.googlecharts')
 
 class View(ViewForm):
     """ GoogleChartsView
@@ -21,29 +24,39 @@ class View(ViewForm):
     view_name = "googlechart.googlecharts"
     section = "Charts"
 
+    @property
+    def siteProperties(self):
+        """ Persistent utility for site_properties
+        """
+        sp = queryUtility(IPropertiesTool)
+        props = getattr(sp, 'site_properties', None)
+        if callable(props):
+            try:
+                props = props(context=self.context, request=self.request)
+            except Exception, err:
+                logger.debug(err)
+        return props
+
     def qr_position(self):
         """ Position of QR Code
         """
-        sp = getToolByName(self.context,'portal_properties').site_properties
-        return sp.getProperty('QRCode_Position', 'Top Left')
+        return self.siteProperties.getProperty('QRCode_Position', 'Top Left')
 
     def qr_size(self):
         """ Size of QR Code
         """
-        sp = getToolByName(self.context,'portal_properties').site_properties
-        return sp.getProperty('QRCode_Size', 70)
+        return self.siteProperties.getProperty('QRCode_Size', 70)
 
     def wm_position(self):
         """ Position of Watermark
         """
-        sp = getToolByName(self.context,'portal_properties').site_properties
-        return sp.getProperty('Watermark_Position', 'Bottom Right')
+        return self.siteProperties.getProperty('Watermark_Position',
+                                               'Bottom Right')
 
     def wm_path(self):
         """ Path to Watermark Image
         """
-        sp = getToolByName(self.context,'portal_properties').site_properties
-        return sp.getProperty('Watermark_Image', '')
+        return self.siteProperties.getProperty('Watermark_Image', '')
 
     def get_maintitle(self):
         """ Main title of visualization
@@ -216,6 +229,19 @@ def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
 class Export(BrowserView):
     """ Export chart to png
     """
+    @property
+    def siteProperties(self):
+        """ Persistent utility for site_properties
+        """
+        sp = queryUtility(IPropertiesTool)
+        props = getattr(sp, 'site_properties', None)
+        if callable(props):
+            try:
+                props = props(context=self.context, request=self.request)
+            except Exception, err:
+                logger.debug(err)
+        return props
+
     def __call__(self, **kwargs):
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
@@ -232,7 +258,7 @@ class Export(BrowserView):
                      "Please try again later.")
 
 
-        sp = getToolByName(self.context,'portal_properties').site_properties
+        sp = self.siteProperties
         qrPosition = sp.getProperty('QRCode_Position', 'Top Left')
         qrVertical = sp.getProperty('QRCode_Vertical_Space_For_PNG_Export', 0)
         qrHorizontal = sp.getProperty(
