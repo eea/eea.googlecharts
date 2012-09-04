@@ -8,9 +8,17 @@ Changelog
 * Feature: Made this package Plone independent (Zope2 minimal requirements)
   [voineali refs #5422]
 
-4.7-dev - (unreleased)
-----------------------
-* Feature: Use Visualization title and Chart title on PNG export and 
+4.9 - (2012-08-28)
+------------------
+
+4.8 - (2012-08-28)
+------------------
+* Feature: Added customStyle attribute for embedded charts.
+  [szabozo0 refs #5488]
+
+4.7 - (2012-08-27)
+------------------
+* Feature: Use Visualization title and Chart title on PNG export and
   embedded charts and dashboards
   [szabozo0 refs #5447]
 * Upgrde step:

@@ -1,11 +1,12 @@
-Introduction
-============
-EEA Google Charts provides Google Charts framework integration for
-eea.app.visualization. See eea.daviz package for more details.
+=================
+EEA Google Charts
+=================
+`EEA Google Charts`_ provides `Google Charts`_ framework integration for
+`eea.app.visualization`_. See `eea.daviz`_ package for more details.
 
 
-Contents
-========
+.. image:: http://eea.github.com/_images/eea.daviz.layers.svg
+
 
 .. contents::
 
@@ -15,50 +16,51 @@ Introduction
 
 Create and configure charts and dashboards on an intuitive visualization editor.
 
-You can easily make visualizations like: 
-   2. http://code.google.com/apis/chart/
+You can easily make visualizations like:
+  - http://code.google.com/apis/chart/
 
 
 Main features
 =============
 
-
-The main features are:
-
-  1. Intuitive visualization editor to create interactive charts.
-  2. Large amount of visualizations available: Area, Bar, \
-     Bubble, Candlestick, Column, Combo Chart, Gauge, Geo Intensity Maps, Line, Pie, Radar, Scatter, Stepped Area, Table, Tree Map, Motion Charts
-  3. Dashboard. Group charts into one dashboard.
-  4. Add filters to charts or dashboards.
-  5. Share any chart. Embeddabe visualization in any webpage.
-  6. Customizable chart options and colors
-  7. Data table manipulation via drag and drop, preparing table for chart
-  8. Pivot table (Transpose), tranform row values into columns and viceversa
+1. Intuitive visualization editor to create interactive charts.
+2. Large amount of visualizations available: Area, Bar, \
+   Bubble, Candlestick, Column, Combo Chart, Gauge, Geo Intensity Maps,
+   Line, Pie, Radar, Scatter, Stepped Area, Table, Tree Map, Motion Charts
+3. Dashboard. Group charts into one dashboard.
+4. Add filters to charts or dashboards.
+5. Share any chart. Embeddable visualization in any webpage.
+6. Customizable chart options and colors
+7. Data table manipulation via drag and drop, preparing table for chart
+8. Pivot table (Transpose), transform row values into columns and viceversa
 
 
-Dependecies
-===========
+Dependencies
+============
 
-  1. Plone 4.x
-  2. eea.converter
-  3. eea.app.visualization
+1. Zope 2.12+
+2. `eea.converter`_
+3. `eea.app.visualization`_
+
+
+.. image:: http://eea.github.com/_images/eea.daviz.dependencies.svg
 
 
 Live demos
 ==========
 
-Eurostat data employment rates 2000-2010 (demo using Linked Data): 
-   http://www.eea.europa.eu/data-and-maps/daviz/data-visualization-employement-trends-eu-1
+Eurostat data employment rates 2000-2010 (demo using Linked Data):
+  - http://www.eea.europa.eu/data-and-maps/daviz/data-visualization-employement-trends-eu-1
 
 Google charts demos:
-   http://code.google.com/apis/chart/
+  - http://code.google.com/apis/chart/
 
 
 Source code
 ===========
 
-Latest source code (Plone 4 compatible):
-   https://svn.eionet.europa.eu/repositories/Zope/trunk/eea.googlecharts/trunk
+Latest source code (Zope 2 compatible):
+  - https://svn.eionet.europa.eu/repositories/Zope/trunk/eea.googlecharts/trunk
 
 
 Copyright and license
@@ -78,6 +80,11 @@ More details under docs/License.txt
 Funding
 =======
 
-  EEA_ - European Enviroment Agency (EU)
+EEA_ - European Environment Agency (EU)
 
 .. _EEA: http://www.eea.europa.eu/
+.. _`eea.daviz`: http://eea.github.com/docs/eea.daviz
+.. _`eea.app.visualization`: http://eea.github.com/docs/eea.app.visualization
+.. _`eea.converter`: http://eea.github.com/docs/eea.converter
+.. _`Google Charts`: http://code.google.com/apis/chart
+.. _`EEA Google Charts`: http://eea.github.com/docs/eea.googlecharts

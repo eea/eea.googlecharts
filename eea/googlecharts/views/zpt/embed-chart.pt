@@ -14,6 +14,9 @@
 <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.embed_chart.js"></script>
 
+<style type="text/css" tal:content="view/get_customstyle">
+</style>
+
 </head>
 <body tal:define="chart view/get_chart" style="margin: 0; overflow: hidden">
     <script type="text/javascript" tal:content="string:chart_columns = ${chart/columns};

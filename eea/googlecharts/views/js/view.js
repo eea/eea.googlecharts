@@ -270,10 +270,11 @@ function showEmbed(){
     if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
         iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
                     "&chartWidth=" + chartObj.attr('chart_width') +
-                    "&chartHeight=" + chartObj.attr('chart_height');
+                    "&chartHeight=" + chartObj.attr('chart_height') +
+                    "&customStyle=%23googlechart_view{margin-left:0px%3B}";
     }
     else{
-        iframeSrc = baseurl+"/embed-dashboard";
+        iframeSrc = baseurl+"/embed-dashboard?customStyle=%23googlechart_view{margin-left:0px%3B}";
     }
     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
     var embedHtml = '<div>' +
