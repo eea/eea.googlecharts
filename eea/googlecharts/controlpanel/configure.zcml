@@ -1,0 +1,12 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser">
+
+    <utility component=".controlpanel.GooglechartsSettingsFactory"
+        name="eea.googlecharts.controlpanel.controlpanel.GooglechartsSettings" />
+
+    <utility component=".controlpanel.img_positions_vocabulary"
+             name="eea.googlecharts.controlpanel.vocabularies.imgPositions"
+             provides="zope.schema.interfaces.IVocabularyFactory" />
+
+</configure>
