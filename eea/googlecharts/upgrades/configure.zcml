@@ -10,8 +10,13 @@
     profile="eea.googlecharts:default">
 
     <genericsetup:upgradeDepends
-      title="Import all steps from eea.googlecharts profile"
-      import_profile="eea.googlecharts:default"
+      title="Upgrade step for eea.googlecharts: import cssregistry"
+      import_steps="cssregistry"
+      />
+      
+    <genericsetup:upgradeDepends
+      title="Upgrade step for eea.googlecharts: import jsregistry"
+      import_steps="jsregistry"
       />
 
   </genericsetup:upgradeSteps>

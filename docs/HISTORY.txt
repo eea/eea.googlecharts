@@ -3,6 +3,8 @@ Changelog
 
 6.0-dev - (unreleased)
 ----------------------
+* Bug fix: Use portal logo as default brand settings for charts.
+  changed default position of QR-code to bottom left.
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
   upgrade button available for eea.googlecharts
 * Feature: Made this package Plone independent (Zope2 minimal requirements)
@@ -39,11 +41,11 @@ Changelog
   [voineali refs #5365]
 * Bug fix: Fixed charts position in dashboard
   [voineali]
-* Bugfix: Fixed columns order
+* Bug fix: Fixed columns order
   [szabozo0 refs #5137]
 * Feature: Compatible with Plone 4.2
   [voineali refs #5346]
-* Bugfix: Fixed preview and dashboard iframes with error message:
+* Bug fix: Fixed preview and dashboard iframes with error message:
   "Request URI is too long"
   [szabozo0 refs #5384]
 * Feature: Changed size of QR code configurable from ZMI

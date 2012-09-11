@@ -40,7 +40,7 @@ class View(ViewForm):
     def qr_position(self):
         """ Position of QR Code
         """
-        return self.siteProperties.getProperty('QRCode_Position', 'Top Left')
+        return self.siteProperties.getProperty('QRCode_Position', 'Bottom Left')
 
     def qr_size(self):
         """ Size of QR Code
