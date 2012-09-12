@@ -132,14 +132,14 @@ function prepareForChart(originalDataTable, columns, limit){
             var newColumn = row[column];
 
             var colType = originalDataTable.properties[column];
+            var listType = ((colType.columnType === 'list') || (colType.valueType === 'list'));
 
             if(colType === undefined){
                 colType = 'string';
             }else{
                 colType = colType.valueType !== undefined ? colType.valueType: colType;
-//                if (allowedTypesForCharts.indexOf(colType) === -1){
                 if (jQuery.inArray(colType, allowedTypesForCharts) === -1){
-                    if (colType === 'list'){
+                    if(listType){
                         newColumn = newColumn.join(", ");
                     }
                     colType = "string";
