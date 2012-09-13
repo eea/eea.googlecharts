@@ -1,16 +1,15 @@
 """ Googlecharts Control Panel Section
 """
 from zope.interface import implements
-from eea.app.visualization.controlpanel.interfaces import IDavizSettings
+from eea.app.visualization.controlpanel.interfaces import IDavizSection
 from zope.formlib.form import FormFields
 from zope import schema
-from eea.app.visualization.controlpanel.controlpanel import DavizSettings
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
-class GooglechartsSettings(DavizSettings):
+class GooglechartsSection(object):
     """ Googlecharts Settings Section
     """
-    implements(IDavizSettings)
+    implements(IDavizSection)
     prefix = 'googlechart'
     title = 'Googlechart Settings'
     form_fields = FormFields(
@@ -48,7 +47,7 @@ class GooglechartsSettings(DavizSettings):
         schema.TextLine(
             __name__='googlechart.watermark_image',
             title=u'Watermark Image',
-            required=False),
+            required=True),
         schema.Int(
             __name__='googlechart.watermark_horizontal_space_for_png_export',
             title=u'Watermark Horizontal Space For PNG Export',
@@ -62,7 +61,7 @@ class GooglechartsSettings(DavizSettings):
 
     )
 
-GooglechartsSettingsFactory = GooglechartsSettings()
+GooglechartsSectionFactory = GooglechartsSection()
 
 def img_positions_vocabulary(context):
     """Vocabulary with available positions for watermark and qr code
