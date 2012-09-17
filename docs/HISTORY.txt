@@ -3,6 +3,8 @@ Changelog
 
 6.0-dev - (unreleased)
 ----------------------
+* Feature: Use centralized daviz settings instead of plone properties
+  [szabozo0 #5449]
 * Bug fix: Use portal logo as default brand settings for charts.
   changed default position of QR-code to bottom left.
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on

@@ -6,15 +6,16 @@ import urllib2
 from PIL import Image
 from cStringIO import StringIO
 from zope.component import queryAdapter, getMultiAdapter
-from zope.component import getUtility, queryUtility
+from zope.component import getUtility
 from zope.schema.interfaces import IVocabularyFactory
 from Products.Five.browser import BrowserView
 from eea.app.visualization.zopera import IFolderish
-from eea.app.visualization.zopera import IPropertiesTool
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.view import ViewForm
 from eea.converter.interfaces import IConvert, IWatermark
 from eea.googlecharts.config import EEAMessageFactory as _
+from Products.CMFCore.utils import getToolByName
+
 logger = logging.getLogger('eea.googlecharts')
 
 class View(ViewForm):
@@ -28,35 +29,32 @@ class View(ViewForm):
     def siteProperties(self):
         """ Persistent utility for site_properties
         """
-        sp = queryUtility(IPropertiesTool)
-        props = getattr(sp, 'site_properties', None)
-        if callable(props):
-            try:
-                props = props(context=self.context, request=self.request)
-            except Exception, err:
-                logger.debug(err)
-        return props
+        ds = getToolByName(self.context, "portal_davizsettings")
+        return ds.settings
 
     def qr_position(self):
         """ Position of QR Code
         """
-        return self.siteProperties.getProperty('QRCode_Position', 'Bottom Left')
+        sp = self.siteProperties
+        return sp.get('googlechart.qrcode_position', 'Bottom Left')
 
     def qr_size(self):
         """ Size of QR Code
         """
-        return self.siteProperties.getProperty('QRCode_Size', 70)
+        sp = self.siteProperties
+        return sp.get('googlechart.qrcode_size', 70)
 
     def wm_position(self):
         """ Position of Watermark
         """
-        return self.siteProperties.getProperty('Watermark_Position',
-                                               'Bottom Right')
+        sp = self.siteProperties
+        return sp.get('googlechart.watermark_position', 'Bottom Right')
 
     def wm_path(self):
         """ Path to Watermark Image
         """
-        return self.siteProperties.getProperty('Watermark_Image', '')
+        sp = self.siteProperties
+        return sp.get('googlechart.watermark_image', '')
 
     def get_maintitle(self):
         """ Main title of visualization
@@ -233,14 +231,8 @@ class Export(BrowserView):
     def siteProperties(self):
         """ Persistent utility for site_properties
         """
-        sp = queryUtility(IPropertiesTool)
-        props = getattr(sp, 'site_properties', None)
-        if callable(props):
-            try:
-                props = props(context=self.context, request=self.request)
-            except Exception, err:
-                logger.debug(err)
-        return props
+        ds = getToolByName(self.context, "portal_davizsettings")
+        return ds.settings
 
     def __call__(self, **kwargs):
         form = getattr(self.request, 'form', {})
@@ -259,17 +251,20 @@ class Export(BrowserView):
 
 
         sp = self.siteProperties
-        qrPosition = sp.getProperty('QRCode_Position', 'Top Left')
-        qrVertical = sp.getProperty('QRCode_Vertical_Space_For_PNG_Export', 0)
-        qrHorizontal = sp.getProperty(
-                    'QRCode_Horizontal_Space_For_PNG_Export', 0)
-
-        wmPath = sp.getProperty('Watermark_Image', '')
-        wmPosition = sp.getProperty('Watermark_Position', 'Bottom Right')
-        wmVertical = sp.getProperty(
-                    'Watermark_Vertical_Space_For_PNG_Export', 0)
-        wmHorizontal = sp.getProperty(
-                    'Watermark_Horizontal_Space_For_PNG_Export', 0)
+        qrPosition =  sp.get(
+                    'googlechart.qrcode_position', 'Bottom Left')
+        qrVertical = sp.get(
+                    'googlechart.qrcode_vertical_space_for_png_export', 0)
+        qrHorizontal = sp.get(
+                    'googlechart.qrcode_horizontal_space_for_png_export', 0)
+        wmPath = sp.get(
+                    'googlechart.watermark_image', '')
+        wmPosition = sp.get(
+                    'googlechart.watermark_position', 'Bottom Right')
+        wmVertical = sp.get(
+                    'googlechart.watermark_vertical_space_for_png_export', 0)
+        wmHorizontal = sp.get(
+                    'googlechart.watermark_horizontal_space_for_png_export', 0)
 
         shiftSecondImg = False
         hShift = 0
