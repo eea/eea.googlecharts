@@ -19,6 +19,17 @@
       import_steps="jsregistry"
       />
 
+    <genericsetup:upgradeDepends
+      title="Upgrade eea.app.visualization"
+      import_profile="eea.app.visualization:default"
+      />
+
+    <genericsetup:upgradeStep
+      title="Migrate settings from portal_properties to portal_davizsettings"
+      handler="eea.googlecharts.upgrades.evolve60.migrate_settings"
+      />
+
+
   </genericsetup:upgradeSteps>
 
 </configure>
