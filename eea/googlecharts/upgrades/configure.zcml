@@ -25,7 +25,7 @@
       />
 
     <genericsetup:upgradeStep
-      title="Migrate settings from portal_properties to portal_davizsettings"
+      title="Migrate settings from portal_properties to portal_daviz"
       handler="eea.googlecharts.upgrades.evolve60.migrate_settings"
       />
 

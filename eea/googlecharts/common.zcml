@@ -8,5 +8,6 @@
   <include package=".browser" />
   <include package=".views" />
   <include package=".widgets" />
+  <include package=".controlpanel" />
 
 </configure>

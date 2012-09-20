@@ -1,6 +1,4 @@
-<configure
-  xmlns="http://namespaces.zope.org/zope"
-  xmlns:browser="http://namespaces.zope.org/browser">
+<configure xmlns="http://namespaces.zope.org/zope">
 
     <utility component=".controlpanel.GooglechartsSectionFactory"
         name="eea.googlecharts.controlpanel.controlpanel.GooglechartsSection" />

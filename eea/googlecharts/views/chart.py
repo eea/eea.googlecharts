@@ -14,7 +14,8 @@ from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.view import ViewForm
 from eea.converter.interfaces import IConvert, IWatermark
 from eea.googlecharts.config import EEAMessageFactory as _
-from Products.CMFCore.utils import getToolByName
+from eea.app.visualization.controlpanel.interfaces import IDavizSettings
+from zope.component import queryUtility
 
 logger = logging.getLogger('eea.googlecharts')
 
@@ -29,7 +30,7 @@ class View(ViewForm):
     def siteProperties(self):
         """ Persistent utility for site_properties
         """
-        ds = getToolByName(self.context, "portal_davizsettings")
+        ds = queryUtility(IDavizSettings)
         return ds.settings
 
     def qr_position(self):
@@ -231,7 +232,7 @@ class Export(BrowserView):
     def siteProperties(self):
         """ Persistent utility for site_properties
         """
-        ds = getToolByName(self.context, "portal_davizsettings")
+        ds = queryUtility(IDavizSettings)
         return ds.settings
 
     def __call__(self, **kwargs):

@@ -5,6 +5,5 @@
   <include file="common.zcml" />
   <include file="profiles.zcml" />
   <include package=".upgrades" />
-  <include package=".controlpanel" />
 
 </configure>

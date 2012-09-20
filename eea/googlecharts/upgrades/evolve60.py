@@ -4,11 +4,11 @@ import logging
 logger = logging.getLogger("eea.app.visualization.upgrades")
 
 def migrate_settings(context):
-    """ Migrate settings to portal_davizsettings
+    """ Migrate settings to portal_daviz
     """
 
     old_settings = context.portal_properties.site_properties
-    new_settings = context.portal_davizsettings.settings
+    new_settings = context.portal_daviz.settings
 
     migration_mapping = (
             ('QRCode_Position', 

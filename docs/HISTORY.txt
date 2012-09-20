@@ -5,7 +5,7 @@ Changelog
 ----------------------
 * Feature: Use centralized daviz settings instead of plone properties
   On upgrading eea.googlecharts migrate settings from portal_properties to
-  portal_davizsettings
+  portal_daviz
   [szabozo0 #5449]
 * Bug fix: Use portal logo as default brand settings for charts.
   changed default position of QR-code to bottom left.
