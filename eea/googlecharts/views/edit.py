@@ -54,7 +54,7 @@ class Edit(BrowserView):
         """ Rows
         """
         result = getMultiAdapter((self.context, self.request),
-                                 name="daviz-relateditems.json")()
+                                 name="daviz.json")()
         result_json = json.loads(result)
         stripped_result = {}
         stripped_result['properties'] = result_json['properties']
@@ -65,7 +65,7 @@ class Edit(BrowserView):
         """ All Rows
         """
         result = getMultiAdapter((self.context, self.request),
-                                 name="daviz-relateditems.json")()
+                                 name="daviz.json")()
         result_json = json.loads(result)
         stripped_result = {}
         stripped_result['properties'] = result_json['properties']

@@ -31,7 +31,7 @@ class View(ViewForm):
         """ Persistent utility for site_properties
         """
         ds = queryUtility(IDavizSettings)
-        return ds.settings
+        return ds.settings if ds else {}
 
     def qr_position(self):
         """ Position of QR Code
@@ -86,7 +86,7 @@ class View(ViewForm):
         """ Rows
         """
         result = getMultiAdapter((self.context, self.request),
-                                 name="daviz-relateditems.json")()
+                                 name="daviz.json")()
         return result
 
     def get_full_chart(self):
