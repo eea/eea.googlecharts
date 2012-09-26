@@ -40,6 +40,8 @@ def migrate_settings(context):
         logger.info('Migrating ' + setting[0])
         new_settings[setting[1]] = old_settings.getProperty(setting[0],
                                                             setting[2])
-        old_settings._delProperty(setting[0])
+        if old_settings.hasProperty(setting[0]):
+            old_settings._delProperty(setting[0])
 
-    old_settings._delProperty('watermark_positions')
+    if old_settings.hasProperty('watermark_positions'):
+        old_settings._delProperty('watermark_positions')
