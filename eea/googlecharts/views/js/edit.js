@@ -61,9 +61,8 @@ var matrixChartOptions = {
 };
 
 function checkSVG(id){
-    var svg = jQuery("#googlechart_chart_div_"+id).find("iframe").contents().find("#chartArea").html();
-
-    if ((svg) && (svg !== "")){
+    var svg = jQuery("#googlechart_chart_div_"+id).find("svg");
+    if (svg[0]){
         jQuery("#googlechart_thumb_id_"+id).show();
         jQuery("#googlechart_thumb_text_"+id).show();
         return true;
@@ -145,7 +144,7 @@ function saveThumb(value){
             var thumbObj = jQuery("#googlechart_thumb_form");
             thumbObj.find("#filename").attr("value", "thumb");
             thumbObj.find("#type").attr("value","image/png");
-            var svg = jQuery("#googlechart_thumb_zone").find("iframe").contents().find("#chartArea").html();
+            var svg = jQuery("#googlechart_thumb_zone").find("svg").parent().html();
             thumbObj.find("#svg").attr("value",svg);
             var form = jQuery('.daviz-view-form:has(#googlecharts_config)');
             var action = form.length ? form.attr('action') : '';
