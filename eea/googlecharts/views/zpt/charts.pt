@@ -11,12 +11,12 @@
     var has_dashboard = false;
 </script>
 
-<script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; qr_size = '${view/qr_size}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}';">
+<script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; qr_size = '${view/qr_size}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}'; var main_title='${view/get_maintitle}';">
 </script>
 <div class="googlecharts_container">
 <tal:block tal:define="charts view/get_charts; has_dashboard view/has_dashboard">
     <tal:block tal:condition="has_dashboard">
-        <script type="text/javascript" tal:content="string: var googledashboard_filters=${view/get_dashboard_filters}; var main_title='${view/get_maintitle}';">
+        <script type="text/javascript" tal:content="string: var googledashboard_filters=${view/get_dashboard_filters};">
         </script>
         <script type="text/javascript">
             has_dashboard = true;
