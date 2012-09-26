@@ -250,22 +250,21 @@ class Export(BrowserView):
             return _("ERROR: An error occured while exporting your image. "
                      "Please try again later.")
 
-
         sp = self.siteProperties
         qrPosition =  sp.get(
                     'googlechart.qrcode_position', 'Bottom Left')
-        qrVertical = sp.get(
-                    'googlechart.qrcode_vertical_space_for_png_export', 0)
-        qrHorizontal = sp.get(
-                    'googlechart.qrcode_horizontal_space_for_png_export', 0)
+        qrVertical = int(sp.get(
+                    'googlechart.qrcode_vertical_space_for_png_export', 0))
+        qrHorizontal = int(sp.get(
+                    'googlechart.qrcode_horizontal_space_for_png_export', 0))
         wmPath = sp.get(
                     'googlechart.watermark_image', '')
         wmPosition = sp.get(
                     'googlechart.watermark_position', 'Bottom Right')
-        wmVertical = sp.get(
-                    'googlechart.watermark_vertical_space_for_png_export', 0)
-        wmHorizontal = sp.get(
-                    'googlechart.watermark_horizontal_space_for_png_export', 0)
+        wmVertical = int(sp.get(
+                    'googlechart.watermark_vertical_space_for_png_export', 0))
+        wmHorizontal = int(sp.get(
+                    'googlechart.watermark_horizontal_space_for_png_export', 0))
 
         shiftSecondImg = False
         hShift = 0

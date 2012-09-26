@@ -6,11 +6,12 @@ var sortedDashboardChartsConfig;
 function exportToPng(){
     var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
     jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
-    var svg = jQuery("#googlechart_view").find("iframe").contents().find("#chartArea").html();
-
+    var svg = jQuery("#googlechart_view").find("svg").parent().html();
+//    contents().find("#chartArea").html();
+//    console.log(svg);
     var form = jQuery("#export");
-
-    jQuery(googlechart_config_array).each(function(index, value){
+    jQuery("#svg").attr("value",svg); 
+/*    jQuery(googlechart_config_array).each(function(index, value){
         if (value[0] == current_chart_id){
             index_to_use = index;
         }
@@ -19,7 +20,7 @@ function exportToPng(){
     var old_title = googlechart_config_array[index_to_use][1].options.title;
     var new_title = main_title + " — " + old_title;
     updated_svg = svg.replace(old_title, new_title);
-    jQuery("#svg").attr("value",updated_svg);
+    jQuery("#svg").attr("value",updated_svg);*/
 
     form.submit();
 }
@@ -28,6 +29,12 @@ function checkSVG(){
     var svg = jQuery("#googlechart_view").find("iframe").contents().find("#chartArea").html();
     if ((svg) && (svg !== "")){
         jQuery("#googlechart_export_button").show();
+    }
+    else {
+        svg = jQuery("#googlechart_view").find("svg")
+        if (svg){
+           jQuery("#googlechart_export_button").show();
+        }
     }
 }
 
@@ -342,7 +349,9 @@ jQuery(document).ready(function($){
     if (typeof(googlechart_config_array) == 'undefined'){
         return;
     }
-
+    jQuery.each(googlechart_config_array, function(key, config){
+        config[1].options.title = main_title + " — " + config[1].options.title;
+    });
     if (has_dashboard) {
         var configs = [];
         sortedDashboardChartConfig = [];
