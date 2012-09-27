@@ -955,3 +955,7 @@ dl.portlet .dashboard-widget,
 select[name=googlechart_filterposition] {
     width: 100%;
 }
+
+.google-visualization-charteditor-menu li {
+    display:block !important;
+}
