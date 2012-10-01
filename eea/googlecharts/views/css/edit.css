@@ -960,6 +960,8 @@ select[name=googlechart_filterposition] {
     display:block !important;
 }
 
-.jfk-tooltip {
+.jfk-tooltip,
+.jfk-textinput,
+#google-visualization-charteditor-panel-wrapper {
     z-index:1004;
 }
