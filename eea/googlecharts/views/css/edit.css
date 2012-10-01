@@ -959,3 +959,7 @@ select[name=googlechart_filterposition] {
 .google-visualization-charteditor-menu li {
     display:block !important;
 }
+
+.jfk-tooltip {
+    z-index:1004;
+}
