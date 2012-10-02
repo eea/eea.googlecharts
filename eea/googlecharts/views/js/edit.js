@@ -1534,16 +1534,19 @@ function openEditChart(id){
             '<h3 style="display:none;"><a href="#">Table Editor</a></h3>' +
             '<div class="googlechart_accordion_container">' +
                 '<div class="googlechart_accordion_table">' +
+                    '<div class="pivotingTable">' +
                     '<span class="label">Table pivots</span>' +
                     '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable table">'+
                         '<tr id="pivotConfigHeader"></tr>'+
                         '<tr id="pivotConfigDropZones"></tr>'+
                     '</table>'+
+                    '</div>' +
                     '<div style="clear:both"></div>'+
                     '<div>'+
                         '<span class="label">Table for chart</span>' +
                         '<div class="buttons-bar">'+
                         '<input type="button" class="column-show-hide-button context btn" value="Original table" id="showOriginal"/>' +
+                        '<input type="button" class="column-show-hide-button context btn" value="Table pivots" id="tablePivots"/>' +
                         '<input type="button" class="column-show-hide-button context btn" value="Hide all columns" onclick="columnsHideAll();"/>' +
                         '<input type="button" class="column-show-hide-button context btn" value="Show all columns" onclick="columnsShowAll();"/>' +
                         '<input type="button" class="column-show-hide-button context btn" value="Reverse selection" onclick="columnsRevert();"/>' +
@@ -1744,6 +1747,10 @@ function openEditChart(id){
 
     jQuery("#showOriginal").click(function(){
         jQuery("#googlechart_overlay").overlay().load();
+    });
+
+    jQuery("#tablePivots").click(function(){
+        jQuery(".pivotingTable").toggle();
     });
 
     jQuery("#googlechart_overlay").overlay({

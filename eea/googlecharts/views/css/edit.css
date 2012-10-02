@@ -965,3 +965,7 @@ select[name=googlechart_filterposition] {
 #google-visualization-charteditor-panel-wrapper {
     z-index:1004;
 }
+
+.pivotingTable {
+    display: none;
+}

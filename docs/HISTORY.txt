@@ -3,7 +3,9 @@ Changelog
 
 6.0-dev - (unreleased)
 ----------------------
-* Bugfix: Updated png export and thumbnails for charts as google changed 
+* Change: Simplify charts editor by making pivot-tables optional by default
+  [voineali refs #5550]
+* Bugfix: Updated png export and thumbnails for charts as google changed
   the way how the svg is generated
   [szabozo0 #5549]
 * Feature: Use centralized daviz settings instead of plone properties
