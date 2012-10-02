@@ -145,12 +145,7 @@ jQuery(document).ready(function($){
 
     var dashboard_filters = {};
     jQuery.each(myFilters, function(){
-        if (this.type === "3") {
-            dashboard_filters[this.column] = "2";
-        }
-        else {
-            dashboard_filters[this.column] = this.type;
-        }
+        dashboard_filters[this.column] = this.type;
     });
     drawGoogleDashboard('googlechart_dashboard',
                         'googlechart_view',

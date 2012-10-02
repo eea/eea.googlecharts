@@ -3,6 +3,8 @@ Changelog
 
 6.0-dev - (unreleased)
 ----------------------
+* Change: Use Multiple Category Filters on embedded dashboards also
+  [szabozo0 refs #5560]
 * Change: Simplify charts editor by making pivot-tables optional by default
   [voineali refs #5550]
 * Bugfix: Updated png export and thumbnails for charts as google changed
