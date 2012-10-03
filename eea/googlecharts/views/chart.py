@@ -260,7 +260,7 @@ class Export(BrowserView):
         wmPath = sp.get(
                     'googlechart.watermark_image', '')
         wmPosition = sp.get(
-                    'googlechart.watermark_position', 'Bottom Right')
+                    'googlechart.watermark_position', 'Disabled')
         wmVertical = int(sp.get(
                     'googlechart.watermark_vertical_space_for_png_export', 0))
         wmHorizontal = int(sp.get(
