@@ -287,8 +287,10 @@ DavizEdit.GoogleDashboardCharts.prototype = {
   },
 
   resize: function(width, height){
+    self = this;
     jQuery('.box-title input[name=width]', self.box).val(width);
     jQuery('.box-title input[name=height]', self.box).val(height);
+    self.after_resize(width, height);
   },
 
   after_resize: function(width, height){
@@ -1283,8 +1285,10 @@ DavizEdit.GoogleDashboardFilters.prototype = {
   },
 
   resize: function(width, height){
+    self = this;
     jQuery('.box-title input[name=width]', self.box).val(width);
     jQuery('.box-title input[name=height]', self.box).val(height);
+    self.after_resize(width, height);
   },
 
   after_resize: function(width, height){

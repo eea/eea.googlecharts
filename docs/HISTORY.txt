@@ -3,6 +3,9 @@ Changelog
 
 6.0-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed dashboard editor to save chart and filters box size on
+  resize with mouse
+  [szabozo0 refs #5565]
 * Change: Use Multiple Category Filters on embedded dashboards also
   [szabozo0 refs #5560]
 * Change: Simplify charts editor by making pivot-tables optional by default
