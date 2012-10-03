@@ -60,7 +60,8 @@ Source code
 ===========
 
 Latest source code (Zope 2 compatible):
-  - https://svn.eionet.europa.eu/repositories/Zope/trunk/eea.googlecharts/trunk
+- `Plone Collective on Github <https://github.com/collective/eea.googlecharts>`_
+- `EEA on Github <https://github.com/eea/eea.googlecharts>`_
 
 
 Copyright and license
