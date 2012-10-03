@@ -43,13 +43,16 @@ class View(ViewForm):
         """ Size of QR Code
         """
         sp = self.siteProperties
-        return sp.get('googlechart.qrcode_size', 70)
+        size = sp.get('googlechart.qrcode_size', '70')
+        if size == '0':
+            size = '70'
+        return size
 
     def wm_position(self):
         """ Position of Watermark
         """
         sp = self.siteProperties
-        return sp.get('googlechart.watermark_position', 'Bottom Right')
+        return sp.get('googlechart.watermark_position', 'Disabled')
 
     def wm_path(self):
         """ Path to Watermark Image
@@ -285,15 +288,18 @@ class Export(BrowserView):
                 hShift = Image.open(StringIO(qr_img)).size[0] + qrHorizontal
 
         if wmPosition != 'Disabled':
-            wm_con = urllib2.urlopen(wmPath)
-            wm_img = wm_con.read()
-            wm_con.close()
-            img = applyWatermark(img,
+            try:
+                wm_con = urllib2.urlopen(wmPath)
+                wm_img = wm_con.read()
+                wm_con.close()
+                img = applyWatermark(img,
                                 wm_img,
                                 wmPosition,
                                 wmVertical,
                                 wmHorizontal + hShift,
                                 0.7)
+            except ValueError, err:
+                logger.exception(err)
 
         ctype = kwargs.get('type', 'image/png')
         filename = kwargs.get('filename', 'export')

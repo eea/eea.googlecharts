@@ -3,6 +3,8 @@ Changelog
 
 6.0-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed png export when qrcode or watermark is not configured properly
+  [szabozo0 refs #5570]
 * Bug fix: Fixed dashboard editor to save chart and filters box size on
   resize with mouse
   [szabozo0 refs #5565]

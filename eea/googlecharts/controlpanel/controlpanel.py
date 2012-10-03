@@ -35,7 +35,7 @@ class GooglechartsSection(object):
             __name__='googlechart.qrcode_size',
             title=u'QRCode Size',
             required=False,
-            default=0),
+            default=70),
         schema.Choice(
             __name__='googlechart.watermark_position',
             title=u"Watermark Position",
