@@ -1,8 +1,8 @@
 Changelog
 =========
 
-6.0-dev - (unreleased)
-----------------------
+6.0 - (2012-10-08)
+------------------
 * Bug fix: Fixed timeline charts
   [szabozo0]
 * Bug fix: Fixed png export when qrcode or watermark is not configured properly
