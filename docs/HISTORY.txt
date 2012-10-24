@@ -3,6 +3,8 @@ Changelog
 
 6.1-dev - (unreleased)
 ----------------------
+* Feature: Added possibility to hide charts
+  [szabozo0 #5600]
 
 6.0 - (2012-10-08)
 ------------------

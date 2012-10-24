@@ -77,6 +77,11 @@ class View(ViewForm):
             return []
         return config['charts']
 
+    def get_visible_charts(self):
+        """ Return only visible charts
+        """
+        return [chart for chart in self.get_charts() if not chart['hidden']]
+
     def get_columns(self):
         """ Columns
         """
@@ -160,7 +165,7 @@ class View(ViewForm):
         """ Tabs in view mode
         """
         tabs = []
-        for chart in self.get_charts():
+        for chart in self.get_visible_charts():
             name = chart.get('id', '')
             title = chart.get('name', '')
             config = json.loads(chart.get('config', '{}'))
