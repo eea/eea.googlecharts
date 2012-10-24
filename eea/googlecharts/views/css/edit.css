@@ -30,7 +30,11 @@
 }
 
 .googlechart_modified{
-    background-color:#FFFFBB;
+    background-color:#FFFFBB !important;
+}
+
+.googlechart_hidden{
+    background-color:#DDDDDD;
 }
 
 .googlechart fieldset {
