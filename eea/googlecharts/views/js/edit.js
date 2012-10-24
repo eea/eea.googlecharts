@@ -1860,7 +1860,7 @@ function saveCharts(){
         chart.config = chartObj.find(".googlechart_configjson").attr("value");
         chart.width = chartObj.find(".googlechart_width").attr("value");
         chart.height = chartObj.find(".googlechart_height").attr("value");
-        chart.filterposition = chartObj.find("[name=googlechart_filterposition]").val();
+        chart.filterposition = chartObj.find("[name='googlechart_filterposition']").val();
         chart.options = chartObj.find(".googlechart_options").attr("value");
         chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
         chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
@@ -2080,8 +2080,8 @@ function init_googlecharts_edit(){
         openAddChartFilterDialog(id);
     });
 
-    jQuery('input[name=googlechart.googlecharts.actions.save]').unbind('click');
-    jQuery('input[name=googlechart.googlecharts.actions.save]').click(function(e){
+    jQuery("input[name='googlechart.googlecharts.actions.save']").unbind('click');
+    jQuery("input[name='googlechart.googlecharts.actions.save']").click(function(e){
         saveCharts();
     });
 
@@ -2136,7 +2136,7 @@ function init_googlecharts_edit(){
 
 
 jQuery(document).ready(function(){
-    charteditor_css = jQuery("link[rel=stylesheet][href*=charteditor]");
+    charteditor_css = jQuery("link[rel='stylesheet'][href*='charteditor']");
     charteditor_css.remove();
 
     init_googlecharts_edit();

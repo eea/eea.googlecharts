@@ -230,13 +230,13 @@ DavizEdit.GoogleDashboardCharts.prototype = {
        self.new_widget(self.box);
      });
 
-    jQuery('input[name=width]', header).val(width).change(function(){
+    jQuery("input[name='width']", header).val(width).change(function(){
       var width = jQuery(this).val();
       self.box.width(width);
       self.after_resize(width, self.box.height());
     });
 
-    jQuery('input[name=height]', header).val(height).change(function(){
+    jQuery("input[name='height']", header).val(height).change(function(){
       var height = jQuery(this).val();
       self.box.height(height);
       self.after_resize(self.box.width(), height);
@@ -288,8 +288,8 @@ DavizEdit.GoogleDashboardCharts.prototype = {
 
   resize: function(width, height){
     self = this;
-    jQuery('.box-title input[name=width]', self.box).val(width);
-    jQuery('.box-title input[name=height]', self.box).val(height);
+    jQuery(".box-title input[name='width']", self.box).val(width);
+    jQuery(".box-title input[name='height']", self.box).val(height);
     self.after_resize(width, height);
   },
 
@@ -392,7 +392,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     widget.load(action, {}, function(){
       widget.removeClass('loading');
       jQuery('#actionsView', widget).remove();
-      jQuery('[name=form.wtype]', widget).change(function(){
+      jQuery("[name='form.wtype']", widget).change(function(){
         var formUrl = jQuery(this).val();
         if(!formUrl){
           return;
@@ -524,7 +524,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
 
     self.handle_buttons(header);
 
-    jQuery('input[name=width]', header).val(width).change(function(){
+    jQuery("input[name='width']", header).val(width).change(function(){
       var width = jQuery(this).val();
       self.box.width(width);
       jQuery(self.settings.chart).trigger(DavizEdit.Events.charts.resizeFinished, {
@@ -533,7 +533,7 @@ DavizEdit.GoogleDashboardChart.prototype = {
       });
     });
 
-    jQuery('input[name=height]', header).val(height).change(function(){
+    jQuery("input[name='height']", header).val(height).change(function(){
       var height = jQuery(this).val();
       self.box.height(height);
       jQuery(self.settings.chart).trigger(DavizEdit.Events.charts.resizeFinished, {
@@ -571,8 +571,8 @@ DavizEdit.GoogleDashboardChart.prototype = {
   handle_resize: function(data){
     var self = this;
     var context = jQuery(data.context);
-    jQuery('input[name=width]', context).val(data.width);
-    jQuery('input[name=height]', context).val(data.height);
+    jQuery("input[name='width']", context).val(data.width);
+    jQuery("input[name='height']", context).val(data.height);
     jQuery(self.settings.chart).trigger(DavizEdit.Events.charts.resizeFinished, {
       context: context,
       width: data.width,
@@ -810,7 +810,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
 
     self.handle_buttons(header);
 
-    jQuery('input[name=width]', header).val(width).change(function(){
+    jQuery("input[name='width']", header).val(width).change(function(){
       var width = jQuery(this).val();
       self.box.width(width);
       jQuery(self.box).trigger(DavizEdit.Events.charts.resizeFinished, {
@@ -819,7 +819,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
       });
     });
 
-    jQuery('input[name=height]', header).val(height).change(function(){
+    jQuery("input[name='height']", header).val(height).change(function(){
       var height = jQuery(this).val();
       self.box.height(height);
       jQuery(self.box).trigger(DavizEdit.Events.charts.resizeFinished, {
@@ -869,8 +869,8 @@ DavizEdit.GoogleDashboardWidget.prototype = {
   handle_resize: function(data){
     var self = this;
     var context = jQuery(data.context);
-    jQuery('input[name=width]', context).val(data.width);
-    jQuery('input[name=height]', context).val(data.height);
+    jQuery("input[name='width']", context).val(data.width);
+    jQuery("input[name='height']", context).val(data.height);
     jQuery(self.box).trigger(DavizEdit.Events.charts.resizeFinished, {
       context: context,
       width: data.width,
@@ -964,7 +964,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
       self.tinyMCE_onChange(form);
     }
 
-    var title = jQuery('input[name*=.title]', form);
+    var title = jQuery("input[name*='.title']", form);
     if(title.length){
       self.settings.title = title.val();
     }
@@ -1156,13 +1156,13 @@ DavizEdit.GoogleDashboardFilters.prototype = {
        self.new_filter(self.box);
      });
 
-    jQuery('input[name=width]', header).val(width).change(function(){
+    jQuery("input[name='width']", header).val(width).change(function(){
       var width = jQuery(this).val();
       self.box.width(width);
       self.after_resize(width, self.box.height());
     });
 
-    jQuery('input[name=height]', header).val(height).change(function(){
+    jQuery("input[name='height']", header).val(height).change(function(){
       var height = jQuery(this).val();
       self.box.height(height);
       self.after_resize(self.box.width(), height);
@@ -1211,13 +1211,13 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     jQuery.each(fcolumns, function(key, val){
       var option = jQuery('<option>')
         .val(key).text(val)
-        .appendTo(jQuery('select[name=column]', widget));
+        .appendTo(jQuery("select[name='column']", widget));
     });
 
     jQuery.each(ftypes, function(key, val){
       var option = jQuery('<option>')
         .val(key).text(val)
-        .appendTo(jQuery('select[name=type]', widget));
+        .appendTo(jQuery("select[name='type']", widget));
     });
 
     widget.dialog({
@@ -1286,8 +1286,8 @@ DavizEdit.GoogleDashboardFilters.prototype = {
 
   resize: function(width, height){
     self = this;
-    jQuery('.box-title input[name=width]', self.box).val(width);
-    jQuery('.box-title input[name=height]', self.box).val(height);
+    jQuery(".box-title input[name='width']", self.box).val(width);
+    jQuery(".box-title input[name='height']", self.box).val(height);
     self.after_resize(width, height);
   },
 
