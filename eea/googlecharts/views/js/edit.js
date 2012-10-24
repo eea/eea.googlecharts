@@ -96,6 +96,16 @@ function markChartAsModified(id){
     chartObj.addClass("googlechart_modified");
 }
 
+function changeChartHiddenState(id){
+    var chartObj = jQuery("#googlechartid_"+id);
+    if (chartObj.hasClass("googlechart_hidden")){
+        chartObj.removeClass("googlechart_hidden");
+    }
+    else{
+        chartObj.addClass("googlechart_hidden");
+    }
+}
+
 function addFilter(id, column, filtertype, columnName){
     var filter = jQuery("<li class='googlechart_filteritem' id='googlechart_filter_"+id+"_"+column+"'>" +
                 "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden' class='googlechart_filteritem_id'></div><div class='ui-icon ui-icon-trash remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
@@ -276,7 +286,7 @@ function markChartAsThumb(id){
     markChartAsModified(id);
 }
 
-function addChart(id, name, config, columns, filters, width, height, filter_pos, options, isThumb, dashboard){
+function addChart(id, name, config, columns, filters, width, height, filter_pos, options, isThumb, dashboard, hidden){
     config = typeof(config) !== 'undefined' ? config : "";
     columns = typeof(columns) !== 'undefined' ? columns : "";
     filters = typeof(filters) !== 'undefined' ? filters : {};
@@ -286,6 +296,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
     options = typeof(options) !== 'undefined' ? options : defaultAdvancedOptions;
     isThumb = typeof(isThumb) !== 'undefined' ? isThumb : false;
     dashboard = typeof(dashboard) !== 'undefined' ? dashboard: {};
+    hidden = typeof(hidden) !== 'undefined' ? hidden : false;
     filter_pos = parseInt(filter_pos, 0);
 
     var shouldMark = false;
@@ -312,6 +323,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                 "<input class='googlechart_width' type='text' onchange='markChartAsModified(\""+id+"\");'/>" +
             "</div>"+
             "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"+
+            "<div class='ui-icon ui-icon-"+(hidden?"show":"hide")+" googlechart_hide_chart_icon' title='Hide/Show chart'>x</div>"+
             "<div style='float:right;font-weight:normal;font-size:0.9em;margin-right:10px' id='googlechart_thumb_text_"+id+"'>Use this chart as thumb</div>"+
             "<input style='float:right; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+id+"' onChange='markChartAsThumb(\""+id+"\");' "+(isThumb?"checked='checked'":"")+"/>"+
             "<div style='clear:both'> </div>"+
@@ -348,6 +360,10 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
     googlechart.find(".googlechart_width").attr("value", width);
     jQuery('#googlecharts_list').append(googlechart);
     jQuery.data(googlechart[0], 'dashboard', dashboard);
+
+    if (hidden){
+        changeChartHiddenState(id);
+    }
 
     jQuery("#googlechart_filters_"+id).sortable({
         handle : '.googlechart_filteritem_'+id,
@@ -1864,6 +1880,7 @@ function saveCharts(){
         chart.options = chartObj.find(".googlechart_options").attr("value");
         chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
         chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
+        chart.hidden = chartObj.find(".googlechart_hide_chart_icon").hasClass("ui-icon-show");
         config = JSON.parse(chart.config);
         config.options.title = chart.name;
         config.dataTable = [];
@@ -1934,7 +1951,7 @@ function loadCharts(){
     jQuery.getJSON(ajax_baseurl+"/googlechart.get_charts", function(data){
         var jsonObj = data;
         var charts = jsonObj.charts;
-        jQuery(charts).each(function(index,chart){
+        jQuery(charts).each(function(index, chart){
             addChart(
                 chart.id,
                 chart.name,
@@ -1946,7 +1963,8 @@ function loadCharts(){
                 chart.filterposition,
                 chart.options,
                 chart.isThumb,
-                chart.dashboard
+                chart.dashboard,
+                chart.hidden
             );
         });
         DavizEdit.Status.stop("Done");
@@ -2015,7 +2033,7 @@ function init_googlecharts_edit(){
 
     jQuery("#addgooglechart").click(addNewChart);
     jQuery("#googlecharts_list").delegate(".remove_chart_icon","click",function(){
-        chartId = jQuery(this).closest('.googlechart').attr('id');
+        var chartId = jQuery(this).closest('.googlechart').attr('id');
         var chartToRemove = jQuery("#"+chartId).find(".googlechart_id").attr('value');
         var removeChartDialog = ""+
             "<div>Are you sure you want to delete chart: "+
@@ -2040,6 +2058,18 @@ function init_googlecharts_edit(){
                     }
                 }
         ]});
+    });
+    jQuery("#googlecharts_list").delegate(".googlechart_hide_chart_icon","click",function(){
+        var oldClass = "ui-icon-hide";
+        var newClass = "ui-icon-show";
+        if (jQuery(this).hasClass(newClass)){
+            oldClass = "ui-icon-show";
+            newClass = "ui-icon-hide";
+        }
+        jQuery(this).removeClass(oldClass).addClass(newClass);
+        var chartId = jQuery(this).closest('.googlechart').find('.googlechart_id').attr('value');
+        markChartAsModified(chartId);
+        changeChartHiddenState(chartId);
     });
 
     jQuery("#googlecharts_list").delegate(".remove_filter_icon","click",function(){
