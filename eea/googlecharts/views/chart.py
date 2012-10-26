@@ -80,7 +80,8 @@ class View(ViewForm):
     def get_visible_charts(self):
         """ Return only visible charts
         """
-        return [chart for chart in self.get_charts() if not chart['hidden']]
+        return [chart for chart in self.get_charts()
+                if not chart.get('hidden', False)]
 
     def get_columns(self):
         """ Columns
