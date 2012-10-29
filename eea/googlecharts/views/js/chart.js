@@ -1,5 +1,5 @@
 function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId, chartJson, chartDataTable, chartFilters, chartWidth, chartHeight, chartFilterPosition, chartOptions, availableColumns, chartReadyEvent, chartErrorEvent){
-    //jQuery("#"+chartViewDiv).attr("style", "width:" + chartWidth + "px;height:" + chartHeight + "px");
+    jQuery("#"+chartViewDiv).attr("style", "width:" + chartWidth + "px;height:" + chartHeight + "px");
     chartJson.options.width = chartWidth;
     chartJson.options.height = chartHeight;
 
@@ -141,7 +141,7 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
             .text('chart')
             .appendTo('#googlechart_view');
         chartContainer.data('dashboard', value[8]);
-        //chartContainer.attr("style", "width:" + value[8].width + "px;height:" + value[8].height + "px");
+        chartContainer.attr("style", "width:" + value[8].width + "px;height:" + value[8].height + "px");
         var chart = new google.visualization.ChartWrapper(value[1]);
         chart.setContainerId(chartContainerId);
         if (value[8].width){
