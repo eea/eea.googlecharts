@@ -109,7 +109,7 @@ jQuery(document).ready(function($){
                                         columnsFromSettings.valueColumn,
                                         available_columns);
     var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
-    chart_json.options.title = main_title + " — " +name;
+    chart_json.options.title = name + " — " + main_title;
     jQuery.each(chart_filters,function(key,value){
             if (value === "3"){
                 chart_filters[key] = "2";
