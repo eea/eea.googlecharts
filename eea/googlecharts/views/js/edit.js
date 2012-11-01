@@ -330,8 +330,8 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
             "</h1>" +
             "<fieldset>" +
                 "<div style='float:left'>" +
-                    //"<div id='googlechart_chart_div_"+id+"' class='chart_div' style='height: 400px; width:700px; overflow:hidden'></div>" +
-                    "<div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 400px; max-width:700px; overflow:hidden'></div>" +
+                    "<div id='googlechart_chart_div_"+id+"' class='chart_div' style='height: 400px; width:700px; overflow:hidden'></div>" +
+                    //"<div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 400px; max-width:700px; overflow:hidden'></div>" +
                 "</div>" +
                 "<div style='float:right; width:250px'>" +
                     "<span class='label'>Filters position</span>"+

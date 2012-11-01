@@ -3,6 +3,8 @@ Changelog
 
 6.1-dev - (unreleased)
 ----------------------
+* Change: For better readability, modified titles on views to have chart title before main title
+  [szabozo0 #9624]
 * Feature: Added possibility to hide charts
   [szabozo0 #5600]
 

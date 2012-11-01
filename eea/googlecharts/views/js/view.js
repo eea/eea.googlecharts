@@ -332,7 +332,7 @@ jQuery(document).ready(function($){
         return;
     }
     jQuery.each(googlechart_config_array, function(key, config){
-        config[1].options.title = main_title + " — " + config[1].options.title;
+        config[1].options.title = config[1].options.title + " — " + main_title;
     });
     if (has_dashboard) {
         var configs = [];

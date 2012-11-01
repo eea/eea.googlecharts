@@ -973,3 +973,7 @@ select[name=googlechart_filterposition] {
 .pivotingTable {
     display: none;
 }
+
+#googlechart_thumb_zone {
+    display:none;
+}
