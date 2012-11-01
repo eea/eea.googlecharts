@@ -43,12 +43,10 @@ class Edit(BrowserView):
         vocab = getUtility(IVocabularyFactory,
                                name="eea.daviz.vocabularies.FacetsVocabulary")
         terms = [[term.token, term.title] for term in vocab(self.context)]
-        jsonStr = '{'
-        for term in terms:
-            jsonStr += '"' + term[0] + '": ' + '"' + term[1] + '", '
-        jsonStr = jsonStr[:-2]
-        jsonStr += '}'
-        return jsonStr
+        jsonStr = [u'{']
+        jsonStr.append(u', '.join(u'"%s": "%s"' for term in terms))
+        jsonStr.append(u'}')
+        return u''.join(jsonStr)
 
     def get_rows(self):
         """ Rows
