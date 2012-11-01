@@ -286,7 +286,7 @@ function markChartAsThumb(id){
     markChartAsModified(id);
 }
 
-function addChart(id, name, config, columns, filters, width, height, filter_pos, options, isThumb, dashboard, hidden){
+function addChart(id, name, config, columns, showSort, filters, width, height, filter_pos, options, isThumb, dashboard, hidden){
     config = typeof(config) !== 'undefined' ? config : "";
     columns = typeof(columns) !== 'undefined' ? columns : "";
     filters = typeof(filters) !== 'undefined' ? filters : {};
@@ -297,6 +297,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
     isThumb = typeof(isThumb) !== 'undefined' ? isThumb : false;
     dashboard = typeof(dashboard) !== 'undefined' ? dashboard: {};
     hidden = typeof(hidden) !== 'undefined' ? hidden : false;
+    showSort = typeof(showSort) !== 'undefined' ? showSort : false;
     filter_pos = parseInt(filter_pos, 0);
 
     var shouldMark = false;
@@ -323,7 +324,7 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                 "<input class='googlechart_width' type='text' onchange='markChartAsModified(\""+id+"\");'/>" +
             "</div>"+
             "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"+
-            "<div class='ui-icon ui-icon-"+(hidden?"show":"hide")+" googlechart_hide_chart_icon' title='Hide/Show chart'>x</div>"+
+            "<div class='ui-icon ui-icon-" + (hidden?"show":"hide") + " googlechart_hide_chart_icon' title='Hide/Show chart'>x</div>"+
             "<div style='float:right;font-weight:normal;font-size:0.9em;margin-right:10px' id='googlechart_thumb_text_"+id+"'>Use this chart as thumb</div>"+
             "<input style='float:right; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+id+"' onChange='markChartAsThumb(\""+id+"\");' "+(isThumb?"checked='checked'":"")+"/>"+
             "<div style='clear:both'> </div>"+
@@ -343,6 +344,15 @@ function addChart(id, name, config, columns, filters, width, height, filter_pos,
                     "</select>" +
                     "<input type='button' value='Add New Filter' class='context addgooglechartfilter btn'/>"+
                     "<div style='clear:both'> </div>" +
+                    "<ul class='googlechart_sort'  id='googlechart_sort_"+id+"'>" +
+                        "<li class='googlechart_filteritem'>" +
+                            "<h1>"+
+                                "<div style='float:left;'>Sort by column</div>"+
+                                "<div class='ui-icon ui-icon-" + (!showSort?"show":"hide") + " googlechart_hide_sort_icon' title='Hide/Show sort on view'>x</div>"+
+                                "<div style='clear:both'> </div>" +
+                            "</h1>"+
+                        "</li>" +
+                    "</ul>" +
                     "<ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>" +
                     "</ul>" +
                 "</div>" +
@@ -1881,6 +1891,7 @@ function saveCharts(){
         chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
         chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
         chart.hidden = chartObj.find(".googlechart_hide_chart_icon").hasClass("ui-icon-show");
+        chart.showSort = chartObj.find(".googlechart_hide_sort_icon").hasClass("ui-icon-hide");
         config = JSON.parse(chart.config);
         config.options.title = chart.name;
         config.dataTable = [];
@@ -1957,6 +1968,7 @@ function loadCharts(){
                 chart.name,
                 chart.config,
                 chart.columns,
+                chart.showSort,
                 JSON.parse(chart.filters),
                 chart.width,
                 chart.height,
@@ -2001,7 +2013,7 @@ function addNewChart(){
         newPrepared.fullname = value;
         newColumns.prepared.push(newPrepared);
     });
-    addChart(newChartId, "New Chart",JSON.stringify({'chartType':'Table','options': {'legend':'none'}}), JSON.stringify(newColumns));
+    addChart(newChartId, "New Chart",JSON.stringify({'chartType':'Table','options': {'legend':'none'}}), JSON.stringify(newColumns), true);
 
     var newChart = jQuery("#googlechartid_"+newChartId);
 
@@ -2070,6 +2082,18 @@ function init_googlecharts_edit(){
         var chartId = jQuery(this).closest('.googlechart').find('.googlechart_id').attr('value');
         markChartAsModified(chartId);
         changeChartHiddenState(chartId);
+    });
+
+    jQuery("#googlecharts_list").delegate(".googlechart_hide_sort_icon","click",function(){
+        var oldClass = "ui-icon-hide";
+        var newClass = "ui-icon-show";
+        if (jQuery(this).hasClass(newClass)){
+            oldClass = "ui-icon-show";
+            newClass = "ui-icon-hide";
+        }
+        jQuery(this).removeClass(oldClass).addClass(newClass);
+        var chartId = jQuery(this).closest('.googlechart').find('.googlechart_id').attr('value');
+        markChartAsModified(chartId);
     });
 
     jQuery("#googlecharts_list").delegate(".remove_filter_icon","click",function(){

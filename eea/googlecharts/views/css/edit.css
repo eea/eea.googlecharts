@@ -15,10 +15,15 @@
 }
 
 #googlecharts_list,
-.googlechart_filters_list {
+.googlechart_filters_list,
+.googlechart_sort {
     list-style-type:none !important;
     list-style-image:none !important;
     margin:0 !important;
+}
+
+.googlechart_sort li h1{
+    cursor: default !important;
 }
 
 .googlechart_filteritem span {

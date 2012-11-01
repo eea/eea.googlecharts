@@ -13,13 +13,15 @@
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.embed_chart.js"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
 
 <style type="text/css" tal:content="view/get_customstyle">
 </style>
 
 </head>
 <body tal:define="chart view/get_chart" style="margin: 0; overflow: hidden">
-    <script type="text/javascript" tal:content="string:chart_columns = ${chart/columns};
+    <script type="text/javascript" tal:define="showSort python: chart.get('showSort','False')"
+        tal:content="string:chart_columns = ${chart/columns};
                                                 merged_rows = ${chart/data};
                                                 available_columns = ${chart/available_columns};
                                                 chart_json = ${chart/config};
@@ -35,7 +37,8 @@
                                                 qr_size = '${view/qr_size}';
                                                 wm_pos = '${view/wm_position}';
                                                 wm_path = '${view/wm_path}';
-                                                main_title = '${view/get_maintitle}';">
+                                                main_title = '${view/get_maintitle}';
+                                                showSort = '${showSort}';">
     </script>
     <div id="googlechart_dashboard" class="embedded-dashboard">
         <div id="googlechart_table">

@@ -25,8 +25,8 @@
 
     <tal:block tal:repeat="chart charts">
         <script type="text/javascript"
-            tal:define="dashboard python:view.get_dashboard_js(chart);"
-            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard]);"></script>
+            tal:define="dashboard python:view.get_dashboard_js(chart);showSort python:view.get_showSort(chart);"
+            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard, '$showSort']);"></script>
     </tal:block>
     <div style="clear:both">
     </div>

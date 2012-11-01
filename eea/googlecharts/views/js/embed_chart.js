@@ -115,6 +115,7 @@ jQuery(document).ready(function($){
                 chart_filters[key] = "2";
             }
     });
+    var chart_showSort = (showSort==='True'?true:false);
     drawGoogleChart(
             'googlechart_dashboard',
             'googlechart_view',
@@ -129,6 +130,7 @@ jQuery(document).ready(function($){
             options,
             transformedTable.available_columns,
             function(){},
-            function(){}
+            function(){},
+            chart_showSort
     );
 });
