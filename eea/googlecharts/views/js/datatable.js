@@ -1,6 +1,15 @@
 var allowedTypesForCharts = ['string', 'number', 'boolean', 'date', 'datetime', 'timeofday'];
 
-function transformTable(originalTable, normalColumns, pivotingColumns, valueColumn, availableColumns){
+function transformTable(options){
+    var settings = {
+        originalTable : '',
+        normalColumns : '',
+        pivotingColumns : '',
+        valueColumn : '',
+        availableColumns : ''
+    };
+    jQuery.extend(settings, options);
+
     var additionalColumns = {};
 
     var pivotTable = {};
@@ -8,16 +17,16 @@ function transformTable(originalTable, normalColumns, pivotingColumns, valueColu
     pivotTable.available_columns = {};
     pivotTable.properties = {};
 
-    jQuery.each(normalColumns,function(normal_index, normal_column){
-        pivotTable.properties[normal_column] = originalTable.properties[normal_column];
-        pivotTable.available_columns[normal_column] = availableColumns[normal_column];
+    jQuery.each(settings.normalColumns,function(normal_index, normal_column){
+        pivotTable.properties[normal_column] = settings.originalTable.properties[normal_column];
+        pivotTable.available_columns[normal_column] = settings.availableColumns[normal_column];
     });
 
-    jQuery(originalTable.items).each(function(row_index, row){
+    jQuery(settings.originalTable.items).each(function(row_index, row){
         var newRow = {};
         var isNewRow = true;
 
-        jQuery(normalColumns).each(function(column_index, column){
+        jQuery(settings.normalColumns).each(function(column_index, column){
             newRow[column] = row[column];
         });
 
@@ -25,12 +34,12 @@ function transformTable(originalTable, normalColumns, pivotingColumns, valueColu
             newRow[column_key] = column_value;
         });
 
-        if (valueColumn !== ''){
-            var pivotColumnName = valueColumn;
-            var pivotColumnLabel = availableColumns[valueColumn];
-            var pivotValue = row[valueColumn];
+        if (settings.valueColumn !== ''){
+            var pivotColumnName = settings.valueColumn;
+            var pivotColumnLabel = settings.availableColumns[settings.valueColumn];
+            var pivotValue = row[settings.valueColumn];
             var defaultPivotColumnValue; // = undefined;
-            jQuery(pivotingColumns).each(function(pivot_index, pivot_column){
+            jQuery(settings.pivotingColumns).each(function(pivot_index, pivot_column){
                 pivotColumnLabel += " " + row[pivot_column];
                 pivotColumnName += " " + row[pivot_column];
             });
@@ -39,11 +48,11 @@ function transformTable(originalTable, normalColumns, pivotingColumns, valueColu
             additionalColumns[pivotColumn] = defaultPivotColumnValue;
 
             pivotTable.available_columns[pivotColumn] = pivotColumnLabel;
-            pivotTable.properties[pivotColumn] = originalTable.properties[valueColumn];
+            pivotTable.properties[pivotColumn] = settings.originalTable.properties[settings.valueColumn];
 
             jQuery(pivotTable.items).each(function(pivot_row_index, pivot_row){
                 var foundRow = true;
-                jQuery(normalColumns).each(function(normal_col_index, normal_col){
+                jQuery(settings.normalColumns).each(function(normal_col_index, normal_col){
                     if (newRow[normal_col] !== pivot_row[normal_col]){
                         foundRow = false;
                     }
@@ -67,19 +76,25 @@ function transformTable(originalTable, normalColumns, pivotingColumns, valueColu
     return pivotTable;
 }
 
-function tableToArray(originalDataTable, columns){
+function tableToArray(options){
+    var settings = {
+        originalDataTable: '', 
+        columns: ''
+    };
+    jQuery.extend(settings, options);
+
     var columnLabels = [];
     var tableArray = [];
 
-    jQuery(columns).each(function(column_index, column){
-        columnLabels.push(originalDataTable.available_columns[column]);
+    jQuery(settings.columns).each(function(column_index, column){
+        columnLabels.push(settings.originalDataTable.available_columns[column]);
     });
 
     tableArray.push(columnLabels);
 
-    jQuery(originalDataTable.items).each(function(row_index, row){
+    jQuery(settings.originalDataTable.items).each(function(row_index, row){
         var chartRow = [];
-        jQuery(columns).each(function(column_index, column){
+        jQuery(settings.columns).each(function(column_index, column){
             chartRow.push(row[column]);
         });
         tableArray.push(chartRow);
@@ -88,13 +103,18 @@ function tableToArray(originalDataTable, columns){
     return tableArray;
 }
 
-function prepareForChart(originalDataTable, columns, limit){
-    limit = typeof(limit) !== 'undefined' ? limit : 0;
+function prepareForChart(options){
+    var settings = {
+        originalDataTable : '',
+        columns : '',
+        limit : 0
+    };
+    jQuery.extend(settings, options);
 
-    var tmpItemsToDisplay = originalDataTable.items;
+    var tmpItemsToDisplay = settings.originalDataTable.items;
     var itemsToDisplay = [];
-    if (limit > 0){
-        var step = Math.max(Math.round(tmpItemsToDisplay.length/limit), 1);
+    if (settings.limit > 0){
+        var step = Math.max(Math.round(tmpItemsToDisplay.length/settings.limit), 1);
         var count = 0;
         jQuery.each(tmpItemsToDisplay, function(idx, item){
             if (count == step){
@@ -112,9 +132,9 @@ function prepareForChart(originalDataTable, columns, limit){
     }
     var dataForChart = new google.visualization.DataTable();
 
-    jQuery.each(columns, function(column_index, column){
-        var colName = originalDataTable.available_columns[column];
-        var colType = originalDataTable.properties[column];
+    jQuery.each(settings.columns, function(column_index, column){
+        var colName = settings.originalDataTable.available_columns[column];
+        var colType = settings.originalDataTable.properties[column];
         if(colType === undefined){
             colType = 'string';
         }else{
@@ -128,11 +148,11 @@ function prepareForChart(originalDataTable, columns, limit){
     });
     jQuery(itemsToDisplay).each(function(row_index, row){
         var newRow = [];
-        jQuery(columns).each(function(column_index, column){
+        jQuery(settings.columns).each(function(column_index, column){
             var newColumn = row[column];
 
-            var colType = originalDataTable.properties[column];
-            var listType = colType ? ((colType.columnType === 'list') || (colType.valueType === 'list')) : false;
+            var colType = settings.originalDataTable.properties[column];
+            var listType = ((colType.columnType === 'list') || (colType.valueType === 'list'));
 
             if(colType === undefined){
                 colType = 'string';
@@ -160,6 +180,7 @@ function prepareForChart(originalDataTable, columns, limit){
 
     return dataForChart;
 }
+
 
 function getColumnsFromSettings(columnSettings){
     var settings = {};
@@ -197,13 +218,20 @@ function getColumnsFromSettings(columnSettings){
     return settings;
 }
 
-function createMergedTable(originalTable, tableConfigs, availableColumns){
+function createMergedTable(options){
+    var settings = {
+        originalTable : '',
+        tableConfigs : '',
+        availableColumns : ''
+    };
+    jQuery.extend(settings, options);
+
     var mergedTable = {};
     mergedTable.items = [];
     mergedTable.properties = {};
     var mergedColumns = {};
 
-    jQuery.each(originalTable.items, function(row_id, row){
+    jQuery.each(settings.originalTable.items, function(row_id, row){
         var newRow = {};
         jQuery.each(row, function(col_key, col){
             newRow[col_key] = col;
@@ -211,21 +239,26 @@ function createMergedTable(originalTable, tableConfigs, availableColumns){
         mergedTable.items.push(newRow);
     });
 
-    jQuery.each(originalTable.properties, function(prop_id, prop_value){
+    jQuery.each(settings.originalTable.properties, function(prop_id, prop_value){
         mergedTable.properties[prop_id] = prop_value;
     });
 
-    jQuery.each(availableColumns, function(column_key, column_value){
+    jQuery.each(settings.availableColumns, function(column_key, column_value){
         mergedColumns[column_key] = column_value;
     });
 
-    jQuery.each(tableConfigs, function(key, config){
+    jQuery.each(settings.tableConfigs, function(key, config){
         var columnsFromSettings = getColumnsFromSettings(config);
-        var transformedTable = transformTable(originalTable,
-                                    columnsFromSettings.normalColumns,
-                                    columnsFromSettings.pivotColumns,
-                                    columnsFromSettings.valueColumn,
-                                    availableColumns);
+
+        var options = {
+            originalTable : settings.originalTable,
+            normalColumns : columnsFromSettings.normalColumns,
+            pivotingColumns : columnsFromSettings.pivotColumns,
+            valueColumn : columnsFromSettings.valueColumn,
+            availableColumns : settings.availableColumns
+        };
+
+        var transformedTable = transformTable(options);
 
         jQuery.each(transformedTable.properties, function(prop_id, prop_value){
             mergedTable.properties[prop_id] = prop_value;

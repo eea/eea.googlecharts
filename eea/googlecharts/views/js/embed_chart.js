@@ -103,12 +103,24 @@ jQuery(document).ready(function($){
     }
 
     var columnsFromSettings = getColumnsFromSettings(chart_columns);
-    var transformedTable = transformTable(merged_rows,
-                                        columnsFromSettings.normalColumns,
-                                        columnsFromSettings.pivotColumns,
-                                        columnsFromSettings.valueColumn,
-                                        available_columns);
-    var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
+
+    var options = {
+        originalTable : merged_rows,
+        normalColumns : columnsFromSettings.normalColumns,
+        pivotingColumns : columnsFromSettings.pivotColumns,
+        valueColumn : columnsFromSettings.valueColumn,
+        availableColumns : available_columns
+    };
+
+    var transformedTable = transformTable(options);
+
+    options = {
+        originalDataTable : transformedTable,
+        columns : columnsFromSettings.columns
+    };
+
+    var tableForChart = prepareForChart(options);
+
     chart_json.options.title = name + " — " + main_title;
     jQuery.each(chart_filters,function(key,value){
             if (value === "3"){
@@ -116,21 +128,21 @@ jQuery(document).ready(function($){
             }
     });
     var chart_showSort = (showSort==='True'?true:false);
-    drawGoogleChart(
-            'googlechart_dashboard',
-            'googlechart_view',
-            'googlechart_filters',
-            'embed',
-            chart_json,
-            tableForChart,
-            chart_filters,
-            width,
-            height,
-            '',
-            options,
-            transformedTable.available_columns,
-            function(){},
-            function(){},
-            chart_showSort
-    );
+
+    var googlechart_params = {
+        chartDashboard : 'googlechart_dashboard',
+        chartViewDiv : 'googlechart_view',
+        chartFiltersDiv : 'googlechart_filters',
+        chartId : 'embed',
+        chartJson : chart_json,
+        chartDataTable : tableForChart,
+        chartFilters : chart_filters,
+        chartWidth : width,
+        chartHeight : height,
+        chartOptions : options,
+        availableColumns : transformedTable.available_columns,
+        showSort : chart_showSort
+    };
+
+    drawGoogleChart(googlechart_params);
 });

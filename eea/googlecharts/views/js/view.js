@@ -127,7 +127,7 @@ function drawChart(value){
         }
 
         putImageDivInPosition("googlechart_wm", wm_pos);
-        
+
         var googlechart_wm = "<img alt='Watermark' src='" + wm_path + "'/>";
         if (wm_pos !== "Disabled"){
             jQuery(googlechart_wm).appendTo("#googlechart_wm");
@@ -139,30 +139,41 @@ function drawChart(value){
         jQuery('#googlechart_dashboard').attr("chart_height", chart_height);
 
         var columnsFromSettings = getColumnsFromSettings(chart_columns);
-        var transformedTable = transformTable(merged_rows,
-                                        columnsFromSettings.normalColumns,
-                                        columnsFromSettings.pivotColumns,
-                                        columnsFromSettings.valueColumn,
-                                        available_columns);
-        var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
 
-        drawGoogleChart(
-            'googlechart_dashboard',
-            'googlechart_view',
-            'googlechart_filters',
-            chart_id,
-            chart_json,
-            tableForChart,
-            chart_filters,
-            chart_width,
-            chart_height,
-            chart_filterposition,
-            chart_options,
-            transformedTable.available_columns,
-            checkSVG,
-            function(){},
-            chart_showSort
-            );
+        var options = {
+            originalTable : merged_rows,
+            normalColumns : columnsFromSettings.normalColumns,
+            pivotingColumns : columnsFromSettings.pivotColumns,
+            valueColumn : columnsFromSettings.valueColumn,
+            availableColumns : available_columns
+        };
+
+        var transformedTable = transformTable(options);
+
+        options = {
+            originalDataTable : transformedTable,
+            columns : columnsFromSettings.columns
+        };
+        var tableForChart = prepareForChart(options);
+
+        var googlechart_params = {
+            chartDashboard : 'googlechart_dashboard',
+            chartViewDiv : 'googlechart_view',
+            chartFiltersDiv : 'googlechart_filters',
+            chartId : chart_id,
+            chartJson : chart_json,
+            chartDataTable : tableForChart,
+            chartFilters : chart_filters,
+            chartWidth : chart_width,
+            chartHeight : chart_height,
+            chartFilterPosition : chart_filterposition,
+            chartOptions : chart_options,
+            availableColumns : transformedTable.available_columns,
+            chartReadyEvent : checkSVG,
+            showSort : chart_showSort
+        };
+
+        drawGoogleChart(googlechart_params);
 }
 
 function drawDashboard(){
@@ -241,13 +252,18 @@ function drawDashboard(){
     jQuery.each(myFilters, function(){
         filters[this.column] = this.type;
     });
-    drawGoogleDashboard('googlechart_dashboard',
-                        'googlechart_view',
-                        'googlechart_filters',
-                        sortedDashboardChartConfig,
-                        tableForDashboard,
-                        allColumns,
-                        filters);
+
+    var googledashboard_params = {
+        chartsDashboard : 'googlechart_dashboard',
+        chartViewsDiv : 'googlechart_view',
+        chartFiltersDiv : 'googlechart_filters',
+        chartsSettings : sortedDashboardChartConfig,
+        chartsMergedTable : tableForDashboard,
+        allColumns : allColumns,
+        filters : filters
+    };
+
+    drawGoogleDashboard(googledashboard_params);
 
 }
 
@@ -367,12 +383,23 @@ jQuery(document).ready(function($){
             sortedDashboardChartConfig.push(dashboardChartConfig[dashboardKey]);
         });
 
-        var mergedTable = createMergedTable(merged_rows, configs, available_columns);
+        var options = {
+            originalTable : merged_rows,
+            tableConfigs : configs,
+            availableColumns : available_columns
+        };
+        var mergedTable = createMergedTable(options);
         allColumns = [];
         jQuery.each(mergedTable.available_columns, function(key, value){
             allColumns.push(key);
         });
-        tableForDashboard = prepareForChart(mergedTable, allColumns);
+
+        options = {
+            originalDataTable : mergedTable,
+            columns : allColumns
+        };
+
+        tableForDashboard = prepareForChart(options);
     }
 
     // Integrate google charts with daviz tabs
