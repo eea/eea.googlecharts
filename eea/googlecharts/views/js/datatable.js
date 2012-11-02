@@ -132,7 +132,7 @@ function prepareForChart(originalDataTable, columns, limit){
             var newColumn = row[column];
 
             var colType = originalDataTable.properties[column];
-            var listType = ((colType.columnType === 'list') || (colType.valueType === 'list'));
+            var listType = colType ? ((colType.columnType === 'list') || (colType.valueType === 'list')) : false;
 
             if(colType === undefined){
                 colType = 'string';

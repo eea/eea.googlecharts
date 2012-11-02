@@ -44,7 +44,8 @@ class Edit(BrowserView):
                                name="eea.daviz.vocabularies.FacetsVocabulary")
         terms = [[term.token, term.title] for term in vocab(self.context)]
         jsonStr = [u'{']
-        jsonStr.append(u', '.join(u'"%s": "%s"' for term in terms))
+        jsonStr.append(u', '.join((u'"%s": "%s"' % (term[0], term[1]))
+                                  for term in terms))
         jsonStr.append(u'}')
         return u''.join(jsonStr)
 
