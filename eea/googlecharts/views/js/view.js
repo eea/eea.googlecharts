@@ -53,7 +53,7 @@ function drawChart(value){
         var chart_height = value[5];
         var chart_filterposition = value[6];
         var chart_options = value[7];
-
+        var chart_showSort = (value[9]==='True'?true:false);
         jQuery("#filename").attr("value",chart_json.options.title);
         jQuery("#type").attr("value","image/png");
 
@@ -146,7 +146,6 @@ function drawChart(value){
                                         available_columns);
         var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
 
-
         drawGoogleChart(
             'googlechart_dashboard',
             'googlechart_view',
@@ -161,7 +160,8 @@ function drawChart(value){
             chart_options,
             transformedTable.available_columns,
             checkSVG,
-            function(){}
+            function(){},
+            chart_showSort
             );
 }
 

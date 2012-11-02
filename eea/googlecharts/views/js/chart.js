@@ -1,4 +1,4 @@
-function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId, chartJson, chartDataTable, chartFilters, chartWidth, chartHeight, chartFilterPosition, chartOptions, availableColumns, chartReadyEvent, chartErrorEvent){
+function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId, chartJson, chartDataTable, chartFilters, chartWidth, chartHeight, chartFilterPosition, chartOptions, availableColumns, chartReadyEvent, chartErrorEvent, showSort){
     jQuery("#"+chartViewDiv).attr("style", "width:" + chartWidth + "px;height:" + chartHeight + "px");
     chartJson.options.width = chartWidth;
     chartJson.options.height = chartHeight;
@@ -61,6 +61,8 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
         });
     }
 
+    var dataView = new google.visualization.DataView(chartDataTable);
+
     if (filtersArray.length > 0){
         var dashboard = new google.visualization.Dashboard(
             document.getElementById(chartDashboard));
@@ -75,10 +77,17 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
             chartErrorEvent();
         });
 
-        dashboard.draw(chartDataTable);
+        jQuery(filtersArray).each(function(key,value){
+            google.visualization.events.addListener(value, 'statechange', function(event){
+                applyCustomFilters();
+            });
+        });
+
+
+        dashboard.draw(dataView);
     }
     else {
-        chart.setDataTable(chartDataTable);
+        chart.setDataTable(dataView);
         google.visualization.events.addListener(chart, 'ready', function(event){
             chartReadyEvent();
         });
@@ -88,6 +97,10 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
         });
 
         chart.draw();
+    }
+
+    if (showSort){
+        addSortFilter(chartFiltersDiv, 'Sort By', chartDataTable, chart);
     }
 }
 

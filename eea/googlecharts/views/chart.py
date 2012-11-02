@@ -154,6 +154,11 @@ class View(ViewForm):
         """
         return json.dumps(chart.get('dashboard', {}))
 
+    def get_showSort(self, chart):
+        """ Show Sort
+        """
+        return chart.get('showSort', 'False')
+
     def get_dashboard_filters(self):
         """ Dashboard filters
         """

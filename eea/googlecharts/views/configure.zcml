@@ -169,6 +169,11 @@
   />
 
   <browser:resource
+    name="eea.googlecharts.custom_filters.js"
+    file="./js/custom_filters.js"
+  />
+
+  <browser:resource
     name="eea.googlecharts.view.css"
     file="./css/view.css"
   />
