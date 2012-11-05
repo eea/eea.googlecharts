@@ -119,7 +119,7 @@ function addFilter(id, column, filtertype, columnName){
     filter.appendTo("#googlechart_filters_"+id);
 }
 
-function saveThumb(value){
+function saveThumb(value, useName){
     DavizEdit.Status.start("Saving Thumb");
     var chart_id = value[0];
     var chart_json = value[1];
@@ -158,15 +158,18 @@ function saveThumb(value){
         chartOptions : chart_options,
         availableColumns : transformedTable.available_columns,
         chartReadyEvent : function(){
-                            var thumbObj = jQuery("#googlechart_thumb_form");
-                            thumbObj.find("#filename").attr("value", "thumb");
-                            thumbObj.find("#type").attr("value","image/png");
+                            var filename;
+                            if (!useName){
+                                filename = "cover.png";
+                            }
+                            else {
+                                filename = value[0]+".png";
+                            }
                             var svg = jQuery("#googlechart_thumb_zone").find("svg").parent().html();
-                            thumbObj.find("#svg").attr("value",svg);
                             var form = jQuery('.daviz-view-form:has(#googlecharts_config)');
                             var action = form.length ? form.attr('action') : '';
                             action = action.split('@@')[0] + "@@googlechart.setthumb";
-                            jQuery.post(action, {"svg":svg},function(data){
+                            jQuery.post(action, {"svg":svg, "filename":filename},function(data){
                                 if (data !== "Success"){
                                     DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
                                 }else{
@@ -1999,11 +2002,42 @@ function saveCharts(){
         type:'post',
         data:query,
         success:function(data){
+            // save static image charts for all charts if available
+            var chartObjs = jQuery("#googlecharts_list li.googlechart");
+            jQuery(chartObjs).each(function(idx, chartObj){
+                chartObj = jQuery(chartObj);
+                if (chartObj.find(".googlechart_thumb_checkbox").is(":visible")){
+                    var chartSettings=[];
+                    chartSettings[0] = chartObj.find(".googlechart_id").attr("value");
+                    var config_str = chartObj.find(".googlechart_configjson").attr("value");
+                    if (config_str){
+                        chartSettings[1] = JSON.parse(config_str);
+                        var columns_str = chartObj.find(".googlechart_columns").attr("value");
+                        var columnsSettings = {};
+                        if (!columns_str){
+                            columnsSettings.prepared = [];
+                            columnsSettings.original = [];
+                        }
+                        else{
+                            columnsSettings = JSON.parse(columns_str);
+                        }
+                        chartSettings[2] = columnsSettings;
+                        chartSettings[3] = "";
+                        chartSettings[4] = chartObj.find(".googlechart_width").attr("value");
+                        chartSettings[5] = chartObj.find(".googlechart_height").attr("value");
+                        chartSettings[6] = "";
+                        chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
+                        saveThumb(chartSettings, true);
+                    }
+                }
+            });
+
+
             if (thumbId){
                 var chartSettings=[];
                 var chartObj = jQuery("#googlechartid_"+thumbId);
                 chartSettings[0] = thumbId;
-                config_str = chartObj.find(".googlechart_configjson").attr("value");
+                var config_str = chartObj.find(".googlechart_configjson").attr("value");
                 if (!config_str){
                     DavizEdit.Status.stop(data);
                 }
