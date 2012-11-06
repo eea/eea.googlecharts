@@ -70,6 +70,13 @@
     />
 
   <browser:page
+    name="googlechart.savepngchart"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".chart.SavePNGChart"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="googlechart.setthumb"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".chart.SetThumb"

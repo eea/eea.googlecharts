@@ -322,6 +322,35 @@ class Export(BrowserView):
         )
         return img
 
+class SavePNGChart(Export):
+    """ Save png version of chart, including qr code and watermark
+    """
+    def __call__ (self, **kwargs):
+        form = getattr(self.request, 'form', {})
+        kwargs.update(form)
+        filename = kwargs.get('filename', 'img')
+        chart_url = self.context.absolute_url() + "#" + "tab-" + filename
+        filename = filename + ".png"
+        sp = self.siteProperties
+        qr_size = sp.get('googlechart.qrcode_size', '70')
+        if qr_size == '0':
+            qr_size = '70'
+        qr_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs=" + \
+            qr_size + "x" + qr_size + "&chl=" + urllib2.quote(chart_url)
+        self.request.form['qr_url'] = qr_url
+        img = super(SavePNGChart, self).__call__()
+
+        if not img:
+            return _("ERROR: An error occured while exporting your image. "
+                     "Please try again later.")
+
+        if filename not in self.context.objectIds():
+            filename = self.context.invokeFactory('Image', id=filename)
+        obj = self.context._getOb(filename)
+        obj.setExcludeFromNav(True)
+        obj.getField('image').getMutator(obj)(img)
+        return _("Success")
+
 class SetThumb(BrowserView):
     """ Set thumbnail
     """
