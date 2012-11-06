@@ -325,7 +325,7 @@ class Export(BrowserView):
 class SavePNGChart(Export):
     """ Save png version of chart, including qr code and watermark
     """
-    def __call__ (self, **kwargs):
+    def __call__(self, **kwargs):
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
         filename = kwargs.get('filename', 'img')

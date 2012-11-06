@@ -54,6 +54,8 @@ function drawChart(value){
         var chart_filterposition = value[6];
         var chart_options = value[7];
         var chart_showSort = (value[9]==='True'?true:false);
+        var chart_hasPNG = (value[10]==='True'?true:false);
+
         jQuery("#filename").attr("value",chart_json.options.title);
         jQuery("#type").attr("value","image/png");
 
@@ -137,6 +139,7 @@ function drawChart(value){
         jQuery('#googlechart_dashboard').attr("chart_id", chart_id);
         jQuery('#googlechart_dashboard').attr("chart_width", chart_width);
         jQuery('#googlechart_dashboard').attr("chart_height", chart_height);
+        jQuery('#googlechart_dashboard').attr("chart_hasPNG", chart_hasPNG);
 
         var columnsFromSettings = getColumnsFromSettings(chart_columns);
 
@@ -282,16 +285,24 @@ function showEmbed(){
         iframeSrc = baseurl+"/embed-dashboard?customStyle=%23googlechart_view{margin-left:0px%3B}";
     }
     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
+    var hasPNG = chartObj.attr('chart_hasPNG');
     var embedHtml = '<div>' +
-                        '<textarea style="width:96%" rows="7">' + iframeCode + '</textarea>' +
-                    '</div>';
+                        '<h3>Interactive chart: </h3>'+
+                        '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>';
+    if (hasPNG === 'true'){
+        var chart_id = chartObj.attr("chart_id");
+        var pngCode = '<a href="'  + baseurl + "#tab-" + chart_id + '"><img alt="' + chart_id + '" src="' + baseurl + "/" + chart_id + '.png" /></a>';
+        embedHtml += '<h3>Image chart: </h3>';
+        embedHtml += '<textarea class="pngCode" style="width:96%" rows="3">' + pngCode + '</textarea>';
+    }
+    embedHtml += '</div>';
 
     jQuery(embedHtml).dialog({
         title: "Embed code",
         modal:true,
         open: function(evt, ui){
-            jQuery('textarea', this)[0].focus();
-            jQuery('textarea', this)[0].select();
+            jQuery('.iframeCode', this)[0].focus();
+            jQuery('.iframeCode', this)[0].select();
             jQuery(this).delegate('textarea', 'click', function(){
                 this.focus();
                 this.select();

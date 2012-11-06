@@ -119,7 +119,7 @@ function drawGoogleChart(options){
     if (settings.showSort){
         var options2 = {
             filtersDiv : settings.chartFiltersDiv,
-            filterTitle : 'Sort By',
+            filterTitle : 'sort by',
             filterDataTable : settings.chartDataTable,
             filterChart : chart
         };

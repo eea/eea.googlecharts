@@ -390,7 +390,7 @@ function addChart(options){
                     "<ul class='googlechart_sort'  id='googlechart_sort_"+settings.id+"'>" +
                         "<li class='googlechart_filteritem'>" +
                             "<h1>"+
-                                "<div style='float:left;'>Sort by column</div>"+
+                                "<div style='float:left;'>sort by column</div>"+
                                 "<div class='ui-icon ui-icon-" + (!settings.showSort?"show":"hide") + " googlechart_hide_sort_icon' title='Hide/Show sort on view'>x</div>"+
                                 "<div style='clear:both'> </div>" +
                             "</h1>"+
@@ -1986,6 +1986,7 @@ function saveCharts(){
         chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
         chart.hidden = chartObj.find(".googlechart_hide_chart_icon").hasClass("ui-icon-show");
         chart.showSort = chartObj.find(".googlechart_hide_sort_icon").hasClass("ui-icon-hide");
+        chart.hasPNG = chartObj.find(".googlechart_thumb_checkbox").is(":visible");
         config = JSON.parse(chart.config);
         config.options.title = chart.name;
         config.dataTable = [];
