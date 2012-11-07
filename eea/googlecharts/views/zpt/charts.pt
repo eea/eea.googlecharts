@@ -1,6 +1,11 @@
 <tal:tabs repeat="tab view/tabs">
-  <div class="daviz-tab-view eea-googlecharts-charts"
-    tal:attributes="id string:tab-${tab/name}"></div>
+    <div class="daviz-tab-view eea-googlecharts-charts daviz-tab-view-noscript"
+            tal:attributes="id string:tab-${tab/name}">
+        <noscript>
+            <img tal:attributes="alt tab/name;
+                                src tab/fallback-image"/>
+        </noscript>
+    </div>
 </tal:tabs>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>

@@ -176,11 +176,18 @@ class View(ViewForm):
             title = chart.get('name', '')
             config = json.loads(chart.get('config', '{}'))
             chartType = config.get('chartType', '')
+            if chart.get('hasPNG', False):
+                png_url = self.context.absolute_url() + "/" + name + ".png"
+            else:
+                png_url = self.context.absolute_url() + \
+                    "/++resource++googlechart." + chartType + ".preview.png"
+
             tabs.append({
                 'name': name,
                 'title': title,
                 'css': 'googlechart_class_%s' % chartType,
-                'tabname': 'tab-%s' % name.replace('.', '-')
+                'tabname': 'tab-%s' % name.replace('.', '-'),
+                'fallback-image': png_url
             })
         return tabs
 
@@ -392,12 +399,15 @@ class DashboardView(ViewForm):
     def tabs(self):
         """ View tabs
         """
+        png_url = self.context.absolute_url() + \
+            "/++resource++googlechart.dashboard.preview.png"
         return [
             {
             'name': self.__name__,
             'title': 'Dashboard',
             'css': 'googlechart_class_Dashboard',
-            'tabname': 'tab-%s' % self.__name__.replace('.', '-')
+            'tabname': 'tab-%s' % self.__name__.replace('.', '-'),
+            'fallback-image': png_url
             },
         ]
 
