@@ -180,7 +180,8 @@ class View(ViewForm):
                 png_url = self.context.absolute_url() + "/" + name + ".png"
             else:
                 png_url = self.context.absolute_url() + \
-                    "/++resource++googlechart." + chartType + ".preview.png"
+                    "/++resource++googlechart." + chartType.lower() + \
+                    ".preview.png"
 
             tabs.append({
                 'name': name,
@@ -400,7 +401,7 @@ class DashboardView(ViewForm):
         """ View tabs
         """
         png_url = self.context.absolute_url() + \
-            "/++resource++googlechart.dashboard.preview.png"
+            "/++resource++googlechart.googledashboard.preview.png"
         return [
             {
             'name': self.__name__,
