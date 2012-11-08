@@ -176,20 +176,22 @@ class View(ViewForm):
             title = chart.get('name', '')
             config = json.loads(chart.get('config', '{}'))
             chartType = config.get('chartType', '')
-            if chart.get('hasPNG', False):
-                png_url = self.context.absolute_url() + "/" + name + ".png"
-            else:
-                png_url = self.context.absolute_url() + \
-                    "/++resource++googlechart." + chartType.lower() + \
-                    ".preview.png"
-
-            tabs.append({
+            tab = {
                 'name': name,
                 'title': title,
                 'css': 'googlechart_class_%s' % chartType,
                 'tabname': 'tab-%s' % name.replace('.', '-'),
-                'fallback-image': png_url
-            })
+            }
+            if chart.get('hasPNG', False):
+                tab['fallback-image'] = \
+                    self.context.absolute_url() + "/" + name + ".png"
+                tab['realchart'] = True
+            else:
+                tab['fallback-image'] = \
+                    self.context.absolute_url() + \
+                    "/++resource++googlechart." + chartType.lower() + \
+                    ".preview.png"
+            tabs.append(tab)
         return tabs
 
     def get_iframe_chart(self):
