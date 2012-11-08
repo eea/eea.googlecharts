@@ -382,3 +382,8 @@ class DashboardEdit(ChartsEdit):
 
         # View mode
         return 'Invalid action provided: %s' % action
+
+class DashboardsEdit(ChartsEdit):
+    """ Edit Google Dashboards
+    """
+    form_fields = Fields(IGoogleChartsEdit)

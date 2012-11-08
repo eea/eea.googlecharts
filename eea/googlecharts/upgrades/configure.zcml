@@ -3,6 +3,19 @@
   xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
   i18n_domain="eea">
 
+  <!-- 6.0 => 6.1 -->
+  <genericsetup:upgradeSteps
+    source="6.0"
+    destination="6.1"
+    profile="eea.googlecharts:default">
+
+    <genericsetup:upgradeStep
+      title="Migrate single-dashboard to multiple-dashboards"
+      handler="eea.googlecharts.upgrades.evolve61.migrate_dashboards"
+      />
+
+  </genericsetup:upgradeSteps>
+
   <!-- 4.x => 6.0 -->
   <genericsetup:upgradeSteps
     source="4.0"
@@ -13,7 +26,7 @@
       title="Upgrade step for eea.googlecharts: import cssregistry"
       import_steps="cssregistry"
       />
-      
+
     <genericsetup:upgradeDepends
       title="Upgrade step for eea.googlecharts: import jsregistry"
       import_steps="jsregistry"

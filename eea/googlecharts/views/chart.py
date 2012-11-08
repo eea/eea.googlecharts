@@ -427,3 +427,9 @@ class DashboardView(ViewForm):
         mutator = queryAdapter(self.context, IVisualizationConfig)
         view = dict(mutator.view('googlechart.googledashboard', {}))
         return json.dumps(view)
+
+class DashboardsView(ViewForm):
+    """ Google dashboards view
+    """
+    label = 'Charts Dashboards'
+    section = 'Charts'
