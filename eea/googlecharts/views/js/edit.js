@@ -119,7 +119,7 @@ function addFilter(id, column, filtertype, columnName){
     filter.appendTo("#googlechart_filters_"+id);
 }
 
-function saveThumb(value){
+function saveThumb(value, useName){
     DavizEdit.Status.start("Saving Thumb");
     var chart_id = value[0];
     var chart_json = value[1];
@@ -131,46 +131,71 @@ function saveThumb(value){
     var chart_options = value[7];
 
     var columnsFromSettings = getColumnsFromSettings(chart_columns);
-    var transformedTable = transformTable(all_rows,
-                                    columnsFromSettings.normalColumns,
-                                    columnsFromSettings.pivotColumns,
-                                    columnsFromSettings.valueColumn,
-                                    available_columns);
-    var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
-    drawGoogleChart(
-        '',
-        'googlechart_thumb_zone',
-        '',
-        chart_id,
-        chart_json,
-        tableForChart,
-        '',
-        chart_width,
-        chart_height,
-        '',
-        chart_options,
-        transformedTable.available_columns,
-        function(){
-            var thumbObj = jQuery("#googlechart_thumb_form");
-            thumbObj.find("#filename").attr("value", "thumb");
-            thumbObj.find("#type").attr("value","image/png");
-            var svg = jQuery("#googlechart_thumb_zone").find("svg").parent().html();
-            thumbObj.find("#svg").attr("value",svg);
-            var form = jQuery('.daviz-view-form:has(#googlecharts_config)');
-            var action = form.length ? form.attr('action') : '';
-            action = action.split('@@')[0] + "@@googlechart.setthumb";
-            jQuery.post(action, {"svg":svg},function(data){
-                if (data !== "Success"){
-                    DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
-                }else{
-                    DavizEdit.Status.stop("Done");
-                }
-            });
-        },
-        function(){
-            DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
-        }
-    );
+    var options = {
+        originalTable : all_rows,
+        normalColumns : columnsFromSettings.normalColumns,
+        pivotingColumns : columnsFromSettings.pivotColumns,
+        valueColumn : columnsFromSettings.valueColumn,
+        availableColumns : available_columns
+    };
+
+    var transformedTable = transformTable(options);
+
+    options = {
+        originalDataTable : transformedTable,
+        columns : columnsFromSettings.columns
+    };
+    var tableForChart = prepareForChart(options);
+
+    var googlechart_params = {
+        chartViewDiv : 'googlechart_thumb_zone',
+        chartId : chart_id,
+        chartJson : chart_json,
+        chartDataTable : tableForChart,
+        chartFilters : '',
+        chartWidth : chart_width,
+        chartHeight : chart_height,
+        chartOptions : chart_options,
+        availableColumns : transformedTable.available_columns,
+        chartReadyEvent : function(){
+                            var filename;
+                            if (!useName){
+                                filename = "cover.png";
+                            }
+                            else {
+                                filename = value[0];
+                            }
+                            var svg = jQuery("#googlechart_thumb_zone").find("svg").parent().html();
+                            var form = jQuery('.daviz-view-form:has(#googlecharts_config)');
+                            var action = form.length ? form.attr('action') : '';
+                            if (useName){
+                                action = action.split('@@')[0] + "@@googlechart.savepngchart";
+                            }
+                            else {
+                                action = action.split('@@')[0] + "@@googlechart.setthumb";
+                            }
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: action,
+                                data: {"svg":svg, "filename":filename},
+                                async: false,
+                                success: function(data){
+                                    if (data !== "Success"){
+                                        DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
+                                    }else{
+                                        DavizEdit.Status.stop("Done");
+                                    }
+                                 }
+                            });
+                        },
+
+        chartErrorEvent : function(){
+                            DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
+                        },
+        showSort : false
+    };
+
+    drawGoogleChart(googlechart_params);
 }
 
 function drawChart(elementId, readyEvent){
@@ -191,12 +216,23 @@ function drawChart(elementId, readyEvent){
         }
 
         var columnsFromSettings = getColumnsFromSettings(chartColumns);
-        var transformedTable = transformTable(all_rows,
-                                        columnsFromSettings.normalColumns,
-                                        columnsFromSettings.pivotColumns,
-                                        columnsFromSettings.valueColumn,
-                                        available_columns);
-        var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns);
+
+        var options = {
+            originalTable : all_rows,
+            normalColumns : columnsFromSettings.normalColumns,
+            pivotingColumns : columnsFromSettings.pivotColumns,
+            valueColumn : columnsFromSettings.valueColumn,
+            availableColumns : available_columns
+        };
+
+        var transformedTable = transformTable(options);
+
+        options = {
+            originalDataTable : transformedTable,
+            columns : columnsFromSettings.columns
+        };
+
+        var tableForChart = prepareForChart(options);
 
         wrapperJSON.dataTable = tableForChart;
         wrapperJSON.options.title = chartName;
@@ -286,122 +322,129 @@ function markChartAsThumb(id){
     markChartAsModified(id);
 }
 
-function addChart(id, name, config, columns, showSort, filters, width, height, filter_pos, options, isThumb, dashboard, hidden){
-    config = typeof(config) !== 'undefined' ? config : "";
-    columns = typeof(columns) !== 'undefined' ? columns : "";
-    filters = typeof(filters) !== 'undefined' ? filters : {};
-    width = typeof(width) !== 'undefined' ? width : 800;
-    height = typeof(height) !== 'undefined' ? height : 600;
-    filter_pos = typeof(filter_pos) !== 'undefined' ? filter_pos : 0;
-    options = typeof(options) !== 'undefined' ? options : defaultAdvancedOptions;
-    isThumb = typeof(isThumb) !== 'undefined' ? isThumb : false;
-    dashboard = typeof(dashboard) !== 'undefined' ? dashboard: {};
-    hidden = typeof(hidden) !== 'undefined' ? hidden : false;
-    showSort = typeof(showSort) !== 'undefined' ? showSort : false;
-    filter_pos = parseInt(filter_pos, 0);
+function addChart(options){
+    var settings = {
+        id : "",
+        name : "",
+        config : "",
+        columns : "",
+        showSort : false,
+        filters : {},
+        width : 800,
+        height : 600,
+        filter_pos : 0,
+        options : defaultAdvancedOptions,
+        isThumb : false,
+        dashboard : {},
+        hidden : false
+    };
+
+    jQuery.extend(settings, options);
+
+    settings.filter_pos = parseInt(settings.filter_pos, 0);
 
     var shouldMark = false;
     var chart;
-    if (config === ""){
+    if (settings.config === ""){
         shouldMark = true;
         chart = defaultChart;
-        chart.options.title = name;
-        config = JSON.stringify(chart);
+        chart.options.title = settings.name;
+        settings.config = JSON.stringify(chart);
     }
     var googlechart = jQuery("" +
-        "<li class='googlechart daviz-facet-edit' id='googlechartid_"+id+"'>" +
-            "<input class='googlechart_id' type='hidden' value='"+id+"'/>" +
+        "<li class='googlechart daviz-facet-edit' id='googlechartid_"+settings.id+"'>" +
+            "<input class='googlechart_id' type='hidden' value='"+settings.id+"'/>" +
             "<input class='googlechart_configjson' type='hidden'/>" +
             "<input class='googlechart_columns' type='hidden'/>" +
             "<input class='googlechart_options' type='hidden'/>" +
 
             "<h1 class='googlechart_handle'>"+
             "<div style='float:left;width:60%;height:20px;overflow:hidden;'>"+
-                "<input class='googlechart_name' type='text' style='width:200px' onchange='markChartAsModified(\""+id+"\");drawChart(\""+id+"\",function(){});'/>" +
+                "<input class='googlechart_name' type='text' style='width:200px' onchange='markChartAsModified(\""+settings.id+"\");drawChart(\""+settings.id+"\",function(){});'/>" +
                 "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>px</span>"+
-                "<input class='googlechart_height' type='text' onchange='markChartAsModified(\""+id+"\");'/>" +
+                "<input class='googlechart_height' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
                 "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>X</span>"+
-                "<input class='googlechart_width' type='text' onchange='markChartAsModified(\""+id+"\");'/>" +
+                "<input class='googlechart_width' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
             "</div>"+
             "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"+
-            "<div class='ui-icon ui-icon-" + (hidden?"show":"hide") + " googlechart_hide_chart_icon' title='Hide/Show chart'>x</div>"+
-            "<div style='float:right;font-weight:normal;font-size:0.9em;margin-right:10px' id='googlechart_thumb_text_"+id+"'>Use this chart as thumb</div>"+
-            "<input style='float:right; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+id+"' onChange='markChartAsThumb(\""+id+"\");' "+(isThumb?"checked='checked'":"")+"/>"+
+            "<div class='ui-icon ui-icon-" + (settings.hidden?"show":"hide") + " googlechart_hide_chart_icon' title='Hide/Show chart'>x</div>"+
+            "<div style='float:right;font-weight:normal;font-size:0.9em;margin-right:10px' id='googlechart_thumb_text_"+settings.id+"'>Use this chart as thumb</div>"+
+            "<input style='float:right; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+settings.id+"' onChange='markChartAsThumb(\""+settings.id+"\");' "+(settings.isThumb?"checked='checked'":"")+"/>"+
             "<div style='clear:both'> </div>"+
             "</h1>" +
             "<fieldset>" +
                 "<div style='float:left'>" +
-                    "<div id='googlechart_chart_div_"+id+"' class='chart_div' style='height: 400px; width:700px; overflow:hidden'></div>" +
-                    //"<div id='googlechart_chart_div_"+id+"' class='chart_div' style='max-height: 400px; max-width:700px; overflow:hidden'></div>" +
+                    "<div id='googlechart_chart_div_"+settings.id+"' class='chart_div' style='height: 400px; width:700px; overflow:hidden'></div>" +
+                    //"<div id='googlechart_chart_div_"+settings.id+"' class='chart_div' style='max-height: 400px; max-width:700px; overflow:hidden'></div>" +
                 "</div>" +
                 "<div style='float:right; width:250px'>" +
                     "<span class='label'>Filters position</span>"+
-                    "<select name='googlechart_filterposition' onchange='markChartAsModified(\"" + id + "\")'>" +
-                        "<option value='0' " + ((filter_pos === 0) ? "selected='selected'": "") + ">Top</option>" +
-                        "<option value='1' " + ((filter_pos === 1) ? "selected='selected'": "") + ">Left</option>" +
-                        "<option value='2' " + ((filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
-                        "<option value='3' " + ((filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
+                    "<select name='googlechart_filterposition' onchange='markChartAsModified(\"" + settings.id + "\")'>" +
+                        "<option value='0' " + ((settings.filter_pos === 0) ? "selected='selected'": "") + ">Top</option>" +
+                        "<option value='1' " + ((settings.filter_pos === 1) ? "selected='selected'": "") + ">Left</option>" +
+                        "<option value='2' " + ((settings.filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
+                        "<option value='3' " + ((settings.filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
                     "</select>" +
                     "<input type='button' value='Add New Filter' class='context addgooglechartfilter btn'/>"+
                     "<div style='clear:both'> </div>" +
-                    "<ul class='googlechart_sort'  id='googlechart_sort_"+id+"'>" +
+                    "<ul class='googlechart_sort'  id='googlechart_sort_"+settings.id+"'>" +
                         "<li class='googlechart_filteritem'>" +
                             "<h1>"+
-                                "<div style='float:left;'>Sort by column</div>"+
-                                "<div class='ui-icon ui-icon-" + (!showSort?"show":"hide") + " googlechart_hide_sort_icon' title='Hide/Show sort on view'>x</div>"+
+                                "<div style='float:left;'>sort by column</div>"+
+                                "<div class='ui-icon ui-icon-" + (!settings.showSort?"show":"hide") + " googlechart_hide_sort_icon' title='Hide/Show sort on view'>x</div>"+
                                 "<div style='clear:both'> </div>" +
                             "</h1>"+
                         "</li>" +
                     "</ul>" +
-                    "<ul class='googlechart_filters_list'  id='googlechart_filters_"+id+"'>" +
+                    "<ul class='googlechart_filters_list'  id='googlechart_filters_"+settings.id+"'>" +
                     "</ul>" +
                 "</div>" +
                 "<div style='clear:both'> </div>" +
-                "<input type='button' class='context btn' value='Edit Chart' onclick='openEditChart(\""+id+"\");'/>" +
-                "<input type='button' class='context btn' value='Advanced Options' onclick='openAdvancedOptions(\""+id+"\");'/>" +
+                "<input type='button' class='context btn' value='Edit Chart' onclick='openEditChart(\""+settings.id+"\");'/>" +
+                "<input type='button' class='context btn' value='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'/>" +
                 "<a style='float:right' class='preview_button btn'>Preview Chart</a>"+
             "</fieldset>" +
         "</li>");
-    googlechart.find(".googlechart_columns").attr("value", columns);
-    googlechart.find(".googlechart_configjson").attr("value", config);
-    googlechart.find(".googlechart_options").attr("value", options);
-    googlechart.find(".googlechart_name").attr("value", name);
-    googlechart.find(".googlechart_height").attr("value", height);
-    googlechart.find(".googlechart_width").attr("value", width);
+    googlechart.find(".googlechart_columns").attr("value", settings.columns);
+    googlechart.find(".googlechart_configjson").attr("value", settings.config);
+    googlechart.find(".googlechart_options").attr("value", settings.options);
+    googlechart.find(".googlechart_name").attr("value", settings.name);
+    googlechart.find(".googlechart_height").attr("value", settings.height);
+    googlechart.find(".googlechart_width").attr("value", settings.width);
     jQuery('#googlecharts_list').append(googlechart);
-    jQuery.data(googlechart[0], 'dashboard', dashboard);
+    jQuery.data(googlechart[0], 'dashboard', settings.dashboard);
 
-    if (hidden){
-        changeChartHiddenState(id);
+    if (settings.hidden){
+        changeChartHiddenState(settings.id);
     }
 
-    jQuery("#googlechart_filters_"+id).sortable({
-        handle : '.googlechart_filteritem_'+id,
+    jQuery("#googlechart_filters_"+settings.id).sortable({
+        handle : '.googlechart_filteritem_'+settings.id,
         stop: function(event,ui){
-            markChartAsModified(id);
+            markChartAsModified(settings.id);
         }
     });
 
-    drawChart(id, checkSVG);
+    drawChart(settings.id, checkSVG);
 
     var chartColumns = {};
-    if (columns === ""){
+    if (settings.columns === ""){
         chartColumns.original = {};
         chartColumns.prepared = {};
     }
     else{
-        chartColumns = JSON.parse(columns);
+        chartColumns = JSON.parse(settings.columns);
     }
 
-    jQuery.each(filters,function(key,value){
+    jQuery.each(settings.filters,function(key,value){
         jQuery(chartColumns.prepared).each(function(idx, column){
             if (column.name === key){
-                addFilter(id, key, value, column.fullname);
+                addFilter(settings.id, key, value, column.fullname);
             }
         });
     });
     if (shouldMark){
-        markChartAsModified(id);
+        markChartAsModified(settings.id);
     }
 }
 
@@ -485,12 +528,24 @@ function openEditor(elementId) {
 
 
     var columnsFromSettings = getColumnsFromSettings(chartColumns);
-    var transformedTable = transformTable(all_rows,
-                                    columnsFromSettings.normalColumns,
-                                    columnsFromSettings.pivotColumns,
-                                    columnsFromSettings.valueColumn,
-                                    available_columns);
-    var tableForChart = prepareForChart(transformedTable, columnsFromSettings.columns, 100);
+
+    var options = {
+        originalTable : all_rows,
+        normalColumns : columnsFromSettings.normalColumns,
+        pivotingColumns : columnsFromSettings.pivotColumns,
+        valueColumn : columnsFromSettings.valueColumn,
+        availableColumns : available_columns
+    };
+
+    var transformedTable = transformTable(options);
+
+    options = {
+        originalDataTable : transformedTable,
+        columns : columnsFromSettings.columns,
+        limit : 100
+    };
+
+    var tableForChart = prepareForChart(options);
 
     chart.dataTable = tableForChart;
 
@@ -558,7 +613,16 @@ function generateNewTable(sortOrder, isFirst){
     });
 
     jQuery("#newTable").find("tr").remove();
-    var transformedTable = transformTable(all_rows, normalColumns, pivotColumns, valueColumn, available_columns);
+
+    var options = {
+        originalTable : all_rows,
+        normalColumns : normalColumns,
+        pivotingColumns : pivotColumns,
+        valueColumn : valueColumn,
+        availableColumns : available_columns
+    };
+
+    var transformedTable = transformTable(options);
 
     var tmpSortOrder = [];
     jQuery.each(transformedTable.available_columns,function(col_key, col){
@@ -1157,7 +1221,15 @@ function columnsMatrixChart(chartType){
         }
     });
 
-    var transformedTable = transformTable(all_rows, normalColumns, pivotColumns, valueColumn, available_columns);
+    var options = {
+        originalTable : all_rows,
+        normalColumns : normalColumns,
+        pivotingColumns : pivotColumns,
+        valueColumn : valueColumn,
+        availableColumns : available_columns
+    };
+
+    var transformedTable = transformTable(options);
 
     var columnsForMatrix = [];
     var columns_tmp = jQuery("#newColumns").find("th");
@@ -1224,12 +1296,24 @@ function columnsMatrixChart(chartType){
     var data;
     if (chartType === 'ScatterChart'){
         dotsForMatrixChart = Math.max(Math.round(matrixChartMatrixMaxDots / ((cols_nr * cols_nr - cols_nr) / 2)), matrixChartMinDots);
-        data = prepareForChart(transformedTable, columnNamesForMatrix, dotsForMatrixChart);
+
+        options = {
+            originalDataTable : transformedTable,
+            columns : columnNamesForMatrix,
+            limit : dotsForMatrixChart
+        };
+
+        data = prepareForChart(options);
     }
     else {
         dotsForMatrixChart = 30;
         //Math.max(Math.round(matrixChartMatrixMaxDots / (rows_nr * cols_nr)), matrixChartMinDots);
-        data = prepareForChart(transformedTable, allColumnNamesForMatrix, dotsForMatrixChart);
+        options = {
+            originalDataTable : transformedTable,
+            columns : allColumnNamesForMatrix,
+            limit : dotsForMatrixChart
+        };
+        data = prepareForChart(options);
     }
 
     jQuery(".matrixChart_dialog").remove();
@@ -1378,19 +1462,29 @@ function columnsMatrixChart(chartType){
                     var sc_col1;
                     var sc_col2;
                     var chart_data;
+                    var options = {};
                     if (chartType === 'ScatterChart'){
                         sc_col_name1 = columnNiceNamesForMatrix[col_nr];
                         sc_col_name2 = columnNiceNamesForMatrix[row_nr];
                         sc_col1 = columnNamesForMatrix[col_nr];
                         sc_col2 = columnNamesForMatrix[row_nr];
-                        chart_data = prepareForChart(transformedTable, columnNamesForMatrix);
+                        options = {
+                            originalDataTable : transformedTable,
+                            columns : columnNamesForMatrix
+                        };
+
+                        chart_data = prepareForChart(options);
                     }
                     else {
                         sc_col_name1 = allColumnNiceNamesForMatrix[row_nr];
                         sc_col_name2 = allColumnNiceNamesForMatrix[col_nr];
                         sc_col1 = allColumnNamesForMatrix[row_nr];
                         sc_col2 = allColumnNamesForMatrix[col_nr];
-                        chart_data = prepareForChart(transformedTable, allColumnNamesForMatrix);
+                        options = {
+                            originalDataTable : transformedTable,
+                            columns : allColumnNamesForMatrix
+                        };
+                        chart_data = prepareForChart(options);
                     }
 
                     var matrixChartChartDialog = ""+
@@ -1892,6 +1986,7 @@ function saveCharts(){
         chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
         chart.hidden = chartObj.find(".googlechart_hide_chart_icon").hasClass("ui-icon-show");
         chart.showSort = chartObj.find(".googlechart_hide_sort_icon").hasClass("ui-icon-hide");
+        chart.hasPNG = chartObj.find(".googlechart_thumb_checkbox").is(":visible");
         config = JSON.parse(chart.config);
         config.options.title = chart.name;
         config.dataTable = [];
@@ -1919,11 +2014,43 @@ function saveCharts(){
         type:'post',
         data:query,
         success:function(data){
+            // save static image charts for all charts if available
+            var chartObjs = jQuery("#googlecharts_list li.googlechart");
+            jQuery(chartObjs).each(function(idx, chartObj){
+                chartObj = jQuery(chartObj);
+                if (chartObj.find(".googlechart_thumb_checkbox").is(":visible")){
+                    var chartSettings=[];
+                    chartSettings[0] = chartObj.find(".googlechart_id").attr("value");
+                    var config_str = chartObj.find(".googlechart_configjson").attr("value");
+                    if (config_str){
+                        chartSettings[1] = JSON.parse(config_str);
+                        var columns_str = chartObj.find(".googlechart_columns").attr("value");
+                        var columnsSettings = {};
+                        if (!columns_str){
+                            columnsSettings.prepared = [];
+                            columnsSettings.original = [];
+                        }
+                        else{
+                            columnsSettings = JSON.parse(columns_str);
+                        }
+                        chartSettings[2] = columnsSettings;
+                        chartSettings[3] = "";
+                        chartSettings[4] = chartObj.find(".googlechart_width").attr("value");
+                        chartSettings[5] = chartObj.find(".googlechart_height").attr("value");
+                        chartSettings[6] = "";
+                        chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
+
+                        saveThumb(chartSettings, true);
+                    }
+                }
+            });
+
+
             if (thumbId){
                 var chartSettings=[];
                 var chartObj = jQuery("#googlechartid_"+thumbId);
                 chartSettings[0] = thumbId;
-                config_str = chartObj.find(".googlechart_configjson").attr("value");
+                var config_str = chartObj.find(".googlechart_configjson").attr("value");
                 if (!config_str){
                     DavizEdit.Status.stop(data);
                 }
@@ -1963,21 +2090,23 @@ function loadCharts(){
         var jsonObj = data;
         var charts = jsonObj.charts;
         jQuery(charts).each(function(index, chart){
-            addChart(
-                chart.id,
-                chart.name,
-                chart.config,
-                chart.columns,
-                chart.showSort,
-                JSON.parse(chart.filters),
-                chart.width,
-                chart.height,
-                chart.filterposition,
-                chart.options,
-                chart.isThumb,
-                chart.dashboard,
-                chart.hidden
-            );
+            var options = {
+                id : chart.id,
+                name : chart.name,
+                config : chart.config,
+                columns : chart.columns,
+                showSort : chart.showSort,
+                filters : JSON.parse(chart.filters),
+                width : chart.width,
+                height : chart.height,
+                filter_pos : chart.filterposition,
+                options : chart.options,
+                isThumb : chart.isThumb,
+                dashboard : chart.dashboard,
+                hidden : chart.hidden
+            };
+
+            addChart(options);
         });
         DavizEdit.Status.stop("Done");
         jQuery(document).trigger('google-charts-initialized');
@@ -2013,7 +2142,16 @@ function addNewChart(){
         newPrepared.fullname = value;
         newColumns.prepared.push(newPrepared);
     });
-    addChart(newChartId, "New Chart",JSON.stringify({'chartType':'Table','options': {'legend':'none'}}), JSON.stringify(newColumns), true);
+
+    var options = {
+        id : newChartId,
+        name : "New Chart",
+        config : JSON.stringify({'chartType':'Table','options': {'legend':'none'}}),
+        columns : JSON.stringify(newColumns),
+        showSort : true
+    };
+
+    addChart(options);
 
     var newChart = jQuery("#googlechartid_"+newChartId);
 

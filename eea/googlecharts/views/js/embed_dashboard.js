@@ -62,12 +62,22 @@ jQuery(document).ready(function($){
             sortedDashboardChartConfig.push(dashboardChartConfig[dashboardKey]);
         });
 
-        var mergedTable = createMergedTable(merged_rows, configs, available_columns);
+        var options = {
+            originalTable : merged_rows,
+            tableConfigs : configs,
+            availableColumns : available_columns
+        };
+        var mergedTable = createMergedTable(options);
+
         allColumns = [];
         jQuery.each(mergedTable.available_columns, function(key, value){
             allColumns.push(key);
         });
-        tableForDashboard = prepareForChart(mergedTable, allColumns);
+        options = {
+            originalDataTable : mergedTable,
+            columns : allColumns
+        };
+        tableForDashboard = prepareForChart(options);
     }
     else {
         return;
@@ -147,12 +157,17 @@ jQuery(document).ready(function($){
     jQuery.each(myFilters, function(){
         dashboard_filters[this.column] = this.type;
     });
-    drawGoogleDashboard('googlechart_dashboard',
-                        'googlechart_view',
-                        'googlechart_filters',
-                        sortedDashboardChartConfig,
-                        tableForDashboard,
-                        allColumns,
-                        dashboard_filters);
+
+    var googledashboard_params = {
+        chartsDashboard : 'googlechart_dashboard',
+        chartViewsDiv : 'googlechart_view',
+        chartFiltersDiv : 'googlechart_filters',
+        chartsSettings : sortedDashboardChartConfig,
+        chartsMergedTable : tableForDashboard,
+        allColumns : allColumns,
+        filters : dashboard_filters
+    };
+
+    drawGoogleDashboard(googledashboard_params);
 
 });

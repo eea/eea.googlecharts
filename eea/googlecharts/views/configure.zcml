@@ -70,6 +70,13 @@
     />
 
   <browser:page
+    name="googlechart.savepngchart"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".chart.SavePNGChart"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="googlechart.setthumb"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".chart.SetThumb"
@@ -195,8 +202,36 @@
 
   <browser:resource
     name="googlechart.googledashboard.preview.png"
-    file="./imgs/dashboard-preview.png"
+    file="./imgs/dashboard.preview.png"
   />
+
+  <browser:resource
+    name="googlechart.motionchart.preview.png"
+    file="./imgs/motion.preview.png" />
+
+  <browser:resource
+    name="googlechart.organizational.preview.png"
+    file="./imgs/organizational.preview.png" />
+
+  <browser:resource
+    name="googlechart.imagechart.preview.png"
+    file="./imgs/radar.preview.png" />
+
+  <browser:resource
+    name="googlechart.sparkline.preview.png"
+    file="./imgs/sparkline.preview.png" />
+
+  <browser:resource
+    name="googlechart.table.preview.png"
+    file="./imgs/table.preview.png" />
+
+  <browser:resource
+    name="googlechart.annotatedtimeline.preview.png"
+    file="./imgs/timeline.preview.png" />
+
+  <browser:resource
+    name="googlechart.treemap.preview.png"
+    file="./imgs/treemap.preview.png" />
 
   <browser:resourceDirectory
     name="eea.googlecharts.images"

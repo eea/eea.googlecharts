@@ -1,6 +1,16 @@
 <tal:tabs repeat="tab view/tabs">
-  <div class="daviz-tab-view eea-googlecharts-charts"
-    tal:attributes="id string:tab-${tab/name}"></div>
+    <div class="daviz-tab-view eea-googlecharts-charts daviz-tab-view-noscript"
+            tal:attributes="id string:tab-${tab/name}">
+        <noscript tal:define="realchart python:tab.get('realchart', False)">
+            <div class="daviz-tab-norealchart" tal:condition="not:realchart">
+                This is NOT a real chart.<br/>
+                To see the real chart, you need Javascript enabled in your browser.
+            </div>
+            <div style="clear:both"></div>
+            <img tal:attributes="alt tab/name;
+                                src tab/fallback-image"/>
+        </noscript>
+    </div>
 </tal:tabs>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -25,8 +35,8 @@
 
     <tal:block tal:repeat="chart charts">
         <script type="text/javascript"
-            tal:define="dashboard python:view.get_dashboard_js(chart);showSort python:view.get_showSort(chart);"
-            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard, '$showSort']);"></script>
+            tal:define="dashboard python:view.get_dashboard_js(chart);showSort python:view.get_showSort(chart); hasPNG chart/hasPNG | string: false"
+            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard, '$showSort', '$hasPNG']);"></script>
     </tal:block>
     <div style="clear:both">
     </div>

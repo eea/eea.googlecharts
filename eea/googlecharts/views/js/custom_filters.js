@@ -1,13 +1,23 @@
-function addCustomFilter(customTitle, customPrefix, filtersDiv, customValues, customAllowMultiple, customHandler){
-    var filterData = google.visualization.arrayToDataTable(customValues);
+function addCustomFilter(options){
+    var settings = {
+        customTitle : '',
+        customPrefix : '',
+        filtersDiv : '',
+        customValues : '',
+        customAllowMultiple : '',
+        customHandler : function(){}
+    };
+    jQuery.extend(settings, options);
 
-    var filterChartDivId = customPrefix + "_custom_chart";
+    var filterData = google.visualization.arrayToDataTable(settings.customValues);
+
+    var filterChartDivId = settings.customPrefix + "_custom_chart";
     var filterChartDiv = "<div id='" + filterChartDivId + "' style='display:none;'></div>";
-    jQuery(filterChartDiv).appendTo("#" + filtersDiv);
+    jQuery(filterChartDiv).appendTo("#" + settings.filtersDiv);
 
-    var filterFilterDivId = customPrefix + "_custom_filter";
+    var filterFilterDivId = settings.customPrefix + "_custom_filter";
     var filterFilterDiv = "<div id='" + filterFilterDivId + "'></div>";
-    jQuery(filterFilterDiv).prependTo("#" + filtersDiv);
+    jQuery(filterFilterDiv).prependTo("#" + settings.filtersDiv);
 
     var filterChart = new google.visualization.ChartWrapper({
         'chartType': 'Table',
@@ -18,10 +28,10 @@ function addCustomFilter(customTitle, customPrefix, filtersDiv, customValues, cu
         'controlType': 'CategoryFilter',
         'containerId': filterFilterDivId,
         'options': {
-            'filterColumnLabel': customTitle,
+            'filterColumnLabel': settings.customTitle,
             'ui': {
                 'allowTyping': false,
-                'allowMultiple': customAllowMultiple
+                'allowMultiple': settings.customAllowMultiple
             }
         }
     });
@@ -30,7 +40,7 @@ function addCustomFilter(customTitle, customPrefix, filtersDiv, customValues, cu
     filterDashboard.bind(filterFilter, filterChart);
 
     google.visualization.events.addListener(filterFilter, 'statechange', function(event){
-        customHandler();
+        settings.customHandler();
     });
 
     filterDashboard.draw(filterData);
@@ -86,17 +96,35 @@ function applyCustomFilters(){
     }
 }
 
-function addSortFilter(filtersDiv, filterTitle, filterDataTable, filterChart){
-    sortFilterChart = filterChart;
-    sortFilterDataTable = filterDataTable;
-    var colsnr = filterDataTable.getNumberOfColumns();
-    var cols_array = [[filterTitle]];
+function addSortFilter(options){
+    var settings = {
+        filtersDiv : '',
+        filterTitle : '',
+        filterDataTable : null,
+        filterChart : null
+    };
+
+    jQuery.extend(settings, options);
+
+    sortFilterChart = settings.filterChart;
+    sortFilterDataTable = settings.filterDataTable;
+    var colsnr = settings.filterDataTable.getNumberOfColumns();
+    var cols_array = [[settings.filterTitle]];
     for (var i = 0; i < colsnr; i++){
-        cols_array.push([filterDataTable.getColumnLabel(i)]);
-        sortFilterArray[filterDataTable.getColumnLabel(i)] = [i, false];
-        cols_array.push([filterDataTable.getColumnLabel(i) + " reversed"]);
-        sortFilterArray[filterDataTable.getColumnLabel(i) + " reversed"] = [i, true];
+        cols_array.push([settings.filterDataTable.getColumnLabel(i)]);
+        sortFilterArray[settings.filterDataTable.getColumnLabel(i)] = [i, false];
+        cols_array.push([settings.filterDataTable.getColumnLabel(i) + " reversed"]);
+        sortFilterArray[settings.filterDataTable.getColumnLabel(i) + " reversed"] = [i, true];
     }
 
-    sortFilterObj = addCustomFilter(filterTitle, 'sortfilter', filtersDiv, cols_array, false, applyCustomFilters);
+    var options2 = {
+        customTitle : settings.filterTitle,
+        customPrefix : 'sortfilter',
+        filtersDiv : settings.filtersDiv,
+        customValues : cols_array,
+        customAllowMultiple : false,
+        customHandler : applyCustomFilters
+    };
+
+    sortFilterObj = addCustomFilter(options2);
 }

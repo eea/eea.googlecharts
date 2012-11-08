@@ -3,6 +3,8 @@ Changelog
 
 6.1-dev - (unreleased)
 ----------------------
+* Feature: Save PNG version for each chart
+  [szabozo0 #9562]
 * Feature: Added possibility to sort data on chart view
   [szabozo0 #9595]
 * Change: For better readability, modified titles on views to have chart title before main title

@@ -1,40 +1,58 @@
-function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId, chartJson, chartDataTable, chartFilters, chartWidth, chartHeight, chartFilterPosition, chartOptions, availableColumns, chartReadyEvent, chartErrorEvent, showSort){
-    jQuery("#"+chartViewDiv).attr("style", "width:" + chartWidth + "px;height:" + chartHeight + "px");
-    chartJson.options.width = chartWidth;
-    chartJson.options.height = chartHeight;
+function drawGoogleChart(options){
+    var settings = {
+        chartDashboard : '',
+        chartViewDiv : '',
+        chartFiltersDiv : '',
+        chartId : '',
+        chartJson : '',
+        chartDataTable : '',
+        chartFilters : '',
+        chartWidth : '',
+        chartHeight : '',
+        chartFilterPosition : '',
+        chartOptions : '',
+        availableColumns : '',
+        chartReadyEvent : function(){},
+        chartErrorEvent : function(){},
+        showSort : false
+    };
+    jQuery.extend(settings, options);
+    jQuery("#"+settings.chartViewDiv).attr("style", "width:" + settings.chartWidth + "px;height:" + settings.chartHeight + "px");
+    settings.chartJson.options.width = settings.chartWidth;
+    settings.chartJson.options.height = settings.chartHeight;
 
-    jQuery.each(chartOptions, function(key, value){
-        chartJson.options[key] = value;
+    jQuery.each(settings.chartOptions, function(key, value){
+        settings.chartJson.options[key] = value;
     });
 
-    chartJson.dataTable = [];
+    settings.chartJson.dataTable = [];
 
-    chartJson.containerId = chartViewDiv;
+    settings.chartJson.containerId = settings.chartViewDiv;
 
-    var chart = new google.visualization.ChartWrapper(chartJson);
+    var chart = new google.visualization.ChartWrapper(settings.chartJson);
 
     var filtersArray = [];
     var usedColumnNames = [];
-    for (i = 0; i < chartDataTable.getNumberOfColumns(); i++){
-        usedColumnNames.push(chartDataTable.getColumnLabel(i));
+    for (i = 0; i < settings.chartDataTable.getNumberOfColumns(); i++){
+        usedColumnNames.push(settings.chartDataTable.getColumnLabel(i));
     }
-    if (chartFilters){
-        jQuery.each(chartFilters, function(key, value){
-            if (!availableColumns[key]){
+    if (settings.chartFilters){
+        jQuery.each(settings.chartFilters, function(key, value){
+            if (!settings.availableColumns[key]){
                 return;
             }
 //            if (usedColumnNames.indexOf(availableColumns[key]) === -1){
-            if (jQuery.inArray(availableColumns[key], usedColumnNames) === -1){
+            if (jQuery.inArray(settings.availableColumns[key], usedColumnNames) === -1){
                 return;
             }
-            var filter_div_id = chartFiltersDiv + "_" + key;
+            var filter_div_id = settings.chartFiltersDiv + "_" + key;
             var filter_div = "<div id='" + filter_div_id + "'></div>";
-            jQuery(filter_div).appendTo("#" + chartFiltersDiv);
+            jQuery(filter_div).appendTo("#" + settings.chartFiltersDiv);
 
             var filterSettings = {};
             filterSettings.options = {};
             filterSettings.options.ui = {};
-            filterSettings.options.filterColumnLabel = availableColumns[key];
+            filterSettings.options.filterColumnLabel = settings.availableColumns[key];
             filterSettings.containerId = filter_div_id;
 
             switch(value){
@@ -61,20 +79,20 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
         });
     }
 
-    var dataView = new google.visualization.DataView(chartDataTable);
+    var dataView = new google.visualization.DataView(settings.chartDataTable);
 
     if (filtersArray.length > 0){
         var dashboard = new google.visualization.Dashboard(
-            document.getElementById(chartDashboard));
+            document.getElementById(settings.chartDashboard));
 
         dashboard.bind(filtersArray, chart);
 
         google.visualization.events.addListener(dashboard, 'ready', function(event){
-            chartReadyEvent();
+            settings.chartReadyEvent();
         });
 
         google.visualization.events.addListener(dashboard, 'error', function(event){
-            chartErrorEvent();
+            settings.chartErrorEvent();
         });
 
         jQuery(filtersArray).each(function(key,value){
@@ -89,24 +107,36 @@ function drawGoogleChart(chartDashboard, chartViewDiv, chartFiltersDiv, chartId,
     else {
         chart.setDataTable(dataView);
         google.visualization.events.addListener(chart, 'ready', function(event){
-            chartReadyEvent();
+            settings.chartReadyEvent();
         });
 
         google.visualization.events.addListener(chart, 'error', function(event){
-            chartErrorEvent();
+            settings.chartErrorEvent();
         });
 
         chart.draw();
     }
+    if (settings.showSort){
+        var options2 = {
+            filtersDiv : settings.chartFiltersDiv,
+            filterTitle : 'sort by',
+            filterDataTable : settings.chartDataTable,
+            filterChart : chart
+        };
 
-    if (showSort){
-        addSortFilter(chartFiltersDiv, 'Sort By', chartDataTable, chart);
+        addSortFilter(options2);
     }
 }
 
-function removeDuplicated(chart, cols) {
-    var columns = chart.getView().columns;
-    var dataTable = chart.getDataTable();
+function removeDuplicated(options) {
+    var settings = {
+        chart : '',
+        cols : ''
+    };
+    jQuery.extend(settings, options);
+
+    var columns = settings.chart.getView().columns;
+    var dataTable = settings.chart.getDataTable();
     if (!dataTable){
         return;
     }
@@ -117,7 +147,7 @@ function removeDuplicated(chart, cols) {
     var distinctRows = [];
     for (var i = 0; i < rows_nr; i++){
         var newRow = {};
-        jQuery(cols).each(function(key,value){
+        jQuery(settings.cols).each(function(key,value){
             newRow[key] = table.getValue(i,value);
         });
         var isNewRow = true;
@@ -138,14 +168,25 @@ function removeDuplicated(chart, cols) {
             newRows.push(i);
         }
     }
-    chart.setView({"columns":columns,"rows":newRows});
+    settings.chart.setView({"columns":columns,"rows":newRows});
 }
 
-function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, chartsSettings, chartsMergedTable, allColumns, filters){
+function drawGoogleDashboard(options){
+    var settings = {
+        chartsDashboard : '',
+        chartViewsDiv : '',
+        chartFiltersDiv : '',
+        chartsSettings : '',
+        chartsMergedTable : '',
+        allColumns : '',
+        filters : ''
+    };
+    jQuery.extend(settings, options);
+
     var dashboardCharts = [];
 
     // Dashboard charts
-    jQuery.each(chartsSettings, function(key, value){
+    jQuery.each(settings.chartsSettings, function(key, value){
         var chartContainerId = "googlechart_view_" + value[0];
         var chartContainer = jQuery('<div>')
             .attr('id', chartContainerId)
@@ -184,11 +225,11 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
         jQuery.each(value[2].prepared, function(key,column){
             if (column.status === 1){
                 //column_nrs.push(allColumns.indexOf(column.name));
-                column_nrs.push(jQuery.inArray(column.name, allColumns));
+                column_nrs.push(jQuery.inArray(column.name, settings.allColumns));
                 //if (originalColumns.indexOf(column.name !== -1)){
                 if (jQuery.inArray(column.name, originalColumns) !== -1){
                     //normalColumns.push(allColumns.indexOf(column.name));
-                    normalColumns.push(jQuery.inArray(column.name, allColumns));
+                    normalColumns.push(jQuery.inArray(column.name, settings.allColumns));
                 }
             }
             else{
@@ -240,16 +281,16 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
 
     // Dashboard filters
     var dashboardFilters = [];
-    jQuery.each(filters, function(key, value){
-        var filter_div_id = chartFiltersDiv + "_" + key;
+    jQuery.each(settings.filters, function(key, value){
+        var filter_div_id = settings.chartFiltersDiv + "_" + key;
         var filter_div = "<div id='" + filter_div_id + "'></div>";
-        jQuery(filter_div).appendTo("#" + chartFiltersDiv);
+        jQuery(filter_div).appendTo("#" + settings.chartFiltersDiv);
 
         var filterSettings = {};
         filterSettings.options = {};
         filterSettings.options.ui = {};
         //filterSettings.options.filterColumnIndex = allColumns.indexOf(key);
-        filterSettings.options.filterColumnIndex = jQuery.inArray(key, allColumns);
+        filterSettings.options.filterColumnIndex = jQuery.inArray(key, settings.allColumns);
         filterSettings.containerId = filter_div_id;
         switch(value){
             case "0":
@@ -275,16 +316,20 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
     });
     if (dashboardFilters.length === 0){
         jQuery.each(dashboardCharts, function(chart_key, chart){
-            chart.chart.setDataTable(chartsMergedTable);
+            chart.chart.setDataTable(settings.chartsMergedTable);
             if (chart.isTransformed){
-                removeDuplicated(chart.chart, chart.normalColumns);
+                var options = {
+                    chart : chart.chart,
+                    cols : chart.normalColumns
+                };
+                removeDuplicated(options);
             }
             chart.chart.draw();
         });
     }
     else{
         var dashboard = new google.visualization.Dashboard(
-            document.getElementById(chartsDashboard));
+            document.getElementById(settings.chartsDashboard));
         var tmpDashboardCharts = [];
         jQuery.each(dashboardCharts, function(chart_key, chart){
             tmpDashboardCharts.push(chart.chart);
@@ -295,27 +340,43 @@ function drawGoogleDashboard(chartsDashboard, chartViewsDiv, chartFiltersDiv, ch
             jQuery.each(dashboardFilters, function(filter_key, filter){
                 if (chart.isTransformed){
                     google.visualization.events.addListener(filter, 'statechange', function(event){
-                        removeDuplicated(chart.chart, chart.normalColumns);
+                        var options = {
+                            chart : chart.chart,
+                            cols : chart.normalColumns
+                        };
+                        removeDuplicated(options);
                     });
                     google.visualization.events.addListener(filter, 'ready', function(event){
-                        removeDuplicated(chart.chart, chart.normalColumns);
+                        var options = {
+                            chart : chart.chart,
+                            cols : chart.normalColumns
+                        };
+                        removeDuplicated(options);
                     });
                 }
             });
             if (chart.isTransformed){
                 google.visualization.events.addListener(chart.chart, 'ready', function(event){
-                    removeDuplicated(chart.chart, chart.normalColumns);
+                    var options = {
+                        chart : chart.chart,
+                        cols : chart.normalColumns
+                    };
+                    removeDuplicated(options);
                 });
             }
         });
         google.visualization.events.addListener(dashboard, 'ready', function(event){
             jQuery.each(dashboardCharts, function(chart_key, chart){
                 if (chart.isTransformed){
-                    removeDuplicated(chart.chart, chart.normalColumns);
+                    var options = {
+                        chart : chart.chart,
+                        cols : chart.normalColumns
+                    };
+                    removeDuplicated(options);
                 }
             });
         });
 
-        dashboard.draw(chartsMergedTable);
+        dashboard.draw(settings.chartsMergedTable);
     }
 }
