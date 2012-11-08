@@ -291,7 +291,12 @@ function showEmbed(){
                         '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>';
     if (hasPNG === 'true'){
         var chart_id = chartObj.attr("chart_id");
-        var pngCode = '<a href="'  + baseurl + "#tab-" + chart_id + '"><img alt="' + chart_id + '" src="' + baseurl + "/" + chart_id + '.png" /></a>';
+        var pngCode = '<a href="'  + baseurl + "#tab-" + chart_id + '">' +
+                        '<img alt="' + chart_id + '" src="' + baseurl + "/" + chart_id + '.png" />' +
+                        '<div style="clear:both"></div>' +
+                        'Go to original visualization' +
+                      '</a>';
+                      
         embedHtml += '<h3>Image chart: </h3>';
         embedHtml += '<textarea class="pngCode" style="width:96%" rows="3">' + pngCode + '</textarea>';
     }
