@@ -297,7 +297,7 @@ function showEmbed(){
                         'Go to original visualization' +
                       '</a>';
                       
-        embedHtml += '<h3>Image chart: </h3>';
+        embedHtml += '<h3>Static image: </h3>';
         embedHtml += '<textarea class="pngCode" style="width:96%" rows="3">' + pngCode + '</textarea>';
     }
     embedHtml += '</div>';
