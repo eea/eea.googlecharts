@@ -3,6 +3,8 @@ Changelog
 
 6.1-dev - (unreleased)
 ----------------------
+* Feature: Added i18n translations
+  [avoinea]
 * Feature: Save PNG version for each chart
   [szabozo0 #9562]
 * Feature: Added possibility to sort data on chart view

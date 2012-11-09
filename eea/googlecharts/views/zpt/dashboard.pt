@@ -1,6 +1,7 @@
 <div class="daviz-tab-view eea-googlecharts-dashboard daviz-tab-view-noscript" tal:attributes="
   id view/tabname;
-  data-link context/absolute_url">
+  data-link context/absolute_url"
+  i18n:domain="eea">
 <noscript>
     <tal:tabs repeat="tab view/tabs">
       <div class="daviz-preview-chart">
