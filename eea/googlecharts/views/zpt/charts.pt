@@ -2,13 +2,12 @@
     <div class="daviz-tab-view eea-googlecharts-charts daviz-tab-view-noscript"
             tal:attributes="id string:tab-${tab/name}">
         <noscript tal:define="realchart python:tab.get('realchart', False)">
-            <div class="daviz-tab-norealchart" tal:condition="not:realchart">
-                This is NOT a real chart.<br/>
-                To see the real chart, you need Javascript enabled in your browser.
+            <div class="daviz-preview-chart">
+                <img tal:attributes="alt tab/name; src tab/fallback-image" />
+                <div class="daviz-tab-norealchart" i18n:translate="" tal:condition="not:realchart">
+                  This is NOT a real chart. To see the real chart, you need Javascript enabled in your browser.
+                </div>
             </div>
-            <div style="clear:both"></div>
-            <img tal:attributes="alt tab/name;
-                                src tab/fallback-image"/>
         </noscript>
     </div>
 </tal:tabs>
