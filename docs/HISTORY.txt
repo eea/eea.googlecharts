@@ -3,7 +3,8 @@ Changelog
 
 6.2-dev - (unreleased)
 ----------------------
-
+* Bug fix: Layout fixes for dashboard view
+  [szabozo0]
 6.1 - (2012-11-09)
 ------------------
 * Feature: Added i18n translations

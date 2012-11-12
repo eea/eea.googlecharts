@@ -17,7 +17,7 @@ function drawGoogleChart(options){
         showSort : false
     };
     jQuery.extend(settings, options);
-    jQuery("#"+settings.chartViewDiv).attr("style", "width:" + settings.chartWidth + "px;height:" + settings.chartHeight + "px");
+    jQuery("#"+settings.chartViewDiv).width(settings.chartWidth).height(settings.chartHeight);
     settings.chartJson.options.width = settings.chartWidth;
     settings.chartJson.options.height = settings.chartHeight;
 
@@ -195,7 +195,6 @@ function drawGoogleDashboard(options){
             .text('chart')
             .appendTo('#googlechart_view');
         chartContainer.data('dashboard', value[8]);
-        chartContainer.width(value[8].width).height(value[8].height);
         var chart = new google.visualization.ChartWrapper(value[1]);
         chart.setContainerId(chartContainerId);
         if (value[8].width){
@@ -210,7 +209,8 @@ function drawGoogleDashboard(options){
         else{
             chart.setOption("height",value[5]);
         }
-
+        chartContainer.width(chart.getOption("width"))
+                      .height(chart.getOption("height"));
         jQuery.each(value[7], function(key, value){
             chart.setOption(key, value);
         });
