@@ -195,7 +195,7 @@ function drawGoogleDashboard(options){
             .text('chart')
             .appendTo('#googlechart_view');
         chartContainer.data('dashboard', value[8]);
-        chartContainer.attr("style", "width:" + value[8].width + "px;height:" + value[8].height + "px");
+        chartContainer.width(value[8].width).height(value[8].height);
         var chart = new google.visualization.ChartWrapper(value[1]);
         chart.setContainerId(chartContainerId);
         if (value[8].width){
