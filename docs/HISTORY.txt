@@ -1,6 +1,9 @@
 Changelog
 =========
 
+6.3-dev - (unreleased)
+----------------------
+
 6.2 - (2012-11-12)
 ------------------
 * Bug fix: Layout fixes for dashboard view
