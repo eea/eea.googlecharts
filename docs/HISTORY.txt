@@ -3,6 +3,8 @@ Changelog
 
 6.3-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed saving of png versions of charts
+  [szabozo0 #9997]
 
 6.2 - (2012-11-12)
 ------------------

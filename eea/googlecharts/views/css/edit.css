@@ -979,6 +979,6 @@ select[name=googlechart_filterposition] {
     display: none;
 }
 
-#googlechart_thumb_zone {
+.googlechart_thumb_zone {
     display:none;
 }
