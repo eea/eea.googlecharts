@@ -147,8 +147,21 @@ function saveThumb(value, useName){
     };
     var tableForChart = prepareForChart(options);
 
+    var thumb_id = "googlechart_thumb_zone";
+    if (!useName){
+        thumb_id += "_cover";
+    }
+    else {
+        thumb_id += "_" + value[0];
+    }
+
+    jQuery("<div></div>")
+        .attr("id", thumb_id)
+        .addClass("googlechart_thumb_zone")
+        .appendTo("#googlecharts_config");
+
     var googlechart_params = {
-        chartViewDiv : 'googlechart_thumb_zone',
+        chartViewDiv : thumb_id,
         chartId : chart_id,
         chartJson : chart_json,
         chartDataTable : tableForChart,
@@ -159,13 +172,17 @@ function saveThumb(value, useName){
         availableColumns : transformedTable.available_columns,
         chartReadyEvent : function(){
                             var filename;
+                            var thumb_id = "#googlechart_thumb_zone";
                             if (!useName){
                                 filename = "cover.png";
+                                thumb_id += "_cover";
                             }
                             else {
                                 filename = value[0];
+                                thumb_id += "_" + value[0];
                             }
-                            var svg = jQuery("#googlechart_thumb_zone").find("svg").parent().html();
+                            var svg = jQuery(thumb_id).find("svg").parent().html();
+                            jQuery(thumb_id).remove();
                             var form = jQuery('.daviz-view-form:has(#googlecharts_config)');
                             var action = form.length ? form.attr('action') : '';
                             if (useName){
@@ -194,7 +211,6 @@ function saveThumb(value, useName){
                         },
         showSort : false
     };
-
     drawGoogleChart(googlechart_params);
 }
 
@@ -2039,7 +2055,6 @@ function saveCharts(){
                         chartSettings[5] = chartObj.find(".googlechart_height").attr("value");
                         chartSettings[6] = "";
                         chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
-
                         saveThumb(chartSettings, true);
                     }
                 }

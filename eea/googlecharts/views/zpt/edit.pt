@@ -8,6 +8,4 @@
            class="context btn"
            i18n:attributes="value" />
     <ul id="googlecharts_list"></ul>
-    <div id="googlechart_thumb_zone" style="display:none;">
-    </div>
 </div>
