@@ -654,11 +654,10 @@ function generateNewTable(sortOrder, isFirst){
         catch(err){
             if (retries < retryNr){
                 retries++;
-                continue
+                continue;
             }
             else{
                 throw err;
-                break;
             }
         }
     }
