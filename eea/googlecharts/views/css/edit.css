@@ -982,3 +982,63 @@ select[name=googlechart_filterposition] {
 .googlechart_thumb_zone {
     display:none;
 }
+
+    .slick-header-menu {
+      z-index: 9999 !important;
+    }
+
+    .slick-header-menuitem {
+      padding: 2px 4px;
+      border: 1px solid transparent;
+      border-radius: 3px;
+    }
+
+    .slick-header-menuitem:hover {
+      border-color: silver;
+      background: white;
+    }
+
+    .slick-header-menuitem-disabled {
+      border-color: transparent !important;
+      background: inherit !important;
+    }
+
+    .icon-help {
+      background-image: url(../images/help.png);
+    }
+
+    #filter_grid > .slick-header {
+        display:none;
+    }
+
+    .filter_item{
+        padding-left:30px !important;
+    }
+
+    .filter_item:hover{
+        background-color:#CCCCCC;
+    }
+    .filter_item_selected {
+        background-repeat: no-repeat;
+        background-image: url(++resource++slickgrid-images/tick.png); 
+    }
+    .filter_item_ignored {
+    }
+
+    .slick_newTable .grid-column-hidden{
+        background-color:gray;
+    }
+
+    .slick-cell.active{
+        border: 1px solid transparent;
+        border-bottom:1px solid silver;
+        border-right: 1px dotted silver;
+    }
+
+    .filtered-column{
+        background-repeat: no-repeat;
+        background-image: url(http://localhost:8080/Plone/electricity-generated-from-renewable-sources-1990-eurostat-nrg_ind_333a-1/++resource++slickgrid-images/pencil.png); 
+        padding-left:15px;
+    }
+
+ 

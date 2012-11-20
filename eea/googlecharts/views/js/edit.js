@@ -603,6 +603,46 @@ function generateSortedColumns() {
 }
 
 function generateNewTable(sortOrder, isFirst){
+    var columns = jQuery("#originalColumns").find("th");
+
+    var normalColumns = [];
+    var pivotColumns = [];
+    var valueColumn = '';
+    jQuery.each(columns, function(idx, value){
+        var columnType = jQuery(value).find("select").attr("value");
+        var columnName = jQuery(value).attr("column_id");
+        switch(columnType){
+            case "0":
+                break;
+            case "1":
+                normalColumns.push(columnName);
+                break;
+            case "2":
+                pivotColumns.push(columnName);
+                break;
+            case "3":
+                valueColumn = columnName;
+                break;
+        }
+    });
+
+    jQuery("#newTable").find("tr").remove();
+
+    var options = {
+        originalTable : all_rows,
+        normalColumns : normalColumns,
+        pivotingColumns : pivotColumns,
+        valueColumn : valueColumn,
+        availableColumns : available_columns
+    };
+
+    var transformedTable = transformTable(options);
+
+    drawGrid("#newTable", transformedTable.items);
+
+}
+
+function generateNewTable_(sortOrder, isFirst){
     isFirst = typeof(isFirst) !== 'undefined' ? isFirst : false;
     DavizEdit.Status.start("Updating Tables");
     var columns = jQuery("#originalColumns").find("th");
@@ -1692,8 +1732,8 @@ function openEditChart(id){
                         '</div>' +
                     '</div>'+
                     "<div style='clear:both;'> </div>" +
-                    '<table id="newTable" class="googlechartTable newGooglechartTable table" style="height:300px;">'+
-                    '</table>'+
+                    '<div id="newTable" class="slick_newTable" style="height:300px;">'+
+                    '</div>'+
                     '<div style="clear:both"></div>'+
                 '</div>'+
             '</div>'+
@@ -1881,14 +1921,6 @@ function openEditChart(id){
     });
     updateWithStatus();
     openEditor("tmp_chart");
-
-    jQuery("#showOriginal").click(function(){
-        jQuery("#googlechart_overlay").overlay().load();
-    });
-
-    jQuery("#tablePivots").click(function(){
-        jQuery(".pivotingTable").toggle();
-    });
 
     jQuery("#googlechart_overlay").overlay({
         mask: 'black'
