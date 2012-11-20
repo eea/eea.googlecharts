@@ -647,11 +647,11 @@ function generateNewTable(sortOrder, isFirst){
     var retries = 0;
     while (true){
         try{
-            drawGrid("#newTable", transformedTable.items);
+            jQuery("#newTable").empty();
+            drawGrid("#newTable", transformedTable.items, transformedTable.available_columns);
             break;
         }
         catch(err){
-            console.log("exception");
             if (retries < retryNr){
                 retries++;
                 continue

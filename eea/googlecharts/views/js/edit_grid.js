@@ -110,7 +110,7 @@ var filter_grid_colId;
 function filterGridFilter(item) {
     if (filter_grid_filter !== "") {
         var c = filter_grid.getColumns()[0];
-        if (item[c.field].indexOf(filter_grid_filter) < 0 ) {
+        if (item[c.field].toLowerCase().indexOf(filter_grid_filter.toLowerCase()) < 0 ) {
           return false;
         }
       }
@@ -152,7 +152,14 @@ function enableGridFilters(){
     });
 
     jQuery("body").delegate("#slick-menu-all","click", function(){
-        filter_grid_filters = [];
+        for (var i = 0; i < filter_grid.getDataLength(); i++){
+            var element = filter_grid.getDataItem(i);
+            var value = element[filter_grid_colId];
+            pos = jQuery.inArray(value, filter_grid_filters);
+            if (pos !== -1){
+                filter_grid_filters.splice(pos,1);
+            }
+        }
         filterApplyFlags();
     });
 
@@ -176,9 +183,15 @@ function enableGridFilters(){
         filter_data_view.refresh();
     });
 
-    jQuery("#newTable").delegate(".slick-header-menubutton","click", function(){
+    jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
         filter_grid_filter = "";
-        var colId = jQuery(this.parentElement).find("span").text();
+        var colName = jQuery(this.parentElement).find("span").text();
+        var colId;
+        jQuery(grid.getColumns()).each(function(){
+            if (this.name === colName){
+                colId = this.id;
+            }
+        });
         if (grid_filters[colId] === undefined){
             filter_grid_filters = [];
         }
@@ -187,10 +200,11 @@ function enableGridFilters(){
         }
         filter_grid_colId = colId;
         var colNr = self.grid.getColumnIndex(colId);
-        var filter_element = jQuery(".slick-header-menuitem").find("span:contains(filter)")
+        var filter_element = jQuery(".slick-header-menuitem").find("span:contains(filter)");
         if (filter_element.length === 0){
             return;
         }
+        filter_element.parent().hide();
         var menu = filter_element.parent().parent();
         jQuery("#slick-menu-quicksearch").remove();
         jQuery("#slick-menu-clearboth").remove();
@@ -199,11 +213,14 @@ function enableGridFilters(){
         jQuery("#filter_grid").remove();
         jQuery("#slick-menu-ok").remove();
         jQuery("#slick-menu-cancel").remove();
-        jQuery("<input type='text' id='slick-menu-quicksearch'/>").appendTo(menu);
-        jQuery("<div style='clear:both' id='slick-menu-clearboth'> </div>").appendTo(menu);
+        jQuery("<hr class='slick-filter-hr'>").appendTo(menu);
+        jQuery("<div class='slick-filter-title'>Filter:</div>").appendTo(menu);
         jQuery("<input id='slick-menu-all' type='button' value='all'/>").appendTo(menu);
         jQuery("<input id='slick-menu-clear' type='button' value='clear'/>").appendTo(menu);
-        jQuery("<div id='filter_grid'></div>").width(menu.width()).height(150).appendTo(menu);
+        jQuery("<div style='clear:both' id='slick-menu-clearboth'> </div>").appendTo(menu);
+        jQuery("<input type='text' id='slick-menu-quicksearch'/>").appendTo(menu);
+        jQuery("<div style='clear:both' id='slick-menu-clearboth'> </div>").appendTo(menu);
+        jQuery("<div id='filter_grid'></div>").appendTo(menu);
         jQuery("<input id='slick-menu-ok' type='button' value='ok'/>").appendTo(menu);
         jQuery("<input id='slick-menu-cancel' type='button' value='cancel'/>").appendTo(menu);
 
@@ -256,6 +273,8 @@ function enableGridFilters(){
         filter_data_view.setFilter(filterGridFilter);
 
         filter_data_view.endUpdate();
+        filter_grid.autosizeColumns()
+        jQuery("#filter_grid").find(".slick-viewport").height(jQuery("#filter_grid").height());
         filter_grid.onClick.subscribe(function(e, args){
             args.grid.setActiveCell(null);
             self.filter_clicked = true;
@@ -284,7 +303,7 @@ function enableGridFilters(){
     });
 }
 
-function drawGrid(divId, data){
+function drawGrid(divId, data, data_colnames){
     self.grid_data = data.slice();
     var options = {
         enableCellNavigation: false,
@@ -340,7 +359,7 @@ function drawGrid(divId, data){
     grid_colnames = [];
     jQuery.each(data[0], function(key,value){
         grid_colnames.push(key);
-        columns.push({id: key, name: key, field: key,
+        columns.push({id: key, name: data_colnames[key], field: key,
                     formatter: hiddenFormatter,
                     header: header});
 
@@ -377,9 +396,9 @@ function drawGrid(divId, data){
     grid_data_view.endUpdate();
 
     grid.onColumnsReordered.subscribe(gridOnColumnsReorderedHandler);
-    var headerMenuPlugin = new Slick.Plugins.HeaderMenu({
+    var headerMenuPlugin = new Slick.Plugins.HeaderMenu(/*{
         buttonImage: "http://mleibman.github.com/SlickGrid/images/down.gif",
-    });
+    }*/);
 
     headerMenuPlugin.onCommand.subscribe(menuOnCommandHandler);
     grid.registerPlugin(headerMenuPlugin);

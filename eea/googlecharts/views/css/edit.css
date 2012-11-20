@@ -1037,8 +1037,48 @@ select[name=googlechart_filterposition] {
 
     .filtered-column{
         background-repeat: no-repeat;
-        background-image: url(http://localhost:8080/Plone/electricity-generated-from-renewable-sources-1990-eurostat-nrg_ind_333a-1/++resource++slickgrid-images/pencil.png); 
+        background-image: url(++resource++slickgrid-images/pencil.png); 
         padding-left:15px;
     }
 
- 
+.slick-filter-hr {
+    margin-top:5px;
+    margin-bottom:10px;
+    border-top: 1px solid #AAA;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+}
+
+#slick-menu-quicksearch{
+    margin-left:25px;
+    margin-right:15px;
+    margin-top:5px;
+    width:200px;
+}
+
+#filter_grid{
+    margin-left:25px;
+    margin-right:15px;
+    margin-bottom:10px;
+    width:200px;
+    height:150px;
+}
+
+.slick-filter-title{
+    font-size:11px;
+    font-weight:bold;
+    margin-left:25px;
+    float:left;
+}
+
+#slick-menu-ok {
+    margin-left:25px;
+}
+
+#slick-menu-cancel {
+}
+
+#slick-menu-cancel {}
+
+#slick-menu-all {}
