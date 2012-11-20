@@ -638,8 +638,30 @@ function generateNewTable(sortOrder, isFirst){
 
     var transformedTable = transformTable(options);
 
-    drawGrid("#newTable", transformedTable.items);
-
+    /* Workaround for slickgrid - webkit bug 
+    As the styles are generated in js, in chrome sometimes we get the error: Cannot find stylesheet.
+    If we get this error, we try to draw the grid again, 5 times.
+    If the problem persists after 5 atempts, we throw the exception we got from slickgrid
+    */
+    var retryNr = 5;
+    var retries = 0;
+    while (true){
+        try{
+            drawGrid("#newTable", transformedTable.items);
+            break;
+        }
+        catch(err){
+            console.log("exception");
+            if (retries < retryNr){
+                retries++;
+                continue
+            }
+            else{
+                throw err;
+                break;
+            }
+        }
+    }
 }
 
 function generateNewTable_(sortOrder, isFirst){
