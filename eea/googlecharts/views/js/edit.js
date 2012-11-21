@@ -1743,13 +1743,7 @@ function openEditChart(id){
                     '<div>'+
                         '<span class="label">Table for chart</span>' +
                         '<div class="buttons-bar">'+
-                        '<input type="button" class="column-show-hide-button context btn" value="Original table" id="showOriginal"/>' +
                         '<input type="button" class="column-show-hide-button context btn" value="Table pivots" id="tablePivots"/>' +
-                        '<input type="button" class="column-show-hide-button context btn" value="Hide all columns" onclick="columnsHideAll();"/>' +
-                        '<input type="button" class="column-show-hide-button context btn" value="Show all columns" onclick="columnsShowAll();"/>' +
-                        '<input type="button" class="column-show-hide-button context btn" value="Reverse selection" onclick="columnsRevert();"/>' +
-                        '<input type="button" class="column-show-hide-button context btn" value="Scatterplots matrix" onclick="columnsMatrixChart(\'ScatterChart\');"/>' +
-                        '<input type="button" class="column-show-hide-button context btn" value="Other matrices" onclick="columnsMatrixChart();"/>' +
                         '</div>' +
                     '</div>'+
                     "<div style='clear:both;'> </div>" +
@@ -1942,6 +1936,10 @@ function openEditChart(id){
     });
     updateWithStatus();
     openEditor("tmp_chart");
+
+    jQuery("#tablePivots").click(function(){
+        jQuery(".pivotingTable").toggle();
+    });
 
     jQuery("#googlechart_overlay").overlay({
         mask: 'black'

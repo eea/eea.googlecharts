@@ -1,28 +1,29 @@
 var grid;
-var grid_colnames = [];
+var grid_colIds = {};
 var grid_columnsHiddenById = {};
 var grid_filters = {};
 var grid_data_view;
 var grid_data;
 
 function updateColumnHeaders(){
-    for (var colId in grid_colnames){
-        if ((grid_filters[grid_colnames[colId]] !== undefined) && (grid_filters[grid_colnames[colId]].length !== 0)){
-            jQuery(".slick-column-name:contains("+grid_colnames[colId]+")").addClass("filtered-column");
+    jQuery.each(grid_colIds, function(colId, colName){
+        if ((grid_filters[colId] !== undefined) && (grid_filters[colId].length !== 0)){
+            jQuery(".slick-column-name:contains("+colName+")").addClass("filtered-column");
         }
         else {
-            jQuery(".slick-column-name:contains("+grid_colnames[colId]+")").removeClass("filtered-column");
+            jQuery(".slick-column-name:contains("+colName+")").removeClass("filtered-column");
         }
-    }
+    });
 }
 
 function gridFilter(item) {
-    for (var colId in grid_colnames){
-        if (jQuery.inArray(item[grid_colnames[colId]], grid_filters[grid_colnames[colId]]) !== -1){
-            return false;
+    var retVal = true;
+    jQuery.each(grid_colIds, function(colId, colName){
+        if (jQuery.inArray(item[colId], grid_filters[colId]) !== -1){
+            retVal = false;
         }
-    }
-    return true;
+    });
+    return retVal;
 }
 
 function hiddenFormatter(row, cell, value, columnDef, dataContext){
@@ -47,14 +48,12 @@ function menuOnCommandHandler(e, args){
     if (command == "showOriginal"){
         jQuery("#googlechart_overlay").overlay().load();
     }
-    if (command == "showPivots"){
-        jQuery(".pivotingTable").toggle();
-    }
+
     var colId;
     if (command == "hideAll"){
-        for (colId in grid_colnames){
-            grid_columnsHiddenById[grid_colnames[colId]] = true;
-        }
+        jQuery.each(grid_colIds, function(colId, colName){
+            grid_columnsHiddenById[colId] = true;
+        });
         grid.invalidate();
     }
     if (command == "showAll"){
@@ -62,14 +61,14 @@ function menuOnCommandHandler(e, args){
         grid.invalidate();
     }
     if (command == "reverse"){
-        for (colId in grid_colnames){
-            if (grid_columnsHiddenById[grid_colnames[colId]]){
-                delete grid_columnsHiddenById[grid_colnames[colId]];
+        jQuery.each(grid_colIds, function(colId, colName){
+            if (grid_columnsHiddenById[colId]){
+                delete grid_columnsHiddenById[colId];
             }
             else {
-                grid_columnsHiddenById[grid_colnames[colId]] = true;
+                grid_columnsHiddenById[colId] = true;
             }
-        }
+        });
 
         grid.invalidate();
     }
@@ -81,6 +80,14 @@ function menuOnCommandHandler(e, args){
     if (command == "otherMatrices"){
         columnsMatrixChart();
         grid.invalidate();
+    }
+    if (command == "resetFilters"){
+        grid_filters = {};
+        grid_data_view.refresh();
+        grid.updateRowCount();
+        grid.invalidateAllRows();
+        grid.render();
+        updateColumnHeaders();
     }
 }
 
@@ -201,7 +208,7 @@ function enableGridFilters(){
         }
         filter_grid_colId = colId;
         var colNr = self.grid.getColumnIndex(colId);
-        var filter_element = jQuery(".slick-header-menuitem").find("span:contains(filter)");
+        var filter_element = jQuery(".slick-header-menuitem").find("span:contains(-filter-)");
         if (filter_element.length === 0){
             return;
         }
@@ -319,7 +326,7 @@ function drawGrid(divId, data, data_colnames){
                  command:'showColumn'},
                 {title:'hide column',
                  command:'hideColumn'},
-                {title:'filter',
+                {title:'-filter-',
                  command:'filter',
                  disabled:true}
             ]
@@ -338,8 +345,6 @@ function drawGrid(divId, data, data_colnames){
                     items: [
                         {title:'show original table',
                         command:'showOriginal'},
-                        {title:'table pivots',
-                        command:'showPivots'},
                         {title:'hide all columns',
                         command:'hideAll'},
                         {title:'show all columns',
@@ -350,36 +355,35 @@ function drawGrid(divId, data, data_colnames){
                         command:'scatterplots'},
                         {title:'other matrices',
                         command:'otherMatrices'},
-                        {title:'reset table',
-                        command:'resetTable'}
+                        {title:'reset filters',
+                        command:'resetFilters'}
                     ]
                 }
             }
         }
     ];
     grid_filters = {};
-    grid_colnames = [];
+    grid_colIds = {};
     jQuery.each(data[0], function(key,value){
-        grid_colnames.push(key);
+        grid_colIds[key] = data_colnames[key];
         columns.push({id: key, name: data_colnames[key], field: key,
                     formatter: hiddenFormatter,
-                    header: header});
+                    header: header,
+                    toolTip: data_colnames[key]});
 
     });
 
-        grid_data_view = new Slick.Data.DataView();
+    grid_data_view = new Slick.Data.DataView();
 
-        grid_data_view.onRowCountChanged.subscribe(function (e, args) {
-            grid.updateRowCount();
-            grid.render();
-        });
+    grid_data_view.onRowCountChanged.subscribe(function (e, args) {
+        grid.updateRowCount();
+        grid.render();
+    });
 
-        grid_data_view.onRowsChanged.subscribe(function (e, args) {
-            grid.invalidateRows(args.rows);
-            grid.render();
-        });
-
-
+    grid_data_view.onRowsChanged.subscribe(function (e, args) {
+        grid.invalidateRows(args.rows);
+        grid.render();
+    });
 
     grid = new Slick.Grid(divId, grid_data_view, columns, options);
 
