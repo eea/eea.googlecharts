@@ -602,6 +602,61 @@ function generateSortedColumns() {
     return (sortedColumns);
 }
 
+function generateNewTableForChart(){
+        var tmp_chart = jQuery("#googlechartid_tmp_chart");
+
+        var columnsSettings = {};
+        columnsSettings.original = [];
+        columnsSettings.prepared = [];
+        var hasNormal = false;
+        var hasPivot = false;
+        var hasValue = false;
+        jQuery("#originalColumns").find("th").each(function(){
+           var original = {};
+           original.name = jQuery(this).attr("column_id");
+           original.status = parseInt(jQuery(this).find("select").attr("value"),10);
+           if (original.status === 1){
+              hasNormal = true;
+           }
+           if (original.status === 2){
+               hasPivot = true;
+           }
+           if (original.status === 3){
+               hasValue = true;
+           }
+           columnsSettings.original.push(original);
+        });
+        jQuery(grid.getColumns()).each(function(){
+            if (this.id !== "options"){
+                var preparedColumn = {};
+                preparedColumn.name = jQuery(this).attr("column_id");
+                preparedColumn.name = this.id;
+                if (grid_columnsHiddenById[this.id]){
+                    preparedColumn.status = 0;
+                }
+                else {
+                    preparedColumn.status = 1;
+                }
+                preparedColumn.fullname = this.name;
+                columnsSettings.prepared.push(preparedColumn);
+            }
+        });
+        var isOK = true;
+        if (!hasNormal){
+            jQuery("#googlechart_chart_div_tmp_chart").html("At least 1 visible column must be selected!");
+            isOK = false;
+        }
+        if (hasPivot != hasValue){
+            jQuery("#googlechart_chart_div_tmp_chart").html("If you want pivot table, you must select at least 1 pivot volumn and 1 value column");
+            isOK = false;
+        }
+        if(isOK){
+            var columns_str = JSON.stringify(columnsSettings);
+            jQuery("#googlechartid_tmp_chart .googlechart_columns").val(columns_str);
+        }
+    openEditor("tmp_chart");
+}
+
 function generateNewTable(sortOrder, isFirst){
     var columns = jQuery("#originalColumns").find("th");
 
@@ -661,6 +716,12 @@ function generateNewTable(sortOrder, isFirst){
             }
         }
     }
+
+    if (!isFirst){
+        generateNewTableForChart();
+    }
+//    openEditor("tmp_chart");
+
 }
 
 function generateNewTable_(sortOrder, isFirst){

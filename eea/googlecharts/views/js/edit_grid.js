@@ -6,6 +6,7 @@ var grid_data_view;
 var grid_data;
 
 function updateColumnHeaders(){
+    generateNewTableForChart();
     jQuery.each(grid_colIds, function(colId, colName){
         if ((grid_filters[colId] !== undefined) && (grid_filters[colId].length !== 0)){
             jQuery(".slick-column-name:contains("+colName+")").addClass("filtered-column");
@@ -87,8 +88,8 @@ function menuOnCommandHandler(e, args){
         grid.updateRowCount();
         grid.invalidateAllRows();
         grid.render();
-        updateColumnHeaders();
     }
+    updateColumnHeaders();
 }
 
 function gridOnColumnsReorderedHandler(e, args){
