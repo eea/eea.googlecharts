@@ -11,8 +11,8 @@ def migrate_imagecharts(context):
     brains = ctool.unrestrictedSearchResults(portal_type='DavizVisualization')
     for brain in brains:
         visualization = brain.getObject()
-        tabs = getMultiAdapter((visualization, context.REQUEST),
-                                name='daviz-view.html').tabs
+        tabs = queryMultiAdapter((visualization, context.REQUEST),
+                                 name='daviz-view.html').tabs
 
         for tab in tabs:
             if tab['name'] == 'googlechart.googledashboard':

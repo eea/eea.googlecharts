@@ -16,7 +16,7 @@ class Dashboards(BrowserView):
 
         view = deepcopy(view)
         view.setdefault('title', u'Dashboard')
-        mutator.add_view(u'googlechart.googledashboards', dashboards=[view,])
+        mutator.add_view(u'googlechart.googledashboards', dashboards=[view, ])
         mutator.delete_view(u'googlechart.googledashboard')
         return 'Migration of %s Googlecharts Dashboards ... DONE' % (
             self.context.absolute_url()
