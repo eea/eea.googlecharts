@@ -216,19 +216,21 @@ function enableGridFilters(){
         filter_element.parent().hide();
         var menu = filter_element.parent().parent();
         jQuery("#slick-menu-quicksearch").remove();
-        jQuery("#slick-menu-clearboth").remove();
+        jQuery(".slick-menu-clearboth").remove();
         jQuery("#slick-menu-all").remove();
         jQuery("#slick-menu-clear").remove();
         jQuery("#filter_grid").remove();
         jQuery("#slick-menu-ok").remove();
         jQuery("#slick-menu-cancel").remove();
+        jQuery(".slick-filter-title").remove();
+        jQuery(".slick-filter-hr").remove();
         jQuery("<hr class='slick-filter-hr'>").appendTo(menu);
         jQuery("<div class='slick-filter-title'>Filter:</div>").appendTo(menu);
         jQuery("<input id='slick-menu-all' type='button' value='all'/>").appendTo(menu);
         jQuery("<input id='slick-menu-clear' type='button' value='clear'/>").appendTo(menu);
-        jQuery("<div style='clear:both' id='slick-menu-clearboth'> </div>").appendTo(menu);
+        jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(menu);
         jQuery("<input type='text' id='slick-menu-quicksearch'/>").appendTo(menu);
-        jQuery("<div style='clear:both' id='slick-menu-clearboth'> </div>").appendTo(menu);
+        jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(menu);
         jQuery("<div id='filter_grid'></div>").appendTo(menu);
         jQuery("<input id='slick-menu-ok' type='button' value='ok'/>").appendTo(menu);
         jQuery("<input id='slick-menu-cancel' type='button' value='cancel'/>").appendTo(menu);
@@ -313,6 +315,23 @@ function enableGridFilters(){
     });
 }
 
+function setGridColumnsOrder(sortOrder){
+    var orig_cols = grid.getColumns();
+    var tmp_cols = [];
+    tmp_cols.push(orig_cols[0]);
+    jQuery(sortOrder).each(function(idx_c, col){
+        if (col[1] === "hidden"){
+            grid_columnsHiddenById[col[0]] = true;
+        }
+        jQuery(orig_cols).each(function(idx_oc, orig_col){
+            if (col[0] === orig_col.id){
+                tmp_cols.push(orig_col);
+            }
+        });
+    });
+    grid.setColumns(tmp_cols);
+}
+
 function drawGrid(divId, data, data_colnames){
     self.grid_data = data.slice();
     var options = {
@@ -365,6 +384,7 @@ function drawGrid(divId, data, data_colnames){
     ];
     grid_filters = {};
     grid_colIds = {};
+    grid_columnsHiddenById = {};
     jQuery.each(data[0], function(key,value){
         grid_colIds[key] = data_colnames[key];
         columns.push({id: key, name: data_colnames[key], field: key,

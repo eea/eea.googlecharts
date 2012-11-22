@@ -629,7 +629,6 @@ function generateNewTableForChart(){
         jQuery(grid.getColumns()).each(function(){
             if (this.id !== "options"){
                 var preparedColumn = {};
-                preparedColumn.name = jQuery(this).attr("column_id");
                 preparedColumn.name = this.id;
                 if (grid_columnsHiddenById[this.id]){
                     preparedColumn.status = 0;
@@ -681,8 +680,6 @@ function generateNewTable(sortOrder, isFirst){
         }
     });
 
-    jQuery("#newTable").find("tr").remove();
-
     var options = {
         originalTable : all_rows,
         normalColumns : normalColumns,
@@ -692,6 +689,11 @@ function generateNewTable(sortOrder, isFirst){
     };
 
     var transformedTable = transformTable(options);
+    var tmpSortOrder = [];
+    jQuery.each(transformedTable.available_columns,function(col_key, col){
+        tmpSortOrder.push([col_key, "visible"]);
+    });
+    sortOrder = typeof(sortOrder) === 'undefined' ? tmpSortOrder : sortOrder;
 
     /* Workaround for slickgrid - webkit bug 
     As the styles are generated in js, in chrome sometimes we get the error: Cannot find stylesheet.
@@ -716,7 +718,7 @@ function generateNewTable(sortOrder, isFirst){
             }
         }
     }
-
+    setGridColumnsOrder(sortOrder);
     if (!isFirst){
         generateNewTableForChart();
     }
@@ -1135,12 +1137,20 @@ function chartEditorSave(id){
         }
         columnsSettings.original.push(original);
     });
-    jQuery("#newColumns").find("th").each(function(){
-        var preparedColumn = {};
-        preparedColumn.name = jQuery(this).attr("column_id");
-        preparedColumn.status = (jQuery(this).attr("column_visible") === 'visible'?1:0);
-        preparedColumn.fullname = jQuery(this).find("span").html();
-        columnsSettings.prepared.push(preparedColumn);
+//    jQuery("#newColumns").find("th").each(function(){
+    jQuery(grid.getColumns()).each(function(){
+        if (this.id !== "options"){
+            var preparedColumn = {};
+            preparedColumn.name = this.id;
+            if (grid_columnsHiddenById[this.id]){
+                preparedColumn.status = 0;
+            }
+            else {
+                preparedColumn.status = 1;
+            }
+            preparedColumn.fullname = this.name;
+            columnsSettings.prepared.push(preparedColumn);
+        }
     });
 
     if (!hasNormal){
@@ -1228,44 +1238,6 @@ function updatePalette() {
     if (chartEditor){
         redrawEditorChart();
     }
-}
-
-function columnsHideAll(){
-    jQuery("#newTable").find(".ui-icon").each(function(idx, column){
-        if (jQuery(column).hasClass("ui-icon-hide")){
-            jQuery(column).removeClass("ui-icon-hide");
-            jQuery(column).addClass("ui-icon-show");
-            jQuery(column).closest("th").attr("column_visible","hidden");
-        }
-    });
-    generateNewTable(generateSortedColumns());
-}
-
-function columnsShowAll(){
-    jQuery("#newTable").find(".ui-icon").each(function(idx, column){
-        if (!jQuery(column).hasClass("ui-icon-hide")){
-            jQuery(column).removeClass("ui-icon-show");
-            jQuery(column).addClass("ui-icon-hide");
-            jQuery(column).closest("th").attr("column_visible","visible");
-        }
-    });
-    generateNewTable(generateSortedColumns());
-}
-
-function columnsRevert(){
-    jQuery("#newTable").find(".ui-icon").each(function(idx, column){
-        if (jQuery(column).hasClass("ui-icon-hide")){
-            jQuery(column).removeClass("ui-icon-hide");
-            jQuery(column).addClass("ui-icon-show");
-            jQuery(column).closest("th").attr("column_visible","hidden");
-        }
-        else{
-            jQuery(column).removeClass("ui-icon-show");
-            jQuery(column).addClass("ui-icon-hide");
-            jQuery(column).closest("th").attr("column_visible","visible");
-        }
-    });
-    generateNewTable(generateSortedColumns());
 }
 
 function updateMatrixChartScrolls(){
@@ -1968,8 +1940,8 @@ function openEditChart(id){
             containment:"#headers",
             revert:false,
             start: function(event, ui){
-                if (checkVisiblePivotValueColumns() < 3){
-                    alert("At least 3 visible column is required");
+                if (checkVisiblePivotValueColumns() < 2){
+                    alert("At least 2 visible column are required");
                     return false;
                 }
                 pivotDraggedColumn = parseInt($(ui.helper).attr("columnnr"),10);
