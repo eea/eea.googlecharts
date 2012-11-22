@@ -1,14 +1,13 @@
-<tal:tabs repeat="tab view/tabs">
+<tal:tabs repeat="tab view/tabs" i18n:domain="eea">
     <div class="daviz-tab-view eea-googlecharts-charts daviz-tab-view-noscript"
             tal:attributes="id string:tab-${tab/name}">
         <noscript tal:define="realchart python:tab.get('realchart', False)">
-            <div class="daviz-tab-norealchart" tal:condition="not:realchart">
-                This is NOT a real chart.<br/>
-                To see the real chart, you need Javascript enabled in your browser.
+            <div class="daviz-preview-chart">
+                <img tal:attributes="alt tab/name; src tab/fallback-image" />
+                <div class="daviz-tab-norealchart" i18n:translate="" tal:condition="not:realchart">
+                  This is NOT a real chart. To see the real chart, you need Javascript enabled in your browser.
+                </div>
             </div>
-            <div style="clear:both"></div>
-            <img tal:attributes="alt tab/name;
-                                src tab/fallback-image"/>
         </noscript>
     </div>
 </tal:tabs>
@@ -23,7 +22,7 @@
 
 <script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; qr_size = '${view/qr_size}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}'; var main_title='${view/get_maintitle}';">
 </script>
-<div class="googlecharts_container">
+<div class="googlecharts_container" i18n:domain="eea">
 <tal:block tal:define="charts view/get_charts; has_dashboard view/has_dashboard">
     <tal:block tal:condition="has_dashboard">
         <script type="text/javascript" tal:content="string: var googledashboard_filters=${view/get_dashboard_filters};">
