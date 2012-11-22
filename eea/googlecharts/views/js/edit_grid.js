@@ -316,6 +316,7 @@ function enableGridFilters(){
 }
 
 function setGridColumnsOrder(sortOrder){
+    grid_columnsHiddenById = {};
     var orig_cols = grid.getColumns();
     var tmp_cols = [];
     tmp_cols.push(orig_cols[0]);
@@ -330,6 +331,7 @@ function setGridColumnsOrder(sortOrder){
         });
     });
     grid.setColumns(tmp_cols);
+    updateColumnHeaders();
 }
 
 function drawGrid(divId, data, data_colnames){

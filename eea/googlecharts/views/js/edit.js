@@ -1342,7 +1342,7 @@ function columnsMatrixChart(chartType){
     var transformedTable = transformTable(options);
 
     var columnsForMatrix = [];
-    var columns_tmp = jQuery("#newColumns").find("th");
+    var columns_tmp = grid.getColumns();
     var columnNamesForMatrix = [];
     var columnNiceNamesForMatrix = [];
     var key_idx = 0;
@@ -1359,9 +1359,11 @@ function columnsMatrixChart(chartType){
     var unAllowedTypes = ['number', 'boolean', 'date', 'datetime', 'timeofday'];
 
     jQuery.each(columns_tmp, function(idx, value){
-        var columnName = jQuery(value).attr("column_id");
-        var columnVisible = jQuery(value).attr("column_visible");
-        if (columnVisible === 'visible'){
+        var columnName = value.id;
+        if ((grid_columnsHiddenById[value.id]) || (columnName === 'options')){
+            return;
+        }
+        else{
             if (transformedTable.properties[columnName].valueType === 'number'){
 
                 if (chartType === 'ScatterChart'){
@@ -1371,19 +1373,19 @@ function columnsMatrixChart(chartType){
                     columnsForMatrix.push(allKey_idx);
                 }
                 columnNamesForMatrix.push(columnName);
-                columnNiceNamesForMatrix.push(jQuery(value).find("span").html());
+                columnNiceNamesForMatrix.push(value.name);
                 key_idx++;
             }
 
             if (jQuery.inArray(transformedTable.properties[columnName].valueType, unAllowedTypes) === -1){
                 allAllowedColumnsForMatrix.push(allKey_idx);
                 allAllowedColumnNamesForMatrix.push(columnName);
-                allAllowedColumnNiceNamesForMatrix.push(jQuery(value).find("span").html());
+                allAllowedColumnNiceNamesForMatrix.push(value.name);
             }
 
             allColumnsForMatrix.push(allKey_idx);
             allColumnNamesForMatrix.push(columnName);
-            allColumnNiceNamesForMatrix.push(jQuery(value).find("span").html());
+            allColumnNiceNamesForMatrix.push(value.name);
             allKey_idx++;
         }
     });
@@ -1614,25 +1616,16 @@ function columnsMatrixChart(chartType){
                             {
                                 text: "Use this chart",
                                 click: function(){
-                                    var firstCol;
-                                    var secondCol;
                                     jQuery(this).dialog("close");
                                     jQuery(".matrixChart_dialog").dialog("close");
-                                    jQuery("#newTable").find(".ui-icon").each(function(idx, column){
-                                        if (jQuery(column).closest("th").attr("column_id") === sc_col1) {
-                                            firstCol = jQuery(column).closest("th");
+                                    var sortOrder = [];
+                                    sortOrder.push([sc_col1, "visible"]);
+                                    sortOrder.push([sc_col2, "visible"]);
+                                    jQuery(grid.getColumns()).each(function(idx, column){
+                                        if ((column.id !== sc_col1) && (column.id !== sc_col2) && (column.id !== 'options')){
+                                            sortOrder.push([column.id, "hidden"]);
                                         }
-                                        if (jQuery(column).closest("th").attr("column_id") === sc_col2) {
-                                            secondCol = jQuery(column).closest("th");
-                                        }
-                                        if (jQuery(column).hasClass("ui-icon-hide") &&
-                                            (jQuery(column).closest("th").attr("column_id") != sc_col1) &&
-                                            (jQuery(column).closest("th").attr("column_id") != sc_col2)){
-                                                jQuery(column).removeClass("ui-icon-hide");
-                                                jQuery(column).addClass("ui-icon-show");
-                                                jQuery(column).closest("th").attr("column_visible","hidden");
-                                            }
-                                        });
+                                    });
                                     var old_conf_str = jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value");
                                     var tmp_conf_json = JSON.parse(old_conf_str);
                                     tmp_conf_json.chartType = typeof(chartType) !== 'undefined' ? chartType : jQuery("#matrixChart_type_selector").find("select").attr("value");
@@ -1646,9 +1639,7 @@ function columnsMatrixChart(chartType){
                                     var new_conf_str = JSON.stringify(tmp_conf_json);
                                     jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value",new_conf_str);
                                     jQuery("#googlechartid_tmp_chart").find(".googlechart_name").attr("value",sc_col_name1 + " / " + sc_col_name2);
-                                    jQuery("#newColumns").prepend(secondCol);
-                                    jQuery("#newColumns").prepend(firstCol);
-                                    generateNewTable(generateSortedColumns());
+                                    setGridColumnsOrder(sortOrder);
                                 }
                             },
                             {
