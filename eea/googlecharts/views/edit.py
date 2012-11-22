@@ -24,6 +24,23 @@ class Edit(BrowserView):
         data['chartsconfig'] = json.loads(self.request['charts'])
         mutator.edit_view('googlechart.googlecharts', **data)
 
+        previews = ["googlechart.googledashboard.preview.png",
+                    "googlechart.motionchart.preview.png",
+                    "googlechart.organizational.preview.png",
+                    "googlechart.imagechart.preview.png",
+                    "googlechart.sparkline.preview.png",
+                    "googlechart.table.preview.png",
+                    "googlechart.annotatedtimeline.preview.png",
+                    "googlechart.treemap.preview.png"]
+        for previewname in previews:
+            if not self.context.get(previewname, None):
+                img = self.context.restrictedTraverse(
+                    "++resource++" + previewname)
+                self.context.invokeFactory('Image',
+                    id=previewname,
+                    title=previewname,
+                    image=img.GET())
+
         return 'Changes saved'
 
     def get_charts(self):

@@ -189,7 +189,7 @@ class View(ViewForm):
             else:
                 tab['fallback-image'] = \
                     self.context.absolute_url() + \
-                    "/++resource++googlechart." + chartType.lower() + \
+                    "/googlechart." + chartType.lower() + \
                     ".preview.png"
             tabs.append(tab)
         return tabs
@@ -403,7 +403,7 @@ class DashboardView(ViewForm):
         """ View tabs
         """
         png_url = self.context.absolute_url() + \
-            "/++resource++googlechart.googledashboard.preview.png"
+            "/googlechart.googledashboard.preview.png"
         return [
             {
             'name': self.__name__,

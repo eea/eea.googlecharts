@@ -3,6 +3,10 @@ Changelog
 
 6.3-dev - (unreleased)
 ----------------------
+* Upgrade step: Within "Plone > Site setup > Add-ons" click on
+  upgrade button available for eea.googlecharts
+* Feature: On saving a chart, copy the generic chart image in the visualization
+  [szabozo0 refs #10019]
 * Bug fix: Fixed saving of png versions of charts
   [szabozo0 #9997]
 
