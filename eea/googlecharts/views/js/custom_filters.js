@@ -61,7 +61,7 @@ function applySortOnChart(){
     var hasFilter = (tmpDataView.getNumberOfRows() !== tmpRows.length);
     var sortedRows;
     if (sortBy && hasFilter){
-         sortedRows = sortFilterChart.getDataTable().getSortedRows(sortFilterArray[sortBy][0]);
+        sortedRows = sortFilterChart.getDataTable().getSortedRows(sortFilterArray[sortBy][0]);
         if (sortFilterArray[sortBy][1]){
             sortedRows = sortedRows.reverse();
         }

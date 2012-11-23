@@ -117,7 +117,9 @@ function prepareForChart(options){
     var settings = {
         originalDataTable : '',
         columns : '',
-        limit : 0
+        limit : 0,
+        sortBy : '',
+        sortAsc : true
     };
     jQuery.extend(settings, options);
 
@@ -188,7 +190,19 @@ function prepareForChart(options){
         dataForChart.addRow(newRow);
     });
 
-    return dataForChart;
+    var tmpDataView = new google.visualization.DataView(dataForChart);
+
+    if (settings.sortBy !== ""){
+        pos = jQuery.inArray(settings.sortBy, settings.columns);
+        if (pos > -1){
+            var tmp_sort = tmpDataView.getSortedRows(pos);
+            if (!settings.sortAsc){
+                tmp_sort.reverse()
+            }
+            tmpDataView.setRows(tmp_sort);
+        }
+    }
+    return tmpDataView;
 }
 
 

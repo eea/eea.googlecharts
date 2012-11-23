@@ -54,6 +54,8 @@ function menuOnCommandHandler(e, args){
     if (command == "sortasc") {
         grid_sort_columnId = column.id;
         grid_sort_asc = true;
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value", column.id);
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value", "asc");
         grid_data_view.sort(function(row1, row2){
             var val1 = row1[column.field];
             var val2 = row2[column.field];
@@ -75,6 +77,8 @@ function menuOnCommandHandler(e, args){
     if (command == "sortdesc") {
         grid_sort_columnId = column.id;
         grid_sort_asc = false;
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value", column.id);
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value", "desc");
         grid_data_view.sort(function(row1, row2){
             var val1 = row1[column.field];
             var val2 = row2[column.field];
@@ -95,6 +99,8 @@ function menuOnCommandHandler(e, args){
     }
     if (command == "origord") {
         grid_sort_columnId = "";
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value", "");
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value", "asc");
         grid_data_view.sort(function(row1, row2){
             var val1 = row1.id;
             var val2 = row2.id;
@@ -230,6 +236,7 @@ function enableGridFilters(){
 
     jQuery("body").delegate("#slick-menu-ok","click", function(){
         grid_filters[filter_grid_colId] = filter_grid_filters.slice();
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value", JSON.stringify(grid_filters));
         grid_data_view.refresh();
         grid.updateRowCount();
         grid.invalidateAllRows();
