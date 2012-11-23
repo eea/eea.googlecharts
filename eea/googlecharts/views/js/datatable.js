@@ -6,7 +6,8 @@ function transformTable(options){
         normalColumns : '',
         pivotingColumns : '',
         valueColumn : '',
-        availableColumns : ''
+        availableColumns : '',
+        filters: {}
     };
     jQuery.extend(settings, options);
 
@@ -23,6 +24,15 @@ function transformTable(options){
     });
 
     jQuery(settings.originalTable.items).each(function(row_index, row){
+        var shouldDisplay = true;
+        jQuery.each(settings.filters, function(column, column_filter){
+            if (jQuery.inArray(row[column], column_filter) !== -1){
+                shouldDisplay = false;
+            }
+        });
+        if (!shouldDisplay){
+            return;
+        }
         var newRow = {};
         var isNewRow = true;
 

@@ -715,6 +715,9 @@ dl.portlet .dashboard-widget,
     background-color:rgba(119, 124, 31, 0.6);
 }
 
+#matrixChart_type_selector > div > select {
+    width: 70px;
+}
 
 .matrixChart_item {
     float:left;
@@ -1037,7 +1040,6 @@ select[name=googlechart_filterposition] {
 
     .filtered-column{
         background-repeat: no-repeat;
-        background-image: url(++resource++slickgrid-images/pencil.png); 
         padding-left:15px;
     }
 
@@ -1082,3 +1084,11 @@ select[name=googlechart_filterposition] {
 #slick-menu-cancel {}
 
 #slick-menu-all {}
+
+.slick-column-search-icon {
+    float:left;
+}
+
+.slick-column-sort-icon {
+    float:left;
+}

@@ -4,15 +4,28 @@ var grid_columnsHiddenById = {};
 var grid_filters = {};
 var grid_data_view;
 var grid_data;
+var grid_sort_columnId = "";
+var grid_sort_asc = true;
 
 function updateColumnHeaders(){
     generateNewTableForChart();
+    jQuery("#newTable").find(".slick-column-name:contains(options)").addClass("ui-icon").addClass("ui-icon-gear");
+    jQuery(".slick-column-search-icon").remove();
+    jQuery(".slick-column-sort-icon").remove();
     jQuery.each(grid_colIds, function(colId, colName){
-        if ((grid_filters[colId] !== undefined) && (grid_filters[colId].length !== 0)){
-            jQuery(".slick-column-name:contains("+colName+")").addClass("filtered-column");
+        if (grid_sort_columnId === colId){
+            var slick_sort = jQuery("<span></span>").addClass("slick-column-sort-icon ui-icon");
+            if (grid_sort_asc){
+                slick_sort.addClass("ui-icon-carat-1-n");
+            }
+            else {
+                slick_sort.addClass("ui-icon-carat-1-s");
+            }
+            jQuery("#newTable").find(".slick-column-name:contains("+colName+")").prepend(slick_sort);
         }
-        else {
-            jQuery(".slick-column-name:contains("+colName+")").removeClass("filtered-column");
+        if ((grid_filters[colId] !== undefined) && (grid_filters[colId].length !== 0)){
+            var slick_search = jQuery("<span></span>").addClass("slick-column-search-icon ui-icon ui-icon-search");
+            jQuery("#newTable").find(".slick-column-name:contains("+colName+")").prepend(slick_search);
         }
     });
 }
@@ -38,6 +51,68 @@ function hiddenFormatter(row, cell, value, columnDef, dataContext){
 function menuOnCommandHandler(e, args){
     var column = args.column;
     var command = args.command;
+    if (command == "sortasc") {
+        grid_sort_columnId = column.id;
+        grid_sort_asc = true;
+        grid_data_view.sort(function(row1, row2){
+            var val1 = row1[column.field];
+            var val2 = row2[column.field];
+            if (val1 > val2){
+                return 1;
+            }
+            if (val1 === val2){
+                return 0;
+            }
+            if (val1 < val2){
+                return -1;
+            }
+        },true);
+        grid_data_view.refresh();
+        grid.updateRowCount();
+        grid.invalidateAllRows();
+        grid.render();
+    }
+    if (command == "sortdesc") {
+        grid_sort_columnId = column.id;
+        grid_sort_asc = false;
+        grid_data_view.sort(function(row1, row2){
+            var val1 = row1[column.field];
+            var val2 = row2[column.field];
+            if (val1 > val2){
+                return 1;
+            }
+            if (val1 === val2){
+                return 0;
+            }
+            if (val1 < val2){
+                return -1;
+            }
+        },false);
+        grid_data_view.refresh();
+        grid.updateRowCount();
+        grid.invalidateAllRows();
+        grid.render();
+    }
+    if (command == "origord") {
+        grid_sort_columnId = "";
+        grid_data_view.sort(function(row1, row2){
+            var val1 = row1.id;
+            var val2 = row2.id;
+            if (val1 > val2){
+                return 1;
+            }
+            if (val1 === val2){
+                return 0;
+            }
+            if (val1 < val2){
+                return -1;
+            }
+        },true);
+        grid_data_view.refresh();
+        grid.updateRowCount();
+        grid.invalidateAllRows();
+        grid.render();
+    }
     if (command == "showColumn") {
         delete grid_columnsHiddenById[column.id];
         grid.invalidate();
@@ -119,7 +194,11 @@ var filter_grid_colId;
 function filterGridFilter(item) {
     if (filter_grid_filter !== "") {
         var c = filter_grid.getColumns()[0];
-        if (item[c.field].toLowerCase().indexOf(filter_grid_filter.toLowerCase()) < 0 ) {
+        var tmp_val = "";
+        if (item[c.field]){
+            tmp_val = item[c.field].toLowerCase();
+        }
+        if (tmp_val.indexOf(filter_grid_filter.toLowerCase()) < 0 ) {
           return false;
         }
       }
@@ -334,16 +413,33 @@ function setGridColumnsOrder(sortOrder){
     updateColumnHeaders();
 }
 
-function drawGrid(divId, data, data_colnames){
-    self.grid_data = data.slice();
+function drawGrid(divId, data, data_colnames, filterable_columns){
     var options = {
         enableCellNavigation: false,
         enableColumnReorder: true
     };
 
-    var header = {
+    var header_nofilter = {
         menu: {
             items: [
+                {title:'sort ascending',
+                 command:'sortasc'},
+                {title:'sort descending',
+                 command:'sortdesc'},
+                {title:'show column',
+                 command:'showColumn'},
+                {title:'hide column',
+                 command:'hideColumn'}
+            ]
+        }
+    };
+    var header_filter = {
+        menu: {
+            items: [
+                {title:'sort ascending',
+                 command:'sortasc'},
+                {title:'sort descending',
+                 command:'sortdesc'},
                 {title:'show column',
                  command:'showColumn'},
                 {title:'hide column',
@@ -359,8 +455,8 @@ function drawGrid(divId, data, data_colnames){
         {
             id: "options",
             name: "options",
-            field: "",
-            width: 60,
+            field: "id",
+            width: 40,
             resizable: false,
             header: {
                 menu: {
@@ -373,12 +469,14 @@ function drawGrid(divId, data, data_colnames){
                         command:'showAll'},
                         {title:'reverse selection',
                         command:'reverse'},
+                        {title:'reset sort',
+                         command:'origord'},
+                        {title:'reset filters',
+                        command:'resetFilters'},
                         {title:'scatterplots matrix',
                         command:'scatterplots'},
                         {title:'other matrices',
-                        command:'otherMatrices'},
-                        {title:'reset filters',
-                        command:'resetFilters'}
+                        command:'otherMatrices'}
                     ]
                 }
             }
@@ -387,8 +485,14 @@ function drawGrid(divId, data, data_colnames){
     grid_filters = {};
     grid_colIds = {};
     grid_columnsHiddenById = {};
+    grid_sort_columnId = "";
+
     jQuery.each(data[0], function(key,value){
         grid_colIds[key] = data_colnames[key];
+        var header = header_nofilter;
+        if (jQuery.inArray(key, filterable_columns) !== -1){
+            header = header_filter;
+        }
         columns.push({id: key, name: data_colnames[key], field: key,
                     formatter: hiddenFormatter,
                     header: header,
@@ -411,20 +515,21 @@ function drawGrid(divId, data, data_colnames){
     grid = new Slick.Grid(divId, grid_data_view, columns, options);
 
     grid.init();
-    var grid_data = [];
+    self.grid_data = [];
     for (var i = 0; i < data.length; i++){
         var tmp_row = {'id': i};
         jQuery.extend(tmp_row, data[i]);
-        grid_data.push(tmp_row);
+        self.grid_data.push(tmp_row);
     }
     grid_data_view.beginUpdate();
-    grid_data_view.setItems(grid_data);
+    grid_data_view.setItems(self.grid_data);
 
     grid_data_view.setFilter(gridFilter);
 
     grid_data_view.endUpdate();
 
     grid.onColumnsReordered.subscribe(gridOnColumnsReorderedHandler);
+
     var headerMenuPlugin = new Slick.Plugins.HeaderMenu();
 
     headerMenuPlugin.onCommand.subscribe(menuOnCommandHandler);

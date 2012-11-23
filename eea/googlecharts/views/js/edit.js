@@ -550,7 +550,8 @@ function openEditor(elementId) {
         normalColumns : columnsFromSettings.normalColumns,
         pivotingColumns : columnsFromSettings.pivotColumns,
         valueColumn : columnsFromSettings.valueColumn,
-        availableColumns : available_columns
+        availableColumns : available_columns,
+        filters: grid_filters
     };
 
     var transformedTable = transformTable(options);
@@ -603,56 +604,56 @@ function generateSortedColumns() {
 }
 
 function generateNewTableForChart(){
-        var tmp_chart = jQuery("#googlechartid_tmp_chart");
+    var tmp_chart = jQuery("#googlechartid_tmp_chart");
 
-        var columnsSettings = {};
-        columnsSettings.original = [];
-        columnsSettings.prepared = [];
-        var hasNormal = false;
-        var hasPivot = false;
-        var hasValue = false;
-        jQuery("#originalColumns").find("th").each(function(){
-           var original = {};
-           original.name = jQuery(this).attr("column_id");
-           original.status = parseInt(jQuery(this).find("select").attr("value"),10);
-           if (original.status === 1){
-              hasNormal = true;
-           }
-           if (original.status === 2){
-               hasPivot = true;
-           }
-           if (original.status === 3){
-               hasValue = true;
-           }
-           columnsSettings.original.push(original);
-        });
-        jQuery(grid.getColumns()).each(function(){
-            if (this.id !== "options"){
-                var preparedColumn = {};
-                preparedColumn.name = this.id;
-                if (grid_columnsHiddenById[this.id]){
-                    preparedColumn.status = 0;
-                }
-                else {
-                    preparedColumn.status = 1;
-                }
-                preparedColumn.fullname = this.name;
-                columnsSettings.prepared.push(preparedColumn);
+    var columnsSettings = {};
+    columnsSettings.original = [];
+    columnsSettings.prepared = [];
+    var hasNormal = false;
+    var hasPivot = false;
+    var hasValue = false;
+    jQuery("#originalColumns").find("th").each(function(){
+        var original = {};
+        original.name = jQuery(this).attr("column_id");
+        original.status = parseInt(jQuery(this).find("select").attr("value"),10);
+        if (original.status === 1){
+            hasNormal = true;
+        }
+        if (original.status === 2){
+            hasPivot = true;
+        }
+        if (original.status === 3){
+            hasValue = true;
+        }
+        columnsSettings.original.push(original);
+    });
+    jQuery(grid.getColumns()).each(function(){
+        if (this.id !== "options"){
+            var preparedColumn = {};
+            preparedColumn.name = this.id;
+            if (grid_columnsHiddenById[this.id]){
+                preparedColumn.status = 0;
             }
-        });
-        var isOK = true;
-        if (!hasNormal){
-            jQuery("#googlechart_chart_div_tmp_chart").html("At least 1 visible column must be selected!");
-            isOK = false;
+            else {
+                preparedColumn.status = 1;
+            }
+            preparedColumn.fullname = this.name;
+            columnsSettings.prepared.push(preparedColumn);
         }
-        if (hasPivot != hasValue){
-            jQuery("#googlechart_chart_div_tmp_chart").html("If you want pivot table, you must select at least 1 pivot volumn and 1 value column");
-            isOK = false;
-        }
-        if(isOK){
-            var columns_str = JSON.stringify(columnsSettings);
-            jQuery("#googlechartid_tmp_chart .googlechart_columns").val(columns_str);
-        }
+    });
+    var isOK = true;
+    if (!hasNormal){
+        jQuery("#googlechart_chart_div_tmp_chart").html("At least 1 visible column must be selected!");
+        isOK = false;
+    }
+    if (hasPivot != hasValue){
+        jQuery("#googlechart_chart_div_tmp_chart").html("If you want pivot table, you must select at least 1 pivot volumn and 1 value column");
+        isOK = false;
+    }
+    if(isOK){
+        var columns_str = JSON.stringify(columnsSettings);
+        jQuery("#googlechartid_tmp_chart .googlechart_columns").val(columns_str);
+    }
     openEditor("tmp_chart");
 }
 
@@ -700,33 +701,44 @@ function generateNewTable(sortOrder, isFirst){
     If we get this error, we try to draw the grid again, 5 times.
     If the problem persists after 5 atempts, we throw the exception we got from slickgrid
     */
-    var retryNr = 5;
-    var retries = 0;
-    while (true){
-        try{
-            jQuery("#newTable").empty();
-            drawGrid("#newTable", transformedTable.items, transformedTable.available_columns);
-            break;
+    var filterable_columns = [];
+    jQuery.each(transformedTable.properties, function(column, properties){
+        if (properties.valueType === "text"){
+            filterable_columns.push(column);
         }
-        catch(err){
-            if (retries < retryNr){
-                retries++;
-                continue;
-            }
-            else{
-                throw err;
-            }
-        }
-    }
-    setGridColumnsOrder(sortOrder);
+    });
     if (!isFirst){
+        drawGrid("#newTable", transformedTable.items, transformedTable.available_columns, filterable_columns);
+        setGridColumnsOrder(sortOrder);
         generateNewTableForChart();
     }
-//    openEditor("tmp_chart");
-
+    else{
+        var retryNr = 5;
+        var retries = 0;
+        while (true){
+            try{
+                jQuery("#newTable").empty();
+                setTimeout(function(){
+                        drawGrid("#newTable", transformedTable.items, transformedTable.available_columns, filterable_columns);
+                        setGridColumnsOrder(sortOrder);
+                    },
+                    1000);
+                break;
+            }
+            catch(err){
+                if (retries < retryNr){
+                    retries++;
+                    continue;
+                }
+                else{
+                    throw err;
+                }
+            }
+        }
+    }
 }
 
-function generateNewTable_(sortOrder, isFirst){
+/*function generateNewTable_(sortOrder, isFirst){
     isFirst = typeof(isFirst) !== 'undefined' ? isFirst : false;
     DavizEdit.Status.start("Updating Tables");
     var columns = jQuery("#originalColumns").find("th");
@@ -867,6 +879,7 @@ function generateNewTable_(sortOrder, isFirst){
     openEditor("tmp_chart");
     DavizEdit.Status.stop("Done");
 }
+*/
 
 function isAvailableChart(chartType){
     return true;
