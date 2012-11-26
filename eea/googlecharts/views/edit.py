@@ -96,7 +96,9 @@ class Edit(BrowserView):
         chart['json'] = urllib2.unquote(chart['json'])
         chart['options'] = urllib2.unquote(chart['options'])
         chart['columns'] = urllib2.unquote(chart['columns'])
-
+        chart['row_filters_str'] = urllib2.unquote(chart['row_filters_str'])
+        chart['sortBy'] = urllib2.unquote(chart['sortBy'])
+        chart['sortAsc_str'] = urllib2.unquote(chart['sortAsc_str'])
         data = {}
         data['chartsconfig_tmp_iframe'] = chart
 

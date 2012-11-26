@@ -312,7 +312,6 @@ function showEmbed(){
                         '<div style="clear:both"></div>' +
                         'Go to original visualization' +
                       '</a>';
-                      
         embedHtml += '<h3>Static image: </h3>';
         embedHtml += '<textarea class="pngCode" style="width:96%" rows="3">' + pngCode + '</textarea>';
     }

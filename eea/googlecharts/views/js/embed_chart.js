@@ -151,7 +151,7 @@ jQuery(document).ready(function($){
         chartFilters : chart_filters,
         chartWidth : width,
         chartHeight : height,
-        chartOptions : options,
+        chartOptions : chart_options,
         availableColumns : transformedTable.available_columns,
         showSort : chart_showSort
     };

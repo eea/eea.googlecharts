@@ -28,7 +28,7 @@
                                                 width = ${chart/chartWidth};
                                                 height = ${chart/chartHeight};
                                                 name = '${chart/name}';
-                                                options = ${chart/options};
+                                                chart_options = ${chart/options};
                                                 chart_filterposition = ${chart/filterposition}
                                                 chart_filters = ${chart/filters};
                                                 baseurl = '${view/context/absolute_url}';
