@@ -48,6 +48,22 @@ function hiddenFormatter(row, cell, value, columnDef, dataContext){
     }
 }
 
+function sortById(id, asc){
+    grid_data_view.sort(function(row1, row2){
+        var val1 = row1[id];
+        var val2 = row2[id];
+        if (val1 > val2){
+            return 1;
+        }
+        if (val1 === val2){
+            return 0;
+        }
+        if (val1 < val2){
+            return -1;
+        }
+    },asc);
+}
+
 function menuOnCommandHandler(e, args){
     var column = args.column;
     var command = args.command;
@@ -56,19 +72,7 @@ function menuOnCommandHandler(e, args){
         grid_sort_asc = true;
         jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value", column.id);
         jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value", "asc");
-        grid_data_view.sort(function(row1, row2){
-            var val1 = row1[column.field];
-            var val2 = row2[column.field];
-            if (val1 > val2){
-                return 1;
-            }
-            if (val1 === val2){
-                return 0;
-            }
-            if (val1 < val2){
-                return -1;
-            }
-        },true);
+        sortById(column.field, true);
         grid_data_view.refresh();
         grid.updateRowCount();
         grid.invalidateAllRows();
@@ -79,19 +83,7 @@ function menuOnCommandHandler(e, args){
         grid_sort_asc = false;
         jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value", column.id);
         jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value", "desc");
-        grid_data_view.sort(function(row1, row2){
-            var val1 = row1[column.field];
-            var val2 = row2[column.field];
-            if (val1 > val2){
-                return 1;
-            }
-            if (val1 === val2){
-                return 0;
-            }
-            if (val1 < val2){
-                return -1;
-            }
-        },false);
+        sortById(column.field, false);
         grid_data_view.refresh();
         grid.updateRowCount();
         grid.invalidateAllRows();
@@ -101,19 +93,7 @@ function menuOnCommandHandler(e, args){
         grid_sort_columnId = "";
         jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value", "");
         jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value", "asc");
-        grid_data_view.sort(function(row1, row2){
-            var val1 = row1.id;
-            var val2 = row2.id;
-            if (val1 > val2){
-                return 1;
-            }
-            if (val1 === val2){
-                return 0;
-            }
-            if (val1 < val2){
-                return -1;
-            }
-        },true);
+        sortById("id", true);
         grid_data_view.refresh();
         grid.updateRowCount();
         grid.invalidateAllRows();
@@ -227,7 +207,6 @@ function filterApplyFlags() {
 }
 
 function enableGridFilters(){
-    grid_filters = {};
     filter_grid_filters = [];
     jQuery("body").delegate("#slick-menu-cancel","click", function(){
         jQuery(".slick-header-menu").remove();
@@ -489,10 +468,22 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
             }
         }
     ];
-    grid_filters = {};
     grid_colIds = {};
     grid_columnsHiddenById = {};
-    grid_sort_columnId = "";
+
+    var tmp_filters = jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value");
+    grid_filters = {};
+    if (tmp_filters.length > 0){
+        grid_filters = JSON.parse(tmp_filters);
+    }
+
+    grid_sort_columnId = jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value");
+
+    var tmp_sortAsc = jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value");
+    grid_sort_asc = true;
+    if (tmp_sortAsc === 'desc'){
+        grid_sort_asc = false;
+    }
 
     jQuery.each(data[0], function(key,value){
         grid_colIds[key] = data_colnames[key];
@@ -541,6 +532,10 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
 
     headerMenuPlugin.onCommand.subscribe(menuOnCommandHandler);
     grid.registerPlugin(headerMenuPlugin);
+
+    if (grid_sort_columnId !== ""){
+        sortById(grid_sort_columnId, grid_sort_asc);
+    }
 
     enableGridFilters();
 }

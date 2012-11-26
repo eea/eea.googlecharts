@@ -219,7 +219,7 @@ function drawChart(elementId, readyEvent){
     var row_filters_str = jQuery("#googlechartid_"+elementId+" .googlechart_row_filters").attr('value');
     var row_filters = {};
     if (row_filters_str.length > 0){
-        row_filtersJSON = JSON.parse(row_filters_str);
+        row_filters = JSON.parse(row_filters_str);
     }
     var sortBy = jQuery("#googlechartid_"+elementId+" .googlechart_sortBy").attr('value');
     var sortAsc_str = jQuery("#googlechartid_"+elementId+" .googlechart_sortAsc").attr('value');
@@ -734,7 +734,7 @@ function generateNewTable(sortOrder, isFirst){
         normalColumns : normalColumns,
         pivotingColumns : pivotColumns,
         valueColumn : valueColumn,
-        availableColumns : available_columns,
+        availableColumns : available_columns
 //        filters : row_filters
     };
 
@@ -757,6 +757,10 @@ function generateNewTable(sortOrder, isFirst){
         }
     });
     if (!isFirst){
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value", "{}");
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value", "");
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value", "asc");
+
         drawGrid("#newTable", transformedTable.items, transformedTable.available_columns, filterable_columns);
         setGridColumnsOrder(sortOrder);
         generateNewTableForChart();
