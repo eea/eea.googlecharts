@@ -986,62 +986,43 @@ select[name=googlechart_filterposition] {
     display:none;
 }
 
-    .slick-header-menu {
-      z-index: 9999 !important;
-    }
+.slick-header-menu {
+    z-index: 9999 !important;
+}
 
-    .slick-header-menuitem {
-      padding: 2px 4px;
-      border: 1px solid transparent;
-      border-radius: 3px;
-    }
+.slick_newTable .grid-column-hidden{
+    background-color:gray;
+}
 
-    .slick-header-menuitem:hover {
-      border-color: silver;
-      background: white;
-    }
+.slick-cell.active{
+    border: 1px solid transparent !important;
+    border-bottom:1px solid silver !important;
+    border-right: 1px dotted silver !important;
+}
 
-    .slick-header-menuitem-disabled {
-      border-color: transparent !important;
-      background: inherit !important;
-    }
+.filter_item{
+    padding-left:30px !important;
+}
 
-    .icon-help {
-      background-image: url(../images/help.png);
-    }
+.filter_item:hover{
+    background-color:#CCCCCC;
+}
 
-    #filter_grid > .slick-header {
-        display:none;
-    }
+.filter_item_selected {
+    background-repeat: no-repeat;
+    background-image: url(++resource++slickgrid-images/tick.png); 
+}
 
-    .filter_item{
-        padding-left:30px !important;
-    }
+.filter_item_ignored {}
 
-    .filter_item:hover{
-        background-color:#CCCCCC;
-    }
-    .filter_item_selected {
-        background-repeat: no-repeat;
-        background-image: url(++resource++slickgrid-images/tick.png); 
-    }
-    .filter_item_ignored {
-    }
+#filter_grid > .slick-header {
+    display:none;
+}
 
-    .slick_newTable .grid-column-hidden{
-        background-color:gray;
-    }
-
-    .slick-cell.active{
-        border: 1px solid transparent;
-        border-bottom:1px solid silver;
-        border-right: 1px dotted silver;
-    }
-
-    .filtered-column{
-        background-repeat: no-repeat;
-        padding-left:15px;
-    }
+.filtered-column{
+    background-repeat: no-repeat;
+    padding-left:15px;
+}
 
 .slick-filter-hr {
     margin-top:5px;
@@ -1091,4 +1072,17 @@ select[name=googlechart_filterposition] {
 
 .slick-column-sort-icon {
     float:left;
+}
+
+.slick_newTable th.ui-state-default,
+.slick_newTable td.ui-state-default,
+.slick_newTable div.ui-state-default,
+.slick_newTable .slick-header-columns {
+  background: none;
+  background-color: #f3f3f3;
+  color: #000;
+}
+
+.slick_newTable .ui-icon{
+    background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png);
 }
