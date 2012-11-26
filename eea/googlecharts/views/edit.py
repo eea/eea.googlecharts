@@ -404,3 +404,10 @@ class DashboardsEdit(ChartsEdit):
     """ Edit Google Dashboards
     """
     form_fields = Fields(IGoogleChartsEdit)
+
+    def json(self, **kwargs):
+        """ Return config JSON
+        """
+        accessor = queryAdapter(self.context, IVisualizationConfig)
+        view = accessor.view(self.__name__.replace('.edit', ''), {})
+        return json.dumps(dict(view), ensure_ascii=False)

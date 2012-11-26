@@ -1407,14 +1407,14 @@ jQuery.fn.EEAGoogleDashboard = function(options){
 };
 
 
-/** On load
-*/
-jQuery(document).ready(function(){
-  jQuery(document).bind(DavizEdit.Events.charts.initialized, function(evt, data){
-    var dashboard = jQuery('#gcharts-dashboard-edit');
-    if(!dashboard.length){
-      return;
-    }
-    dashboard.EEAGoogleDashboard();
-  });
-});
+///** On load
+//*/
+//jQuery(document).ready(function(){
+  //jQuery(document).bind(DavizEdit.Events.charts.initialized, function(evt, data){
+    //var dashboard = jQuery('#gcharts-dashboard-edit');
+    //if(!dashboard.length){
+      //return;
+    //}
+    //dashboard.EEAGoogleDashboard();
+  //});
+//});

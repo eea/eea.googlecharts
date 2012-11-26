@@ -81,6 +81,7 @@ class EditResources(object):
             '++resource++eea.googlecharts.datatable.js',
             '++resource++eea.googlecharts.palettes.js',
             '++resource++eea.googlecharts.dashboard-edit.js',
+            '++resource++eea.googlecharts.dashboards-edit.js',
             '++resource++eea.googlecharts.edit.js',
             '++resource++eea.googlecharts.configurator_messages.js',
         ]

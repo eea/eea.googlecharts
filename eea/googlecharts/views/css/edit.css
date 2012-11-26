@@ -142,6 +142,63 @@
     background-image: url(../../++resource++eea.daviz.images/show.png);
 }
 
+#gcharts-dashboards-edit {
+    padding: 1em;
+}
+
+#gcharts-dashboards-edit .add-button {
+    background: #fff url(../../++resource++eea.googlecharts.images/chart_add.png) no-repeat;
+    cursor: pointer;
+    background-position: center;
+    box-shadow: 5px 5px 5px #ccc;
+    border-radius: 20px
+}
+
+#gcharts-dashboards-edit .edit-button {
+    background: #fff url(../../++resource++eea.googlecharts.images/dashboard.thumb.png) no-repeat;
+    cursor: pointer;
+    background-position: center;
+    box-shadow: 5px 5px 5px #ccc;
+    border-radius: 20px
+}
+
+#gcharts-dashboards-edit .add-button,
+#gcharts-dashboards-edit .edit-button {
+    width: 128px;
+    height: 128px;
+    float: left;
+    margin: 0.5em;
+}
+
+#gcharts-dashboards-edit .add-button:hover,
+#gcharts-dashboards-edit .edit-button:hover {
+    box-shadow: 2px 2px 2px #ccc;
+}
+
+#gcharts-dashboards-edit .add-button:active,
+#gcharts-dashboards-edit .edit-button:active {
+    box-shadow: 0px 0px 0px #ccc;
+}
+
+#gcharts-dashboards-edit .add-button span,
+#gcharts-dashboards-edit .edit-button span {
+    margin-top: 90px;
+    display: block;
+    text-align: center;
+    max-height: 36px;
+    overflow: hidden;
+    color: #7BAA0F;
+}
+
+#gcharts-dashboards-edit:after {
+    content: '.';
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+
 #newColumns th {
     cursor: crosshair;
     vertical-align: text-top;

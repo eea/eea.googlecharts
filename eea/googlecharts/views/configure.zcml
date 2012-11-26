@@ -129,6 +129,11 @@
   />
 
   <browser:resource
+    name="eea.googlecharts.dashboards-edit.js"
+    file="./js/dashboards-edit.js"
+  />
+
+  <browser:resource
     name="eea.googlecharts.edit.js"
     file="./js/edit.js"
   />
@@ -214,6 +219,11 @@
   <browser:resource
     name="googlechart.googlecharts.preview.png"
     file="./imgs/preview.png"
+  />
+
+  <browser:resource
+    name="googlechart.googledashboard.preview.png"
+    file="./imgs/dashboard.preview.png"
   />
 
   <browser:resource
