@@ -102,6 +102,15 @@ jQuery(document).ready(function($){
         jQuery("#googlechart_wm").removeClass("eea-googlechart-hidden-image");
     }
 
+    var row_filters = {};
+    var sortAsc = 'asc';
+    if (row_filters_str.length > 0){
+        row_filters = JSON.parse(row_filters_str);
+    }
+    if (sortAsc_str === 'desc'){
+        sortAsc = false;
+    }
+
     var columnsFromSettings = getColumnsFromSettings(chart_columns);
 
     var options = {
@@ -109,14 +118,17 @@ jQuery(document).ready(function($){
         normalColumns : columnsFromSettings.normalColumns,
         pivotingColumns : columnsFromSettings.pivotColumns,
         valueColumn : columnsFromSettings.valueColumn,
-        availableColumns : available_columns
+        availableColumns : available_columns,
+        filters : row_filters
     };
 
     var transformedTable = transformTable(options);
 
     options = {
         originalDataTable : transformedTable,
-        columns : columnsFromSettings.columns
+        columns : columnsFromSettings.columns,
+        sortBy : sortBy,
+        sortAsc : sortAsc
     };
 
     var tableForChart = prepareForChart(options);
