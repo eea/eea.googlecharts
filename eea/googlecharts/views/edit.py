@@ -91,7 +91,6 @@ class Edit(BrowserView):
     def set_iframe_chart(self):
         """ Set chart for iframe
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
         chart = json.loads(self.request['preview_tmp_chart'])
         chart['json'] = urllib2.unquote(chart['json'])
         chart['options'] = urllib2.unquote(chart['options'])
@@ -99,10 +98,7 @@ class Edit(BrowserView):
         chart['row_filters_str'] = urllib2.unquote(chart['row_filters_str'])
         chart['sortBy'] = urllib2.unquote(chart['sortBy'])
         chart['sortAsc_str'] = urllib2.unquote(chart['sortAsc_str'])
-        data = {}
-        data['chartsconfig_tmp_iframe'] = chart
-
-        mutator.edit_view('googlechart.googlecharts', **data)
+        self.context._v_iframe_chart_tmp_config = chart
 
         return 'Changes saved'
 

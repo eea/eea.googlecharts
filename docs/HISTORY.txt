@@ -3,6 +3,8 @@ Changelog
 
 6.3-dev - (unreleased)
 ----------------------
+* Change: Store temporary data for preview chart in a volatile variable
+  [szabozo0]
 * Feature: Integrated slickgrid in chart table configurator, Added row filtering for charts on edit
   [szabozo0 refs #9578]
 * Feature: Added default sort for charts on edit

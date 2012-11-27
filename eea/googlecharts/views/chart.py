@@ -202,10 +202,7 @@ class View(ViewForm):
         chart_height = self.request.get('height', 0)
         config = {}
         if chart_id == '':
-            mutator = queryAdapter(self.context, IVisualizationConfig)
-            for view in mutator.views:
-                if (view.get('chartsconfig_tmp_iframe')):
-                    config = view.get('chartsconfig_tmp_iframe')
+            config = self.context._v_iframe_chart_tmp_config
             config['preview_width'] = config['width']
             config['preview_height'] = config['height']
         else:
