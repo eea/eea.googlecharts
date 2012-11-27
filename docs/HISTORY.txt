@@ -3,6 +3,7 @@ Changelog
 
 6.3-dev - (unreleased)
 ----------------------
+* Bugfix: Don't try to save png charts when visualization is not folderish
 * Change: Store temporary data for preview chart in a volatile variable
   [szabozo0]
 * Feature: Integrated slickgrid in chart table configurator, Added row filtering for charts on edit

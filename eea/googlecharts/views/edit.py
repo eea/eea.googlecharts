@@ -10,6 +10,7 @@ from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.edit import EditForm
+from eea.app.visualization.zopera import IFolderish
 from eea.googlecharts.views.interfaces import IGoogleChartsEdit
 logger = logging.getLogger('eea.googlecharts')
 
@@ -23,6 +24,10 @@ class Edit(BrowserView):
         data = {}
         data['chartsconfig'] = json.loads(self.request['charts'])
         mutator.edit_view('googlechart.googlecharts', **data)
+
+        if not IFolderish.providedBy(self.context):
+            return "Changes saved, but can't save png "+
+                    "chart on a non-folderish object!"
 
         previews = ["googlechart.googledashboard.preview.png",
                     "googlechart.motionchart.preview.png",
