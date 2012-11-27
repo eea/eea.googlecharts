@@ -1653,6 +1653,8 @@ function resizeTableConfigurator(forced){
         jQuery(".googlechart_table_config_scaleable").removeClass("googlechart_transition").attr("style",container_heightstr);
         jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
         jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
+        jQuery("#newTable").height(fullheight-250);
+        grid.resizeCanvas();
     }
 }
 
@@ -1715,8 +1717,10 @@ function openEditChart(id){
             '<h3 style="display:none;"><a href="#">Table Editor</a></h3>' +
             '<div class="googlechart_accordion_container">' +
                 '<div class="googlechart_accordion_table">' +
+                    '<div id="pivotingTableLabel" class="label">Table pivots' + //xxx
+                        '<div class="ui-icon ui-icon-circlesmall-plus">expand</div>'+
+                    '</div>'+
                     '<div class="pivotingTable">' +
-                    '<span class="label">Table pivots</span>' +
                     '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable table">'+
                         '<tr id="pivotConfigHeader"></tr>'+
                         '<tr id="pivotConfigDropZones"></tr>'+
@@ -1725,9 +1729,9 @@ function openEditChart(id){
                     '<div style="clear:both"></div>'+
                     '<div>'+
                         '<span class="label">Table for chart</span>' +
-                        '<div class="buttons-bar">'+
-                        '<input type="button" class="column-show-hide-button context btn" value="Table pivots" id="tablePivots"/>' +
-                        '</div>' +
+//                        '<div class="buttons-bar">'+
+//                      '<input type="button" class="column-show-hide-button context btn" value="Table pivots" id="tablePivots"/>' +
+//                      '</div>' +
                     '</div>'+
                     "<div style='clear:both;'> </div>" +
                     '<div id="newTable" class="slick_newTable" style="height:300px;">'+
@@ -1923,7 +1927,14 @@ function openEditChart(id){
     updateWithStatus();
     openEditor("tmp_chart");
 
-    jQuery("#tablePivots").click(function(){
+    jQuery("#pivotingTableLabel").click(function(){
+        var tmp_icon = jQuery("#pivotingTableLabel").find(".ui-icon");
+        if (tmp_icon.hasClass("ui-icon-circlesmall-plus")){
+            tmp_icon.removeClass("ui-icon-circlesmall-plus").addClass("ui-icon-circlesmall-minus");
+        }
+        else {
+            tmp_icon.removeClass("ui-icon-circlesmall-minus").addClass("ui-icon-circlesmall-plus");
+        }
         jQuery(".pivotingTable").toggle();
     });
 

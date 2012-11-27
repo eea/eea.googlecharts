@@ -102,11 +102,18 @@
 }
 .googlechartTable th,
 .pivotedColumn {
-    padding: 1em;
-    border:1px solid #EEE;
-    background-color: #CDE2A7;
+    padding: 4px;
+    line-height: 16px;
+    border:1px solid #CCC;
+    border-bottom:2px solid #CCC;
+    background-color: #F3F3F3;
     color: #333;
 }
+
+.googlechartTable .ui-icon{
+    background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png);
+}
+
 .googlechartTable td{
     padding:2px;
     border:1px solid #EEEEEE;
@@ -143,7 +150,7 @@
 }
 
 #newColumns th {
-    cursor: crosshair;
+    cursor: move;
     vertical-align: text-top;
 }
 
@@ -632,7 +639,9 @@ dl.portlet .dashboard-widget,
 
 .pivotedColumn,
 .draggable {
-    font-weight:bold;
+    font-weight:normal;
+    font-size:14px;
+    line-height:16px;
 }
 
 .pivotedColumn {
@@ -640,7 +649,7 @@ dl.portlet .dashboard-widget,
 }
 
 .draggable {
-    cursor: crosshair;
+    cursor: move;
 }
 
 .googlechart-editor{
@@ -991,7 +1000,8 @@ select[name=googlechart_filterposition] {
 }
 
 .slick_newTable .grid-column-hidden{
-    background-color:gray;
+    background-color:#CCC;
+    overflow: hidden;
 }
 
 .slick-cell.active{
@@ -1059,13 +1069,6 @@ select[name=googlechart_filterposition] {
     margin-left:25px;
 }
 
-#slick-menu-cancel {
-}
-
-#slick-menu-cancel {}
-
-#slick-menu-all {}
-
 .slick-column-search-icon {
     float:left;
 }
@@ -1085,4 +1088,14 @@ select[name=googlechart_filterposition] {
 
 .slick_newTable .ui-icon{
     background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png);
+}
+
+#pivotingTableLabel {
+    float:left;
+    cursor:pointer;
+}
+
+#pivotingTableLabel > .ui-icon{
+    float:right; background-color:#999;
+    background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_ffffff_256x240.png);
 }

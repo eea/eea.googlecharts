@@ -333,6 +333,8 @@ class SavePNGChart(Export):
     """ Save png version of chart, including qr code and watermark
     """
     def __call__(self, **kwargs):
+        if not IFolderish.providedBy(self.context):
+            return _("Can't save png chart on a non-folderish object !")
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
         filename = kwargs.get('filename', 'img')
