@@ -8,14 +8,15 @@ if(window.DavizEdit === undefined){
 DavizEdit.GoogleDashboards = function(context, options){
   var self = this;
   self.context = context;
-  self.settings = {
-    config: {}
-  };
+  self.settings = {};
 
   if(options){
     jQuery.extend(self.settings, options);
   }
 
+  if(!self.settings.dashboards){
+    self.settings.dashboards = [];
+  }
   self.initialize();
 };
 
@@ -31,16 +32,15 @@ DavizEdit.GoogleDashboards.prototype = {
     var self = this;
     self.context.empty();
 
-    jQuery.each(self.settings.config.dashboards, function(index, config){
+    jQuery.each(self.settings.dashboards, function(index, config){
       var thumb = jQuery('<div>')
         .attr('title', 'Edit ' + config.title)
         .addClass('img-polaroid')
         .addClass('edit-button')
-        .data('config', config)
         .appendTo(self.context)
         .html("<span>" + config.title + "</span>")
         .click(function(){
-          self.edit(jQuery(this));
+          self.edit(jQuery(this), config);
         });
     });
 
@@ -59,10 +59,16 @@ DavizEdit.GoogleDashboards.prototype = {
     console.log('Adding new dashboard');
   },
 
-  edit: function(chart){
+  edit: function(chart, options){
     var self = this;
-    console.log(chart);
-    console.log(chart.data());
+    jQuery('.edit-button', self.context).removeClass('selected');
+    chart.addClass('selected');
+    jQuery('#gcharts-dashboard-edit', self.context).remove();
+    jQuery("<div>")
+      .attr('id', "gcharts-dashboard-edit")
+      .appendTo(self.context);
+
+    jQuery('#gcharts-dashboard-edit', self.context).EEAGoogleDashboard(options);
   }
 };
 
@@ -78,12 +84,23 @@ jQuery.fn.EEAGoogleDashboards = function(options){
 /** On load
 */
 jQuery(document).ready(function(){
-  var dashboards = jQuery('#gcharts-dashboards-edit');
-  if(!dashboards.length){
-    return;
-  }
-  var config = dashboards.attr('data-config') || "{}";
-  dashboards.attr('data-config', null);
-  config = JSON.parse(config);
-  dashboards.EEAGoogleDashboards({config: config});
+  var init = function(){
+    var dashboards = jQuery('#gcharts-dashboards-edit');
+    if(!dashboards.length){
+      return;
+    }
+    var config = dashboards.attr('data-config') || "{}";
+    dashboards.attr('data-config', null);
+    config = JSON.parse(config);
+    dashboards.EEAGoogleDashboards(config);
+  };
+
+  // onRefresh
+  jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
+    init();
+  });
+
+  // onLoad
+  init();
+
 });

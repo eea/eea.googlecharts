@@ -431,5 +431,5 @@ class DashboardView(ViewForm):
 class DashboardsView(ViewForm):
     """ Google dashboards view
     """
-    label = 'Charts Dashboards'
+    label = 'Dashboards'
     section = 'Charts'

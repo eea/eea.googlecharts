@@ -6,7 +6,7 @@ if(window.DavizEdit === undefined){
 }
 
 DavizEdit.Events.charts = {
-    initialized: 'google-charts-initialized',
+    //initialized: 'google-charts-initialized',
     changed: 'google-charts-changed',
     reordered: 'google-charts-position-changed',
     resized: 'google-chart-resized',
@@ -23,11 +23,6 @@ DavizEdit.GoogleDashboard = function(context, options){
     jQuery.extend(self.settings, options);
   }
 
-  // Events
-  jQuery(document).bind(DavizEdit.Events.charts.changed, function(evt, data){
-    self.reload();
-  });
-
   self.initialize();
 };
 
@@ -36,22 +31,13 @@ DavizEdit.GoogleDashboard.prototype = {
     var self = this;
     self.context.empty();
 
-    // Get config JSON
-    var query = {action: 'json'};
-
-    var form = self.context.parents('.daviz-view-form');
-    var action = form.length ? form.attr('action') : '';
-    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
-
-    jQuery.getJSON(action, query, function(data){
-      if((data.chartsBox !== undefined) && (data.chartsBox.order === 0)){
-        self.handle_charts(data);
-        self.handle_filters(data);
-      }else{
-        self.handle_filters(data);
-        self.handle_charts(data);
-      }
-    });
+    if((self.settings.chartsBox !== undefined) && (self.settings.chartsBox.order === 0)){
+      self.handle_charts();
+      self.handle_filters();
+    }else{
+      self.handle_filters();
+      self.handle_charts();
+    }
 
     self.context.sortable({
       items: '.dashboard-section',
@@ -68,20 +54,21 @@ DavizEdit.GoogleDashboard.prototype = {
     });
   },
 
-  handle_filters: function(options){
+  handle_filters: function(){
     var self = this;
-    var filters = new DavizEdit.GoogleDashboardFilters(self.context, options);
+    var filters = new DavizEdit.GoogleDashboardFilters(self.context, self.settings);
   },
 
-  handle_charts: function(options){
+  handle_charts: function(){
     var self = this;
-    var charts = new DavizEdit.GoogleDashboardCharts(self.context, options);
+    var charts = new DavizEdit.GoogleDashboardCharts(self.context, self.settings);
   },
 
   reorder: function(order){
     var self = this;
     var query = {
       action: 'sections.position',
+      dashboard: self.settings.name,
       order: order
     };
     query = jQuery.param(query, traditional=true);
@@ -156,38 +143,8 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     self.handle_header(width, height);
     self.handle_body();
 
-    var chartsAndWidgets = jQuery('li.googlechart');
-    jQuery.each(self.settings.widgets, function(){
-      chartsAndWidgets.push(this);
-    });
-
-    chartsAndWidgets = chartsAndWidgets.sort(function(a, b){
-      var order_a, order_b;
-      if(a.dashboard === undefined){
-        order_a = jQuery.data(a, 'dashboard').order;
-        order_a = order_a !== undefined ? parseInt(order_a, 10) : 998;
-      }else{
-        order_a = a.dashboard.order;
-        order_a = order_a !== undefined ? parseInt(order_a, 10): 998;
-      }
-
-      if(b.dashboard === undefined){
-        order_b = jQuery.data(b, 'dashboard').order;
-        order_b = order_b !== undefined ? parseInt(order_b, 10) : 999;
-      }else{
-        order_b = b.dashboard.order;
-        order_b = order_b !== undefined ? parseInt(order_b, 10): 999;
-      }
-
-      return (order_a <= order_b) ? -1 : 1;
-    });
-
-    jQuery(chartsAndWidgets).each(function(index){
-      if(this.dashboard === undefined){
-        self.handle_chart(index, jQuery(this), jQuery('.box-body', self.box));
-      }else{
-        self.handle_widget(index, this, jQuery('.box-body', self.box));
-      }
+    jQuery(self.settings.widgets).each(function(index){
+      self.handle_widget(index, this, jQuery('.box-body', self.box));
     });
 
     self.box.sortable({
@@ -250,16 +207,6 @@ DavizEdit.GoogleDashboardCharts.prototype = {
        .appendTo(self.box);
   },
 
-  handle_chart: function(index, chart, context){
-    var self = this;
-    name = jQuery('.googlechart_id', chart).val();
-    var gchart = new DavizEdit.GoogleDashboardChart(context, {
-      chart: chart,
-      name: name,
-      index: index
-    });
-  },
-
   handle_widget: function(index, widget, context){
     var self = this;
     if(widget.dashboard.order === undefined){
@@ -272,6 +219,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     var self = this;
     var query = {
       action: 'charts.position',
+      dashboard: self.settings.name,
       order: order
     };
     query = jQuery.param(query, traditional=true);
@@ -297,6 +245,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     var self = this;
     var query = {
       action: 'charts.size',
+      dashboard: self.settings.name,
       width: width,
       height: height
     };
@@ -389,7 +338,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     var action = form.length ? form.attr('action') : '';
     action = action.split('@@')[0] + '@@googlecharts.widgets.add';
 
-    widget.load(action, {}, function(){
+    widget.load(action, {dashboard: self.settings.name}, function(){
       widget.removeClass('loading');
       jQuery('#actionsView', widget).remove();
       jQuery("[name='form.wtype']", widget).change(function(){
@@ -416,7 +365,10 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       tinyMCE.triggerSave(true, true);
     }
 
-    var query = {};
+    var query = {
+      dashboard: self.settings.name
+    };
+
     jQuery.each(form.serializeArray(), function(){
       query[this.name] = this.value;
     });
@@ -1013,6 +965,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     var self = this;
     DavizEdit.Status.start("Deleting...");
     query = {
+      dashboard: 'ana-are-mere',
       name: self.settings.name,
       action: 'widget.delete'
     };
@@ -1405,16 +1358,3 @@ jQuery.fn.EEAGoogleDashboard = function(options){
     context.data('EEAGoogleDashboard', dashboard);
   });
 };
-
-
-///** On load
-//*/
-//jQuery(document).ready(function(){
-  //jQuery(document).bind(DavizEdit.Events.charts.initialized, function(evt, data){
-    //var dashboard = jQuery('#gcharts-dashboard-edit');
-    //if(!dashboard.length){
-      //return;
-    //}
-    //dashboard.EEAGoogleDashboard();
-  //});
-//});
