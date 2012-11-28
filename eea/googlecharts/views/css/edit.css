@@ -172,7 +172,21 @@
 
 #gcharts-dashboards-edit .edit-button.selected {
     box-shadow: none;
-    border: none;
+    position: relative;
+    border-color: white;
+}
+
+#gcharts-dashboards-edit .edit-button.selected:after {
+    border: solid;
+    bottom: -30px;
+    z-index: 99;
+    content: "";
+    display: block;
+    left: 50px;
+    position: absolute;
+    border-color: #f3f3f3 transparent;
+    -webkit-border-color: #eee transparent;
+    border-width: 0px 20px 20px;
 }
 
 #gcharts-dashboards-edit .edit-button.selected:hover {
@@ -233,19 +247,6 @@
     border-radius: 10px;
 }
 
-#gcharts-dashboard-edit:before {
-    border: solid;
-    top: -20px;
-    content: "";
-    display: block;
-    left: 50px;
-    position: absolute;
-    border-color: #f3f3f3 transparent;
-    -webkit-border-color: #eee transparent;
-    border-width: 0px 20px 20px;
-}
-
-
 #gcharts-dashboard-edit:after {
     content: '.';
     display: block;
@@ -254,9 +255,12 @@
     visibility: hidden;
 }
 
-#gcharts-dashboard-edit .ui-state-highlight {
-    float: left;
+#gcharts-dashboard-edit .ui-state-highlight,
+#gcharts-dashboards-edit .ui-state-highlight {
+  float: left;
+  border-radius: 20px;
 }
+
 
 .dashboard-resizable-helper {
     border: 2px dotted #E0EDFE;

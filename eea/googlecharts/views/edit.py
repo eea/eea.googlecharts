@@ -8,6 +8,7 @@ from Products.Five import BrowserView
 
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
+from zope.container.interfaces import INameChooser
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.edit import EditForm
 from eea.googlecharts.views.interfaces import IGoogleChartsEdit
@@ -16,8 +17,8 @@ logger = logging.getLogger('eea.googlecharts')
 def compare(a, b):
     """ Compare dashboard widgets
     """
-    order_a = a.get('dashboard', {}).get('order', 998)
-    order_b = b.get('dashboard', {}).get('order', 999)
+    order_a = a.get('order', a.get('dashboard', {}).get('order', 998))
+    order_b = b.get('order', b.get('dashboard', {}).get('order', 999))
     return cmp(order_a, order_b)
 
 class Edit(BrowserView):
@@ -162,7 +163,8 @@ class DashboardEdit(ChartsEdit):
     def dashboard(self, name):
         """ Return dashboard by name
         """
-        for dashboard in self.dashboards.get('dashboards', []):
+        self.dashboards.setdefault('dashboards', [])
+        for dashboard in self.dashboards['dashboards']:
             if dashboard.get('name', '') == name:
                 return dashboard
         return {}
@@ -170,10 +172,12 @@ class DashboardEdit(ChartsEdit):
     def json(self, **kwargs):
         """ Return config JSON
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        view = mutator.view(self.__name__.replace('.edit', ''), {})
-        return json.dumps(dict(view))
+        dashboard = kwargs.pop('dashboard', '')
+        if not dashboard:
+            return "{}"
 
+        dashboard = self.dashboard(dashboard)
+        return json.dumps(dict(dashboard))
 
     def widgetEdit(self, **kwargs):
         """ Edit dashboard widget
@@ -382,10 +386,14 @@ class DashboardEdit(ChartsEdit):
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
         action = kwargs.pop('action', '')
+        #
+        # View mode
+        #
         if not action:
             return super(DashboardEdit, self).__call__()
-
+        #
         # Edit mode
+        #
         if action == 'json':
             return self.json(**kwargs)
 
@@ -415,8 +423,6 @@ class DashboardEdit(ChartsEdit):
         elif action == 'sections.position':
             return self.sectionsPosition(**kwargs)
 
-
-        # View mode
         return 'Invalid action provided: %s' % action
 
 class DashboardsEdit(ChartsEdit):
@@ -424,9 +430,121 @@ class DashboardsEdit(ChartsEdit):
     """
     form_fields = Fields(IGoogleChartsEdit)
 
+    def __init__(self, context, request):
+        super(DashboardsEdit, self).__init__(context, request)
+        self._dashboards = None
+
+    @property
+    def dashboards(self):
+        """ Get dashboards from annotations
+        """
+        if not self._dashboards:
+            mutator = queryAdapter(self.context, IVisualizationConfig)
+            viewname = self.__name__.replace('.edit', '')
+            self._dashboards = mutator.view(viewname, {})
+            self._dashboards.setdefault('dashboards', [])
+        return self._dashboards
+
+    @dashboards.setter
+    def dashboards(self, value):
+        """ Update dashboards settings
+        """
+        if value == 'Changed':
+            value = self.dashboards
+
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        viewname = self.__name__.replace('.edit', '')
+        mutator.edit_view(viewname, **value)
+
     def json(self, **kwargs):
         """ Return config JSON
         """
-        accessor = queryAdapter(self.context, IVisualizationConfig)
-        view = accessor.view(self.__name__.replace('.edit', ''), {})
-        return json.dumps(dict(view), ensure_ascii=False)
+        return json.dumps(dict(self.dashboards), ensure_ascii=False)
+
+    def chooseName(self, title, existing=None):
+        """ Choose unique name for dashboard
+        """
+        if not existing:
+            existing = [dashboard.get('name', '')
+                        for dashboard in self.dashboards.get('dashboards', [])]
+
+        chooser = queryAdapter(self.context, INameChooser)
+        if not chooser:
+            chooser = queryAdapter(self.context.getParentNode(), INameChooser)
+        name = chooser.chooseName(title, self.context)
+
+        if name in existing:
+            free_ids = set(u'%s-%d' % (name, uid)
+                           for uid in range(len(existing)+1))
+            name = free_ids.difference(existing)
+            name = name.pop()
+        return name
+
+    def add(self, **kwargs):
+        """ Add new dashboard
+        """
+        title = kwargs.get('title', 'Dashboard')
+        name = self.chooseName(title)
+
+        dashboard = {
+            "title": title,
+            "name": name,
+            "filtersBox": {
+                "height": "auto",
+                "width": "100%",
+            },
+            "chartsBox": {
+                "height": "auto",
+                "width": "100%",
+            },
+            "filters": [],
+            "widgets": [],
+        }
+
+        self.dashboards['dashboards'].append(dashboard)
+        self.dashboards = "Changed"
+        return self.json(**kwargs)
+
+    def dashboardsPosition(self, **kwargs):
+        """ Reorder dashboards
+        """
+        order = kwargs.get('order', [])
+        order = dict((name, index) for index, name in enumerate(order))
+
+        changed = False
+        dashboards = self.dashboards['dashboards']
+        for dashboard in dashboards:
+            name = dashboard.get('name', '')
+            my_order = dashboard.get('order', -1)
+            new_order = order.get(name, -1)
+            if my_order == new_order:
+                continue
+
+            dashboard['order'] = new_order
+            changed = True
+
+        if changed:
+            dashboards.sort(cmp=compare)
+            self.dashboards = 'Changed'
+        return self.json(**kwargs)
+
+    def __call__(self, **kwargs):
+        form = getattr(self.request, 'form', {})
+        kwargs.update(form)
+        action = kwargs.pop('action', '')
+        #
+        # View mode
+        #
+        if not action:
+            return super(DashboardsEdit, self).__call__()
+        #
+        # Edit mode
+        #
+        if action == 'json':
+            return self.json(**kwargs)
+        if action == 'add':
+            return self.add(**kwargs)
+        if action == 'dashboards.position':
+            return self.dashboardsPosition(**kwargs)
+
+        return 'Invalid action provided: %s' % action

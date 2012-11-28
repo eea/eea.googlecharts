@@ -23,18 +23,42 @@ DavizEdit.GoogleDashboards = function(context, options){
 DavizEdit.GoogleDashboards.prototype = {
   initialize: function(){
     var self = this;
+    self.active = null;
+
+    var form = self.context.parents('.daviz-view-form');
+    self.action = form.length ? form.attr('action') : '';
 
     jQuery('input[name*="save"]', self.context.parent()).unbind();
-    self.reload();
+
+    // Events
+    jQuery(document).bind(DavizEdit.Events.charts.changed, function(evt, data){
+      self.reload(true);
+    });
+
+    self.reload(false);
   },
 
-  reload: function(){
+  reload: function(hard){
+    var self = this;
+    if(!hard){
+      return self.onReload();
+    }
+
+    jQuery.getJSON(self.action, {action: 'json'}, function(data){
+      self.settings = data;
+      return self.onReload();
+    });
+  },
+
+  onReload: function(){
     var self = this;
     self.context.empty();
+    self.context.sortable('destroy');
 
     jQuery.each(self.settings.dashboards, function(index, config){
       var thumb = jQuery('<div>')
         .attr('title', 'Edit ' + config.title)
+        .attr('id', config.name)
         .addClass('img-polaroid')
         .addClass('edit-button')
         .appendTo(self.context)
@@ -52,15 +76,50 @@ DavizEdit.GoogleDashboards.prototype = {
       .click(function(){
         self.add();
       });
+
+    self.context.sortable({
+      items: '.edit-button',
+      placeholder: 'ui-state-highlight',
+      forcePlaceholderSize: true,
+      opacity: 0.7,
+      delay: 300,
+      cursor: 'crosshair',
+      tolerance: 'pointer',
+      update: function(event, ui){
+        self.reorder(self.context.sortable('toArray'));
+      }
+    });
+
+    if(self.active){
+      var active = self.active;
+      self.active = null;
+      jQuery('[id="' + active+ '"]', self.context).click();
+    }
   },
 
   add: function(){
     var self = this;
-    console.log('Adding new dashboard');
+
+
+    jQuery.getJSON(self.action, {action: 'add'}, function(data){
+      self.settings = data;
+      var dashboards = self.settings.dashboards;
+      var dashboard = dashboards[dashboards.length - 1];
+      self.active = dashboard.name;
+      return self.reload(false);
+    });
   },
 
   edit: function(chart, options){
     var self = this;
+
+    // Close tab
+    if(options.name == self.active){
+      self.active = null;
+      return self.reload(false);
+    }
+
+    self.active = options.name;
     jQuery('.edit-button', self.context).removeClass('selected');
     chart.addClass('selected');
     jQuery('#gcharts-dashboard-edit', self.context).remove();
@@ -69,6 +128,21 @@ DavizEdit.GoogleDashboards.prototype = {
       .appendTo(self.context);
 
     jQuery('#gcharts-dashboard-edit', self.context).EEAGoogleDashboard(options);
+  },
+
+  reorder: function(order){
+    var self = this;
+    var query = {
+      action: 'dashboards.position',
+      order: order
+    };
+    query = jQuery.param(query, traditional=true);
+
+    DavizEdit.Status.start("Saving...");
+    jQuery.post(self.action, query, function(data){
+      self.settings = data;
+      DavizEdit.Status.stop('Dashboards position changed');
+    });
   }
 };
 

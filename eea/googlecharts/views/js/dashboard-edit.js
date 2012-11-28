@@ -23,11 +23,6 @@ DavizEdit.GoogleDashboard = function(context, options){
     jQuery.extend(self.settings, options);
   }
 
-  // Events
-  //jQuery(document).bind(DavizEdit.Events.charts.changed, function(evt, data){
-    //self.reload();
-  //});
-
   self.initialize();
 };
 
@@ -453,7 +448,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     var query = {
       dashboard: self.settings.dashboard.name,
       name: self.settings.name
-    }
+    };
 
 
     jQuery.get(action, query, function(data){
@@ -658,7 +653,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     var query = {
       dashboard: self.settings.dashboard.name,
       name: self.settings.name
-    }
+    };
 
     jQuery.get(action, query, function(data){
       var form = jQuery('<form>')
@@ -716,7 +711,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     if(title.length){
       self.settings.title = title.val();
     }
-    var action = 'googlechart.googledashboard.actions.save';
+    var action = self.settings.dashboard.name + '.actions.save';
     var query = {};
     jQuery.each(form.serializeArray(), function(){
       query[this.name] = this.value;
