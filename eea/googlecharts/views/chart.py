@@ -198,6 +198,22 @@ class View(ViewForm):
         """ Get chart for iframe
         """
         chart_id = self.request.get("chart", '')
+
+        tmp_id = self.request.get("preview_id", "")
+        if tmp_id:
+            if getattr(self.context, '_v_chart_listing_tmp_charts', None):
+                if tmp_id in self.context._v_chart_listing_tmp_charts.keys():
+                    config = self.context._v_chart_listing_tmp_charts[tmp_id]
+                    config['data'] = self.get_rows()
+                    config['available_columns'] = self.get_columns()
+                    config['preview_width'] = config['width']
+                    config['preview_height'] = config['height']
+                    return config
+                else:
+                    return {}
+            else:
+                return {}
+
         chart_width = self.request.get('width', 0)
         chart_height = self.request.get('height', 0)
         config = {}

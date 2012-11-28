@@ -1099,3 +1099,7 @@ select[name=googlechart_filterposition] {
     float:right; background-color:#999;
     background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_ffffff_256x240.png);
 }
+
+.googlechart_dragging{
+    background-color:rgba(100, 100, 100, 0.6);
+}

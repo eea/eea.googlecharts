@@ -26,7 +26,7 @@ class Edit(BrowserView):
         mutator.edit_view('googlechart.googlecharts', **data)
 
         if not IFolderish.providedBy(self.context):
-            return "Changes saved, but can't save png "+
+            return "Changes saved, but can't save png" + \
                     "chart on a non-folderish object!"
 
         previews = ["googlechart.googledashboard.preview.png",
@@ -103,6 +103,14 @@ class Edit(BrowserView):
         chart['row_filters_str'] = urllib2.unquote(chart['row_filters_str'])
         chart['sortBy'] = urllib2.unquote(chart['sortBy'])
         chart['sortAsc_str'] = urllib2.unquote(chart['sortAsc_str'])
+
+        tmp_id = chart.get('preview_id', None)
+        if tmp_id:
+            if not getattr(self.context, "_v_chart_listing_tmp_charts", None):
+                self.context._v_chart_listing_tmp_charts = {}
+            self.context._v_chart_listing_tmp_charts[tmp_id] = chart
+            return tmp_id
+
         self.context._v_iframe_chart_tmp_config = chart
 
         return 'Changes saved'
