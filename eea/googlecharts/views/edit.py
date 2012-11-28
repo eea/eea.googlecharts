@@ -13,6 +13,13 @@ from eea.app.visualization.views.edit import EditForm
 from eea.googlecharts.views.interfaces import IGoogleChartsEdit
 logger = logging.getLogger('eea.googlecharts')
 
+def compare(a, b):
+    """ Compare dashboard widgets
+    """
+    order_a = a.get('dashboard', {}).get('order', 998)
+    order_b = b.get('dashboard', {}).get('order', 999)
+    return cmp(order_a, order_b)
+
 class Edit(BrowserView):
     """ Edit GoogleCharts form
     """
@@ -258,6 +265,7 @@ class DashboardEdit(ChartsEdit):
             changed = True
 
         if changed:
+            widgets.sort(cmp=compare)
             self.dashboards = 'Changed'
         return u'Changed saved'
 

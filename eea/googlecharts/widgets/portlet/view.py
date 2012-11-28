@@ -1,32 +1,20 @@
 """ Widget view
 """
 import logging
-from zope.component import queryAdapter
-from eea.app.visualization.interfaces import IVisualizationConfig
-from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ZopeTwoPageTemplateFile
+from eea.googlecharts.widgets.view import View as Widget
 logger = logging.getLogger('eea.googlecharts')
 
-class View(BrowserView):
+class View(Widget):
     """ View portlet widget
     """
     index = ZopeTwoPageTemplateFile('view.pt', globals())
-
-    def __init__(self, context, request):
-        super(View, self).__init__(context, request)
-        self.widget_name = ''
 
     @property
     def macro(self):
         """ Get macro
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        view = mutator.view('googlechart.googledashboard', {})
-        widgets = view.get('widgets', [])
-        macro = None
-        for widget in widgets:
-            if widget.get('name', None) == self.widget_name:
-                macro = widget.get('macro', None)
+        macro = self.widget.get('macro', None)
 
         if not macro:
             err = 'Empty macro %s' % macro
@@ -54,9 +42,3 @@ class View(BrowserView):
         err = "Invalid macro: %s" % macro
         logger.exception(err)
         raise ValueError(err)
-
-    def __call__(self, **kwargs):
-        form = self.request.form
-        form.update(kwargs)
-        self.widget_name = form.get('name', '')
-        return self.index()

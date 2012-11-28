@@ -293,6 +293,9 @@
 .dashboard-header span.title {
     float: left;
     font-weight: bold;
+    max-width: 40%;
+    max-height: 1.8em;
+    overflow: hidden;
 }
 
 .dashboard-header input {

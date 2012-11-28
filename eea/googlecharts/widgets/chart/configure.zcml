@@ -1,0 +1,32 @@
+<configure
+  xmlns:googlecharts="http://namespaces.zope.org/googlecharts"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="eea">
+
+  <!-- View -->
+  <googlecharts:widget
+    name="googlecharts.widgets.chart"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".view.View"
+    template="view.pt"
+    permission="zope2.View"
+    title="Chart"
+    />
+
+  <!-- Edit -->
+  <browser:page
+    name="googlecharts.widgets.chart.edit"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Edit"
+    permission="eea.app.visualization.configure"
+    />
+
+  <!-- Add -->
+  <browser:page
+    name="googlecharts.widgets.chart.add"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Add"
+    permission="eea.app.visualization.configure"
+    />
+
+</configure>

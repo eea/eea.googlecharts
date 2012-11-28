@@ -24,7 +24,7 @@ DavizEdit.GoogleDashboards.prototype = {
   initialize: function(){
     var self = this;
 
-    jQuery('input[name*="save"]', self.context.parent()).remove();
+    jQuery('input[name*="save"]', self.context.parent()).unbind();
     self.reload();
   },
 
