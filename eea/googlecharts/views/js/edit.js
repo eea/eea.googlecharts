@@ -286,6 +286,12 @@ function openAdvancedOptions(id){
             modal:true,
             minWidth: 600,
             minHeight: 480,
+            open: function(evt, ui){
+                var buttons = jQuery(this).parent().find('button');
+                buttons.attr('class', 'btn');
+                jQuery(buttons[0]).addClass('btn-success');
+                jQuery(buttons[1]).addClass('btn-inverse');
+            },
             buttons:[
                 {
                     text: "Save",
@@ -416,9 +422,9 @@ function addChart(options){
                     "</ul>" +
                 "</div>" +
                 "<div style='clear:both'> </div>" +
-                "<input type='button' class='context btn' value='Edit Chart' onclick='openEditChart(\""+settings.id+"\");'/>" +
-                "<input type='button' class='context btn' value='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'/>" +
-                "<a style='float:right' class='preview_button btn'>Preview Chart</a>"+
+                "<input type='button' class='context btn btn-primary' value='Edit Chart' onclick='openEditChart(\""+settings.id+"\");'/>" +
+                "<input type='button' class='context btn btn-warning' value='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'/>" +
+                "<a style='float:right' class='preview_button btn btn-info'>Preview Chart</a>"+
             "</fieldset>" +
         "</li>");
     googlechart.find(".googlechart_columns").attr("value", settings.columns);
@@ -726,7 +732,7 @@ function generateNewTable(sortOrder, isFirst){
     });
     sortOrder = typeof(sortOrder) === 'undefined' ? tmpSortOrder : sortOrder;
 
-    /* Workaround for slickgrid - webkit bug 
+    /* Workaround for slickgrid - webkit bug
     As the styles are generated in js, in chrome sometimes we get the error: Cannot find stylesheet.
     If we get this error, we try to draw the grid again, 5 times.
     If the problem persists after 5 atempts, we throw the exception we got from slickgrid
@@ -1577,6 +1583,12 @@ function columnsMatrixChart(chartType){
                                 }
                             }],
                         open:function(){
+                            // Buttons
+                            var buttons = jQuery(this).parent().find('button');
+                            buttons.attr('class', 'btn');
+                            jQuery(buttons[0]).addClass('btn-success');
+                            jQuery(buttons[1]).addClass('btn-inverse');
+
                             var tmp_options = {};
 //                            jQuery.extend(tmp_options, matrixChartOptions);
                             tmp_options = JSON.parse(JSON.stringify(matrixChartOptions));
@@ -1655,8 +1667,8 @@ function openEditChart(id){
             '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:341px" title="Click to enlarge Table Configurator">Table Configurator</div>'+
             "<div style='float:right;'>"+
                 '<div class="buttons">' +
-                "<input type='button' style='width:80px' class='context btn' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
-                "<input style='margin-left:5px;width:80px' type='button' class='context btn' value='Cancel' onclick='chartEditorCancel();'/>" +
+                "<input type='button' class='btn btn-success' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
+                "<input type='button' class='btn btn-inverse' value='Cancel' onclick='chartEditorCancel();'/>" +
                 "</div>" +
             "</div>"+
         '</div>'+
@@ -1947,6 +1959,12 @@ function openAddChartFilterDialog(id){
     jQuery(addfilterdialog).dialog({title:"Add Filter",
                 dialogClass: 'googlechart-dialog',
                 modal:true,
+                open: function(evt, ui){
+                    var buttons = jQuery(this).parent().find('button');
+                    buttons.attr('class', 'btn');
+                    jQuery(buttons[0]).addClass('btn-success');
+                    jQuery(buttons[1]).addClass('btn-inverse');
+                },
                 buttons:[
                     {
                         text: "Save",
@@ -2280,6 +2298,12 @@ function init_googlecharts_edit(){
         jQuery(removeChartDialog).dialog({title:"Remove Chart",
             modal:true,
             dialogClass: 'googlechart-dialog',
+            open: function(evt, ui){
+                var buttons = jQuery(this).parent().find('button');
+                buttons.attr('class', 'btn');
+                jQuery(buttons[0]).addClass('btn-danger');
+                jQuery(buttons[1]).addClass('btn-inverse');
+            },
             buttons:[
                 {
                     text: "Remove",
@@ -2332,9 +2356,15 @@ function init_googlecharts_edit(){
             "<div>Are you sure you want to delete filter: "+
             "<strong>"+title+"</strong>"+
             "</div>";
-        jQuery(removeFilterDialog).dialog({title:"Remove Chart",
+        jQuery(removeFilterDialog).dialog({title:"Remove filter",
             modal:true,
             dialogClass: 'googlechart-dialog',
+            open: function(evt, ui){
+                var buttons = jQuery(this).parent().find('button');
+                buttons.attr('class', 'btn');
+                jQuery(buttons[0]).addClass('btn-danger');
+                jQuery(buttons[1]).addClass('btn-inverse');
+            },
             buttons:[
                 {
                     text: "Remove",
