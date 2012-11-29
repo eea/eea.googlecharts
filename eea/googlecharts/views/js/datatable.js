@@ -6,7 +6,8 @@ function transformTable(options){
         normalColumns : '',
         pivotingColumns : '',
         valueColumn : '',
-        availableColumns : ''
+        availableColumns : '',
+        filters: {}
     };
     jQuery.extend(settings, options);
 
@@ -23,6 +24,15 @@ function transformTable(options){
     });
 
     jQuery(settings.originalTable.items).each(function(row_index, row){
+        var shouldDisplay = true;
+        jQuery.each(settings.filters, function(column, column_filter){
+            if (jQuery.inArray(row[column], column_filter) !== -1){
+                shouldDisplay = false;
+            }
+        });
+        if (!shouldDisplay){
+            return;
+        }
         var newRow = {};
         var isNewRow = true;
 
@@ -107,7 +117,9 @@ function prepareForChart(options){
     var settings = {
         originalDataTable : '',
         columns : '',
-        limit : 0
+        limit : 0,
+        sortBy : '',
+        sortAsc : true
     };
     jQuery.extend(settings, options);
 
@@ -178,7 +190,19 @@ function prepareForChart(options){
         dataForChart.addRow(newRow);
     });
 
-    return dataForChart;
+    var tmpDataView = new google.visualization.DataView(dataForChart);
+
+    if (settings.sortBy !== ""){
+        pos = jQuery.inArray(settings.sortBy, settings.columns);
+        if (pos > -1){
+            var tmp_sort = tmpDataView.getSortedRows(pos);
+            if (!settings.sortAsc){
+                tmp_sort.reverse()
+            }
+            tmpDataView.setRows(tmp_sort);
+        }
+    }
+    return tmpDataView;
 }
 
 

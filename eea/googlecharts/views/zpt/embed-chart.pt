@@ -20,7 +20,7 @@
 
 </head>
 <body tal:define="chart view/get_chart" style="margin: 0; overflow: hidden">
-    <script type="text/javascript" tal:define="showSort python: chart.get('showSort','False')"
+    <script type="text/javascript" tal:define="showSort python: chart.get('showSort','False'); row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc')"
         tal:content="string:chart_columns = ${chart/columns};
                                                 merged_rows = ${chart/data};
                                                 available_columns = ${chart/available_columns};
@@ -28,7 +28,7 @@
                                                 width = ${chart/chartWidth};
                                                 height = ${chart/chartHeight};
                                                 name = '${chart/name}';
-                                                options = ${chart/options};
+                                                chart_options = ${chart/options};
                                                 chart_filterposition = ${chart/filterposition}
                                                 chart_filters = ${chart/filters};
                                                 baseurl = '${view/context/absolute_url}';
@@ -38,7 +38,10 @@
                                                 wm_pos = '${view/wm_position}';
                                                 wm_path = '${view/wm_path}';
                                                 main_title = '${view/get_maintitle}';
-                                                showSort = '${showSort}';">
+                                                showSort = '${showSort}';
+                                                row_filters_str = '$row_filters';
+                                                sortBy = '$sortBy';
+                                                sortAsc_str = '$sortAsc'">
     </script>
     <div id="googlechart_dashboard" class="embedded-dashboard">
         <div id="googlechart_table">

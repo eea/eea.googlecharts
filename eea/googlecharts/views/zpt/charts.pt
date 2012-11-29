@@ -34,8 +34,8 @@
 
     <tal:block tal:repeat="chart charts">
         <script type="text/javascript"
-            tal:define="dashboard python:view.get_dashboard_js(chart);showSort python:view.get_showSort(chart); hasPNG chart/hasPNG | string: false"
-            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard, '$showSort', '$hasPNG']);"></script>
+            tal:define="dashboard python:view.get_dashboard_js(chart);showSort python:view.get_showSort(chart); hasPNG chart/hasPNG | string: false; row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc')"
+            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard, '$showSort', '$hasPNG', '$row_filters', '$sortBy', '$sortAsc']);"></script>
     </tal:block>
     <div style="clear:both">
     </div>

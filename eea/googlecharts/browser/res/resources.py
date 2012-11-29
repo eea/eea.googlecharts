@@ -83,4 +83,5 @@ class EditResources(object):
             '++resource++eea.googlecharts.dashboard-edit.js',
             '++resource++eea.googlecharts.edit.js',
             '++resource++eea.googlecharts.configurator_messages.js',
+            '++resource++eea.googlecharts.edit_grid.js',
         ]

@@ -102,11 +102,18 @@
 }
 .googlechartTable th,
 .pivotedColumn {
-    padding: 1em;
-    border:1px solid #EEE;
-    background-color: #CDE2A7;
+    padding: 4px;
+    line-height: 16px;
+    border:1px solid #CCC;
+    border-bottom:2px solid #CCC;
+    background-color: #F3F3F3;
     color: #333;
 }
+
+.googlechartTable .ui-icon{
+    background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png);
+}
+
 .googlechartTable td{
     padding:2px;
     border:1px solid #EEEEEE;
@@ -143,7 +150,7 @@
 }
 
 #newColumns th {
-    cursor: crosshair;
+    cursor: move;
     vertical-align: text-top;
 }
 
@@ -632,7 +639,9 @@ dl.portlet .dashboard-widget,
 
 .pivotedColumn,
 .draggable {
-    font-weight:bold;
+    font-weight:normal;
+    font-size:14px;
+    line-height:16px;
 }
 
 .pivotedColumn {
@@ -640,7 +649,7 @@ dl.portlet .dashboard-widget,
 }
 
 .draggable {
-    cursor: crosshair;
+    cursor: move;
 }
 
 .googlechart-editor{
@@ -715,6 +724,9 @@ dl.portlet .dashboard-widget,
     background-color:rgba(119, 124, 31, 0.6);
 }
 
+#matrixChart_type_selector > div > select {
+    width: 70px;
+}
 
 .matrixChart_item {
     float:left;
@@ -981,4 +993,113 @@ select[name=googlechart_filterposition] {
 
 .googlechart_thumb_zone {
     display:none;
+}
+
+.slick-header-menu {
+    z-index: 9999 !important;
+}
+
+.slick_newTable .grid-column-hidden{
+    background-color:#CCC;
+    overflow: hidden;
+}
+
+.slick-cell.active{
+    border: 1px solid transparent !important;
+    border-bottom:1px solid silver !important;
+    border-right: 1px dotted silver !important;
+}
+
+.filter_item{
+    padding-left:30px !important;
+}
+
+.filter_item:hover{
+    background-color:#CCCCCC;
+}
+
+.filter_item_selected {
+    background-repeat: no-repeat;
+    background-image: url(++resource++slickgrid-images/tick.png); 
+}
+
+.filter_item_ignored {}
+
+#filter_grid > .slick-header {
+    display:none;
+}
+
+.filtered-column{
+    background-repeat: no-repeat;
+    padding-left:15px;
+}
+
+.slick-filter-hr {
+    margin-top:5px;
+    margin-bottom:10px;
+    border-top: 1px solid #AAA;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+}
+
+#slick-menu-quicksearch{
+    margin-left:25px;
+    margin-right:15px;
+    margin-top:5px;
+    width:200px;
+}
+
+#filter_grid{
+    margin-left:25px;
+    margin-right:15px;
+    margin-bottom:10px;
+    width:200px;
+    height:150px;
+}
+
+.slick-filter-title{
+    font-size:11px;
+    font-weight:bold;
+    margin-left:25px;
+    float:left;
+}
+
+#slick-menu-ok {
+    margin-left:25px;
+}
+
+.slick-column-search-icon {
+    float:left;
+}
+
+.slick-column-sort-icon {
+    float:left;
+}
+
+.slick_newTable th.ui-state-default,
+.slick_newTable td.ui-state-default,
+.slick_newTable div.ui-state-default,
+.slick_newTable .slick-header-columns {
+  background: none;
+  background-color: #f3f3f3;
+  color: #000;
+}
+
+.slick_newTable .ui-icon{
+    background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png);
+}
+
+#pivotingTableLabel {
+    float:left;
+    cursor:pointer;
+}
+
+#pivotingTableLabel > .ui-icon{
+    float:right; background-color:#999;
+    background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_ffffff_256x240.png);
+}
+
+.googlechart_dragging{
+    background-color:rgba(100, 100, 100, 0.6);
 }

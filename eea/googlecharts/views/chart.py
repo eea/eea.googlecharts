@@ -198,14 +198,27 @@ class View(ViewForm):
         """ Get chart for iframe
         """
         chart_id = self.request.get("chart", '')
+
+        tmp_id = self.request.get("preview_id", "")
+        if tmp_id:
+            if getattr(self.context, '_v_chart_listing_tmp_charts', None):
+                if tmp_id in self.context._v_chart_listing_tmp_charts.keys():
+                    config = self.context._v_chart_listing_tmp_charts[tmp_id]
+                    config['data'] = self.get_rows()
+                    config['available_columns'] = self.get_columns()
+                    config['preview_width'] = config['width']
+                    config['preview_height'] = config['height']
+                    return config
+                else:
+                    return {}
+            else:
+                return {}
+
         chart_width = self.request.get('width', 0)
         chart_height = self.request.get('height', 0)
         config = {}
         if chart_id == '':
-            mutator = queryAdapter(self.context, IVisualizationConfig)
-            for view in mutator.views:
-                if (view.get('chartsconfig_tmp_iframe')):
-                    config = view.get('chartsconfig_tmp_iframe')
+            config = self.context._v_iframe_chart_tmp_config
             config['preview_width'] = config['width']
             config['preview_height'] = config['height']
         else:
@@ -336,6 +349,8 @@ class SavePNGChart(Export):
     """ Save png version of chart, including qr code and watermark
     """
     def __call__(self, **kwargs):
+        if not IFolderish.providedBy(self.context):
+            return _("Can't save png chart on a non-folderish object !")
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
         filename = kwargs.get('filename', 'img')

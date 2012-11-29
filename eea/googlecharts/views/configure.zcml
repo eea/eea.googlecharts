@@ -181,6 +181,11 @@
   />
 
   <browser:resource
+    name="eea.googlecharts.edit_grid.js"
+    file="./js/edit_grid.js"
+  />
+
+  <browser:resource
     name="eea.googlecharts.view.css"
     file="./css/view.css"
   />
