@@ -439,6 +439,7 @@ function addChart(options){
 
     jQuery("#googlechart_filters_"+settings.id).sortable({
         handle : '.googlechart_filteritem_'+settings.id,
+        delay: 300,
         stop: function(event,ui){
             markChartAsModified(settings.id);
         }
@@ -1869,6 +1870,7 @@ function openEditChart(id){
     populateTableForPivot();
     $(".draggable").draggable({
             containment:"#headers",
+            delay: 300,
             revert:false,
             start: function(event, ui){
                 if (checkVisiblePivotValueColumns() < 2){
@@ -2247,6 +2249,7 @@ function init_googlecharts_edit(){
         handle : '.googlechart_handle',
         items: 'li.googlechart',
         opacity: 0.7,
+        delay: 300,
         tolerance: 'pointer',
         helper: function(event, ui){
             var draggingObj = jQuery("<li></li");
