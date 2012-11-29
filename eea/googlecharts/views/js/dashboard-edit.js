@@ -31,6 +31,7 @@ DavizEdit.GoogleDashboard.prototype = {
     var self = this;
     self.context.empty();
 
+    self.handle_header();
     if((self.settings.chartsBox !== undefined) && (self.settings.chartsBox.order === 0)){
       self.handle_charts();
       self.handle_filters();
@@ -52,6 +53,49 @@ DavizEdit.GoogleDashboard.prototype = {
         self.reorder(self.context.sortable('toArray'));
       }
     });
+  },
+
+  handle_header: function(){
+    var self = this;
+    var header = jQuery('<div>')
+      .addClass('dashboard-header')
+      .addClass('dashboard-header-title')
+      .html([
+      '<span class="title">', self.settings.title, '</span>',
+      ].join('\n'));
+
+    self.handle_buttons(header);
+    self.context.prepend(header);
+  },
+
+  handle_buttons: function(header){
+    var self = this;
+
+    jQuery("<span>")
+      .attr('title', 'Rename')
+      .text('e')
+      .addClass('ui-icon').addClass('ui-icon-pencil')
+      .prependTo(header)
+      .click(function(){
+        self.handle_edit();
+      });
+
+    jQuery('<span>')
+      .attr('title', 'Delete')
+      .text('x')
+      .addClass('ui-icon').addClass('ui-icon-trash')
+      .prependTo(header)
+      .click(function(){
+        self.handle_delete();
+      });
+  },
+
+  handle_edit: function(){
+
+  },
+
+  handle_delete: function(){
+
   },
 
   handle_filters: function(){
@@ -320,6 +364,12 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       closeOnEscape: true,
       minHeight: 600,
       minWidth: 950,
+      open: function(evt, ui){
+        var buttons = jQuery(this).parent().find('button');
+        buttons.attr('class', 'btn');
+        jQuery(buttons[0]).addClass('btn-inverse');
+        jQuery(buttons[1]).addClass('btn-success');
+      },
       buttons: [
         {
           text: "Cancel",
@@ -675,6 +725,10 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         minHeight: 600,
         closeOnEscape: true,
         open: function(){
+          var buttons = jQuery(this).parent().find('button');
+          buttons.attr('class', 'btn');
+          jQuery(buttons[0]).addClass('btn-inverse');
+          jQuery(buttons[1]).addClass('btn-success');
           // Init tinyMCE
           if(jQuery('textarea', form).length){
             self.initializeTinyMCE(form);
@@ -741,6 +795,12 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         title: 'Remove widget',
         modal: true,
         dialogClass: 'googlechart-dialog',
+        open: function(evt, ui){
+          var buttons = jQuery(this).parent().find('button');
+          buttons.attr('class', 'btn');
+          jQuery(buttons[0]).addClass('btn-danger');
+          jQuery(buttons[1]).addClass('btn-inverse');
+        },
         buttons: {
           Yes: function(){
             self.onRemove();
@@ -978,6 +1038,12 @@ DavizEdit.GoogleDashboardFilters.prototype = {
       bgiframe: true,
       modal: true,
       closeOnEscape: true,
+      open: function(evt, ui){
+        var buttons = jQuery(this).parent().find('button');
+        buttons.attr('class', 'btn');
+        jQuery(buttons[0]).addClass('btn-inverse');
+        jQuery(buttons[1]).addClass('btn-success');
+      },
       buttons: [
         {
           text: "Cancel",
@@ -1116,6 +1182,12 @@ DavizEdit.GoogleDashboardFilter.prototype = {
         title: 'Remove filter',
         modal: true,
         dialogClass: 'googlechart-dialog',
+        open: function(evt, ui){
+          var buttons = jQuery(this).parent().find('button');
+          buttons.attr('class', 'btn');
+          jQuery(buttons[0]).addClass('btn-danger');
+          jQuery(buttons[1]).addClass('btn-inverse');
+        },
         buttons: {
           Yes: function(){
             self.onRemove();

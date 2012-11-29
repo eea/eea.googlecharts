@@ -191,7 +191,7 @@
     display: block;
     left: 50px;
     position: absolute;
-    border-color: #f3f3f3 transparent;
+    border-color: #fff transparent;
     -webkit-border-color: #eee transparent;
     border-width: 0px 20px 20px;
 }
@@ -328,6 +328,27 @@
     background-image: -moz-linear-gradient(center top , #FFFFFF, #E6E6E6);
     background-image: -ms-linear-gradient(center top , #FFFFFF, #E6E6E6);
     background-image: -o-linear-gradient(center top , #FFFFFF, #E6E6E6);
+}
+
+.dashboard-header-title {
+    opacity: 1;
+    position: relative;
+    min-height: 20px;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 0.5em 0;
+}
+
+.dashboard-header-title .ui-icon {
+    cursor: pointer;
+    float: right;
+}
+
+.dashboard-header-title .title {
+    padding: 0 1em;
 }
 
 #content .dashboard-chart,
@@ -1109,7 +1130,7 @@ select[name=googlechart_filterposition] {
 
 .filter_item_selected {
     background-repeat: no-repeat;
-    background-image: url(++resource++slickgrid-images/tick.png); 
+    background-image: url(++resource++slickgrid-images/tick.png);
 }
 
 .filter_item_ignored {}
