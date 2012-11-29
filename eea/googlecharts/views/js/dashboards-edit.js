@@ -31,8 +31,17 @@ DavizEdit.GoogleDashboards.prototype = {
     jQuery('input[name*="save"]', self.context.parent()).unbind();
 
     // Events
-    jQuery(document).bind(DavizEdit.Events.charts.changed, function(evt, data){
+    jQuery(document).unbind('.dashboards');
+    jQuery(document).bind(DavizEdit.Events.charts.changed + ".dashboards", function(evt, data){
       self.reload(true);
+    });
+
+    jQuery(document).bind(DavizEdit.Events.dashboard.removed + ".dashboards", function(evt, data){
+      self.remove(data);
+    });
+
+    jQuery(document).bind(DavizEdit.Events.dashboard.renamed + ".dashboards", function(evt, data){
+      self.rename(data);
     });
 
     self.reload(false);
@@ -143,6 +152,26 @@ DavizEdit.GoogleDashboards.prototype = {
       self.settings = data;
       DavizEdit.Status.stop('Dashboards position changed');
     });
+  },
+
+  rename: function(dashboard){
+    var self = this;
+    jQuery.each(self.settings.dashboards, function(index, elem){
+      if(elem.name==dashboard.name){
+        elem.title = dashboard.title;
+      }
+    });
+    self.reload(false);
+  },
+
+  remove: function(dashboard){
+    var self = this;
+    self.settings.dashboards = jQuery.map(self.settings.dashboards, function(elem, index){
+      if(elem.name != dashboard.name){
+        return elem;
+      }
+    });
+    self.reload(false);
   }
 };
 

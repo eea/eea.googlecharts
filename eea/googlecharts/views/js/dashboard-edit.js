@@ -5,6 +5,13 @@ if(window.DavizEdit === undefined){
   DavizEdit.Events = {};
 }
 
+DavizEdit.Events.dashboard = {
+  remove: 'google-dashboard-delete',
+  removed: 'google-dashboard-deleted',
+  rename: 'google-dashboard-rename',
+  renamed: 'google-dashboard-renamed'
+};
+
 DavizEdit.Events.charts = {
     initialized: 'google-charts-initialized',
     changed: 'google-charts-changed',
@@ -22,6 +29,16 @@ DavizEdit.GoogleDashboard = function(context, options){
   if(options){
     jQuery.extend(self.settings, options);
   }
+
+  // Events
+  jQuery(document).unbind('.dashboard');
+  jQuery(document).bind(DavizEdit.Events.dashboard.rename + ".dashboard", function(evt, data){
+    self.onRename(data);
+  });
+
+  jQuery(document).bind(DavizEdit.Events.dashboard.remove + ".dashboard", function(evt, data){
+    self.onRemove(data);
+  });
 
   self.initialize();
 };
@@ -61,7 +78,7 @@ DavizEdit.GoogleDashboard.prototype = {
       .addClass('dashboard-header')
       .addClass('dashboard-header-title')
       .html([
-      '<span class="title">', self.settings.title, '</span>',
+      '<span class="title">', self.settings.title, '</span>'
       ].join('\n'));
 
     self.handle_buttons(header);
@@ -77,7 +94,7 @@ DavizEdit.GoogleDashboard.prototype = {
       .addClass('ui-icon').addClass('ui-icon-pencil')
       .prependTo(header)
       .click(function(){
-        self.handle_edit();
+        self.handle_rename();
       });
 
     jQuery('<span>')
@@ -90,12 +107,82 @@ DavizEdit.GoogleDashboard.prototype = {
       });
   },
 
-  handle_edit: function(){
+  handle_rename: function(){
+    var self = this;
+    var text = self.settings.title;
+    var popup = jQuery("<div title='Rename dashbord: " + text + "' />")
+      .append(
+        jQuery('<input>').attr('type', 'text').val(text).width('80%')
+      ).dialog({
+        bgiframe: true,
+        modal: true,
+        dialogClass: 'daviz-confirm-overlay',
+        width: 400,
+        open: function(evt, ui){
+          var buttons = jQuery(this).parent().find('button');
+          buttons.attr('class', 'btn');
+          jQuery(buttons[0]).addClass('btn-inverse');
+          jQuery(buttons[1]).addClass('btn-success');
+        },
+        buttons: {
+          Cancel: function(){
+            jQuery(this).dialog('close');
+          },
+          Rename: function(){
+            var value = jQuery('input', popup).val();
+            jQuery(document).trigger(DavizEdit.Events.dashboard.rename, value);
+            jQuery(this).dialog('close');
+          }
+        }
+    });
+  },
 
+  onRename: function(value){
+    var self = this;
+
+    self.settings.title = value;
+    var query = {
+      action: 'dashboard.rename',
+      dashboard: self.settings.name,
+      title: value
+    };
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
+    DavizEdit.Status.start("Saving...");
+    jQuery.post(action, query, function(data){
+      DavizEdit.Status.stop(data);
+      jQuery(document).trigger(DavizEdit.Events.dashboard.renamed, self.settings);
+    });
   },
 
   handle_delete: function(){
+    var self = this;
+    var msg = [
+      '<span>This will <strong>erase</strong> all configuration for this dashboard.</span>',
+      '<span>Are you sure you want to <strong>remove</strong> this dashboard?</span>'
+    ].join('\n');
+    DavizEdit.Confirm.confirm(msg, DavizEdit.Events.dashboard.remove, self.settings);
+  },
 
+  onRemove: function(dashboard){
+    var self = this;
+    var query = {
+      action: 'dashboard.delete',
+      dashboard: self.settings.name
+    };
+
+    var form = self.context.parents('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
+
+    DavizEdit.Status.start("Deleting dashboard...");
+    jQuery.post(action, query, function(data){
+      DavizEdit.Status.stop(data);
+      jQuery(document).trigger(DavizEdit.Events.dashboard.removed, self.settings);
+    });
   },
 
   handle_filters: function(){

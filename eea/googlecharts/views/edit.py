@@ -194,6 +194,24 @@ class DashboardEdit(ChartsEdit):
         """
         return json.dumps(dict(self.dashboard))
 
+    def dashboardRename(self, **kwargs):
+        """ Rename dashboard
+        """
+        title = kwargs.get('title', '')
+        self.dashboard['title'] = title
+        self.dashboards = "Changed"
+        return u"Dashboard renamed"
+
+    def dashboardDelete(self, **kwargs):
+        """ Delete dashboard
+        """
+        dashboards = self.dashboards.get('dashboards', [])
+        self.dashboards['dashboards'] = [
+            dashboard for dashboard in dashboards
+            if dashboard.get('name') != self.dashboard_name]
+        self.dashboards = 'Changed'
+        return u"Dashboard deleted"
+
     def widgetEdit(self, **kwargs):
         """ Edit dashboard widget
         """
@@ -366,6 +384,11 @@ class DashboardEdit(ChartsEdit):
         if action == 'json':
             return self.json(**kwargs)
 
+        # Dashboard
+        elif action == 'dashboard.rename':
+            return self.dashboardRename(**kwargs)
+        elif action == 'dashboard.delete':
+            return self.dashboardDelete(**kwargs)
         #   Charts
         elif action == 'charts.position':
             return self.chartsPosition(**kwargs)
