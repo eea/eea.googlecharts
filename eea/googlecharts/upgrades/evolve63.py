@@ -2,7 +2,8 @@
 """
 import logging
 from zope.component import queryMultiAdapter
-from Products.CMFCore.utils import getToolByName
+from eea.app.visualization.zopera import getToolByName
+from eea.app.visualization.zopera import IFolderish
 logger = logging.getLogger('eea.googlecharts.evolve63')
 
 def migrate_imagecharts(context):
@@ -11,19 +12,20 @@ def migrate_imagecharts(context):
     brains = ctool.unrestrictedSearchResults(portal_type='DavizVisualization')
     for brain in brains:
         visualization = brain.getObject()
-        tabs = queryMultiAdapter((visualization, context.REQUEST),
-                                 name='daviz-view.html').tabs
+        if IFolderish.providedBy(visualization):
+            tabs = queryMultiAdapter((visualization, context.REQUEST),
+                                     name='daviz-view.html').tabs
 
-        for tab in tabs:
-            if tab['name'] == 'googlechart.googledashboard':
-                previewname = tab['name'] + '.preview.png'
-                if not visualization.get(previewname, None):
-                    img = context.restrictedTraverse('++resource++' +
-                        str(previewname))
-                    visualization.invokeFactory('Image',
-                        id=previewname,
-                        title=previewname,
-                        image=img.GET())
+            for tab in tabs:
+                if tab['name'] == 'googlechart.googledashboard':
+                    previewname = tab['name'] + '.preview.png'
+                    if not visualization.get(previewname, None):
+                        img = context.restrictedTraverse('++resource++' +
+                            str(previewname))
+                        visualization.invokeFactory('Image',
+                            id=previewname,
+                            title=previewname,
+                            image=img.GET())
 
 def migrate_dashboards(context):
     """ Migrate single dashboard settings to multiple-dashboards

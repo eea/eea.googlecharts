@@ -55,6 +55,19 @@ function drawChart(value){
         var chart_options = value[7];
         var chart_showSort = (value[9]==='True'?true:false);
         var chart_hasPNG = (value[10]==='True'?true:false);
+        var chart_row_filters = {};
+        var chart_sortBy = value[12];
+        var chart_sortAsc = true;
+
+        var row_filters_str = value[11];
+        var sortAsc_str = value[13];
+        if (row_filters_str.length > 0){
+            chart_row_filters = JSON.parse(row_filters_str);
+        }
+        if (sortAsc_str === 'desc'){
+            chart_sortAsc = false;
+        }
+
 
         jQuery("#filename").attr("value",chart_json.options.title);
         jQuery("#type").attr("value","image/png");
@@ -148,14 +161,17 @@ function drawChart(value){
             normalColumns : columnsFromSettings.normalColumns,
             pivotingColumns : columnsFromSettings.pivotColumns,
             valueColumn : columnsFromSettings.valueColumn,
-            availableColumns : available_columns
+            availableColumns : available_columns,
+            filters : chart_row_filters
         };
 
         var transformedTable = transformTable(options);
 
         options = {
             originalDataTable : transformedTable,
-            columns : columnsFromSettings.columns
+            columns : columnsFromSettings.columns,
+            sortBy : chart_sortBy,
+            sortAsc : chart_sortAsc
         };
         var tableForChart = prepareForChart(options);
 
@@ -296,7 +312,6 @@ function showEmbed(){
                         '<div style="clear:both"></div>' +
                         'Go to original visualization' +
                       '</a>';
-                      
         embedHtml += '<h3>Static image: </h3>';
         embedHtml += '<textarea class="pngCode" style="width:96%" rows="3">' + pngCode + '</textarea>';
     }

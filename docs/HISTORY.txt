@@ -3,6 +3,17 @@ Changelog
 
 6.3-dev - (unreleased)
 ----------------------
+* Change: For better performace, on the chart tab display the charts in iframes
+  [szabozo0 refs #9563]
+* Bugfix: Don't try to save png charts when visualization is not folderish
+* Change: Store temporary data for preview chart in a volatile variable
+  [szabozo0]
+* Feature: Integrated slickgrid in chart table configurator, Added row filtering for charts on edit
+  [szabozo0 refs #9578]
+* Feature: Added default sort for charts on edit
+  [szabozo0 refs #9949]
+* Bug fix: Fixed table pivoting
+  [szabozo0 refs #9588]
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
   upgrade button available for eea.googlecharts
 * Feature: On saving a chart, copy the generic chart image in the visualization
