@@ -133,13 +133,15 @@ class DashboardEdit(ChartsEdit):
 
     def __init__(self, context, request):
         super(DashboardEdit, self).__init__(context, request)
+        self.dashboard_name = ''
         self._dashboards = None
+        self._dashboard = None
 
     @property
     def dashboards(self):
         """ Get dashboards from annotations
         """
-        if not self._dashboards:
+        if self._dashboards is None:
             mutator = queryAdapter(self.context, IVisualizationConfig)
             viewname = self.__name__.replace('googlechart.googledashboard',
                                              'googlechart.googledashboards', 1)
@@ -160,32 +162,30 @@ class DashboardEdit(ChartsEdit):
         viewname = viewname.replace('.edit', '')
         mutator.edit_view(viewname, **value)
 
-    def dashboard(self, name):
+    @property
+    def dashboard(self):
         """ Return dashboard by name
         """
-        self.dashboards.setdefault('dashboards', [])
-        for dashboard in self.dashboards['dashboards']:
-            if dashboard.get('name', '') == name:
-                return dashboard
-        return {}
+        if self._dashboard is None:
+            self.dashboards.setdefault('dashboards', [])
+            for dashboard in self.dashboards['dashboards']:
+                if dashboard.get('name', '') == self.dashboard_name:
+                    self._dashboard = dashboard
+                    break
+
+        # Dashboard not found
+        if self._dashboard is None:
+            self._dashboard = {}
+        return self._dashboard
 
     def json(self, **kwargs):
         """ Return config JSON
         """
-        dashboard = kwargs.pop('dashboard', '')
-        if not dashboard:
-            return "{}"
-
-        dashboard = self.dashboard(dashboard)
-        return json.dumps(dict(dashboard))
+        return json.dumps(dict(self.dashboard))
 
     def widgetEdit(self, **kwargs):
         """ Edit dashboard widget
         """
-        dashboard = kwargs.pop('dashboard', '')
-        if not dashboard:
-            return u'Dashboard name not provided'
-
         settings = kwargs.pop('settings', "{}")
         try:
             settings = json.loads(settings)
@@ -199,8 +199,7 @@ class DashboardEdit(ChartsEdit):
             logger.exception(msg)
             return msg
 
-        dashboard = self.dashboard(dashboard)
-        widgets = dashboard.get('widgets', [])
+        widgets = self.dashboard.get('widgets', [])
 
         changed = False
         for widget in widgets:
@@ -215,18 +214,13 @@ class DashboardEdit(ChartsEdit):
     def widgetDelete(self, **kwargs):
         """ Delete widget
         """
-        name = kwargs.pop('dashboard', '')
-        if not name:
-            return u'Dashboard name not provided'
-
         widget_name = kwargs.get('name', '')
         if not widget_name:
             err = 'Empty widget name provided %s' % widget_name
             logger.exception(err)
             return err
 
-        dashboard = self.dashboard(name)
-        widgets = dashboard.get('widgets', [])
+        widgets = self.dashboard.get('widgets', [])
 
         changed = False
         for index, widget in enumerate(widgets):
@@ -242,16 +236,11 @@ class DashboardEdit(ChartsEdit):
     def chartsPosition(self, **kwargs):
         """ Change chats position in dashboard
         """
-        name = kwargs.pop('dashboard', '')
-        if not name:
-            return u'Dashboard name not provided'
-
         order = kwargs.get('order', [])
         order = dict((name, index) for index, name in enumerate(order))
 
         # Widgets order
-        view = self.dashboard(name)
-        widgets = view.get('widgets', [])
+        widgets = self.dashboard.get('widgets', [])
 
         changed = False
         for widget in widgets:
@@ -276,14 +265,9 @@ class DashboardEdit(ChartsEdit):
     def chartsSize(self, **kwargs):
         """ Change filters box size
         """
-        name = kwargs.pop('dashboard', '')
-        if not name:
-            return u'Dashboard name not provided'
-
-        dashboard = self.dashboard(name)
-        dashboard.setdefault('chartsBox', {})
-        dashboard['chartsBox']['width'] = kwargs.get('width', '100%')
-        dashboard['chartsBox']['height'] = kwargs.get('height', 'auto')
+        self.dashboard.setdefault('chartsBox', {})
+        self.dashboard['chartsBox']['width'] = kwargs.get('width', '100%')
+        self.dashboard['chartsBox']['height'] = kwargs.get('height', 'auto')
 
         self.dashboards = 'Changed'
         return 'Charts box resized'
@@ -291,13 +275,8 @@ class DashboardEdit(ChartsEdit):
     def filterAdd(self, **kwargs):
         """ Add filter
         """
-        name = kwargs.pop('dashboard', '')
-        if not name:
-            return u'Dashboard name not provided'
-
-        dashboard = self.dashboard(name)
-        dashboard.setdefault('filters', [])
-        dashboard['filters'].append(kwargs)
+        self.dashboard.setdefault('filters', [])
+        self.dashboard['filters'].append(kwargs)
 
         self.dashboards = 'Changed'
         return u'Filter added'
@@ -305,18 +284,10 @@ class DashboardEdit(ChartsEdit):
     def filterDelete(self, **kwargs):
         """ Delete filter
         """
-        name = kwargs.get('dashboard', '')
-        if not name:
-            return u'Dashboard name not provided'
-
         filtername = kwargs.get('name', '')
-        if not filtername:
-            return u'No filter name provided'
-
-        dashboard = self.dashboard(name)
-        filters = [item for item in dashboard.get('filters', [])
-                   if item.get('column', '') != name]
-        dashboard['filters'] = filters
+        filters = [item for item in self.dashboard.get('filters', [])
+                   if item.get('column', '') != filtername]
+        self.dashboard['filters'] = filters
 
         self.dashboards = 'Changed'
         return u'Filter deleted'
@@ -324,24 +295,19 @@ class DashboardEdit(ChartsEdit):
     def filtersPosition(self, **kwargs):
         """ Change filters position
         """
-        name = kwargs.get('dashboard', '')
-        if not name:
-            return u'Dashboard name not provided'
-
         order = kwargs.get('order', [])
         if not order:
             return 'New order not provided'
 
-        dashboard = self.dashboard(name)
         filters = dict((item.get('column'), item)
-                       for item in dashboard.get('filters', []))
+                       for item in self.dashboard.get('filters', []))
 
         reordered = []
         for name in order:
             if name not in filters:
                 continue
             reordered.append(filters.get(name))
-        dashboard['filters'] = reordered
+        self.dashboard['filters'] = reordered
 
         self.dashboards = 'Changed'
         return 'Filters position changed'
@@ -349,16 +315,12 @@ class DashboardEdit(ChartsEdit):
     def filtersSize(self, **kwargs):
         """ Change filters box size
         """
-        name = kwargs.get('dashboard', '')
-        if not name:
-            return u'Dashboard name not provided'
         width = kwargs.get('width', '100%')
         height = kwargs.get('height', 'auto')
 
-        dashboard = self.dashboard(name)
-        dashboard.setdefault('filtersBox', {})
-        dashboard['filtersBox']['width'] = width
-        dashboard['filtersBox']['height'] = height
+        self.dashboard.setdefault('filtersBox', {})
+        self.dashboard['filtersBox']['width'] = width
+        self.dashboard['filtersBox']['height'] = height
 
         self.dashboards = 'Changed'
         return 'Filters box resized'
@@ -366,18 +328,13 @@ class DashboardEdit(ChartsEdit):
     def sectionsPosition(self, **kwargs):
         """ Change sections position in dashboard
         """
-        name = kwargs.get('dashboard', '')
-        if not name:
-            return u'Dashboard name not provided'
-
         order = kwargs.get('order', [])
         if not order:
             return u'New order not provided'
 
-        dashboard = self.dashboard(name)
         for item in order:
-            dashboard.setdefault(item, {})
-            dashboard[item]['order'] = order.index(item)
+            self.dashboard.setdefault(item, {})
+            self.dashboard[item]['order'] = order.index(item)
 
         self.dashboards = 'Changed'
         return 'Position changed'
@@ -386,6 +343,7 @@ class DashboardEdit(ChartsEdit):
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
         action = kwargs.pop('action', '')
+        self.dashboard_name = kwargs.pop('dashboard', '')
         #
         # View mode
         #
