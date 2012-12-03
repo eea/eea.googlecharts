@@ -4,6 +4,7 @@
   i18n_domain="eea">
 
   <include file="meta.zcml" />
+  <include package=".chart" />
   <include package=".textarea" />
   <include package=".portlet" />
 

@@ -3,6 +3,16 @@ Changelog
 
 6.3-dev - (unreleased)
 ----------------------
+* Upgrade step: Within "Plone > Site setup > Add-ons" click on
+  upgrade button available for eea.googlecharts
+
+* Feature: Multiple dashboards support WIP:
+  TODO: Handle view mode
+  TODO: Add chart widget to dashboard
+  TODO: Handle edit/deletion of charts within charts tab (update dashboard settings)
+  TODO: Handle chart resize in dashboard (refresh iframe)
+  [voineali refs #9572]
+
 * Change: For better performace, on the chart tab display the charts in iframes
   [szabozo0 refs #9563]
 * Bugfix: Don't try to save png charts when visualization is not folderish
@@ -14,8 +24,6 @@ Changelog
   [szabozo0 refs #9949]
 * Bug fix: Fixed table pivoting
   [szabozo0 refs #9588]
-* Upgrade step: Within "Plone > Site setup > Add-ons" click on
-  upgrade button available for eea.googlecharts
 * Feature: On saving a chart, copy the generic chart image in the visualization
   [szabozo0 refs #10019]
 * Bug fix: Fixed saving of png versions of charts

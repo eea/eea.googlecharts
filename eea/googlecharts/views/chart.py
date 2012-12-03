@@ -442,3 +442,32 @@ class DashboardView(ViewForm):
         mutator = queryAdapter(self.context, IVisualizationConfig)
         view = dict(mutator.view('googlechart.googledashboard', {}))
         return json.dumps(view)
+
+class DashboardsView(ViewForm):
+    """ Google dashboards view
+    """
+    label = 'Dashboards'
+    section = 'Charts'
+
+    @property
+    def tabs(self):
+        """ View tabs
+        """
+        png_url = self.context.absolute_url() + \
+            "/googlechart.googledashboard.preview.png"
+
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        view = dict(mutator.view(self.__name__, {}))
+
+        tabs = []
+        for dashboard in view.get('dashboards', []):
+            name = dashboard.get('name', '')
+            tab = {
+                'name': name,
+                'title': dashboard.get('title', name),
+                'css': 'googlechart_class_Dashboard',
+                'tabname': 'tab-%s' % name.replace('.', '-'),
+                'fallback-image': png_url
+            }
+            tabs.append(tab)
+        return tabs

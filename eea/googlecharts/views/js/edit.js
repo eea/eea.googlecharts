@@ -755,14 +755,14 @@ function generateNewTable(sortOrder, isFirst){
     else{
         var retryNr = 5;
         var retries = 0;
+        var reload = function(){
+            drawGrid("#newTable", transformedTable.items, transformedTable.available_columns, filterable_columns);
+            setGridColumnsOrder(sortOrder);
+        };
         while (true){
             try{
                 jQuery("#newTable").empty();
-                setTimeout(function(){
-                        drawGrid("#newTable", transformedTable.items, transformedTable.available_columns, filterable_columns);
-                        setGridColumnsOrder(sortOrder);
-                    },
-                    1000);
+                setTimeout(reload, 1000);
                 break;
             }
             catch(err){

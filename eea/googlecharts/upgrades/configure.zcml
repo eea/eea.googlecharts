@@ -9,14 +9,14 @@
     destination="6.3"
     profile="eea.googlecharts:default">
 
-    <genericsetup:upgradeDepends
-      title="Upgrade eea.googlecharts"
-      import_profile="eea.googlecharts:default"
-      />
-
     <genericsetup:upgradeStep
       title="Create generic image charts"
       handler="eea.googlecharts.upgrades.evolve63.migrate_imagecharts"
+      />
+
+    <genericsetup:upgradeStep
+      title="Migrate single-dashboard to multiple-dashboards"
+      handler="eea.googlecharts.upgrades.evolve63.migrate_dashboards"
       />
 
   </genericsetup:upgradeSteps>
@@ -31,7 +31,7 @@
       title="Upgrade step for eea.googlecharts: import cssregistry"
       import_steps="cssregistry"
       />
-      
+
     <genericsetup:upgradeDepends
       title="Upgrade step for eea.googlecharts: import jsregistry"
       import_steps="jsregistry"

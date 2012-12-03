@@ -1,0 +1,1 @@
+<div id="gcharts-dashboards-edit" tal:attributes="data-config view/json"></div>

@@ -8,11 +8,19 @@ from Products.Five import BrowserView
 
 from zope.component import queryAdapter, getUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
+from zope.container.interfaces import INameChooser
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.edit import EditForm
 from eea.app.visualization.zopera import IFolderish
 from eea.googlecharts.views.interfaces import IGoogleChartsEdit
 logger = logging.getLogger('eea.googlecharts')
+
+def compare(a, b):
+    """ Compare dashboard widgets
+    """
+    order_a = a.get('order', a.get('dashboard', {}).get('order', 998))
+    order_b = b.get('order', b.get('dashboard', {}).get('order', 999))
+    return cmp(order_a, order_b)
 
 class Edit(BrowserView):
     """ Edit GoogleCharts form
@@ -134,59 +142,79 @@ class DashboardEdit(ChartsEdit):
     """
     form_fields = Fields(IGoogleChartsEdit)
 
+    def __init__(self, context, request):
+        super(DashboardEdit, self).__init__(context, request)
+        self.dashboard_name = ''
+        self._dashboards = None
+        self._dashboard = None
+
+    @property
+    def dashboards(self):
+        """ Get dashboards from annotations
+        """
+        if self._dashboards is None:
+            mutator = queryAdapter(self.context, IVisualizationConfig)
+            viewname = self.__name__.replace('googlechart.googledashboard',
+                                             'googlechart.googledashboards', 1)
+            viewname = viewname.replace('.edit', '')
+            self._dashboards = mutator.view(viewname, {})
+        return self._dashboards
+
+    @dashboards.setter
+    def dashboards(self, value):
+        """ Update dashboards settings
+        """
+        if value == 'Changed':
+            value = self.dashboards
+
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        viewname = self.__name__.replace(
+            'googlechart.googledashboard', 'googlechart.googledashboards', 1)
+        viewname = viewname.replace('.edit', '')
+        mutator.edit_view(viewname, **value)
+
+    @property
+    def dashboard(self):
+        """ Return dashboard by name
+        """
+        if self._dashboard is None:
+            self.dashboards.setdefault('dashboards', [])
+            for dashboard in self.dashboards['dashboards']:
+                if dashboard.get('name', '') == self.dashboard_name:
+                    self._dashboard = dashboard
+                    break
+
+        # Dashboard not found
+        if self._dashboard is None:
+            self._dashboard = {}
+        return self._dashboard
+
     def json(self, **kwargs):
         """ Return config JSON
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        view = mutator.view(self.__name__.replace('.edit', ''), {})
-        return json.dumps(dict(view))
+        return json.dumps(dict(self.dashboard))
 
-    def chartEdit(self, **kwargs):
-        """ Edit chart properties
+    def dashboardRename(self, **kwargs):
+        """ Rename dashboard
         """
-        name = kwargs.get('name', '')
-        if not name:
-            msg = 'Empty chart name provided %s' % name
-            logger.exception(msg)
-            return msg
+        title = kwargs.get('title', '')
+        self.dashboard['title'] = title
+        self.dashboards = "Changed"
+        return u"Dashboard renamed"
 
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        dashboard = kwargs.pop('dashboard', "{}")
-        try:
-            dashboard = json.loads(dashboard)
-        except Exception, err:
-            logger.exception(err)
-            return err
-
-        view = mutator.view('googlechart.googlecharts')
-        if not view:
-            msg = 'Invalid view googlechart.googlecharts'
-            logger.exception(msg)
-            return msg
-
-        config = view.get('chartsconfig', {})
-        charts = config.get('charts', [])
-        changed = False
-        for chart in charts:
-            if chart.get('id', '') == name:
-                chart['dashboard'] = dashboard
-                changed = True
-                break
-
-        if changed:
-            mutator.edit_view('googlechart.googlecharts', **view)
-        return u"Changes saved"
+    def dashboardDelete(self, **kwargs):
+        """ Delete dashboard
+        """
+        dashboards = self.dashboards.get('dashboards', [])
+        self.dashboards['dashboards'] = [
+            dashboard for dashboard in dashboards
+            if dashboard.get('name') != self.dashboard_name]
+        self.dashboards = 'Changed'
+        return u"Dashboard deleted"
 
     def widgetEdit(self, **kwargs):
         """ Edit dashboard widget
         """
-        name = kwargs.get('name', '')
-        if not name:
-            msg = 'Empty widget name provided %s' % name
-            logger.exception(msg)
-            return msg
-
-        mutator = queryAdapter(self.context, IVisualizationConfig)
         settings = kwargs.pop('settings', "{}")
         try:
             settings = json.loads(settings)
@@ -194,9 +222,14 @@ class DashboardEdit(ChartsEdit):
             logger.exception(err)
             return err
 
-        viewname = self.__name__.replace('.edit', '', 1)
-        view = mutator.view(viewname, {})
-        widgets = view.get('widgets', [])
+        name = kwargs.get('name', '')
+        if not name:
+            msg = 'Empty widget name provided %s' % name
+            logger.exception(msg)
+            return msg
+
+        widgets = self.dashboard.get('widgets', [])
+
         changed = False
         for widget in widgets:
             if widget.get('name', '') == name:
@@ -204,31 +237,29 @@ class DashboardEdit(ChartsEdit):
                 changed = True
 
         if changed:
-            mutator.edit_view(viewname, **view)
+            self.dashboards = 'Changed'
         return u'Changes saved'
 
     def widgetDelete(self, **kwargs):
         """ Delete widget
         """
-        name = kwargs.get('name', '')
-        if not name:
-            err = 'Empty widget name provided %s' % name
+        widget_name = kwargs.get('name', '')
+        if not widget_name:
+            err = 'Empty widget name provided %s' % widget_name
             logger.exception(err)
             return err
 
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        viewname = self.__name__.replace('.edit', '', 1)
-        view = mutator.view(viewname, {})
-        widgets = view.get('widgets', [])
+        widgets = self.dashboard.get('widgets', [])
+
         changed = False
         for index, widget in enumerate(widgets):
-            if widget.get('name', '') == name:
+            if widget.get('name', '') == widget_name:
                 widgets.pop(index)
                 changed = True
                 break
 
         if changed:
-            mutator.edit_view(viewname, **view)
+            self.dashboards = 'Changed'
         return u'Widget deleted'
 
     def chartsPosition(self, **kwargs):
@@ -237,33 +268,10 @@ class DashboardEdit(ChartsEdit):
         order = kwargs.get('order', [])
         order = dict((name, index) for index, name in enumerate(order))
 
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        view = mutator.view('googlechart.googlecharts', {})
-        config = view.get('chartsconfig', {})
-        charts = config.get('charts', [])
-
-        # Charts order
-        changed = False
-        for chart in charts:
-            dashboard = chart.get('dashboard', {})
-            name = chart.get('id', '')
-            new_order = order.get(name, -1)
-            my_order = dashboard.get('order', -1)
-            if my_order == new_order:
-                continue
-
-            dashboard['order'] = new_order
-            chart['dashboard'] = dashboard
-            changed = True
-
-        if changed:
-            mutator.edit_view('googlechart.googlecharts', **view)
-
         # Widgets order
+        widgets = self.dashboard.get('widgets', [])
+
         changed = False
-        viewname = self.__name__.replace('.edit', '', 1)
-        view = mutator.view(viewname, {})
-        widgets = view.get('widgets', [])
         for widget in widgets:
             dashboard = widget.get('dashboard', {})
             if not dashboard:
@@ -279,109 +287,109 @@ class DashboardEdit(ChartsEdit):
             changed = True
 
         if changed:
-            mutator.edit_view(viewname, **view)
-
+            widgets.sort(cmp=compare)
+            self.dashboards = 'Changed'
         return u'Changed saved'
 
     def chartsSize(self, **kwargs):
         """ Change filters box size
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        view = mutator.view(self.__name__.replace('.edit', ''), {})
-        width = kwargs.get('width', '100%')
-        height = kwargs.get('height', 'auto')
-        view.setdefault('chartsBox', {})
-        view['chartsBox']['width'] = width
-        view['chartsBox']['height'] = height
-        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+        self.dashboard.setdefault('chartsBox', {})
+        self.dashboard['chartsBox']['width'] = kwargs.get('width', '100%')
+        self.dashboard['chartsBox']['height'] = kwargs.get('height', 'auto')
+
+        self.dashboards = 'Changed'
         return 'Charts box resized'
 
     def filterAdd(self, **kwargs):
         """ Add filter
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        view = mutator.view(self.__name__.replace('.edit', ''), {})
-        view.setdefault('filters', [])
-        view['filters'].append(kwargs)
-        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+        self.dashboard.setdefault('filters', [])
+        self.dashboard['filters'].append(kwargs)
+
+        self.dashboards = 'Changed'
         return u'Filter added'
 
     def filterDelete(self, **kwargs):
         """ Delete filter
         """
-        name = kwargs.get('name', '')
-        if not name:
-            return u'No filter name provided'
+        filtername = kwargs.get('name', '')
+        filters = [item for item in self.dashboard.get('filters', [])
+                   if item.get('column', '') != filtername]
+        self.dashboard['filters'] = filters
 
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        view = mutator.view(self.__name__.replace('.edit', ''), {})
-        filters = [item for item in view.get('filters', [])
-                   if item.get('column', '') != name]
-        view['filters'] = filters
-        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+        self.dashboards = 'Changed'
         return u'Filter deleted'
 
     def filtersPosition(self, **kwargs):
         """ Change filters position
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        view = mutator.view(self.__name__.replace('.edit', ''), {})
-        filters = dict((item.get('column'), item)
-                       for item in view.get('filters', []))
         order = kwargs.get('order', [])
         if not order:
             return 'New order not provided'
+
+        filters = dict((item.get('column'), item)
+                       for item in self.dashboard.get('filters', []))
 
         reordered = []
         for name in order:
             if name not in filters:
                 continue
             reordered.append(filters.get(name))
-        view['filters'] = reordered
-        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+        self.dashboard['filters'] = reordered
+
+        self.dashboards = 'Changed'
         return 'Filters position changed'
 
     def filtersSize(self, **kwargs):
         """ Change filters box size
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        view = mutator.view(self.__name__.replace('.edit', ''), {})
         width = kwargs.get('width', '100%')
         height = kwargs.get('height', 'auto')
-        view.setdefault('filtersBox', {})
-        view['filtersBox']['width'] = width
-        view['filtersBox']['height'] = height
-        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+
+        self.dashboard.setdefault('filtersBox', {})
+        self.dashboard['filtersBox']['width'] = width
+        self.dashboard['filtersBox']['height'] = height
+
+        self.dashboards = 'Changed'
         return 'Filters box resized'
 
     def sectionsPosition(self, **kwargs):
-        """ Change sections position
+        """ Change sections position in dashboard
         """
         order = kwargs.get('order', [])
         if not order:
             return u'New order not provided'
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        view = mutator.view(self.__name__.replace('.edit', ''), {})
+
         for item in order:
-            view.setdefault(item, {})
-            view[item]['order'] = order.index(item)
-        mutator.edit_view(self.__name__.replace('.edit', ''), **view)
+            self.dashboard.setdefault(item, {})
+            self.dashboard[item]['order'] = order.index(item)
+
+        self.dashboards = 'Changed'
         return 'Position changed'
 
     def __call__(self, **kwargs):
         form = getattr(self.request, 'form', {})
         kwargs.update(form)
         action = kwargs.pop('action', '')
+        self.dashboard_name = kwargs.pop('dashboard', '')
+        #
+        # View mode
+        #
         if not action:
             return super(DashboardEdit, self).__call__()
-
+        #
         # Edit mode
+        #
         if action == 'json':
             return self.json(**kwargs)
 
+        # Dashboard
+        elif action == 'dashboard.rename':
+            return self.dashboardRename(**kwargs)
+        elif action == 'dashboard.delete':
+            return self.dashboardDelete(**kwargs)
         #   Charts
-        elif action == 'chart.edit':
-            return self.chartEdit(**kwargs)
         elif action == 'charts.position':
             return self.chartsPosition(**kwargs)
         elif action == 'charts.size':
@@ -407,6 +415,128 @@ class DashboardEdit(ChartsEdit):
         elif action == 'sections.position':
             return self.sectionsPosition(**kwargs)
 
+        return 'Invalid action provided: %s' % action
 
+class DashboardsEdit(ChartsEdit):
+    """ Edit Google Dashboards
+    """
+    form_fields = Fields(IGoogleChartsEdit)
+
+    def __init__(self, context, request):
+        super(DashboardsEdit, self).__init__(context, request)
+        self._dashboards = None
+
+    @property
+    def dashboards(self):
+        """ Get dashboards from annotations
+        """
+        if not self._dashboards:
+            mutator = queryAdapter(self.context, IVisualizationConfig)
+            viewname = self.__name__.replace('.edit', '')
+            self._dashboards = mutator.view(viewname, {})
+            self._dashboards.setdefault('dashboards', [])
+        return self._dashboards
+
+    @dashboards.setter
+    def dashboards(self, value):
+        """ Update dashboards settings
+        """
+        if value == 'Changed':
+            value = self.dashboards
+
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        viewname = self.__name__.replace('.edit', '')
+        mutator.edit_view(viewname, **value)
+
+    def json(self, **kwargs):
+        """ Return config JSON
+        """
+        return json.dumps(dict(self.dashboards), ensure_ascii=False)
+
+    def chooseName(self, title, existing=None):
+        """ Choose unique name for dashboard
+        """
+        if not existing:
+            existing = [dashboard.get('name', '')
+                        for dashboard in self.dashboards.get('dashboards', [])]
+
+        chooser = queryAdapter(self.context, INameChooser)
+        if not chooser:
+            chooser = queryAdapter(self.context.getParentNode(), INameChooser)
+        name = chooser.chooseName(title, self.context)
+
+        if name in existing:
+            free_ids = set(u'%s-%d' % (name, uid)
+                           for uid in range(len(existing)+1))
+            name = free_ids.difference(existing)
+            name = name.pop()
+        return name
+
+    def add(self, **kwargs):
+        """ Add new dashboard
+        """
+        title = kwargs.get('title', 'Dashboard')
+        name = self.chooseName(title)
+
+        dashboard = {
+            "title": title,
+            "name": name,
+            "filtersBox": {
+                "height": "auto",
+                "width": "100%",
+            },
+            "chartsBox": {
+                "height": "auto",
+                "width": "100%",
+            },
+            "filters": [],
+            "widgets": [],
+        }
+
+        self.dashboards['dashboards'].append(dashboard)
+        self.dashboards = "Changed"
+        return self.json(**kwargs)
+
+    def dashboardsPosition(self, **kwargs):
+        """ Reorder dashboards
+        """
+        order = kwargs.get('order', [])
+        order = dict((name, index) for index, name in enumerate(order))
+
+        changed = False
+        dashboards = self.dashboards['dashboards']
+        for dashboard in dashboards:
+            name = dashboard.get('name', '')
+            my_order = dashboard.get('order', -1)
+            new_order = order.get(name, -1)
+            if my_order == new_order:
+                continue
+
+            dashboard['order'] = new_order
+            changed = True
+
+        if changed:
+            dashboards.sort(cmp=compare)
+            self.dashboards = 'Changed'
+        return self.json(**kwargs)
+
+    def __call__(self, **kwargs):
+        form = getattr(self.request, 'form', {})
+        kwargs.update(form)
+        action = kwargs.pop('action', '')
+        #
         # View mode
+        #
+        if not action:
+            return super(DashboardsEdit, self).__call__()
+        #
+        # Edit mode
+        #
+        if action == 'json':
+            return self.json(**kwargs)
+        if action == 'add':
+            return self.add(**kwargs)
+        if action == 'dashboards.position':
+            return self.dashboardsPosition(**kwargs)
+
         return 'Invalid action provided: %s' % action
