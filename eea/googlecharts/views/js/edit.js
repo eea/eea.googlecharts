@@ -431,7 +431,9 @@ function addChart(options){
             "</h1>" +
             "<fieldset>" +
                 "<div style='float:left'>" +
-                    "<div id='googlechart_chart_div_"+settings.id+"'></div>" +
+                    "<a style='float:right' class='preview_button btn btn-info'>" +
+                    "<span id='googlechart_chart_div_"+settings.id+"'></span>" +
+                    "Preview Chart</a>"+
                 "</div>" +
                 "<div style='float:right; width:250px'>" +
                     "<span class='label'>Filters position</span>"+
@@ -458,7 +460,6 @@ function addChart(options){
                 "<div style='clear:both'> </div>" +
                 "<input type='button' class='context btn btn-primary' value='Edit Chart' onclick='openEditChart(\""+settings.id+"\");'/>" +
                 "<input type='button' class='context btn btn-warning' value='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'/>" +
-                "<a style='float:right' class='preview_button btn btn-info'>Preview Chart</a>"+
             "</fieldset>" +
         "</li>");
     googlechart.find(".googlechart_columns").attr("value", settings.columns);

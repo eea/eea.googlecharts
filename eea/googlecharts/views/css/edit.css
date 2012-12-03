@@ -1169,3 +1169,7 @@ select[name=googlechart_filterposition] {
     width: 110px;
     height: 68px;
 }
+
+li.googlechart > fieldset > div > a > span {
+    display:block;
+}
