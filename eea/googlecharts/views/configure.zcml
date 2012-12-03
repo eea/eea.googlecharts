@@ -217,6 +217,11 @@
   />
 
   <browser:resource
+    name="thumbs17.png"
+    file="./imgs/thumbs17.png"
+  />
+
+  <browser:resource
     name="close_overlay.png"
     file="./imgs/close_overlay.png"
   />
