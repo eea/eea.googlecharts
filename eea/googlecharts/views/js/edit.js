@@ -417,7 +417,7 @@ function addChart(options){
 
             "<h1 class='googlechart_handle'>"+
             "<div style='float:left;width:60%;height:20px;overflow:hidden;'>"+
-                "<input class='googlechart_name' type='text' style='width:200px' onchange='markChartAsModified(\""+settings.id+"\");drawChart(\""+settings.id+"\",function(){});'/>" +
+                "<input class='googlechart_name' type='text' onchange='markChartAsModified(\""+settings.id+"\");drawChart(\""+settings.id+"\",function(){});'/>" +
                 "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>px</span>"+
                 "<input class='googlechart_height' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
                 "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>X</span>"+

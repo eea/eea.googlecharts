@@ -1173,3 +1173,18 @@ select[name=googlechart_filterposition] {
 li.googlechart > fieldset > div > a > span {
     display:block;
 }
+
+.preview_button {
+    text-align:center;
+    display:block;
+}
+
+.googlechart {
+    width:550px;
+    float:left;
+    margin-right:15px;
+}
+
+.googlechart_name {
+    width: 150px !important;
+}
