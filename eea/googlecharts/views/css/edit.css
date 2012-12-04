@@ -1188,3 +1188,7 @@ li.googlechart > fieldset > div > a > span {
 .googlechart_name {
     width: 150px !important;
 }
+
+.googlechart_firstchartinrow {
+    clear: both;
+}

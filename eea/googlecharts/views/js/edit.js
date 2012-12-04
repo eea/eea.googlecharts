@@ -69,6 +69,19 @@ var matrixChartOptions = {
             }
 };
 
+function resizeGooglecharts(){
+    var listwidth = jQuery("#googlecharts_list").width();
+    var chartwidth = jQuery(".googlechart").width();
+    jQuery(".googlechart").removeClass("googlechart_firstchartinrow");
+    var chartsinrow = parseInt((listwidth - 34) / chartwidth);
+    var ordered = jQuery('#googlecharts_list').sortable('toArray');
+    jQuery(ordered).each(function(index, value){
+        if ((index + 1)% chartsinrow === 1){
+            jQuery("#"+value).addClass("googlechart_firstchartinrow");
+        }
+    });
+}
+
 function checkSVG(id){
     var tmp_config_str = jQuery("#googlechartid_"+id).find(".googlechart_configjson").attr("value");
     var tmp_config = JSON.parse(tmp_config_str);
@@ -507,6 +520,7 @@ function addChart(options){
     if (shouldMark){
         markChartAsModified(settings.id);
     }
+    resizeGooglecharts()
 }
 
 var isFirstEdit = true;
@@ -2319,9 +2333,10 @@ function init_googlecharts_edit(){
                 drawChart(id, function(){});
                 markChartAsModified(id);
             }
+            resizeGooglecharts();
         }
     });
-
+    jQuery(window).resize(resizeGooglecharts);
     jQuery("#addgooglechart").click(addNewChart);
     jQuery("#googlecharts_list").delegate(".remove_chart_icon","click",function(){
         var chartId = jQuery(this).closest('.googlechart').attr('id');
