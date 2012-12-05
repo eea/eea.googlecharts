@@ -8,9 +8,7 @@ Changelog
 
 * Feature: Multiple dashboards support WIP:
   TODO: Handle view mode
-  TODO: Add chart widget to dashboard
   TODO: Handle edit/deletion of charts within charts tab (update dashboard settings)
-  TODO: Handle chart resize in dashboard (refresh iframe)
   [voineali refs #9572]
 
 * Change: On saving thumbnail, move it to the top of the folder

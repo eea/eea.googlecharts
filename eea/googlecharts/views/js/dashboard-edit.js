@@ -767,7 +767,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     }
 
     // Save changes
-    self.save();
+    self.save(false, true);
   },
 
   handle_position: function(order){
@@ -933,7 +933,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     self.save();
   },
 
-  save: function(quiet){
+  save: function(quiet, reload){
     var self = this;
     query = {
       action: 'widget.edit',
@@ -952,6 +952,9 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     jQuery.post(action, query, function(data){
       if(!quiet){
         DavizEdit.Status.stop(data);
+      }
+      if(reload){
+        self.reload();
       }
     });
   }

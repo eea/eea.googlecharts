@@ -214,13 +214,13 @@ class View(ViewForm):
             else:
                 return {}
 
-        chart_width = self.request.get('width', 0)
-        chart_height = self.request.get('height', 0)
+        chart_width = self.request.get('width', 800)
+        chart_height = self.request.get('height', 600)
         config = {}
         if chart_id == '':
-            config = self.context._v_iframe_chart_tmp_config
-            config['preview_width'] = config['width']
-            config['preview_height'] = config['height']
+            config = getattr(self.context, '_v_iframe_chart_tmp_config', {})
+            config['preview_width'] = config.get('width', chart_width)
+            config['preview_height'] = config.get('height', chart_height)
         else:
             charts = self.get_charts()
             found = False
