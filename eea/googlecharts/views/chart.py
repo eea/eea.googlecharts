@@ -414,6 +414,7 @@ class SetThumb(BrowserView):
         obj = self.context._getOb(filename)
         obj.setExcludeFromNav(True)
         obj.getField('image').getMutator(obj)(img)
+        self.context.getOrdering().moveObjectsToTop(ids=[obj.getId()])
         return _("Success")
 
 class DashboardView(ViewForm):
