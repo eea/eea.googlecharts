@@ -69,6 +69,19 @@ var matrixChartOptions = {
             }
 };
 
+function resizeGooglecharts(){
+    var listwidth = jQuery("#googlecharts_list").width();
+    var chartwidth = jQuery(".googlechart").width();
+    jQuery(".googlechart").removeClass("googlechart_firstchartinrow");
+    var chartsinrow = parseInt((listwidth - 34) / chartwidth, 10);
+    var ordered = jQuery('#googlecharts_list').sortable('toArray');
+    jQuery(ordered).each(function(index, value){
+        if ((index + 1)% chartsinrow === 1){
+            jQuery("#"+value).addClass("googlechart_firstchartinrow");
+        }
+    });
+}
+
 function checkSVG(id){
     var tmp_config_str = jQuery("#googlechartid_"+id).find(".googlechart_configjson").attr("value");
     var tmp_config = JSON.parse(tmp_config_str);
@@ -232,32 +245,41 @@ function saveThumb(value, useName){
 
 function drawChart(elementId, readyEvent){
     readyEvent(elementId);
-    chartObj = jQuery("#googlechartid_"+elementId);
-    jQuery("#googlechart_chart_div_" + elementId).find("iframe").remove();
-    var width = jQuery("#googlechart_chart_div_" + elementId).width();
-    var height = jQuery("#googlechart_chart_div_" + elementId).height();
-    var config_json = JSON.parse(chartObj.find(".googlechart_configjson").attr("value"));
-    config_json.dataTable = [];
-    var config_str = JSON.stringify(config_json);
-    var name = chartObj.find(".googlechart_name").attr("value");
-
-    var row_filters_str = chartObj.find(".googlechart_row_filters").attr('value');
-    var sortBy = chartObj.find(".googlechart_sortBy").attr('value');
-    var sortAsc_str = chartObj.find(".googlechart_sortAsc").attr('value');
-
-    var query = {'preview_tmp_chart':'{"row_filters_str":"'+encodeURIComponent(row_filters_str)+'","sortBy":"'+encodeURIComponent(sortBy)+'","sortAsc_str":"'+encodeURIComponent(sortAsc_str)+'","json":"'+encodeURIComponent(config_str)+'","options":"'+encodeURIComponent(chartObj.find(".googlechart_options").attr("value"))+'","columns":"'+encodeURIComponent(chartObj.find(".googlechart_columns").attr("value"))+'","width":'+width+',"height":'+height+',"name":"'+name+'","preview_id":"'+elementId+'"}'};
-    jQuery.ajax({
-        url:ajax_baseurl+"/googlechart.set_iframe_chart",
-        type:'post',
-        data:query,
-        async:false,
-        success:function(data){
-            jQuery("#googlechart_chart_div_" + data).append(jQuery('<iframe>')
-                .attr('src', ajax_baseurl+"/chart-full?preview_id="+data)
-                .attr('width', parseInt(width, 10))
-                .attr('height', parseInt(height, 10)));
+    var chartConfig = JSON.parse(jQuery("#googlechartid_"+elementId).find(".googlechart_configjson").attr("value"));
+    var chartType = chartConfig.chartType.toLowerCase();
+    var chartClass = "googlechart-preview-"+chartType;
+    if (chartType === "linechart"){
+        if (chartConfig.options.curveType === 'function'){
+            chartClass += "-smooth";
         }
-    });
+    }
+    if (chartType === "imagechart"){
+        if (chartConfig.options.cht[0] === "r"){
+            chartClass += "-radar";
+        }
+    }
+    if ((chartType === "areachart") || (chartType === 'barchart') || (chartType === 'columnchart')){
+        if (chartConfig.options.isStacked){
+            chartClass += "-stacked";
+        }
+    }
+    if (chartType === "piechart"){
+        if (chartConfig.options.is3D){
+            chartClass += "-3d";
+        }
+        else{
+            if (chartConfig.options.pieHole !== 0){
+                chartClass += "-donut";
+            }
+        }
+    }
+    if (chartType === "geochart"){
+        if (chartConfig.options.displayMode === 'markers'){
+            chartClass += "-markers";
+        }
+    }
+    jQuery("#googlechart_chart_div_"+elementId).attr("class", chartClass);
+    return;
 }
 
 function openAdvancedOptions(id){
@@ -382,7 +404,7 @@ function addChart(options){
 
             "<h1 class='googlechart_handle'>"+
             "<div style='float:left;width:60%;height:20px;overflow:hidden;'>"+
-                "<input class='googlechart_name' type='text' style='width:200px' onchange='markChartAsModified(\""+settings.id+"\");drawChart(\""+settings.id+"\",function(){});'/>" +
+                "<input class='googlechart_name' type='text' onchange='markChartAsModified(\""+settings.id+"\");drawChart(\""+settings.id+"\",function(){});'/>" +
                 "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>px</span>"+
                 "<input class='googlechart_height' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
                 "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>X</span>"+
@@ -396,8 +418,9 @@ function addChart(options){
             "</h1>" +
             "<fieldset>" +
                 "<div style='float:left'>" +
-                    "<div id='googlechart_chart_div_"+settings.id+"' class='chart_div' style='height: 400px; width:700px; overflow:hidden'></div>" +
-                    //"<div id='googlechart_chart_div_"+settings.id+"' class='chart_div' style='max-height: 400px; max-width:700px; overflow:hidden'></div>" +
+                    "<a style='float:right' class='preview_button btn btn-info'>" +
+                    "<span id='googlechart_chart_div_"+settings.id+"'></span>" +
+                    "Preview Chart</a>"+
                 "</div>" +
                 "<div style='float:right; width:250px'>" +
                     "<span class='label'>Filters position</span>"+
@@ -424,7 +447,6 @@ function addChart(options){
                 "<div style='clear:both'> </div>" +
                 "<input type='button' class='context btn btn-primary' value='Edit Chart' onclick='openEditChart(\""+settings.id+"\");'/>" +
                 "<input type='button' class='context btn btn-warning' value='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'/>" +
-                "<a style='float:right' class='preview_button btn btn-info'>Preview Chart</a>"+
             "</fieldset>" +
         "</li>");
     googlechart.find(".googlechart_columns").attr("value", settings.columns);
@@ -445,6 +467,7 @@ function addChart(options){
 
     jQuery("#googlechart_filters_"+settings.id).sortable({
         handle : '.googlechart_filteritem_'+settings.id,
+        delay: 300,
         stop: function(event,ui){
             markChartAsModified(settings.id);
         }
@@ -471,6 +494,7 @@ function addChart(options){
     if (shouldMark){
         markChartAsModified(settings.id);
     }
+    resizeGooglecharts();
 }
 
 var isFirstEdit = true;
@@ -478,11 +502,16 @@ var editedChartStatus = false;
 
 function moveIfFirst(){
     if (isFirstEdit){
-        jQuery(".google-visualization-charteditor-dialog").appendTo("#googlechart_editor_container");
-        jQuery(".google-visualization-charteditor-dialog").removeClass("modal-dialog");
-        jQuery(".google-visualization-charteditor-dialog").addClass("googlechart-editor");
+        if (jQuery(".google-visualization-charteditor-dialog").length > 0){
+            jQuery(".google-visualization-charteditor-dialog").appendTo("#googlechart_editor_container");
+            jQuery(".google-visualization-charteditor-dialog").removeClass("modal-dialog");
+            jQuery(".google-visualization-charteditor-dialog").addClass("googlechart-editor");
+            isFirstEdit = false;
+        }
+        else{
+            setTimeout(moveIfFirst, 500);
+        }
     }
-    isFirstEdit = false;
 }
 
 function redrawChart(){
@@ -599,7 +628,7 @@ function openEditor(elementId) {
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = true;
-        moveIfFirst();
+//        moveIfFirst();
         redrawEditorChart();
         setConfiguratorMessage("");
     });
@@ -607,9 +636,10 @@ function openEditor(elementId) {
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = false;
-        moveIfFirst();
+//        moveIfFirst();
         setConfiguratorMessage(JSON.parse(settings_str).chartType);
     });
+    moveIfFirst();
 
     chartEditor.openDialog(wrapper, {});
 }
@@ -1024,6 +1054,7 @@ function chartEditorSave(id){
         alert("Chart is not properly configured");
         return;
     }
+    var settings_str = chartEditor.getChartWrapper().toJSON();
     chartEditor.closeDialog();
     var columnsSettings = {};
     columnsSettings.original = [];
@@ -1072,7 +1103,7 @@ function chartEditorSave(id){
     }
     var columns_str = JSON.stringify(columnsSettings);
 
-    var settings_str = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value");
+//    var settings_str = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value");
     var settings_json = JSON.parse(settings_str);
     settings_json.paletteId = jQuery("#googlechart_palettes").attr("value");
     settings_json.dataTable = [];
@@ -1881,6 +1912,7 @@ function openEditChart(id){
     populateTableForPivot();
     $(".draggable").draggable({
             containment:"#headers",
+            delay: 300,
             revert:false,
             start: function(event, ui){
                 if (checkVisiblePivotValueColumns() < 2){
@@ -2265,14 +2297,8 @@ function init_googlecharts_edit(){
         handle : '.googlechart_handle',
         items: 'li.googlechart',
         opacity: 0.7,
+        delay: 300,
         tolerance: 'pointer',
-        helper: function(event, ui){
-            var draggingObj = jQuery("<li></li");
-            draggingObj.addClass("googlechart daviz-facet-edit googlechart_dragging");
-            var header = jQuery(ui[0]).find("h1.googlechart_handle");
-            header.clone().appendTo(draggingObj);
-            return draggingObj;
-        },
         stop: function(event,ui){
             var draggedItem = jQuery(ui.item[0]).attr('id');
             var liName = "googlechartid";
@@ -2281,9 +2307,10 @@ function init_googlecharts_edit(){
                 drawChart(id, function(){});
                 markChartAsModified(id);
             }
+            resizeGooglecharts();
         }
     });
-
+    jQuery(window).resize(resizeGooglecharts);
     jQuery("#addgooglechart").click(addNewChart);
     jQuery("#googlecharts_list").delegate(".remove_chart_icon","click",function(){
         var chartId = jQuery(this).closest('.googlechart').attr('id');

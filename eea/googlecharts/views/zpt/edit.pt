@@ -9,3 +9,4 @@
            i18n:attributes="value" />
     <ul id="googlecharts_list"></ul>
 </div>
+<div style="clear:both"> </div>

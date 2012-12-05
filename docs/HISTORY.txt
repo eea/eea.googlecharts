@@ -3,6 +3,13 @@ Changelog
 
 6.3-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed a bug on chart editor:
+  Some charts didn't trigger the ready event and the editor couldn't work with these type of charts
+  [szabozo0]
+* Change: Updated chart tab layout
+  [szabozo0]
+* Change: On chart tab display the charts generic thumb
+  [szabozo0 refs #9563]
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
   upgrade button available for eea.googlecharts
 

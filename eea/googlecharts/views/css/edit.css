@@ -522,206 +522,6 @@ dl.portlet .dashboard-widget,
     height:100%;
 }
 
-.googlechart_type_LineChart {
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1615px transparent;
-}
-
-.googlechart_type_LineChart_disabled {
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2424px transparent;
-}
-
-.googlechart_type_SmoothLineChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -68px transparent;
-}
-
-.googlechart_type_SmoothLineChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2356px transparent;
-}
-
-.googlechart_type_ComboChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2764px transparent;
-}
-
-.googlechart_type_ComboChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3512px transparent;
-}
-
-.googlechart_type_RadarChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2900px transparent;
-}
-
-.googlechart_type_RadarChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -340px transparent;
-}
-
-.googlechart_type_AreaChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3444px transparent;
-}
-
-.googlechart_type_AreaChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1139px transparent;
-}
-
-.googlechart_type_StackedAreaChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3648px transparent;
-}
-
-.googlechart_type_StackedAreaChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2696px transparent;
-}
-
-.googlechart_type_SteppedAreaChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2152px transparent;
-}
-
-.googlechart_type_SteppedAreaChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -408px transparent;
-}
-
-.googlechart_type_ColumnChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1751px transparent;
-}
-
-.googlechart_type_ColumnChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1207px transparent;
-}
-
-.googlechart_type_StackedColumnChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -272px transparent;
-}
-
-.googlechart_type_StackedColumnChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1343px transparent;
-}
-
-.googlechart_type_BarChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3240px transparent;
-}
-
-.googlechart_type_BarChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1479px transparent;
-}
-
-.googlechart_type_StackedBarChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -748px transparent;
-}
-
-.googlechart_type_StackedBarChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1547px transparent;
-}
-
-.googlechart_type_ScatterChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3716px transparent;
-}
-
-.googlechart_type_ScatterChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3036px transparent;
-}
-
-.googlechart_type_BubbleChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -136px transparent;
-}
-
-.googlechart_type_BubbleChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -935px transparent;
-}
-
-.googlechart_type_PieChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2492px transparent;
-}
-
-.googlechart_type_PieChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2560px transparent;
-}
-
-.googlechart_type_Pie3dChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1003px transparent;
-}
-
-.googlechart_type_Pie3dChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3784px transparent;
-}
-
-.googlechart_type_GeoRegionsChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -544px transparent;
-}
-
-.googlechart_type_GeoRegionsChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -680px transparent;
-}
-
-.googlechart_type_GeoMarkersChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3308px transparent;
-}
-
-.googlechart_type_GeoMarkersChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3104px transparent;
-}
-
-.googlechart_type_SparklineChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2084px transparent;
-}
-
-.googlechart_type_SparklineChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2016px transparent;
-}
-
-.googlechart_type_TimelineChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3376px transparent;
-}
-
-.googlechart_type_TimelineChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2288px transparent;
-}
-
-.googlechart_type_MotionChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1275px transparent;
-}
-
-.googlechart_type_MotionChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1071px transparent;
-}
-
-.googlechart_type_CandlestickChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -476px transparent;
-}
-
-.googlechart_type_CandlestickChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1819px transparent;
-}
-
-.googlechart_type_GaugeChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3172px transparent;
-}
-
-.googlechart_type_GaugeChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2220px transparent;
-}
-
-.googlechart_type_OrganizationalChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -204px transparent;
-}
-
-.googlechart_type_OrganizationalChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -1411px transparent;
-}
-
-.googlechart_type_TreeMapChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 0px transparent;
-}
-
-.googlechart_type_TreeMapChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2628px transparent;
-}
-
-.googlechart_type_TableChart{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -3580px transparent;
-}
-
-.googlechart_type_TableChart_disabled{
-    background: url("../../++resource++thumbs16.png") no-repeat scroll 0 -2832px transparent;
-}
-
 #googlechart_table_accordion > h3 {
     height: 19px;
 }
@@ -1212,4 +1012,183 @@ select[name=googlechart_filterposition] {
 
 .googlechart_dragging{
     background-color:rgba(100, 100, 100, 0.6);
+}
+
+.googlechart-preview-table {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -1351px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-linechart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -1623px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-linechart-smooth {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -3648px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-combochart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -1147px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-imagechart-radar {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -3376px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-areachart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -2568px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-steppedareachart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -1555px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-areachart-stacked {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -1963px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-barchart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -1759px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-barchart-stacked {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -3240px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-columnchart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -2704px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-columnchart-stacked {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -1283px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-scatterchart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -2840px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-bubblechart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -1487px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-piechart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -875px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-piechart-3d {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -3580px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-piechart-donut {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -1079px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-geochart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -2772px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-geochart-markers {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -612px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-imagesparkline {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -3104px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-annotatedtimeline {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -1895px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-motionchart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -3172px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-candlestickchart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -68px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-gauge {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -3444px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-orgchart {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -2303px;
+    width: 110px;
+    height: 68px;
+}
+
+.googlechart-preview-treemap {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -1419px;
+    width: 110px;
+    height: 68px;
+}
+
+li.googlechart > fieldset > div > a > span {
+    display:block;
+}
+
+.preview_button {
+    text-align:center;
+    display:block;
+}
+
+.googlechart {
+    width:550px;
+    float:left;
+    margin-right:15px;
+}
+
+.googlechart_name {
+    width: 150px !important;
+}
+
+.googlechart_firstchartinrow {
+    clear: both;
 }
