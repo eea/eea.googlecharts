@@ -73,7 +73,7 @@ function resizeGooglecharts(){
     var listwidth = jQuery("#googlecharts_list").width();
     var chartwidth = jQuery(".googlechart").width();
     jQuery(".googlechart").removeClass("googlechart_firstchartinrow");
-    var chartsinrow = parseInt((listwidth - 34) / chartwidth);
+    var chartsinrow = parseInt((listwidth - 34) / chartwidth, 10);
     var ordered = jQuery('#googlecharts_list').sortable('toArray');
     jQuery(ordered).each(function(index, value){
         if ((index + 1)% chartsinrow === 1){
@@ -268,7 +268,7 @@ function drawChart(elementId, readyEvent){
             chartClass += "-3d";
         }
         else{
-            if (chartConfig.options.pieHole != 0){
+            if (chartConfig.options.pieHole !== 0){
                 chartClass += "-donut";
             }
         }
@@ -280,32 +280,6 @@ function drawChart(elementId, readyEvent){
     }
     jQuery("#googlechart_chart_div_"+elementId).attr("class", chartClass);
     return;
-    chartObj = jQuery("#googlechartid_"+elementId);
-    jQuery("#googlechart_chart_div_" + elementId).find("iframe").remove();
-    var width = jQuery("#googlechart_chart_div_" + elementId).width();
-    var height = jQuery("#googlechart_chart_div_" + elementId).height();
-    var config_json = JSON.parse(chartObj.find(".googlechart_configjson").attr("value"));
-    config_json.dataTable = [];
-    var config_str = JSON.stringify(config_json);
-    var name = chartObj.find(".googlechart_name").attr("value");
-
-    var row_filters_str = chartObj.find(".googlechart_row_filters").attr('value');
-    var sortBy = chartObj.find(".googlechart_sortBy").attr('value');
-    var sortAsc_str = chartObj.find(".googlechart_sortAsc").attr('value');
-
-    var query = {'preview_tmp_chart':'{"row_filters_str":"'+encodeURIComponent(row_filters_str)+'","sortBy":"'+encodeURIComponent(sortBy)+'","sortAsc_str":"'+encodeURIComponent(sortAsc_str)+'","json":"'+encodeURIComponent(config_str)+'","options":"'+encodeURIComponent(chartObj.find(".googlechart_options").attr("value"))+'","columns":"'+encodeURIComponent(chartObj.find(".googlechart_columns").attr("value"))+'","width":'+width+',"height":'+height+',"name":"'+name+'","preview_id":"'+elementId+'"}'};
-    jQuery.ajax({
-        url:ajax_baseurl+"/googlechart.set_iframe_chart",
-        type:'post',
-        data:query,
-        async:false,
-        success:function(data){
-            jQuery("#googlechart_chart_div_" + data).append(jQuery('<iframe>')
-                .attr('src', ajax_baseurl+"/chart-full?preview_id="+data)
-                .attr('width', parseInt(width, 10))
-                .attr('height', parseInt(height, 10)));
-        }
-    });
 }
 
 function openAdvancedOptions(id){
@@ -520,7 +494,7 @@ function addChart(options){
     if (shouldMark){
         markChartAsModified(settings.id);
     }
-    resizeGooglecharts()
+    resizeGooglecharts();
 }
 
 var isFirstEdit = true;
