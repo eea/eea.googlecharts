@@ -13,6 +13,8 @@ Changelog
   TODO: Handle chart resize in dashboard (refresh iframe)
   [voineali refs #9572]
 
+* Bug fix: Don't throw error when trying to display inexistent charts in iframes
+  [szabozo0]
 * Bug fix: Fixed a bug on chart editor:
   Some charts didn't trigger the ready event and the editor couldn't work with these type of charts
   [szabozo0]

@@ -223,11 +223,20 @@ class View(ViewForm):
             config['preview_height'] = config['height']
         else:
             charts = self.get_charts()
+            found = False
             for chart in charts:
                 if chart['id'] == chart_id:
+                    found = True
                     config = chart
                     config['chart_id'] = chart_id
                     config['json'] = config['config']
+            if not found:
+                config = {}
+                config['name'] = ""
+                config['chart_id'] = ""
+                config['json'] = ""
+                config['columns'] = ""
+                config['options'] = ""
             config['preview_width'] = chart_width
             config['preview_height'] = chart_height
 
