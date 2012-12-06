@@ -418,7 +418,7 @@ function addChart(options){
             "</h1>" +
             "<fieldset>" +
                 "<div style='float:left'>" +
-                    "<a style='float:right' class='preview_button btn btn-info'>" +
+                    "<a style='float:right' class='preview_button img-polaroid'>" +
                     "<span id='googlechart_chart_div_"+settings.id+"'></span>" +
                     "Preview Chart</a>"+
                 "</div>" +
