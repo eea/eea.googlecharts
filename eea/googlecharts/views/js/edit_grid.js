@@ -9,7 +9,16 @@ var grid_sort_asc = true;
 
 function updateColumnHeaders(){
     generateNewTableForChart();
-    jQuery("#newTable").find(".slick-column-name:contains(options)").addClass("ui-icon").addClass("ui-icon-gear");
+    jQuery("#newTable").find(".slick-column-name:contains(options)")
+        .addClass("ui-icon")
+        .addClass("ui-icon-gear")
+        .click(function(){
+            jQuery(this).parent().find('.slick-header-menubutton').click();
+        }).bind("contextmenu",function(e){
+            e.preventDefault();
+            jQuery(this).click();
+        });
+
     jQuery(".slick-column-search-icon").remove();
     jQuery(".slick-column-sort-icon").remove();
     jQuery.each(grid_colIds, function(colId, colName){
@@ -511,6 +520,11 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
     });
 
     grid = new Slick.Grid(divId, grid_data_view, columns, options);
+
+    grid.onHeaderContextMenu.subscribe(function(e, args){
+      e.preventDefault();
+      jQuery('.slick-header-menubutton', e.srcElement).click();
+    });
 
     grid.init();
     self.grid_data = [];
