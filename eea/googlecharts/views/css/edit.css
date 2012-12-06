@@ -10,6 +10,13 @@
     border: 2px solid #CCCCCC;
 }
 
+#googlecharts_config .ui-state-highlight {
+    float: left;
+    border-radius: 5px;
+    margin-top: 1em;
+    opacity: 0.3;
+}
+
 .googlechart_handle{
     cursor:move;
 }
@@ -266,6 +273,7 @@
 #gcharts-dashboards-edit .ui-state-highlight {
   float: left;
   border-radius: 20px;
+  opacity: 0.3;
 }
 
 
@@ -448,6 +456,7 @@ dl.portlet .dashboard-widget,
 
 .dashboard-filters .ui-state-highlight {
     float: left;
+    opacity: 0.3;
 }
 
 .dashboard-filter {

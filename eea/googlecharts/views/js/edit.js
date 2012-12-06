@@ -2299,6 +2299,10 @@ function init_googlecharts_edit(){
         opacity: 0.7,
         delay: 300,
         tolerance: 'pointer',
+        placeholder: 'ui-state-highlight',
+        forcePlaceholderSize: true,
+        cursor: 'crosshair',
+        tolerance: 'pointer',
         stop: function(event,ui){
             var draggedItem = jQuery(ui.item[0]).attr('id');
             var liName = "googlechartid";
