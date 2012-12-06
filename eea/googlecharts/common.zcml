@@ -6,6 +6,7 @@
   <includeDependencies package="." />
 
   <include package=".browser" />
+  <include package=".events" />
   <include package=".views" />
   <include package=".widgets" />
   <include package=".controlpanel" />

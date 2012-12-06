@@ -3,6 +3,7 @@
 import json
 import logging
 import urllib2
+from zope.event import notify
 from zope.formlib.form import Fields
 from Products.Five import BrowserView
 
@@ -13,6 +14,7 @@ from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.edit import EditForm
 from eea.app.visualization.zopera import IFolderish
 from eea.googlecharts.views.interfaces import IGoogleChartsEdit
+from eea.googlecharts.events import ChartsChanged
 logger = logging.getLogger('eea.googlecharts')
 
 def compare(a, b):
@@ -53,6 +55,8 @@ class Edit(BrowserView):
                     id=previewname,
                     title=previewname,
                     image=img.GET())
+
+        notify(ChartsChanged(self.context, config=data))
 
         return 'Changes saved'
 
