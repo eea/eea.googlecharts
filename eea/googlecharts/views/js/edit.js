@@ -143,7 +143,6 @@ function addFilter(id, column, filtertype, columnName){
 }
 
 function saveThumb(value, useName){
-    DavizEdit.Status.start("Saving Thumb");
     var chart_id = value[0];
     var chart_json = value[1];
     var chart_columns = value[2];
@@ -228,8 +227,6 @@ function saveThumb(value, useName){
                                 success: function(data){
                                     if (data !== "Success"){
                                         DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
-                                    }else{
-                                        DavizEdit.Status.stop("Done");
                                     }
                                  }
                             });
@@ -2101,6 +2098,7 @@ function saveCharts(){
     jsonObj.charts = charts;
     var jsonStr = JSON.stringify(jsonObj);
     var query = {'charts':jsonStr};
+
     jQuery.ajax({
         url:ajax_baseurl+"/googlechart.submit_charts",
         type:'post',
