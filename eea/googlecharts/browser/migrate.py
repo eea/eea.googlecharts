@@ -22,9 +22,9 @@ class Dashboards(BrowserView):
             return
 
         order = [
-            view.get('name').replace(u'googlechart.googledashboard',
-                                     u'googlechart.googledashboards', 1)
-            for view in mutator.views]
+            xview.get('name').replace(u'googlechart.googledashboard',
+                                      u'googlechart.googledashboards', 1)
+            for xview in mutator.views]
 
         view = deepcopy(dict(view))
         view.setdefault('title', u'Dashboard')

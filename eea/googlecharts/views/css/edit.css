@@ -192,7 +192,7 @@
 
 #gcharts-dashboards-edit .edit-button.selected:after {
     border: solid;
-    bottom: -30px;
+    bottom: -27px;
     z-index: 99;
     content: "";
     display: block;
@@ -345,8 +345,8 @@
     padding: 0;
     margin: 0;
     width: 100%;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     padding: 0.5em 0;
 }
 
