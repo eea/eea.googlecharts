@@ -21,6 +21,10 @@
     cursor:move;
 }
 
+.googlechart_handle .ui-icon {
+    margin-left: 0.5em;
+}
+
 #googlecharts_list,
 .googlechart_filters_list,
 .googlechart_sort {
@@ -29,12 +33,44 @@
     margin:0 !important;
 }
 
+.googlechart_filters_list h1 {
+    background: none;
+    font-weight: bold;
+}
+
+.googlechart_filters_list li {
+    background: whitesmoke;
+}
+
+.googlechart_filters_list li,
+.googlechart_sort li {
+    border: 1px dotted #ccc;
+}
+
+.googlechart_filters_list li:hover {
+    box-shadow: #CCC 0px 0px 10px;
+}
+
 .googlechart_sort li h1{
     cursor: default !important;
+    background: none;
+    font-weight: bold;
 }
 
 .googlechart_filteritem span {
     margin-left: 2em;
+}
+
+.googlechart-filters-box {
+  float:right;
+  width:250px;
+  box-shadow: 0px 0px 10px #ccc;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.googlechart-filters-box .label {
+  cursor: pointer;
 }
 
 .googlechart{
@@ -1189,7 +1225,7 @@ li.googlechart > fieldset > div > a > span {
 }
 
 .googlechart {
-    width:550px;
+    width:450px;
     float:left;
     margin-right:15px;
 }

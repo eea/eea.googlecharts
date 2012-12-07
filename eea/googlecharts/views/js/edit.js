@@ -131,7 +131,7 @@ function changeChartHiddenState(id){
 
 function addFilter(id, column, filtertype, columnName){
     var filter = jQuery("<li class='googlechart_filteritem' id='googlechart_filter_"+id+"_"+column+"'>" +
-                "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden' class='googlechart_filteritem_id'></div><div class='ui-icon ui-icon-trash remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
+                "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden' class='googlechart_filteritem_id'></div><div class='ui-icon ui-icon-close remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
                 '<span>' + available_filter_types[filtertype] + '</span>' +
                 "<input type='hidden' class='googlechart_filteritem_type'/>" +
                 "<input type='hidden' class='googlechart_filteritem_column'/>" +
@@ -403,17 +403,17 @@ function addChart(options){
             "<input class='googlechart_sortAsc' type='hidden' value='"+settings.sortAsc+"'/>" +
 
             "<h1 class='googlechart_handle'>"+
-            "<div style='float:left;width:60%;height:20px;overflow:hidden;'>"+
-                "<input class='googlechart_name' type='text' onchange='markChartAsModified(\""+settings.id+"\");drawChart(\""+settings.id+"\",function(){});'/>" +
+            "<div style='float:left;width:75%;height:20px;overflow:hidden;'>"+
+                "<input style='float: left' class='googlechart_name' type='text' onchange='markChartAsModified(\""+settings.id+"\");drawChart(\""+settings.id+"\",function(){});'/>" +
                 "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>px</span>"+
                 "<input class='googlechart_height' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
-                "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>X</span>"+
+                "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>x</span>"+
                 "<input class='googlechart_width' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
             "</div>"+
             "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"+
             "<div class='ui-icon ui-icon-" + (settings.hidden?"show":"hide") + " googlechart_hide_chart_icon' title='Hide/Show chart'>x</div>"+
-            "<div style='float:right;font-weight:normal;font-size:0.9em;margin-right:10px' id='googlechart_thumb_text_"+settings.id+"'>Use this chart as thumb</div>"+
-            "<input style='float:right; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+settings.id+"' onChange='markChartAsThumb(\""+settings.id+"\");' "+(settings.isThumb?"checked='checked'":"")+"/>"+
+            "<div class='ui-icon ui-icon-pencil' title='Edit chart' onclick='openEditChart(\""+settings.id+"\");'>e</div>"+
+            "<div class='ui-icon ui-icon-gear' title='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'>a</div>"+
             "<div style='clear:both'> </div>"+
             "</h1>" +
             "<fieldset>" +
@@ -422,33 +422,58 @@ function addChart(options){
                     "<span id='googlechart_chart_div_"+settings.id+"'></span>" +
                     "Preview Chart</a>"+
                 "</div>" +
-                "<div style='float:right; width:250px'>" +
-                    "<span class='label'>Filters position</span>"+
-                    "<select name='googlechart_filterposition' onchange='markChartAsModified(\"" + settings.id + "\")'>" +
-                        "<option value='0' " + ((settings.filter_pos === 0) ? "selected='selected'": "") + ">Top</option>" +
-                        "<option value='1' " + ((settings.filter_pos === 1) ? "selected='selected'": "") + ">Left</option>" +
-                        "<option value='2' " + ((settings.filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
-                        "<option value='3' " + ((settings.filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
-                    "</select>" +
-                    "<input type='button' value='Add New Filter' class='context addgooglechartfilter btn'/>"+
-                    "<div style='clear:both'> </div>" +
-                    "<ul class='googlechart_sort'  id='googlechart_sort_"+settings.id+"'>" +
-                        "<li class='googlechart_filteritem'>" +
-                            "<h1>"+
-                                "<div style='float:left;'>sort by column</div>"+
-                                "<div class='ui-icon ui-icon-" + (!settings.showSort?"show":"hide") + " googlechart_hide_sort_icon' title='Hide/Show sort on view'>x</div>"+
-                                "<div style='clear:both'> </div>" +
-                            "</h1>"+
-                        "</li>" +
-                    "</ul>" +
-                    "<ul class='googlechart_filters_list'  id='googlechart_filters_"+settings.id+"'>" +
-                    "</ul>" +
+                "<div class='googlechart-filters-box'>" +
+                    '<div class="header">' +
+                        '<span class="label">Chart filters <span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span></span>' +
+                        '<span title="Add new filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartfilter">+</span>' +
+                    '</div>' +
+                    '<div style="padding: 1em" class="body">' +
+                        "<ul class='googlechart_sort'  id='googlechart_sort_"+settings.id+"'>" +
+                            "<li class='googlechart_filteritem'>" +
+                                "<h1>"+
+                                    "<div style='float:left;'>sort by column</div>"+
+                                    "<div class='ui-icon ui-icon-" + (!settings.showSort?"show":"hide") + " googlechart_hide_sort_icon' title='Hide/Show sort on view'>x</div>"+
+                                    "<div style='clear:both'> </div>" +
+                                "</h1>"+
+                            "</li>" +
+                        "</ul>" +
+                        "<ul class='googlechart_filters_list'  id='googlechart_filters_"+settings.id+"'>" +
+                        "</ul>" +
+                        "<span>Position</span>"+
+                        "<select name='googlechart_filterposition' onchange='markChartAsModified(\"" + settings.id + "\")'>" +
+                            "<option value='0' " + ((settings.filter_pos === 0) ? "selected='selected'": "") + ">Top</option>" +
+                            "<option value='1' " + ((settings.filter_pos === 1) ? "selected='selected'": "") + ">Left</option>" +
+                            "<option value='2' " + ((settings.filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
+                            "<option value='3' " + ((settings.filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
+                        "</select>" +
+                    '</div>' +
                 "</div>" +
                 "<div style='clear:both'> </div>" +
-                "<input type='button' class='context btn btn-primary' value='Edit Chart' onclick='openEditChart(\""+settings.id+"\");'/>" +
-                "<input type='button' class='context btn btn-warning' value='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'/>" +
+                "<div style='font-weight:normal;font-size:0.9em;margin-right:10px' id='googlechart_thumb_text_"+settings.id+"'>" +
+                  "<input style='float: left; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+settings.id+"' onChange='markChartAsThumb(\""+settings.id+"\");' "+(settings.isThumb?"checked='checked'":"")+"/>"+
+                  "<label>Use this chart as thumb</label>" +
+                "</div>"+
             "</fieldset>" +
         "</li>");
+    googlechart.find('.googlechart-filters-box .body').hide();
+    googlechart.find('.googlechart-filters-box .header .ui-icon-plus').hide();
+    googlechart.find('.googlechart-filters-box .header .label').click(function(){
+        var body = googlechart.find('.googlechart-filters-box .body');
+        var button = googlechart.find('.ui-icon-plus');
+        if(body.is(':visible')){
+            body.slideUp();
+            button.hide();
+            jQuery('.ui-icon-circlesmall-minus', googlechart)
+                .removeClass('ui-icon-circlesmall-minus')
+                .addClass('ui-icon-circlesmall-plus');
+        }else{
+            body.slideDown();
+            button.show();
+            jQuery('.ui-icon-circlesmall-plus', googlechart)
+                .removeClass('ui-icon-circlesmall-plus')
+                .addClass('ui-icon-circlesmall-minus');
+        }
+    });
     googlechart.find(".googlechart_columns").attr("value", settings.columns);
     googlechart.find(".googlechart_configjson").attr("value", settings.config);
     googlechart.find(".googlechart_options").attr("value", settings.options);
@@ -459,6 +484,11 @@ function addChart(options){
     googlechart.find(".googlechart_sortBy").attr("value", settings.sortBy);
     googlechart.find(".googlechart_sortAsc").attr("value", settings.sortAsc);
     jQuery('#googlecharts_list').append(googlechart);
+
+    googlechart.dblclick(function(){
+        return openEditChart(settings.id);
+    });
+
     jQuery.data(googlechart[0], 'dashboard', settings.dashboard);
 
     if (settings.hidden){
@@ -468,6 +498,11 @@ function addChart(options){
     jQuery("#googlechart_filters_"+settings.id).sortable({
         handle : '.googlechart_filteritem_'+settings.id,
         delay: 300,
+        opacity: 0.7,
+        placeholder: 'ui-state-highlight',
+        forcePlaceholderSize: true,
+        cursor: 'crosshair',
+        tolerance: 'pointer',
         stop: function(event,ui){
             markChartAsModified(settings.id);
         }
@@ -1687,7 +1722,7 @@ function openEditChart(id){
     var tmp_sortBy = jQuery("#googlechartid_"+id+" .googlechart_sortBy").attr('value');
     var tmp_sortAsc = jQuery("#googlechartid_"+id+" .googlechart_sortAsc").attr('value');
     isFirstEdit = true;
-    DavizEdit.Status.start("Updating Tables");
+
     jQuery(".googlecharts_columns_config").remove();
     var editcolumnsdialog = jQuery(
     '<div class="googlecharts_columns_config">' +
@@ -1959,8 +1994,6 @@ function openEditChart(id){
     jQuery("#googlechart_overlay").overlay({
         mask: 'black'
     });
-
-    DavizEdit.Status.stop("Done");
 }
 
 function openAddChartFilterDialog(id){
@@ -1973,7 +2006,6 @@ function openAddChartFilterDialog(id){
             '<span class="required" style="color: #f00;" title="Required"> ■ </span>' +
             '<div class="formHelp">Filter Column</div>' +
             '<select class="googlecharts_filter_columns">' +
-                '<option value="-1">Select Column</option>'+
             '</select>' +
         '</div>' +
         '<div class="field">' +
@@ -1981,7 +2013,6 @@ function openAddChartFilterDialog(id){
             '<span class="required" style="color: #f00;" title="Required"> ■ </span>' +
             '<div class="formHelp">Filter Type</div>' +
             '<select class="googlecharts_filter_type">' +
-                '<option value="-1">Select Filter Type</option>'+
             '</select>' +
         '</div>' +
     '</div>';
@@ -2298,7 +2329,6 @@ function init_googlecharts_edit(){
         items: 'li.googlechart',
         opacity: 0.7,
         delay: 300,
-        tolerance: 'pointer',
         placeholder: 'ui-state-highlight',
         forcePlaceholderSize: true,
         cursor: 'crosshair',
