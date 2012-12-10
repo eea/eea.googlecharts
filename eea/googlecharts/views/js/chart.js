@@ -134,8 +134,9 @@ function drawGoogleChart(options){
     }
     return {'chart': chart, 'filters': filtersArray};
 }
-var hiddenDashboardFilters = [];
-var dashboardFilters = [];
+
+var hiddenDashboardFilters;
+var dashboardFilters;
 
 function dashboardFilterChanged(){
     var filtersStates = {};
@@ -152,6 +153,8 @@ function dashboardFilterChanged(){
     return;
 }
 function drawGoogleDashboard(options){
+    hiddenDashboardFilters = [];
+    dashboardFilters = [];
     var settings = {
         chartsDashboard : '',
         chartViewsDiv : '',
@@ -227,6 +230,14 @@ function drawGoogleDashboard(options){
 
             var tableForChart = prepareForChart(options);
 
+            var chart_width = chartConfig[4];
+            var chart_height = chartConfig[5];
+            if (value.dashboard.width){
+                chart_width = value.dashboard.width;
+            }
+            if (value.dashboard.height){
+                chart_height = value.dashboard.height;
+            }
             chart_options = {
                 chartDashboard : 'googlechart_dashboard',
                 chartViewDiv : chartContainerId,
@@ -235,8 +246,8 @@ function drawGoogleDashboard(options){
                 chartJson: chartConfig[1],
                 chartDataTable : tableForChart,
                 chartFilters : dashboard_filters,
-                chartWidth: chartConfig[4],
-                chartHeight: chartConfig[5],
+                chartWidth: chart_width,
+                chartHeight: chart_height,
                 chartFilterPosition : '',
                 chartOptions : chartConfig[7],
                 availableColumns : transformedTable.available_columns,
