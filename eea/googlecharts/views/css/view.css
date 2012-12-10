@@ -314,5 +314,5 @@ ul.googlechart_tabs li:first-of-type a:hover {
 }
 
 .googledashboard-hidden-helper-filters {
-    display: block;
+    display: none;
 }
