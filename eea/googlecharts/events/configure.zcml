@@ -1,0 +1,11 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  i18n_domain="eea">
+
+  <subscriber
+    for="eea.app.visualization.interfaces.IVisualizationEnabled
+         eea.googlecharts.interfaces.IChartsChangedEvent"
+    handler=".subscribers.update_dashboards"
+    />
+
+</configure>

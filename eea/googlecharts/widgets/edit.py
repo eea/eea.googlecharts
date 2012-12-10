@@ -70,22 +70,16 @@ class SubPageForm(BaseForm):
 class AddForm(SubPageForm):
     """ Common add form for widgets
     """
-    @action(_('Save'))
-    def save(self, saction, data):
-        """ Handle save action
-        """
-        self.dashboard.setdefault('widgets', [])
 
+    def prepare(self, data):
+        """ Prepare data to be saved
+        """
         chooser = queryAdapter(self.context, INameChooser)
         if not chooser:
             chooser = queryAdapter(self.context.getParentNode(), INameChooser)
         name = data.get('name', 'widget')
-        data['title'] = name
+        data.setdefault('title', name)
         data['name'] = chooser.chooseName(name, self.context)
-        for widget in self.dashboard.get('widgets', []):
-            if data.get('name', '') == widget.get('name', ''):
-                return u'Invalid name. Widget not added'
-
         data['wtype'] = self.__name__.replace('.add', '', 1)
         data['dashboard'] = {
             'width': 800,
@@ -93,6 +87,20 @@ class AddForm(SubPageForm):
             'order': 997,
             'hidden': False
         }
+        return data
+
+    @action(_('Save'))
+    def save(self, saction, data):
+        """ Handle save action
+        """
+        self.dashboard.setdefault('widgets', [])
+
+        data = self.prepare(data)
+
+        for widget in self.dashboard.get('widgets', []):
+            if data.get('name', '') == widget.get('name', ''):
+                return u'Invalid name. Widget not added'
+
         self.dashboard['widgets'].append(data)
         self.dashboards = 'Changed'
 
@@ -105,6 +113,11 @@ class AddForm(SubPageForm):
 class EditForm(SubPageForm):
     """ Common Edit form for widgets
     """
+    def prepare(self, data):
+        """ Update data dict
+        """
+        return data
+
     @action(_('Save'))
     def save(self, saction, data):
         """ Handle save action
@@ -114,6 +127,8 @@ class EditForm(SubPageForm):
         widgetName = self.request.form.get('name', '')
 
         widgets = self.dashboard.get('widgets', [])
+
+        data = self.prepare(data)
 
         changed = False
         for widget in widgets:

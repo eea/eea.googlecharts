@@ -4,13 +4,12 @@ Changelog
 6.3-dev - (unreleased)
 ----------------------
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
-  upgrade button available for eea.googlecharts
+  upgrade button available for eea.googlecharts.
+  For non-Plone usage you'll have to manually run @@migrate-dashboards for all
+  visualizations that have Google-Dashboard enabled.
 
 * Feature: Multiple dashboards support WIP:
   TODO: Handle view mode
-  TODO: Add chart widget to dashboard
-  TODO: Handle edit/deletion of charts within charts tab (update dashboard settings)
-  TODO: Handle chart resize in dashboard (refresh iframe)
   [voineali refs #9572]
 
 * Feature: Allow row filtering on dashboards also

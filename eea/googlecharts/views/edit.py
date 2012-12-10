@@ -3,16 +3,18 @@
 import json
 import logging
 import urllib2
+from zope.event import notify
 from zope.formlib.form import Fields
 from Products.Five import BrowserView
 
-from zope.component import queryAdapter, getUtility, getMultiAdapter
+from zope.component import queryAdapter, queryUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from zope.container.interfaces import INameChooser
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.edit import EditForm
 from eea.app.visualization.zopera import IFolderish
 from eea.googlecharts.views.interfaces import IGoogleChartsEdit
+from eea.googlecharts.events import ChartsChanged
 logger = logging.getLogger('eea.googlecharts')
 
 def compare(a, b):
@@ -54,6 +56,8 @@ class Edit(BrowserView):
                     title=previewname,
                     image=img.GET())
 
+        notify(ChartsChanged(self.context, config=data))
+
         return 'Changes saved'
 
     def get_charts(self):
@@ -70,8 +74,8 @@ class Edit(BrowserView):
     def get_columns(self):
         """ Columns
         """
-        vocab = getUtility(IVocabularyFactory,
-                               name="eea.daviz.vocabularies.FacetsVocabulary")
+        vocab = queryUtility(IVocabularyFactory,
+                             name="eea.daviz.vocabularies.FacetsVocabulary")
         terms = [[term.token, term.title] for term in vocab(self.context)]
         jsonStr = [u'{']
         jsonStr.append(u', '.join((u'"%s": "%s"' % (term[0], term[1]))
@@ -472,8 +476,9 @@ class DashboardsEdit(ChartsEdit):
             name = name.pop()
         return name
 
-    def add(self, **kwargs):
-        """ Add new dashboard
+
+    def prepare(self, **kwargs):
+        """ Prepare dashboard
         """
         title = kwargs.get('title', 'Dashboard')
         name = self.chooseName(title)
@@ -493,6 +498,32 @@ class DashboardsEdit(ChartsEdit):
             "widgets": [],
         }
 
+        # Only add all charts if this is the first dashboard
+        if self.dashboards['dashboards']:
+            return dashboard
+
+        voc = queryUtility(IVocabularyFactory,
+                           name=u'eea.googlecharts.vocabularies.charts')
+        for index, term in enumerate(voc(self.context)):
+            widget = {
+                'name': term.value,
+                'title': term.title,
+                'path': term.token,
+                'wtype': u'googlecharts.widgets.chart',
+                'dashboard': {
+                    'width': 800,
+                    'height': 600,
+                    'order': index,
+                    'hidden': False
+                }
+            }
+            dashboard['widgets'].append(widget)
+        return dashboard
+
+    def add(self, **kwargs):
+        """ Add new dashboard
+        """
+        dashboard = self.prepare(**kwargs)
         self.dashboards['dashboards'].append(dashboard)
         self.dashboards = "Changed"
         return self.json(**kwargs)

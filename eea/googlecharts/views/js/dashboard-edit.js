@@ -767,7 +767,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     }
 
     // Save changes
-    self.save();
+    self.save(false, true);
   },
 
   handle_position: function(order){
@@ -933,7 +933,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     self.save();
   },
 
-  save: function(quiet){
+  save: function(quiet, reload){
     var self = this;
     query = {
       action: 'widget.edit',
@@ -952,6 +952,9 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     jQuery.post(action, query, function(data){
       if(!quiet){
         DavizEdit.Status.stop(data);
+      }
+      if(reload){
+        self.reload();
       }
     });
   }
@@ -1247,7 +1250,7 @@ DavizEdit.GoogleDashboardFilter.prototype = {
 
     // Delete "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"
     jQuery('<div>')
-      .addClass('ui-icon').addClass('ui-icon-trash')
+      .addClass('ui-icon').addClass('ui-icon-close')
       .attr('title', 'Delete filter')
       .text('x')
       .prependTo(self.box)

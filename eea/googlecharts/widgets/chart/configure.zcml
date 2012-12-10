@@ -1,4 +1,5 @@
 <configure
+  xmlns="http://namespaces.zope.org/zope"
   xmlns:googlecharts="http://namespaces.zope.org/googlecharts"
   xmlns:browser="http://namespaces.zope.org/browser"
   i18n_domain="eea">
@@ -28,5 +29,14 @@
     class=".edit.Add"
     permission="eea.app.visualization.configure"
     />
+
+  <utility name="eea.googlecharts.vocabularies.charts"
+    factory=".vocabulary.Charts"/>
+
+  <utility name="eea.googlecharts.vocabularies.charts.add"
+    factory=".vocabulary.Add"/>
+
+  <utility name="eea.googlecharts.vocabularies.charts.edit"
+    factory=".vocabulary.Edit"/>
 
 </configure>

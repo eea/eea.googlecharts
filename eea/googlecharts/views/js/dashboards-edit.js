@@ -149,7 +149,7 @@ DavizEdit.GoogleDashboards.prototype = {
 
     DavizEdit.Status.start("Saving...");
     jQuery.post(self.action, query, function(data){
-      self.settings = data;
+      self.settings = JSON.parse(data);
       DavizEdit.Status.stop('Dashboards position changed');
     });
   },
