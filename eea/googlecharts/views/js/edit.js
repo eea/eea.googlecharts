@@ -448,6 +448,17 @@ function addChart(options){
                         "</select>" +
                     '</div>' +
                 "</div>" +
+                "<div class='googlechart-notes-box'>" +
+                    '<div class="header">' +
+                        '<span class="label">Chart notes <span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span></span>' +
+                        '<span title="Add chart note" class="ui-icon ui-icon-plus ui-corner-all addgooglechartnote">+</span>' +
+                    '</div>' +
+                    '<div style="padding: 1em" class="body">' +
+                        "<ul class='googlechart_notes_list'  id='googlechart_notes_"+settings.id+"'>" +
+                            "<li>There is nothing here, yet</li>" +
+                        "</ul>" +
+                    '</div>' +
+                "</div>" +
                 "<div style='clear:both'> </div>" +
                 "<div style='font-weight:normal;font-size:0.9em;margin-right:10px' id='googlechart_thumb_text_"+settings.id+"'>" +
                   "<input style='float: left; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+settings.id+"' onChange='markChartAsThumb(\""+settings.id+"\");' "+(settings.isThumb?"checked='checked'":"")+"/>"+
@@ -455,25 +466,51 @@ function addChart(options){
                 "</div>"+
             "</fieldset>" +
         "</li>");
+
+    // Filters
     googlechart.find('.googlechart-filters-box .body').hide();
     googlechart.find('.googlechart-filters-box .header .ui-icon-plus').hide();
     googlechart.find('.googlechart-filters-box .header .label').click(function(){
         var body = googlechart.find('.googlechart-filters-box .body');
-        var button = googlechart.find('.ui-icon-plus');
+        var button = googlechart.find('.googlechart-filters-box .ui-icon-plus');
         if(body.is(':visible')){
             body.slideUp();
             button.hide();
-            jQuery('.ui-icon-circlesmall-minus', googlechart)
+            jQuery('.googlechart-filters-box .ui-icon-circlesmall-minus', googlechart)
                 .removeClass('ui-icon-circlesmall-minus')
                 .addClass('ui-icon-circlesmall-plus');
         }else{
             body.slideDown();
             button.show();
-            jQuery('.ui-icon-circlesmall-plus', googlechart)
+            jQuery('.googlechart-filters-box .ui-icon-circlesmall-plus', googlechart)
                 .removeClass('ui-icon-circlesmall-plus')
                 .addClass('ui-icon-circlesmall-minus');
         }
     });
+
+    // Notes
+    googlechart.find('.googlechart-notes-box .body').hide();
+    googlechart.find('.googlechart-notes-box .header .ui-icon-plus').hide();
+    googlechart.find('.googlechart-notes-box .header .label').click(function(){
+        var body = googlechart.find('.googlechart-notes-box .body');
+        var button = googlechart.find('.googlechart-notes-box .ui-icon-plus');
+        if(body.is(':visible')){
+            body.slideUp();
+            button.hide();
+            jQuery('.googlechart-notes-box .ui-icon-circlesmall-minus', googlechart)
+                .removeClass('ui-icon-circlesmall-minus')
+                .addClass('ui-icon-circlesmall-plus');
+        }else{
+            body.slideDown();
+            button.show();
+            jQuery('.googlechart-notes-box .ui-icon-circlesmall-plus', googlechart)
+                .removeClass('ui-icon-circlesmall-plus')
+                .addClass('ui-icon-circlesmall-minus');
+        }
+    });
+
+
+
     googlechart.find(".googlechart_columns").attr("value", settings.columns);
     googlechart.find(".googlechart_configjson").attr("value", settings.config);
     googlechart.find(".googlechart_options").attr("value", settings.options);

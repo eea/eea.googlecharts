@@ -27,7 +27,8 @@
 
 #googlecharts_list,
 .googlechart_filters_list,
-.googlechart_sort {
+.googlechart_sort,
+.googlechart_notes_list {
     list-style-type:none !important;
     list-style-image:none !important;
     margin:0 !important;
@@ -38,17 +39,26 @@
     font-weight: bold;
 }
 
+.googlechart_sort li,
 .googlechart_filters_list li {
-    background: whitesmoke;
+    background: white;
 }
 
 .googlechart_filters_list li,
 .googlechart_sort li {
-    border: 1px dotted #ccc;
+    border: 1px solid #eee;
+    margin: 5px;
+    padding: 1em;
 }
 
-.googlechart_filters_list li:hover {
-    box-shadow: #CCC 0px 0px 10px;
+.googlechart-filters-box .ui-state-highlight {
+    background: orange;
+    opacity: 0.3;
+    min-width: 85%;
+}
+
+.googlechart_filters_list li {
+    box-shadow: #CCC 3px 3px 3px;
 }
 
 .googlechart_sort li h1{
@@ -61,15 +71,18 @@
     margin-left: 2em;
 }
 
-.googlechart-filters-box {
+.googlechart-filters-box,
+.googlechart-notes-box {
   float:right;
   width:250px;
-  box-shadow: 0px 0px 10px #ccc;
   padding: 5px;
   border-radius: 3px;
+  background-color: #f3f3f3;
+  margin-bottom: 0.5em;
 }
 
-.googlechart-filters-box .label {
+.googlechart-filters-box .label,
+.googlechart-notes-box .label {
   cursor: pointer;
 }
 

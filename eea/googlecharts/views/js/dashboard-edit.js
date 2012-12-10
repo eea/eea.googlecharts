@@ -1250,7 +1250,7 @@ DavizEdit.GoogleDashboardFilter.prototype = {
 
     // Delete "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"
     jQuery('<div>')
-      .addClass('ui-icon').addClass('ui-icon-trash')
+      .addClass('ui-icon').addClass('ui-icon-close')
       .attr('title', 'Delete filter')
       .text('x')
       .prependTo(self.box)
