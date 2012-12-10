@@ -5,7 +5,7 @@
     <input id="addgooglechart"
            type="button"
            value="Add another visualization"
-           class="context btn"
+           class="context btn btn-primary"
            i18n:attributes="value" />
     <ul id="googlecharts_list"></ul>
 </div>

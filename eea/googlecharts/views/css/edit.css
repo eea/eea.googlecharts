@@ -1241,6 +1241,7 @@ li.googlechart > fieldset > div > a > span {
     width:450px;
     float:left;
     margin-right:15px;
+    min-height: 190px;
 }
 
 .googlechart_name {
