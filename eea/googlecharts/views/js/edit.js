@@ -411,9 +411,8 @@ function addChart(options){
                 "<input class='googlechart_width' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
             "</div>"+
             "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"+
-            "<div class='ui-icon ui-icon-" + (settings.hidden?"show":"hide") + " googlechart_hide_chart_icon' title='Hide/Show chart'>x</div>"+
-            "<div class='ui-icon ui-icon-pencil' title='Edit chart' onclick='openEditChart(\""+settings.id+"\");'>e</div>"+
             "<div class='ui-icon ui-icon-gear' title='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'>a</div>"+
+            "<div class='ui-icon ui-icon-" + (settings.hidden?"show":"hide") + " googlechart_hide_chart_icon' title='Hide/Show chart'>x</div>"+
             "<div style='clear:both'> </div>"+
             "</h1>" +
             "<fieldset>" +
@@ -460,7 +459,8 @@ function addChart(options){
                     '</div>' +
                 "</div>" +
                 "<div style='clear:both'> </div>" +
-                "<div style='font-weight:normal;font-size:0.9em;margin-right:10px' id='googlechart_thumb_text_"+settings.id+"'>" +
+                "<input type='button' style='float:right; margin-top:0.5em;' class='context btn btn-warning' value='Edit' onclick='openEditChart(\""+settings.id+"\");'/>" +
+                "<div style='font-weight:normal;font-size:0.9em;margin-right:10px; padding-top:1em;' id='googlechart_thumb_text_"+settings.id+"'>" +
                   "<input style='float: left; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+settings.id+"' onChange='markChartAsThumb(\""+settings.id+"\");' "+(settings.isThumb?"checked='checked'":"")+"/>"+
                   "<label>Use this chart as thumb</label>" +
                 "</div>"+
@@ -521,10 +521,6 @@ function addChart(options){
     googlechart.find(".googlechart_sortBy").attr("value", settings.sortBy);
     googlechart.find(".googlechart_sortAsc").attr("value", settings.sortAsc);
     jQuery('#googlecharts_list').append(googlechart);
-
-    googlechart.dblclick(function(){
-        return openEditChart(settings.id);
-    });
 
     jQuery.data(googlechart[0], 'dashboard', settings.dashboard);
 
