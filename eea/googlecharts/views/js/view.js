@@ -54,19 +54,14 @@ function drawChart(value){
         var chart_options = value[7];
         var chart_showSort = (value[9]==='True'?true:false);
         var chart_hasPNG = (value[10]==='True'?true:false);
-        var chart_row_filters = {};
+        var chart_row_filters = value[11];
         var chart_sortBy = value[12];
         var chart_sortAsc = true;
 
-        var row_filters_str = value[11];
         var sortAsc_str = value[13];
-        if (row_filters_str.length > 0){
-            chart_row_filters = JSON.parse(row_filters_str);
-        }
         if (sortAsc_str === 'desc'){
             chart_sortAsc = false;
         }
-
 
         jQuery("#filename").attr("value",chart_json.options.title);
         jQuery("#type").attr("value","image/png");
@@ -361,9 +356,9 @@ var googleChartTabClick = function(context){
             var config;
             jQuery(dashboards_config_array).each(function(index, value){
                 if (value.name == current_chart_id.replace("-", ".")){
-                    config = value
+                    config = value;
                 }
-            })
+            });
             drawDashboard(config);
         }
     }

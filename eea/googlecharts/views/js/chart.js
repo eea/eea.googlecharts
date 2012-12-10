@@ -14,7 +14,8 @@ function drawGoogleChart(options){
         availableColumns : '',
         chartReadyEvent : function(){},
         chartErrorEvent : function(){},
-        showSort : false
+        showSort : false,
+        customFilterHandler : function(){}
     };
     jQuery.extend(settings, options);
     jQuery("#"+settings.chartViewDiv).width(settings.chartWidth).height(settings.chartHeight);
@@ -75,6 +76,11 @@ function drawGoogleChart(options){
                     break;
             }
             var filter = new google.visualization.ControlWrapper(filterSettings);
+
+            google.visualization.events.addListener(filter, 'statechange', function(event){
+                settings.customFilterHandler();
+            });
+
             filtersArray.push(filter);
         });
     }
@@ -126,8 +132,25 @@ function drawGoogleChart(options){
 
         addSortFilter(options2);
     }
+    return {'chart': chart, 'filters': filtersArray};
 }
+var hiddenDashboardFilters = [];
+var dashboardFilters = [];
 
+function dashboardFilterChanged(){
+    var filtersStates = {};
+    jQuery(dashboardFilters).each(function(idx, filter){
+        var filterName = filter.getOption("filterColumnLabel");
+        var filterState = filter.getState();
+        filtersStates[filterName] = filterState;
+    });
+    jQuery(hiddenDashboardFilters).each(function(idx, filter){
+        var filterName = filter.getOption("filterColumnLabel");
+        filter.setState(filtersStates[filterName]);
+        filter.draw();
+    });
+    return;
+}
 function drawGoogleDashboard(options){
     var settings = {
         chartsDashboard : '',
@@ -145,6 +168,10 @@ function drawGoogleDashboard(options){
     var dashboardLink = jQuery('#googlechart_dashboard').attr('data-link');
     dashboardLink = dashboardLink !== undefined ? dashboardLink + '/' : '';
 
+    var dashboard_filters = {};
+    jQuery.each(settings.filters, function(key, value){
+        dashboard_filters[value.column] = value.type;
+    });
     // Dashboard charts
     jQuery.each(settings.chartsSettings, function(key, value){
         if (value.wtype === 'googlecharts.widgets.chart'){
@@ -162,17 +189,20 @@ function drawGoogleDashboard(options){
                 .text('chart')
                 .appendTo('#googlechart_view');
 
+            var chartFiltersId = "googlechart_hidden_filters_" + value.name;
+            var chartFilters = jQuery('<div>')
+                .attr('id', chartFiltersId)
+                .addClass('googledashboard-hidden-helper-filters')
+                .css('float', 'left')
+                .appendTo('#'+settings.chartFiltersDiv);
+
             var columnsFromSettings = getColumnsFromSettings(chartConfig[2]);
 
             var chart_sortBy = chartConfig[12];
             var chart_sortAsc = true;
-            var chart_row_filters = {};
+            var chart_row_filters = chartConfig[11];
 
-            var row_filters_str = chartConfig[11];
             var sortAsc_str = chartConfig[13];
-            if (row_filters_str.length > 0){
-                chart_row_filters = JSON.parse(row_filters_str);
-            }
             if (sortAsc_str === 'desc'){
                 chart_sortAsc = false;
             }
@@ -200,11 +230,11 @@ function drawGoogleDashboard(options){
             chart_options = {
                 chartDashboard : 'googlechart_dashboard',
                 chartViewDiv : chartContainerId,
-                chartFiltersDiv : '',
+                chartFiltersDiv : chartFiltersId,
                 chartId : chartConfig[0],
                 chartJson: chartConfig[1],
                 chartDataTable : tableForChart,
-                chartFilters : '',
+                chartFilters : dashboard_filters,
                 chartWidth: chartConfig[4],
                 chartHeight: chartConfig[5],
                 chartFilterPosition : '',
@@ -213,7 +243,8 @@ function drawGoogleDashboard(options){
                 chartReadyEvent : function(){},
                 showSort:false
             };
-            drawGoogleChart(chart_options);
+            var tmp_chart = drawGoogleChart(chart_options);
+            hiddenDashboardFilters = hiddenDashboardFilters.concat(tmp_chart.filters);
         }
         else{
             if(value.dashboard.hidden){
@@ -234,106 +265,55 @@ function drawGoogleDashboard(options){
         }
     });
 
-
-    return;
     // Dashboard filters
-    var dashboardFilters = [];
-    jQuery.each(settings.filters, function(key, value){
-        var filter_div_id = settings.chartFiltersDiv + "_" + key;
-        var filter_div = "<div id='" + filter_div_id + "'></div>";
-        jQuery(filter_div).appendTo("#" + settings.chartFiltersDiv);
+    if (settings.filters.length > 0){
+            filters_chart_id = 'filters_helper_tablechart';
+            var chartContainerId = "googlechart_view_" + filters_chart_id;
 
-        var filterSettings = {};
-        filterSettings.options = {};
-        filterSettings.options.ui = {};
-        //filterSettings.options.filterColumnIndex = allColumns.indexOf(key);
-        filterSettings.options.filterColumnIndex = jQuery.inArray(key, settings.allColumns);
-        filterSettings.containerId = filter_div_id;
-        switch(value){
-            case "0":
-                filterSettings.controlType = 'NumberRangeFilter';
-                break;
-            case "1":
-                filterSettings.controlType = 'StringFilter';
-                break;
-            case "2":
-                filterSettings.controlType = 'CategoryFilter';
-                filterSettings.options.ui.allowTyping = false;
-                filterSettings.options.ui.allowMultiple = false;
-                break;
-            case "3":
-                filterSettings.controlType = 'CategoryFilter';
-                filterSettings.options.ui.allowTyping = false;
-                filterSettings.options.ui.allowMultiple = true;
-                filterSettings.options.ui.selectedValuesLayout = 'belowStacked';
-                break;
-        }
-        var filter = new google.visualization.ControlWrapper(filterSettings);
-        dashboardFilters.push(filter);
-    });
-    if (dashboardFilters.length === 0){
-        jQuery.each(dashboardCharts, function(chart_key, chart){
-            chart.chart.setDataTable(settings.chartsMergedTable);
-            if (chart.isTransformed){
-                var options = {
-                    chart : chart.chart,
-                    cols : chart.normalColumns
-                };
-                removeDuplicated(options);
-            }
-            chart.chart.draw();
-        });
-    }
-    else{
-        var dashboard = new google.visualization.Dashboard(
-            document.getElementById(settings.chartsDashboard));
-        var tmpDashboardCharts = [];
-        jQuery.each(dashboardCharts, function(chart_key, chart){
-            tmpDashboardCharts.push(chart.chart);
-        });
-        dashboard.bind(dashboardFilters, tmpDashboardCharts);
+            var chartContainer = jQuery('<div>')
+                .attr('id', chartContainerId)
+                .addClass('googlechart_dashboard_filters_helper')
+                .prependTo('#googlechart_view');
 
-        jQuery.each(dashboardCharts, function(chart_key, chart){
-            jQuery.each(dashboardFilters, function(filter_key, filter){
-                if (chart.isTransformed){
-                    google.visualization.events.addListener(filter, 'statechange', function(event){
-                        var options = {
-                            chart : chart.chart,
-                            cols : chart.normalColumns
-                        };
-                        removeDuplicated(options);
-                    });
-                    google.visualization.events.addListener(filter, 'ready', function(event){
-                        var options = {
-                            chart : chart.chart,
-                            cols : chart.normalColumns
-                        };
-                        removeDuplicated(options);
-                    });
-                }
+            var normalColumns = [];
+            jQuery.each(settings.columns, function(key,value){
+                normalColumns.push(key);
             });
-            if (chart.isTransformed){
-                google.visualization.events.addListener(chart.chart, 'ready', function(event){
-                    var options = {
-                        chart : chart.chart,
-                        cols : chart.normalColumns
-                    };
-                    removeDuplicated(options);
-                });
-            }
-        });
-        google.visualization.events.addListener(dashboard, 'ready', function(event){
-            jQuery.each(dashboardCharts, function(chart_key, chart){
-                if (chart.isTransformed){
-                    var options = {
-                        chart : chart.chart,
-                        cols : chart.normalColumns
-                    };
-                    removeDuplicated(options);
-                }
-            });
-        });
+            options = {
+                originalTable : settings.rows,
+                normalColumns : normalColumns,
+                pivotingColumns : [],
+                valueColumn : "",
+                availableColumns : settings.columns
+            };
 
-        dashboard.draw(settings.chartsMergedTable);
+            var transformedTable = transformTable(options);
+
+            options = {
+                originalDataTable : transformedTable,
+                columns : normalColumns
+            };
+
+            var tableForChart = prepareForChart(options);
+            var filtersHelperChart = {'chartType': 'Table',
+                                      'options': {'height': '13em', 'width': '20em'}};
+            chart_options = {
+                chartDashboard : 'googlechart_dashboard',
+                chartViewDiv : chartContainerId,
+                chartFiltersDiv : settings.chartFiltersDiv,
+                chartId : filters_chart_id,
+                chartJson: filtersHelperChart,
+                chartDataTable : tableForChart,
+                chartFilters : dashboard_filters,
+                chartWidth: 200,
+                chartHeight: 200,
+                chartFilterPosition : '',
+                availableColumns : transformedTable.available_columns,
+                chartReadyEvent : function(){},
+                showSort : false,
+                customFilterHandler : dashboardFilterChanged
+            };
+            var tmp_chart = drawGoogleChart(chart_options);
+            dashboardFilters = tmp_chart.filters;
     }
 }
