@@ -1999,62 +1999,21 @@ function openEditChart(id){
 function openAddChartFilterDialog(id){
     jQuery(".googlecharts_filter_config").remove();
 
-    var addfilterdialog = '' +
+    var addfilterdialog = jQuery('' +
     '<div class="googlecharts_filter_config">' +
         '<div class="field">' +
             '<label>Column</label>' +
-            '<span class="required" style="color: #f00;" title="Required"> ■ </span>' +
             '<div class="formHelp">Filter Column</div>' +
             '<select class="googlecharts_filter_columns">' +
             '</select>' +
         '</div>' +
         '<div class="field">' +
             '<label>Type</label>' +
-            '<span class="required" style="color: #f00;" title="Required"> ■ </span>' +
             '<div class="formHelp">Filter Type</div>' +
             '<select class="googlecharts_filter_type">' +
             '</select>' +
         '</div>' +
-    '</div>';
-
-    jQuery(addfilterdialog).dialog({title:"Add Filter",
-                dialogClass: 'googlechart-dialog',
-                modal:true,
-                open: function(evt, ui){
-                    var buttons = jQuery(this).parent().find('button');
-                    buttons.attr('class', 'btn');
-                    jQuery(buttons[0]).addClass('btn-success');
-                    jQuery(buttons[1]).addClass('btn-inverse');
-                },
-                buttons:[
-                    {
-                        text: "Save",
-                        click: function(){
-                            var selectedColumn = jQuery(".googlecharts_filter_columns").val();
-                            var selectedFilter = jQuery(".googlecharts_filter_type").val();
-                            var selectedColumnName = "";
-                            jQuery(".googlecharts_filter_columns").find("option").each(function(idx, filter){
-                                if (jQuery(filter).attr("value") === selectedColumn){
-                                    selectedColumnName = jQuery(filter).html();
-                                }
-                            });
-                            if ((selectedColumn === '-1') || (selectedFilter === '-1')){
-                                alert("Please select column and filter type!");
-                            }
-                            else{
-                                addFilter(id, selectedColumn, selectedFilter, selectedColumnName);
-                                markChartAsModified(id);
-                                jQuery(this).dialog("close");
-                            }
-                        }
-                    },
-                    {
-                        text: "Cancel",
-                        click: function(){
-                            jQuery(this).dialog("close");
-                        }
-                    }
-                ]});
+    '</div>');
 
     var orderedFilters = jQuery("#googlechart_filters_"+id).sortable('toArray');
     var used_columns = [];
@@ -2063,6 +2022,7 @@ function openAddChartFilterDialog(id){
         used_columns.push(jQuery("#"+value+" .googlechart_filteritem_column").attr("value"));
     });
 
+    var empty = true;
     var chartColumns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").val();
     if (chartColumns_str !== ""){
         var preparedColumns = JSON.parse(chartColumns_str).prepared;
@@ -2071,16 +2031,61 @@ function openAddChartFilterDialog(id){
                 var column = jQuery('<option></option>');
                 column.attr("value", value.name);
                 column.text(value.fullname);
-                column.appendTo(".googlecharts_filter_columns");
+                jQuery(".googlecharts_filter_columns", addfilterdialog).append(column);
+                empty = false;
             }
         });
+    }
+
+    if(empty){
+        return alert("You've added all possible filters!");
     }
 
     jQuery.each(available_filter_types,function(key,value){
         var column = jQuery('<option></option>');
         column.attr("value", key);
         column.text(value);
-        column.appendTo(".googlecharts_filter_type");
+        jQuery(".googlecharts_filter_type", addfilterdialog).append(column);
+    });
+
+    addfilterdialog.dialog({title:"Add Filter",
+        dialogClass: 'googlechart-dialog',
+        modal:true,
+        open: function(evt, ui){
+            var buttons = jQuery(this).parent().find('button');
+            buttons.attr('class', 'btn');
+            jQuery(buttons[0]).addClass('btn-success');
+            jQuery(buttons[1]).addClass('btn-inverse');
+        },
+        buttons:[
+            {
+                text: "Save",
+                click: function(){
+                    var selectedColumn = jQuery(".googlecharts_filter_columns").val();
+                    var selectedFilter = jQuery(".googlecharts_filter_type").val();
+                    var selectedColumnName = "";
+                    jQuery(".googlecharts_filter_columns").find("option").each(function(idx, filter){
+                        if (jQuery(filter).attr("value") === selectedColumn){
+                            selectedColumnName = jQuery(filter).html();
+                        }
+                    });
+                    if ((selectedColumn === '-1') || (selectedFilter === '-1')){
+                        alert("Please select column and filter type!");
+                    }
+                    else{
+                        addFilter(id, selectedColumn, selectedFilter, selectedColumnName);
+                        markChartAsModified(id);
+                        jQuery(this).dialog("close");
+                    }
+                }
+            },
+            {
+                text: "Cancel",
+                click: function(){
+                    jQuery(this).dialog("close");
+                }
+            }
+        ]
     });
 }
 
