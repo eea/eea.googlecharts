@@ -14,12 +14,16 @@
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-<script type="text/javascript">
+<tal:comment condition="nothing">
+<!-- XXX Use GoogleChartsConfig instead of googlechart_config_array -->
+</tal:comment>
+
+<script type="text/javascript" tal:define="GoogleChartsConfig view/get_charts_json;" tal:content="structure string:
     google.load('visualization', '1.0', {packages: ['controls']});
     var googlechart_config_array = [];
+    var GoogleChartsConfig = $GoogleChartsConfig;
     var dashboards_config_array = [];
-    var dashboards_config_array;
-</script>
+"></script>
 
 <script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; qr_size = '${view/qr_size}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}'; var main_title='${view/get_maintitle}';">
 </script>

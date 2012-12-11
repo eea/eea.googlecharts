@@ -15,9 +15,21 @@ function drawGoogleChart(options){
         chartReadyEvent : function(){},
         chartErrorEvent : function(){},
         showSort : false,
-        customFilterHandler : function(){}
+        customFilterHandler : function(){},
+        notes: []
     };
+
     jQuery.extend(settings, options);
+
+    // XXX Use GoogleChartsConfig for options instead of googlechart_config_array
+    if(window.GoogleChartsConfig){
+        jQuery.each(GoogleChartsConfig, function(index, value){
+            if(value.id == settings.chartId){
+                settings.notes = value.notes;
+            }
+        });
+    }
+
     jQuery("#"+settings.chartViewDiv).width(settings.chartWidth).height(settings.chartHeight);
     settings.chartJson.options.width = settings.chartWidth;
     settings.chartJson.options.height = settings.chartHeight;
@@ -132,7 +144,22 @@ function drawGoogleChart(options){
 
         addSortFilter(options2);
     }
+
+    // Notes
+    var notes = jQuery('<div>')
+        .addClass('googlechart-notes')
+        .width(settings.chartWidth);
+
+    jQuery.each(settings.notes, function(index, note){
+        jQuery('<div>')
+            .addClass('googlecharts-note')
+            .html(note.text)
+            .appendTo(notes);
+    });
+    jQuery('#' + settings.chartViewDiv).after(notes);
+
     return {'chart': chart, 'filters': filtersArray};
+
 }
 
 var hiddenDashboardFilters;
