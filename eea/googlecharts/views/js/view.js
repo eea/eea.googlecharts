@@ -355,7 +355,10 @@ var googleChartTabClick = function(context){
         else {
             var config;
             jQuery(dashboards_config_array).each(function(index, value){
-                if (value.name == current_chart_id.replace("-", ".")){
+                if (value.name === current_chart_id){
+                    config = value;
+                }
+                else if (value.name == current_chart_id.replace("-", ".")){
                     config = value;
                 }
             });
