@@ -140,14 +140,17 @@ class View(ViewForm):
         """
         return self.request.get("customStyle", "")
 
-    def has_dashboard(self):
-        """ Dashboard is configured """
-        views = queryAdapter(self.context, IVisualizationConfig).views
-        hasDashboard = False
-        for view in views:
-            if view.get('name') == 'googlechart.googledashboard':
-                hasDashboard = True
-        return hasDashboard
+    def get_dashboards(self):
+        """ Dashboards
+        """
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        config = ''
+        for view in mutator.views:
+            if view.get('name') == 'googlechart.googledashboards':
+                config = view.get('dashboards')
+        if config == "":
+            return []
+        return json.dumps(config)
 
     def get_dashboard_js(self, chart):
         """ Dashboard
@@ -158,13 +161,6 @@ class View(ViewForm):
         """ Show Sort
         """
         return chart.get('showSort', 'False')
-
-    def get_dashboard_filters(self):
-        """ Dashboard filters
-        """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        view = dict(mutator.view('googlechart.googledashboard', {}))
-        return json.dumps(view)
 
     @property
     def tabs(self):

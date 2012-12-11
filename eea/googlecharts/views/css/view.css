@@ -308,3 +308,11 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .googledashboard-widget {
     overflow: hidden;
 }
+
+.googlechart_dashboard_filters_helper {
+    display: none;
+}
+
+.googledashboard-hidden-helper-filters {
+    display: none;
+}

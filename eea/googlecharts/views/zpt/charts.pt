@@ -16,27 +16,24 @@
 
 <script type="text/javascript">
     google.load('visualization', '1.0', {packages: ['controls']});
-    googlechart_config_array = [];
-    var has_dashboard = false;
+    var googlechart_config_array = [];
+    var dashboards_config_array = [];
+    var dashboards_config_array;
 </script>
 
 <script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; qr_size = '${view/qr_size}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}'; var main_title='${view/get_maintitle}';">
 </script>
 <div class="googlecharts_container" i18n:domain="eea">
-<tal:block tal:define="charts view/get_charts; has_dashboard view/has_dashboard">
-    <tal:block tal:condition="has_dashboard">
-        <script type="text/javascript" tal:content="string: var googledashboard_filters=${view/get_dashboard_filters};">
-        </script>
-        <script type="text/javascript">
-            has_dashboard = true;
-        </script>
-    </tal:block>
-
+<tal:block tal:define="charts view/get_charts; dashboards view/get_dashboards">
     <tal:block tal:repeat="chart charts">
         <script type="text/javascript"
-            tal:define="dashboard python:view.get_dashboard_js(chart);showSort python:view.get_showSort(chart); hasPNG chart/hasPNG | string: false; row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc')"
-            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard, '$showSort', '$hasPNG', '$row_filters', '$sortBy', '$sortAsc']);"></script>
+            tal:define="dashboard python:view.get_dashboard_js(chart);showSort python:view.get_showSort(chart); hasPNG chart/hasPNG | string: false; row_filters python: chart.get('row_filters',{}); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc')"
+            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard, '$showSort', '$hasPNG', $row_filters, '$sortBy', '$sortAsc']);"></script>
     </tal:block>
+
+    <script type="text/javascript" tal:content="string: dashboards_config_array = ${dashboards}">
+    </script>
+
     <div style="clear:both">
     </div>
 
@@ -58,7 +55,7 @@
     </div>
 
 
-    <div id="googlechart_dashboard">
+    <div id="googlechart_dashboard" tal:attributes="data-link context/absolute_url">
         <div style="clear:both"></div>
     </div>
 

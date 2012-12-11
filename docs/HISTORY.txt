@@ -12,8 +12,10 @@ Changelog
   TODO: Handle view mode
   [voineali refs #9572]
 
+* Feature: Allow row filtering on dashboards also
+  [szabozo0 refs #9578]
 * Change: On saving thumbnail, move it to the top of the folder
-  [szabozo0
+  [szabozo0]
 * Bug fix: Don't throw error when trying to display inexistent charts in iframes
   [szabozo0]
 * Bug fix: Fixed a bug on chart editor:
