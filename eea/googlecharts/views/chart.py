@@ -77,6 +77,12 @@ class View(ViewForm):
             return []
         return config['charts']
 
+    def get_charts_json(self):
+        """ Charts as JSON
+        """
+        charts = self.get_charts()
+        return json.dumps(charts)
+
     def get_visible_charts(self):
         """ Return only visible charts
         """

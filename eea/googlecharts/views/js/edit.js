@@ -142,6 +142,189 @@ function addFilter(id, column, filtertype, columnName){
     filter.appendTo("#googlechart_filters_"+id);
 }
 
+function initializeChartTinyMCE(form){
+    // tinyMCE not supported
+    if(!window.tinyMCE){
+      return false;
+    }
+    if(!window.TinyMCEConfig){
+      return false;
+    }
+
+    var textarea = jQuery('textarea', form).addClass('mce_editable');
+    var name = textarea.attr('id');
+    var exists = tinyMCE.get(name);
+    if(exists !== undefined){
+      delete InitializedTinyMCEInstances[name];
+    }
+
+    form = jQuery('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@tinymce-jsonconfiguration';
+
+    jQuery.getJSON(action, {fieldname: name}, function(data){
+      data.autoresize = true;
+      data.resizing = false;
+      // XXX Remove some buttons as they have bugs
+      data.buttons = jQuery.map(data.buttons, function(button){
+        if(button === 'save'){
+          return;
+        }else{
+          return button;
+        }
+      });
+      textarea.attr('title', JSON.stringify(data));
+      var config = new TinyMCEConfig(name);
+      config.init();
+    });
+
+    return true;
+}
+
+function reloadChartNotes(id){
+    var context = jQuery('#googlechartid_' + id);
+    if(!context.length){
+        return;
+    }
+
+    var box = jQuery('.googlechart-notes-box', context);
+    var ul = jQuery('.body ul', box).empty();
+
+    var notes = context.data('notes') || [];
+    jQuery.each(notes, function(index, note){
+        var li = jQuery('<li>').text(note.title).appendTo(ul);
+        li.data('note', note);
+
+        // Note edit button
+        jQuery('<div>')
+            .addClass('ui-icon')
+            .addClass('ui-icon-pencil')
+            .attr('title', 'Edit note')
+            .text('e')
+            .prependTo(li)
+            .click(function(){
+                jQuery(".googlecharts_note_config").remove();
+
+                var editDialog = jQuery('' +
+                '<div class="googlecharts_note_config">' +
+                    '<div class="field">' +
+                        '<label>Title</label>' +
+                        '<div class="formHelp">Note title</div>' +
+                        '<input type="text" value="' + note.title + '"/>' +
+                    '</div>' +
+                    '<div class="field">' +
+                        '<label>Text</label>' +
+                        '<div class="formHelp">Note body</div>' +
+                        '<textarea id="googlechart_note_add_' + id + '">' + note.text + '</textarea>' +
+                    '</div>' +
+                '</div>');
+
+                var isTinyMCE = false;
+                editDialog.dialog({
+                    title: 'Edit note',
+                    dialogClass: 'googlechart-dialog',
+                    modal: true,
+                    minHeight: 600,
+                    minWidth: 950,
+                    open: function(evt, ui){
+                        var buttons = jQuery(this).parent().find('button');
+                        buttons.attr('class', 'btn');
+                        jQuery(buttons[0]).addClass('btn-inverse');
+                        jQuery(buttons[1]).addClass('btn-success');
+                        isTinyMCE = initializeChartTinyMCE(editDialog);
+                    },
+                    buttons: {
+                        Cancel: function(){
+                            jQuery(this).dialog('close');
+                        },
+                        Save: function(){
+                            if(isTinyMCE){
+                                tinyMCE.triggerSave(true, true);
+                            }
+
+                            var newNote = {
+                                title: jQuery('input[type="text"]', editDialog).val(),
+                                text: jQuery('textarea', editDialog).val()
+                            };
+
+                            var newNotes = jQuery.map(context.data('notes'), function(value, index){
+                                if(value.title != note.title){
+                                    return value;
+                                }else{
+                                    return newNote;
+                                }
+                            });
+                            context.data('notes', newNotes);
+                            markChartAsModified(id);
+                            reloadChartNotes(id);
+                            jQuery(this).dialog('close');
+                        }
+                    }
+                });
+            });
+
+        // Note delete button
+        jQuery('<div>')
+            .addClass('ui-icon')
+            .addClass('ui-icon-close')
+            .attr('title', 'Delete note')
+            .text('x')
+            .prependTo(li)
+            .click(function(){
+                var deleteButton = jQuery(this);
+                var removeDialog = jQuery([
+                "<div>Are you sure you want to delete chart note: ",
+                    "<strong>", note.title, "</strong>" ,
+                "</div>"
+                ].join('\n'));
+                removeDialog.dialog({
+                    title: "Remove note",
+                    modal: true,
+                    dialogClass: 'googlechart-dialog',
+                    open: function(evt, ui){
+                        var buttons = jQuery(this).parent().find('button');
+                        buttons.attr('class', 'btn');
+                        jQuery(buttons[0]).addClass('btn-danger');
+                        jQuery(buttons[1]).addClass('btn-inverse');
+                    },
+                    buttons:{
+                        Remove: function(){
+                            var li = deleteButton.closest('li');
+                            li.remove();
+                            context.data('notes', []);
+                            jQuery('li', ul).each(function(){
+                                context.data('notes').push(jQuery(this).data('note'));
+                            });
+                            markChartAsModified(id);
+                            jQuery(this).dialog("close");
+                        },
+                        Cancel: function(){
+                            jQuery(this).dialog("close");
+                        }
+                    }
+                });
+            });
+    });
+
+    ul.sortable('destroy');
+    ul.sortable({
+        items: 'li',
+        opacity: 0.7,
+        delay: 300,
+        placeholder: 'ui-state-highlight',
+        forcePlaceholderSize: true,
+        cursor: 'crosshair',
+        tolerance: 'pointer',
+        update: function(){
+            context.data('notes', []);
+            jQuery('li', ul).each(function(){
+                context.data('notes').push(jQuery(this).data('note'));
+            });
+            markChartAsModified(id);
+        }
+    });
+}
+
 function saveThumb(value, useName){
     var chart_id = value[0];
     var chart_json = value[1];
@@ -365,6 +548,7 @@ function addChart(options){
         columns : "",
         showSort : false,
         filters : {},
+        notes: [],
         width : 800,
         height : 600,
         filter_pos : 0,
@@ -451,7 +635,6 @@ function addChart(options){
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
                         "<ul class='googlechart_notes_list'  id='googlechart_notes_"+settings.id+"'>" +
-                            "<li>There is nothing here, yet</li>" +
                         "</ul>" +
                     '</div>' +
                 "</div>" +
@@ -520,6 +703,8 @@ function addChart(options){
     jQuery('#googlecharts_list').append(googlechart);
 
     jQuery.data(googlechart[0], 'dashboard', settings.dashboard);
+    googlechart.data('notes', settings.notes);
+    reloadChartNotes(settings.id);
 
     if (settings.hidden){
         changeChartHiddenState(settings.id);
@@ -2068,12 +2253,18 @@ function openAddChartFilterDialog(id){
         open: function(evt, ui){
             var buttons = jQuery(this).parent().find('button');
             buttons.attr('class', 'btn');
-            jQuery(buttons[0]).addClass('btn-success');
-            jQuery(buttons[1]).addClass('btn-inverse');
+            jQuery(buttons[0]).addClass('btn-inverse');
+            jQuery(buttons[1]).addClass('btn-success');
         },
         buttons:[
             {
-                text: "Save",
+                text: "Cancel",
+                click: function(){
+                    jQuery(this).dialog("close");
+                }
+            },
+            {
+                text: "Add",
                 click: function(){
                     var selectedColumn = jQuery(".googlecharts_filter_columns").val();
                     var selectedFilter = jQuery(".googlecharts_filter_type").val();
@@ -2092,14 +2283,67 @@ function openAddChartFilterDialog(id){
                         jQuery(this).dialog("close");
                     }
                 }
-            },
-            {
-                text: "Cancel",
-                click: function(){
-                    jQuery(this).dialog("close");
-                }
             }
         ]
+    });
+}
+
+function openAddChartNoteDialog(id){
+    var context = jQuery('#googlechartid_' + id);
+    jQuery(".googlecharts_note_config").remove();
+
+    var adddialog = jQuery('' +
+    '<div class="googlecharts_note_config">' +
+        '<div class="field">' +
+            '<label>Title</label>' +
+            '<div class="formHelp">Note title</div>' +
+            '<input type="text" class="googlecharts_note_title" />' +
+        '</div>' +
+        '<div class="field">' +
+            '<label>Text</label>' +
+            '<div class="formHelp">Note body</div>' +
+            '<textarea class="googlecharts_note_text" id="googlechart_note_add_' + id + '"></textarea>' +
+        '</div>' +
+    '</div>');
+
+    var isTinyMCE = false;
+    adddialog.dialog({
+        title: 'Add note',
+        dialogClass: 'googlechart-dialog',
+        modal:true,
+        minHeight: 600,
+        minWidth: 950,
+        open: function(evt, ui){
+            var buttons = jQuery(this).parent().find('button');
+            buttons.attr('class', 'btn');
+            jQuery(buttons[0]).addClass('btn-inverse');
+            jQuery(buttons[1]).addClass('btn-success');
+            isTinyMCE = initializeChartTinyMCE(adddialog);
+        },
+        buttons: {
+            Cancel: function(){
+                jQuery(this).dialog('close');
+            },
+            Add: function(){
+                if(isTinyMCE){
+                    tinyMCE.triggerSave(true, true);
+                }
+
+                var note = {
+                    title: jQuery('input[type="text"]', adddialog).val(),
+                    text: jQuery('textarea', adddialog).val()
+                };
+
+                if(!context.data('notes')){
+                    context.data('notes', []);
+                }
+
+                context.data('notes').push(note);
+                markChartAsModified(id);
+                reloadChartNotes(id);
+                jQuery(this).dialog('close');
+            }
+        }
     });
 }
 
@@ -2142,6 +2386,8 @@ function saveCharts(){
             filters[jQuery("#"+filter+" .googlechart_filteritem_column").attr("value")] = jQuery("#"+filter+" .googlechart_filteritem_type").attr("value");
         });
         chart.filters = JSON.stringify(filters);
+        chart.notes = chartObj.data('notes') || [];
+
         charts.push(chart);
         if (chart.isThumb){
             thumbId = chart.id;
@@ -2271,6 +2517,7 @@ function loadCharts(){
                 columns : chart.columns,
                 showSort : chart.showSort,
                 filters : JSON.parse(chart.filters),
+                notes: chart.notes || [],
                 width : chart.width,
                 height : chart.height,
                 filter_pos : chart.filterposition,
@@ -2466,6 +2713,13 @@ function init_googlecharts_edit(){
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
         openAddChartFilterDialog(id);
+    });
+
+    jQuery("#googlecharts_list").delegate(".addgooglechartnote","click",function(){
+        chartId = jQuery(this).closest('.googlechart').attr('id');
+        var liName = "googlechartid";
+        var id = chartId.substr(liName.length+1);
+        openAddChartNoteDialog(id);
     });
 
     jQuery("input[name='googlechart.googlecharts.actions.save']").unbind('click');

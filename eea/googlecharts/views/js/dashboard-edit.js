@@ -260,7 +260,6 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       .addClass('dashboard-section')
       .appendTo(self.context)
       .resizable({
-        ghost: true,
         helper: 'dashboard-resizable-helper',
         stop: function(event, ui){
           self.resize(ui.size.width, ui.size.height);
@@ -568,7 +567,6 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     }
 
     self.box.resizable({
-      ghost: true,
       helper: 'dashboard-resizable-helper',
       stop: function(event, ui){
         jQuery(self.box).trigger(DavizEdit.Events.charts.resized, {
@@ -993,7 +991,6 @@ DavizEdit.GoogleDashboardFilters.prototype = {
       .addClass('dashboard-section')
       .appendTo(self.context)
       .resizable({
-        ghost: true,
         helper: 'dashboard-resizable-helper',
         stop: function(event, ui){
           self.resize(ui.size.width, ui.size.height);

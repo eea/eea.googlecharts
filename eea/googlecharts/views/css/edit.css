@@ -51,8 +51,9 @@
     padding: 1em;
 }
 
-.googlechart-filters-box .ui-state-highlight {
-    background: orange;
+.googlechart-filters-box .ui-state-highlight,
+.googlechart-notes-box .ui-state-highlight {
+    background-color: orange;
     opacity: 0.3;
     min-width: 85%;
 }
@@ -84,6 +85,15 @@
 .googlechart-filters-box .label,
 .googlechart-notes-box .label {
   cursor: pointer;
+}
+
+.googlechart-notes-box .body li {
+    background: white;
+    border: 1px solid #eee;
+    margin: 5px;
+    padding: 1em;
+    box-shadow: #CCC 3px 3px 3px;
+    cursor: pointer;
 }
 
 .googlechart{
@@ -327,7 +337,7 @@
 
 
 .dashboard-resizable-helper {
-    border: 2px dotted #E0EDFE;
+    border: 2px dotted green;
 }
 
 .dashboard-mask {
@@ -1250,4 +1260,13 @@ li.googlechart > fieldset > div > a > span {
 
 .googlechart_firstchartinrow {
     clear: both;
+}
+
+.googlecharts_note_config input[type=text],
+.googlecharts_note_config textarea {
+    width: 99%;
+}
+
+.googlecharts_note_config textarea {
+  height: 600px;
 }
