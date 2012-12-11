@@ -142,6 +142,45 @@ function addFilter(id, column, filtertype, columnName){
     filter.appendTo("#googlechart_filters_"+id);
 }
 
+function initializeChartTinyMCE(form){
+    // tinyMCE not supported
+    if(!window.tinyMCE){
+      return false;
+    }
+    if(!window.TinyMCEConfig){
+      return false;
+    }
+
+    var textarea = jQuery('textarea', form).addClass('mce_editable');
+    var name = textarea.attr('id');
+    var exists = tinyMCE.get(name);
+    if(exists !== undefined){
+      delete InitializedTinyMCEInstances[name];
+    }
+
+    form = jQuery('.daviz-view-form');
+    var action = form.length ? form.attr('action') : '';
+    action = action.split('@@')[0] + '@@tinymce-jsonconfiguration';
+
+    jQuery.getJSON(action, {fieldname: name}, function(data){
+      data.autoresize = true;
+      data.resizing = false;
+      // XXX Remove some buttons as they have bugs
+      data.buttons = jQuery.map(data.buttons, function(button){
+        if(button === 'save'){
+          return;
+        }else{
+          return button;
+        }
+      });
+      textarea.attr('title', JSON.stringify(data));
+      var config = new TinyMCEConfig(name);
+      config.init();
+    });
+
+    return true;
+}
+
 function reloadChartNotes(id){
     var context = jQuery('#googlechartid_' + id);
     if(!context.length){
@@ -154,6 +193,77 @@ function reloadChartNotes(id){
     var notes = context.data('notes') || [];
     jQuery.each(notes, function(index, note){
         var li = jQuery('<li>').text(note.title).appendTo(ul);
+        li.data('note', note);
+
+        // Note edit button
+        jQuery('<div>')
+            .addClass('ui-icon')
+            .addClass('ui-icon-pencil')
+            .attr('title', 'Edit note')
+            .text('e')
+            .prependTo(li)
+            .click(function(){
+                jQuery(".googlecharts_note_config").remove();
+
+                var editDialog = jQuery('' +
+                '<div class="googlecharts_note_config">' +
+                    '<div class="field">' +
+                        '<label>Title</label>' +
+                        '<div class="formHelp">Note title</div>' +
+                        '<input type="text" value="' + note.title + '"/>' +
+                    '</div>' +
+                    '<div class="field">' +
+                        '<label>Text</label>' +
+                        '<div class="formHelp">Note body</div>' +
+                        '<textarea id="googlechart_note_add_' + id + '">' + note.text + '</textarea>' +
+                    '</div>' +
+                '</div>');
+
+                var isTinyMCE = false;
+                editDialog.dialog({
+                    title: 'Edit note',
+                    dialogClass: 'googlechart-dialog',
+                    modal: true,
+                    minHeight: 600,
+                    minWidth: 950,
+                    open: function(evt, ui){
+                        var buttons = jQuery(this).parent().find('button');
+                        buttons.attr('class', 'btn');
+                        jQuery(buttons[0]).addClass('btn-inverse');
+                        jQuery(buttons[1]).addClass('btn-success');
+                        isTinyMCE = initializeChartTinyMCE(editDialog);
+                    },
+                    buttons: {
+                        Cancel: function(){
+                            jQuery(this).dialog('close');
+                        },
+                        Save: function(){
+                            if(isTinyMCE){
+                                tinyMCE.triggerSave(true, true);
+                            }
+
+                            var newNote = {
+                                title: jQuery('input[type="text"]', editDialog).val(),
+                                text: jQuery('textarea', editDialog).val()
+                            };
+
+                            var newNotes = jQuery.map(context.data('notes'), function(value, index){
+                                if(value.title != note.title){
+                                    return value;
+                                }else{
+                                    return newNote;
+                                }
+                            });
+                            context.data('notes', newNotes);
+                            markChartAsModified(id);
+                            reloadChartNotes(id);
+                            jQuery(this).dialog('close');
+                        }
+                    }
+                });
+            });
+
+        // Note delete button
         jQuery('<div>')
             .addClass('ui-icon')
             .addClass('ui-icon-close')
@@ -161,15 +271,39 @@ function reloadChartNotes(id){
             .text('x')
             .prependTo(li)
             .click(function(){
-                var li = jQuery(this).closest('li');
-                li.remove();
-                context.data('notes', []);
-                jQuery('li', ul).each(function(){
-                    context.data('notes').push(jQuery(this).data('note'));
+                var deleteButton = jQuery(this);
+                var removeDialog = jQuery([
+                "<div>Are you sure you want to delete chart note: ",
+                    "<strong>", note.title, "</strong>" ,
+                "</div>"
+                ].join('\n'));
+                removeDialog.dialog({
+                    title: "Remove note",
+                    modal: true,
+                    dialogClass: 'googlechart-dialog',
+                    open: function(evt, ui){
+                        var buttons = jQuery(this).parent().find('button');
+                        buttons.attr('class', 'btn');
+                        jQuery(buttons[0]).addClass('btn-danger');
+                        jQuery(buttons[1]).addClass('btn-inverse');
+                    },
+                    buttons:{
+                        Remove: function(){
+                            var li = deleteButton.closest('li');
+                            li.remove();
+                            context.data('notes', []);
+                            jQuery('li', ul).each(function(){
+                                context.data('notes').push(jQuery(this).data('note'));
+                            });
+                            markChartAsModified(id);
+                            jQuery(this).dialog("close");
+                        },
+                        Cancel: function(){
+                            jQuery(this).dialog("close");
+                        }
+                    }
                 });
-                markChartAsModified(id);
             });
-        li.data('note', note);
     });
 
     ul.sortable('destroy');
@@ -2168,45 +2302,6 @@ function openAddChartFilterDialog(id){
             }
         ]
     });
-}
-
-function initializeChartTinyMCE(form){
-    // tinyMCE not supported
-    if(!window.tinyMCE){
-      return false;
-    }
-    if(!window.TinyMCEConfig){
-      return false;
-    }
-
-    var textarea = jQuery('textarea', form).addClass('mce_editable');
-    var name = textarea.attr('id');
-    var exists = tinyMCE.get(name);
-    if(exists !== undefined){
-      delete InitializedTinyMCEInstances[name];
-    }
-
-    form = jQuery('.daviz-view-form');
-    var action = form.length ? form.attr('action') : '';
-    action = action.split('@@')[0] + '@@tinymce-jsonconfiguration';
-
-    jQuery.getJSON(action, {fieldname: name}, function(data){
-      data.autoresize = true;
-      data.resizing = false;
-      // XXX Remove some buttons as they have bugs
-      data.buttons = jQuery.map(data.buttons, function(button){
-        if(button === 'save'){
-          return;
-        }else{
-          return button;
-        }
-      });
-      textarea.attr('title', JSON.stringify(data));
-      var config = new TinyMCEConfig(name);
-      config.init();
-    });
-
-    return true;
 }
 
 function openAddChartNoteDialog(id){
