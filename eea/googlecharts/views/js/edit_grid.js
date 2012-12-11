@@ -411,7 +411,8 @@ function setGridColumnsOrder(sortOrder){
 function drawGrid(divId, data, data_colnames, filterable_columns){
     var options = {
         enableCellNavigation: false,
-        enableColumnReorder: true
+        enableColumnReorder: true,
+        explicitInitialization: true
     };
 
     var header_nofilter = {

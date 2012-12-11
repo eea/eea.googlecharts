@@ -2020,7 +2020,6 @@ function fillEditorDialog(){
     jQuery("#googlechart_overlay").overlay({
         mask: 'black'
     });
-
 }
 
 function openEditChart(id){
@@ -2190,7 +2189,7 @@ function openEditChart(id){
                     resizeTableConfigurator(false);
                 },
                 open:function(){
-                    fillEditorDialog();
+                    setTimeout(fillEditorDialog, 100);
                 }
                 });
 }
