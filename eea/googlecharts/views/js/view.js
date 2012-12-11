@@ -283,7 +283,8 @@ function drawDashboard(value){
         filters : settings.filters,
         rows : merged_rows,
         columns : available_columns,
-        charts : googlechart_config_array
+        charts : googlechart_config_array,
+        dashboardName: value.name
     };
 
     drawGoogleDashboard(googledashboard_params);
