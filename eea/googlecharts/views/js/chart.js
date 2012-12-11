@@ -190,7 +190,8 @@ function drawGoogleDashboard(options){
         filters : '',
         rows : {},
         columns : {},
-        charts : []
+        charts : [],
+        dashboardName : ""
     };
     jQuery.extend(settings, options);
 
@@ -297,7 +298,7 @@ function drawGoogleDashboard(options){
                 .width(value.dashboard.width)
                 .height(value.dashboard.height)
                 .data('dashboard', value.dashboard)
-                .load(dashboardLink + '@@' + value.wtype, {name: value.name});
+                .load(dashboardLink + '@@' + value.wtype, {name: value.name, dashboard: settings.dashboardName});
 
                 widgetDiv.appendTo('#googlechart_view');
         }
