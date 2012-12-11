@@ -1997,7 +1997,6 @@ function openEditChart(id){
                 closeOnEscape:false,
                 create:function(){
                     editorDialog = jQuery(this);
-                    console.log("create");
                 },
                 close:function(){
                     charteditor_css.remove();
@@ -2006,11 +2005,7 @@ function openEditChart(id){
                     resizeTableConfigurator(false);
                 },
                 open:function(){
-                    console.log("open");
                     fillEditorDialog();
-                },
-                focus:function(){
-                    console.log("focus");
                 }
                 });
 }
