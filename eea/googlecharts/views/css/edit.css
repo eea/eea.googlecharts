@@ -1270,3 +1270,21 @@ li.googlechart > fieldset > div > a > span {
 .googlecharts_note_config textarea {
   height: 600px;
 }
+
+.googlechart_editor_loading {
+    width: 896px;
+}
+
+.googlechart_editor_loaded {
+    display: none;
+}
+
+.googlechart_palette_loading {
+    display: none;
+}
+
+.googlechart_loading_img {
+    width:100px;
+    height:100px;
+    background-image: url(../../++resource++eea.jquery.images/ajax-loader.gif);
+}
