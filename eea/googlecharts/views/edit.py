@@ -463,6 +463,8 @@ class DashboardsEdit(ChartsEdit):
         if not existing:
             existing = [dashboard.get('name', '')
                         for dashboard in self.dashboards.get('dashboards', [])]
+        if 'dashboard' not in existing:
+            existing.append('dashboard')
 
         chooser = queryAdapter(self.context, INameChooser)
         if not chooser:
@@ -470,10 +472,11 @@ class DashboardsEdit(ChartsEdit):
         name = chooser.chooseName(title, self.context)
 
         if name in existing:
-            free_ids = set(u'%s-%d' % (name, uid)
-                           for uid in range(len(existing)+1))
+            free_ids = set(u'%s-%.2d' % (name, uid)
+                           for uid in range(1, len(existing)+1))
             name = free_ids.difference(existing)
             name = name.pop()
+
         return name
 
 

@@ -339,7 +339,6 @@ function showEmbed(){
 var googleChartTabClick = function(context){
     if (jQuery(context).attr("chart_id") !== current_chart_id){
         current_chart_id = jQuery(context).attr("chart_id");
-        jQuery(context).addClass("current");
 
         var chart_index_to_use = -1;
         jQuery(googlechart_config_array).each(function(index, value){
