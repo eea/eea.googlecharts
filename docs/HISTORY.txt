@@ -11,6 +11,8 @@ Changelog
 * Feature: Multiple dashboards support WIP:
   TODO: Handle view mode
   [voineali refs #9572]
+* Bugfix: Improved loading time of chart editor
+  [szabozo0 #9578]
 * Feature: Possibility to add richtext notes on each chart
   [voineali refs #9577]
 * Feature: Allow row filtering on dashboards also

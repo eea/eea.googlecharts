@@ -878,20 +878,24 @@ function openEditor(elementId) {
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = true;
-//        moveIfFirst();
-        redrawEditorChart();
+        setTimeout(function(){
+            redrawEditorChart();
+        },100);
         setConfiguratorMessage("");
+        jQuery(".googlechart_editor_loading").addClass("googlechart_editor_loaded");
+        jQuery(".googlechart_palette_loading").removeClass("googlechart_palette_loading");
     });
     google.visualization.events.addListener(chartEditor, 'error', function(event){
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = false;
-//        moveIfFirst();
         setConfiguratorMessage(JSON.parse(settings_str).chartType);
     });
     moveIfFirst();
 
-    chartEditor.openDialog(wrapper, {});
+    setTimeout(function(){
+        chartEditor.openDialog(wrapper, {});
+    },100);
 }
 
 function generateSortedColumns() {
@@ -2065,10 +2069,14 @@ function openEditChart(id){
                 "<input class='googlechart_sortBy' type='hidden'/>" +
                 "<input class='googlechart_sortAsc' type='hidden'/>" +
 
-                "<div id='googlechart_editor_container'></div>" +
+                "<div id='googlechart_editor_container'>"+
+                    "<div class='googlechart_editor_loading'>Loading Chart..."+
+                        "<div class='googlechart_loading_img'></div>"+
+                    "</div>"+
+                "</div>" +
 
             '</div>' +
-            "<div id='googlechart_palette_select' style='width:168px;float:left'>"+
+            "<div id='googlechart_palette_select' class='googlechart_palette_loading' style='width:168px;float:left'>"+
                 "<strong style='float:left;'>Select Palette:</strong>"+
                 "<select id='googlechart_palettes' style='float:left;' onchange='updatePalette();'>"+
                 "</select>"+
@@ -2099,6 +2107,8 @@ function openEditChart(id){
                     '</div>'+
                     "<div style='clear:both;'> </div>" +
                     '<div id="newTable" class="slick_newTable" style="height:300px;">'+
+                        "Loading Table..."+
+                        "<div class='googlechart_loading_img'></div>"+
                     '</div>'+
                     '<div style="clear:both"></div>'+
                 '</div>'+
@@ -2189,7 +2199,7 @@ function openEditChart(id){
                     resizeTableConfigurator(false);
                 },
                 open:function(){
-                    setTimeout(fillEditorDialog, 100);
+                    setTimeout(fillEditorDialog, 500);
                 }
                 });
 }
