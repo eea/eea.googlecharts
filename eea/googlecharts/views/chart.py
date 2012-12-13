@@ -24,7 +24,6 @@ class View(ViewForm):
     """
     label = 'Charts'
     view_name = "googlechart.googlecharts"
-    section = "Charts"
 
     @property
     def siteProperties(self):
@@ -423,7 +422,6 @@ class DashboardView(ViewForm):
     """ Google dashboard view
     """
     label = 'Charts Dashboard'
-    section = "Charts"
 
     @property
     def tabs(self):
@@ -459,7 +457,6 @@ class DashboardsView(ViewForm):
     """ Google dashboards view
     """
     label = 'Dashboards'
-    section = 'Charts'
 
     @property
     def tabs(self):

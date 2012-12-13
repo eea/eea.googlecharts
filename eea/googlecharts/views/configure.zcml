@@ -7,14 +7,6 @@
   <daviz:view name="googlechart.googledashboards" />
 
   <browser:page
-    name="charts"
-    for="eea.app.visualization.interfaces.IVisualizationEnabled"
-    template="zpt/view.pt"
-    class=".view.View"
-    permission="zope2.View"
-    />
-
-  <browser:page
     name="chart-full"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/chart-full.pt"
