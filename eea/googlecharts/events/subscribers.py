@@ -25,6 +25,8 @@ def update_dashboards(context, evt):
             continue
 
         for widget in widgets[:]:
+            if widget.get('wtype', '') != u'googlecharts.widgets.chart':
+                continue
             name = widget.get('name', '')
             if name not in settings:
                 widgets.remove(widget)
