@@ -1,5 +1,15 @@
-<div class="daviz-tab-view eea-googlecharts-dashboards" tal:attributes="
-  id view/tabname;
-  data-link context/absolute_url"
-  i18n:domain="eea">
-</div>
+<tal:panel repeat="tab view/tabs">
+  <div class="daviz-tab-view eea-googlecharts-dashboard  daviz-tab-view-noscript" tal:attributes="
+    id tab/tabname;
+    data-link context/absolute_url"
+    i18n:domain="eea">
+    <noscript>
+      <div class="daviz-preview-chart">
+        <img tal:attributes="alt tab/name; src tab/fallback-image" />
+        <div class="daviz-tab-norealchart" i18n:translate="">
+          This is NOT a real chart. To see the real chart, you need Javascript enabled in your browser.
+        </div>
+      </div>
+    </noscript>
+  </div>
+</tal:panel>

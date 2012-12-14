@@ -5,6 +5,10 @@
     margin-top:1em;
 }
 
+#addgooglechart {
+    margin: 0.5em;
+}
+
 #googlecharts_config .ui-icon-plus{
     float-left;
     border: 2px solid #CCCCCC;
