@@ -140,12 +140,11 @@ jQuery(document).ready(function($){
             }
     });
     var chart_showSort = (showSort==='True'?true:false);
-
     var googlechart_params = {
         chartDashboard : 'googlechart_dashboard',
         chartViewDiv : 'googlechart_view',
         chartFiltersDiv : 'googlechart_filters',
-        chartId : 'embed',
+        chartId : GoogleChartsConfig[0].id,
         chartJson : chart_json,
         chartDataTable : tableForChart,
         chartFilters : chart_filters,

@@ -15,27 +15,24 @@
 <script type="text/javascript" src="++resource++eea.googlecharts.embed_dashboard.js"></script>
 
 <script type="text/javascript">
-    googlechart_config_array = [];
-    var has_dashboard = false;
+    var googlechart_config_array = [];
+    var dashboard_config;
 </script>
 
 <script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; qr_size = '${view/qr_size}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}';main_title = '${view/get_maintitle}';">
 </script>
-<tal:block tal:define="charts view/get_charts; has_dashboard view/has_dashboard">
-    <tal:block tal:condition="has_dashboard">
-        <script type="text/javascript" tal:content="string: var googledashboard_filters=${view/get_dashboard_filters}">
-        </script>
-        <script type="text/javascript">
-            has_dashboard = true;
-        </script>
-    </tal:block>
-
+<tal:block tal:define="charts view/get_charts;">
     <tal:block tal:repeat="chart charts">
         <script type="text/javascript"
             tal:define="dashboard python:view.get_dashboard_js(chart);"
             tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard]);"></script>
     </tal:block>
 </tal:block>
+
+<script type="text/javascript"
+    tal:define="dashboard view/get_dashboard"
+    tal:content="string: dashboard_config = ${dashboard}">
+</script>
 
 <style type="text/css" tal:content="view/get_customstyle">
 </style>
