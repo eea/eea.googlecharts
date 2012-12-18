@@ -8,9 +8,10 @@ Changelog
   For non-Plone usage you'll have to manually run @@migrate-dashboards for all
   visualizations that have Google-Dashboard enabled.
 
-* Feature: Multiple dashboards support WIP:
-  TODO: Handle view mode
-  [voineali refs #9572]
+* Bugfix: Fixed hidden widgets for dashboards; fixed notes for charts; fixed qr code when disabled
+  [szabozo0 refs #10207]
+* Feature: Multiple dashboards support on view and embed
+  [szabozo0 refs #9572]
 * Bugfix: Improved loading time of chart editor
   [szabozo0 #9578]
 * Feature: Possibility to add richtext notes on each chart

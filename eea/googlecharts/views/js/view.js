@@ -234,7 +234,8 @@ function drawDashboard(value){
     }
 
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
-    var chart_url = baseurl + "#tab-googlechart-googledashboard";
+
+    var chart_url = baseurl + "#tab-" + settings.name.replace(".","-");
 
     putImageDivInPosition("googlechart_qr", qr_pos);
 
@@ -254,6 +255,7 @@ function drawDashboard(value){
     }
 
     jQuery('#googlechart_dashboard').removeAttr("chart_id");
+    jQuery('#googlechart_dashboard').attr("dashboard_id", value.name);
 
     // Set width, height
     if(settings.chartsBox.width){
@@ -268,12 +270,6 @@ function drawDashboard(value){
     if(settings.filtersBox.height){
         jQuery('#googlechart_filters', jQuery('#googlechart_dashboard')).height(settings.filtersBox.height);
     }
-
-    var filters = {};
-    jQuery.each(settings.filters, function(){
-        filters[this.column] = this.type;
-    });
-
 
     var googledashboard_params = {
         chartsDashboard : 'googlechart_dashboard',
@@ -302,7 +298,8 @@ function showEmbed(){
                     "&customStyle=%23googlechart_view{margin-left:0px%3B}";
     }
     else{
-        iframeSrc = baseurl+"/embed-dashboard?customStyle=%23googlechart_view{margin-left:0px%3B}";
+        iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+ 
+                    "&customStyle=%23googlechart_view{margin-left:0px%3B}";
     }
     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
     var hasPNG = chartObj.attr('chart_hasPNG');

@@ -59,6 +59,7 @@
             chartFilterPosition : '',
             chartOptions : chart_options,
             availableColumns : transformedTable.available_columns,
+            hideNotes: true
         };
 
         drawGoogleChart(googlechart_params);

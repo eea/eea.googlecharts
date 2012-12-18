@@ -16,7 +16,8 @@ function drawGoogleChart(options){
         chartErrorEvent : function(){},
         showSort : false,
         customFilterHandler : function(){},
-        notes: []
+        notes: [],
+        hideNotes: false
     };
 
     jQuery.extend(settings, options);
@@ -146,18 +147,19 @@ function drawGoogleChart(options){
     }
 
     // Notes
-    var notes = jQuery('<div>')
-        .addClass('googlechart-notes')
-        .width(settings.chartWidth);
+    if (!settings.hideNotes){
+        var notes = jQuery('<div>')
+            .addClass('googlechart-notes')
+            .width(settings.chartWidth);
 
-    jQuery.each(settings.notes, function(index, note){
-        jQuery('<div>')
-            .addClass('googlecharts-note')
-            .html(note.text)
-            .appendTo(notes);
-    });
-    jQuery('#' + settings.chartViewDiv).after(notes);
-
+        jQuery.each(settings.notes, function(index, note){
+            jQuery('<div>')
+                .addClass('googlecharts-note')
+                .html(note.text)
+                .appendTo(notes);
+        });
+        jQuery('#' + settings.chartViewDiv).after(notes);
+    }
     return {'chart': chart, 'filters': filtersArray};
 
 }
@@ -205,6 +207,9 @@ function drawGoogleDashboard(options){
     });
     // Dashboard charts
     jQuery.each(settings.chartsSettings, function(key, value){
+        if(value.dashboard.hidden){
+            return;
+        }
         if (value.wtype === 'googlecharts.widgets.chart'){
             var chartConfig;
             jQuery(settings.charts).each(function(idx, config){
@@ -280,15 +285,13 @@ function drawGoogleDashboard(options){
                 chartOptions : chartConfig[7],
                 availableColumns : transformedTable.available_columns,
                 chartReadyEvent : function(){},
-                showSort:false
+                showSort:false,
+                hideNotes:true
             };
             var tmp_chart = drawGoogleChart(chart_options);
             hiddenDashboardFilters = hiddenDashboardFilters.concat(tmp_chart.filters);
         }
         else{
-            if(value.dashboard.hidden){
-                return;
-            }
             var widgetDiv = jQuery('<div>')
                 .css('float', 'left')
                 .addClass('googledashboard-chart')

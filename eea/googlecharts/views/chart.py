@@ -36,7 +36,7 @@ class View(ViewForm):
         """ Position of QR Code
         """
         sp = self.siteProperties
-        return sp.get('googlechart.qrcode_position', 'Bottom Left')
+        return sp.get('googlechart.qrcode_position', 'Disabled')
 
     def qr_size(self):
         """ Size of QR Code
@@ -140,6 +140,15 @@ class View(ViewForm):
             self.request.get("chartHeight",chart_settings["height"])
         return chart_settings
 
+    def get_chart_json(self):
+        """Chart as JSON
+        """
+        chart_id = self.request['chart']
+        charts = self.get_charts()
+        for chart in charts:
+            if chart.get('id') == chart_id:
+                return json.dumps([chart])
+
     def get_customstyle(self):
         """ Get custom style for embed
         """
@@ -153,9 +162,17 @@ class View(ViewForm):
         for view in mutator.views:
             if view.get('name') == 'googlechart.googledashboards':
                 config = view.get('dashboards')
-        if config == "":
-            return []
         return json.dumps(config)
+
+    def get_dashboard(self):
+        """ Dashboard
+        """
+        dashboard_id = \
+            self.request.get('dashboard', 'googlechart.googledashboard')
+        dashboards = json.loads(self.get_dashboards())
+        for dashboard in dashboards:
+            if dashboard.get('name') == dashboard_id:
+                return json.dumps(dashboard)
 
     def get_dashboard_js(self, chart):
         """ Dashboard
@@ -299,7 +316,7 @@ class Export(BrowserView):
 
         sp = self.siteProperties
         qrPosition =  sp.get(
-                    'googlechart.qrcode_position', 'Bottom Left')
+                    'googlechart.qrcode_position', 'Disabled')
         qrVertical = int(sp.get(
                     'googlechart.qrcode_vertical_space_for_png_export', 0))
         qrHorizontal = int(sp.get(

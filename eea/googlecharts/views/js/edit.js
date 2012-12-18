@@ -418,7 +418,8 @@ function saveThumb(value, useName){
         chartErrorEvent : function(){
                             DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
                         },
-        showSort : false
+        showSort : false,
+        hideNotes: true
     };
     drawGoogleChart(googlechart_params);
 }
