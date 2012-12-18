@@ -144,7 +144,7 @@ jQuery(document).ready(function($){
         chartDashboard : 'googlechart_dashboard',
         chartViewDiv : 'googlechart_view',
         chartFiltersDiv : 'googlechart_filters',
-        chartId : window.GoogleChartsConfig[0].id,
+        chartId : GoogleChartsConfig[0].id,
         chartJson : chart_json,
         chartDataTable : tableForChart,
         chartFilters : chart_filters,

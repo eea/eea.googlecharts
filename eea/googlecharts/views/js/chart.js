@@ -23,7 +23,7 @@ function drawGoogleChart(options){
     jQuery.extend(settings, options);
 
     // XXX Use GoogleChartsConfig for options instead of googlechart_config_array
-    if(window.GoogleChartsConfig){
+    if(GoogleChartsConfig){
         jQuery.each(GoogleChartsConfig, function(index, value){
             if((value.id == settings.chartId) && value.notes){
                 settings.notes = value.notes;
