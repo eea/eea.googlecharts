@@ -629,6 +629,16 @@ function addChart(options){
                         "</select>" +
                     '</div>' +
                 "</div>" +
+                "<div class='googlechart-columnfilters-box'>" +
+                    '<div class="header">' +
+                        '<span class="label">Column filters<span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span></span>' +
+                        '<span title="Add column filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartcolumnfilter">+</span>' +
+                    '</div>' +
+                    '<div style="padding: 1em" class="body">' +
+                        "<ul class='googlechart_columnfilters_list'  id='googlechart_columnfilter_"+settings.id+"'>" +
+                        "</ul>" +
+                    '</div>' +
+                "</div>" +
                 "<div class='googlechart-notes-box'>" +
                     '<div class="header">' +
                         '<span class="label">Chart notes <span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span></span>' +
@@ -664,6 +674,27 @@ function addChart(options){
             body.slideDown();
             button.show();
             jQuery('.googlechart-filters-box .ui-icon-circlesmall-plus', googlechart)
+                .removeClass('ui-icon-circlesmall-plus')
+                .addClass('ui-icon-circlesmall-minus');
+        }
+    });
+
+    // Column Filters
+    googlechart.find('.googlechart-columnfilters-box .body').hide();
+    googlechart.find('.googlechart-columnfilters-box .header .ui-icon-plus').hide();
+    googlechart.find('.googlechart-columnfilters-box .header .label').click(function(){
+        var body = googlechart.find('.googlechart-columnfilters-box .body');
+        var button = googlechart.find('.googlechart-columnfilters-box .ui-icon-plus');
+        if(body.is(':visible')){
+            body.slideUp();
+            button.hide();
+            jQuery('.googlechart-columnfilters-box .ui-icon-circlesmall-minus', googlechart)
+                .removeClass('ui-icon-circlesmall-minus')
+                .addClass('ui-icon-circlesmall-plus');
+        }else{
+            body.slideDown();
+            button.show();
+            jQuery('.googlechart-columnfilters-box .ui-icon-circlesmall-plus', googlechart)
                 .removeClass('ui-icon-circlesmall-plus')
                 .addClass('ui-icon-circlesmall-minus');
         }
@@ -1584,7 +1615,7 @@ function columnsMatrixChart(chartType){
         return;
     }
 
-    if ((cols_nr < 1) || (rows_nr < 1)){
+    if ((chartType !== 'ScatterChart') && ((cols_nr < 1) || (rows_nr < 1))){
         DavizEdit.Status.stop("Done");
         alert("At least 1 string and 1 numeric columns have to be visible!");
         return;
@@ -2298,6 +2329,70 @@ function openAddChartFilterDialog(id){
     });
 }
 
+function openAddChartColumnFilterDialog(id){
+//zotya
+    jQuery(".googlecharts_columnfilter_config").remove();
+
+    var adddialog = jQuery('' +
+    '<div class="googlecharts_columnfilter_config">' +
+        '<div class="field">' +
+            '<label>Title</label>' +
+            '<div class="formHelp">Filter title</div>' +
+            '<input type="text" class="googlecharts_columnfilter_title" />' +
+        '</div>' +
+        '<div class="field">' +
+            '<label>Type</label>' +
+            '<div class="formHelp">Filter type</div>' +
+            '<select class="googlecharts_columnfilter_type" >'+
+                '<option value="0">Simple select</option>'+
+                '<option value="1">Multi select</option>'+
+                '<option value="2">Pair select</option>'+
+            '</select>' +
+        '</div>' +
+        '<div class="field">' +
+            '<label>Dynamic columns</label>' +
+            '<div class="googlecharts_columnfilter_slickgrid daviz-slick-table" style="width:500px;height:200px"></div>'+
+        '</div>' +
+    '</div>');
+
+    var chartcolumns = JSON.parse(jQuery("#googlechartid_" + id).find(".googlechart_columns").attr("value")).prepared;
+    var cols = [];
+    jQuery.each(chartcolumns,function(index, column){
+        var col = {};
+        col['name'] = column.name;
+        col['friendlyname'] = column.fullname;
+        col['visible'] = false;
+        if (column.status === 1){
+            col['visible'] = true
+        }
+        col['default'] = false;
+        col['selectable'] = false;
+        cols.push(col);
+    });
+    adddialog.dialog({
+        title: 'Add Column filter',
+        dialogClass: 'googlechart-dialog',
+        modal:true,
+        minWidth:500,
+        open: function(evt, ui){
+            var buttons = jQuery(this).parent().find('button');
+            buttons.attr('class', 'btn');
+            jQuery(buttons[0]).addClass('btn-inverse');
+            jQuery(buttons[1]).addClass('btn-success');
+            drawColumnFiltersGrid(".googlecharts_columnfilter_slickgrid", cols);
+        },
+        buttons: {
+            Cancel: function(){
+                jQuery(this).dialog('close');
+            },
+            Add: function(){
+                jQuery(this).dialog('close');
+            }
+        }
+    });
+    return;
+}
+
 function openAddChartNoteDialog(id){
     var context = jQuery('#googlechartid_' + id);
     jQuery(".googlecharts_note_config").remove();
@@ -2397,6 +2492,8 @@ function saveCharts(){
         });
         chart.filters = JSON.stringify(filters);
         chart.notes = chartObj.data('notes') || [];
+
+        chart.columnfilters = chartObj.data('columnfilters') || [];
 
         charts.push(chart);
         if (chart.isThumb){
@@ -2723,6 +2820,13 @@ function init_googlecharts_edit(){
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
         openAddChartFilterDialog(id);
+    });
+
+    jQuery("#googlecharts_list").delegate(".addgooglechartcolumnfilter","click",function(){
+        chartId = jQuery(this).closest('.googlechart').attr('id');
+        var liName = "googlechartid";
+        var id = chartId.substr(liName.length+1);
+        openAddChartColumnFilterDialog(id);
     });
 
     jQuery("#googlecharts_list").delegate(".addgooglechartnote","click",function(){

@@ -452,8 +452,9 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
             id: "options",
             name: "options",
             field: "id",
-            width: 40,
+            width: 30,
             resizable: false,
+            cssClass: "slickgrid-index-column",
             header: {
                 menu: {
                     items: [
@@ -553,4 +554,100 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
     }
 
     enableGridFilters();
+}
+
+function drawColumnFiltersGrid1(divId, columns_list){
+    var options = {
+        enableCellNavigation: false,
+        enableColumnReorder: true,
+        explicitInitialization: true,
+        editable: true,
+        asyncEditorLoading: false,
+        autoEdit: false
+    };
+    var grid;
+    var data = [];
+    var columns = [];
+    var row0 = (data[0] = {});
+    row0 = "row0";
+    var row1 = (data[1] = {});
+    row1 = "row1";
+    var row2 = (data[2] = {});
+    row2 = "row2";
+    var row3 = (data[3] = {});
+    row3 = "row3";
+
+    var checkboxSelector = new Slick.CheckboxSelectColumn({
+        cssClass: "slick-cell-checkboxsel"
+    });
+
+    columns.push(checkboxSelector.getColumnDefinition());
+    columns.push({
+        id : 0,
+        name : 'Column Name',
+        field : 0,
+    });
+    debugger;
+    grid = new Slick.Grid(divId, data, columns, options);
+    grid.setSelectionModel(new Slick.RowSelectionModel({selectActiveRow:false}));
+    grid.registerPlugin(checkboxSelector);
+}
+
+function drawColumnFiltersGrid(divId, columns_list){
+    var grid;
+    var data = [];
+    var options = {
+        editable: true,
+        enableCellNavigation: true,
+        asyncEditorLoading: false,
+        autoEdit: true
+    };
+    var columns = [];
+
+    for (var i = 0; i < columns_list.length; i++) {
+        var d = (data[i] = {});
+        d[0] = columns_list[i].name;
+        d[1] = columns_list[i].visible;
+        d[2] = columns_list[i].default;
+        d[3] = columns_list[i].selectable;
+    }
+
+    columns.push({
+        id: 0,
+        name: "Column",
+        field: 0,
+        width: 100
+    });
+
+    columns.push({
+        id: 1,
+        name: "Visible",
+        field: 1,
+        width: 100,
+        cssClass: 'columnfilters-grid-checkbox',
+        formatter: Slick.Formatters.Checkmark
+    });
+
+    columns.push({
+        id: 2,
+        name: "Default",
+        field: 2,
+        width: 100,
+        cssClass: 'columnfilters-grid-checkbox',
+        formatter: Slick.Formatters.Checkmark,
+        editor: Slick.Editors.Checkbox
+    });
+
+    columns.push({
+        id: 3,
+        name: "Selectable",
+        field: 3,
+        width: 100,
+        cssClass: 'columnfilters-grid-checkbox',
+        formatter: Slick.Formatters.Checkmark,
+        editor: Slick.Editors.Checkbox
+    });
+
+    grid = new Slick.Grid(divId, data, columns, options);
+//    grid.setSelectionModel(new Slick.RowSelectionModel({selectActiveRow: false}));
 }
