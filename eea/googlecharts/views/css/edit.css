@@ -1305,3 +1305,8 @@ li.googlechart > fieldset > div > a > span {
 .columnfilters-grid-checkbox {
     text-align:center;
 }
+
+.columnfilters-helper,
+.columnfilters-helper li{
+    display: list-item;
+}

@@ -556,46 +556,11 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
     enableGridFilters();
 }
 
-function drawColumnFiltersGrid1(divId, columns_list){
-    var options = {
-        enableCellNavigation: false,
-        enableColumnReorder: true,
-        explicitInitialization: true,
-        editable: true,
-        asyncEditorLoading: false,
-        autoEdit: false
-    };
-    var grid;
-    var data = [];
-    var columns = [];
-    var row0 = (data[0] = {});
-    row0 = "row0";
-    var row1 = (data[1] = {});
-    row1 = "row1";
-    var row2 = (data[2] = {});
-    row2 = "row2";
-    var row3 = (data[3] = {});
-    row3 = "row3";
-
-    var checkboxSelector = new Slick.CheckboxSelectColumn({
-        cssClass: "slick-cell-checkboxsel"
-    });
-
-    columns.push(checkboxSelector.getColumnDefinition());
-    columns.push({
-        id : 0,
-        name : 'Column Name',
-        field : 0,
-    });
-    debugger;
-    grid = new Slick.Grid(divId, data, columns, options);
-    grid.setSelectionModel(new Slick.RowSelectionModel({selectActiveRow:false}));
-    grid.registerPlugin(checkboxSelector);
-}
+var columnfilter_data;
 
 function drawColumnFiltersGrid(divId, columns_list){
     var grid;
-    var data = [];
+    columnfilter_data = [];
     var options = {
         editable: true,
         enableCellNavigation: true,
@@ -605,49 +570,77 @@ function drawColumnFiltersGrid(divId, columns_list){
     var columns = [];
 
     for (var i = 0; i < columns_list.length; i++) {
-        var d = (data[i] = {});
-        d[0] = columns_list[i].name;
-        d[1] = columns_list[i].visible;
-        d[2] = columns_list[i].default;
-        d[3] = columns_list[i].selectable;
+        var d = (columnfilter_data[i] = {});
+        d.colid = columns_list[i].name;
+        d.column = columns_list[i].friendlyname;
+        d.visible = columns_list[i].visible;
+        d.defaultcol = columns_list[i].defaultcol;
+        d.selectable = columns_list[i].selectable;
     }
 
     columns.push({
-        id: 0,
+        id: 'column',
         name: "Column",
-        field: 0,
-        width: 100
+        field: 'column',
+        width: 260
     });
 
     columns.push({
-        id: 1,
+        id: 'visible',
         name: "Visible",
-        field: 1,
-        width: 100,
+        field: 'visible',
+        width: 50,
         cssClass: 'columnfilters-grid-checkbox',
         formatter: Slick.Formatters.Checkmark
     });
 
     columns.push({
-        id: 2,
+        id: 'defaultcol',
         name: "Default",
-        field: 2,
-        width: 100,
+        field: 'defaultcol',
+        width: 50,
         cssClass: 'columnfilters-grid-checkbox',
-        formatter: Slick.Formatters.Checkmark,
-        editor: Slick.Editors.Checkbox
+        formatter: Slick.Formatters.Checkmark
     });
 
     columns.push({
-        id: 3,
+        id: 'selectable',
         name: "Selectable",
-        field: 3,
-        width: 100,
+        field: 'selectable',
+        width: 75,
         cssClass: 'columnfilters-grid-checkbox',
-        formatter: Slick.Formatters.Checkmark,
-        editor: Slick.Editors.Checkbox
+        formatter: Slick.Formatters.Checkmark
     });
 
-    grid = new Slick.Grid(divId, data, columns, options);
-//    grid.setSelectionModel(new Slick.RowSelectionModel({selectActiveRow: false}));
+    grid = new Slick.Grid(divId, columnfilter_data, columns, options);
+    grid.onClick.subscribe(function (e) {
+        var cell = grid.getCellFromEvent(e);
+        if (grid.getColumns()[cell.cell].id == 'defaultcol') {
+            if (!columnfilter_data[cell.row].visible){
+                return;
+            }
+            if (columnfilter_data[cell.row].defaultcol){
+                columnfilter_data[cell.row].defaultcol = false;
+            }
+            else{
+                columnfilter_data[cell.row].defaultcol = true;
+                columnfilter_data[cell.row].selectable = true;
+            }
+            grid.updateRow(cell.row);
+            e.stopPropagation();
+        }
+        if (columnfilter_data[cell.row].defaultcol){
+            return;
+        }
+        if (grid.getColumns()[cell.cell].id == 'selectable') {
+            if (columnfilter_data[cell.row].selectable){
+                columnfilter_data[cell.row].selectable = false;
+            }
+            else{
+                columnfilter_data[cell.row].selectable = true;
+            }
+            grid.updateRow(cell.row);
+            e.stopPropagation();
+        }
+    });
 }
