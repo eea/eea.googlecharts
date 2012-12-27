@@ -63,6 +63,8 @@ function drawChart(value){
             chart_sortAsc = false;
         }
 
+        var chart_columnFilters = value[14];
+
         jQuery("#filename").attr("value",chart_json.options.title);
         jQuery("#type").attr("value","image/png");
 
@@ -72,7 +74,6 @@ function drawChart(value){
         jQuery("#googlechart_view").remove();
         jQuery("#googlechart_table").remove();
         filters = '<div id="googlechart_filters"></div>';
-        var view = '<div id="googlechart_view" class="googlechart"></div>';
         var googlechart_table;
         if (chart_filterposition === 0){
             googlechart_table = ""+
@@ -123,6 +124,7 @@ function drawChart(value){
                 "</div>";
         }
         jQuery(googlechart_table).appendTo('#googlechart_dashboard');
+        jQuery("#googlechart_view").attr("chart_id", chart_id);
         var chart_url = baseurl + "#tab-" + chart_id;
 
         putImageDivInPosition("googlechart_qr", qr_pos);
@@ -183,7 +185,8 @@ function drawChart(value){
             chartOptions : chart_options,
             availableColumns : transformedTable.available_columns,
             chartReadyEvent : checkSVG,
-            showSort : chart_showSort
+            showSort : chart_showSort,
+            columnFilters : chart_columnFilters
         };
 
         drawGoogleChart(googlechart_params);
