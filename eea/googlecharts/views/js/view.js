@@ -351,6 +351,7 @@ var googleChartTabClick = function(context){
             jQuery("#googlechart_view").html('');
 
             drawChart(googlechart_config_array[chart_index_to_use]);
+            applyColumnFilters();
         }
         else {
             var config;

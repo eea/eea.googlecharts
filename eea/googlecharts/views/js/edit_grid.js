@@ -154,6 +154,8 @@ function menuOnCommandHandler(e, args){
     }
     if (command == "resetFilters"){
         grid_filters = {};
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value","{}");
+
         grid_data_view.refresh();
         grid.updateRowCount();
         grid.invalidateAllRows();

@@ -132,7 +132,18 @@ function addSortFilter(options){
 }
 
 var columnFiltersObj = [];
+var columnFriendlyNames;
+function getColNameFromFriendly(friendlyname){
+    var colName = "";
+    jQuery.each(columnFriendlyNames, function(key,value){
+        if (value === friendlyname){
+            colName = key;
+        }
+    });
+    return (colName);
+}
 function applyColumnFilters(){
+
     jQuery("#googlechart_filters").html('');
     jQuery("#googlechart_view").html('');
 
@@ -141,8 +152,8 @@ function applyColumnFilters(){
         if (conf[0] === jQuery("#googlechart_view").attr("chart_id")){
             var chart_id = conf[0];
             var chart_json = conf[1];
-            var chart_columns = conf[2];
-            var chart_filters = conf[3];
+            var chart_columns_old = conf[2];
+            var chart_filters_old = conf[3];
             var chart_width = conf[4];
             var chart_height = conf[5];
             var chart_filterposition = conf[6];
@@ -154,12 +165,106 @@ function applyColumnFilters(){
             var chart_sortBy = conf[12];
             var chart_sortAsc = conf[13];
 
-            var chart_columnFilters = conf[14];
+            var chart_columnFilters_old = conf[14];
+            var chart_columnFilters_new = [];
+            //update column filters 0, 1
+            jQuery.each(columnFiltersObj, function(c_idx, columnFilterObj){
+                var chart_columnFilter_new = {};
+                chart_columnFilter_new.title = chart_columnFilters_old[c_idx].title;
+                chart_columnFilter_new.type = chart_columnFilters_old[c_idx].type;
+                chart_columnFilter_new.settings = {};
+                var defaults_new = [];
+                jQuery.each(columnFilterObj.getState().selectedValues, function(idx, default_new){
+                    defaults_new.push(getColNameFromFriendly(default_new));
+                });
+                chart_columnFilter_new.settings.defaults = defaults_new;
+                chart_columnFilter_new.settings.selectables = [];
+                jQuery.each(chart_columnFilters_old[c_idx].settings.selectables, function(co_idx, columnFilter_old){
+                    chart_columnFilter_new.settings.selectables.push(columnFilter_old);
+                });
+                chart_columnFilters_new.push(chart_columnFilter_new);
+            });
 
+            //update columns 0, 1
+            var chart_json_view_columns = [];
+            var colnr = 0;
+            var chart_columns_new = {};
+            chart_columns_new.original = [];
+            chart_columns_new.prepared = [];
+            jQuery.each(chart_columns_old.original, function(idx, chart_column_old){
+                var chart_column_new = {};
+                chart_column_new.name = chart_column_old.name;
+                chart_column_new.status = chart_column_old.status;
+                chart_columns_new.original.push(chart_column_new);
+            });
+
+            var usedFilterIdxs = [];
+            jQuery.each(chart_columns_old.prepared, function(idx, chart_column_old){
+                var columnFilterIdx = -1;
+                var shouldSkip;
+                jQuery.each(chart_columnFilters_old, function(idx, columnFilter_old){
+                    if (columnFilter_old.settings.defaults.indexOf(chart_column_old.name) !== -1){
+                        if (usedFilterIdxs.indexOf(idx) === -1){
+                            columnFilterIdx = idx;
+                            usedFilterIdxs.push(idx);
+                        }
+                        else{
+                            shouldSkip = true;
+                        }
+                    }
+                });
+                if (shouldSkip){
+                    return;
+                }
+                if (columnFilterIdx === -1){
+                    var chart_column_new = {};
+                    chart_column_new.name = chart_column_old.name;
+                    chart_column_new.fullname = chart_column_old.fullname;
+                    chart_column_new.status = chart_column_old.status;
+                    chart_columns_new.prepared.push(chart_column_new);
+                    if (chart_column_new.status === 1){
+                        chart_json_view_columns.push(colnr);
+                        colnr++;
+                    }
+                }
+                else {
+                    jQuery.each(chart_columnFilters_new[columnFilterIdx].settings.defaults, function(idx, default_col_new){
+                        var chart_column_new = {};
+                        chart_column_new.name = default_col_new;
+                        chart_column_new.fullname = columnFriendlyNames[default_col_new];
+                        chart_column_new.status = 1;
+                        chart_columns_new.prepared.push(chart_column_new);
+                        chart_json_view_columns.push(colnr);
+                        colnr++;
+                    });
+                }
+            });
+
+            //update filters
+            var chart_filters_new = {};
+            jQuery.each(chart_filters_old,function(key,value){
+                var columnFilterIdx = -1;
+                jQuery.each(chart_columnFilters_old, function(idx, columnFilter_old){
+                    if (columnFilter_old.settings.defaults.indexOf(key) !== -1){
+                        columnFilterIdx = idx;
+                    }
+                });
+                if (columnFilterIdx === -1){
+                    chart_filters_new[key] = value;
+                }
+                else{
+                    jQuery.each(chart_columnFilters_new[columnFilterIdx].settings.defaults, function(idx, default_col_new){
+                        chart_filters_new[default_col_new] = value;
+                    });
+                }
+            });
+
+
+            chart_json.view.columns = chart_json_view_columns;
             config.push(chart_id);
             config.push(chart_json);
-            config.push(chart_columns);
-            config.push(chart_filters);
+            config.push(chart_columns_new);
+            config.push(chart_filters_new);
             config.push(chart_width);
             config.push(chart_height);
             config.push(chart_filterposition);
@@ -170,7 +275,7 @@ function applyColumnFilters(){
             config.push(chart_row_filters);
             config.push(chart_sortBy);
             config.push(chart_sortAsc);
-            config.push(chart_columnFilters);
+            config.push(chart_columnFilters_new);
         }
     });
     drawChart(config);
@@ -182,8 +287,8 @@ function addColumnFilters(options){
         columnFilters : [],
         columns: {}
     };
-
     jQuery.extend(settings, options);
+    columnFriendlyNames = settings.columns;
     columnFiltersObj = [];
     columnFiltersColumnsWithNames = [];
     jQuery.each(settings.columnFilters.reverse(), function(idx, columnFilter){
@@ -219,4 +324,6 @@ function addColumnFilters(options){
         };
         columnFiltersObj.push(addCustomFilter(options2));
     });
+    settings.columnFilters.reverse();
+    columnFiltersObj.reverse();
 }
