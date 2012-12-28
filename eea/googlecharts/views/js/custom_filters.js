@@ -82,8 +82,8 @@ function applySortOnChart(){
         sortFilterChart.draw();
     }
     if (!sortBy && hasFilter){
-        tmpDataView.setRows(tmpRows);
-        sortFilterChart.setDataTable(tmpDataView);
+        var tmpFiltered2 = new google.visualization.DataView(sortFilterChart.getDataTable());
+        sortFilterChart.setDataTable(tmpFiltered2);
         sortFilterChart.draw();
     }
     if (!sortBy && !hasFilter){
