@@ -18,7 +18,8 @@ function drawGoogleChart(options){
         customFilterHandler : function(){},
         notes: [],
         hideNotes: false,
-        columnFilters : []
+        columnFilters : [],
+        chartsettings: []
     };
 
     jQuery.extend(settings, options);
@@ -157,7 +158,8 @@ function drawGoogleChart(options){
         var options3 = {
             filtersDiv : settings.chartFiltersDiv,
             columnFilters : settings.columnFilters,
-            columns : settings.availableColumns
+            columns : settings.availableColumns,
+            chartsettings : settings.chartsettings
         };
         addColumnFilters(options3);
     }

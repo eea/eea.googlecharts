@@ -346,26 +346,12 @@ function validateColumnFilter(columnfilter_titles, columnfilter, checktitle){
                 }
             }
             else {
-                if (columnfilter.type === "1"){
-                    if (columnfilter.settings.defaults.length < 1){
-                        errorMsg = "At least 1 column should be selected as default column!";
-                    }
-                    else {
-                        if (columnfilter.settings.selectables.length < 2){
-                            errorMsg = "At least 2 columns must be selected as selectable columns!";
-                        }
-                    }
+                if (columnfilter.settings.defaults.length < 1){
+                    errorMsg = "At least 1 column should be selected as default column!";
                 }
                 else {
-                    if (columnfilter.type === "2"){
-                        if (columnfilter.settings.defaults.length !== 2){
-                            errorMsg = "2 columns should be selected as default columns!";
-                        }
-                        else {
-                            if (columnfilter.settings.selectables.length < 3){
-                                errorMsg = "At least 3 columns must be selected as selectable columns!";
-                            }
-                        }
+                    if (columnfilter.settings.selectables.length < 2){
+                        errorMsg = "At least 2 columns must be selected as selectable columns!";
                     }
                 }
             }
@@ -437,8 +423,12 @@ function reloadColumnFilters(id){
                             '<select class="googlecharts_columnfilter_type">'+
                                 '<option value="0" ' + ((columnfilter.type === '0') ? "selected='selected'": "") + '>Simple select</option>'+
                                 '<option value="1" ' + ((columnfilter.type === '1') ? "selected='selected'": "") + '>Multi select</option>'+
-                                '<option value="2" ' + ((columnfilter.type === '2') ? "selected='selected'": "") + '>Pair select</option>'+
                             '</select>' +
+                        '</div>' +
+                        '<div class="field">' +
+                            '<label>Allow disabled</label>' +
+                            '<div class="formHelp">Allow column to be disabled</div>' +
+                            '<input type="checkbox" class="googlecharts_columnfilter_allowempty" '+ (columnfilter.allowempty ? 'checked="checked"' : '') +'/>' +
                         '</div>' +
                         '<div class="field">' +
                             '<label>Dynamic columns</label>' +
@@ -473,6 +463,7 @@ function reloadColumnFilters(id){
                             var modified_columnfilter = {};
                             modified_columnfilter.title = jQuery('.googlecharts_columnfilter_title').val();
                             modified_columnfilter.type = jQuery('.googlecharts_columnfilter_type').val();
+                            modified_columnfilter.allowempty = jQuery('.googlecharts_columnfilter_allowempty').is(':checked') ? true : false;
                             modified_columnfilter.settings = {};
                             modified_columnfilter.settings.defaults = [];
                             modified_columnfilter.settings.selectables = [];
@@ -811,7 +802,8 @@ function addChart(options){
         hidden : false,
         row_filters : "",
         sortBy : "",
-        sortAsc : ""
+        sortAsc : "",
+        columnfilters : []
     };
 
     jQuery.extend(settings, options);
@@ -2602,8 +2594,12 @@ function openAddChartColumnFilterDialog(id){
             '<select class="googlecharts_columnfilter_type" >'+
                 '<option value="0">Simple select</option>'+
                 '<option value="1">Multi select</option>'+
-                '<option value="2">Pair select</option>'+
             '</select>' +
+        '</div>' +
+        '<div class="field">' +
+            '<label>Allow disabled</label>' +
+            '<div class="formHelp">Allow column to be disabled</div>' +
+            '<input type="checkbox" class="googlecharts_columnfilter_allowempty" />' +
         '</div>' +
         '<div class="field">' +
             '<label>Dynamic columns</label>' +
@@ -2651,6 +2647,7 @@ function openAddChartColumnFilterDialog(id){
                 var columnfilter = {};
                 columnfilter.title = jQuery('.googlecharts_columnfilter_title').val();
                 columnfilter.type = jQuery('.googlecharts_columnfilter_type').val();
+                columnfilter.allowempty = jQuery('.googlecharts_columnfilter_allowempty').is(':checked') ? true : false;
                 columnfilter.settings = {};
                 columnfilter.settings.defaults = [];
                 columnfilter.settings.selectables = [];

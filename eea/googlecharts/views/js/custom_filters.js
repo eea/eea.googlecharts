@@ -33,7 +33,8 @@ function addCustomFilter(options){
             'ui': {
                 'allowNone' : settings.allowNone,
                 'allowTyping': false,
-                'allowMultiple': settings.customAllowMultiple
+                'allowMultiple': settings.customAllowMultiple,
+                'selectedValuesLayout': 'belowStacked'
             }
         }
     });
@@ -133,6 +134,7 @@ function addSortFilter(options){
 
 var columnFiltersObj = [];
 var columnFriendlyNames;
+
 function getColNameFromFriendly(friendlyname){
     var colName = "";
     jQuery.each(columnFriendlyNames, function(key,value){
@@ -142,12 +144,14 @@ function getColNameFromFriendly(friendlyname){
     });
     return (colName);
 }
+
 function applyColumnFilters(){
 
     jQuery("#googlechart_filters").html('');
     jQuery("#googlechart_view").html('');
 
     var config = [];
+
     jQuery.each(googlechart_config_array, function(idx, conf){
         if (conf[0] === jQuery("#googlechart_view").attr("chart_id")){
             var chart_id = conf[0];
@@ -167,11 +171,12 @@ function applyColumnFilters(){
 
             var chart_columnFilters_old = conf[14];
             var chart_columnFilters_new = [];
-            //update column filters 0, 1
+
             jQuery.each(columnFiltersObj, function(c_idx, columnFilterObj){
                 var chart_columnFilter_new = {};
                 chart_columnFilter_new.title = chart_columnFilters_old[c_idx].title;
                 chart_columnFilter_new.type = chart_columnFilters_old[c_idx].type;
+                chart_columnFilter_new.allowempty = chart_columnFilters_old[c_idx].allowempty;
                 chart_columnFilter_new.settings = {};
                 var defaults_new = [];
                 jQuery.each(columnFilterObj.getState().selectedValues, function(idx, default_new){
@@ -185,7 +190,6 @@ function applyColumnFilters(){
                 chart_columnFilters_new.push(chart_columnFilter_new);
             });
 
-            //update columns 0, 1
             var chart_json_view_columns = [];
             var colnr = 0;
             var chart_columns_new = {};
@@ -236,11 +240,10 @@ function applyColumnFilters(){
                         chart_columns_new.prepared.push(chart_column_new);
                         chart_json_view_columns.push(colnr);
                         colnr++;
-                    });
+                   });
                 }
             });
 
-            //update filters
             var chart_filters_new = {};
             jQuery.each(chart_filters_old,function(key,value){
                 var columnFilterIdx = -1;
@@ -258,7 +261,6 @@ function applyColumnFilters(){
                     });
                 }
             });
-
 
             chart_json.view.columns = chart_json_view_columns;
             config.push(chart_id);
@@ -285,7 +287,8 @@ function addColumnFilters(options){
     var settings = {
         filtersDiv : '',
         columnFilters : [],
-        columns: {}
+        columns: {},
+        chartsettings : []
     };
     jQuery.extend(settings, options);
     columnFriendlyNames = settings.columns;
@@ -294,24 +297,12 @@ function addColumnFilters(options){
     jQuery.each(settings.columnFilters.reverse(), function(idx, columnFilter){
         var values = [[columnFilter.title]];
         var defaultValues = [];
-        if (columnFilter.type !== '2'){
-            jQuery.each(columnFilter.settings.defaults, function(idx, defaultcol){
-                defaultValues.push(settings.columns[defaultcol]);
-            });
-            jQuery.each(columnFilter.settings.selectables, function(idx, selectable){
-                values.push([settings.columns[selectable]]);
-            });
-        }
-        else{
-            defaultValues = [settings.columns[columnFilter.settings.defaults[0]] + " - " + settings.columns[columnFilter.settings.defaults[1]]];
-            jQuery.each(columnFilter.settings.selectables, function(idx, selectable1){
-                jQuery.each(columnFilter.settings.selectables, function(idx, selectable2){
-                    if (selectable1 !== selectable2){
-                        values.push([settings.columns[selectable1] + " - " + settings.columns[selectable2]]);
-                    }
-                });
-            });
-        }
+        jQuery.each(columnFilter.settings.defaults, function(idx, defaultcol){
+            defaultValues.push(settings.columns[defaultcol]);
+        });
+        jQuery.each(columnFilter.settings.selectables, function(idx, selectable){
+            values.push([settings.columns[selectable]]);
+        });
         var options2 = {
             customTitle : columnFilter.title,
             customPrefix : 'columnfilter' + columnFilter.title,
@@ -320,7 +311,7 @@ function addColumnFilters(options){
             customAllowMultiple : (columnFilter.type === '1' ? true : false),
             customHandler : applyColumnFilters,
             defaultValues : defaultValues,
-            allowNone : (columnFilter.type === '1' ? true : false)
+            allowNone : columnFilter.allowempty
         };
         columnFiltersObj.push(addCustomFilter(options2));
     });
