@@ -385,6 +385,18 @@ var googleChartOnTabClick = function(settings){
 };
 
 jQuery(document).ready(function($){
+    // workaround for firefox issue: http://taskman.eionet.europa.eu/issues/9941
+    if (jQuery.browser.mozilla){
+        var href = document.location.href;
+        var href_array = href.split("#");
+        if (!href_array[0].endsWith("/")){
+            href_array[0] = href_array[0] + "/";
+            var href2 = href_array.join("#");
+            document.location = href2;
+        }
+    }
+    // end of workaround
+
     if (typeof(googlechart_config_array) == 'undefined'){
         return;
     }
