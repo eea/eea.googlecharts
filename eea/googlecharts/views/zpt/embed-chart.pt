@@ -24,7 +24,7 @@
 
 </head>
 <body tal:define="chart view/get_chart" style="margin: 0; overflow: hidden">
-    <script type="text/javascript" tal:define="showSort python: chart.get('showSort','False'); row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc')"
+    <script type="text/javascript" tal:define="showSort python: chart.get('showSort','False'); row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart);"
         tal:content="string:chart_columns = ${chart/columns};
                                                 merged_rows = ${chart/data};
                                                 available_columns = ${chart/available_columns};
@@ -45,7 +45,8 @@
                                                 showSort = '${showSort}';
                                                 row_filters_str = '$row_filters';
                                                 sortBy = '$sortBy';
-                                                sortAsc_str = '$sortAsc'">
+                                                sortAsc_str = '$sortAsc';
+                                                chart_columnFilters = $columnFilters">
     </script>
     <div id="googlechart_dashboard" class="embedded-dashboard">
         <div id="googlechart_table">

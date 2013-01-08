@@ -316,3 +316,11 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .googledashboard-hidden-helper-filters {
     display: none;
 }
+
+.filter-separator {
+    clear:both;
+    margin:0 !important;
+    min-width:0 !important;
+    padding:0 !important;
+    min-height:0 !important;
+}

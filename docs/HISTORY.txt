@@ -8,6 +8,10 @@ Changelog
   For non-Plone usage you'll have to manually run @@migrate-dashboards for all
   visualizations that have Google-Dashboard enabled.
 
+* Bugfix: Implemented workaround to display bubble value notes for charts in firefox
+  [szabozo0 refs #9941]
+* Feature: Added possibility to select on view which columns to be used for the chart
+  [szabozo0 refs #9581]
 * Bugfix: Fixed hidden widgets for dashboards; fixed notes for charts; fixed qr code when disabled
   [szabozo0 refs #10207]
 * Feature: Multiple dashboards support on view and embed

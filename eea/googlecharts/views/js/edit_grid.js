@@ -154,6 +154,8 @@ function menuOnCommandHandler(e, args){
     }
     if (command == "resetFilters"){
         grid_filters = {};
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value","{}");
+
         grid_data_view.refresh();
         grid.updateRowCount();
         grid.invalidateAllRows();
@@ -452,8 +454,9 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
             id: "options",
             name: "options",
             field: "id",
-            width: 40,
+            width: 30,
             resizable: false,
+            cssClass: "slickgrid-index-column",
             header: {
                 menu: {
                     items: [
@@ -553,4 +556,93 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
     }
 
     enableGridFilters();
+}
+
+var columnfilter_data;
+
+function drawColumnFiltersGrid(divId, columns_list){
+    var grid;
+    columnfilter_data = [];
+    var options = {
+        editable: true,
+        enableCellNavigation: true,
+        asyncEditorLoading: false,
+        autoEdit: true
+    };
+    var columns = [];
+
+    for (var i = 0; i < columns_list.length; i++) {
+        var d = (columnfilter_data[i] = {});
+        d.colid = columns_list[i].name;
+        d.column = columns_list[i].friendlyname;
+        d.visible = columns_list[i].visible;
+        d.defaultcol = columns_list[i].defaultcol;
+        d.selectable = columns_list[i].selectable;
+    }
+
+    columns.push({
+        id: 'column',
+        name: "Column",
+        field: 'column',
+        width: 260
+    });
+
+    columns.push({
+        id: 'visible',
+        name: "Visible",
+        field: 'visible',
+        width: 50,
+        cssClass: 'columnfilters-grid-checkbox',
+        formatter: Slick.Formatters.Checkmark
+    });
+
+    columns.push({
+        id: 'defaultcol',
+        name: "Default",
+        field: 'defaultcol',
+        width: 50,
+        cssClass: 'columnfilters-grid-checkbox',
+        formatter: Slick.Formatters.Checkmark
+    });
+
+    columns.push({
+        id: 'selectable',
+        name: "Selectable",
+        field: 'selectable',
+        width: 75,
+        cssClass: 'columnfilters-grid-checkbox',
+        formatter: Slick.Formatters.Checkmark
+    });
+
+    grid = new Slick.Grid(divId, columnfilter_data, columns, options);
+    grid.onClick.subscribe(function (e) {
+        var cell = grid.getCellFromEvent(e);
+        if (grid.getColumns()[cell.cell].id == 'defaultcol') {
+            if (!columnfilter_data[cell.row].visible){
+                return;
+            }
+            if (columnfilter_data[cell.row].defaultcol){
+                columnfilter_data[cell.row].defaultcol = false;
+            }
+            else{
+                columnfilter_data[cell.row].defaultcol = true;
+                columnfilter_data[cell.row].selectable = true;
+            }
+            grid.updateRow(cell.row);
+            e.stopPropagation();
+        }
+        if (columnfilter_data[cell.row].defaultcol){
+            return;
+        }
+        if (grid.getColumns()[cell.cell].id == 'selectable') {
+            if (columnfilter_data[cell.row].selectable){
+                columnfilter_data[cell.row].selectable = false;
+            }
+            else{
+                columnfilter_data[cell.row].selectable = true;
+            }
+            grid.updateRow(cell.row);
+            e.stopPropagation();
+        }
+    });
 }

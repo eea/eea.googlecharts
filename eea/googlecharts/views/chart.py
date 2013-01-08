@@ -179,6 +179,11 @@ class View(ViewForm):
         """
         return json.dumps(chart.get('dashboard', {}))
 
+    def get_columnfilters_js(self, chart):
+        """ column filters
+        """
+        return json.dumps(chart.get('columnfilters', []))
+
     def get_showSort(self, chart):
         """ Show Sort
         """

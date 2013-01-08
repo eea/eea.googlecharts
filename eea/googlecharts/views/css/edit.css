@@ -32,23 +32,27 @@
 #googlecharts_list,
 .googlechart_filters_list,
 .googlechart_sort,
-.googlechart_notes_list {
+.googlechart_notes_list,
+.googlechart_columnfilters_list {
     list-style-type:none !important;
     list-style-image:none !important;
     margin:0 !important;
 }
 
-.googlechart_filters_list h1 {
+.googlechart_filters_list h1,
+.googlechart_columnfilters_list h1, {
     background: none;
     font-weight: bold;
 }
 
 .googlechart_sort li,
-.googlechart_filters_list li {
+.googlechart_filters_list li,
+.googlechart_columnfilters_list li {
     background: white;
 }
 
 .googlechart_filters_list li,
+.googlechart_columnfilters_list li,
 .googlechart_sort li {
     border: 1px solid #eee;
     margin: 5px;
@@ -56,27 +60,31 @@
 }
 
 .googlechart-filters-box .ui-state-highlight,
+.googlechart-columnfilters-box .ui-state-highlight,
 .googlechart-notes-box .ui-state-highlight {
     background-color: orange;
     opacity: 0.3;
     min-width: 85%;
 }
 
-.googlechart_filters_list li {
+.googlechart_filters_list li,
+.googlechart_columnfilters_list li {
     box-shadow: #CCC 3px 3px 3px;
 }
 
-.googlechart_sort li h1{
+.googlechart_sort li h1 {
     cursor: default !important;
     background: none;
     font-weight: bold;
 }
 
-.googlechart_filteritem span {
+.googlechart_filteritem span,
+.googlechart_columnfilteritem span {
     margin-left: 2em;
 }
 
 .googlechart-filters-box,
+.googlechart-columnfilters-box,
 .googlechart-notes-box {
   float:right;
   width:250px;
@@ -87,6 +95,7 @@
 }
 
 .googlechart-filters-box .label,
+.googlechart-columnfilters-box .label,
 .googlechart-notes-box .label {
   cursor: pointer;
 }
@@ -1272,7 +1281,7 @@ li.googlechart > fieldset > div > a > span {
 }
 
 .googlecharts_note_config textarea {
-  height: 600px;
+  height: 300px;
 }
 
 .googlechart_editor_loading {
@@ -1291,4 +1300,13 @@ li.googlechart > fieldset > div > a > span {
     width:100px;
     height:100px;
     background-image: url(../../++resource++eea.jquery.images/ajax-loader.gif);
+}
+
+.columnfilters-grid-checkbox {
+    text-align:center;
+}
+
+.columnfilters-helper,
+.columnfilters-helper li{
+    display: list-item;
 }
