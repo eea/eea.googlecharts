@@ -7,16 +7,17 @@ function addCustomFilter(options){
         customAllowMultiple : '',
         customHandler : function(){},
         defaultValues : [],
-        allowNone : true
+        allowNone : true,
+        paramsForHandler : null
     };
     jQuery.extend(settings, options);
     var filterData = google.visualization.arrayToDataTable(settings.customValues);
 
-    var filterChartDivId = settings.customPrefix + "_custom_chart";
+    var filterChartDivId = settings.filtersDiv + "_" + settings.customPrefix + "_custom_chart";
     var filterChartDiv = "<div id='" + filterChartDivId + "' style='display:none;'></div>";
     jQuery(filterChartDiv).appendTo("#" + settings.filtersDiv);
 
-    var filterFilterDivId = settings.customPrefix + "_custom_filter";
+    var filterFilterDivId = settings.filtersDiv + "_" + settings.customPrefix + "_custom_filter";
     var filterFilterDiv = "<div id='" + filterFilterDivId + "'></div>";
     jQuery(filterFilterDiv).prependTo("#" + settings.filtersDiv);
 
@@ -43,7 +44,7 @@ function addCustomFilter(options){
     filterDashboard.bind(filterFilter, filterChart);
 
     google.visualization.events.addListener(filterFilter, 'statechange', function(event){
-        settings.customHandler();
+        settings.customHandler(settings.paramsForHandler);
     });
 
     filterDashboard.draw(filterData);
@@ -52,50 +53,48 @@ function addCustomFilter(options){
 }
 
 
-var sortFilterChart = null;
-var sortFilterDataTable = null;
-var sortFilterObj = null;
-var sortFilterArray = {};
-
-function applySortOnChart(){
-    var tmpDataView = new google.visualization.DataView(sortFilterDataTable);
-    var sortBy = sortFilterObj.getState().selectedValues[0];
-    var tmpRows = sortFilterChart.getDataTable().getViewRows();
+function applySortOnChart(options){
+    var tmpDataView = new google.visualization.DataView(options.sortFilterDataTable);
+    var sortBy = options.sortFilterObj.getState().selectedValues[0];
+    var tmpRows = options.sortFilterChart.getDataTable().getViewRows();
     var hasFilter = (tmpDataView.getNumberOfRows() !== tmpRows.length);
     var sortedRows;
     if (sortBy && hasFilter){
-        sortedRows = sortFilterChart.getDataTable().getSortedRows(sortFilterArray[sortBy][0]);
-        if (sortFilterArray[sortBy][1]){
+        sortedRows = options.sortFilterChart.getDataTable().getSortedRows(options.sortFilterArray[sortBy][0]);
+        if (options.sortFilterArray[sortBy][1]){
             sortedRows = sortedRows.reverse();
         }
-        var tmpFiltered = new google.visualization.DataView(sortFilterChart.getDataTable());
+        var tmpFiltered = new google.visualization.DataView(options.sortFilterChart.getDataTable());
         tmpFiltered.setRows(sortedRows);
-        sortFilterChart.setDataTable(tmpFiltered);
-        sortFilterChart.draw();
+        options.sortFilterChart.setDataTable(tmpFiltered);
+        options.sortFilterChart.draw();
     }
     if (sortBy && !hasFilter){
-        sortedRows = tmpDataView.getSortedRows(sortFilterArray[sortBy][0]);
-        if (sortFilterArray[sortBy][1]){
+        sortedRows = tmpDataView.getSortedRows(options.sortFilterArray[sortBy][0]);
+        if (options.sortFilterArray[sortBy][1]){
             sortedRows = sortedRows.reverse();
         }
         tmpDataView.setRows(sortedRows);
-        sortFilterChart.setDataTable(tmpDataView);
-        sortFilterChart.draw();
+        options.sortFilterChart.setDataTable(tmpDataView);
+        options.sortFilterChart.draw();
     }
     if (!sortBy && hasFilter){
-        var tmpFiltered2 = new google.visualization.DataView(sortFilterChart.getDataTable());
-        sortFilterChart.setDataTable(tmpFiltered2);
-        sortFilterChart.draw();
+        var tmpFiltered2 = new google.visualization.DataView(options.sortFilterChart.getDataTable());
+        options.sortFilterChart.setDataTable(tmpFiltered2);
+        options.sortFilterChart.draw();
     }
     if (!sortBy && !hasFilter){
-        sortFilterChart.setDataTable(tmpDataView);
-        sortFilterChart.draw();
+        options.sortFilterChart.setDataTable(tmpDataView);
+        options.sortFilterChart.draw();
     }
 }
 
-function applyCustomFilters(){
-    if (sortFilterObj){
-        applySortOnChart();
+function applyCustomFilters(options){
+    if (!options){
+        return;
+    }
+    if (options.sortFilterObj){
+        applySortOnChart(options);
     }
 }
 
@@ -109,10 +108,11 @@ function addSortFilter(options){
 
     jQuery.extend(settings, options);
 
-    sortFilterChart = settings.filterChart;
-    sortFilterDataTable = settings.filterDataTable;
+    var sortFilterChart = settings.filterChart;
+    var sortFilterDataTable = settings.filterDataTable;
     var colsnr = settings.filterDataTable.getNumberOfColumns();
     var cols_array = [[settings.filterTitle]];
+    var sortFilterArray = {};
     for (var i = 0; i < colsnr; i++){
         cols_array.push([settings.filterDataTable.getColumnLabel(i)]);
         sortFilterArray[settings.filterDataTable.getColumnLabel(i)] = [i, false];
@@ -120,24 +120,30 @@ function addSortFilter(options){
         sortFilterArray[settings.filterDataTable.getColumnLabel(i) + " reversed"] = [i, true];
     }
 
+    var paramsForHandler = {
+        sortFilterChart : sortFilterChart,
+        sortFilterDataTable : sortFilterDataTable,
+        sortFilterArray : sortFilterArray
+    };
     var options2 = {
         customTitle : settings.filterTitle,
         customPrefix : 'sortfilter',
         filtersDiv : settings.filtersDiv,
         customValues : cols_array,
         customAllowMultiple : false,
-        customHandler : applyCustomFilters
+        customHandler : applyCustomFilters,
+        paramsForHandler : paramsForHandler
     };
 
     sortFilterObj = addCustomFilter(options2);
+    paramsForHandler.sortFilterObj = sortFilterObj;
+    return paramsForHandler;
 }
 
-var columnFiltersObj = [];
-var columnFriendlyNames;
 
-function getColNameFromFriendly(friendlyname){
+function getColNameFromFriendly(friendlyname, options){
     var colName = "";
-    jQuery.each(columnFriendlyNames, function(key,value){
+    jQuery.each(options.columnFriendlyNames, function(key,value){
         if (value === friendlyname){
             colName = key;
         }
@@ -145,15 +151,15 @@ function getColNameFromFriendly(friendlyname){
     return (colName);
 }
 
-function applyColumnFilters(){
-
-    jQuery("#googlechart_filters").html('');
-    jQuery("#googlechart_view").html('');
+function applyColumnFilters(options){
+    jQuery("#"+options.filtersDiv).html('');
+    jQuery("#"+options.chartViewDiv).html('');
 
     var config = [];
 
-    jQuery.each(googlechart_config_array, function(idx, conf){
-        if (conf[0] === jQuery("#googlechart_view").attr("chart_id")){
+    var conf_array = jQuery("#" + options.dashboardDiv).data('other_settings').googlechart_config_array;
+    jQuery.each(conf_array, function(idx, conf){
+        if (conf[0] === jQuery("#"+options.chartViewDiv).attr("chart_id")){
             var chart_id = conf[0];
             var chart_json = conf[1];
             var chart_columns_old = conf[2];
@@ -172,7 +178,7 @@ function applyColumnFilters(){
             var chart_columnFilters_old = conf[14];
             var chart_columnFilters_new = [];
 
-            jQuery.each(columnFiltersObj, function(c_idx, columnFilterObj){
+            jQuery.each(options.columnFiltersObj, function(c_idx, columnFilterObj){
                 var chart_columnFilter_new = {};
                 chart_columnFilter_new.title = chart_columnFilters_old[c_idx].title;
                 chart_columnFilter_new.type = chart_columnFilters_old[c_idx].type;
@@ -180,7 +186,7 @@ function applyColumnFilters(){
                 chart_columnFilter_new.settings = {};
                 var defaults_new = [];
                 jQuery.each(columnFilterObj.getState().selectedValues, function(idx, default_new){
-                    defaults_new.push(getColNameFromFriendly(default_new));
+                    defaults_new.push(getColNameFromFriendly(default_new, options));
                 });
                 chart_columnFilter_new.settings.defaults = defaults_new;
                 chart_columnFilter_new.settings.selectables = [];
@@ -235,7 +241,7 @@ function applyColumnFilters(){
                     jQuery.each(chart_columnFilters_new[columnFilterIdx].settings.defaults, function(idx, default_col_new){
                         var chart_column_new = {};
                         chart_column_new.name = default_col_new;
-                        chart_column_new.fullname = columnFriendlyNames[default_col_new];
+                        chart_column_new.fullname = options.columnFriendlyNames[default_col_new];
                         chart_column_new.status = 1;
                         chart_columns_new.prepared.push(chart_column_new);
                         chart_json_view_columns.push(colnr);
@@ -280,20 +286,31 @@ function applyColumnFilters(){
             config.push(chart_columnFilters_new);
         }
     });
-    drawChart(config);
+
+    var other_settings = jQuery("#" + options.dashboardDiv).data('other_settings');
+
+    drawChart(config, other_settings);
 }
 
 function addColumnFilters(options){
     var settings = {
+        dashboardDiv : '',
+        chartViewDiv : '',
         filtersDiv : '',
         columnFilters : [],
-        columns: {},
-        chartsettings : []
+        columns: {}
     };
     jQuery.extend(settings, options);
-    columnFriendlyNames = settings.columns;
-    columnFiltersObj = [];
+    var columnFriendlyNames = settings.columns;
+    var columnFiltersObj = [];
     columnFiltersColumnsWithNames = [];
+    var paramsForHandler = {
+        dashboardDiv : settings.dashboardDiv,
+        chartViewDiv : settings.chartViewDiv,
+        filtersDiv : settings.filtersDiv,
+        columnFiltersObj : columnFiltersObj,
+        columnFriendlyNames : columnFriendlyNames
+    };
     jQuery.each(settings.columnFilters.reverse(), function(idx, columnFilter){
         var values = [[columnFilter.title]];
         var defaultValues = [];
@@ -311,7 +328,8 @@ function addColumnFilters(options){
             customAllowMultiple : (columnFilter.type === '1' ? true : false),
             customHandler : applyColumnFilters,
             defaultValues : defaultValues,
-            allowNone : columnFilter.allowempty
+            allowNone : columnFilter.allowempty,
+            paramsForHandler : paramsForHandler
         };
         columnFiltersObj.push(addCustomFilter(options2));
     });

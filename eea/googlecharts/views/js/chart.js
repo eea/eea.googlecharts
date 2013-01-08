@@ -16,17 +16,18 @@ function drawGoogleChart(options){
         chartErrorEvent : function(){},
         showSort : false,
         customFilterHandler : function(){},
+        customFilterOptions : null,
         notes: [],
         hideNotes: false,
-        columnFilters : [],
-        chartsettings: []
+        columnFilters : []
     };
 
     jQuery.extend(settings, options);
 
     // XXX Use GoogleChartsConfig for options instead of googlechart_config_array
-    if(window.GoogleChartsConfig){
-        jQuery.each(GoogleChartsConfig, function(index, value){
+    var other_settings = jQuery("#"+settings.chartDashboard).data("other_settings");
+    if ((other_settings) && (other_settings.GoogleChartsConfig)){
+        jQuery.each(other_settings.GoogleChartsConfig, function(index, value){
             if((value.id == settings.chartId) && value.notes){
                 settings.notes = value.notes;
             }
@@ -34,6 +35,7 @@ function drawGoogleChart(options){
     }
 
     jQuery("#"+settings.chartViewDiv).width(settings.chartWidth).height(settings.chartHeight);
+
     settings.chartJson.options.width = settings.chartWidth;
     settings.chartJson.options.height = settings.chartHeight;
 
@@ -93,7 +95,7 @@ function drawGoogleChart(options){
             var filter = new google.visualization.ControlWrapper(filterSettings);
 
             google.visualization.events.addListener(filter, 'statechange', function(event){
-                settings.customFilterHandler();
+                settings.customFilterHandler(settings.customFilterOptions);
             });
 
             filtersArray.push(filter);
@@ -102,6 +104,7 @@ function drawGoogleChart(options){
 
     var dataView = new google.visualization.DataView(settings.chartDataTable);
 
+    var customFilterParams;
     if (filtersArray.length > 0){
         var dashboard = new google.visualization.Dashboard(
             document.getElementById(settings.chartDashboard));
@@ -118,7 +121,7 @@ function drawGoogleChart(options){
 
         jQuery(filtersArray).each(function(key,value){
             google.visualization.events.addListener(value, 'statechange', function(event){
-                applyCustomFilters();
+                applyCustomFilters(customFilterParams);
             });
         });
 
@@ -149,17 +152,18 @@ function drawGoogleChart(options){
             filterChart : chart
         };
 
-        addSortFilter(options2);
+        customFilterParams = addSortFilter(options2);
     }
 
     jQuery(filterSeparatorDiv).prependTo("#" + settings.chartFiltersDiv);
 
     if (settings.columnFilters.length > 0){
         var options3 = {
+            dashboardDiv : settings.chartDashboard,
+            chartViewDiv :  settings.chartViewDiv,
             filtersDiv : settings.chartFiltersDiv,
             columnFilters : settings.columnFilters,
-            columns : settings.availableColumns,
-            chartsettings : settings.chartsettings
+            columns : settings.availableColumns
         };
         addColumnFilters(options3);
     }
@@ -181,26 +185,27 @@ function drawGoogleChart(options){
 
 }
 
-var hiddenDashboardFilters;
-var dashboardFilters;
+//var hiddenDashboardFilters;
+//var dashboardFilters;
 
-function dashboardFilterChanged(){
+function dashboardFilterChanged(options){
     var filtersStates = {};
-    jQuery(dashboardFilters).each(function(idx, filter){
+    jQuery(options.dashboardFilters).each(function(idx, filter){
         var filterName = filter.getOption("filterColumnLabel");
         var filterState = filter.getState();
         filtersStates[filterName] = filterState;
     });
-    jQuery(hiddenDashboardFilters).each(function(idx, filter){
+    jQuery(options.hiddenDashboardFilters).each(function(idx, filter){
         var filterName = filter.getOption("filterColumnLabel");
         filter.setState(filtersStates[filterName]);
         filter.draw();
     });
     return;
 }
+
 function drawGoogleDashboard(options){
-    hiddenDashboardFilters = [];
-    dashboardFilters = [];
+    var hiddenDashboardFilters = [];
+    var dashboardFilters = [];
     var settings = {
         chartsDashboard : '',
         chartViewsDiv : '',
@@ -215,7 +220,7 @@ function drawGoogleDashboard(options){
     jQuery.extend(settings, options);
 
     var dashboardCharts = [];
-    var dashboardLink = jQuery('#googlechart_dashboard').attr('data-link');
+    var dashboardLink = jQuery('#' + settings.chartsDashboard).attr('data-link');
     dashboardLink = dashboardLink !== undefined ? dashboardLink + '/' : '';
 
     var dashboard_filters = {};
@@ -234,15 +239,15 @@ function drawGoogleDashboard(options){
                     chartConfig = config;
                 }
             });
-            var chartContainerId = "googlechart_view_" + value.name;
+            var chartContainerId = settings.chartViewsDiv+"_" + value.name;
             var chartContainer = jQuery('<div>')
                 .attr('id', chartContainerId)
                 .css('float', 'left')
                 .addClass('googledashboard-chart')
                 .text('chart')
-                .appendTo('#googlechart_view');
+                .appendTo('#'+settings.chartViewsDiv);
 
-            var chartFiltersId = "googlechart_hidden_filters_" + value.name;
+            var chartFiltersId = settings.chartFiltersDiv + "_hidden_filters_" + value.name;
             var chartFilters = jQuery('<div>')
                 .attr('id', chartFiltersId)
                 .addClass('googledashboard-hidden-helper-filters')
@@ -289,7 +294,7 @@ function drawGoogleDashboard(options){
                 chart_height = value.dashboard.height;
             }
             chart_options = {
-                chartDashboard : 'googlechart_dashboard',
+                chartDashboard : settings.chartsDashboard,
                 chartViewDiv : chartContainerId,
                 chartFiltersDiv : chartFiltersId,
                 chartId : chartConfig[0],
@@ -320,19 +325,19 @@ function drawGoogleDashboard(options){
                 .data('dashboard', value.dashboard)
                 .load(dashboardLink + '@@' + value.wtype, {name: value.name, dashboard: settings.dashboardName});
 
-                widgetDiv.appendTo('#googlechart_view');
+                widgetDiv.appendTo('#'+settings.chartViewsDiv);
         }
     });
 
     // Dashboard filters
     if (settings.filters.length > 0){
             filters_chart_id = 'filters_helper_tablechart';
-            var chartContainerId = "googlechart_view_" + filters_chart_id;
+            var chartContainerId = settings.chartFiltersDiv + "_" + filters_chart_id;
 
             var chartContainer = jQuery('<div>')
                 .attr('id', chartContainerId)
                 .addClass('googlechart_dashboard_filters_helper')
-                .prependTo('#googlechart_view');
+                .prependTo('#'+settings.chartViewsDiv);
 
             var normalColumns = [];
             jQuery.each(settings.columns, function(key,value){
@@ -356,8 +361,13 @@ function drawGoogleDashboard(options){
             var tableForChart = prepareForChart(options);
             var filtersHelperChart = {'chartType': 'Table',
                                       'options': {'height': '13em', 'width': '20em'}};
+            var customFilterOptions = {
+                dashboardFilters : dashboardFilters,
+                hiddenDashboardFilters : hiddenDashboardFilters
+            };
+
             chart_options = {
-                chartDashboard : 'googlechart_dashboard',
+                chartDashboard : settings.chartsDashboard,
                 chartViewDiv : chartContainerId,
                 chartFiltersDiv : settings.chartFiltersDiv,
                 chartId : filters_chart_id,
@@ -370,9 +380,12 @@ function drawGoogleDashboard(options){
                 availableColumns : transformedTable.available_columns,
                 chartReadyEvent : function(){},
                 showSort : false,
-                customFilterHandler : dashboardFilterChanged
+                customFilterHandler : dashboardFilterChanged,
+                customFilterOptions : customFilterOptions
             };
             var tmp_chart = drawGoogleChart(chart_options);
-            dashboardFilters = tmp_chart.filters;
+            jQuery.each(tmp_chart.filters, function(idx, filter){
+                dashboardFilters.push(filter);
+            });
     }
 }

@@ -15,6 +15,13 @@
     />
 
   <browser:page
+    name="inline-includes"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    template="zpt/inline-includes.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="embed-chart"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/embed-chart.pt"
@@ -166,6 +173,11 @@
   <browser:resource
     name="eea.googlecharts.datatable.js"
     file="./js/datatable.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.embed_common.js"
+    file="./js/embed_common.js"
   />
 
   <browser:resource

@@ -3,6 +3,7 @@
 import json
 import logging
 import urllib2
+import hashlib
 from PIL import Image
 from cStringIO import StringIO
 from zope.component import queryAdapter, getMultiAdapter
@@ -267,6 +268,22 @@ class View(ViewForm):
         config['available_columns'] = self.get_columns()
         return config
 
+    def get_visualization_hash(self):
+        """ unique hash of a chart or dashboard
+        """
+        v_id = self.request.get("chart", "")
+        if v_id == "":
+            v_id = self.request.get("dashboard", "dashboard")
+        path = self.context.absolute_url()+"/"+v_id
+        return hashlib.md5(path).hexdigest()
+
+    def isInline(self):
+        """ iframe embed or inline embed
+        """
+        inline = self.request.get("inline", "")
+        if inline == "inline":
+            return True
+        return False
 
 def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
     """ Calculate position of watermark and place it over the original image
