@@ -96,10 +96,7 @@ function drawChart(value, other_options){
 
     jQuery("#googlechart_view_"+other_settings.vhash).attr("chart_id", embedchart_id);
     jQuery("#googlechart_view_"+other_settings.vhash).addClass("googlechart_view");
-    if (other_settings.isInline === 'True'){
-        jQuery(".iframe_body").removeClass("iframe_body");
-    }
-    else{
+    if (other_settings.isInline !== 'True'){
         var chart_url = other_settings.baseurl + "#tab-" + embedchart_id;
         putImageDivInPosition("googlechart_qr_"+other_settings.vhash, other_settings.qr_pos, other_settings.vhash);
 

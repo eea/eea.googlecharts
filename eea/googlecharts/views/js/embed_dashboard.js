@@ -59,10 +59,7 @@ function drawDashboardEmbed(options){
     jQuery("#googlechart_view_"+settings.vhash).addClass("googlechart_view");
     jQuery("#googlechart_filters_"+settings.vhash).addClass("googlechart_filters");
 
-    if (settings.isInline === 'True'){
-        jQuery(".iframe_body").removeClass("iframe_body");
-    }
-    else {
+    if (settings.isInline !== 'True'){
         putImageDivInPosition("googlechart_qr_" + settings.vhash, settings.qr_pos, settings.vhash);
 
         var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs="+settings.qr_size+"x"+settings.qr_size+"&chl=" + encodeURIComponent(chart_url);
