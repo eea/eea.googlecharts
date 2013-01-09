@@ -14,12 +14,6 @@
     permission="zope2.View"
     />
 
-  <browser:page
-    name="inline-includes"
-    for="eea.app.visualization.interfaces.IVisualizationEnabled"
-    template="zpt/inline-includes.pt"
-    permission="zope2.View"
-    />
 
   <browser:page
     name="embed-chart"
@@ -34,6 +28,21 @@
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/embed-dashboard.pt"
     class=".chart.View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="embed-inline"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".chart.View"
+    attribute="embed_inline"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="embed-inline-includes"
+    for="*"
+    template="zpt/inline-includes.pt"
     permission="zope2.View"
     />
 
@@ -288,5 +297,14 @@
          eea.app.visualization.interfaces.IVisualizationEnabledEvent"
     handler=".events.create_default_views"
     />
+
+  <browser:page
+    name="googlechart.get_inline_embed"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".chart.View"
+    attribute="getInlineEmbed"
+    permission="zope2.View"
+    />
+
 
 </configure>

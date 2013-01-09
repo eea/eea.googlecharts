@@ -285,6 +285,23 @@ class View(ViewForm):
             return True
         return False
 
+    def embed_inline(self):
+        chart = self.request.get("chart", "")
+        if chart == "":
+            return ""
+        view = ""
+        if chart.startswith("dashboard"):
+            self.request['chart'] = ''
+            self.request['dashboard'] = chart
+            self.request['inline'] = 'inline'
+            view = "embed-dashboard"
+        else:
+            self.request['chart'] = chart
+            self.request['dashboard'] = ""
+            self.request['inline'] = 'inline'
+            view = "embed-chart"
+        return getMultiAdapter((self.context, self.request), name=view)()
+
 def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
     """ Calculate position of watermark and place it over the original image
     """
