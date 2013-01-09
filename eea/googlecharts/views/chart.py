@@ -285,8 +285,7 @@ class View(ViewForm):
             return True
         return False
 
-    def embed_inline(self):
-        chart = self.request.get("chart", "")
+    def embed_inline(self, chart):
         if chart == "":
             return ""
         view = ""
