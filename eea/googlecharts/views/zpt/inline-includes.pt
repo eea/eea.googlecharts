@@ -1,0 +1,9 @@
+<link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.embed_chart.js"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.embed_dashboard.js"></script>
+<script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>

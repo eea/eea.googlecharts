@@ -1,55 +1,97 @@
-<html>
+<tal:block tal:define="inline view/isInline; enabled_dashboard python: True">
+<html tal:condition="not:inline">
 <head>
-<style type="text/css">
-    #googlechart_full > div > div {overflow:hidden ! important;}
-    #googlechart_filters {margin-top:0px !important;}
-</style>
-<link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" tal:attributes="src view/jquery_src"></script>
-<script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
-<script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
-<script type="text/javascript" src="++resource++eea.googlecharts.embed_dashboard.js"></script>
+    <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
+    <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
+    <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
+    <script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
+    <script type="text/javascript" src="++resource++eea.googlecharts.embed_dashboard.js"></script>
+    <script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
 
-<script type="text/javascript">
-    var googlechart_config_array = [];
-    var dashboard_config;
-</script>
+    <style type="text/css">
+        #googlechart_full > div > div {overflow:hidden ! important;}
+        #googlechart_filters {margin-top:0px !important;}
+        .googlechart_full > div > div {overflow:hidden ! important;}
+        .googlechart_filters {margin-top:0px !important;}
+        body {margin:0; overflow: hidden;}
+    </style>
 
-<script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; qr_size = '${view/qr_size}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}';main_title = '${view/get_maintitle}';">
-</script>
-<tal:block tal:define="charts view/get_charts;">
-    <tal:block tal:repeat="chart charts">
-        <script type="text/javascript"
-            tal:define="dashboard python:view.get_dashboard_js(chart);"
-            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard]);"></script>
-    </tal:block>
-</tal:block>
 
-<script type="text/javascript"
-    tal:define="dashboard view/get_dashboard"
-    tal:content="string: dashboard_config = ${dashboard}">
-</script>
-
-<style type="text/css" tal:content="view/get_customstyle">
-</style>
-
+    <style type="text/css" tal:content="view/get_customstyle">
+    </style>
 </head>
-<body style="margin: 0; overflow: hidden">
+<body>
+    <metal:chart use-macro="here/embed-dashboard/macros/dashboard"/>
 
-    <div id="googlechart_dashboard" class="embedded-dashboard">
-        <div id="googlechart_table">
-            <div id="googlechart_filters" class="embedded-filters">
-            </div>
-            <div id="googlechart_view">
-            </div>
-        </div>
-    </div>
-    <a style="float:right"
+    <a tal:condition="python:not inline" style="float:right"
        tal:attributes="href view/context/absolute_url"
        i18n:translate=""
        target="_top">Go to original visualization</a>
 </body>
-
 </html>
+
+<tal:block tal:condition="inline">
+    <metal:chart use-macro="here/embed-dashboard/macros/dashboard"/>
+</tal:block>
+</tal:block>
+
+<tal:block tal:define="enabled_dashboard python:False">
+<metal:chart define-macro="dashboard" tal:condition="enabled_dashboard">
+    <tal:block tal:define="vhash view/get_visualization_hash">
+    <script type="text/javascript" tal:content="string:
+        var googlechart_config_array_$vhash = [];
+        ">
+    </script>
+
+    <script type="text/javascript" tal:content="string:
+        var available_columns_$vhash = ${view/get_columns};
+        var merged_rows_$vhash = ${view/get_rows};
+        var baseurl_$vhash = '${view/context/absolute_url}';
+        var qr_pos_$vhash = '${view/qr_position}';
+        var qr_size_$vhash = '${view/qr_size}';
+        var wm_pos_$vhash = '${view/wm_position}';
+        var wm_path_$vhash = '${view/wm_path}';
+        var main_title_$vhash = '${view/get_maintitle}';
+        var isInline_$vhash = '$inline';">
+    </script>
+    <tal:block tal:define="charts view/get_charts;">
+        <tal:block tal:repeat="chart charts">
+            <script type="text/javascript"
+                tal:define="dashboard python:view.get_dashboard_js(chart)"
+                tal:content="string: googlechart_config_array_$vhash.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard]);"></script>
+        </tal:block>
+    </tal:block>
+
+    <script type="text/javascript"
+        tal:define="dashboard view/get_dashboard"
+        tal:content="structure string:
+        var dashboard_config_$vhash = ${dashboard};
+
+        jQuery(document).ready(function($){
+            var settings_$vhash = {
+                googlechart_config_array : googlechart_config_array_$vhash,
+                main_title : main_title_$vhash,
+                dashboard_config : dashboard_config_$vhash,
+                baseurl : baseurl_$vhash,
+                qr_pos : qr_pos_$vhash,
+                qr_size : qr_size_$vhash,
+                wm_pos : wm_pos_$vhash,
+                wm_path : wm_path_$vhash,
+                merged_rows : merged_rows_$vhash,
+                available_columns : available_columns_$vhash,
+                vhash : '$vhash',
+                isInline : isInline_$vhash
+            };
+            drawDashboardEmbed(settings_$vhash);
+        });
+        ">
+    </script>
+
+    <div tal:attributes="id string:googlechart_dashboard_$vhash" class="embedded-dashboard googlechart_dashboard">
+    </div>
+    </tal:block>
+</metal:chart>
+</tal:block>

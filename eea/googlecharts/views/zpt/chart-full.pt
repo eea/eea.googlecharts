@@ -75,7 +75,7 @@
 
 </script>
 </head>
-<body tal:define="chart view/get_iframe_chart; row_filters python: chart.get('row_filters_str','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc_str','asc')" style="margin: 0; overflow: hidden">
+<body tal:define="chart view/get_iframe_chart; row_filters python: chart.get('row_filters_str','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc_str','asc');" style="margin: 0; overflow: hidden">
     <script type="text/javascript" tal:content="
         string:chart_columns = ${chart/columns};
         merged_rows = ${chart/data};

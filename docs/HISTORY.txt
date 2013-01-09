@@ -8,6 +8,8 @@ Changelog
   For non-Plone usage you'll have to manually run @@migrate-dashboards for all
   visualizations that have Google-Dashboard enabled.
 
+* Feature: Added possibility to have inline embeds of charts and dashboards
+  [szabozo0 refs #10239]
 * Bugfix: Implemented workaround to display bubble value notes for charts in firefox
   [szabozo0 refs #9941]
 * Feature: Added possibility to select on view which columns to be used for the chart

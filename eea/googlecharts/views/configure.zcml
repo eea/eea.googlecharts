@@ -14,6 +14,7 @@
     permission="zope2.View"
     />
 
+
   <browser:page
     name="embed-chart"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
@@ -27,6 +28,21 @@
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/embed-dashboard.pt"
     class=".chart.View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="embed-inline"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".chart.View"
+    attribute="embed_inline"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="embed-inline-includes"
+    for="*"
+    template="zpt/inline-includes.pt"
     permission="zope2.View"
     />
 
@@ -166,6 +182,11 @@
   <browser:resource
     name="eea.googlecharts.datatable.js"
     file="./js/datatable.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.embed_common.js"
+    file="./js/embed_common.js"
   />
 
   <browser:resource

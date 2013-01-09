@@ -43,7 +43,16 @@ function putImageDivInPosition(div_id, position){
     }
 }
 
-function drawChart(value){
+function drawChart(value, other_options){
+    var other_settings = {
+        merged_rows : '',
+        available_columns : '',
+        googlechart_config_array: [],
+        GoogleChartsConfig : null
+    };
+
+    jQuery.extend(other_settings, other_options);
+
     var chart_id = value[0];
     var chart_json = value[1];
     var chart_columns = value[2];
@@ -150,14 +159,16 @@ function drawChart(value){
     jQuery('#googlechart_dashboard').attr("chart_height", chart_height);
     jQuery('#googlechart_dashboard').attr("chart_hasPNG", chart_hasPNG);
 
+    jQuery('#googlechart_dashboard').data('other_settings', other_settings);
+
     var columnsFromSettings = getColumnsFromSettings(chart_columns);
 
     var options = {
-        originalTable : merged_rows,
+        originalTable : other_settings.merged_rows,
         normalColumns : columnsFromSettings.normalColumns,
         pivotingColumns : columnsFromSettings.pivotColumns,
         valueColumn : columnsFromSettings.valueColumn,
-        availableColumns : available_columns,
+        availableColumns : other_settings.available_columns,
         filters : chart_row_filters
     };
 
@@ -192,7 +203,15 @@ function drawChart(value){
     drawGoogleChart(googlechart_params);
 }
 
-function drawDashboard(value){
+function drawDashboard(value, other_options){
+    var other_settings = {
+        merged_rows : '',
+        available_columns : '',
+        googlechart_config_array: []
+    };
+
+    jQuery.extend(other_settings, other_options);
+
     var settings = {
         name : "",
         title : "",
@@ -236,6 +255,7 @@ function drawDashboard(value){
             "</div>";
     }
 
+    jQuery('#googlechart_dashboard').data('other_settings', other_settings);
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
     var chart_url = baseurl + "#tab-" + settings.name.replace(".","-");
@@ -280,9 +300,9 @@ function drawDashboard(value){
         chartFiltersDiv : 'googlechart_filters',
         chartsSettings : settings.widgets,
         filters : settings.filters,
-        rows : merged_rows,
-        columns : available_columns,
-        charts : googlechart_config_array,
+        rows : other_settings.merged_rows,
+        columns : other_settings.available_columns,
+        charts : other_settings.googlechart_config_array,
         dashboardName: value.name
     };
 
@@ -350,8 +370,14 @@ var googleChartTabClick = function(context){
             jQuery("#googlechart_filters").html('');
             jQuery("#googlechart_view").html('');
 
-            drawChart(googlechart_config_array[chart_index_to_use]);
-            applyColumnFilters();
+            var chart_other_options = {
+                merged_rows: merged_rows,
+                available_columns: available_columns,
+                googlechart_config_array: googlechart_config_array,
+                GoogleChartsConfig: GoogleChartsConfig
+            };
+
+            drawChart(googlechart_config_array[chart_index_to_use], chart_other_options);
         }
         else {
             var config;
@@ -363,7 +389,13 @@ var googleChartTabClick = function(context){
                     config = value;
                 }
             });
-            drawDashboard(config);
+            var dashboard_other_options = {
+                merged_rows: merged_rows,
+                available_columns: available_columns,
+                googlechart_config_array: googlechart_config_array,
+                GoogleChartsConfig: GoogleChartsConfig
+            };
+            drawDashboard(config, dashboard_other_options);
         }
     }
     return false;

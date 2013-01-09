@@ -1,63 +1,114 @@
-<html>
-<head>
-<style type="text/css">
-    #googlechart_full > div > div {overflow:hidden ! important;}
-    #googlechart_filters {margin-top:0px !important;}
-</style>
-<link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" tal:attributes="src view/jquery_src"></script>
-<script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
-<script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
-<script type="text/javascript" src="++resource++eea.googlecharts.embed_chart.js"></script>
-<script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
+<tal:block tal:define="inline view/isInline; enabled_chart python: True">
+<html tal:condition="not:inline">
+    <head>
+        <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
+        <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
+        <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
+        <script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
+        <script type="text/javascript" src="++resource++eea.googlecharts.embed_chart.js"></script>
+        <script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
+        <style type="text/css" tal:content="view/get_customstyle">
+        </style>
+        <style type="text/css">
+            #googlechart_full > div > div {overflow:hidden ! important;}
+            #googlechart_filters {margin-top:0px !important;}
+            .googlechart_full > div > div {overflow:hidden ! important;}
+            .googlechart_filters {margin-top:0px !important;}
+            body {margin:0; overflow: hidden;}
+        </style>
 
-<style type="text/css" tal:content="view/get_customstyle">
-</style>
-
-<script type="text/javascript" tal:define="GoogleChartsConfig view/get_chart_json;" tal:content="structure string:
-    var GoogleChartsConfig = $GoogleChartsConfig;
-"></script>
-
-</head>
-<body tal:define="chart view/get_chart" style="margin: 0; overflow: hidden">
-    <script type="text/javascript" tal:define="showSort python: chart.get('showSort','False'); row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart);"
-        tal:content="string:chart_columns = ${chart/columns};
-                                                merged_rows = ${chart/data};
-                                                available_columns = ${chart/available_columns};
-                                                chart_json = ${chart/config};
-                                                width = ${chart/chartWidth};
-                                                height = ${chart/chartHeight};
-                                                name = '${chart/name}';
-                                                chart_options = ${chart/options};
-                                                chart_filterposition = ${chart/filterposition}
-                                                chart_filters = ${chart/filters};
-                                                baseurl = '${view/context/absolute_url}';
-                                                chart_id = '${chart/chart_id}';
-                                                qr_pos = '${view/qr_position}';
-                                                qr_size = '${view/qr_size}';
-                                                wm_pos = '${view/wm_position}';
-                                                wm_path = '${view/wm_path}';
-                                                main_title = '${view/get_maintitle}';
-                                                showSort = '${showSort}';
-                                                row_filters_str = '$row_filters';
-                                                sortBy = '$sortBy';
-                                                sortAsc_str = '$sortAsc';
-                                                chart_columnFilters = $columnFilters">
-    </script>
-    <div id="googlechart_dashboard" class="embedded-dashboard">
-        <div id="googlechart_table">
-            <div id="googlechart_filters" class="embedded-filters">
-            </div>
-            <div id="googlechart_view">
-            </div>
-        </div>
-    </div>
-    <a style="float:right"
-       tal:attributes="href view/context/absolute_url"
-       i18n:translate=""
-       target="_top">Go to original visualization</a>
-</body>
-
+    </head>
+    <body>
+        <metal:chart use-macro="here/embed-chart/macros/chart"/>
+        <a tal:condition="python:not inline" style="float:right"
+           tal:attributes="href view/context/absolute_url"
+           i18n:translate=""
+           target="_top">Go to original visualization</a>
+    </body>
 </html>
+
+<tal:block tal:condition="inline">
+    <metal:chart use-macro="here/embed-chart/macros/chart"/>
+</tal:block>
+
+</tal:block>
+<tal:block tal:define="enabled_chart python:False">
+<metal:chart define-macro="chart" tal:condition="enabled_chart">
+    <tal:block tal:define="chart view/get_chart; vhash view/get_visualization_hash">
+    <script type="text/javascript" tal:define="showSort python: chart.get('showSort','False'); row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart); GoogleChartsConfig view/get_chart_json;"
+        tal:content="structure string:
+            var chart_columns_$vhash = ${chart/columns};
+            var merged_rows_$vhash = ${chart/data};
+            var available_columns_$vhash = ${chart/available_columns};
+            var chart_json_$vhash = ${chart/config};
+            var width_$vhash = ${chart/chartWidth};
+            var height_$vhash = ${chart/chartHeight};
+            var name_$vhash = '${chart/name}';
+            var chart_options_$vhash = ${chart/options};
+            var chart_filterposition_$vhash = ${chart/filterposition}
+            var chart_filters_$vhash = ${chart/filters};
+            var baseurl_$vhash = '${view/context/absolute_url}';
+            var chart_id_$vhash = '${chart/chart_id}';
+            var qr_pos_$vhash = '${view/qr_position}';
+            var qr_size_$vhash = '${view/qr_size}';
+            var wm_pos_$vhash = '${view/wm_position}';
+            var wm_path_$vhash = '${view/wm_path}';
+            var main_title_$vhash = '${view/get_maintitle}';
+            var showSort_$vhash = '${showSort}';
+            var row_filters_str_$vhash = '$row_filters';
+            var sortBy_$vhash = '$sortBy';
+            var sortAsc_str_$vhash = '$sortAsc';
+            var chart_columnFilters_$vhash = $columnFilters;
+            var GoogleChartsConfig_$vhash = $GoogleChartsConfig;
+            var isInline_$vhash = '$inline';
+
+            var googlechart_config_array_$vhash = [];
+            jQuery(document).ready(function($){
+                var settings_$vhash = [];
+                settings_$vhash.push(GoogleChartsConfig_$vhash[0].id);
+                settings_$vhash.push(chart_json_$vhash);
+                settings_$vhash.push(chart_columns_$vhash);
+                settings_$vhash.push(chart_filters_$vhash);
+                settings_$vhash.push(width_$vhash);
+                settings_$vhash.push(height_$vhash);
+                settings_$vhash.push(chart_filterposition_$vhash);
+                settings_$vhash.push(chart_options_$vhash);
+                settings_$vhash.push(null);
+                settings_$vhash.push(showSort_$vhash);
+                settings_$vhash.push(null);
+                settings_$vhash.push(row_filters_str_$vhash);
+                settings_$vhash.push(sortBy_$vhash);
+                settings_$vhash.push(sortAsc_str_$vhash);
+                settings_$vhash.push(chart_columnFilters_$vhash);
+                googlechart_config_array_$vhash.push(settings_$vhash);
+
+                var other_options_$vhash = {
+                    merged_rows: merged_rows_$vhash,
+                    available_columns: available_columns_$vhash,
+                    googlechart_config_array: googlechart_config_array_$vhash,
+                    GoogleChartsConfig: GoogleChartsConfig_$vhash,
+                    main_title: main_title_$vhash,
+                    baseurl: baseurl_$vhash,
+                    qr_pos: qr_pos_$vhash,
+                    qr_size: qr_size_$vhash,
+                    wm_pos: wm_pos_$vhash,
+                    wm_path: wm_path_$vhash,
+                    vhash: '$vhash',
+                    name: name_$vhash,
+                    isInline: isInline_$vhash
+                };
+
+                drawChart(settings_$vhash, other_options_$vhash);
+            });
+            ">
+    </script>
+
+    <div tal:attributes="id string:googlechart_dashboard_$vhash" class="embedded-dashboard googlechart_dashboard">
+    </div>
+    </tal:block>
+
+</metal:chart>
+</tal:block>
