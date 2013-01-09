@@ -298,13 +298,4 @@
     handler=".events.create_default_views"
     />
 
-  <browser:page
-    name="googlechart.get_inline_embed"
-    for="eea.app.visualization.interfaces.IVisualizationEnabled"
-    class=".chart.View"
-    attribute="getInlineEmbed"
-    permission="zope2.View"
-    />
-
-
 </configure>
