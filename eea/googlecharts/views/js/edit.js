@@ -847,6 +847,16 @@ function addChart(options){
                     "<span id='googlechart_chart_div_"+settings.id+"'></span>" +
                     "Preview Chart</a>"+
                 "</div>" +
+                "<div class='googlechart-columnfilters-box'>" +
+                    '<div class="header">' +
+                        '<span class="label">Column filters<span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span></span>' +
+                        '<span title="Add column filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartcolumnfilter">+</span>' +
+                    '</div>' +
+                    '<div style="padding: 1em" class="body">' +
+                        "<ul class='googlechart_columnfilters_list'  id='googlechart_columnfilter_"+settings.id+"'>" +
+                        "</ul>" +
+                    '</div>' +
+                "</div>" +
                 "<div class='googlechart-filters-box'>" +
                     '<div class="header">' +
                         '<span class="label">Chart filters <span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span></span>' +
@@ -871,16 +881,6 @@ function addChart(options){
                             "<option value='2' " + ((settings.filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
                             "<option value='3' " + ((settings.filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
                         "</select>" +
-                    '</div>' +
-                "</div>" +
-                "<div class='googlechart-columnfilters-box'>" +
-                    '<div class="header">' +
-                        '<span class="label">Column filters<span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span></span>' +
-                        '<span title="Add column filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartcolumnfilter">+</span>' +
-                    '</div>' +
-                    '<div style="padding: 1em" class="body">' +
-                        "<ul class='googlechart_columnfilters_list'  id='googlechart_columnfilter_"+settings.id+"'>" +
-                        "</ul>" +
                     '</div>' +
                 "</div>" +
                 "<div class='googlechart-notes-box'>" +

@@ -141,9 +141,6 @@ function drawGoogleChart(options){
         chart.draw();
     }
 
-    var filterSeparatorDiv = "<div class='filter-separator'></div>";
-    jQuery(filterSeparatorDiv).prependTo("#" + settings.chartFiltersDiv);
-
     if (settings.showSort){
         var options2 = {
             filtersDiv : settings.chartFiltersDiv,
@@ -154,8 +151,6 @@ function drawGoogleChart(options){
 
         customFilterParams = addSortFilter(options2);
     }
-
-    jQuery(filterSeparatorDiv).prependTo("#" + settings.chartFiltersDiv);
 
     if (settings.columnFilters.length > 0){
         var options3 = {
