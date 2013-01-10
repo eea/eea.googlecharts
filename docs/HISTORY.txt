@@ -1,13 +1,12 @@
 Changelog
 =========
 
-6.3-dev - (unreleased)
-----------------------
+6.3 - (2013-01-10)
+------------------
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
   upgrade button available for eea.googlecharts.
   For non-Plone usage you'll have to manually run @@migrate-dashboards for all
   visualizations that have Google-Dashboard enabled.
-
 * Feature: Added possibility to have inline embeds of charts and dashboards
   [szabozo0 refs #10239]
 * Bugfix: Implemented workaround to display bubble value notes for charts in firefox

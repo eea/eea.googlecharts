@@ -39,8 +39,8 @@ setup(name=NAME,
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'eea.converter',
-          'eea.app.visualization > 6.1',
+          'eea.converter >= 6.0',
+          'eea.app.visualization >= 6.2',
       ],
       extras_require={
           'test': [
