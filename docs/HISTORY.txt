@@ -50,6 +50,8 @@ Changelog
   [szabozo0 refs #10019]
 * Bug fix: Fixed saving of png versions of charts
   [szabozo0 #9997]
+* Bug fix: saner jquery source injection (makes Chameleon happy)
+  [simahawk]
 
 6.2 - (2012-11-12)
 ------------------
