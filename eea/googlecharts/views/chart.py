@@ -41,8 +41,8 @@ class View(ViewForm):
                 # XXX: maybe better to check via portal_javascript?
                 self.context.restrictedTraverse(i)
                 src = i
-            except AttributeError:
-                pass
+            except AttributeError, err:
+                logger.exception(err)
         return src
 
     @property
@@ -305,6 +305,8 @@ class View(ViewForm):
         return False
 
     def embed_inline(self, chart):
+        """ inline embed for charts and dashboards
+        """
         if chart == "":
             return ""
         view = ""
