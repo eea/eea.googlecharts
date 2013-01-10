@@ -164,12 +164,12 @@ function prepareForChart(options){
             var newColumn = row[column];
 
             var colType = settings.originalDataTable.properties[column];
-            var listType = ((colType.columnType === 'list') || (colType.valueType === 'list'));
 
             if(colType === undefined){
                 colType = 'string';
             }else{
                 colType = colType.valueType !== undefined ? colType.valueType: colType;
+                var listType = ((colType.columnType === 'list') || (colType.valueType === 'list'));
                 if (jQuery.inArray(colType, allowedTypesForCharts) === -1){
                     if(listType){
                         newColumn = newColumn.join(", ");
