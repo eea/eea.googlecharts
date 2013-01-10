@@ -69,6 +69,18 @@ var matrixChartOptions = {
             }
 };
 
+function updateCounters(){
+    jQuery(".googlechart").each(function(){
+        var columnFiltersNr = jQuery(this).find(".googlechart-columnfilters-box").find("li").length;
+        var notesNr = jQuery(this).find(".googlechart-notes-box").find("li").length;
+        var filtersNr = jQuery(this).find(".googlechart-filters-box").find(".ui-icon-hide").length +
+                        jQuery(this).find(".googlechart_filters_list").find("li").length;
+        jQuery(this).find(".googlechart-columnfilters-box").find(".items_counter").text("("+columnFiltersNr+")");
+        jQuery(this).find(".googlechart-notes-box").find(".items_counter").text("("+notesNr+")");
+        jQuery(this).find(".googlechart-filters-box").find(".items_counter").text("("+filtersNr+")");
+    });
+}
+
 function resizeGooglecharts(){
     var listwidth = jQuery("#googlecharts_list").width();
     var chartwidth = jQuery(".googlechart").width();
@@ -117,6 +129,7 @@ function checkSVG_withThumb(id){
 function markChartAsModified(id){
     var chartObj = jQuery("#googlechartid_"+id);
     chartObj.addClass("googlechart_modified");
+    updateCounters();
 }
 
 function changeChartHiddenState(id){
@@ -255,8 +268,8 @@ function reloadChartNotes(id){
                                 }
                             });
                             context.data('notes', newNotes);
-                            markChartAsModified(id);
                             reloadChartNotes(id);
+                            markChartAsModified(id);
                             jQuery(this).dialog('close');
                         }
                     }
@@ -498,8 +511,8 @@ function reloadColumnFilters(id){
                                 }
                             });
                             context.data('columnfilters', newColumnFilters);
-                            markChartAsModified(id);
                             reloadColumnFilters(id);
+                            markChartAsModified(id);
                             jQuery(this).dialog('close');
                         }
                     }
@@ -784,6 +797,7 @@ function markChartAsThumb(id){
     markChartAsModified(id);
 }
 
+
 function addChart(options){
     var settings = {
         id : "",
@@ -849,7 +863,7 @@ function addChart(options){
                 "</div>" +
                 "<div class='googlechart-columnfilters-box'>" +
                     '<div class="header">' +
-                        '<span class="label">Column filters<span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span></span>' +
+                        '<span class="label">Column filters<span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span><span class="items_counter"></span></span>' +
                         '<span title="Add column filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartcolumnfilter">+</span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
@@ -859,7 +873,7 @@ function addChart(options){
                 "</div>" +
                 "<div class='googlechart-filters-box'>" +
                     '<div class="header">' +
-                        '<span class="label">Chart filters <span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span></span>' +
+                        '<span class="label">Chart filters <span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span><span class="items_counter"></span></span>' +
                         '<span title="Add new filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartfilter">+</span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
@@ -885,7 +899,7 @@ function addChart(options){
                 "</div>" +
                 "<div class='googlechart-notes-box'>" +
                     '<div class="header">' +
-                        '<span class="label">Chart notes <span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span></span>' +
+                        '<span class="label">Chart notes <span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span><span class="items_counter"></span></span>' +
                         '<span title="Add chart note" class="ui-icon ui-icon-plus ui-corner-all addgooglechartnote">+</span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
@@ -903,6 +917,7 @@ function addChart(options){
         "</li>");
 
     // Filters
+
     googlechart.find('.googlechart-filters-box .body').hide();
     googlechart.find('.googlechart-filters-box .header .ui-icon-plus').hide();
     googlechart.find('.googlechart-filters-box .header .label').click(function(){
@@ -965,8 +980,6 @@ function addChart(options){
         }
     });
 
-
-
     googlechart.find(".googlechart_columns").attr("value", settings.columns);
     googlechart.find(".googlechart_configjson").attr("value", settings.config);
     googlechart.find(".googlechart_options").attr("value", settings.options);
@@ -1025,6 +1038,7 @@ function addChart(options){
         markChartAsModified(settings.id);
     }
     resizeGooglecharts();
+    updateCounters();
 }
 
 var isFirstEdit = true;
@@ -2671,8 +2685,8 @@ function openAddChartColumnFilterDialog(id){
                     return;
                 }
                 context.data('columnfilters').push(columnfilter);
-                markChartAsModified(id);
                 reloadColumnFilters(id);
+                markChartAsModified(id);
                 jQuery(this).dialog('close');
             }
         }
@@ -2732,8 +2746,8 @@ function openAddChartNoteDialog(id){
                 }
 
                 context.data('notes').push(note);
-                markChartAsModified(id);
                 reloadChartNotes(id);
+                markChartAsModified(id);
                 jQuery(this).dialog('close');
             }
         }
