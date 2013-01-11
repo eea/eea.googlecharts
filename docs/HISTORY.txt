@@ -3,6 +3,8 @@ Changelog
 
 6.4-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed visualization migration to create the default images for charts
+  [szabozo0]
 * Feature: Added italian translations
   [simahawk]
 
