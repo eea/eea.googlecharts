@@ -18,7 +18,7 @@ def migrate_imagecharts(context):
         "googlechart.table.preview.png",
         "googlechart.annotatedtimeline.preview.png",
         "googlechart.treemap.preview.png"
-    ];
+    ]
 
     logger.info('Migrating %s Visualizations ...', len(brains))
 
@@ -31,7 +31,8 @@ def migrate_imagecharts(context):
                 if not visualization.get(previewname, None):
                     logger.info('Create img: %s', previewname)
 
-                    img = context.restrictedTraverse('++resource++' + previewname)
+                    img = context.restrictedTraverse(
+                        '++resource++' + previewname)
                     visualization.invokeFactory('Image',
                         id=previewname,
                         title=previewname,
