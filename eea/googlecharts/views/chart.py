@@ -30,19 +30,20 @@ class View(ViewForm):
     def jquery_src(self):
         """ returns available jquery source href
         """
-        src = ''
+        src = '++resource++eea.jquery.js'
+
         possible_resources = (
             'jquery.js',
             '++resource++plone.app.jquery.js',
-            '++resource++eea.jquery.js',
         )
-        for i in possible_resources:
+
+        for res in possible_resources:
             try:
-                # XXX: maybe better to check via portal_javascript?
-                self.context.restrictedTraverse(i)
-                src = i
-            except AttributeError, err:
-                logger.exception(err)
+                self.context.restrictedTraverse(res)
+                return res
+            except Exception, err:
+                logger.debug(err)
+                continue
         return src
 
     @property
