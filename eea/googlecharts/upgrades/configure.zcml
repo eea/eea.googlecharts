@@ -3,6 +3,19 @@
   xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
   i18n_domain="eea">
 
+
+  <!-- 6.3 => 6.4 -->
+  <genericsetup:upgradeSteps
+    source="6.3"
+    destination="6.4"
+    profile="eea.googlecharts:default">
+
+    <genericsetup:upgradeStep
+      title="Create generic image charts"
+      handler="eea.googlecharts.upgrades.evolve64.migrate_imagecharts"
+      />
+  </genericsetup:upgradeSteps>
+
   <!-- 6.0 => 6.3 -->
   <genericsetup:upgradeSteps
     source="6.0"
