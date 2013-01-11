@@ -3,6 +3,8 @@ Changelog
 
 6.4-dev - (unreleased)
 ----------------------
+* Feature: Added italian translations
+  [simahawk]
 
 6.3 - (2013-01-10)
 ------------------
