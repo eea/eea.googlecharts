@@ -1,6 +1,9 @@
 Changelog
 =========
 
+6.5-dev - (unreleased)
+----------------------
+
 6.4 - (2013-01-11)
 ------------------
 * Bug fix: Update jquery_src to return the first available jQuery JS resource
