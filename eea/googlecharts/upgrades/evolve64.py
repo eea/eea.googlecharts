@@ -1,7 +1,6 @@
 """ Create the generic image charts for dashboards in all visualizations
 """
 import logging
-from zope.component import queryMultiAdapter
 from eea.app.visualization.zopera import getToolByName
 from eea.app.visualization.zopera import IFolderish
 logger = logging.getLogger('eea.googlecharts.evolve64')
