@@ -80,16 +80,16 @@ function drawDashboardEmbed(options){
     jQuery('#googlechart_dashboard_' + settings.vhash).removeAttr("chart_id");
 
     // Set width, height
-    if(settings.dashboard_config.chartsBox.width){
+    if ((settings.dashboard_config.chartsBox) && (settings.dashboard_config.chartsBox.width)){
         jQuery('#googlechart_view_' + settings.vhash, jQuery('#googlechart_dashboard_' + settings.vhash)).width(settings.dashboard_config.chartsBox.width);
     }
-    if(settings.dashboard_config.chartsBox.height){
+    if ((settings.dashboard_config.chartsBox) && (settings.dashboard_config.chartsBox.height)){
         jQuery('#googlechart_view_' + settings.vhash, jQuery('#googlechart_dashboard_' + settings.vhash)).height(settings.dashboard_config.chartsBox.height);
     }
-    if(settings.dashboard_config.filtersBox.width){
+    if ((settings.dashboard_config.filtersBox) && (settings.dashboard_config.filtersBox.width)){
         jQuery('#googlechart_filters_' + settings.vhash, jQuery('#googlechart_dashboard_' + settings.vhash)).width(settings.dashboard_config.filtersBox.width);
     }
-    if(settings.dashboard_config.filtersBox.height){
+    if ((settings.dashboard_config.filtersBox) && (settings.dashboard_config.filtersBox.height)){
         jQuery('#googlechart_filters_' + settings.vhash, jQuery('#googlechart_dashboard_' + settings.vhash)).height(settings.dashboard_config.filtersBox.height);
     }
 

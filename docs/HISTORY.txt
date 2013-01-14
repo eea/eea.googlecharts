@@ -3,6 +3,8 @@ Changelog
 
 6.5-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed embed for migrated dashboards
+  [szabozo0 refs #10239]
 
 6.4 - (2013-01-11)
 ------------------

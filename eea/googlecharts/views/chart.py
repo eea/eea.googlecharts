@@ -311,7 +311,8 @@ class View(ViewForm):
         if chart == "":
             return ""
         view = ""
-        if chart.startswith("dashboard"):
+
+        if "dashboard" in chart:
             self.request['chart'] = ''
             self.request['dashboard'] = chart
             self.request['inline'] = 'inline'
