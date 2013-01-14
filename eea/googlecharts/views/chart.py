@@ -341,13 +341,13 @@ class View(ViewForm):
                             note['title'] = widget.get('title', '')
                             note['text']  = widget.get('text', '')
                             notes.append(note)
-                    return json.dumps(notes)
+                    return notes
         else:
             charts = self.get_charts()
             for chart in charts:
                 if chart.get('id') == chart_id:
-                    return json.dumps([chart.get('notes', [])])
-        return json.dumps([])
+                    return chart.get('notes', [])
+        return []
 
 def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
     """ Calculate position of watermark and place it over the original image
