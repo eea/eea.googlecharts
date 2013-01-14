@@ -45,7 +45,7 @@
         var tableForChart = prepareForChart(options);
         chart_json.options.title = name;
         var googlechart_params = {
-            chartDashboard : '',
+            chartDashboard : 'googlechart_dashboard_full',
             chartViewDiv : 'googlechart_full',
             chartFiltersDiv : '',
             chartId : 'full',
