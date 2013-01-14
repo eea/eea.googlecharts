@@ -324,6 +324,16 @@ class View(ViewForm):
             view = "embed-chart"
         return getMultiAdapter((self.context, self.request), name=view)()
 
+    def get_notes(self, chart_id):
+        """ get the notes for chart
+        """
+        if 'dashboard' in chart_id:
+            return json.dumps([])
+        charts = self.get_charts()
+        for chart in charts:
+            if chart.get('id') == chart_id:
+                return json.dumps([chart.get('notes', [])])
+
 def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
     """ Calculate position of watermark and place it over the original image
     """
