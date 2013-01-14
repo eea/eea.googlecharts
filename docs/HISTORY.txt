@@ -3,6 +3,8 @@ Changelog
 
 6.5-dev - (unreleased)
 ----------------------
+* Feature: Added view to get notes for a chart and dashboard
+  [szabozo0 refs #10239]
 * Bug fix: Fixed embed for migrated dashboards
   [szabozo0 refs #10239]
 

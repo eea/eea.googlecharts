@@ -324,6 +324,31 @@ class View(ViewForm):
             view = "embed-chart"
         return getMultiAdapter((self.context, self.request), name=view)()
 
+    def get_notes(self, chart_id):
+        """ get the notes for charts or dashboards
+        """
+        if 'dashboard' in chart_id:
+            dashboards = json.loads(self.get_dashboards())
+            for dashboard in dashboards:
+                if dashboard['name'] == chart_id:
+                    notes = []
+                    for widget in dashboard.get('widgets', []):
+                        if widget.get('wtype','') == \
+                            'googlecharts.widgets.textarea' and \
+                            not widget.get('dashboard',{}).get('hidden', True):
+
+                            note = {}
+                            note['title'] = widget.get('title', '')
+                            note['text']  = widget.get('text', '')
+                            notes.append(note)
+                    return notes
+        else:
+            charts = self.get_charts()
+            for chart in charts:
+                if chart.get('id') == chart_id:
+                    return chart.get('notes', [])
+        return []
+
 def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
     """ Calculate position of watermark and place it over the original image
     """
