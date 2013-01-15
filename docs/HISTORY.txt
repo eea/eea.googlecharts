@@ -1,6 +1,9 @@
 Changelog
 =========
 
+6.6-dev - (unreleased)
+----------------------
+
 6.5 - (2013-01-15)
 ------------------
 * Feature: Added view to get notes for a chart and dashboard
