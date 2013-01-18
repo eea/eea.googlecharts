@@ -560,8 +560,40 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
 
 var columnfilter_data;
 
+function eeaCheckMarkFormatter(row, cell, value, columnDef, dataContext){
+    if (!value) {
+        if (columnDef.name === 'Selectable'){
+            return "<span class='ui-icon ui-icon-closethick'></span>";
+        }
+        if (columnDef.name === 'Visible'){
+            return "<span class='ui-icon ui-icon-cancel'></span>";
+        }
+        if (columnfilter_data[row].visible){
+            return "<span class='ui-icon ui-icon-closethick'></span>";
+        }
+        else {
+            return "<span class='ui-icon ui-icon-cancel'></span>";
+        }
+    }
+    return "<img src='++resource++slickgrid-images/tick.png'>";
+}
+
+var grid_columns;
+
+function menuOnColumnsCommandHandler(e, args){
+    var command = args.command;
+    var newValue = false;
+    if (command == "columnFiltersSelectAll"){
+        newValue = true;
+    }
+    jQuery.each(columnfilter_data, function(idx, row){
+        row.selectable = newValue;
+    });
+    grid_columns.invalidateAllRows();
+    grid_columns.render();
+}
+
 function drawColumnFiltersGrid(divId, columns_list){
-    var grid;
     columnfilter_data = [];
     var options = {
         editable: true,
@@ -593,7 +625,7 @@ function drawColumnFiltersGrid(divId, columns_list){
         field: 'visible',
         width: 50,
         cssClass: 'columnfilters-grid-checkbox',
-        formatter: Slick.Formatters.Checkmark
+        formatter: eeaCheckMarkFormatter
     });
 
     columns.push({
@@ -602,7 +634,7 @@ function drawColumnFiltersGrid(divId, columns_list){
         field: 'defaultcol',
         width: 50,
         cssClass: 'columnfilters-grid-checkbox',
-        formatter: Slick.Formatters.Checkmark
+        formatter: eeaCheckMarkFormatter
     });
 
     columns.push({
@@ -611,14 +643,29 @@ function drawColumnFiltersGrid(divId, columns_list){
         field: 'selectable',
         width: 75,
         cssClass: 'columnfilters-grid-checkbox',
-        formatter: Slick.Formatters.Checkmark
+        formatter: eeaCheckMarkFormatter,
+        header:{
+            menu: {
+                items: [
+                    {title:'select all',
+                    command:'columnFiltersSelectAll'},
+                    {title:'disable all',
+                    command:'columnFiltersDisableAll'}
+                ]
+            }
+        }
     });
 
-    grid = new Slick.Grid(divId, columnfilter_data, columns, options);
-    grid.onClick.subscribe(function (e) {
-        var cell = grid.getCellFromEvent(e);
-        if (grid.getColumns()[cell.cell].id == 'defaultcol') {
-            if (!columnfilter_data[cell.row].visible){
+    grid_columns = new Slick.Grid(divId, columnfilter_data, columns, options);
+
+    var columnHeaderMenuPlugin = new Slick.Plugins.HeaderMenu();
+    columnHeaderMenuPlugin.onCommand.subscribe(menuOnColumnsCommandHandler);
+    grid_columns.registerPlugin(columnHeaderMenuPlugin);
+
+    grid_columns.onClick.subscribe(function (e) {
+        var cell = grid_columns.getCellFromEvent(e);
+        if (grid_columns.getColumns()[cell.cell].id == 'defaultcol') {
+            if ((!columnfilter_data[cell.row].visible) && (!columnfilter_data[cell.row].defaultcol)){
                 return;
             }
             if (columnfilter_data[cell.row].defaultcol){
@@ -628,20 +675,20 @@ function drawColumnFiltersGrid(divId, columns_list){
                 columnfilter_data[cell.row].defaultcol = true;
                 columnfilter_data[cell.row].selectable = true;
             }
-            grid.updateRow(cell.row);
+            grid_columns.updateRow(cell.row);
             e.stopPropagation();
         }
         if (columnfilter_data[cell.row].defaultcol){
             return;
         }
-        if (grid.getColumns()[cell.cell].id == 'selectable') {
+        if (grid_columns.getColumns()[cell.cell].id == 'selectable') {
             if (columnfilter_data[cell.row].selectable){
                 columnfilter_data[cell.row].selectable = false;
             }
             else{
                 columnfilter_data[cell.row].selectable = true;
             }
-            grid.updateRow(cell.row);
+            grid_columns.updateRow(cell.row);
             e.stopPropagation();
         }
     });

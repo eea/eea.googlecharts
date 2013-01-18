@@ -451,7 +451,7 @@ function reloadColumnFilters(id){
                                     '<li>Default filter columns are automatically selectable columns</li>'+
                                 '</ul>'+
                             '</div>'+
-                            '<div class="googlecharts_columnfilter_slickgrid daviz-slick-table" style="width:450px;height:200px"></div>'+
+                            '<div class="googlecharts_columnfilter_slickgrid daviz-data-table daviz-slick-table slick_newTable" style="width:450px;height:200px"></div>'+
                         '</div>' +
                     '</div>');
 
@@ -863,7 +863,7 @@ function addChart(options){
                 "</div>" +
                 "<div class='googlechart-columnfilters-box'>" +
                     '<div class="header">' +
-                        '<span class="label">Column filters<span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span><span class="items_counter"></span></span>' +
+                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Column filters <span class="items_counter"></span></span>' +
                         '<span title="Add column filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartcolumnfilter">+</span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
@@ -873,7 +873,7 @@ function addChart(options){
                 "</div>" +
                 "<div class='googlechart-filters-box'>" +
                     '<div class="header">' +
-                        '<span class="label">Chart filters <span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span><span class="items_counter"></span></span>' +
+                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Chart filters <span class="items_counter"></span></span>' +
                         '<span title="Add new filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartfilter">+</span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
@@ -899,7 +899,7 @@ function addChart(options){
                 "</div>" +
                 "<div class='googlechart-notes-box'>" +
                     '<div class="header">' +
-                        '<span class="label">Chart notes <span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span><span class="items_counter"></span></span>' +
+                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Chart notes <span class="items_counter"></span></span>' +
                         '<span title="Add chart note" class="ui-icon ui-icon-plus ui-corner-all addgooglechartnote">+</span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
@@ -2400,7 +2400,7 @@ function openEditChart(id){
 //                      '</div>' +
                     '</div>'+
                     "<div style='clear:both;'> </div>" +
-                    '<div id="newTable" class="slick_newTable" style="height:300px;">'+
+                    '<div id="newTable" class="daviz-data-table slick_newTable" style="height:300px;">'+
                         "Loading Table..."+
                         "<div class='googlechart_loading_img'></div>"+
                     '</div>'+
@@ -2623,7 +2623,7 @@ function openAddChartColumnFilterDialog(id){
                     '<li>Default filter columns are automatically selectable columns</li>'+
                 '</ul>'+
             '</div>'+
-            '<div class="googlecharts_columnfilter_slickgrid daviz-slick-table" style="width:450px;height:200px"></div>'+
+            '<div class="googlecharts_columnfilter_slickgrid daviz-data-table daviz-slick-table slick_newTable" style="width:450px;height:200px"></div>'+
         '</div>' +
     '</div>');
 

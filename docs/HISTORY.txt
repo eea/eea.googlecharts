@@ -3,6 +3,8 @@ Changelog
 
 6.6-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed slickgrid layout
+  [szabozo0]
 
 6.5 - (2013-01-15)
 ------------------
