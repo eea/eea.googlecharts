@@ -318,11 +318,11 @@ function showEmbed(){
         iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
                     "&chartWidth=" + chartObj.attr('chart_width') +
                     "&chartHeight=" + chartObj.attr('chart_height') +
-                    "&customStyle=%23googlechart_view{margin-left:0px%3B}";
+                    "&customStyle=.googlechart_view{margin-left:0px%3B}";
     }
     else{
         iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+ 
-                    "&customStyle=%23googlechart_view{margin-left:0px%3B}";
+                    "&customStyle=.googlechart_view{margin-left:0px%3B}";
     }
     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
     var hasPNG = chartObj.attr('chart_hasPNG');

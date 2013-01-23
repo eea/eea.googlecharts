@@ -3,6 +3,10 @@ Changelog
 
 6.7-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed embedded dashboards to use row filters
+  [szabozo0 refs #9578]
+* Change: Allow possibility to set filter on all types of columns, not only text
+  [szabozo0 refs #9578]
 
 6.6 - (2013-01-18)
 ------------------

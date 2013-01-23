@@ -1311,9 +1311,7 @@ function generateNewTable(sortOrder, isFirst){
 
     var filterable_columns = [];
     jQuery.each(transformedTable.properties, function(column, properties){
-        if (properties.valueType === "text"){
-            filterable_columns.push(column);
-        }
+        filterable_columns.push(column);
     });
     if (!isFirst){
         jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value", "{}");

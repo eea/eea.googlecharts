@@ -24,15 +24,6 @@ function transformTable(options){
     });
 
     jQuery(settings.originalTable.items).each(function(row_index, row){
-        var shouldDisplay = true;
-        jQuery.each(settings.filters, function(column, column_filter){
-            if (jQuery.inArray(row[column], column_filter) !== -1){
-                shouldDisplay = false;
-            }
-        });
-        if (!shouldDisplay){
-            return;
-        }
         var newRow = {};
         var isNewRow = true;
 
@@ -83,7 +74,28 @@ function transformTable(options){
             pivotTable.items.push(newRow);
         }
     });
-    return pivotTable;
+    var filteredPivotTable = {};
+    filteredPivotTable.available_columns = pivotTable.available_columns;
+    filteredPivotTable.properties = pivotTable.properties;
+    filteredPivotTable.items = [];
+
+    jQuery(pivotTable.items).each(function(row_index, row){
+        var shouldDisplay = true;
+        jQuery.each(settings.filters, function(column, column_filter){
+            var val = "";
+            if (row[column] !== undefined){
+                val = row[column].toString();
+            }
+            if (jQuery.inArray(val, column_filter) !== -1){
+                shouldDisplay = false;
+            }
+        });
+        if (!shouldDisplay){
+            return;
+        }
+        filteredPivotTable.items.push(row);
+    });
+    return filteredPivotTable;
 }
 
 function tableToArray(options){
