@@ -1,6 +1,9 @@
 Changelog
 =========
 
+6.8-dev - (unreleased)
+----------------------
+
 6.7 - (2013-01-23)
 ------------------
 * Bug fix: Fixed embedded dashboards to use row filters
