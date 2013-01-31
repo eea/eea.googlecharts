@@ -43,9 +43,10 @@ function gridFilter(item) {
     var retVal = true;
     jQuery.each(grid_colIds, function(colId, colName){
         var val = "";
-        if (item[colId] !== undefined){
+        try{
             val = item[colId].toString();
         }
+        catch(err){}
         if (jQuery.inArray(val, grid_filters[colId]) !== -1){
             retVal = false;
         }
@@ -196,9 +197,10 @@ function filterGridFilter(item) {
     if (filter_grid_filter !== "") {
         var c = filter_grid.getColumns()[0];
         var tmp_val = "";
-        if (item[c.field]){
+        try{
             tmp_val = item[c.field].toString().toLowerCase();
         }
+        catch(err){}
         if (tmp_val.indexOf(filter_grid_filter.toLowerCase()) < 0 ) {
           return false;
         }
@@ -243,13 +245,11 @@ function enableGridFilters(){
     jQuery("body").delegate("#slick-menu-all","click", function(){
         for (var i = 0; i < filter_grid.getDataLength(); i++){
             var element = filter_grid.getDataItem(i);
-            var value = element[filter_grid_colId];
-            if (value !== undefined){
-                value = value.toString();
+            var value = "";
+            try {
+                value = element[filter_grid_colId].toString();
             }
-            else {
-                value = "";
-            }
+            catch(err){}
             pos = jQuery.inArray(value, filter_grid_filters);
             if (pos !== -1){
                 filter_grid_filters.splice(pos,1);
@@ -261,13 +261,11 @@ function enableGridFilters(){
     jQuery("body").delegate("#slick-menu-clear","click", function(){
         for (var i = 0; i < filter_grid.getDataLength(); i++){
             var element = filter_grid.getDataItem(i);
-            var value = element[filter_grid_colId];
-            if (value !== undefined){
-                value = value.toString();
+            var value = "";
+            try {
+                value = element[filter_grid_colId].toString();
             }
-            else {
-                value = "";
-            }
+            catch(err){}
             pos = jQuery.inArray(value, filter_grid_filters);
             if (pos === -1){
                 filter_grid_filters.push(value);
@@ -388,9 +386,10 @@ function enableGridFilters(){
                 var selectedValue = "";
                 if (args.grid.getActiveCell()){
                     var selectedRow = args.grid.getActiveCell().row;
-                    if (args.grid.getDataItem(selectedRow)[filter_grid_colId] !== undefined){
+                    try{
                         selectedValue = args.grid.getDataItem(selectedRow)[filter_grid_colId].toString();
                     }
+                    catch(err){}
                 }
 
                 var pos = jQuery.inArray(selectedValue, filter_grid_filters);

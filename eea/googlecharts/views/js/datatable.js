@@ -83,9 +83,10 @@ function transformTable(options){
         var shouldDisplay = true;
         jQuery.each(settings.filters, function(column, column_filter){
             var val = "";
-            if (row[column] !== undefined){
+            try{
                 val = row[column].toString();
             }
+            catch(err){}
             if (jQuery.inArray(val, column_filter) !== -1){
                 shouldDisplay = false;
             }

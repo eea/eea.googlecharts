@@ -3,6 +3,8 @@ Changelog
 
 6.8-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed row filters for columns with empty values
+  [szabozo0 refs #9578]
 
 6.7 - (2013-01-23)
 ------------------
