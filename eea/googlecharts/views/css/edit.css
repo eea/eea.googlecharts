@@ -1054,6 +1054,13 @@ select[name=googlechart_filterposition] {
     font-weight:bold;
     margin-left:25px;
     float:left;
+    padding: 0.2em;
+}
+
+#slick-menu-all,
+#slick-menu-clear {
+    padding: 0 0 0 0.5em;
+    font-size: 80%;
 }
 
 #slick-menu-ok {

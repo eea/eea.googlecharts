@@ -316,14 +316,14 @@ function enableGridFilters(){
         jQuery(".slick-filter-hr").remove();
         jQuery("<hr class='slick-filter-hr'>").appendTo(menu);
         jQuery("<div class='slick-filter-title'>Filter:</div>").appendTo(menu);
-        jQuery("<input id='slick-menu-all' type='button' value='all'/>").appendTo(menu);
-        jQuery("<input id='slick-menu-clear' type='button' value='clear'/>").appendTo(menu);
+        jQuery("<input id='slick-menu-all' type='button' value='Select all' class='btn btn-link' />").appendTo(menu);
+        jQuery("<input id='slick-menu-clear' type='button' value='Clear' class='btn btn-link' />").appendTo(menu);
         jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(menu);
-        jQuery("<input type='text' id='slick-menu-quicksearch'/>").appendTo(menu);
+        jQuery("<input type='text' id='slick-menu-quicksearch' placeholder='Search...'/>").appendTo(menu);
         jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(menu);
         jQuery("<div id='filter_grid'></div>").appendTo(menu);
-        jQuery("<input id='slick-menu-ok' type='button' value='ok'/>").appendTo(menu);
-        jQuery("<input id='slick-menu-cancel' type='button' value='cancel'/>").appendTo(menu);
+        jQuery("<input id='slick-menu-ok' type='button' value='ok' class='btn'/>").appendTo(menu);
+        jQuery("<input id='slick-menu-cancel' type='button' value='cancel' class='btn'/>").appendTo(menu);
 
         var filter_columns = [
             {id: colId, name: colId, field: colId, cssClass:"filter_item"}
