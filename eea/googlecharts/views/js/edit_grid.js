@@ -441,13 +441,13 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
     var header_nofilter = {
         menu: {
             items: [
-                {title:'sort ascending',
+                {title:'Sort A → Z',
                  command:'sortasc'},
-                {title:'sort descending',
+                {title:'Sort Z → A',
                  command:'sortdesc'},
-                {title:'show column',
+                {title:'Show column',
                  command:'showColumn'},
-                {title:'hide column',
+                {title:'Hide column',
                  command:'hideColumn'}
             ]
         }
@@ -455,13 +455,13 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
     var header_filter = {
         menu: {
             items: [
-                {title:'sort ascending',
+                {title:'Sort A → Z',
                  command:'sortasc'},
-                {title:'sort descending',
+                {title:'Sort Z → A',
                  command:'sortdesc'},
-                {title:'show column',
+                {title:'Show column',
                  command:'showColumn'},
-                {title:'hide column',
+                {title:'Hide column',
                  command:'hideColumn'},
                 {title:'-filter-',
                  command:'filter',
@@ -481,21 +481,21 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
             header: {
                 menu: {
                     items: [
-                        {title:'show original table',
+                        {title:'Show original table',
                         command:'showOriginal'},
-                        {title:'hide all columns',
+                        {title:'Hide all columns',
                         command:'hideAll'},
-                        {title:'show all columns',
+                        {title:'Show all columns',
                         command:'showAll'},
-                        {title:'reverse selection',
+                        {title:'Reverse selection',
                         command:'reverse'},
-                        {title:'reset sort',
+                        {title:'Reset sort',
                          command:'origord'},
-                        {title:'reset filters',
+                        {title:'Reset filters',
                         command:'resetFilters'},
-                        {title:'scatterplots matrix',
+                        {title:'Scatterplots matrix',
                         command:'scatterplots'},
-                        {title:'other matrices',
+                        {title:'Other matrices',
                         command:'otherMatrices'}
                     ]
                 }
