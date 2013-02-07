@@ -3,6 +3,9 @@ Changelog
 
 6.9-dev - (unreleased)
 ----------------------
+* WIP Feature: Allow to format cells using available Google formats
+  (ArrowFormat, BarFormat, ColorFormat, DateFormat, NumberFormat, PatternFormat)
+  [voineali refs #9583]
 
 6.8 - (2013-02-01)
 ------------------

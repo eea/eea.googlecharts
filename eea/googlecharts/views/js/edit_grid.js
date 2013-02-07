@@ -223,6 +223,10 @@ function filterApplyFlags() {
     }
 }
 
+function enableGridFormat(){
+    console.log('Not implemented: enableGridFormat ');
+}
+
 function enableGridFilters(){
     filter_grid_filters = [];
     jQuery("body").delegate("#slick-menu-cancel","click", function(){
@@ -305,25 +309,23 @@ function enableGridFilters(){
         }
         filter_element.parent().hide();
         var menu = filter_element.parent().parent();
-        jQuery("#slick-menu-quicksearch").remove();
-        jQuery(".slick-menu-clearboth").remove();
-        jQuery("#slick-menu-all").remove();
-        jQuery("#slick-menu-clear").remove();
-        jQuery("#filter_grid").remove();
-        jQuery("#slick-menu-ok").remove();
-        jQuery("#slick-menu-cancel").remove();
         jQuery(".slick-filter-title").remove();
-        jQuery(".slick-filter-hr").remove();
-        jQuery("<hr class='slick-filter-hr'>").appendTo(menu);
-        jQuery("<div class='slick-filter-title'>Filter:</div>").appendTo(menu);
-        jQuery("<input id='slick-menu-all' type='button' value='Select all' class='btn btn-link' />").appendTo(menu);
-        jQuery("<input id='slick-menu-clear' type='button' value='Clear' class='btn btn-link' />").appendTo(menu);
-        jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(menu);
-        jQuery("<input type='text' id='slick-menu-quicksearch' placeholder='Search...'/>").appendTo(menu);
-        jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(menu);
-        jQuery("<div id='filter_grid'></div>").appendTo(menu);
-        jQuery("<input id='slick-menu-ok' type='button' value='ok' class='btn'/>").appendTo(menu);
-        jQuery("<input id='slick-menu-cancel' type='button' value='cancel' class='btn'/>").appendTo(menu);
+        jQuery('.slick-filter-body').remove();
+        var filters_title = jQuery('<div>').addClass('slick-filter-title').text('Filter...').appendTo(menu);
+        var filters = jQuery('<div>').addClass('slick-filter-body').appendTo(menu);
+        jQuery("<input id='slick-menu-clear' type='button' value='Clear' class='btn btn-link' />").appendTo(filters);
+        jQuery("<input id='slick-menu-all' type='button' value='Select all' class='btn btn-link' />").appendTo(filters);
+        jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(filters);
+        jQuery("<input type='text' id='slick-menu-quicksearch' placeholder='Search...'/>").appendTo(filters);
+        jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(filters);
+        jQuery("<div id='filter_grid'></div>").appendTo(filters);
+        jQuery("<input id='slick-menu-ok' type='button' value='ok' class='btn'/>").appendTo(filters);
+        jQuery("<input id='slick-menu-cancel' type='button' value='cancel' class='btn'/>").appendTo(filters);
+
+        filters.hide();
+        filters_title.click(function(){
+            filters.toggle('blind', {}, 500);
+        });
 
         var filter_columns = [
             {id: colId, name: colId, field: colId, cssClass:"filter_item"}
@@ -448,7 +450,10 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
                 {title:'Show column',
                  command:'showColumn'},
                 {title:'Hide column',
-                 command:'hideColumn'}
+                 command:'hideColumn'},
+                {title:'Format...',
+                 tooltip: 'Format',
+                 command:'format'}
             ]
         }
     };
@@ -463,8 +468,12 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
                  command:'showColumn'},
                 {title:'Hide column',
                  command:'hideColumn'},
+                {title:'Format...',
+                tooltip: 'Format',
+                 command:'format'},
                 {title:'-filter-',
                  command:'filter',
+                 tooltip: 'Filter',
                  disabled:true}
             ]
         }
@@ -576,6 +585,7 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
         sortById(grid_sort_columnId, grid_sort_asc);
     }
 
+    enableGridFormat();
     enableGridFilters();
 }
 
