@@ -1095,7 +1095,9 @@ function setConfiguratorMessage(message_key) {
     }
 }
 
-function openEditor(elementId) {
+function openEditor(elementId, hasTreeMap) {
+    hasTreeMap = typeof(hasTreeMap) === 'undefined' ? false : hasTreeMap;
+
     isFirstEdit = true;
     jQuery(".google-visualization-charteditor-dialog").remove();
     chartId = elementId;
@@ -1152,10 +1154,13 @@ function openEditor(elementId) {
     options = {
         originalDataTable : transformedTable,
         columns : columnsFromSettings.columns,
-        limit : 100,
         sortBy : sortBy,
         sortAsc : sortAsc
     };
+
+    if (!hasTreeMap){
+        options.limit = 100;
+    }
 
     var tableForChart = prepareForChart(options);
 
@@ -1173,11 +1178,16 @@ function openEditor(elementId) {
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = true;
         setTimeout(function(){
+            if ((!hasTreeMap) && (jQuery(".google-visualization-charteditor-thumbs-treemap").length)){
+                openEditor(elementId, true);
+                return;
+            }
             redrawEditorChart();
         },100);
         setConfiguratorMessage("");
         jQuery(".googlechart_editor_loading").addClass("googlechart_editor_loaded");
         jQuery(".googlechart_palette_loading").removeClass("googlechart_palette_loading");
+
     });
     google.visualization.events.addListener(chartEditor, 'error', function(event){
         var settings_str = chartEditor.getChartWrapper().toJSON();
