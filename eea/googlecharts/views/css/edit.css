@@ -557,6 +557,7 @@ dl.portlet .dashboard-widget,
     min-height: 200px;
     left: 100px;
     padding: 5px;
+    z-index: 99;
 }
 
 #preview-iframe a.close {
