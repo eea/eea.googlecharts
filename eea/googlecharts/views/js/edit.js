@@ -1095,9 +1095,7 @@ function setConfiguratorMessage(message_key) {
     }
 }
 
-function openEditor(elementId, hasTreeMap) {
-    hasTreeMap = typeof(hasTreeMap) === 'undefined' ? false : hasTreeMap;
-
+function openEditor(elementId) {
     isFirstEdit = true;
     jQuery(".google-visualization-charteditor-dialog").remove();
     chartId = elementId;
@@ -1158,10 +1156,6 @@ function openEditor(elementId, hasTreeMap) {
         sortAsc : sortAsc
     };
 
-    if (!hasTreeMap){
-        options.limit = 100;
-    }
-
     var tableForChart = prepareForChart(options);
 
     chart.dataTable = tableForChart;
@@ -1178,10 +1172,6 @@ function openEditor(elementId, hasTreeMap) {
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = true;
         setTimeout(function(){
-            if ((!hasTreeMap) && (jQuery(".google-visualization-charteditor-thumbs-treemap").length)){
-                openEditor(elementId, true);
-                return;
-            }
             redrawEditorChart();
         },100);
         setConfiguratorMessage("");
