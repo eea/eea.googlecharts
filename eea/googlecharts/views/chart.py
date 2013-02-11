@@ -246,8 +246,8 @@ class View(ViewForm):
         tmp_id = self.request.get("preview_id", "")
         if tmp_id:
             mutator = queryAdapter(self.context, IVisualizationConfig)
-            data = mutator.view('googlechart.googlecharts_previews', {})
-            config = data[tmp_id]
+            data = mutator.view('googlechart.googlecharts')
+            config = data['chart_previews'][tmp_id]
             config['data'] = self.get_rows()
             config['available_columns'] = self.get_columns()
             config['preview_width'] = config['width']

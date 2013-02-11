@@ -118,10 +118,12 @@ class Edit(BrowserView):
 
         tmp_id = self.request.get('preview_id', 'no_id')
         mutator = queryAdapter(self.context, IVisualizationConfig)
-        data = mutator.view('googlechart.googlecharts_previews', {})
-        mutator.add_view('googlechart.googlecharts_previews')
-        data[tmp_id] = chart
-        mutator.edit_view('googlechart.googlecharts_previews', **data)
+
+        data = mutator.view('googlechart.googlecharts')
+        preview_data = data.get('chart_previews', {})
+        preview_data[tmp_id] = chart
+        data['chart_previews'] = preview_data
+        mutator.edit_view('googlechart.googlecharts', **data)
 
         return tmp_id
 
