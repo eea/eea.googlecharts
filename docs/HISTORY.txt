@@ -6,6 +6,10 @@ Changelog
 * WIP Feature: Allow to format cells using available Google formats
   (ArrowFormat, BarFormat, ColorFormat, DateFormat, NumberFormat, PatternFormat)
   [voineali refs #9583]
+* Bug fix: Fixed preview for charts
+  [szabozo0 refs #13739]
+* Bug fix: Fixed chart editor for treemap
+  [szabozo0 refs #13784]
 
 6.8 - (2013-02-01)
 ------------------

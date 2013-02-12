@@ -245,27 +245,20 @@ class View(ViewForm):
 
         tmp_id = self.request.get("preview_id", "")
         if tmp_id:
-            if getattr(self.context, '_v_chart_listing_tmp_charts', None):
-                if tmp_id in self.context._v_chart_listing_tmp_charts.keys():
-                    config = self.context._v_chart_listing_tmp_charts[tmp_id]
-                    config['data'] = self.get_rows()
-                    config['available_columns'] = self.get_columns()
-                    config['preview_width'] = config['width']
-                    config['preview_height'] = config['height']
-                    return config
-                else:
-                    return {}
-            else:
-                return {}
+            mutator = queryAdapter(self.context, IVisualizationConfig)
+            data = mutator.view('googlechart.googlecharts')
+            config = data['chart_previews'][tmp_id]
+            config['data'] = self.get_rows()
+            config['available_columns'] = self.get_columns()
+            config['preview_width'] = config['width']
+            config['preview_height'] = config['height']
+            return config
 
-        chart_width = self.request.get('width', 800)
-        chart_height = self.request.get('height', 600)
-        config = {}
-        if chart_id == '':
-            config = getattr(self.context, '_v_iframe_chart_tmp_config', {})
-            config['preview_width'] = config.get('width', chart_width)
-            config['preview_height'] = config.get('height', chart_height)
         else:
+            chart_width = self.request.get('width', 800)
+            chart_height = self.request.get('height', 600)
+            config = {}
+
             charts = self.get_charts()
             found = False
             for chart in charts:
@@ -284,9 +277,9 @@ class View(ViewForm):
             config['preview_width'] = chart_width
             config['preview_height'] = chart_height
 
-        config['data'] = self.get_rows()
-        config['available_columns'] = self.get_columns()
-        return config
+            config['data'] = self.get_rows()
+            config['available_columns'] = self.get_columns()
+            return config
 
     def get_visualization_hash(self):
         """ unique hash of a chart or dashboard

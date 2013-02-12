@@ -116,16 +116,16 @@ class Edit(BrowserView):
         chart['sortBy'] = urllib2.unquote(chart['sortBy'])
         chart['sortAsc_str'] = urllib2.unquote(chart['sortAsc_str'])
 
-        tmp_id = chart.get('preview_id', None)
-        if tmp_id:
-            if not getattr(self.context, "_v_chart_listing_tmp_charts", None):
-                self.context._v_chart_listing_tmp_charts = {}
-            self.context._v_chart_listing_tmp_charts[tmp_id] = chart
-            return tmp_id
+        tmp_id = self.request.get('preview_id', 'no_id')
+        mutator = queryAdapter(self.context, IVisualizationConfig)
 
-        self.context._v_iframe_chart_tmp_config = chart
+        data = mutator.view('googlechart.googlecharts')
+        preview_data = data.get('chart_previews', {})
+        preview_data[tmp_id] = chart
+        data['chart_previews'] = preview_data
+        mutator.edit_view('googlechart.googlecharts', **data)
 
-        return 'Changes saved'
+        return tmp_id
 
 class ChartsEdit(EditForm, Edit):
     """ Edit google charts
