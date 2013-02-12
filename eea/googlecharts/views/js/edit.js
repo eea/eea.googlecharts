@@ -1156,6 +1156,29 @@ function openEditor(elementId) {
         sortAsc : sortAsc
     };
 
+    // check if table contains 2 string columns & 1 or 2 numeric columns (for treemap)
+    var isPossibleTreemap = true;
+    if ((columnsFromSettings.columns.length < 3) || (columnsFromSettings.columns.length > 4)){
+        isPossibleTreemap = false;
+    }
+    else {
+        if (transformedTable.properties[columnsFromSettings.columns[0]].valueType !== 'text'){
+            isPossibleTreemap = false;
+        }
+        if (transformedTable.properties[columnsFromSettings.columns[1]].valueType !== 'text'){
+            isPossibleTreemap = false;
+        }
+        if (transformedTable.properties[columnsFromSettings.columns[2]].valueType !== 'number'){
+            isPossibleTreemap = false;
+        }
+        if ((columnsFromSettings.columns.length === 4) && (transformedTable.properties[columnsFromSettings.columns[3]].valueType !== 'number')){
+            isPossibleTreemap = false;
+        }
+    }
+    if (!isPossibleTreemap){
+        options.limit = 100;
+    }
+
     var tableForChart = prepareForChart(options);
 
     chart.dataTable = tableForChart;
