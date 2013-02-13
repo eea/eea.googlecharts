@@ -145,7 +145,7 @@ function drawChart(value, other_options){
 
     embedchart_json.options.title = other_settings.name + " — " + other_settings.main_title;
     jQuery.each(embedchart_filters,function(key,value){
-        if (value === "3"){
+        if ((value === "3") && (other_settings.isInline !== 'True')){
             embedchart_filters[key] = "2";
         }
     });
