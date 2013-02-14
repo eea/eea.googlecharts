@@ -164,7 +164,8 @@ function drawChart(value, other_options){
         chartOptions : embedchart_options,
         availableColumns : transformedTable.available_columns,
         showSort : embedchart_showSort,
-        columnFilters : embedchart_columnFilters
+        columnFilters : embedchart_columnFilters,
+        columnTypes: transformedTable.properties
     };
     drawGoogleChart(googlechart_params);
 

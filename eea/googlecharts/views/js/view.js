@@ -197,7 +197,8 @@ function drawChart(value, other_options){
         availableColumns : transformedTable.available_columns,
         chartReadyEvent : checkSVG,
         showSort : chart_showSort,
-        columnFilters : chart_columnFilters
+        columnFilters : chart_columnFilters,
+        columnTypes : transformedTable.properties
     };
 
     drawGoogleChart(googlechart_params);

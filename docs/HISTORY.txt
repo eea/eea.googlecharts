@@ -6,6 +6,10 @@ Changelog
 * WIP Feature: Allow to format cells using available Google formats
   (ArrowFormat, BarFormat, ColorFormat, DateFormat, NumberFormat, PatternFormat)
   [voineali refs #9583]
+* Bug fix: Updated color palettes for charts, if column filters are used,
+  the columns will have an assigned color from the palette, and all the time will
+  have the same color
+  [szabozo0 refs #13678]
 * Bug fix: Display multi select filter properly when using inline embed
   [szabozo0 refs #13853]
 * Bug fix: Fixed preview for charts

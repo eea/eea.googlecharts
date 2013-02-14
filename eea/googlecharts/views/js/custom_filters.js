@@ -157,17 +157,19 @@ function applyColumnFilters(options){
 
     var config = [];
 
+    var original_config;
     var conf_array = jQuery("#" + options.dashboardDiv).data('other_settings').googlechart_config_array;
     jQuery.each(conf_array, function(idx, conf){
         if (conf[0] === jQuery("#"+options.chartViewDiv).attr("chart_id")){
+            original_config = conf;
             var chart_id = conf[0];
-            var chart_json = conf[1];
+            var chart_json = JSON.parse(JSON.stringify(conf[1]));
             var chart_columns_old = conf[2];
             var chart_filters_old = conf[3];
             var chart_width = conf[4];
             var chart_height = conf[5];
             var chart_filterposition = conf[6];
-            var chart_options = conf[7];
+            var chart_options = JSON.parse(JSON.stringify(conf[7]));
             var chart_dashboard = conf[8];
             var chart_showSort = conf[9];
             var chart_hasPNG = conf[10];
@@ -289,6 +291,56 @@ function applyColumnFilters(options){
 
     var other_settings = jQuery("#" + options.dashboardDiv).data('other_settings');
 
+    var chartsForPaletteReorder = ["LineChart",
+                                "ComboChart",
+                                "ImageChart",
+                                "AreaChart",
+                                "SteppedAreaChart",
+                                "ColumnChart",
+                                "BarChart",
+                                "ScatterChart",
+                                "ImageSparkLine",
+                                "AnnotatedTimeLine"];
+
+    if (jQuery.inArray(config[1].chartType, chartsForPaletteReorder) !== -1){
+        var original_palette = {};
+        var column_nr = 0;
+        var color_nr = 0;
+        jQuery.each(original_config[2].prepared, function(idx, column){
+            if (column.status === 1){
+                if (column_nr !== 0){
+                    if (options.columnTypes[column.name].valueType === 'number'){
+                        original_palette[column.name] = original_config[1].options.colors[color_nr];
+                        color_nr++;
+                        if (color_nr === original_config[1].options.colors.length){
+                            color_nr = 0;
+                        }
+                    }
+                }
+                column_nr++;
+            }
+        });
+        jQuery.each(original_config[14], function(idx, column_filter){
+            jQuery.each(column_filter.settings.selectables, function(idx, column){
+                if ((options.columnTypes[column].valueType === 'number') && (typeof(original_palette[column]) === 'undefined')){
+                    original_palette[column] = original_config[1].options.colors[color_nr];
+                    color_nr++;
+                    if (color_nr === original_config[1].options.colors.length){
+                        color_nr = 0;
+                    }
+                }
+            });
+        });
+
+        var new_palette = [];
+        jQuery.each(config[2].prepared, function(idx, column){
+            if ((column.status === 1) && (typeof(original_palette[column.name]) !== 'undefined')){
+                new_palette.push(original_palette[column.name]);
+            }
+        });
+        config[1].options.colors = new_palette;
+        config[7].colors = new_palette;
+    }
     drawChart(config, other_settings);
 }
 
@@ -298,7 +350,8 @@ function addColumnFilters(options){
         chartViewDiv : '',
         filtersDiv : '',
         columnFilters : [],
-        columns: {}
+        columns: {},
+        columnTypes: {}
     };
     jQuery.extend(settings, options);
     var columnFriendlyNames = settings.columns;
@@ -309,7 +362,8 @@ function addColumnFilters(options){
         chartViewDiv : settings.chartViewDiv,
         filtersDiv : settings.filtersDiv,
         columnFiltersObj : columnFiltersObj,
-        columnFriendlyNames : columnFriendlyNames
+        columnFriendlyNames : columnFriendlyNames,
+        columnTypes: settings.columnTypes
     };
     jQuery.each(settings.columnFilters.reverse(), function(idx, columnFilter){
         var values = [[columnFilter.title]];
