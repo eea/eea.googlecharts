@@ -324,7 +324,7 @@ function enableGridFilters(){
 
         filters.hide();
         filters_title.click(function(){
-            filters.toggle('blind', {}, 500);
+            filters.toggle('blind');
         });
 
         var filter_columns = [

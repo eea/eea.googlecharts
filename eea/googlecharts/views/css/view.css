@@ -343,3 +343,21 @@ ul.googlechart_tabs li:first-of-type a:hover {
     display: none;
 }
 
+#daviz-view ul.google-visualization-controls-categoryfilter-selected {
+    list-style-type: none;
+    margin: 0;
+    max-width: 100% ! important;
+}
+
+#daviz-view ul.google-visualization-controls-categoryfilter-selected li {
+    display: block;
+    white-space: normal;
+}
+
+#daviz-view ul.google-visualization-controls-categoryfilter-selected li div {
+    display: inline;
+}
+
+#daviz-view ul.google-visualization-controls-categoryfilter-selected li div.goog-link-button-disabled {
+    display: none;
+}
