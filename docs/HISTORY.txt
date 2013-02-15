@@ -6,7 +6,8 @@ Changelog
 * WIP Feature: Allow to format cells using available Google formats
   (ArrowFormat, BarFormat, ColorFormat, DateFormat, NumberFormat, PatternFormat)
   [voineali refs #9583]
-* Bug fix: Fix CSS for multiple select filters
+* Bug fix: Fix CSS for multi-select filters and if filters position
+  is set to "Right"
   [voineali refs #13850]
 * Bug fix: Display multi select filter properly when using inline embed
   [szabozo0 refs #13853]
