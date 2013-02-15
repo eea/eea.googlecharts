@@ -9,6 +9,10 @@ Changelog
 * Bug fix: Fix CSS for multi-select filters and if filters position
   is set to "Right"
   [voineali refs #13850]
+* Bug fix: Updated color palettes for charts, if column filters are used,
+  the columns will have an assigned color from the palette, and all the time will
+  have the same color
+  [szabozo0 refs #13678]
 * Bug fix: Display multi select filter properly when using inline embed
   [szabozo0 refs #13853]
 * Bug fix: Fixed preview for charts
