@@ -34,7 +34,7 @@ Main features
 2. Large amount of visualizations available: Area, Bar, \
    Bubble, Candlestick, Column, Combo Chart, Gauge, Geo Intensity Maps,
    Line, Pie, Radar, Scatter, Stepped Area, Table, Tree Map, Motion Charts
-3. Dashboard. Group charts into one dashboard.
+3. Dashboard. Group charts into one or more dashboards.
 4. Add filters to charts or dashboards.
 5. Share any chart. Embeddable visualization in any webpage.
 6. Customizable chart options and colors
@@ -56,8 +56,8 @@ Dependencies
 Live demos
 ==========
 
-Eurostat data employment rates 2000-2010 (demo using Linked Data):
-  - http://www.eea.europa.eu/data-and-maps/daviz/data-visualization-employement-trends-eu-1
+Daviz showroom:
+  - http://daviz.eionet.europa.eu
 
 Google charts demos:
   - http://code.google.com/apis/chart/
