@@ -19,6 +19,8 @@ Changelog
   [szabozo0 refs #13739]
 * Bug fix: Fixed chart editor for treemap
   [szabozo0 refs #13784]
+* Bug fix: Added eea.notranslation domain for translations
+  [prospchr refs #13827]
 
 6.8 - (2013-02-01)
 ------------------
