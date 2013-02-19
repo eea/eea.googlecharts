@@ -116,8 +116,8 @@ function addSortFilter(options){
     for (var i = 0; i < colsnr; i++){
         cols_array.push([settings.filterDataTable.getColumnLabel(i)]);
         sortFilterArray[settings.filterDataTable.getColumnLabel(i)] = [i, false];
-        cols_array.push([settings.filterDataTable.getColumnLabel(i) + " reversed"]);
-        sortFilterArray[settings.filterDataTable.getColumnLabel(i) + " reversed"] = [i, true];
+        cols_array.push([settings.filterDataTable.getColumnLabel(i) + " (reversed)"]);
+        sortFilterArray[settings.filterDataTable.getColumnLabel(i) + " (reversed)"] = [i, true];
     }
 
     var paramsForHandler = {
