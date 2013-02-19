@@ -142,7 +142,7 @@ function drawGoogleChart(options){
         chart.draw();
     }
 
-    if (settings.showSort){
+    if ((settings.showSort) && (settings.chartJson.chartType !== 'Table')){
         var options2 = {
             filtersDiv : settings.chartFiltersDiv,
             filterTitle : 'sort by',
