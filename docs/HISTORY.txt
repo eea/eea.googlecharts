@@ -6,6 +6,8 @@ Changelog
 * WIP Feature: Allow to format cells using available Google formats
   (ArrowFormat, BarFormat, ColorFormat, DateFormat, NumberFormat, PatternFormat)
   [voineali refs #9583]
+* Change: Disable "sort by column" for table charts
+  [szabozo0 refs #13902]
 * Bug fix: Fix CSS for multi-select filters and if filters position
   is set to "Right"
   [voineali refs #13850]

@@ -73,8 +73,14 @@ function updateCounters(){
     jQuery(".googlechart").each(function(){
         var columnFiltersNr = jQuery(this).find(".googlechart-columnfilters-box").find("li").length;
         var notesNr = jQuery(this).find(".googlechart-notes-box").find("li").length;
-        var filtersNr = jQuery(this).find(".googlechart-filters-box").find(".ui-icon-hide").length +
-                        jQuery(this).find(".googlechart_filters_list").find("li").length;
+        var filtersNr = jQuery(this).find(".googlechart_filters_list").find("li").length;
+        if (JSON.parse(jQuery(this).find(".googlechart_configjson").attr("value")).chartType === 'Table'){
+            jQuery(this).find(".googlechart_sort").hide();
+        }
+        else {
+            jQuery(this).find(".googlechart_sort").show();
+            filtersNr += jQuery(this).find(".googlechart-filters-box").find(".ui-icon-hide").length;
+        }
         jQuery(this).find(".googlechart-columnfilters-box").find(".items_counter").text("("+columnFiltersNr+")");
         jQuery(this).find(".googlechart-notes-box").find(".items_counter").text("("+notesNr+")");
         jQuery(this).find(".googlechart-filters-box").find(".items_counter").text("("+filtersNr+")");
