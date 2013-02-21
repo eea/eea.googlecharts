@@ -3,9 +3,6 @@ Changelog
 
 6.9-dev - (unreleased)
 ----------------------
-* WIP Feature: Allow to format cells using available Google formats
-  (ArrowFormat, BarFormat, ColorFormat, DateFormat, NumberFormat, PatternFormat)
-  [voineali refs #9583]
 * Bug fix: Updated googlecharts embed to draw the chart only if the container is visible
   [szabozo0 refs #13673]
 * Change: Disable "sort by column" for table charts
