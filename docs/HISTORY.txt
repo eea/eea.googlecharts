@@ -1,6 +1,9 @@
 Changelog
 =========
 
+7.0-dev - (unreleased)
+----------------------
+
 6.9 - (2013-02-21)
 ------------------
 * Bug fix: Updated googlecharts embed to draw the chart only if the container is visible
