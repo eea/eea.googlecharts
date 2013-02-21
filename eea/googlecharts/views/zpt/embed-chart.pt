@@ -66,8 +66,9 @@
             var isInline_$vhash = '$inline';
 
             var googlechart_config_array_$vhash = [];
+            var settings_$vhash = [];
+            var other_options_$vhash = {};
             jQuery(document).ready(function($){
-                var settings_$vhash = [];
                 settings_$vhash.push(GoogleChartsConfig_$vhash[0].id);
                 settings_$vhash.push(chart_json_$vhash);
                 settings_$vhash.push(chart_columns_$vhash);
@@ -85,7 +86,7 @@
                 settings_$vhash.push(chart_columnFilters_$vhash);
                 googlechart_config_array_$vhash.push(settings_$vhash);
 
-                var other_options_$vhash = {
+                other_options_$vhash = {
                     merged_rows: merged_rows_$vhash,
                     available_columns: available_columns_$vhash,
                     googlechart_config_array: googlechart_config_array_$vhash,
@@ -100,13 +101,14 @@
                     name: name_$vhash,
                     isInline: isInline_$vhash
                 };
-
-                drawChart(settings_$vhash, other_options_$vhash);
+                if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
+                    drawChart(settings_$vhash, other_options_$vhash);
+                }
             });
             ">
     </script>
 
-    <div tal:attributes="id string:googlechart_dashboard_$vhash" class="embedded-dashboard googlechart_dashboard">
+    <div tal:attributes="id string:googlechart_dashboard_$vhash" class="embedded-dashboard googlechart_dashboard isChart">
     </div>
     </tal:block>
 

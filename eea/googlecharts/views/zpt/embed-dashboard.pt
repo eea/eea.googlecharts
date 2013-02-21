@@ -69,9 +69,9 @@
         tal:define="dashboard view/get_dashboard"
         tal:content="structure string:
         var dashboard_config_$vhash = ${dashboard};
-
+        var settings_$vhash = {}
         jQuery(document).ready(function($){
-            var settings_$vhash = {
+            settings_$vhash = {
                 googlechart_config_array : googlechart_config_array_$vhash,
                 main_title : main_title_$vhash,
                 dashboard_config : dashboard_config_$vhash,
@@ -85,12 +85,14 @@
                 vhash : '$vhash',
                 isInline : isInline_$vhash
             };
-            drawDashboardEmbed(settings_$vhash);
+            if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
+                drawDashboardEmbed(settings_$vhash);
+            }
         });
         ">
     </script>
 
-    <div tal:attributes="id string:googlechart_dashboard_$vhash" class="embedded-dashboard googlechart_dashboard">
+    <div tal:attributes="id string:googlechart_dashboard_$vhash" class="embedded-dashboard googlechart_dashboard isDashboard">
     </div>
     </tal:block>
 </metal:chart>
