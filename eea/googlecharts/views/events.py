@@ -34,7 +34,7 @@ def create_default_views(obj, evt):
     if not len(columns):
         return
 
-    mutator.add_view('googlechart.googlecharts')
+    mutator.add_view('googlechart.googlecharts', order=0)
 
     request = getattr(obj, 'REQUEST', None)
     if not request:
