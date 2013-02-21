@@ -3,6 +3,8 @@ Changelog
 
 7.0-dev - (unreleased)
 ----------------------
+* Change: Enable Charts view on VisualizationEnabledEvent
+  [voineali]
 
 6.9 - (2013-02-21)
 ------------------

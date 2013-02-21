@@ -23,7 +23,7 @@ def create_default_views(obj, evt):
         return
 
     # Views already configure, do nothing
-    if mutator.views:
+    if mutator.view('googlechart.googlecharts'):
         return
 
     vocab = getUtility(IVocabularyFactory,
