@@ -3,6 +3,9 @@ Changelog
 
 7.0-dev - (unreleased)
 ----------------------
+* Feature: Enable Charts view by default only if it's not disabled in controlpanel
+  for context's portal_type
+  [voineali]
 * Change: Enable Charts view on VisualizationEnabledEvent
   [voineali]
 
