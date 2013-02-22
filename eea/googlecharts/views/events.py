@@ -18,7 +18,7 @@ def create_default_views(obj, evt):
     """ Create default views
     """
     settings = queryUtility(IDavizSettings)
-    if settings.disabled('googlechart.googlecharts', obj):
+    if settings and settings.disabled('googlechart.googlecharts', obj):
         return
 
     mutator = queryAdapter(obj, IVisualizationConfig)
