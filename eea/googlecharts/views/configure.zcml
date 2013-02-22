@@ -3,9 +3,6 @@
   xmlns:daviz="http://namespaces.zope.org/daviz"
   xmlns:browser="http://namespaces.zope.org/browser">
 
-  <daviz:view name="googlechart.googlecharts" />
-  <daviz:view name="googlechart.googledashboards" />
-
   <browser:page
     name="chart-full"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
@@ -54,24 +51,34 @@
     permission="zope2.View"
     />
 
-  <browser:page
+  <daviz:view
     name="googlechart.googlecharts"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/charts.pt"
     class=".chart.View"
     permission="zope2.View"
+    title="Charts"
     />
 
-  <browser:page
+  <daviz:edit
+    name="googlechart.googlecharts"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    template="zpt/edit.pt"
+    class=".edit.ChartsEdit"
+    permission="eea.app.visualization.configure"
+    />
+
+  <daviz:view
     name="googlechart.googledashboards"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/dashboards.pt"
     class=".chart.DashboardsView"
     permission="zope2.View"
+    title="Dashboards"
     />
 
-  <browser:page
-    name="googlechart.googledashboards.edit"
+  <daviz:edit
+    name="googlechart.googledashboards"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/dashboards-edit.pt"
     class=".edit.DashboardsEdit"
@@ -163,14 +170,6 @@
     name="eea.googlecharts.edit.css"
     file="./css/edit.css"
   />
-
-  <browser:page
-    name="googlechart.googlecharts.edit"
-    for="eea.app.visualization.interfaces.IVisualizationEnabled"
-    template="zpt/edit.pt"
-    class=".edit.ChartsEdit"
-    permission="eea.app.visualization.configure"
-    />
 
   <browser:resource
     name="eea.googlecharts.dashboard.js"
