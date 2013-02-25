@@ -40,7 +40,7 @@ setup(name=NAME,
       install_requires=[
           'setuptools',
           'eea.converter >= 6.0',
-          'eea.app.visualization >= 7.0',
+          'eea.app.visualization > 6.9',
       ],
       extras_require={
           'test': [
