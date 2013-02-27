@@ -3,6 +3,10 @@ Changelog
 
 7.0-dev - (unreleased)
 ----------------------
+* WIP: Started implementation of chart & chartArea size configuration
+  [szabozo0 refs #13673]
+* Change: Added description to controlpanel fields
+  [szabozo0]
 * Change: Enable Charts view on VisualizationEnabledEvent
   [voineali]
 
