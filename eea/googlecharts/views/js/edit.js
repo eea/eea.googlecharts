@@ -3023,31 +3023,111 @@ function addNewChart(){
     });
 }
 
-function drawPreviewChart(chartObj, width, height, chartAreaLeft, chartAreaTop, chartAreaWidth, chartAreaHeight){
-    jQuery('#preview-iframe iframe').remove();
-    var config_json = JSON.parse(previewChartObj.find(".googlechart_configjson").attr("value"));
+function drawPreviewChart(chartObj, width, height){
+    jQuery('#preview-iframe .preview-container').remove();
+    var config_json = JSON.parse(chartObj.find(".googlechart_configjson").attr("value"));
     config_json.dataTable = [];
+
+    var adv_options_str = chartObj.find(".googlechart_options").attr("value");
+    var adv_options = JSON.parse(adv_options_str);
+    var chartAreaLeft = JSON.parse(chartObj.attr("chartArea")).left;
+    var chartAreaTop = JSON.parse(chartObj.attr("chartArea")).top;
+    var chartAreaWidth = JSON.parse(chartObj.attr("chartArea")).width;
+    var chartAreaHeight = JSON.parse(chartObj.attr("chartArea")).height;
+    var useChartArea = chartObj.attr("hasChartArea");
+    if (useChartArea === "true"){
+        adv_options.chartArea = {};
+        adv_options.chartArea.left = chartAreaLeft;
+        adv_options.chartArea.top = chartAreaTop;
+        adv_options.chartArea.width = chartAreaWidth;
+        adv_options.chartArea.height = chartAreaHeight;
+    }
+    var modified_adv_options_str = JSON.stringify(adv_options);
     var config_str = JSON.stringify(config_json);
-    var name = previewChartObj.find(".googlechart_name").attr("value");
+    var name = chartObj.find(".googlechart_name").attr("value");
     var row_filters_str = chartObj.find(".googlechart_row_filters").attr('value');
     var sortBy = chartObj.find(".googlechart_sortBy").attr('value');
     var sortAsc_str = chartObj.find(".googlechart_sortAsc").attr('value');
-    var query = {'preview_id':chartObj.find(".googlechart_id").attr("value"),'preview_tmp_chart':'{"row_filters_str":"'+encodeURIComponent(row_filters_str)+'","sortBy":"'+encodeURIComponent(sortBy)+'","sortAsc_str":"'+encodeURIComponent(sortAsc_str)+'","json":"'+encodeURIComponent(config_str)+'","options":"'+encodeURIComponent(previewChartObj.find(".googlechart_options").attr("value"))+'","columns":"'+encodeURIComponent(previewChartObj.find(".googlechart_columns").attr("value"))+'","width":'+width+',"height":'+height+',"name":"'+name+'"}'};
+    var query = {
+                "preview_id":chartObj.find(".googlechart_id").attr("value"),
+                "preview_tmp_chart":'{"row_filters_str":"'+encodeURIComponent(row_filters_str)+'",'+
+                                    '"sortBy":"'+encodeURIComponent(sortBy)+'",'+
+                                    '"sortAsc_str":"'+encodeURIComponent(sortAsc_str)+'",'+
+                                    '"json":"'+encodeURIComponent(config_str)+'",'+
+                                    '"options":"'+encodeURIComponent(modified_adv_options_str)+'",'+
+                                    '"columns":"'+encodeURIComponent(chartObj.find(".googlechart_columns").attr("value"))+'",'+
+                                    '"width":'+width+','+
+                                    '"height":'+height+','+
+                                    '"name":"'+name+'"}'
+                };
     jQuery.ajax({
         url:ajax_baseurl+"/googlechart.set_iframe_chart",
         type:'post',
         data:query,
         success:function(data){
             jQuery('#preview-iframe').append(
+                jQuery('<div class="preview-container"></div>'));
+            jQuery(".preview-container").width(width);
+            jQuery(".preview-container").height(height);
+            jQuery('.preview-container').append(
                 jQuery('<iframe>')
                     .attr('src', chartObj.attr('preview_href')+"?preview_id="+data)
                     .attr('width', parseInt(width, 10))
                     .attr('height', parseInt(height, 10)));
+
+            jQuery('.preview-container').append(
+                jQuery('<div class="preview-mask"></div>'));
+            jQuery(".preview-mask").width(width);
+            jQuery(".preview-mask").height(height);
+
+            jQuery('.preview-container').append(
+                jQuery('<div class="chartArea"><span>Drag & Resize Chart Area</span></div>'));
+            var container_offset = jQuery(".preview-container").offset();
+            jQuery(".chartArea").offset({left:container_offset.left + chartAreaLeft, top:container_offset.top + chartAreaTop});
+            jQuery(".chartArea").width(chartAreaWidth);
+            jQuery(".chartArea").height(chartAreaHeight);
+            jQuery('.chartArea').draggable({
+                containment:".preview-container",
+                stop: function(){
+                    var tmp_left = jQuery(this).offset().left - jQuery(".preview-container").offset().left;
+                    var tmp_top = jQuery(this).offset().top - jQuery(".preview-container").offset().top;
+                    var tmp_width = jQuery(this).width();
+                    var tmp_height = jQuery(this).height();
+                    chartObj.attr("chartArea", JSON.stringify({left:tmp_left, top:tmp_top, width:tmp_width, height:tmp_height}));
+                    chartObj.attr("hasChartArea", true);
+                    drawPreviewChart(chartObj, width, height);
+                }
+            });
+            jQuery('.chartArea').resizable({
+                containment:".preview-container",
+                stop: function(){
+                    var tmp_left = jQuery(this).offset().left - jQuery(".preview-container").offset().left;
+                    var tmp_top = jQuery(this).offset().top - jQuery(".preview-container").offset().top;
+                    var tmp_width = jQuery(this).width();
+                    var tmp_height = jQuery(this).height();
+                    chartObj.attr("chartArea", JSON.stringify({left:tmp_left, top:tmp_top, width:tmp_width, height:tmp_height}));
+                    chartObj.attr("hasChartArea", true);
+                    drawPreviewChart(chartObj, width, height);
+                }
+            });
         }
     });
 
 }
-
+function chartAreaAttribute2px(value, size){
+    var pixels = 0;
+    if (typeof(value) === "string"){
+        if (value.indexOf("%") != -1){
+            pixels = size / 100 * parseInt(value, 10);
+        }
+    }
+    else {
+        if (typeof(value) === "number"){
+            pixels = value;
+        }
+    }
+    return pixels;
+}
 function init_googlecharts_edit(){
     if(!jQuery("#googlecharts_list").length){
         return;
@@ -3223,20 +3303,51 @@ function init_googlecharts_edit(){
                 jQuery(".preview-controls .chartWidth").attr("value", tmp_width);
                 jQuery(".preview-controls .chartHeight").attr("value", tmp_height);
             },
-            resizeStart: function(){
-                jQuery( '#preview-iframe iframe').hide();
-                jQuery(".googlechart-preview-dialog").addClass("dialog_resizing");
-            },
             resizeStop: function(){
-                jQuery(".googlechart-preview-dialog").removeClass("dialog_resizing");
-                jQuery('#preview-iframe iframe').show();
+//                var tmp_width = 
+//                var tmp_
+                var width_ratio = jQuery(this).width() / chartObj.attr("widthPrevious");
+                var height_ratio = jQuery(this).height() / chartObj.attr("heightPrevious");
+                var chartAreaLeft = JSON.parse(chartObj.attr("chartArea")).left * width_ratio;
+                var chartAreaTop = JSON.parse(chartObj.attr("chartArea")).top * height_ratio;
+                var chartAreaWidth = JSON.parse(chartObj.attr("chartArea")).width * width_ratio;
+                var chartAreaHeight = JSON.parse(chartObj.attr("chartArea")).height * height_ratio;
+                chartObj.attr("chartArea", JSON.stringify({left:chartAreaLeft, top:chartAreaTop, width:chartAreaWidth, height:chartAreaHeight}));
                 drawPreviewChart(chartObj,
                          width + (jQuery(this).width() - jQuery(this).attr("widthOriginal")),
-                         height + (jQuery(this).height() - jQuery(this).attr("heightOriginal")),
-                         0, 0, 0, 0);
+                         height + (jQuery(this).height() - jQuery(this).attr("heightOriginal"))
+                        );
+            },
+            resizeStart: function(){
+                chartObj.attr("widthPrevious", jQuery(this).width());
+                chartObj.attr("heightPrevious", jQuery(this).height());
             },
             create: function(){
-                drawPreviewChart(chartObj, width, height, 0, 0, 0, 0);
+                var adv_options_str = chartObj.find(".googlechart_options").attr("value");
+                var adv_options = JSON.parse(adv_options_str);
+                var hasChartArea = true;
+                if ((!adv_options.hasOwnProperty("chartArea")) || 
+                    (!adv_options.chartArea.hasOwnProperty("left")) ||
+                    (!adv_options.chartArea.hasOwnProperty("top")) ||
+                    (!adv_options.chartArea.hasOwnProperty("width")) ||
+                    (!adv_options.chartArea.hasOwnProperty("height"))){
+                    hasChartArea = false;
+                }
+                var chartAreaLeft = width / 100 * 10;
+                var chartAreaTop = height / 100 * 10;
+                var chartAreaWidth = width / 100 * 80;
+                var chartAreaHeight = height / 100 * 80;
+                if (hasChartArea){
+                    chartAreaLeft = chartAreaAttribute2px(adv_options.chartArea.left, width);
+                    chartAreaTop = chartAreaAttribute2px(adv_options.chartArea.top, height);
+                    chartAreaWidth = chartAreaAttribute2px(adv_options.chartArea.width, width);
+                    chartAreaHeight = chartAreaAttribute2px(adv_options.chartArea.height, height);
+                }
+                chartObj.attr("chartArea", JSON.stringify({left: chartAreaLeft, top:chartAreaTop, width:chartAreaWidth, height: chartAreaHeight}));
+                chartObj.attr("hasChartArea", hasChartArea);
+                drawPreviewChart(chartObj,
+                                width,
+                                height);
             },
             open: function(){
                 jQuery(".chartsize").change(function(){
@@ -3244,7 +3355,7 @@ function init_googlecharts_edit(){
                     var tmp_height = parseInt(jQuery(".preview-controls .chartHeight").attr("value"), 10);
                     jQuery("#preview-iframe").dialog("option", "width", tmp_width + 35);
                     jQuery("#preview-iframe").dialog("option", "height", tmp_height + 90);
-                    drawPreviewChart(chartObj, tmp_width, tmp_height, 0, 0, 0, 0);
+                    drawPreviewChart(chartObj, tmp_width, tmp_height);
                 });
                 jQuery("#preview-iframe .btn-inverse").click(function(){
                     jQuery("#preview-iframe").dialog("close");
@@ -3259,8 +3370,8 @@ function init_googlecharts_edit(){
                 });
                 jQuery(".preview-controls .chartWidth").attr("value", width);
                 jQuery(".preview-controls .chartHeight").attr("value", height);
-                jQuery(this).attr("widthOriginal", jQuery(this).width())
-                jQuery(this).attr("heightOriginal", jQuery(this).height())
+                jQuery(this).attr("widthOriginal", jQuery(this).width());
+                jQuery(this).attr("heightOriginal", jQuery(this).height());
             }
         });
     });
