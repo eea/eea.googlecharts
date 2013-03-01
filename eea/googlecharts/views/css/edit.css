@@ -209,6 +209,7 @@
 .googlechart_height {
     width:50px !important;
     float:right;
+    display:none !important;
 }
 #gcharts-dashboard-edit .ui-icon-show,
 .googlechartTable .ui-icon-show {
@@ -546,28 +547,6 @@ dl.portlet .dashboard-widget,
 .dashboard-filter .ui-icon {
     cursor: pointer;
     float: right;
-}
-
-#preview-iframe {
-    background: white;
-    box-shadow: 0px 0px 5em #000;
-    border-radius: 10px;
-    display: none;
-    min-width: 200px;
-    min-height: 200px;
-    left: 100px;
-    padding: 5px;
-    z-index: 99;
-}
-
-#preview-iframe a.close {
-    background-image: url(pb_close.png);
-    position: absolute;
-    left: -14px;
-    top: -14px;
-    cursor: pointer;
-    height: 30px;
-    width: 30px;
 }
 
 .googlechart_types_container {
@@ -1328,4 +1307,66 @@ li.googlechart > fieldset > div > a > span {
 .googlecharts_columnfilter_slickgrid .ui-icon{
     margin:auto;
     background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png) !important;
+}
+
+.dialog_resizing {
+    border: 2px dotted green;
+    filter:alpha(opacity=80);
+    opacity:0.8;
+}
+
+.googlechart-preview-dialog {
+/*    padding:0;*/
+}
+
+#preview-iframe {
+/*    position: absolute;*/
+}
+
+#preview-iframe iframe{
+    position:absolute;
+    z-index:9997;
+}
+.preview-container {
+    border: 2px solid green;
+    position:relative;
+}
+
+.preview-mask{
+    position:absolute;
+    z-index: 9998;
+}
+
+.chartArea{
+    z-index: 9999;
+    border: 2px dotted green;
+    position: absolute;
+    font-size: 20px;
+    font-weight: bold;
+    display:table;
+    color:gray;
+}
+
+.chartArea span{
+    display:table-cell;
+    vertical-align:middle;
+    text-align:center;
+}
+.chartsize {
+    width:50px;
+    height:20px !important;
+    font-size:14px !important;
+    padding:0 !important;
+}
+
+.preview-controls {
+    text-align:center;
+}
+
+.googlechart-preview-dialog .btn{
+    float:right;
+}
+
+.preview_button {
+    cursor:pointer;
 }

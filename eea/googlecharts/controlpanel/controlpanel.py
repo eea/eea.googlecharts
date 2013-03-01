@@ -5,6 +5,7 @@ from eea.app.visualization.controlpanel.interfaces import IDavizSection
 from zope.formlib.form import FormFields
 from zope import schema
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
+from eea.googlecharts.config import EEAMessageFactory as _
 
 class GooglechartsSection(object):
     """ Googlecharts Settings Section
@@ -15,7 +16,8 @@ class GooglechartsSection(object):
     form_fields = FormFields(
         schema.Choice(
             __name__='googlechart.qrcode_position',
-            title=u"QRCode Position",
+            title=_(u"QRCode Position"),
+            description=_(u"Position of QR Code"),
             required=True,
             default='Disabled',
             vocabulary=
@@ -23,22 +25,28 @@ class GooglechartsSection(object):
             ),
         schema.Int(
             __name__='googlechart.qrcode_horizontal_space_for_png_export',
-            title=u'QRCode Horizontal Space For PNG Export',
+            title=_(u'QRCode Horizontal Space For PNG Export'),
+            description=_(u"""Horizontal space of QR Code from margin of the
+                            container (for PNG Export)"""),
             required=False,
             default=0),
         schema.Int(
             __name__='googlechart.qrcode_vertical_space_for_png_export',
-            title=u'QRCode Vertical Space For PNG Export',
+            title=_(u'QRCode Vertical Space For PNG Export'),
+            description=_(u"""Vertical space of QR Code from margin of the 
+                            container (for PNG Export)"""),
             required=False,
             default=0),
         schema.Int(
             __name__='googlechart.qrcode_size',
-            title=u'QRCode Size',
+            title=_(u'QRCode Size'),
+            description=_(u"Size of QR Code"),
             required=False,
             default=70),
         schema.Choice(
             __name__='googlechart.watermark_position',
-            title=u"Watermark Position",
+            title=_(u"Watermark Position"),
+            description=_(u"Position of Watermark"),
             required=True,
             default='Disabled',
             vocabulary=
@@ -46,16 +54,21 @@ class GooglechartsSection(object):
             ),
         schema.TextLine(
             __name__='googlechart.watermark_image',
-            title=u'Watermark Image',
+            description=_(u"Link to watermark image"),
+            title=_(u'Watermark Image'),
             required=True),
         schema.Int(
             __name__='googlechart.watermark_horizontal_space_for_png_export',
-            title=u'Watermark Horizontal Space For PNG Export',
+            title=_(u'Watermark Horizontal Space For PNG Export'),
+            description=_(u"""Horizontal space of Watermark image from margin
+                            of the container (for PNG Export)"""),
             required=False,
             default=0),
         schema.Int(
             __name__='googlechart.watermark_vertical_space_for_png_export',
-            title=u'Watermark Vertical Space For PNG Export',
+            title=_(u'Watermark Vertical Space For PNG Export'),
+            description=_(u"""Vertical space of Watermark image from margin
+                            of the container (for PNG Export)"""),
             required=False,
             default=0),
 
