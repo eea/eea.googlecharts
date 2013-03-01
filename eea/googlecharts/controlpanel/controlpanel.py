@@ -26,13 +26,15 @@ class GooglechartsSection(object):
         schema.Int(
             __name__='googlechart.qrcode_horizontal_space_for_png_export',
             title=_(u'QRCode Horizontal Space For PNG Export'),
-            description=_(u"Horizontal space of QR Code from margin of the container (for PNG Export)"),
+            description=_(u"""Horizontal space of QR Code from margin of the
+                            container (for PNG Export)"""),
             required=False,
             default=0),
         schema.Int(
             __name__='googlechart.qrcode_vertical_space_for_png_export',
             title=_(u'QRCode Vertical Space For PNG Export'),
-            description=_(u"Vertical space of QR Code from margin of the container (for PNG Export)"),
+            description=_(u"""Vertical space of QR Code from margin of the 
+                            container (for PNG Export)"""),
             required=False,
             default=0),
         schema.Int(
@@ -58,13 +60,15 @@ class GooglechartsSection(object):
         schema.Int(
             __name__='googlechart.watermark_horizontal_space_for_png_export',
             title=_(u'Watermark Horizontal Space For PNG Export'),
-            description=_(u"Horizontal space of Watermark image from margin of the container (for PNG Export)"),
+            description=_(u"""Horizontal space of Watermark image from margin
+                            of the container (for PNG Export)"""),
             required=False,
             default=0),
         schema.Int(
             __name__='googlechart.watermark_vertical_space_for_png_export',
             title=_(u'Watermark Vertical Space For PNG Export'),
-            description=_(u"Vertical space of Watermark image from margin of the container (for PNG Export)"),
+            description=_(u"""Vertical space of Watermark image from margin
+                            of the container (for PNG Export)"""),
             required=False,
             default=0),
 
