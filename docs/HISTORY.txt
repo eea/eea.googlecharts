@@ -1,12 +1,18 @@
 Changelog
 =========
 
-7.0-dev - (unreleased)
+7.1-dev - (unreleased)
 ----------------------
 * Feature: Added userfriendly resize of chart & chartArea
   [szabozo0 refs #13673]
 * Change: Added description to controlpanel fields
   [szabozo0]
+
+7.0 - (2013-02-25)
+------------------
+* Feature: Enable Charts view by default only if it's not disabled in controlpanel
+  for context's portal_type
+  [voineali]
 * Change: Enable Charts view on VisualizationEnabledEvent
   [voineali]
 

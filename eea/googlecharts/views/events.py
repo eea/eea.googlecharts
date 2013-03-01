@@ -2,8 +2,9 @@
 """
 import logging
 import json
-from zope.component import getUtility, queryAdapter, getMultiAdapter
+from zope.component import queryUtility, queryAdapter, getMultiAdapter
 from eea.app.visualization.interfaces import IVisualizationConfig
+from eea.app.visualization.interfaces import IDavizSettings
 from eea.app.visualization.views.events import facet_deleted
 from zope.schema.interfaces import IVocabularyFactory
 logger = logging.getLogger('eea.googlecharts')
@@ -16,6 +17,10 @@ def googlechart_facet_deleted(obj, evt):
 def create_default_views(obj, evt):
     """ Create default views
     """
+    settings = queryUtility(IDavizSettings)
+    if settings and settings.disabled('googlechart.googlecharts', obj):
+        return
+
     mutator = queryAdapter(obj, IVisualizationConfig)
     if not mutator:
         logger.warn("Couldn't find any IVisualizationConfig adapter for %s",
@@ -26,8 +31,8 @@ def create_default_views(obj, evt):
     if mutator.view('googlechart.googlecharts'):
         return
 
-    vocab = getUtility(IVocabularyFactory,
-                       name="eea.daviz.vocabularies.FacetsVocabulary")
+    vocab = queryUtility(IVocabularyFactory,
+                         name="eea.daviz.vocabularies.FacetsVocabulary")
     columns = vocab(obj)
 
     # If the table is empty, do nothing
