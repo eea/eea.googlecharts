@@ -209,6 +209,7 @@
 .googlechart_height {
     width:50px !important;
     float:right;
+    display:none !important;
 }
 #gcharts-dashboard-edit .ui-icon-show,
 .googlechartTable .ui-icon-show {

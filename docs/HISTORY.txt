@@ -3,7 +3,7 @@ Changelog
 
 7.0-dev - (unreleased)
 ----------------------
-* WIP: Started implementation of chart & chartArea size configuration
+* Feature: Added userfriendly resize of chart & chartArea
   [szabozo0 refs #13673]
 * Change: Added description to controlpanel fields
   [szabozo0]
