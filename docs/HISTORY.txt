@@ -3,6 +3,8 @@ Changelog
 
 7.1-dev - (unreleased)
 ----------------------
+* Feature: added information for contributors
+  [ciobabog refs #13892]
 * Feature: Added userfriendly resize of chart & chartArea
   [szabozo0 refs #13673]
 * Change: Added description to controlpanel fields
