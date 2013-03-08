@@ -466,8 +466,10 @@ class SavePNGChart(Export):
         qr_size = sp.get('googlechart.qrcode_size', '70')
         if qr_size == '0':
             qr_size = '70'
-        qr_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs=" + \
-            qr_size + "x" + qr_size + "&chl=" + urllib2.quote(chart_url)
+        qr_url = (
+            u"http://chart.apis.google.com"
+            "/chart?cht=qr&chld=H|0&chs=%sx%s&chl=%s" % (
+                qr_size, qr_size, urllib2.quote(chart_url)))
         self.request.form['qr_url'] = qr_url
         img = super(SavePNGChart, self).__call__()
 
