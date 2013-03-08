@@ -3,6 +3,8 @@ Changelog
 
 7.1-dev - (unreleased)
 ----------------------
+* Bugfix : Fixed resize of chart and chartArea when textbox is used for size dimensions
+  [szabozo0 refs #13673]
 * Feature: added information for contributors
   [ciobabog refs #13892]
 * Feature: Added userfriendly resize of chart & chartArea

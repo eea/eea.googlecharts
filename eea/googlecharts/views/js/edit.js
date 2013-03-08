@@ -3367,9 +3367,23 @@ function init_googlecharts_edit(){
                 jQuery(".chartsize").change(function(){
                     var tmp_width = parseInt(jQuery(".preview-controls .chartWidth").attr("value"), 10);
                     var tmp_height = parseInt(jQuery(".preview-controls .chartHeight").attr("value"), 10);
+                    var width_ratio = tmp_width / parseInt(chartObj.attr("widthPrevious"),10);
+                    var height_ratio = tmp_height / parseInt(chartObj.attr("heightPrevious"),10);
+                    var chartAreaLeft = JSON.parse(chartObj.attr("chartArea")).left * width_ratio;
+                    var chartAreaTop = JSON.parse(chartObj.attr("chartArea")).top * height_ratio;
+                    var chartAreaWidth = JSON.parse(chartObj.attr("chartArea")).width * width_ratio;
+                    var chartAreaHeight = JSON.parse(chartObj.attr("chartArea")).height * height_ratio;
+                    chartObj.attr("chartArea", JSON.stringify({left:chartAreaLeft, top:chartAreaTop, width:chartAreaWidth, height:chartAreaHeight}));
+                    drawPreviewChart(chartObj, tmp_width, tmp_height);
+
                     jQuery("#preview-iframe").dialog("option", "width", tmp_width + 35);
                     jQuery("#preview-iframe").dialog("option", "height", tmp_height + 90);
-                    drawPreviewChart(chartObj, tmp_width, tmp_height);
+                    chartObj.attr("widthPrevious", tmp_width);
+                    chartObj.attr("heightPrevious", tmp_height);
+                });
+                jQuery(".chartsize").focus(function(){
+                    chartObj.attr("widthPrevious", jQuery(".preview-controls .chartWidth").attr("value"));
+                    chartObj.attr("heightPrevious", jQuery(".preview-controls .chartHeight").attr("value"));
                 });
                 jQuery("#preview-iframe .btn-inverse").click(function(){
                     jQuery("#preview-iframe").dialog("close");
@@ -3401,6 +3415,8 @@ function init_googlecharts_edit(){
                 jQuery(".preview-controls .chartHeight").attr("value", height);
                 jQuery(this).attr("widthOriginal", jQuery(this).width());
                 jQuery(this).attr("heightOriginal", jQuery(this).height());
+                chartObj.attr("widthPrevious", width);
+                chartObj.attr("heightPrevious", height);
             }
         });
     });
