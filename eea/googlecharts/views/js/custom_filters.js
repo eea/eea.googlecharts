@@ -417,7 +417,8 @@ function applyPreConfigFilters(options){
                 var newState = {"selectedValues":[]};
                 jQuery.each(selectedValues, function(idx3, selectedValue){
                     jQuery.each(helperFilter.settings.selectables, function(idx4, selectable){
-                        if (selectable.replace(selectedValue+"_", "") === helperFilter.title.replace("custom_helper_", "")){
+                        selectedValueStr = selectedValue.replace(/[^A-Za-z0-9]/g, '_');
+                        if (selectable.replace(selectedValueStr+"_", "") === helperFilter.title.replace("custom_helper_", "")){
                             newState.selectedValues.push(options.availableColumns[selectable]);
                         }
                     });
