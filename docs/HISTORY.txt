@@ -3,6 +3,8 @@ Changelog
 
 7.2-dev - (unreleased)
 ----------------------
+* Feature: WIP: enhancing chart filters for pivot tables
+  [szabozo0 refs #14070]
 
 7.1 - (2013-03-15)
 ------------------

@@ -10,7 +10,6 @@ function transformTable(options){
         filters: {}
     };
     jQuery.extend(settings, options);
-
     var additionalColumns = {};
 
     var pivotTable = {};
