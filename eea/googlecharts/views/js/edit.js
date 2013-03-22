@@ -335,7 +335,10 @@ function reloadChartNotes(id){
             });
     });
 
-    ul.sortable('destroy');
+    try {
+        ul.sortable('destroy');
+    } catch(err) {}
+
     ul.sortable({
         items: 'li',
         opacity: 0.7,
@@ -578,7 +581,9 @@ function reloadColumnFilters(id){
             });
     });
 
-    ul.sortable('destroy');
+    try{
+        ul.sortable('destroy');
+    } catch(err) {}
     ul.sortable({
         items: 'li',
         opacity: 0.7,

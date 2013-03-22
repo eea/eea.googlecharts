@@ -562,7 +562,9 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         .height(self.settings.dashboard.height)
         .appendTo(self.context);
     }else{
-      self.box.resizable("destroy");
+      try{
+          self.box.resizable("destroy");
+      } catch(err){}
       self.box.empty();
     }
 

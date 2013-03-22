@@ -62,8 +62,9 @@ DavizEdit.GoogleDashboards.prototype = {
   onReload: function(){
     var self = this;
     self.context.empty();
-    self.context.sortable('destroy');
-
+    try{
+        self.context.sortable('destroy');
+    } catch(err) {}
     jQuery.each(self.settings.dashboards, function(index, config){
       var thumb = jQuery('<div>')
         .attr('title', 'Edit ' + config.title)
