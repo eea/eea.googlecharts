@@ -3,6 +3,8 @@ Changelog
 
 7.2-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed chart preview to take in consideration filters
+  [szabozo0 refs #14116]
 
 7.1 - (2013-03-15)
 ------------------
