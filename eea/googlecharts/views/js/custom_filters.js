@@ -1,4 +1,14 @@
-var tmp_array = [];
+var chartsForPaletteReorder = ["LineChart",
+                                "ComboChart",
+                                "ImageChart",
+                                "AreaChart",
+                                "SteppedAreaChart",
+                                "ColumnChart",
+                                "BarChart",
+                                "ScatterChart",
+                                "ImageSparkLine",
+                                "AnnotatedTimeLine"];
+
 function addCustomFilter(options){
     var settings = {
         customTitle : '',
@@ -21,7 +31,13 @@ function addCustomFilter(options){
     jQuery(filterChartDiv).appendTo("#" + settings.filtersDiv);
 
     var filterFilterDivId = settings.filtersDiv + "_" + settings.customPrefix + "_custom_filter";
-    var filterFilterDiv = "<div id='" + filterFilterDivId + "'></div>";
+    var filterFilterDiv;
+    if (settings.customTitle.indexOf("custom_helper_") === 0){
+        filterFilterDiv = "<div id='" + filterFilterDivId + "' style='display:none;'></div>";
+    }
+    else{
+        filterFilterDiv = "<div id='" + filterFilterDivId + "'></div>";
+    }
     jQuery(filterFilterDiv).prependTo("#" + settings.filtersDiv);
 
     var filterChart = new google.visualization.ChartWrapper({
@@ -159,6 +175,10 @@ function applyColumnFilters(options){
     jQuery("#"+options.filtersDiv).html('');
     jQuery("#"+options.chartViewDiv).html('');
 
+    var skipColorReorder = false;
+    if (this.customTitle.indexOf("custom_helper_") === 0){
+        skipColorReorder = true;
+    }
     var config = [];
 
     var original_config;
@@ -184,8 +204,6 @@ function applyColumnFilters(options){
             var chart_columnFilters_old = conf[14];
             var chart_columnFilters_new = [];
 
-//            options.columnFiltersObj.splice(1,1);
-//            chart_columnFilters_old.splice(1,1);
 
             jQuery.each(options.columnFiltersObj, function(c_idx, columnFilterObj){
                 var chart_columnFilter_new = {};
@@ -216,7 +234,6 @@ function applyColumnFilters(options){
                 chart_column_new.status = chart_column_old.status;
                 chart_columns_new.original.push(chart_column_new);
             });
-
             var usedFilterIdxs = [];
             jQuery.each(chart_columns_old.prepared, function(idx, chart_column_old){
                 var columnFilterIdx = -1;
@@ -258,7 +275,6 @@ function applyColumnFilters(options){
                    });
                 }
             });
-
             var chart_filters_new = {};
             jQuery.each(chart_filters_old,function(key,value){
                 var columnFilterIdx = -1;
@@ -298,57 +314,47 @@ function applyColumnFilters(options){
 
     var other_settings = jQuery("#" + options.dashboardDiv).data('other_settings');
 
-    var chartsForPaletteReorder = ["LineChart",
-                                "ComboChart",
-                                "ImageChart",
-                                "AreaChart",
-                                "SteppedAreaChart",
-                                "ColumnChart",
-                                "BarChart",
-                                "ScatterChart",
-                                "ImageSparkLine",
-                                "AnnotatedTimeLine"];
-
-    if (jQuery.inArray(config[1].chartType, chartsForPaletteReorder) !== -1){
-        var original_palette = {};
-        var column_nr = 0;
-        var color_nr = 0;
-        jQuery.each(original_config[2].prepared, function(idx, column){
-            if (column.status === 1){
-                if (column_nr !== 0){
-                    if (options.columnTypes[column.name].valueType === 'number'){
-                        original_palette[column.name] = original_config[1].options.colors[color_nr];
+    if (!skipColorReorder){
+        if (jQuery.inArray(config[1].chartType, chartsForPaletteReorder) !== -1){
+            var original_palette = {};
+            var column_nr = 0;
+            var color_nr = 0;
+            jQuery.each(original_config[2].prepared, function(idx, column){
+                if (column.status === 1){
+                    if (column_nr !== 0){
+                        if (options.columnTypes[column.name].valueType === 'number'){
+                            original_palette[column.name] = original_config[1].options.colors[color_nr];
+                            color_nr++;
+                            if (color_nr === original_config[1].options.colors.length){
+                                color_nr = 0;
+                            }
+                        }
+                    }
+                    column_nr++;
+                }
+            });
+            jQuery.each(original_config[14], function(idx, column_filter){
+                jQuery.each(column_filter.settings.selectables, function(idx, column){
+                    if ((options.columnTypes[column].valueType === 'number') && (typeof(original_palette[column]) === 'undefined')){
+                        original_palette[column] = original_config[1].options.colors[color_nr];
                         color_nr++;
                         if (color_nr === original_config[1].options.colors.length){
                             color_nr = 0;
                         }
                     }
-                }
-                column_nr++;
-            }
-        });
-        jQuery.each(original_config[14], function(idx, column_filter){
-            jQuery.each(column_filter.settings.selectables, function(idx, column){
-                if ((options.columnTypes[column].valueType === 'number') && (typeof(original_palette[column]) === 'undefined')){
-                    original_palette[column] = original_config[1].options.colors[color_nr];
-                    color_nr++;
-                    if (color_nr === original_config[1].options.colors.length){
-                        color_nr = 0;
-                    }
+                });
+            });
+
+            var new_palette = [];
+            jQuery.each(config[2].prepared, function(idx, column){
+                if ((column.status === 1) && (typeof(original_palette[column.name]) !== 'undefined')){
+                    new_palette.push(original_palette[column.name]);
                 }
             });
-        });
-
-        var new_palette = [];
-        jQuery.each(config[2].prepared, function(idx, column){
-            if ((column.status === 1) && (typeof(original_palette[column.name]) !== 'undefined')){
-                new_palette.push(original_palette[column.name]);
-            }
-        });
-        config[1].options.colors = new_palette;
-        config[7].colors = new_palette;
+            config[1].options.colors = new_palette;
+            config[7].colors = new_palette;
+        }
     }
-
     drawChart(config, other_settings);
 }
 
@@ -394,9 +400,7 @@ function addColumnFilters(options){
             allowNone : columnFilter.allowempty,
             paramsForHandler : paramsForHandler
         };
-        var x1 = addCustomFilter(options2);
-        settings.columnFiltersObj.push(x1);
-        tmp_array.push(x1);
+        settings.columnFiltersObj.push(addCustomFilter(options2));
     });
     settings.columnFilters.reverse();
     settings.columnFiltersObj.reverse();
@@ -411,6 +415,34 @@ function applyPreConfigFilters(options){
             selectedValues = columnFilterObj.getState().selectedValues;
         }
     });
+
+    var chart_columnFilters_old;
+    var chart_columns_old;
+    var conf_array = jQuery("#" + options.dashboardDiv).data('other_settings').googlechart_config_array;
+    jQuery.each(conf_array, function(idx, conf){
+        if (conf[0] === jQuery("#"+options.chartViewDiv).attr("chart_id")){
+            chart_columnFilters_old = conf[14];
+            chart_columns_old = conf[2];
+        }
+    });
+
+    jQuery.each(chart_columns_old.prepared, function(idx, prepared){
+        var shouldHide = true;
+        jQuery.each(chart_columns_old.original, function(idx, original){
+            if (original.name === prepared.name){
+                shouldHide = false;
+            }
+        });
+        if (shouldHide){
+            prepared.status = 0;
+        }
+    });
+
+    var filtersNotToRemove = [];
+    var filtersNotToRemoveTitles = [];
+    var filtersConfNotToRemove = [];
+    var filtersConfNotToRemoveTitles = [];
+
     jQuery.each(options.columnFiltersObj, function(idx1, columnFilterObj){
         jQuery.each(options.thisCustomHelperFilters, function(idx2, helperFilter){
             if (columnFilterObj.getOption("filterColumnLabel") === helperFilter.title){
@@ -418,7 +450,7 @@ function applyPreConfigFilters(options){
                 jQuery.each(selectedValues, function(idx3, selectedValue){
                     jQuery.each(helperFilter.settings.selectables, function(idx4, selectable){
                         selectedValueStr = selectedValue.replace(/[^A-Za-z0-9]/g, '_');
-                        if (selectable.replace(selectedValueStr+"_", "") === helperFilter.title.replace("custom_helper_", "")){
+                        if (selectable.replace("_"+selectedValueStr, "") === helperFilter.title.replace("custom_helper_", "")){
                             newState.selectedValues.push(options.availableColumns[selectable]);
                         }
                     });
@@ -426,8 +458,26 @@ function applyPreConfigFilters(options){
                 columnFilterObj.setState(newState);
                 columnFilterObj.draw();
                 objForTrigger = columnFilterObj;
+                if (jQuery.inArray(helperFilter.title, filtersNotToRemoveTitles) === -1){
+                    filtersNotToRemove.push(columnFilterObj);
+                    filtersNotToRemoveTitles.push(helperFilter.title);
+                }
+                jQuery.each(chart_columnFilters_old, function (idx3, oldFilter){
+                    if ((oldFilter.title === helperFilter.title) && (jQuery.inArray(oldFilter.title, filtersConfNotToRemoveTitles) === -1)){
+                        filtersConfNotToRemove.push(oldFilter);
+                        filtersConfNotToRemoveTitles.push(oldFilter.title);
+                    }
+                });
             }
         });
+    });
+    options.columnFiltersObj.splice(0, options.columnFiltersObj.length);
+    jQuery.each(filtersNotToRemove, function(idx, filter){
+        options.columnFiltersObj.push(filter);
+    });
+    chart_columnFilters_old.splice(0, chart_columnFilters_old.length);
+    jQuery.each(filtersConfNotToRemove, function(idx, filter){
+        chart_columnFilters_old.push(filter);
     });
     google.visualization.events.trigger(objForTrigger, 'statechange');
 }
@@ -474,7 +524,7 @@ function addPreConfigFilters(options){
                 if (pos === -1){
                     return;
                 }
-                var tmp_title = key.replace(filterStr+"_", "");
+                var tmp_title = key.replace("_"+filterStr, "");
                 var found_customHelperFilter = false;
                 var tmp_customHelperFilter = null;
                 jQuery.each(customHelperFilters, function(h_idx, customHelperFilter){

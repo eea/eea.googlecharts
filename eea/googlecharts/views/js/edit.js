@@ -2589,7 +2589,7 @@ function openAddChartFilterDialog(id){
 
         var originalColumns = JSON.parse(chartColumns_str).original;
         jQuery(originalColumns).each(function(index, value){
-            if ((used_columns.indexOf(value.name) === -1) && (filter_columns.indexOf(value.name) === -1)){
+            if ((used_columns.indexOf("pre_config_"+value.name) === -1) && (filter_columns.indexOf(value.name) === -1) && (value.status === 2)){
                 filter_columns.push(value.name);
                 var column = jQuery('<option style="background-color:gray"></option>');
                 column.attr("value", "pre_config_" + value.name);

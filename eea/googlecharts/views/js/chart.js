@@ -181,20 +181,58 @@ function drawGoogleChart(options){
         customFilterParams = addSortFilter(options2);
     }
 
+
     var conf_array = jQuery("#" + settings.chartDashboard).data('other_settings').googlechart_config_array;
     jQuery.each(conf_array, function(idx, conf){
         if (conf[0] === jQuery("#"+settings.chartViewDiv).attr("chart_id")){
             var chart_columnFilters_old = conf[14];
+            // remove all custom column filters from original
+            var columnFiltersToKeep = [];
+            jQuery.each(chart_columnFilters_old, function(idx2, columnFilter){
+                if (columnFilter.title.indexOf('custom_helper_') !== 0){
+                    columnFiltersToKeep.push(columnFilter);
+                }
+            });
+            chart_columnFilters_old.splice(0, chart_columnFilters_old.length);
+            jQuery.each(columnFiltersToKeep, function(idx2, columnFilter){
+                chart_columnFilters_old.push(columnFilter);
+            });
+
+            // remove all custom column filters from settings
+            columnFiltersToKeep = [];
+            jQuery.each(settings.columnFilters, function(idx2, columnFilter){
+                if (columnFilter.title.indexOf('custom_helper_') !== 0){
+                    columnFiltersToKeep.push(columnFilter);
+                }
+            });
+            settings.columnFilters.splice(0, settings.columnFilters.length);
+            jQuery.each(columnFiltersToKeep, function(idx2, columnFilter){
+                settings.columnFilters.push(columnFilter);
+            });
+
+            // update custom column filters for original and for settings
             jQuery.each(customColumnFilters, function(idx2, customFilter){
                 var shouldAdd = true;
-                jQuery.each(chart_columnFilters_old, function(idx, columnFilter){
+                jQuery.each(chart_columnFilters_old, function(idx3, columnFilter){
                     if (columnFilter.title === customFilter.title){
                         shouldAdd = false;
                     }
-                })
+                });
                 if (shouldAdd){
                     settings.columnFilters.push(customFilter);
-                };
+                }
+            });
+
+            jQuery.each(settings.columnFilters, function(idx2, columnFilter){
+                var shouldAdd = true;
+                jQuery.each(chart_columnFilters_old, function(idx3, tmpFilter){
+                    if (columnFilter.title === tmpFilter.title){
+                        shouldAdd = false;
+                    }
+                });
+                if (shouldAdd){
+                    chart_columnFilters_old.push(columnFilter);
+                }
             });
         }
     });
@@ -229,9 +267,6 @@ function drawGoogleChart(options){
     return {'chart': chart, 'filters': filtersArray};
 
 }
-
-//var hiddenDashboardFilters;
-//var dashboardFilters;
 
 function dashboardFilterChanged(options){
     var filtersStates = {};
