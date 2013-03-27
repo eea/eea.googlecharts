@@ -5,6 +5,8 @@ Changelog
 ----------------------
 * Bugfix: Fixed chart preview to take in consideration filters
   [szabozo0 refs #14116]
+* Bugfix: Layout fixes for googlechart editor, input fields on custom tab
+  [szabozo0 refs #14226]
 
 7.1 - (2013-03-15)
 ------------------

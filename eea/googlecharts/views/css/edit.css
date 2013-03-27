@@ -1024,7 +1024,9 @@ div[title='Format'].slick-header-menuitem {
     height:150px;
 }
 
-.slick-filter-title {
+.slick-filter-title,
+.slick-format-title {
+    clear:both;
     font-size:11px;
     padding: 0.2em;
     padding-left: 2em;
@@ -1032,7 +1034,8 @@ div[title='Format'].slick-header-menuitem {
     border-top: 1px solid #AAA;
 }
 
-.slick-filter-title:hover {
+.slick-filter-title:hover,
+.slick-format-title:hover {
     border-color: silver;
     background: white;
 }
@@ -1369,4 +1372,13 @@ li.googlechart > fieldset > div > a > span {
 
 .preview_button {
     cursor:pointer;
+}
+
+.goog-inline-block input {
+    padding-bottom: 5px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 5px;
+    margin-bottom: 0;
+    height: 16px;
 }
