@@ -233,6 +233,7 @@ function applyColumnFilters(options){
                     chart_column_new.name = chart_column_old.name;
                     chart_column_new.fullname = chart_column_old.fullname;
                     chart_column_new.status = chart_column_old.status;
+                    chart_column_new.formatters = chart_column_old.formatters;
                     chart_columns_new.prepared.push(chart_column_new);
                     if (chart_column_new.status === 1){
                         chart_json_view_columns.push(colnr);
@@ -241,10 +242,18 @@ function applyColumnFilters(options){
                 }
                 else {
                     jQuery.each(chart_columnFilters_new[columnFilterIdx].settings.defaults, function(idx, default_col_new){
+                        console.log(chart_columns_old);
+                        console.log(default_col_new);
                         var chart_column_new = {};
                         chart_column_new.name = default_col_new;
                         chart_column_new.fullname = options.columnFriendlyNames[default_col_new];
                         chart_column_new.status = 1;
+                        jQuery.each(chart_columns_old.prepared, function(idx, tmpcol){
+                            if ((tmpcol.name === chart_column_new.name) && (tmpcol.hasOwnProperty("formatters"))){
+                                chart_column_new.formatters = tmpcol.formatters;
+                            }
+                        });
+
                         chart_columns_new.prepared.push(chart_column_new);
                         chart_json_view_columns.push(colnr);
                         colnr++;

@@ -1174,7 +1174,8 @@ function openEditor(elementId) {
         originalDataTable : transformedTable,
         columns : columnsFromSettings.columns,
         sortBy : sortBy,
-        sortAsc : sortAsc
+        sortAsc : sortAsc,
+        preparedColumns: chartColumns.prepared
     };
 
     // check if table contains 2 string columns & 1 or 2 numeric columns (for treemap)
@@ -1205,6 +1206,7 @@ function openEditor(elementId) {
     chart.dataTable = tableForChart;
 
     chart.options.title = title;
+    chart.options.allowHtml = true;
     var wrapper = new google.visualization.ChartWrapper(chart);
 
     chartEditor = new google.visualization.ChartEditor();
@@ -1294,7 +1296,15 @@ function generateNewTableForChart(){
         jQuery("#googlechart_chart_div_tmp_chart").html("If you want pivot table, you must select at least 1 pivot volumn and 1 value column");
         isOK = false;
     }
+    prevColumnsSettings = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value"));
     if(isOK){
+        jQuery.each(columnsSettings.prepared, function(idx, newColumn){
+            jQuery.each(prevColumnsSettings.prepared, function(idx, prevColumn){
+                if (((newColumn.name === prevColumn.name) || (newColumn.name.indexOf(prevColumn.name+"_") === 0)) && (prevColumn.hasOwnProperty("formatters"))){
+                    newColumn.formatters = prevColumn.formatters;
+                }
+            });
+        });
         var columns_str = JSON.stringify(columnsSettings);
         jQuery("#googlechartid_tmp_chart .googlechart_columns").val(columns_str);
     }
@@ -1627,6 +1637,7 @@ function chartEditorSave(id){
     var hasNormal = false;
     var hasPivot = false;
     var hasValue = false;
+    var tmpPreparedColumns = JSON.parse($("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
     jQuery("#originalColumns").find("th").each(function(){
         var original = {};
         original.name = jQuery(this).attr("column_id");
@@ -1654,6 +1665,13 @@ function chartEditorSave(id){
                 preparedColumn.status = 1;
             }
             preparedColumn.fullname = this.name;
+            jQuery.each(tmpPreparedColumns, function(idx, tmpPreparedColumn){
+                if (tmpPreparedColumn.fullname === preparedColumn.fullname){
+                    if (tmpPreparedColumn.hasOwnProperty("formatters")){
+                        preparedColumn.formatters = JSON.parse(JSON.stringify(tmpPreparedColumn.formatters));
+                    }
+                }
+            });
             columnsSettings.prepared.push(preparedColumn);
         }
     });

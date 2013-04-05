@@ -37,6 +37,7 @@ function drawGoogleChart(options){
 
     jQuery("#"+settings.chartViewDiv).width(settings.chartWidth).height(settings.chartHeight);
 
+    settings.chartJson.options.allowHtml = true;
     settings.chartJson.options.width = settings.chartWidth;
     settings.chartJson.options.height = settings.chartHeight;
 
@@ -277,7 +278,8 @@ function drawGoogleDashboard(options){
                 originalDataTable : transformedTable,
                 columns : columnsFromSettings.columns,
                 sortBy : chart_sortBy,
-                sortAsc : chart_sortAsc
+                sortAsc : chart_sortAsc,
+                preparedColumns : chartConfig[2].prepared
             };
 
             var tableForChart = prepareForChart(options);

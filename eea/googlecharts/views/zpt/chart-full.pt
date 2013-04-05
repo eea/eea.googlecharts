@@ -39,7 +39,8 @@
             originalDataTable : transformedTable,
             columns : columnsFromSettings.columns,
             sortBy : sortBy,
-            sortAsc : sortAsc
+            sortAsc : sortAsc,
+            preparedColumns : chart_columns.prepared
         };
 
         var tableForChart = prepareForChart(options);

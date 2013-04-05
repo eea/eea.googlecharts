@@ -3,6 +3,8 @@ Changelog
 
 7.2-dev - (unreleased)
 ----------------------
+* Feature: Added formatters for googlecharts
+  [szabozo0 refs #9583]
 * Bugfix: Fixed chart preview to take in consideration filters
   [szabozo0 refs #14116]
 * Bugfix: Layout fixes for googlechart editor, input fields on custom tab

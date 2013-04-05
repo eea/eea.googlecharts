@@ -126,13 +126,121 @@ function tableToArray(options){
     return tableArray;
 }
 
+function applyFormattersOnDataTable(options){
+    var settings = {
+        datatable : '',
+        preparedColumns : ''
+    };
+    jQuery.extend(settings, options);
+
+    var idx = 0;
+    jQuery.each(settings.preparedColumns, function(tmp_idx, tmpcol){
+        if (tmpcol.status !== 1){
+            return;
+        }
+        if (tmpcol.hasOwnProperty("formatters")){
+            var formatters = tmpcol.formatters;
+            var formatter;
+            if (formatters.hasOwnProperty("arrowformatter")){
+                formatter = formatters.arrowformatter;
+                if (formatter.enabled){
+                    var arrowformat = {
+                        base : formatter.base
+                    };
+                    var arrowformatter = new google.visualization.ArrowFormat(arrowformat);
+                    arrowformatter.format(settings.datatable, idx);
+                }
+            }
+
+            if (formatters.hasOwnProperty("barformatter")){
+                formatter = formatters.barformatter;
+                if (formatter.enabled){
+                    var barformat = {
+                        base : formatter.base,
+                        colorNegative : formatter.colornegative,
+                        colorPositive : formatter.colorpositive,
+                        drawZeroLine : formatter.zeroline,
+                        min : formatter.min,
+                        max : formatter.max,
+                        showValue : formatter.showvalue,
+                        width : formatter.width
+                    };
+                    var barformatter = new google.visualization.BarFormat(barformat);
+                    barformatter.format(settings.datatable, idx);
+                }
+            }
+
+            if (formatters.hasOwnProperty("colorformatter")){
+                formatter = formatters.colorformatter;
+                if (formatter.enabled){
+                    var colorformatter = new google.visualization.ColorFormat();
+                    jQuery.each(formatter.ranges, function(idx, range){
+                        if (range.bgcolor === range.bgcolor2){
+                            colorformatter.addRange(range.from, range.to, range.color, range.bgcolor);
+                        }
+                        else {
+                            colorformatter.addGradientRange(range.from, range.to, range.color, range.bgcolor, range.bgcolor2);
+                        }
+                    });
+                    colorformatter.format(settings.datatable, idx);
+                }
+            }
+            if (formatters.hasOwnProperty("dateformatter")){
+                formatter = formatters.dateformatter;
+                if (formatter.enabled){
+                    var dateformat = {};
+                    if (formatter.usepattern){
+                        dateformat.pattern = formatter.pattern;
+                    }
+                    else {
+                        dateformat.formatType = formatter.formattype;
+                    }
+                    var dateformatter = new google.visualization.DateFormat(dateformat);
+                    dateformatter.format(settings.datatable, idx);
+                }
+            }
+
+            if (formatters.hasOwnProperty("numberformatter")){
+                formatter = formatters.numberformatter;
+                if (formatter.enabled){
+                    var numberformat = {};
+                    numberformat.negativeColor = formatter.negativecolor;
+                    if (formatter.usepattern){
+                        numberformat.pattern = formatter.pattern;
+                    }
+                    else {
+                        numberformat.decimalSymbol = formatter.decimalsymbol;
+                        numberformat.fractionDigits = formatter.fractiondigits;
+                        numberformat.groupingSymbol = formatter.groupingsymbol;
+                        numberformat.negativeParens = formatter.negativeparens;
+                        numberformat.prefix = formatter.prefix;
+                        numberformat.suffix = formatter.suffix;
+                    }
+                    var numberformatter = new google.visualization.NumberFormat(numberformat);
+                    numberformatter.format(settings.datatable, idx);
+                }
+            }
+
+            if (formatters.hasOwnProperty("patternformatter")){
+                formatter = formatters.patternformatter;
+                if (formatter.enabled){
+                    var patternformatter = new google.visualization.PatternFormat(formatter.pattern);
+                    patternformatter.format(settings.datatable, [idx]);
+                }
+            }
+        }
+        idx++;
+    });
+}
+
 function prepareForChart(options){
     var settings = {
         originalDataTable : '',
         columns : '',
         limit : 0,
         sortBy : '',
-        sortAsc : true
+        sortAsc : true,
+        preparedColumns : ''
     };
     jQuery.extend(settings, options);
 
@@ -150,7 +258,6 @@ function prepareForChart(options){
             }
             count++;
         });
-//        itemsToDisplay = itemsToDisplay.slice(0, limit);
     }
     else {
         itemsToDisplay = tmpItemsToDisplay;
@@ -164,7 +271,6 @@ function prepareForChart(options){
             colType = 'string';
         }else{
             colType = colType.valueType !== undefined ? colType.valueType: colType;
-//            if (allowedTypesForCharts.indexOf(colType) === -1){
             if (jQuery.inArray(colType, allowedTypesForCharts) === -1){
                 colType = "string";
             }
@@ -203,6 +309,13 @@ function prepareForChart(options){
         dataForChart.addRow(newRow);
     });
 
+    if (settings.preparedColumns !== ''){
+        var formatterOptions = {
+            datatable : dataForChart,
+            preparedColumns : settings.preparedColumns
+        };
+        applyFormattersOnDataTable(formatterOptions);
+    }
     var tmpDataView = new google.visualization.DataView(dataForChart);
 
     if (settings.sortBy !== ""){

@@ -138,7 +138,8 @@ function drawChart(value, other_options){
         originalDataTable : transformedTable,
         columns : columnsFromSettings.columns,
         sortBy : embedchart_sortBy,
-        sortAsc : embedchart_sortAsc
+        sortAsc : embedchart_sortAsc,
+        preparedColumns : embedchart_columns.prepared
     };
 
     var tableForChart = prepareForChart(options);
