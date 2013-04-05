@@ -138,7 +138,7 @@ function applyFormattersOnDataTable(options){
         if (tmpcol.status !== 1){
             return;
         }
-        if (tmpcol.hasOwnProperty("formatters")){
+        if (tmpcol.formatters){
             var formatters = tmpcol.formatters;
             var formatter;
             if (formatters.hasOwnProperty("arrowformatter")){
