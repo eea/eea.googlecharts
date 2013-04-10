@@ -1170,6 +1170,8 @@ function openEditor(elementId) {
 
     var transformedTable = transformTable(options);
 
+    jQuery("#googlechartid_tmp_chart").attr("columnproperties", JSON.stringify(transformedTable.properties));
+
     options = {
         originalDataTable : transformedTable,
         columns : columnsFromSettings.columns,

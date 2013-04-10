@@ -242,8 +242,6 @@ function applyColumnFilters(options){
                 }
                 else {
                     jQuery.each(chart_columnFilters_new[columnFilterIdx].settings.defaults, function(idx, default_col_new){
-                        console.log(chart_columns_old);
-                        console.log(default_col_new);
                         var chart_column_new = {};
                         chart_column_new.name = default_col_new;
                         chart_column_new.fullname = options.columnFriendlyNames[default_col_new];

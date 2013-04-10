@@ -857,6 +857,34 @@ function applyFormatters(button, enabled){
 
 function loadFormatters(colFullName){
     var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
+    var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
+    var colType = "text";
+    jQuery.each(columnProps, function(idx, columnProp){
+        if (columnProp.label === colFullName){
+            colType = columnProp.valueType;
+        }
+    });
+    if (colType === "text"){
+        jQuery(".slick-menu-arrowformat").hide();
+        jQuery(".slick-menu-barformat").hide();
+        jQuery(".slick-menu-colorformat").hide();
+        jQuery(".slick-menu-dateformat").hide();
+        jQuery(".slick-menu-numberformat").hide();
+    }
+
+    if (colType === "date"){
+        jQuery(".slick-menu-arrowformat").hide();
+        jQuery(".slick-menu-barformat").hide();
+        jQuery(".slick-menu-colorformat").hide();
+        jQuery(".slick-menu-numberformat").hide();
+        jQuery(".slick-menu-patternformat").hide();
+    }
+
+    if (colType === "number"){
+        jQuery(".slick-menu-dateformat").hide();
+        jQuery(".slick-menu-patternformat").hide();
+    }
+
     jQuery(".slick-format-menu").removeClass("slick-format-menu-enabled");
     jQuery.each(prepared, function(idx, col){
         if (col.fullname === colFullName){
