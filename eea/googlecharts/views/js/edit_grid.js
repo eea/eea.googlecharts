@@ -492,6 +492,14 @@ function hexToRgb(hex) {
     } : null;
 }
 
+function getFontColorForColor(hexStr){
+    var tmp_color = hexToRgb(hexStr);
+    if (tmp_color.r * 0.3 + tmp_color.g * 0.59 + tmp_color.b * 0.11 > 128){
+        return "#000000";
+    }
+    return "#ffffff";
+}
+
 function eeaColorEditor(args){
     var $color;
     var scope = this;
@@ -528,6 +536,9 @@ function eeaColorEditor(args){
         if ((args.column.field === 'bgcolor') && (!item.bgcolor2)){
             item.bgcolor2 = state;
         }
+        if (args.column.field === 'bgcolor'){
+            item.color = getFontColorForColor(state);
+        }
     };
     this.loadValue = function (item) {
         $color.val(item[args.column.field]);
@@ -547,6 +558,7 @@ function eeaColorEditor(args){
     };
     this.init();
 }
+
 function setUpColorFormatterForm(form){
     form.addClass("colorformatter");
     jQuery("<div class='slickgrid_errormsg eea_formatter_errormsg'></div>").appendTo(form);
@@ -554,9 +566,9 @@ function setUpColorFormatterForm(form){
     var ranges_columns = [
         {id: "from", name: "From", field: "from", editor: Slick.Editors.Text, sortable: false, selectable: true, resizable: true, focusable: true},
         {id: "to", name: "To", field: "to", editor: Slick.Editors.Text, sortable: false, selectable: true, resizable: true, focusable: true},
-        {id: "color", name: "Color", field: "color", editor: eeaColorEditor, sortable: false, selectable: true, resizable: true, focusable: true, formatter: eeaColorFormatter},
         {id: "bgcolor", name: "bgColor", field: "bgcolor", editor: eeaColorEditor, sortable: false, selectable: true, resizable: true, focusable: true, formatter: eeaColorFormatter},
         {id: "bgcolor2", name: "bgColor2", field: "bgcolor2", editor: eeaColorEditor, sortable: false, selectable: true, resizable: true, focusable: true, formatter: eeaColorFormatter, toolTip: "If bgColor2 differs from bgColor, a gradient will be used from bgColor to bgColor2 for the specified range"},
+        {id: "color", name: "Color", field: "color", editor: eeaColorEditor, sortable: false, selectable: true, resizable: true, focusable: true, formatter: eeaColorFormatter},
         {id: "delete", name: "Delete", field: "delete", formatter: eeaDeleteMarkFormatter, width:40}
         ];
     var ranges_options = {
@@ -569,7 +581,6 @@ function setUpColorFormatterForm(form){
     };
 
     ranges_data = [];
-
     ranges_grid = new Slick.Grid(".slick-menu-colorsgrid", ranges_data, ranges_columns, ranges_options);
     ranges_grid.onAddNewRow.subscribe(function (e, args) {
         var item = args.item;
@@ -609,6 +620,22 @@ function setUpColorFormatterForm(form){
             jQuery('.edit-color-text').val("#"+hex);
         }
     });
+
+    jQuery('<div>').addClass("colorpicker-palette").appendTo('.colorpicker');
+    jQuery('<p>Pick from default palette</p>').appendTo('.colorpicker-palette');
+    jQuery(chartPalettes['default'].colors).each(function(idx, color){
+        var tmpObj = jQuery("<div class='googlechart_preview_color colorpicker-color' style='background-color:"+color+"'> </div>");
+        tmpObj.attr("hexcolor", color);
+        tmpObj.appendTo(".colorpicker-palette");
+    });
+    jQuery("<div style='clear:both;'> </div>").appendTo(".colorpicker-palette");
+
+    jQuery('.colorpicker-color').bind('click', function(){
+        jQuery('.colorpickerfield').ColorPickerSetColor(jQuery(this).attr("hexcolor"));
+        jQuery('.edit-color-text').val(jQuery(this).attr("hexcolor"));
+        getFontColorForColor(jQuery(this).attr("hexcolor"));
+    });
+
     jQuery('.colorpickerfield').ColorPickerHide();
 }
 
@@ -1015,7 +1042,7 @@ function enableGridFormatters(){
     });
     jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
         var format_element = jQuery(".slick-header-menuitem").find("span:contains(-format-)");
-        if (!format_element){
+        if (format_element.length === 0){
             return;
         }
         format_element.parent().hide();
@@ -1253,6 +1280,16 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
     grid_data_view.endUpdate();
 
     grid.onColumnsReordered.subscribe(gridOnColumnsReorderedHandler);
+
+    jQuery(document.body).bind("mousedown", function(e){
+        var $menu = jQuery(".slick-header-menu");
+        if ($menu.length > 0 && $menu[0] != e.target && !$.contains($menu[0], e.target)) {
+            if (ranges_grid){
+                ranges_grid.destroy();
+            }
+        }
+    });
+
 
     var headerMenuPlugin = new Slick.Plugins.HeaderMenu();
 
