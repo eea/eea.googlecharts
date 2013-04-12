@@ -25,7 +25,6 @@ function drawGoogleChart(options){
         visibleColumns : ''
     };
     jQuery.extend(settings, options);
-
     // XXX Use GoogleChartsConfig for options instead of googlechart_config_array
     var other_settings = jQuery("#"+settings.chartDashboard).data("other_settings");
     if ((other_settings) && (other_settings.GoogleChartsConfig)){
@@ -170,7 +169,6 @@ function drawGoogleChart(options){
         });
         customColumnFilters = addPreConfigFilters(pre_config_options);
     }
-
     if ((settings.showSort) && (settings.chartJson.chartType !== 'Table')){
         var options2 = {
             filtersDiv : settings.chartFiltersDiv,
@@ -182,7 +180,9 @@ function drawGoogleChart(options){
         customFilterParams = addSortFilter(options2);
     }
 
-
+    if (jQuery("#" + settings.chartDashboard).data() === null){
+        return;
+    }
     var conf_array = jQuery("#" + settings.chartDashboard).data('other_settings').googlechart_config_array;
     jQuery.each(conf_array, function(idx, conf){
         if (conf[0] === jQuery("#"+settings.chartViewDiv).attr("chart_id")){

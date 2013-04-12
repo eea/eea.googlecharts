@@ -33,7 +33,8 @@ function addCustomFilter(options){
     var filterFilterDivId = settings.filtersDiv + "_" + settings.customPrefix + "_custom_filter";
     var filterFilterDiv;
     if (settings.customTitle.indexOf("custom_helper_") === 0){
-        filterFilterDiv = "<div id='" + filterFilterDivId + "' style='display:none;'></div>";
+//        filterFilterDiv = "<div id='" + filterFilterDivId + "' style='display:none;'></div>";
+        filterFilterDiv = "<div id='" + filterFilterDivId + "'></div>";
     }
     else{
         filterFilterDiv = "<div id='" + filterFilterDivId + "'></div>";
@@ -451,6 +452,17 @@ function applyPreConfigFilters(options){
     var filtersConfNotToRemoveTitles = [];
 
     jQuery.each(options.columnFiltersObj, function(idx1, columnFilterObj){
+//        debugger;
+        if (columnFilterObj.getOption("filterColumnLabel").indexOf("custom_helper_") === -1){
+            filtersNotToRemove.push(columnFilterObj);
+            filtersNotToRemoveTitles.push(columnFilterObj.getOption("filterColumnLabel"));
+            jQuery.each(chart_columnFilters_old, function (idx3, oldFilter){
+                if ((oldFilter.title === columnFilterObj.getOption("filterColumnLabel")) && (jQuery.inArray(oldFilter.title, filtersConfNotToRemoveTitles) === -1)){
+                    filtersConfNotToRemove.push(oldFilter);
+                    filtersConfNotToRemoveTitles.push(oldFilter.title);
+                }
+            });
+        }
         jQuery.each(options.thisCustomHelperFilters, function(idx2, helperFilter){
             if (columnFilterObj.getOption("filterColumnLabel") === helperFilter.title){
                 var newState = {"selectedValues":[]};
