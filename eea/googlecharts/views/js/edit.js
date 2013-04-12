@@ -882,19 +882,9 @@ function addChart(options){
                     "<span id='googlechart_chart_div_"+settings.id+"'></span>" +
                     "<span>Preview and size adjustments</span></a>"+
                 "</div>" +
-                "<div class='googlechart-columnfilters-box'>" +
-                    '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Column filters <span class="items_counter"></span></span>' +
-                        '<span title="Add column filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartcolumnfilter">+</span>' +
-                    '</div>' +
-                    '<div style="padding: 1em" class="body">' +
-                        "<ul class='googlechart_columnfilters_list'  id='googlechart_columnfilter_"+settings.id+"'>" +
-                        "</ul>" +
-                    '</div>' +
-                "</div>" +
                 "<div class='googlechart-filters-box'>" +
                     '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Value filters <span class="items_counter"></span></span>' +
+                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Row filters <span class="items_counter"></span></span>' +
                         '<span title="Add new filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartfilter">+</span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
@@ -916,6 +906,16 @@ function addChart(options){
                             "<option value='2' " + ((settings.filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
                             "<option value='3' " + ((settings.filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
                         "</select>" +
+                    '</div>' +
+                "</div>" +
+                "<div class='googlechart-columnfilters-box'>" +
+                    '<div class="header">' +
+                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Column filters <span class="items_counter"></span></span>' +
+                        '<span title="Add column filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartcolumnfilter">+</span>' +
+                    '</div>' +
+                    '<div style="padding: 1em" class="body">' +
+                        "<ul class='googlechart_columnfilters_list'  id='googlechart_columnfilter_"+settings.id+"'>" +
+                        "</ul>" +
                     '</div>' +
                 "</div>" +
                 "<div class='googlechart-notes-box'>" +
@@ -2640,6 +2640,19 @@ function openAddChartFilterDialog(id){
             buttons.attr('class', 'btn');
             jQuery(buttons[0]).addClass('btn-inverse');
             jQuery(buttons[1]).addClass('btn-success');
+            jQuery(".googlecharts_filter_columns").bind("change", function(){
+                jQuery(".googlecharts_filter_type").find("option:selected").removeAttr("selected");
+                if (jQuery(".googlecharts_filter_columns").attr("value").indexOf("pre_config_") === 0){
+                    jQuery(".googlecharts_filter_type").find("option[value='0']").hide();
+                    jQuery(".googlecharts_filter_type").find("option[value='1']").hide();
+                    jQuery(".googlecharts_filter_type").find("option[value='2']").attr("selected", "selected");
+                }
+                else{
+                    jQuery(".googlecharts_filter_type").find("option[value='0']").show();
+                    jQuery(".googlecharts_filter_type").find("option[value='1']").show();
+                    jQuery(".googlecharts_filter_type").find("option[value='0']").attr("selected", "selected");
+                }
+            });
         },
         buttons:[
             {
