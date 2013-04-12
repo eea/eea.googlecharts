@@ -199,9 +199,10 @@ function drawChart(value, other_options){
         chartReadyEvent : checkSVG,
         showSort : chart_showSort,
         columnFilters : chart_columnFilters,
-        columnTypes : transformedTable.properties
+        columnTypes : transformedTable.properties,
+        originalTable : other_settings.merged_rows,
+        visibleColumns : columnsFromSettings.columns
     };
-
     drawGoogleChart(googlechart_params);
 }
 

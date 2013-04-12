@@ -894,7 +894,7 @@ function addChart(options){
                 "</div>" +
                 "<div class='googlechart-filters-box'>" +
                     '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Chart filters <span class="items_counter"></span></span>' +
+                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Value filters <span class="items_counter"></span></span>' +
                         '<span title="Add new filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartfilter">+</span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
@@ -1049,11 +1049,16 @@ function addChart(options){
     }
 
     jQuery.each(settings.filters,function(key,value){
-        jQuery(chartColumns.prepared).each(function(idx, column){
-            if (column.name === key){
-                addFilter(settings.id, key, value, column.fullname);
-            }
-        });
+        if (key.indexOf('pre_config_') === -1){
+            jQuery(chartColumns.prepared).each(function(idx, column){
+                if (column.name === key){
+                    addFilter(settings.id, key, value, column.fullname);
+                }
+            });
+        }
+        else {
+            addFilter(settings.id, key, value, available_columns[key.substr(11)]);
+        }
     });
     if (shouldMark){
         markChartAsModified(settings.id);
@@ -2588,10 +2593,12 @@ function openAddChartFilterDialog(id){
 
     var empty = true;
     var chartColumns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").val();
+    var filter_columns = [];
     if (chartColumns_str !== ""){
         var preparedColumns = JSON.parse(chartColumns_str).prepared;
         jQuery(preparedColumns).each(function(index, value){
             if ((value.status === 1) && (used_columns.indexOf(value.name) === -1)){
+                filter_columns.push(value.name);
                 var column = jQuery('<option></option>');
                 column.attr("value", value.name);
                 column.text(value.fullname);
@@ -2599,6 +2606,19 @@ function openAddChartFilterDialog(id){
                 empty = false;
             }
         });
+
+        var originalColumns = JSON.parse(chartColumns_str).original;
+        jQuery(originalColumns).each(function(index, value){
+            if ((used_columns.indexOf("pre_config_"+value.name) === -1) && (filter_columns.indexOf(value.name) === -1) && (value.status === 2)){
+                filter_columns.push(value.name);
+                var column = jQuery('<option style="background-color:gray"></option>');
+                column.attr("value", "pre_config_" + value.name);
+                column.text(available_columns[value.name]);
+                jQuery(".googlecharts_filter_columns", addfilterdialog).append(column);
+                empty = false;
+            }
+        });
+
     }
 
     if(empty){
