@@ -57,6 +57,31 @@ function drawGoogleChart(options){
         usedColumnNames.push(settings.chartDataTable.getColumnLabel(i));
     }
     if (settings.chartFilters){
+        var hasPreConfig = false;
+        var hasPivotedFilter = false;
+        var pivotedFilterType;
+        var originalTableProps = [];
+        jQuery.each(settings.originalTable.properties, function(key, value){
+            originalTableProps.push(key);
+        });
+        jQuery.each(settings.chartFilters, function(key, value){
+            if (key.indexOf('pre_config_') === 0){
+                hasPreConfig = true;
+            }
+            else{
+                if (jQuery.inArray(key, originalTableProps) === -1){
+                    hasPivotedFilter = true;
+                    pivotedFilterType = value;
+                }
+            }
+        });
+        if (hasPreConfig && hasPivotedFilter){
+            jQuery.each(settings.availableColumns, function(key, value){
+                if (jQuery.inArray(key, originalTableProps) === -1){
+                    settings.chartFilters[key] = pivotedFilterType;
+                }
+            });
+        }
         jQuery.each(settings.chartFilters, function(key, value){
             if (key.indexOf('pre_config_') === 0){
                 return;
@@ -239,6 +264,21 @@ function drawGoogleChart(options){
     });
 
     if (settings.columnFilters.length > 0){
+        jQuery.each(settings.columnFilters, function(idx1, columnFilter1){
+            var shouldHide = false;
+            if (columnFilter1.title.indexOf("custom_helper_") === -1){
+                jQuery.each(settings.columnFilters, function(idx2, columnFilter2){
+                    if (columnFilter1.title !== columnFilter2.title){
+                        jQuery.each(columnFilter1.settings.selectables, function(idx3, column){
+                            if (jQuery.inArray(column, columnFilter2.settings.selectables) !== -1){
+                                shouldHide = true;
+                            }
+                        });
+                    }
+                });
+            }
+            columnFilter1.hideFilter = shouldHide;
+        });
         var options3 = {
             dashboardDiv : settings.chartDashboard,
             chartViewDiv :  settings.chartViewDiv,

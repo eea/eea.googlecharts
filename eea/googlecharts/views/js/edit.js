@@ -912,6 +912,7 @@ function addChart(options){
                     '<div class="header">' +
                         '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Column filters <span class="items_counter"></span></span>' +
                         '<span title="Add column filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartcolumnfilter">+</span>' +
+                        '<br/><span>Note: If row filters for pivoted columns are used, column filters using pivoted columns will be ignored</span>'+
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
                         "<ul class='googlechart_columnfilters_list'  id='googlechart_columnfilter_"+settings.id+"'>" +
@@ -1731,6 +1732,11 @@ function chartEditorSave(id){
     jQuery(columnsSettings.prepared).each(function(idx,value){
         if (value.status === 1){
             columnsForFilters.push(value.name);
+        }
+    });
+    jQuery(columnsSettings.original).each(function(idx, value){
+        if (value.status === 2){
+            columnsForFilters.push("pre_config_" + value.name);
         }
     });
     jQuery("#"+filtersPrefix).find(".googlechart_filteritem").each(function(idx,value){
@@ -2613,7 +2619,7 @@ function openAddChartFilterDialog(id){
                 filter_columns.push(value.name);
                 var column = jQuery('<option style="background-color:gray"></option>');
                 column.attr("value", "pre_config_" + value.name);
-                column.text(available_columns[value.name]);
+                column.text(available_columns[value.name] + " (pre-pivot)");
                 jQuery(".googlecharts_filter_columns", addfilterdialog).append(column);
                 empty = false;
             }
@@ -2670,6 +2676,9 @@ function openAddChartFilterDialog(id){
                     jQuery(".googlecharts_filter_columns").find("option").each(function(idx, filter){
                         if (jQuery(filter).attr("value") === selectedColumn){
                             selectedColumnName = jQuery(filter).html();
+                            if (selectedColumnName.indexOf("(pre-pivot)") !== -1){
+                                selectedColumnName = selectedColumnName.substr(0,selectedColumnName.length - 12);
+                            }
                         }
                     });
                     if ((selectedColumn === '-1') || (selectedFilter === '-1')){
