@@ -4,6 +4,6 @@
   <version>7.2</version>
   <dependencies>
     <dependency>profile-eea.app.visualization:default</dependency>
-    <dependency>profile-eea.jquery:03-ajaxfileupload</dependency>
+    <dependency>profile-eea.jquery:19-colorpicker</dependency>
   </dependencies>
 </metadata>
