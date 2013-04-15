@@ -10,7 +10,6 @@ function transformTable(options){
         filters: {}
     };
     jQuery.extend(settings, options);
-
     var additionalColumns = {};
 
     var pivotTable = {};
@@ -49,7 +48,12 @@ function transformTable(options){
             additionalColumns[pivotColumn] = defaultPivotColumnValue;
 
             pivotTable.available_columns[pivotColumn] = pivotColumnLabel;
-            pivotTable.properties[pivotColumn] = settings.originalTable.properties[settings.valueColumn];
+            pivotTable.properties[pivotColumn] = {
+                valueType : settings.originalTable.properties[settings.valueColumn].valueType,
+                order : settings.originalTable.properties[settings.valueColumn].order,
+                columnType : settings.originalTable.properties[settings.valueColumn].columnType,
+                label : pivotColumnLabel
+            };
 
             jQuery(pivotTable.items).each(function(pivot_row_index, pivot_row){
                 var foundRow = true;

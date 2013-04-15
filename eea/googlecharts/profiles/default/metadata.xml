@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <metadata>
   <description>EEA Google Charts</description>
-  <version>6.4</version>
+  <version>7.2</version>
   <dependencies>
     <dependency>profile-eea.app.visualization:default</dependency>
+    <dependency>profile-eea.jquery:19-colorpicker</dependency>
   </dependencies>
 </metadata>

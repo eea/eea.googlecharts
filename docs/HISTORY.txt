@@ -3,7 +3,9 @@ Changelog
 
 7.2-dev - (unreleased)
 ----------------------
-* Change: 
+* Bugfix: Fixed formatters for pivoted columns
+  [szabozo0 refs #9583]
+* Change:
     - On color formatter allow user to select colors from company default palette
     - On color formatter determine automatically text color (black or white) depending on background color
   [szabozo0 refs #9583]
@@ -17,6 +19,8 @@ Changelog
   [szabozo0 refs #14116]
 * Bugfix: Layout fixes for googlechart editor, input fields on custom tab
   [szabozo0 refs #14226]
+* Feature: Enhanced chart filters for pivot tables
+  [szabozo0 refs #14070]
 
 7.1 - (2013-03-15)
 ------------------

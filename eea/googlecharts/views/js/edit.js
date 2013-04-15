@@ -882,19 +882,9 @@ function addChart(options){
                     "<span id='googlechart_chart_div_"+settings.id+"'></span>" +
                     "<span>Preview and size adjustments</span></a>"+
                 "</div>" +
-                "<div class='googlechart-columnfilters-box'>" +
-                    '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Column filters <span class="items_counter"></span></span>' +
-                        '<span title="Add column filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartcolumnfilter">+</span>' +
-                    '</div>' +
-                    '<div style="padding: 1em" class="body">' +
-                        "<ul class='googlechart_columnfilters_list'  id='googlechart_columnfilter_"+settings.id+"'>" +
-                        "</ul>" +
-                    '</div>' +
-                "</div>" +
                 "<div class='googlechart-filters-box'>" +
                     '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Chart filters <span class="items_counter"></span></span>' +
+                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Row filters <span class="items_counter"></span></span>' +
                         '<span title="Add new filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartfilter">+</span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
@@ -916,6 +906,17 @@ function addChart(options){
                             "<option value='2' " + ((settings.filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
                             "<option value='3' " + ((settings.filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
                         "</select>" +
+                    '</div>' +
+                "</div>" +
+                "<div class='googlechart-columnfilters-box'>" +
+                    '<div class="header">' +
+                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Column filters <span class="items_counter"></span></span>' +
+                        '<span title="Add column filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartcolumnfilter">+</span>' +
+                        '<br/><span>Note: If row filters for pivoted columns are used, column filters using pivoted columns will be ignored</span>'+
+                    '</div>' +
+                    '<div style="padding: 1em" class="body">' +
+                        "<ul class='googlechart_columnfilters_list'  id='googlechart_columnfilter_"+settings.id+"'>" +
+                        "</ul>" +
                     '</div>' +
                 "</div>" +
                 "<div class='googlechart-notes-box'>" +
@@ -1049,11 +1050,16 @@ function addChart(options){
     }
 
     jQuery.each(settings.filters,function(key,value){
-        jQuery(chartColumns.prepared).each(function(idx, column){
-            if (column.name === key){
-                addFilter(settings.id, key, value, column.fullname);
-            }
-        });
+        if (key.indexOf('pre_config_') === -1){
+            jQuery(chartColumns.prepared).each(function(idx, column){
+                if (column.name === key){
+                    addFilter(settings.id, key, value, column.fullname);
+                }
+            });
+        }
+        else {
+            addFilter(settings.id, key, value, available_columns[key.substr(11)]);
+        }
     });
     if (shouldMark){
         markChartAsModified(settings.id);
@@ -1726,6 +1732,11 @@ function chartEditorSave(id){
     jQuery(columnsSettings.prepared).each(function(idx,value){
         if (value.status === 1){
             columnsForFilters.push(value.name);
+        }
+    });
+    jQuery(columnsSettings.original).each(function(idx, value){
+        if (value.status === 2){
+            columnsForFilters.push("pre_config_" + value.name);
         }
     });
     jQuery("#"+filtersPrefix).find(".googlechart_filteritem").each(function(idx,value){
@@ -2588,10 +2599,12 @@ function openAddChartFilterDialog(id){
 
     var empty = true;
     var chartColumns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").val();
+    var filter_columns = [];
     if (chartColumns_str !== ""){
         var preparedColumns = JSON.parse(chartColumns_str).prepared;
         jQuery(preparedColumns).each(function(index, value){
             if ((value.status === 1) && (used_columns.indexOf(value.name) === -1)){
+                filter_columns.push(value.name);
                 var column = jQuery('<option></option>');
                 column.attr("value", value.name);
                 column.text(value.fullname);
@@ -2599,6 +2612,19 @@ function openAddChartFilterDialog(id){
                 empty = false;
             }
         });
+
+        var originalColumns = JSON.parse(chartColumns_str).original;
+        jQuery(originalColumns).each(function(index, value){
+            if ((used_columns.indexOf("pre_config_"+value.name) === -1) && (filter_columns.indexOf(value.name) === -1) && (value.status === 2)){
+                filter_columns.push(value.name);
+                var column = jQuery('<option style="background-color:gray"></option>');
+                column.attr("value", "pre_config_" + value.name);
+                column.text(available_columns[value.name] + " (pre-pivot)");
+                jQuery(".googlecharts_filter_columns", addfilterdialog).append(column);
+                empty = false;
+            }
+        });
+
     }
 
     if(empty){
@@ -2620,6 +2646,19 @@ function openAddChartFilterDialog(id){
             buttons.attr('class', 'btn');
             jQuery(buttons[0]).addClass('btn-inverse');
             jQuery(buttons[1]).addClass('btn-success');
+            jQuery(".googlecharts_filter_columns").bind("change", function(){
+                jQuery(".googlecharts_filter_type").find("option:selected").removeAttr("selected");
+                if (jQuery(".googlecharts_filter_columns").attr("value").indexOf("pre_config_") === 0){
+                    jQuery(".googlecharts_filter_type").find("option[value='0']").hide();
+                    jQuery(".googlecharts_filter_type").find("option[value='1']").hide();
+                    jQuery(".googlecharts_filter_type").find("option[value='2']").attr("selected", "selected");
+                }
+                else{
+                    jQuery(".googlecharts_filter_type").find("option[value='0']").show();
+                    jQuery(".googlecharts_filter_type").find("option[value='1']").show();
+                    jQuery(".googlecharts_filter_type").find("option[value='0']").attr("selected", "selected");
+                }
+            });
         },
         buttons:[
             {
@@ -2637,6 +2676,9 @@ function openAddChartFilterDialog(id){
                     jQuery(".googlecharts_filter_columns").find("option").each(function(idx, filter){
                         if (jQuery(filter).attr("value") === selectedColumn){
                             selectedColumnName = jQuery(filter).html();
+                            if (selectedColumnName.indexOf("(pre-pivot)") !== -1){
+                                selectedColumnName = selectedColumnName.substr(0,selectedColumnName.length - 12);
+                            }
                         }
                     });
                     if ((selectedColumn === '-1') || (selectedFilter === '-1')){
