@@ -53,7 +53,7 @@ function transformTable(options){
                 order : settings.originalTable.properties[settings.valueColumn].order,
                 columnType : settings.originalTable.properties[settings.valueColumn].columnType,
                 label : pivotColumnLabel
-            }
+            };
 
             jQuery(pivotTable.items).each(function(pivot_row_index, pivot_row){
                 var foundRow = true;
