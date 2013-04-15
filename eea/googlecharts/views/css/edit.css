@@ -1478,3 +1478,8 @@ li.googlechart > fieldset > div > a > span {
 .google-visualization-table-table img {
     height:12px !important;
 }
+
+.slick-menu-colorsgrid div.even,
+.slick-menu-colorsgrid div.odd {
+    padding: 0 !important;
+}
