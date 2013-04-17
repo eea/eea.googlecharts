@@ -1,8 +1,8 @@
 Changelog
 =========
 
-7.3-dev - (unreleased)
-----------------------
+7.3 - (2013-04-17)
+------------------
 * Bugfix: Fixed formatters on dashboards
   [szabozo0 #9583]
 * Change: Added upgrade step
