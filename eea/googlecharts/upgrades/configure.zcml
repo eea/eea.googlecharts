@@ -4,6 +4,20 @@
   i18n_domain="eea">
 
 
+  <!-- * => 7.2 -->
+  <genericsetup:upgradeSteps
+    source="*"
+    destination="7.2"
+    profile="eea.googlecharts:default">
+
+    <genericsetup:upgradeDepends
+      title="Install eea.jquery colorpicker plugin"
+      import_profile="eea.jquery:19-colorpicker"
+      />
+
+  </genericsetup:upgradeSteps>
+
+
   <!-- 6.3 => 6.4 -->
   <genericsetup:upgradeSteps
     source="6.3"
