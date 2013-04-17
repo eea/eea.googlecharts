@@ -430,7 +430,8 @@ function drawGoogleDashboard(options){
                 availableColumns : transformedTable.available_columns,
                 chartReadyEvent : function(){},
                 showSort:false,
-                hideNotes:true
+                hideNotes:true,
+                originalTable:settings.rows
             };
             var tmp_chart = drawGoogleChart(chart_options);
             hiddenDashboardFilters = hiddenDashboardFilters.concat(tmp_chart.filters);
@@ -503,7 +504,8 @@ function drawGoogleDashboard(options){
                 chartReadyEvent : function(){},
                 showSort : false,
                 customFilterHandler : dashboardFilterChanged,
-                customFilterOptions : customFilterOptions
+                customFilterOptions : customFilterOptions,
+                originalTable : settings.rows
             };
             var tmp_chart = drawGoogleChart(chart_options);
             jQuery.each(tmp_chart.filters, function(idx, filter){

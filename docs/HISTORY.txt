@@ -3,6 +3,8 @@ Changelog
 
 7.3-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed formatters on dashboards
+  [szabozo0 #9583]
 * Change: Added upgrade step
   [szabozo0]
 
