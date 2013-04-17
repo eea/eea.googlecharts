@@ -4,10 +4,10 @@
   i18n_domain="eea">
 
 
-  <!-- * => 7.2 -->
+  <!-- * => 7.3 -->
   <genericsetup:upgradeSteps
     source="*"
-    destination="7.2"
+    destination="7.3"
     profile="eea.googlecharts:default">
 
     <genericsetup:upgradeDepends
