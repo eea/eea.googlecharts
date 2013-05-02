@@ -430,7 +430,7 @@ jQuery(document).ready(function($){
     if (jQuery.browser.mozilla){
         var href = document.location.href;
         var href_array = href.split("#");
-        if (!href_array[0].endsWith2("/")){
+        if (!href_array[0].endsWith("/")){
             href_array[0] = href_array[0] + "/";
             var href2 = href_array.join("#");
             document.location = href2;
