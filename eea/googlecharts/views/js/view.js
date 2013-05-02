@@ -2,6 +2,12 @@ var current_chart_id;
 var tableForDashboard;
 var allColumns;
 
+if (typeof String.prototype.endsWith === "undefined") {
+    String.prototype.endsWith = function(suffix) {
+        return this.length >= suffix.length && this.substr(this.length - suffix.length) === suffix;
+    };
+}
+
 function exportToPng(){
     var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
     jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
@@ -424,7 +430,7 @@ jQuery(document).ready(function($){
     if (jQuery.browser.mozilla){
         var href = document.location.href;
         var href_array = href.split("#");
-        if (!href_array[0].endsWith("/")){
+        if (!href_array[0].endsWith2("/")){
             href_array[0] = href_array[0] + "/";
             var href2 = href_array.join("#");
             document.location = href2;
