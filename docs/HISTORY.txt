@@ -1,6 +1,9 @@
 Changelog
 =========
 
+7.5-dev - (unreleased)
+----------------------
+
 7.4 - (2013-05-20)
 ------------------
 * Bugfix: Added missing endsWith function to avoid js errors when using eea.googlecharts without eea.exhibit
