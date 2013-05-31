@@ -4,6 +4,7 @@ from zope.component import queryAdapter
 from eea.app.visualization.interfaces import IVisualizationConfig
 from Products.Five.browser import BrowserView
 
+
 class View(BrowserView):
     """ Generic widget view
     """

@@ -1,4 +1,5 @@
-<div id="googlecharts_config" tal:define="ajax_baseurl string:${view/context/absolute_url}">
+<div id="googlecharts_config" tal:define="ajax_baseurl string:${view/context/absolute_url}"
+     i18n:domain="eea">
     <script type="text/javascript" tal:content="string:ajax_baseurl = '${ajax_baseurl}';available_columns = ${view/get_columns};all_rows = ${view/get_allrows}">
     </script>
 

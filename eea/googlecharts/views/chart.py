@@ -23,7 +23,7 @@ logger = logging.getLogger('eea.googlecharts')
 class View(ViewForm):
     """ GoogleChartsView
     """
-    label = 'Charts'
+    label = _('Charts')
     view_name = "googlechart.googlecharts"
 
     @property
@@ -554,7 +554,7 @@ class DashboardView(ViewForm):
 class DashboardsView(ViewForm):
     """ Google dashboards view
     """
-    label = 'Dashboards'
+    label = _('Dashboards')
 
     @property
     def tabs(self):

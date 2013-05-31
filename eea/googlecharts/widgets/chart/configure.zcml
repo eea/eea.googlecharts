@@ -2,6 +2,7 @@
   xmlns="http://namespaces.zope.org/zope"
   xmlns:googlecharts="http://namespaces.zope.org/googlecharts"
   xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:i18n="http://namespaces.zope.org/i18n"
   i18n_domain="eea">
 
   <!-- View -->
@@ -12,7 +13,7 @@
     template="view.pt"
     permission="zope2.View"
     title="Chart"
-    />
+    i18n:attributes="title"/>
 
   <!-- Edit -->
   <browser:page

@@ -15,6 +15,7 @@ from eea.app.visualization.views.edit import EditForm
 from eea.app.visualization.zopera import IFolderish
 from eea.googlecharts.views.interfaces import IGoogleChartsEdit
 from eea.googlecharts.events import ChartsChanged
+from eea.googlecharts.config import EEAMessageFactory as _
 logger = logging.getLogger('eea.googlecharts')
 
 def compare(a, b):
@@ -58,7 +59,7 @@ class Edit(BrowserView):
 
         notify(ChartsChanged(self.context, config=data))
 
-        return 'Changes saved'
+        return _('Changes saved')
 
     def get_charts(self):
         """ Charts
@@ -130,7 +131,7 @@ class Edit(BrowserView):
 class ChartsEdit(EditForm, Edit):
     """ Edit google charts
     """
-    label = "Googlechart Edit"
+    label = _("Googlechart Edit")
     form_fields = Fields(IGoogleChartsEdit)
 
     def __call__(self, **kwargs):
@@ -204,7 +205,7 @@ class DashboardEdit(ChartsEdit):
         title = kwargs.get('title', '')
         self.dashboard['title'] = title
         self.dashboards = "Changed"
-        return u"Dashboard renamed"
+        return _(u"Dashboard renamed")
 
     def dashboardDelete(self, **kwargs):
         """ Delete dashboard
@@ -214,7 +215,7 @@ class DashboardEdit(ChartsEdit):
             dashboard for dashboard in dashboards
             if dashboard.get('name') != self.dashboard_name]
         self.dashboards = 'Changed'
-        return u"Dashboard deleted"
+        return _(u"Dashboard deleted")
 
     def widgetEdit(self, **kwargs):
         """ Edit dashboard widget
@@ -242,7 +243,7 @@ class DashboardEdit(ChartsEdit):
 
         if changed:
             self.dashboards = 'Changed'
-        return u'Changes saved'
+        return _(u'Changes saved')
 
     def widgetDelete(self, **kwargs):
         """ Delete widget
@@ -264,7 +265,7 @@ class DashboardEdit(ChartsEdit):
 
         if changed:
             self.dashboards = 'Changed'
-        return u'Widget deleted'
+        return _(u'Widget deleted')
 
     def chartsPosition(self, **kwargs):
         """ Change chats position in dashboard
@@ -293,7 +294,7 @@ class DashboardEdit(ChartsEdit):
         if changed:
             widgets.sort(cmp=compare)
             self.dashboards = 'Changed'
-        return u'Changed saved'
+        return _(u'Changed saved')
 
     def chartsSize(self, **kwargs):
         """ Change filters box size
@@ -303,7 +304,7 @@ class DashboardEdit(ChartsEdit):
         self.dashboard['chartsBox']['height'] = kwargs.get('height', 'auto')
 
         self.dashboards = 'Changed'
-        return 'Charts box resized'
+        return _('Charts box resized')
 
     def filterAdd(self, **kwargs):
         """ Add filter
@@ -312,7 +313,7 @@ class DashboardEdit(ChartsEdit):
         self.dashboard['filters'].append(kwargs)
 
         self.dashboards = 'Changed'
-        return u'Filter added'
+        return _(u'Filter added')
 
     def filterDelete(self, **kwargs):
         """ Delete filter
@@ -323,14 +324,14 @@ class DashboardEdit(ChartsEdit):
         self.dashboard['filters'] = filters
 
         self.dashboards = 'Changed'
-        return u'Filter deleted'
+        return _(u'Filter deleted')
 
     def filtersPosition(self, **kwargs):
         """ Change filters position
         """
         order = kwargs.get('order', [])
         if not order:
-            return 'New order not provided'
+            return _('New order not provided')
 
         filters = dict((item.get('column'), item)
                        for item in self.dashboard.get('filters', []))
@@ -343,7 +344,7 @@ class DashboardEdit(ChartsEdit):
         self.dashboard['filters'] = reordered
 
         self.dashboards = 'Changed'
-        return 'Filters position changed'
+        return _('Filters position changed')
 
     def filtersSize(self, **kwargs):
         """ Change filters box size
@@ -356,21 +357,21 @@ class DashboardEdit(ChartsEdit):
         self.dashboard['filtersBox']['height'] = height
 
         self.dashboards = 'Changed'
-        return 'Filters box resized'
+        return _('Filters box resized')
 
     def sectionsPosition(self, **kwargs):
         """ Change sections position in dashboard
         """
         order = kwargs.get('order', [])
         if not order:
-            return u'New order not provided'
+            return _(u'New order not provided')
 
         for item in order:
             self.dashboard.setdefault(item, {})
             self.dashboard[item]['order'] = order.index(item)
 
         self.dashboards = 'Changed'
-        return 'Position changed'
+        return _('Position changed')
 
     def __call__(self, **kwargs):
         form = getattr(self.request, 'form', {})

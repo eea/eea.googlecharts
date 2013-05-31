@@ -12,7 +12,7 @@ class GooglechartsSection(object):
     """
     implements(IDavizSection)
     prefix = 'googlechart'
-    title = 'Google Charts Settings'
+    title = _('Google Charts Settings')
     form_fields = FormFields(
         schema.Choice(
             __name__='googlechart.qrcode_position',

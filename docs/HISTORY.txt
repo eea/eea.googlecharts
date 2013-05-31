@@ -3,6 +3,8 @@ Changelog
 
 7.5-dev - (unreleased)
 ----------------------
+* Feature: Package localization enhanced
+  [lepri]
 
 7.4 - (2013-05-20)
 ------------------
