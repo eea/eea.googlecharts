@@ -54,7 +54,7 @@ class SubPageForm(BaseForm):
     def nextUrl(self):
         """ Redirect to daviz-edit.html as next_url
         """
-        IStatusMessage(self.request).addStatusMessage('Changes saved',
+        IStatusMessage(self.request).addStatusMessage(_('Changes saved'),
                                                         type='info')
         next_url = self.context.absolute_url() + '/daviz-edit.html'
         self.request.response.redirect(next_url)
@@ -141,7 +141,7 @@ class EditForm(SubPageForm):
             self.dashboards = 'Changed'
 
         if value == 'ajax':
-            return 'Changes saved'
+            return _('Changes saved')
 
         return self.nextUrl
 

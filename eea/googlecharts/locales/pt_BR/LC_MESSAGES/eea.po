@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI +ZONE\n"
-"PO-Revision-Date: 2013-05-12 19:46-0300\n"
+"PO-Revision-Date: 2013-05-29 16:16-0300\n"
 "Last-Translator: Gustavo Lepri <gustavolepri@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,6 +15,10 @@ msgstr ""
 "Domain: DOMAIN\n"
 "X-Generator: Poedit 1.5.4\n"
 
+#: ../../googlecharts/views/zpt/edit.pt:6
+msgid "Add another visualization"
+msgstr "Adicionar outra visualização"
+
 #: ../../googlecharts/views/chart.py:459
 msgid "Can't save png chart on a non-folderish object !"
 msgstr "Não foi possível salvar o mapa png em um objeto que não é pasta!"
@@ -23,6 +27,38 @@ msgstr "Não foi possível salvar o mapa png em um objeto que não é pasta!"
 msgid "Can't set thumbnail on a non-folderish object !"
 msgstr "Não foi possível  definir o thumbnail em um objeto que não é pasta!"
 
+#: ../../googlecharts/views/edit.py:297
+msgid "Changed saved"
+msgstr "Alterações salvas"
+
+#: ../../googlecharts/views/edit.py:62 ../../googlecharts/widgets/edit.py:57
+msgid "Changes saved"
+msgstr "Alterações salvas"
+
+#: ../../googlecharts/widgets/chart/interfaces.py:11
+msgid "Chart"
+msgstr "Gráfico"
+
+#: ../../googlecharts/views/chart.py:26
+msgid "Charts"
+msgstr "Gráficos"
+
+#: ../../googlecharts/views/edit.py:307
+msgid "Charts box resized"
+msgstr "Caixa do gráfico redimencionada"
+
+#: ../../googlecharts/views/edit.py:218
+msgid "Dashboard deleted"
+msgstr "Painel apagado"
+
+#: ../../googlecharts/views/edit.py:208
+msgid "Dashboard renamed"
+msgstr "Painel renomeado"
+
+#: ../../googlecharts/views/chart.py:557
+msgid "Dashboards"
+msgstr "Painéis"
+
 #: ../../googlecharts/views/chart.py:393
 msgid ""
 "ERROR: An error occured while exporting your image. Please try again later."
@@ -30,9 +66,54 @@ msgstr ""
 "ERRO: Um erro ocorreu enquanto sua imagem era exportada. Por favor, tente "
 "novamente mais tarde."
 
+#: ../../googlecharts/views/edit.py:316
+msgid "Filter added"
+msgstr "Filtro adicionado"
+
+#: ../../googlecharts/views/edit.py:327
+msgid "Filter deleted"
+msgstr "Filtro apagado"
+
+#: ../../googlecharts/views/edit.py:360
+msgid "Filters box resized"
+msgstr "Caixa dos filtros redimencionada"
+
+#: ../../googlecharts/views/edit.py:347
+msgid "Filters position changed"
+msgstr "Posição dos filtros alterada"
+
+#: ../../googlecharts/controlpanel/controlpanel.py:15
+msgid "Google Charts Settings"
+msgstr "Configurações do Google Charts"
+
+#: ../../googlecharts/views/edit.py:134
+msgid "Googlechart Edit"
+msgstr "Editar Googlechart"
+
 #: ../../googlecharts/controlpanel/controlpanel.py:57
 msgid "Link to watermark image"
 msgstr "Link para a imagem marca d'água"
+
+#: ../../googlecharts/widgets/portlet/interfaces.py:17
+msgid "Macro"
+msgstr "Macro"
+
+#: ../../googlecharts/widgets/portlet/interfaces.py:11
+#: ../../googlecharts/widgets/textarea/interfaces.py:11
+msgid "Name"
+msgstr "Nome"
+
+#: ../../googlecharts/views/edit.py:334
+msgid "New order not provided"
+msgstr "Nova ordem não prevista"
+
+#: ../../googlecharts/widgets/portlet/interfaces.py:18
+msgid "Portlet macro (e.g. here/navigation/macros/portlet)"
+msgstr "Portlet macro (e.g. here/navigation/macros/portlet)"
+
+#: ../../googlecharts/views/edit.py:374
+msgid "Position changed"
+msgstr "Posição alterada"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:20
 msgid "Position of QR Code"
@@ -62,6 +143,14 @@ msgstr "Espaço Vertical do QRCode para Exportação em PNG"
 msgid "Save"
 msgstr "Salvar"
 
+#: ../../googlecharts/widgets/chart/interfaces.py:12
+msgid "Select chart"
+msgstr "Selecione o gráfico"
+
+#: ../../googlecharts/widgets/interfaces.py:17
+msgid "Select widget type to add"
+msgstr "Selecione o tipo do widget para adicionar"
+
 #: ../../googlecharts/controlpanel/controlpanel.py:43
 msgid "Size of QR Code"
 msgstr "Tamanho do QR Code"
@@ -69,6 +158,10 @@ msgstr "Tamanho do QR Code"
 #: ../../googlecharts/views/chart.py:485
 msgid "Success"
 msgstr "Sucesso"
+
+#: ../../googlecharts/widgets/textarea/interfaces.py:17
+msgid "Text"
+msgstr "Texto"
 
 #: ../../googlecharts/views/zpt/charts.pt:7
 #: ../../googlecharts/views/zpt/dashboard.pt:9
@@ -79,6 +172,11 @@ msgid ""
 msgstr ""
 "Isto NÃO é um mapa real. Para ver um mapa real, você precisa ter o "
 "Javascript habilitado no seu browser."
+
+#: ../../googlecharts/widgets/portlet/interfaces.py:27
+#: ../../googlecharts/widgets/textarea/interfaces.py:26
+msgid "Title"
+msgstr "Título"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:62
 msgid "Watermark Horizontal Space For PNG Export"
@@ -95,6 +193,28 @@ msgstr "Posição da Marca d'água"
 #: ../../googlecharts/controlpanel/controlpanel.py:69
 msgid "Watermark Vertical Space For PNG Export"
 msgstr "Espaço Vertical da Marca d'água para Exportação em PNG"
+
+#: ../../googlecharts/views/edit.py:268
+msgid "Widget deleted"
+msgstr "Widget apagado"
+
+#: ../../googlecharts/widgets/interfaces.py:16
+msgid "Widget type"
+msgstr "Tipo do widget"
+
+#: ../../googlecharts/widgets/textarea/interfaces.py:18
+msgid "Widget's body"
+msgstr "Corpo do widget"
+
+#: ../../googlecharts/widgets/portlet/interfaces.py:12
+#: ../../googlecharts/widgets/textarea/interfaces.py:12
+msgid "Widget's name"
+msgstr "Nome do widget"
+
+#: ../../googlecharts/widgets/portlet/interfaces.py:28
+#: ../../googlecharts/widgets/textarea/interfaces.py:27
+msgid "Widget's title"
+msgstr "Título do widget"
 
 #: ../../googlecharts/views/zpt/charts.pt:45
 msgid "embed"

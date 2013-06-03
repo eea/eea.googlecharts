@@ -5,6 +5,7 @@ from eea.googlecharts.widgets.interfaces import IWidgetsInfo
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from Products.Five.browser.metaconfigure import page
 
+
 class WidgetsInfo(object):
     """ Widgets registry
     """
@@ -26,6 +27,7 @@ class WidgetsInfo(object):
         """ Widgets label or key
         """
         return self.widgets.get(key, key)
+
 
 def WidgetDirective(_context, name, permission, for_=Interface,
                     layer=IDefaultBrowserLayer, template=None, class_=None,
