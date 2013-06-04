@@ -66,6 +66,7 @@ class Edit(BrowserView):
         """
         mutator = queryAdapter(self.context, IVisualizationConfig)
         config = {}
+        import pdb; pdb.set_trace()
         for view in mutator.views:
             if view.get('chartsconfig'):
                 config = view.get('chartsconfig')

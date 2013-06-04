@@ -276,6 +276,23 @@ function enableGridFilters(){
         filterApplyFlags();
     });
 
+    jQuery("body").delegate("#slick-menu-revert","click", function(){
+        var new_filter_grid_filters = [];
+        for (var i = 0; i < filter_grid.getDataLength(); i++){
+            var element = filter_grid.getDataItem(i);
+            var value = "";
+            try {
+                value = element[filter_grid_colId].toString();
+            }
+            catch(err){}
+            if (jQuery.inArray(value, filter_grid_filters) === -1){
+                new_filter_grid_filters.push(value);
+            }
+        }
+        filter_grid_filters = new_filter_grid_filters;
+        filterApplyFlags();
+    });
+
     jQuery("body").delegate("#slick-menu-quicksearch","keyup", function (e) {
         if (e.which == 27) {
             this.value = "";
@@ -311,12 +328,15 @@ function enableGridFilters(){
         jQuery('.slick-filter-body').remove();
         var filters_title = jQuery('<div>').addClass('slick-filter-title').text('Filter...').appendTo(menu);
         var filters = jQuery('<div>').addClass('slick-filter-body').appendTo(menu);
+        jQuery("<input id='slick-menu-revert' type='button' value='Revert' class='btn btn-link' />").appendTo(filters);
         jQuery("<input id='slick-menu-clear' type='button' value='Clear' class='btn btn-link' />").appendTo(filters);
         jQuery("<input id='slick-menu-all' type='button' value='Select all' class='btn btn-link' />").appendTo(filters);
         jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(filters);
         jQuery("<input type='text' id='slick-menu-quicksearch' placeholder='Search...'/>").appendTo(filters);
         jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(filters);
         jQuery("<div id='filter_grid'></div>").appendTo(filters);
+        jQuery("<div class='slick-filter-type'><input type='radio' name='slick-filter-showhide' value='show'>Show Selected Rows</div>").appendTo(filters);
+        jQuery("<div class='slick-filter-type'><input type='radio' name='slick-filter-showhide' value='hide'>Hide Selected Rows</div>").appendTo(filters);
         jQuery("<input id='slick-menu-ok' type='button' value='ok' class='btn'/>").appendTo(filters);
         jQuery("<input id='slick-menu-cancel' type='button' value='cancel' class='btn'/>").appendTo(filters);
 
