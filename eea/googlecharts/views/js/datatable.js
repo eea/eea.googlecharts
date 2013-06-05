@@ -91,7 +91,7 @@ function transformTable(options){
                 val = row[column].toString();
             }
             catch(err){}
-            if (jQuery.inArray(val, column_filter) !== -1){
+            if (jQuery.inArray(val, column_filter.values) !== -1){
                 shouldDisplay = false;
             }
         });

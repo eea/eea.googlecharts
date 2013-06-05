@@ -49,8 +49,18 @@ function gridFilter(item) {
             val = item[colId].toString();
         }
         catch(err){}
-        if (jQuery.inArray(val, grid_filters[colId]) !== -1){
-            retVal = false;
+        if (grid_filters[colId] !== undefined){
+            var filtertype = (grid_filters[colId].type?grid_filters[colId].type:'hidden');
+            if (filtertype === 'hidden'){
+                if (jQuery.inArray(val, grid_filters[colId].values) !== -1){
+                    retVal = false;
+                }
+            }
+            else{
+                if (jQuery.inArray(val, grid_filters[colId].values) === -1){
+                    retVal = false;
+                }
+            }
         }
     });
     return retVal;
@@ -194,6 +204,7 @@ var filter_grid_clicked = false;
 var filter_data_view;
 var filter_grid_filters = [];
 var filter_grid_colId;
+var filter_type;
 
 function filterGridFilter(item) {
     if (filter_grid_filter !== "") {
@@ -233,7 +244,25 @@ function enableGridFilters(){
     });
 
     jQuery("body").delegate("#slick-menu-ok","click", function(){
-        grid_filters[filter_grid_colId] = filter_grid_filters.slice();
+        grid_filters[filter_grid_colId] = {};
+        grid_filters[filter_grid_colId].type = jQuery("input[name='slick-filter-type']:checked").val();
+        if (grid_filters[filter_grid_colId].type === "visible"){
+            var new_filter_grid_filters = [];
+            for (var i = 0; i < filter_grid.getDataLength(); i++){
+                var element = filter_grid.getDataItem(i);
+                var value = "";
+                try {
+                    value = element[filter_grid_colId].toString();
+                }
+                catch(err){}
+                if (jQuery.inArray(value, filter_grid_filters) === -1){
+                    new_filter_grid_filters.push(value);
+                }
+            }
+            filter_grid_filters = new_filter_grid_filters;
+        }
+        grid_filters[filter_grid_colId].values = filter_grid_filters.slice();
+
         jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value", JSON.stringify(grid_filters));
         grid_data_view.refresh();
         grid.updateRowCount();
@@ -312,9 +341,11 @@ function enableGridFilters(){
         });
         if (grid_filters[colId] === undefined){
             filter_grid_filters = [];
+            filter_type = "hidden";
         }
         else {
-            filter_grid_filters = grid_filters[colId].slice();
+            filter_type = grid_filters[colId].type?grid_filters[colId].type:"hidden";
+            filter_grid_filters = grid_filters[colId].values.slice();
         }
         filter_grid_colId = colId;
         var colNr = self.grid.getColumnIndex(colId);
@@ -335,8 +366,8 @@ function enableGridFilters(){
         jQuery("<input type='text' id='slick-menu-quicksearch' placeholder='Search...'/>").appendTo(filters);
         jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(filters);
         jQuery("<div id='filter_grid'></div>").appendTo(filters);
-        jQuery("<div class='slick-filter-type'><input type='radio' name='slick-filter-showhide' value='show'>Show Selected Rows</div>").appendTo(filters);
-        jQuery("<div class='slick-filter-type'><input type='radio' name='slick-filter-showhide' value='hide'>Hide Selected Rows</div>").appendTo(filters);
+        jQuery("<div class='slick-filter-type'><input type='radio' name='slick-filter-type' value='hidden'"+(filter_type==='hidden'?' checked="checked"':'')+">Store Hidden Values</div>").appendTo(filters);
+        jQuery("<div class='slick-filter-type'><input type='radio' name='slick-filter-type' value='visible'"+(filter_type==='visible'?' checked="checked"':'')+">Store Visible Values</div>").appendTo(filters);
         jQuery("<input id='slick-menu-ok' type='button' value='ok' class='btn'/>").appendTo(filters);
         jQuery("<input id='slick-menu-cancel' type='button' value='cancel' class='btn'/>").appendTo(filters);
 
@@ -387,10 +418,26 @@ function enableGridFilters(){
         }
 
         filter_grid = new Slick.Grid("#filter_grid", filter_data_view, filter_columns, filter_options);
-
         filter_grid.init();
         filter_data_view.beginUpdate();
         filter_data_view.setItems(filter_data);
+
+        if (filter_type === 'visible'){
+            var new_filter_grid_filters = [];
+            for (i = 0; i < filter_data.length; i++){
+                var element = filter_data[i];
+                var value = "";
+                try {
+                    value = element[filter_grid_colId].toString();
+                }
+                catch(err){}
+                if (jQuery.inArray(value, filter_grid_filters) === -1){
+                    new_filter_grid_filters.push(value);
+                }
+            }
+            filter_grid_filters = new_filter_grid_filters;
+        }
+
 
         filter_data_view.setFilter(filterGridFilter);
 

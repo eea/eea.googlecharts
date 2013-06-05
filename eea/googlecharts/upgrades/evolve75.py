@@ -4,7 +4,6 @@ import logging
 import json
 from zope.component import queryAdapter
 from eea.app.visualization.zopera import getToolByName
-from eea.app.visualization.zopera import IFolderish
 from eea.app.visualization.interfaces import IVisualizationConfig
 
 logger = logging.getLogger('eea.googlecharts.evolve64')
@@ -35,7 +34,7 @@ def migrate_rowfilters(context):
                             if type(filters) == list:
                                 migrated_rf[row] = {}
                                 migrated_rf[row]['values'] = filters
-                                migrated_rf[row]['type'] = 'hide'
+                                migrated_rf[row]['type'] = 'hidden'
                             else:
                                 migrated_rf[row] = filters
                         migrated_rf_str = json.dumps(migrated_rf)
