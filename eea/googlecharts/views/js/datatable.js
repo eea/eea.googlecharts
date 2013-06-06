@@ -91,8 +91,17 @@ function transformTable(options){
                 val = row[column].toString();
             }
             catch(err){}
-            if (jQuery.inArray(val, column_filter.values) !== -1){
-                shouldDisplay = false;
+            var filtertype = (column_filter.type?column_filter.type:'hidden');
+
+            if (filtertype === 'hidden'){
+                if (jQuery.inArray(val, column_filter.values) !== -1){
+                    shouldDisplay = false;
+                }
+            }
+            else{
+                if (jQuery.inArray(val, column_filter.values) === -1){
+                    shouldDisplay = false;
+                }
             }
         });
         if (!shouldDisplay){

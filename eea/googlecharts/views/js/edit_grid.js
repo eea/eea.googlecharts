@@ -34,9 +34,11 @@ function updateColumnHeaders(){
             }
             jQuery("#newTable").find(".slick-column-name:contains("+colName+")").prepend(slick_sort);
         }
-        if ((grid_filters[colId] !== undefined) && (grid_filters[colId].length !== 0)){
-            var slick_search = jQuery("<span></span>").addClass("slick-column-search-icon ui-icon ui-icon-search");
-            jQuery("#newTable").find(".slick-column-name:contains("+colName+")").prepend(slick_search);
+        if (grid_filters[colId] !== undefined){
+            if (((grid_filters[colId].type === 'hidden') && (grid_filters[colId].values.length !== 0)) || (grid_filters[colId].type === 'visible')){
+                var slick_search = jQuery("<span></span>").addClass("slick-column-search-icon ui-icon ui-icon-search");
+                jQuery("#newTable").find(".slick-column-name:contains("+colName+")").prepend(slick_search);
+            }
         }
     });
 }
@@ -244,33 +246,36 @@ function enableGridFilters(){
     });
 
     jQuery("body").delegate("#slick-menu-ok","click", function(){
-        grid_filters[filter_grid_colId] = {};
-        grid_filters[filter_grid_colId].type = jQuery("input[name='slick-filter-type']:checked").val();
-        if (grid_filters[filter_grid_colId].type === "visible"){
-            var new_filter_grid_filters = [];
-            for (var i = 0; i < filter_grid.getDataLength(); i++){
-                var element = filter_grid.getDataItem(i);
-                var value = "";
-                try {
-                    value = element[filter_grid_colId].toString();
+        if (jQuery("input[name='slick-filter-type']:checked").val()){
+            grid_filters[filter_grid_colId] = {};
+            grid_filters[filter_grid_colId].type = jQuery("input[name='slick-filter-type']:checked").val();
+            if (grid_filters[filter_grid_colId].type === "visible"){
+                var new_filter_grid_filters = [];
+                for (var i = 0; i < filter_grid.getDataLength(); i++){
+                    var element = filter_grid.getDataItem(i);
+                    var value = "";
+                    try {
+                        value = element[filter_grid_colId].toString();
+                    }
+                    catch(err){}
+                    if (jQuery.inArray(value, filter_grid_filters) === -1){
+                        new_filter_grid_filters.push(value);
+                    }
                 }
-                catch(err){}
-                if (jQuery.inArray(value, filter_grid_filters) === -1){
-                    new_filter_grid_filters.push(value);
-                }
+                filter_grid_filters = new_filter_grid_filters;
             }
-            filter_grid_filters = new_filter_grid_filters;
-        }
-        grid_filters[filter_grid_colId].values = filter_grid_filters.slice();
 
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value", JSON.stringify(grid_filters));
-        grid_data_view.refresh();
-        grid.updateRowCount();
-        grid.invalidateAllRows();
-        grid.render();
-        updateColumnHeaders();
-        jQuery(".slick-header-menu").remove();
-        jQuery(".slick-header-column-active").removeClass("slick-header-column-active");
+            grid_filters[filter_grid_colId].values = filter_grid_filters.slice();
+
+            jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value", JSON.stringify(grid_filters));
+            grid_data_view.refresh();
+            grid.updateRowCount();
+            grid.invalidateAllRows();
+            grid.render();
+            updateColumnHeaders();
+            jQuery(".slick-header-menu").remove();
+            jQuery(".slick-header-column-active").removeClass("slick-header-column-active");
+        }
     });
 
     jQuery("body").delegate("#slick-menu-all","click", function(){
