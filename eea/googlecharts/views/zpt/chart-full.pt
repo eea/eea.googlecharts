@@ -78,17 +78,17 @@
 </head>
 <body tal:define="chart view/get_iframe_chart; row_filters python: chart.get('row_filters_str','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc_str','asc');" style="margin: 0; overflow: hidden">
     <script type="text/javascript" tal:content="
-        string:chart_columns = ${chart/columns};
-        merged_rows = ${chart/data};
-        available_columns = ${chart/available_columns};
-        chart_json = ${chart/json};
-        width = ${chart/preview_width};
-        height = ${chart/preview_height};
-        name = '${chart/name}';
-        chart_options = ${chart/options};
-        row_filters_str = '$row_filters';
-        sortBy = '$sortBy';
-        sortAsc_str = '$sortAsc'
+        string:var chart_columns = ${chart/columns};
+        var merged_rows = ${chart/data};
+        var available_columns = ${chart/available_columns};
+        var chart_json = ${chart/json};
+        var width = ${chart/preview_width};
+        var height = ${chart/preview_height};
+        var name = '${chart/name}';
+        var chart_options = ${chart/options};
+        var row_filters_str = '$row_filters';
+        var sortBy = '$sortBy';
+        var sortAsc_str = '$sortAsc'
         "></script>
 
     <div id="googlechart_dashboard">
