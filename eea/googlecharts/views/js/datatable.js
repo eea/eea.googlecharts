@@ -1,5 +1,9 @@
 var allowedTypesForCharts = ['string', 'number', 'boolean', 'date', 'datetime', 'timeofday'];
 
+function decodeStr(encodedStr){
+    return jQuery("<div/>").html(encodedStr).text();
+}
+
 function transformTable(options){
     var settings = {
         originalTable : '',
@@ -88,20 +92,23 @@ function transformTable(options){
         jQuery.each(settings.filters, function(column, column_filter){
             var val = "";
             try{
-                val = row[column].toString();
+                val = decodeStr(row[column].toString());
             }
             catch(err){}
             var filtertype = (column_filter.type?column_filter.type:'hidden');
+            var foundVal = false;
+            jQuery.each(column_filter.values, function(idx, col_val){
+                if (val === decodeStr(col_val)){
+                    foundVal = true;
+                }
+            });
 
-            if (filtertype === 'hidden'){
-                if (jQuery.inArray(val, column_filter.values) !== -1){
-                    shouldDisplay = false;
-                }
+            if ((filtertype === 'hidden') && (foundVal)){
+                shouldDisplay = false;
             }
-            else{
-                if (jQuery.inArray(val, column_filter.values) === -1){
-                    shouldDisplay = false;
-                }
+
+            if ((filtertype === 'visible') && (!foundVal)){
+                shouldDisplay = false;
             }
         });
         if (!shouldDisplay){

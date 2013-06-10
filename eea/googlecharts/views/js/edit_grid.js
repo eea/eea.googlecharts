@@ -48,7 +48,7 @@ function gridFilter(item) {
     jQuery.each(grid_colIds, function(colId, colName){
         var val = "";
         try{
-            val = item[colId].toString();
+            val = decodeStr(item[colId].toString());
         }
         catch(err){}
         if (grid_filters[colId] !== undefined){
@@ -394,8 +394,9 @@ function enableGridFilters(){
         var i;
         for (i = 0; i < self.grid_data.length; i++){
             var newItem = self.grid_data[i][colId];
-            if (jQuery.inArray(newItem, filter_data_array) === -1){
-                filter_data_array.push(newItem);
+            var decodedNewItem = decodeStr(newItem);
+            if (jQuery.inArray(decodedNewItem, filter_data_array) === -1){
+                filter_data_array.push(decodedNewItem);
             }
         }
         filter_data_array.sort();
