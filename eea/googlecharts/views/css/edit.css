@@ -1037,6 +1037,14 @@ div[title='Format'].slick-header-menuitem {
     border-top: 1px solid #AAA;
 }
 
+.slick-filter-type{
+    clear:both;
+    font-size:11px;
+    padding: 0.2em;
+    padding-left: 2em;
+    cursor: pointer;
+}
+
 .slick-menu-arrowformatter-base{
 
 }
@@ -1092,7 +1100,8 @@ div[title='Format'].slick-header-menuitem {
 }
 
 #slick-menu-all,
-#slick-menu-clear {
+#slick-menu-clear,
+#slick-menu-revert {
     padding: 0 1.5em 0 0.5em;
     font-size: 80%;
     float: right;

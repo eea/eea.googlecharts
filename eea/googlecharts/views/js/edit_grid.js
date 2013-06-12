@@ -34,9 +34,11 @@ function updateColumnHeaders(){
             }
             jQuery("#newTable").find(".slick-column-name:contains("+colName+")").prepend(slick_sort);
         }
-        if ((grid_filters[colId] !== undefined) && (grid_filters[colId].length !== 0)){
-            var slick_search = jQuery("<span></span>").addClass("slick-column-search-icon ui-icon ui-icon-search");
-            jQuery("#newTable").find(".slick-column-name:contains("+colName+")").prepend(slick_search);
+        if (grid_filters[colId] !== undefined){
+            if (((grid_filters[colId].type === 'hidden') && (grid_filters[colId].values.length !== 0)) || (grid_filters[colId].type === 'visible')){
+                var slick_search = jQuery("<span></span>").addClass("slick-column-search-icon ui-icon ui-icon-search");
+                jQuery("#newTable").find(".slick-column-name:contains("+colName+")").prepend(slick_search);
+            }
         }
     });
 }
@@ -46,11 +48,21 @@ function gridFilter(item) {
     jQuery.each(grid_colIds, function(colId, colName){
         var val = "";
         try{
-            val = item[colId].toString();
+            val = decodeStr(item[colId].toString());
         }
         catch(err){}
-        if (jQuery.inArray(val, grid_filters[colId]) !== -1){
-            retVal = false;
+        if (grid_filters[colId] !== undefined){
+            var filtertype = (grid_filters[colId].type?grid_filters[colId].type:'hidden');
+            if (filtertype === 'hidden'){
+                if (jQuery.inArray(val, grid_filters[colId].values) !== -1){
+                    retVal = false;
+                }
+            }
+            else{
+                if (jQuery.inArray(val, grid_filters[colId].values) === -1){
+                    retVal = false;
+                }
+            }
         }
     });
     return retVal;
@@ -194,6 +206,7 @@ var filter_grid_clicked = false;
 var filter_data_view;
 var filter_grid_filters = [];
 var filter_grid_colId;
+var filter_type;
 
 function filterGridFilter(item) {
     if (filter_grid_filter !== "") {
@@ -233,15 +246,36 @@ function enableGridFilters(){
     });
 
     jQuery("body").delegate("#slick-menu-ok","click", function(){
-        grid_filters[filter_grid_colId] = filter_grid_filters.slice();
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value", JSON.stringify(grid_filters));
-        grid_data_view.refresh();
-        grid.updateRowCount();
-        grid.invalidateAllRows();
-        grid.render();
-        updateColumnHeaders();
-        jQuery(".slick-header-menu").remove();
-        jQuery(".slick-header-column-active").removeClass("slick-header-column-active");
+        if (jQuery("input[name='slick-filter-type']:checked").val()){
+            grid_filters[filter_grid_colId] = {};
+            grid_filters[filter_grid_colId].type = jQuery("input[name='slick-filter-type']:checked").val();
+            if (grid_filters[filter_grid_colId].type === "visible"){
+                var new_filter_grid_filters = [];
+                for (var i = 0; i < filter_grid.getDataLength(); i++){
+                    var element = filter_grid.getDataItem(i);
+                    var value = "";
+                    try {
+                        value = element[filter_grid_colId].toString();
+                    }
+                    catch(err){}
+                    if (jQuery.inArray(value, filter_grid_filters) === -1){
+                        new_filter_grid_filters.push(value);
+                    }
+                }
+                filter_grid_filters = new_filter_grid_filters;
+            }
+
+            grid_filters[filter_grid_colId].values = filter_grid_filters.slice();
+
+            jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value", JSON.stringify(grid_filters));
+            grid_data_view.refresh();
+            grid.updateRowCount();
+            grid.invalidateAllRows();
+            grid.render();
+            updateColumnHeaders();
+            jQuery(".slick-header-menu").remove();
+            jQuery(".slick-header-column-active").removeClass("slick-header-column-active");
+        }
     });
 
     jQuery("body").delegate("#slick-menu-all","click", function(){
@@ -276,6 +310,23 @@ function enableGridFilters(){
         filterApplyFlags();
     });
 
+    jQuery("body").delegate("#slick-menu-revert","click", function(){
+        var new_filter_grid_filters = [];
+        for (var i = 0; i < filter_grid.getDataLength(); i++){
+            var element = filter_grid.getDataItem(i);
+            var value = "";
+            try {
+                value = element[filter_grid_colId].toString();
+            }
+            catch(err){}
+            if (jQuery.inArray(value, filter_grid_filters) === -1){
+                new_filter_grid_filters.push(value);
+            }
+        }
+        filter_grid_filters = new_filter_grid_filters;
+        filterApplyFlags();
+    });
+
     jQuery("body").delegate("#slick-menu-quicksearch","keyup", function (e) {
         if (e.which == 27) {
             this.value = "";
@@ -295,9 +346,11 @@ function enableGridFilters(){
         });
         if (grid_filters[colId] === undefined){
             filter_grid_filters = [];
+            filter_type = "hidden";
         }
         else {
-            filter_grid_filters = grid_filters[colId].slice();
+            filter_type = grid_filters[colId].type?grid_filters[colId].type:"hidden";
+            filter_grid_filters = grid_filters[colId].values.slice();
         }
         filter_grid_colId = colId;
         var colNr = self.grid.getColumnIndex(colId);
@@ -311,12 +364,15 @@ function enableGridFilters(){
         jQuery('.slick-filter-body').remove();
         var filters_title = jQuery('<div>').addClass('slick-filter-title').text('Filter...').appendTo(menu);
         var filters = jQuery('<div>').addClass('slick-filter-body').appendTo(menu);
+        jQuery("<input id='slick-menu-revert' type='button' value='Revert' class='btn btn-link' />").appendTo(filters);
         jQuery("<input id='slick-menu-clear' type='button' value='Clear' class='btn btn-link' />").appendTo(filters);
         jQuery("<input id='slick-menu-all' type='button' value='Select all' class='btn btn-link' />").appendTo(filters);
         jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(filters);
         jQuery("<input type='text' id='slick-menu-quicksearch' placeholder='Search...'/>").appendTo(filters);
         jQuery("<div style='clear:both' class='slick-menu-clearboth'> </div>").appendTo(filters);
         jQuery("<div id='filter_grid'></div>").appendTo(filters);
+        jQuery("<div class='slick-filter-type'><input type='radio' name='slick-filter-type' value='hidden'"+(filter_type==='hidden'?' checked="checked"':'')+">Store Hidden Values</div>").appendTo(filters);
+        jQuery("<div class='slick-filter-type'><input type='radio' name='slick-filter-type' value='visible'"+(filter_type==='visible'?' checked="checked"':'')+">Store Visible Values</div>").appendTo(filters);
         jQuery("<input id='slick-menu-ok' type='button' value='ok' class='btn'/>").appendTo(filters);
         jQuery("<input id='slick-menu-cancel' type='button' value='cancel' class='btn'/>").appendTo(filters);
 
@@ -338,8 +394,9 @@ function enableGridFilters(){
         var i;
         for (i = 0; i < self.grid_data.length; i++){
             var newItem = self.grid_data[i][colId];
-            if (jQuery.inArray(newItem, filter_data_array) === -1){
-                filter_data_array.push(newItem);
+            var decodedNewItem = decodeStr(newItem);
+            if (jQuery.inArray(decodedNewItem, filter_data_array) === -1){
+                filter_data_array.push(decodedNewItem);
             }
         }
         filter_data_array.sort();
@@ -367,10 +424,26 @@ function enableGridFilters(){
         }
 
         filter_grid = new Slick.Grid("#filter_grid", filter_data_view, filter_columns, filter_options);
-
         filter_grid.init();
         filter_data_view.beginUpdate();
         filter_data_view.setItems(filter_data);
+
+        if (filter_type === 'visible'){
+            var new_filter_grid_filters = [];
+            for (i = 0; i < filter_data.length; i++){
+                var element = filter_data[i];
+                var value = "";
+                try {
+                    value = element[filter_grid_colId].toString();
+                }
+                catch(err){}
+                if (jQuery.inArray(value, filter_grid_filters) === -1){
+                    new_filter_grid_filters.push(value);
+                }
+            }
+            filter_grid_filters = new_filter_grid_filters;
+        }
+
 
         filter_data_view.setFilter(filterGridFilter);
 

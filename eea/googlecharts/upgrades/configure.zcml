@@ -4,6 +4,19 @@
   i18n_domain="eea">
 
 
+  <!-- * => 7.5 -->
+  <genericsetup:upgradeSteps
+    source="*"
+    destination="7.5"
+    profile="eea.googlecharts:default">
+
+    <genericsetup:upgradeStep
+      title="migrate row filters"
+      handler="eea.googlecharts.upgrades.evolve75.migrate_rowfilters"
+      />
+  </genericsetup:upgradeSteps>
+
+
   <!-- * => 7.3 -->
   <genericsetup:upgradeSteps
     source="*"

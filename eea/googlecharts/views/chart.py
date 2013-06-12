@@ -267,6 +267,8 @@ class View(ViewForm):
                     config = chart
                     config['chart_id'] = chart_id
                     config['json'] = config['config']
+                    config['row_filters_str'] = config['row_filters']
+                    config['sortAsc_str'] = config['sortAsc']
             if not found:
                 config = {}
                 config['name'] = ""
