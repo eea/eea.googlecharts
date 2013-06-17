@@ -1,8 +1,8 @@
 Changelog
 =========
 
-7.5-dev - (unreleased)
-----------------------
+7.5 - (2013-06-17)
+------------------
 * Feature: Added possibility to specify in table editors filters if hidden or visible rows to be stored
   [szabozo0 refs #14244]
 * Feature: Package localization enhanced
