@@ -4,6 +4,7 @@ import json
 import logging
 import urllib2
 import hashlib
+import re
 from PIL import Image
 from cStringIO import StringIO
 from zope.component import queryAdapter, getMultiAdapter
@@ -83,7 +84,7 @@ class View(ViewForm):
     def get_maintitle(self):
         """ Main title of visualization
         """
-        return self.context.title
+        return re.escape(self.context.title)
 
     def get_charts(self):
         """ Charts

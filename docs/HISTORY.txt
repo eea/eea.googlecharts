@@ -3,6 +3,8 @@ Changelog
 
 7.6-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed special characters from metadata for visualizations
+  [szabozo0 refs #14795]
 * Bugfix: Fixed side panel for motion charts in edit mode
   [szabozo0 refs #14793]
 
