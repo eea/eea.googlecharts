@@ -3,6 +3,8 @@ Changelog
 
 7.6-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed side panel for motion charts in edit mode
+  [szabozo0 refs #14793]
 
 7.5 - (2013-06-17)
 ------------------

@@ -1492,3 +1492,7 @@ li.googlechart > fieldset > div > a > span {
 .slick-menu-colorsgrid div.odd {
     padding: 0 !important;
 }
+
+#google-visualization-charteditor-preview-div-chart {
+    z-index: 9999;
+}
