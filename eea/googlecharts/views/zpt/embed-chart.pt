@@ -1,10 +1,12 @@
-<tal:block tal:define="inline view/isInline; enabled_chart python: True">
-<html tal:condition="not:inline">
+<tal:block tal:define="inline view/isInline;
+                        enabled_chart python: True">
+<html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
     <head>
         <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
         <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="++resource++json2.js"></script>
         <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
         <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
         <script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
