@@ -1,6 +1,9 @@
 var allowedTypesForCharts = ['string', 'number', 'boolean', 'date', 'datetime', 'timeofday'];
 
 function decodeStr(encodedStr){
+    if (!encodedStr){
+        encodedStr = '';
+    }
     return jQuery("<div/>").html(encodedStr).text();
 }
 
@@ -324,7 +327,12 @@ function prepareForChart(options){
             if (colType === "datetime"){
                 newColumn = jQuery.datepicker.parseDate("yy-mm-dd",newColumn);
             }
-            newRow.push(newColumn);
+            if (colType === "string"){
+                newRow.push(decodeStr(newColumn));
+            }
+            else{
+                newRow.push(newColumn);
+            }
         });
         dataForChart.addRow(newRow);
     });
