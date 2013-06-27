@@ -3,6 +3,7 @@ var previewChartObj = null;
 var chartEditor = null;
 var chartId = '';
 var drawing = false;
+var chartWrapper;
 
 var defaultChart = {
            'chartType':'LineChart',
@@ -1105,6 +1106,8 @@ function redrawEditorChart() {
     });
 
     tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
+
+    chartWrapper = tmpwrapper;
 }
 
 function setConfiguratorMessage(message_key) {
@@ -1215,7 +1218,7 @@ function openEditor(elementId) {
 
     chart.options.title = title;
     chart.options.allowHtml = true;
-    var wrapper = new google.visualization.ChartWrapper(chart);
+    chartWrapper = new google.visualization.ChartWrapper(chart);
 
     chartEditor = new google.visualization.ChartEditor();
     google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
@@ -1242,7 +1245,7 @@ function openEditor(elementId) {
     moveIfFirst();
 
     setTimeout(function(){
-        chartEditor.openDialog(wrapper, {});
+        chartEditor.openDialog(chartWrapper, {});
     },100);
 }
 
@@ -1709,6 +1712,13 @@ function chartEditorSave(id){
         newColors.push(color);
     });
     options_json.colors = newColors;
+
+    delete options_json.state;
+    var motion_state = chartWrapper.getState();
+    if (typeof(motion_state) === 'string'){
+        options_json.state = motion_state;
+    }
+
     var options_str2 = JSON.stringify(options_json);
 
     var name_str = jQuery("#googlechartid_tmp_chart .googlechart_name").attr("value");

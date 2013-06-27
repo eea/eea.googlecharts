@@ -3,6 +3,8 @@ Changelog
 
 7.6-dev - (unreleased)
 ----------------------
+* Feature: Save motionchart's advanced configuration
+  [szabozo0 refs #14794]
 * Bugfix: Fixed embedded charts and dashboards for IE8 & 9
   [szabozo0 refs #14862]
 * Bugfix: Fixed special characters from metadata for visualizations
