@@ -1,6 +1,9 @@
 Changelog
 =========
 
+7.7-dev - (unreleased)
+----------------------
+
 7.6 - (2013-07-08)
 ------------------
 * Feature: Save motionchart's advanced configuration
