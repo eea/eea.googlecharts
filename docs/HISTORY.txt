@@ -3,6 +3,8 @@ Changelog
 
 7.7-dev - (unreleased)
 ----------------------
+* Change: small layout fixes, padding issues for logo and QR code.
+  [demarant http://taskman.eionet.europa.eu/issues/14910]
 
 7.6 - (2013-07-08)
 ------------------
