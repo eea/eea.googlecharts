@@ -361,3 +361,9 @@ ul.googlechart_tabs li:first-of-type a:hover {
 #daviz-view ul.google-visualization-controls-categoryfilter-selected li div.goog-link-button-disabled {
     display: none;
 }
+
+.googlechart_loading_img {
+    width:100px;
+    height:100px;
+    background-image: url(../../++resource++eea.jquery.images/ajax-loader.gif);
+}

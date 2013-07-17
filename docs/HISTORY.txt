@@ -3,6 +3,8 @@ Changelog
 
 7.7-dev - (unreleased)
 ----------------------
+* Feature: Added loading spinner on charts while rendering
+  [szabozo0 refs #14676]
 
 7.6 - (2013-07-08)
 ------------------

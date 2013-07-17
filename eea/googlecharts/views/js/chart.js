@@ -25,6 +25,7 @@ function drawGoogleChart(options){
         visibleColumns : ''
     };
     jQuery.extend(settings, options);
+    jQuery("<div class='googlechart_loading_img'></div>").appendTo("#"+settings.chartViewDiv);
     // XXX Use GoogleChartsConfig for options instead of googlechart_config_array
     var other_settings = jQuery("#"+settings.chartDashboard).data("other_settings");
     if ((other_settings) && (other_settings.GoogleChartsConfig)){
@@ -141,10 +142,12 @@ function drawGoogleChart(options){
         dashboard.bind(filtersArray, chart);
 
         google.visualization.events.addListener(dashboard, 'ready', function(event){
+            jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartReadyEvent();
         });
 
         google.visualization.events.addListener(dashboard, 'error', function(event){
+            jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartErrorEvent();
         });
 
@@ -160,10 +163,12 @@ function drawGoogleChart(options){
     else {
         chart.setDataTable(dataView);
         google.visualization.events.addListener(chart, 'ready', function(event){
+            jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartReadyEvent();
         });
 
         google.visualization.events.addListener(chart, 'error', function(event){
+            jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartErrorEvent();
         });
 
