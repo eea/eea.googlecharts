@@ -1,8 +1,8 @@
 Changelog
 =========
 
-7.7-dev - (unreleased)
-----------------------
+7.7 - (2013-08-08)
+------------------
 * Bugfix: Layout fixes for embedded daviz, made border visible
   [szabozo0 refs #14910]
 * Feature: Added loading spinner on charts while rendering
