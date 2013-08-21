@@ -411,6 +411,8 @@ var googleChartTabClick = function(context){
 };
 
 var googleChartOnTabClick = function(settings){
+    googlechart_config_array = JSON.parse(jQuery("#daviz-view").attr("original_configs"));
+
     var tab = jQuery(settings.tab);
     var css = tab.attr('class');
     if(css.indexOf('googlechart_class') === -1){
@@ -460,6 +462,8 @@ jQuery(document).ready(function($){
             return false;
         }
     });
+
+    jQuery("#daviz-view").attr("original_configs", JSON.stringify(googlechart_config_array))
 
     googleChartOnTabClick({
         api: api,
