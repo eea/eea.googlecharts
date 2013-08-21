@@ -1,8 +1,8 @@
 Changelog
 =========
 
-7.8-dev - (unreleased)
-----------------------
+7.8 - (2013-08-21)
+------------------
 * Bugfix: Fixed pre-pivot filters for multiple visualizations in Daviz
   [szabozo0 refs #15630]
 
