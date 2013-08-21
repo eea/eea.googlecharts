@@ -3,6 +3,8 @@ Changelog
 
 7.9-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed not working filters on view
+  [szabozo0 refs #15630]
 
 7.8 - (2013-08-21)
 ------------------

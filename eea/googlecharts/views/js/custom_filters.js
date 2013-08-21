@@ -175,6 +175,9 @@ function getColNameFromFriendly(friendlyname, options){
 function applyColumnFilters(options){
     var skipColorReorder = false;
     jQuery.each(jQuery("#"+options.filtersDiv).find("div"), function(idx, div){
+        if ((jQuery(div).attr("id") === undefined) || (jQuery(div).attr("id") === '')){
+            return;
+        }
         if (jQuery(div).attr("id").indexOf("pre_config_filter_") !== -1){
             skipColorReorder = true;
         }

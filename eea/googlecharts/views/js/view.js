@@ -463,7 +463,7 @@ jQuery(document).ready(function($){
         }
     });
 
-    jQuery("#daviz-view").attr("original_configs", JSON.stringify(googlechart_config_array))
+    jQuery("#daviz-view").attr("original_configs", JSON.stringify(googlechart_config_array));
 
     googleChartOnTabClick({
         api: api,
