@@ -3,6 +3,8 @@ Changelog
 
 7.9-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed issues with visualizations not showing up
+  [szabozo0 refs #16287]
 * Bugfix: Fixed not working filters on view
   [szabozo0 refs #15630]
 

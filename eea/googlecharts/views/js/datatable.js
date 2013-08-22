@@ -92,28 +92,30 @@ function transformTable(options){
 
     jQuery(pivotTable.items).each(function(row_index, row){
         var shouldDisplay = true;
-        jQuery.each(settings.filters, function(column, column_filter){
-            var val = "";
-            try{
-                val = decodeStr(row[column].toString());
-            }
-            catch(err){}
-            var filtertype = (column_filter.type?column_filter.type:'hidden');
-            var foundVal = false;
-            jQuery.each(column_filter.values, function(idx, col_val){
-                if (val === decodeStr(col_val)){
-                    foundVal = true;
+        if (settings.filters){
+            jQuery.each(settings.filters, function(column, column_filter){
+                var val = "";
+                try{
+                    val = decodeStr(row[column].toString());
+                }
+                catch(err){}
+                var filtertype = (column_filter.type?column_filter.type:'hidden');
+                var foundVal = false;
+                jQuery.each(column_filter.values, function(idx, col_val){
+                    if (val === decodeStr(col_val)){
+                        foundVal = true;
+                    }
+                });
+
+                if ((filtertype === 'hidden') && (foundVal)){
+                    shouldDisplay = false;
+                }
+
+                if ((filtertype === 'visible') && (!foundVal)){
+                    shouldDisplay = false;
                 }
             });
-
-            if ((filtertype === 'hidden') && (foundVal)){
-                shouldDisplay = false;
-            }
-
-            if ((filtertype === 'visible') && (!foundVal)){
-                shouldDisplay = false;
-            }
-        });
+        }
         if (!shouldDisplay){
             return;
         }
