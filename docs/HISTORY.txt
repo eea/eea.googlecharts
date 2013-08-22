@@ -1,6 +1,9 @@
 Changelog
 =========
 
+8.0-dev - (unreleased)
+----------------------
+
 7.9 - (2013-08-22)
 ------------------
 * Bugfix: Fixed issues with visualizations not showing up
