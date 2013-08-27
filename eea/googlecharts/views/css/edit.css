@@ -191,7 +191,7 @@
 
 .googlechartTable .ui-icon,
 .slick-menu-colorsgrid .ui-icon{
-    background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png);
+    background-image : url(../../++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png);
 }
 
 .googlechartTable td{
@@ -1136,7 +1136,7 @@ div[title='Format'].slick-header-menuitem {
 }
 
 .slick_newTable .ui-icon{
-    background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png);
+    background-image : url(../../++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png);
 }
 
 #pivotingTableLabel {
@@ -1371,7 +1371,7 @@ li.googlechart > fieldset > div > a > span {
 
 .googlecharts_columnfilter_slickgrid .ui-icon{
     margin:auto;
-    background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png) !important;
+    background-image : url(../../++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png) !important;
 }
 
 .dialog_resizing {
