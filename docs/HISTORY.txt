@@ -1,8 +1,8 @@
 Changelog
 =========
 
-8.0-dev - (unreleased)
-----------------------
+8.0 - (2013-08-30)
+------------------
 * Bugfix: Fixed missing icon for deleting pivot functionality
   [szabozo0 refs #16593]
 
