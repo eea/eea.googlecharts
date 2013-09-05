@@ -1,8 +1,8 @@
 Changelog
 =========
 
-8.1-dev - (unreleased)
-----------------------
+8.1 - (2013-09-05)
+------------------
 * Bugfix: Fixed notes for embedded dashboards in indicators
   [szabozo0 refs #16669]
 
