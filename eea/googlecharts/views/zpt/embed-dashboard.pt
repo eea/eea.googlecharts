@@ -94,7 +94,7 @@
         ">
     </script>
 
-    <div tal:attributes="id string:googlechart_dashboard_$vhash" class="embedded-dashboard googlechart_dashboard isDashboard">
+    <div tal:attributes="id string:googlechart_dashboard_$vhash; data-link context/absolute_url" class="embedded-dashboard googlechart_dashboard isDashboard">
     </div>
     </tal:block>
 </metal:chart>
