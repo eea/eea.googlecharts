@@ -3,6 +3,8 @@ Changelog
 
 8.3-dev - (unreleased)
 ----------------------
+* Bugfix: Updated tinymce for daviz notes and dashboard richtext
+  [szabozo0 refs #16656]
 
 8.2 - (2013-09-06)
 ------------------

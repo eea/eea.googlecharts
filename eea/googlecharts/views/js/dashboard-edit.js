@@ -396,26 +396,14 @@ DavizEdit.GoogleDashboardCharts.prototype = {
   initializeTinyMCE: function(form){
     var self = this;
 
-    // tinyMCE no supported
-    if(!window.tinyMCE){
-      return;
-    }
-    if(!window.TinyMCEConfig){
-      return;
-    }
-
     var textarea = jQuery('textarea', form).addClass('mce_editable');
     var name = textarea.attr('id');
-    var exists = tinyMCE.get(name);
-    if(exists !== undefined){
-      delete InitializedTinyMCEInstances[name];
-    }
 
     form = self.context.parents('.daviz-view-form');
     var action = form.length ? form.attr('action') : '';
     action = action.split('@@')[0] + '@@tinymce-jsonconfiguration';
 
-    jQuery.getJSON(action, {fieldname: name}, function(data){
+    jQuery.getJSON(action, {field: name}, function(data){
       data.autoresize = true;
       data.resizing = false;
       // XXX Remove some buttons as they have bugs
@@ -426,9 +414,8 @@ DavizEdit.GoogleDashboardCharts.prototype = {
           return button;
         }
       });
-      textarea.attr('title', JSON.stringify(data));
-      var config = new TinyMCEConfig(name);
-      config.init();
+      textarea.attr('data-mce-config', JSON.stringify(data));
+      window.initTinyMCE(document);
     });
   },
 
