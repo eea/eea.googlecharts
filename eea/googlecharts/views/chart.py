@@ -171,6 +171,27 @@ class View(ViewForm):
             if chart.get('id') == chart_id:
                 return json.dumps([chart])
 
+    def get_chart_png(self):
+        """Chart as JSON
+        """
+        chart_id = self.request['chart']
+        charts = self.get_charts()
+        for chart in charts:
+            if chart.get('id') != chart_id:
+                continue
+
+            if chart.get('hasPNG', False):
+                name = chart.get('id', '')
+                png = self.context[name + '.png']
+            else:
+                config = json.loads(chart.get('config', '{}'))
+                chartType = config.get('chartType', '')
+                png = "googlechart." + chartType.lower() + ".preview.png"
+                png = self.context[png]
+
+            self.request.response.setHeader('content-type', 'image/png')
+            return png.index_html(self.request, self.request.response)
+
     def get_customstyle(self):
         """ Get custom style for embed
         """
@@ -195,6 +216,13 @@ class View(ViewForm):
         for dashboard in dashboards:
             if dashboard.get('name') == dashboard_id:
                 return json.dumps(dashboard)
+
+    def get_dashboard_png(self):
+        """ Dashboard png
+        """
+        png = self.context["googlechart.googledashboard.preview.png"]
+        self.request.response.setHeader('content-type', 'image/png')
+        return png.index_html(self.request, self.request.response)
 
     def get_dashboard_js(self, chart):
         """ Dashboard

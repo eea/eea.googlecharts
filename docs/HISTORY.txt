@@ -3,6 +3,9 @@ Changelog
 
 8.3-dev - (unreleased)
 ----------------------
+* Feature: Register embed-chart.png and embed-dashboard.png browser views that
+  returns charts/dashboards fallback images in order to easily embed them
+  [voineali refs #16802]
 * Bugfix: Updated tinymce for daviz notes and dashboard richtext
   [szabozo0 refs #16656]
 
