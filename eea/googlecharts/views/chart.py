@@ -174,8 +174,11 @@ class View(ViewForm):
     def get_chart_png(self):
         """Chart as JSON
         """
-        chart_id = self.request['chart']
+        tag = self.request.get('tag', False)
+        safe = self.request.get('safe', True)
+        chart_id = self.request.get('chart', '')
         charts = self.get_charts()
+
         for chart in charts:
             if chart.get('id') != chart_id:
                 continue
@@ -184,13 +187,36 @@ class View(ViewForm):
                 name = chart.get('id', '')
                 png = self.context[name + '.png']
             else:
+                if not safe:
+                    return ''
                 config = json.loads(chart.get('config', '{}'))
                 chartType = config.get('chartType', '')
                 png = "googlechart." + chartType.lower() + ".preview.png"
                 png = self.context[png]
 
+            if tag:
+                return png.tag(width='100%', height="auto")
+
             self.request.response.setHeader('content-type', 'image/png')
             return png.index_html(self.request, self.request.response)
+
+        return ''
+
+    def get_dashboard_png(self):
+        """ Dashboard png
+        """
+        tag = self.request.get('tag', False)
+        safe = self.request.get('safe', True)
+
+        if not safe:
+            return ''
+
+        png = self.context["googlechart.googledashboard.preview.png"]
+        if tag:
+            return png.tag(width="100%", height="auto")
+
+        self.request.response.setHeader('content-type', 'image/png')
+        return png.index_html(self.request, self.request.response)
 
     def get_customstyle(self):
         """ Get custom style for embed
@@ -216,13 +242,6 @@ class View(ViewForm):
         for dashboard in dashboards:
             if dashboard.get('name') == dashboard_id:
                 return json.dumps(dashboard)
-
-    def get_dashboard_png(self):
-        """ Dashboard png
-        """
-        png = self.context["googlechart.googledashboard.preview.png"]
-        self.request.response.setHeader('content-type', 'image/png')
-        return png.index_html(self.request, self.request.response)
 
     def get_dashboard_js(self, chart):
         """ Dashboard
