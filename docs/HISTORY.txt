@@ -1,6 +1,9 @@
 Changelog
 =========
 
+8.4-dev - (unreleased)
+----------------------
+
 8.3 - (2013-10-04)
 ------------------
 * Feature: Register embed-chart.png and embed-dashboard.png browser views that
