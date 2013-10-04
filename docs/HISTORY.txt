@@ -1,8 +1,8 @@
 Changelog
 =========
 
-8.3-dev - (unreleased)
-----------------------
+8.3 - (2013-10-04)
+------------------
 * Feature: Register embed-chart.png and embed-dashboard.png browser views that
   returns charts/dashboards fallback images in order to easily embed them
   [voineali refs #16802]
