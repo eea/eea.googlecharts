@@ -40,7 +40,8 @@
             columns : columnsFromSettings.columns,
             sortBy : sortBy,
             sortAsc : sortAsc,
-            preparedColumns : chart_columns.prepared
+            preparedColumns : chart_columns.prepared,
+            enableEmptyRows : chart_options['enableEmptyRows']
         };
 
         var tableForChart = prepareForChart(options);

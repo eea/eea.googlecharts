@@ -87,6 +87,9 @@ function applySortOnChart(options){
         }
         var tmpFiltered = new google.visualization.DataView(options.sortFilterChart.getDataTable());
         tmpFiltered.setRows(sortedRows);
+        if (options.enableEmptyRows){
+            tmpFiltered = addEmptyRows(tmpFiltered);
+        }
         options.sortFilterChart.setDataTable(tmpFiltered);
         options.sortFilterChart.draw();
     }
@@ -96,11 +99,17 @@ function applySortOnChart(options){
             sortedRows = sortedRows.reverse();
         }
         tmpDataView.setRows(sortedRows);
+        if (options.enableEmptyRows){
+            tmpDataView = addEmptyRows(tmpDataView);
+        }
         options.sortFilterChart.setDataTable(tmpDataView);
         options.sortFilterChart.draw();
     }
     if (!sortBy && hasFilter){
         var tmpFiltered2 = new google.visualization.DataView(options.sortFilterChart.getDataTable());
+        if (options.enableEmptyRows){
+            tmpFiltered2 = addEmptyRows(tmpFiltered2);
+        }
         options.sortFilterChart.setDataTable(tmpFiltered2);
         options.sortFilterChart.draw();
     }

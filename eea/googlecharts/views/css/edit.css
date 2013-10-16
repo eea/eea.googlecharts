@@ -1067,6 +1067,7 @@ div[title='Format'].slick-header-menuitem {
     background-color: white;
 }
 
+.slick-menu-enabled,
 .slick-format-menu-enabled {
     background-repeat: no-repeat;
     background-image: url(++resource++slickgrid-images/tick.png);

@@ -7,6 +7,38 @@ function decodeStr(encodedStr){
     return jQuery("<div/>").html(encodedStr).text();
 }
 
+function addEmptyRows(dataview){
+    col_ids = dataview.getViewColumns();
+    row_ids = dataview.getViewRows();
+    var modifiedDataForChart = new google.visualization.DataTable();
+    var emptyRow = []
+    jQuery.each(col_ids, function(col_idx, col_id){
+        var colName = dataview.getColumnLabel(col_id);
+        var colType = dataview.getColumnType(col_id);
+        modifiedDataForChart.addColumn(colType, colName);
+        emptyRow.push(null)
+    });
+    modifiedDataForChart.addRow(emptyRow);
+    jQuery.each(row_ids, function(row_idx, row_id){
+        var newRow = [];
+        var shouldAdd = false;
+        jQuery.each(col_ids, function(col_idx, col_id){
+            var value = dataview.getValue(row_idx, col_idx)
+            if (value !== null){
+                shouldAdd = true;
+            }
+            newRow.push(value);
+        });
+        if (shouldAdd){
+            modifiedDataForChart.addRow(newRow);
+            modifiedDataForChart.addRow(emptyRow);
+        }
+    });
+
+    var modifiedTmpDataView = new google.visualization.DataView(modifiedDataForChart);
+    return modifiedTmpDataView;
+}
+
 function transformTable(options){
     var settings = {
         originalTable : '',
@@ -265,7 +297,8 @@ function prepareForChart(options){
         limit : 0,
         sortBy : '',
         sortAsc : true,
-        preparedColumns : ''
+        preparedColumns : '',
+        enableEmptyRows : false,
     };
     jQuery.extend(settings, options);
 
@@ -357,6 +390,10 @@ function prepareForChart(options){
             }
             tmpDataView.setRows(tmp_sort);
         }
+    }
+
+    if (settings.enableEmptyRows){
+        tmpDataView = addEmptyRows(tmpDataView);
     }
     return tmpDataView;
 }

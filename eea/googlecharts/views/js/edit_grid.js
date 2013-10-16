@@ -180,6 +180,11 @@ function menuOnCommandHandler(e, args){
         grid.invalidateAllRows();
         grid.render();
     }
+    if (command == 'enableEmptyRows'){
+        var options = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+        options['enableEmptyRows'] = !options['enableEmptyRows'];
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value",JSON.stringify(options));
+    }
     updateColumnHeaders();
 }
 
@@ -356,6 +361,12 @@ function enableGridFilters(){
         var colNr = self.grid.getColumnIndex(colId);
         var filter_element = jQuery(".slick-header-menuitem").find("span:contains(-filter-)");
         if (filter_element.length === 0){
+            var options = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+            var icon = jQuery(".slick-header-menuitem:contains('Enable empty rows')").find(".slick-header-menuicon");
+            icon.removeClass("slick-menu-enabled")
+            if (options['enableEmptyRows']){
+                icon.addClass("slick-menu-enabled");
+            }
             return;
         }
         filter_element.parent().hide();
@@ -1283,7 +1294,9 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
                         {title:'Scatterplots matrix',
                         command:'scatterplots'},
                         {title:'Other matrices',
-                        command:'otherMatrices'}
+                        command:'otherMatrices'},
+                        {title:'Enable empty rows',
+                        command:'enableEmptyRows',}
                     ]
                 }
             }

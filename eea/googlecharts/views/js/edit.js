@@ -620,7 +620,8 @@ function saveThumb(value, useName){
         originalDataTable : transformedTable,
         columns : columnsFromSettings.columns,
         sortBy : chart_sortBy,
-        sortAsc : chart_sortAsc
+        sortAsc : chart_sortAsc,
+        enableEmptyRows: chart_options['enableEmptyRows']
     };
     var tableForChart = prepareForChart(options);
 
@@ -1174,7 +1175,8 @@ function openEditor(elementId) {
         columns : columnsFromSettings.columns,
         sortBy : sortBy,
         sortAsc : sortAsc,
-        preparedColumns: chartColumns.prepared
+        preparedColumns: chartColumns.prepared,
+        enableEmptyRows: JSON.parse(chartObj.find(".googlechart_options").attr("value"))['enableEmptyRows']
     };
 
     // check if table contains 2 string columns & 1 or 2 numeric columns (for treemap)
