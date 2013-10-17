@@ -11,19 +11,19 @@ function addEmptyRows(dataview){
     col_ids = dataview.getViewColumns();
     row_ids = dataview.getViewRows();
     var modifiedDataForChart = new google.visualization.DataTable();
-    var emptyRow = []
+    var emptyRow = [];
     jQuery.each(col_ids, function(col_idx, col_id){
         var colName = dataview.getColumnLabel(col_id);
         var colType = dataview.getColumnType(col_id);
         modifiedDataForChart.addColumn(colType, colName);
-        emptyRow.push(null)
+        emptyRow.push(null);
     });
     modifiedDataForChart.addRow(emptyRow);
     jQuery.each(row_ids, function(row_idx, row_id){
         var newRow = [];
         var shouldAdd = false;
         jQuery.each(col_ids, function(col_idx, col_id){
-            var value = dataview.getValue(row_idx, col_idx)
+            var value = dataview.getValue(row_idx, col_idx);
             if (value !== null){
                 shouldAdd = true;
             }
@@ -298,7 +298,7 @@ function prepareForChart(options){
         sortBy : '',
         sortAsc : true,
         preparedColumns : '',
-        enableEmptyRows : false,
+        enableEmptyRows : false
     };
     jQuery.extend(settings, options);
 

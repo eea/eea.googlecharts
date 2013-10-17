@@ -182,7 +182,7 @@ function menuOnCommandHandler(e, args){
     }
     if (command == 'enableEmptyRows'){
         var options = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
-        options['enableEmptyRows'] = !options['enableEmptyRows'];
+        options.enableEmptyRows = !options.enableEmptyRows;
         jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value",JSON.stringify(options));
     }
     updateColumnHeaders();
@@ -363,8 +363,8 @@ function enableGridFilters(){
         if (filter_element.length === 0){
             var options = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
             var icon = jQuery(".slick-header-menuitem:contains('Enable empty rows')").find(".slick-header-menuicon");
-            icon.removeClass("slick-menu-enabled")
-            if (options['enableEmptyRows']){
+            icon.removeClass("slick-menu-enabled");
+            if (options.enableEmptyRows){
                 icon.addClass("slick-menu-enabled");
             }
             return;
@@ -1296,7 +1296,7 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
                         {title:'Other matrices',
                         command:'otherMatrices'},
                         {title:'Enable empty rows',
-                        command:'enableEmptyRows',}
+                        command:'enableEmptyRows'}
                     ]
                 }
             }

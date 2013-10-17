@@ -186,7 +186,7 @@ function drawChart(value, other_options){
         sortBy : chart_sortBy,
         sortAsc : chart_sortAsc,
         preparedColumns : chart_columns.prepared,
-        enableEmptyRows : chart_options['enableEmptyRows']
+        enableEmptyRows : chart_options.enableEmptyRows
     };
     var tableForChart = prepareForChart(options);
 
