@@ -407,7 +407,8 @@ function drawGoogleDashboard(options){
                 columns : columnsFromSettings.columns,
                 sortBy : chart_sortBy,
                 sortAsc : chart_sortAsc,
-                preparedColumns : chartConfig[2].prepared
+                preparedColumns : chartConfig[2].prepared,
+                enableEmptyRows : chartConfig[7].enableEmptyRows
             };
 
             var tableForChart = prepareForChart(options);

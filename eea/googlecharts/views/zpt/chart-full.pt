@@ -41,7 +41,7 @@
             sortBy : sortBy,
             sortAsc : sortAsc,
             preparedColumns : chart_columns.prepared,
-            enableEmptyRows : chart_options['enableEmptyRows']
+            enableEmptyRows : chart_options.enableEmptyRows
         };
 
         var tableForChart = prepareForChart(options);
