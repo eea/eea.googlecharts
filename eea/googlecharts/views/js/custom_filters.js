@@ -133,7 +133,8 @@ function addSortFilter(options){
         filtersDiv : '',
         filterTitle : '',
         filterDataTable : null,
-        filterChart : null
+        filterChart : null,
+        enableEmptyRows : false
     };
 
     jQuery.extend(settings, options);
@@ -153,7 +154,8 @@ function addSortFilter(options){
     var paramsForHandler = {
         sortFilterChart : sortFilterChart,
         sortFilterDataTable : sortFilterDataTable,
-        sortFilterArray : sortFilterArray
+        sortFilterArray : sortFilterArray,
+        enableEmptyRows : settings.enableEmptyRows
     };
     var options2 = {
         customTitle : settings.filterTitle,
@@ -162,7 +164,8 @@ function addSortFilter(options){
         customValues : cols_array,
         customAllowMultiple : false,
         customHandler : applyCustomFilters,
-        paramsForHandler : paramsForHandler
+        paramsForHandler : paramsForHandler,
+        enableEmptyRows : settings.enableEmptyRows
     };
 
     sortFilterObj = addCustomFilter(options2);

@@ -3,7 +3,7 @@ Changelog
 
 8.4-dev - (unreleased)
 ----------------------
-* Feature: WIP impementing option to add empty rows after each row
+* Feature: Impemented option to add empty rows after each row
   [szabozo0 refs #16768]
 
 8.3 - (2013-10-04)

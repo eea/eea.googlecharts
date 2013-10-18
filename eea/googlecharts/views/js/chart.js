@@ -204,9 +204,9 @@ function drawGoogleChart(options){
             filtersDiv : settings.chartFiltersDiv,
             filterTitle : 'sort by',
             filterDataTable : settings.chartDataTable,
-            filterChart : chart
+            filterChart : chart,
+            enableEmptyRows : settings.chartOptions.enableEmptyRows
         };
-
         customFilterParams = addSortFilter(options2);
     }
 
