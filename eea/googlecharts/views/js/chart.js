@@ -14,7 +14,7 @@ function drawGoogleChart(options){
         availableColumns : '',
         chartReadyEvent : function(){},
         chartErrorEvent : function(){},
-        showSort : false,
+        sortFilter : '__disabled__',
         customFilterHandler : function(){},
         customFilterOptions : null,
         notes: [],
@@ -199,14 +199,23 @@ function drawGoogleChart(options){
         });
         customColumnFilters = addPreConfigFilters(pre_config_options);
     }
-    if ((settings.showSort) && (settings.chartJson.chartType !== 'Table')){
+    if ((settings.sortFilter !== '__disabled__') && (settings.chartJson.chartType !== 'Table')){
         var options2 = {
             filtersDiv : settings.chartFiltersDiv,
             filterTitle : 'sort by',
             filterDataTable : settings.chartDataTable,
             filterChart : chart,
-            enableEmptyRows : settings.chartOptions.enableEmptyRows
+            enableEmptyRows : settings.chartOptions.enableEmptyRows,
+            sortFilterValue : settings.sortFilter
         };
+        if (settings.sortFilter !== '__enabled__'){
+            if (settings.sortFilter.substring(settings.sortFilter.length - 9) !== '_reversed'){
+                options2.sortFilterValue = settings.availableColumns[settings.sortFilter];
+            }
+            else {
+                options2.sortFilterValue = settings.availableColumns[settings.sortFilter.substring(0, settings.sortFilter.length - 9)] + " (reversed)";
+            }
+        }
         customFilterParams = addSortFilter(options2);
     }
 
@@ -435,7 +444,7 @@ function drawGoogleDashboard(options){
                 chartOptions : chartConfig[7],
                 availableColumns : transformedTable.available_columns,
                 chartReadyEvent : function(){},
-                showSort:false,
+                sortFilter:'__disabled__',
                 hideNotes:true,
                 originalTable:settings.rows
             };
@@ -508,7 +517,7 @@ function drawGoogleDashboard(options){
                 chartFilterPosition : '',
                 availableColumns : transformedTable.available_columns,
                 chartReadyEvent : function(){},
-                showSort : false,
+                sortFilter : '__disabled__',
                 customFilterHandler : dashboardFilterChanged,
                 customFilterOptions : customFilterOptions,
                 originalTable : settings.rows

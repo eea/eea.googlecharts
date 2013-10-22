@@ -80,17 +80,51 @@ var matrixChartOptions = {
             }
 };
 
+function updateSortOptions(id){
+    var values = JSON.parse(jQuery('#googlechartid_' + id + ' .googlechart_columns').val()).prepared;
+    var body = jQuery("#googlechartid_" + id).find(".googlechart-sort-box").find("select").empty();
+    var disabled_option = jQuery("<option></option>");
+    disabled_option.attr("value", "__disabled__");
+    disabled_option.text("Disabled");
+    disabled_option.appendTo(body);
+    var default_option = jQuery("<option></option>");
+    default_option.attr("value", "__default__");
+    default_option.text("Enabled, without anything selected");
+    default_option.appendTo(body);
+    var selected = body.attr("loaded_value");
+    jQuery.each(values, function(idx, value){
+        if (value.status !== 0){
+            var option = jQuery("<option></option>");
+            if (selected === value.name){
+                option.attr("selected", "selected");
+            }
+            option.attr("value", value.name);
+            option.text(value.fullname);
+            option.appendTo(body);
+            var rev_option = jQuery("<option></option>");
+            if (selected === value.name+"_reversed"){
+                rev_option.attr("selected", "selected");
+            }
+            rev_option.attr("value", value.name+"_reversed");
+            rev_option.text(value.fullname + " (reversed)");
+            rev_option.appendTo(body);
+        }
+    });
+}
+
+
 function updateCounters(){
     jQuery(".googlechart").each(function(){
+        updateSortOptions(jQuery(this).find(".googlechart_id").attr("value"));
         var columnFiltersNr = jQuery(this).find(".googlechart-columnfilters-box").find("li").length;
         var notesNr = jQuery(this).find(".googlechart-notes-box").find("li").length;
         var filtersNr = jQuery(this).find(".googlechart_filters_list").find("li").length;
         if (JSON.parse(jQuery(this).find(".googlechart_configjson").attr("value")).chartType === 'Table'){
-            jQuery(this).find(".googlechart_sort").hide();
+            jQuery(this).find(".googlechart-sort-box").hide();
+            jQuery(this).find(".googlechart-sort-box select").attr("loaded_value", "__disabled__");
         }
-        else {
-            jQuery(this).find(".googlechart_sort").show();
-            filtersNr += jQuery(this).find(".googlechart-filters-box").find(".ui-icon-hide").length;
+        else{
+            jQuery(this).find(".googlechart-sort-box").show();
         }
         jQuery(this).find(".googlechart-columnfilters-box").find(".items_counter").text("("+columnFiltersNr+")");
         jQuery(this).find(".googlechart-notes-box").find(".items_counter").text("("+notesNr+")");
@@ -197,6 +231,18 @@ function initializeChartTinyMCE(form){
     });
 
     return true;
+}
+
+function reloadFilters(id){
+    var context = jQuery('#googlechartid_' + id);
+    if(!context.length){
+        return;
+    }
+    
+    var box = jQuery('.googlechart-filters-box', context);
+    var ul = jQuery('.googlechart_filters_list', box).empty();
+    var filters = context.data('filters') || [];
+    
 }
 
 function reloadChartNotes(id){
@@ -685,8 +731,8 @@ function saveThumb(value, useName){
         chartErrorEvent : function(){
                             DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
                         },
-        showSort : false,
-        hideNotes: true
+        sortFilter : '__disabled__',
+        hideNotes : true
     };
     drawGoogleChart(googlechart_params);
 }
@@ -815,7 +861,7 @@ function addChart(options){
         name : "",
         config : "",
         columns : "",
-        showSort : false,
+        sortFilter : "__disabled__",
         filters : {},
         notes: [],
         width : 800,
@@ -830,7 +876,6 @@ function addChart(options){
         sortAsc : "",
         columnfilters : []
     };
-
     jQuery.extend(settings, options);
 
     settings.filter_pos = parseInt(settings.filter_pos, 0);
@@ -872,21 +917,21 @@ function addChart(options){
                     "<span id='googlechart_chart_div_"+settings.id+"'></span>" +
                     "<span>Preview and size adjustments</span></a>"+
                 "</div>" +
+                "<div class='googlechart-sort-box'>"+
+                    '<div class="header">' +
+                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Sort by column<span class="items_counter"></span></span>' +
+                    '</div>' +
+                    '<div style="padding: 1em" class="body">' +
+                        '<select>'+
+                        '</select>'+
+                    '</div>' +
+                "</div>"+
                 "<div class='googlechart-filters-box'>" +
                     '<div class="header">' +
                         '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Row filters <span class="items_counter"></span></span>' +
                         '<span title="Add new filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartfilter">+</span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
-                        "<ul class='googlechart_sort'  id='googlechart_sort_"+settings.id+"'>" +
-                            "<li class='googlechart_filteritem'>" +
-                                "<h1>"+
-                                    "<div style='float:left;'>sort by column</div>"+
-                                    "<div class='ui-icon ui-icon-" + (!settings.showSort?"show":"hide") + " googlechart_hide_sort_icon' title='Hide/Show sort on view'>x</div>"+
-                                    "<div style='clear:both'> </div>" +
-                                "</h1>"+
-                            "</li>" +
-                        "</ul>" +
                         "<ul class='googlechart_filters_list'  id='googlechart_filters_"+settings.id+"'>" +
                         "</ul>" +
                         "<span>Position</span>"+
@@ -927,6 +972,28 @@ function addChart(options){
                 "</div>"+
             "</fieldset>" +
         "</li>");
+
+    // Sort
+    googlechart.find('.googlechart-sort-box .body').hide();
+    googlechart.find('.googlechart-sort-box .header .label').click(function(){
+        var body = googlechart.find('.googlechart-sort-box .body');
+        if(body.is(':visible')){
+            body.slideUp();
+            jQuery('.googlechart-sort-box .ui-icon-circlesmall-minus', googlechart)
+                .removeClass('ui-icon-circlesmall-minus')
+                .addClass('ui-icon-circlesmall-plus');
+        }else{
+            body.slideDown();
+            jQuery('.googlechart-sort-box .ui-icon-circlesmall-plus', googlechart)
+                .removeClass('ui-icon-circlesmall-plus')
+                .addClass('ui-icon-circlesmall-minus');
+        }
+    });
+    googlechart.find('.googlechart-sort-box select').attr("loaded_value",settings.sortFilter);
+    googlechart.find('.googlechart-sort-box select').change(function(){
+        markChartAsModified(settings.id);
+    });
+//    updateSortOptions(settings.id);
 
     // Filters
 
@@ -1009,6 +1076,9 @@ function addChart(options){
 
     googlechart.data('columnfilters', settings.columnfilters);
     reloadColumnFilters(settings.id);
+
+    googlechart.data('filters', settings.filters);
+    reloadFilters(settings.id);
 
 
     if (settings.hidden){
@@ -2881,7 +2951,7 @@ function saveCharts(){
         chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
         chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
         chart.hidden = chartObj.find(".googlechart_hide_chart_icon").hasClass("ui-icon-show");
-        chart.showSort = chartObj.find(".googlechart_hide_sort_icon").hasClass("ui-icon-hide");
+        chart.sortFilter = chartObj.find(".googlechart-sort-box select").attr("value");
         chart.hasPNG = chartObj.find(".googlechart_thumb_checkbox").is(":visible");
 
         config = JSON.parse(chart.config);
@@ -3028,7 +3098,7 @@ function loadCharts(){
                 name : chart.name,
                 config : chart.config,
                 columns : chart.columns,
-                showSort : chart.showSort,
+                sortFilter : chart.sortFilter,
                 filters : JSON.parse(chart.filters),
                 notes: chart.notes || [],
                 columnfilters: chart.columnfilters || [],
@@ -3086,7 +3156,7 @@ function addNewChart(){
         name : "New Chart",
         config : JSON.stringify({'chartType':'Table','options': {'legend':'none'}}),
         columns : JSON.stringify(newColumns),
-        showSort : true
+        sortFilter : "__disabled__"
     };
 
     addChart(options);

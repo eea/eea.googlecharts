@@ -17,6 +17,7 @@ function addCustomFilter(options){
         customValues : '',
         customAllowMultiple : '',
         customHandler : function(){},
+        customReadyHandler : function(){},
         defaultValues : [],
         allowNone : true,
         paramsForHandler : null,
@@ -67,6 +68,11 @@ function addCustomFilter(options){
     google.visualization.events.addListener(filterFilter, 'statechange', function(event){
         settings.customHandler(settings.paramsForHandler);
     });
+
+    google.visualization.events.addListener(filterDashboard, 'ready', function(event){
+        settings.customReadyHandler(settings.paramsForHandler);
+    });
+
 
     filterDashboard.draw(filterData);
     filterFilter.setState({"selectedValues":settings.defaultValues});
@@ -134,7 +140,8 @@ function addSortFilter(options){
         filterTitle : '',
         filterDataTable : null,
         filterChart : null,
-        enableEmptyRows : false
+        enableEmptyRows : false,
+        sortFilterValue : '__default__'
     };
 
     jQuery.extend(settings, options);
@@ -157,6 +164,14 @@ function addSortFilter(options){
         sortFilterArray : sortFilterArray,
         enableEmptyRows : settings.enableEmptyRows
     };
+
+    var paramsForReadyHandler = {
+        sortFilterChart : sortFilterChart,
+        sortFilterDataTable : sortFilterDataTable,
+        sortFilterArray : sortFilterArray,
+        enableEmptyRows : settings.enableEmptyRows
+    };
+
     var options2 = {
         customTitle : settings.filterTitle,
         customPrefix : 'sortfilter',
@@ -168,8 +183,14 @@ function addSortFilter(options){
         enableEmptyRows : settings.enableEmptyRows
     };
 
+    if (settings.sortFilterValue !== '__default__'){
+        options2.defaultValues = [settings.sortFilterValue];
+        options2.customReadyHandler = applyCustomFilters;
+    }
+
     sortFilterObj = addCustomFilter(options2);
     paramsForHandler.sortFilterObj = sortFilterObj;
+
     return paramsForHandler;
 }
 
@@ -212,7 +233,7 @@ function applyColumnFilters(options){
             var chart_filterposition = conf[6];
             var chart_options = JSON.parse(JSON.stringify(conf[7]));
             var chart_dashboard = conf[8];
-            var chart_showSort = conf[9];
+            var chart_sortFilter = conf[9];
             var chart_hasPNG = conf[10];
             var chart_row_filters = conf[11];
             var chart_sortBy = conf[12];
@@ -327,7 +348,7 @@ function applyColumnFilters(options){
             config.push(chart_filterposition);
             config.push(chart_options);
             config.push(chart_dashboard);
-            config.push(chart_showSort);
+            config.push(chart_sortFilter);
             config.push(chart_hasPNG);
             config.push(chart_row_filters);
             config.push(chart_sortBy);

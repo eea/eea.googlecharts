@@ -24,7 +24,7 @@ function drawChart(value, other_options){
     var embedchart_height = value[5];
     var embedchart_filterposition = value[6];
     var embedchart_options = value[7];
-    var embedchart_showSort = (value[9]==='True'?true:false);
+    var embedchart_sortFilter = value[9];
     var embedchart_hasPNG = (value[10]==='True'?true:false);
     var embedchart_row_filters_str = value[11];
     var embedchart_sortBy = value[12];
@@ -165,7 +165,7 @@ function drawChart(value, other_options){
         chartFilterPosition : embedchart_filterposition,
         chartOptions : embedchart_options,
         availableColumns : transformedTable.available_columns,
-        showSort : embedchart_showSort,
+        sortFilter : embedchart_sortFilter,
         columnFilters : embedchart_columnFilters,
         columnTypes: transformedTable.properties,
         originalTable : other_settings.merged_rows,

@@ -59,6 +59,7 @@
     padding: 1em;
 }
 
+.googlechart-sort-box .ui-state-highlight,
 .googlechart-filters-box .ui-state-highlight,
 .googlechart-columnfilters-box .ui-state-highlight,
 .googlechart-notes-box .ui-state-highlight {
@@ -83,6 +84,7 @@
     margin-left: 2em;
 }
 
+.googlechart-sort-box,
 .googlechart-filters-box,
 .googlechart-columnfilters-box,
 .googlechart-notes-box {
@@ -94,6 +96,7 @@
   margin-bottom: 0.5em;
 }
 
+.googlechart-sort-box .label,
 .googlechart-filters-box .label,
 .googlechart-columnfilters-box .label,
 .googlechart-notes-box .label {

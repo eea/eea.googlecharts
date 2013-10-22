@@ -67,7 +67,7 @@ function drawChart(value, other_options){
     var chart_height = value[5];
     var chart_filterposition = value[6];
     var chart_options = value[7];
-    var chart_showSort = (value[9]==='True'?true:false);
+    var chart_sortFilter = value[9];
     var chart_hasPNG = (value[10]==='True'?true:false);
     var chart_row_filters = value[11];
     var chart_sortBy = value[12];
@@ -204,7 +204,7 @@ function drawChart(value, other_options){
         chartOptions : chart_options,
         availableColumns : transformedTable.available_columns,
         chartReadyEvent : checkSVG,
-        showSort : chart_showSort,
+        sortFilter : chart_sortFilter,
         columnFilters : chart_columnFilters,
         columnTypes : transformedTable.properties,
         originalTable : other_settings.merged_rows,

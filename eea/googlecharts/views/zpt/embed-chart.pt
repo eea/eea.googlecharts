@@ -40,7 +40,7 @@
 <tal:block tal:define="enabled_chart python:False">
 <metal:chart define-macro="chart" tal:condition="enabled_chart">
     <tal:block tal:define="chart view/get_chart; vhash view/get_visualization_hash">
-    <script type="text/javascript" tal:define="showSort python: chart.get('showSort','False'); row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart); GoogleChartsConfig view/get_chart_json;"
+    <script type="text/javascript" tal:define="sortFilter python: chart.get('sortFilter','__disabled__'); row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart); GoogleChartsConfig view/get_chart_json;"
         tal:content="structure string:
             var chart_columns_$vhash = ${chart/columns};
             var merged_rows_$vhash = ${chart/data};
@@ -59,7 +59,7 @@
             var wm_pos_$vhash = '${view/wm_position}';
             var wm_path_$vhash = '${view/wm_path}';
             var main_title_$vhash = '${view/get_maintitle}';
-            var showSort_$vhash = '${showSort}';
+            var sortFilter_$vhash = '${sortFilter}';
             var row_filters_str_$vhash = '$row_filters';
             var sortBy_$vhash = '$sortBy';
             var sortAsc_str_$vhash = '$sortAsc';
@@ -80,7 +80,7 @@
                 settings_$vhash.push(chart_filterposition_$vhash);
                 settings_$vhash.push(chart_options_$vhash);
                 settings_$vhash.push(null);
-                settings_$vhash.push(showSort_$vhash);
+                settings_$vhash.push(sortFilter_$vhash);
                 settings_$vhash.push(null);
                 settings_$vhash.push(row_filters_str_$vhash);
                 settings_$vhash.push(sortBy_$vhash);

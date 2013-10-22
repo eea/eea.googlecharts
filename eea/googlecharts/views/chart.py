@@ -253,10 +253,10 @@ class View(ViewForm):
         """
         return json.dumps(chart.get('columnfilters', []))
 
-    def get_showSort(self, chart):
-        """ Show Sort
+    def get_sortFilter(self, chart):
+        """ Sort filter settings
         """
-        return chart.get('showSort', 'False')
+        return chart.get('sortFilter', '__disabled__')
 
     @property
     def tabs(self):

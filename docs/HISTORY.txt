@@ -3,6 +3,8 @@ Changelog
 
 8.4-dev - (unreleased)
 ----------------------
+* Feature: Allow to specify a default value for the sort filter
+  [szabozo0 refs #16926]
 * Feature: Implemented option to add empty rows after each row
   [szabozo0 refs #16768]
 
