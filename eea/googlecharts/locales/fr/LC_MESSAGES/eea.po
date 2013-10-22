@@ -1,140 +1,150 @@
+# Bitouzé Denis <dbitouze@wanadoo.fr>, 2013.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI +ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2013-10-15 13:00+0200\n"
+"Last-Translator: Bitouzé Denis <dbitouze@wanadoo.fr>\n"
+"Language-Team: French <>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 "Language-Code: en\n"
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
+"Language: fr\n"
+"X-Generator: Lokalize 1.5\n"
 
 #: ../../googlecharts/views/zpt/edit.pt:6
 msgid "Add another visualization"
-msgstr ""
+msgstr "Ajouter une autre visualisation"
 
 #: ../../googlecharts/views/chart.py:459
 msgid "Can't save png chart on a non-folderish object !"
 msgstr ""
+"Impossible d'enregistrer le graphique png dans un objet qui n'est pas un "
+"répertoire"
 
 #: ../../googlecharts/views/chart.py:492
 msgid "Can't set thumbnail on a non-folderish object !"
-msgstr "Impossible de créer une image miniature sur un object qui n'est pas un répertoire."
+msgstr ""
+"Impossible de créer une image miniature dans un objet qui n'est pas un "
+"répertoire."
 
 #: ../../googlecharts/views/edit.py:297
 msgid "Changed saved"
-msgstr ""
+msgstr "Modifications sauvées"
 
 #: ../../googlecharts/views/edit.py:62
 #: ../../googlecharts/widgets/edit.py:57
 msgid "Changes saved"
-msgstr ""
+msgstr "Modifications sauvées"
 
 #: ../../googlecharts/widgets/chart/interfaces.py:11
 msgid "Chart"
-msgstr ""
+msgstr "Graphique"
 
 #: ../../googlecharts/views/chart.py:26
 msgid "Charts"
-msgstr ""
+msgstr "Graphiques"
 
 #: ../../googlecharts/views/edit.py:307
 msgid "Charts box resized"
-msgstr ""
+msgstr "Graphique redimensionné"
 
 #: ../../googlecharts/views/edit.py:218
 msgid "Dashboard deleted"
-msgstr ""
+msgstr "Tableau de bord supprimé"
 
 #: ../../googlecharts/views/edit.py:208
 msgid "Dashboard renamed"
-msgstr ""
+msgstr "Tableau de bord renommé"
 
 #: ../../googlecharts/views/chart.py:557
 msgid "Dashboards"
-msgstr ""
+msgstr "Tableaux de bord"
 
 #: ../../googlecharts/views/chart.py:393
-msgid "ERROR: An error occured while exporting your image. Please try again later."
-msgstr "ERREUR: Une erreur s'est produite lors de l'exportation de votre image. Veuillez réessayer plus tard."
+msgid ""
+"ERROR: An error occured while exporting your image. Please try again later."
+msgstr ""
+"ERREUR: Une erreur s'est produite lors de l'exportation de votre image. "
+"Veuillez réessayer plus tard."
 
 #: ../../googlecharts/views/edit.py:316
 msgid "Filter added"
-msgstr ""
+msgstr "Filtre ajouté"
 
 #: ../../googlecharts/views/edit.py:327
 msgid "Filter deleted"
-msgstr ""
+msgstr "Filtre supprimé"
 
 #: ../../googlecharts/views/edit.py:360
 msgid "Filters box resized"
-msgstr ""
+msgstr "Filtre redimensionné"
 
 #: ../../googlecharts/views/edit.py:347
 msgid "Filters position changed"
-msgstr ""
+msgstr "Position du filtre modifiée"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:15
 msgid "Google Charts Settings"
-msgstr ""
+msgstr "Configuration des graphiques Google"
 
 #: ../../googlecharts/views/edit.py:134
 msgid "Googlechart Edit"
-msgstr ""
+msgstr "Édition des graphiques Google"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:57
 msgid "Link to watermark image"
-msgstr ""
+msgstr "Lien vers l'image en filigrane"
 
 #: ../../googlecharts/widgets/portlet/interfaces.py:17
 msgid "Macro"
-msgstr ""
+msgstr "Macro"
 
 #: ../../googlecharts/widgets/portlet/interfaces.py:11
 #: ../../googlecharts/widgets/textarea/interfaces.py:11
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: ../../googlecharts/views/edit.py:334
 msgid "New order not provided"
-msgstr ""
+msgstr "Nouvel ordre non fourni"
 
 #: ../../googlecharts/widgets/portlet/interfaces.py:18
 msgid "Portlet macro (e.g. here/navigation/macros/portlet)"
-msgstr ""
+msgstr "Macro de portlet (par exemple ici/navigation/macros/portlet)"
 
 #: ../../googlecharts/views/edit.py:374
 msgid "Position changed"
-msgstr ""
+msgstr "Position modifiée"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:20
 msgid "Position of QR Code"
-msgstr ""
+msgstr "Position du code QR"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:49
 msgid "Position of Watermark"
-msgstr ""
+msgstr "Position du filigrane"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:28
 msgid "QRCode Horizontal Space For PNG Export"
-msgstr ""
+msgstr "Espace horizontal du code QR pour l'export PNG"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:19
 msgid "QRCode Position"
-msgstr ""
+msgstr "Position du code QR"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:42
 msgid "QRCode Size"
-msgstr ""
+msgstr "Taille du code QR"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:35
 msgid "QRCode Vertical Space For PNG Export"
-msgstr ""
+msgstr "Espace vertical du code QR pour l'export PNG"
 
 #: ../../googlecharts/widgets/edit.py:92
 msgid "Save"
@@ -142,15 +152,15 @@ msgstr "Enregistrer"
 
 #: ../../googlecharts/widgets/chart/interfaces.py:12
 msgid "Select chart"
-msgstr ""
+msgstr "Sélectionner un graphique"
 
 #: ../../googlecharts/widgets/interfaces.py:17
 msgid "Select widget type to add"
-msgstr ""
+msgstr "Sélectionner le type de gadget à ajouter"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:43
 msgid "Size of QR Code"
-msgstr ""
+msgstr "Taille du code QR"
 
 #: ../../googlecharts/views/chart.py:485
 msgid "Success"
@@ -158,62 +168,67 @@ msgstr "Succès"
 
 #: ../../googlecharts/widgets/textarea/interfaces.py:17
 msgid "Text"
-msgstr ""
+msgstr "Texte"
 
 #: ../../googlecharts/views/zpt/charts.pt:7
 #: ../../googlecharts/views/zpt/dashboard.pt:9
 #: ../../googlecharts/views/zpt/dashboards.pt:9
-msgid "This is NOT a real chart. To see the real chart, you need Javascript enabled in your browser."
-msgstr "Ceci n'est pas un tableu réel. Pour voir le vrai tableau, vous devez activer javascript dans votre navigateur."
+msgid ""
+"This is NOT a real chart. To see the real chart, you need Javascript enabled "
+"in your browser."
+msgstr ""
+"Ceci n'est PAS un graphique réel. Pour voir le vrai graphique, vous devez "
+"activer javascript dans votre navigateur."
 
 #: ../../googlecharts/widgets/portlet/interfaces.py:27
 #: ../../googlecharts/widgets/textarea/interfaces.py:26
 msgid "Title"
-msgstr ""
+msgstr "Titre"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:62
 msgid "Watermark Horizontal Space For PNG Export"
-msgstr ""
+msgstr "Espace horizontal du filigrane pour l'export PNG"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:58
 msgid "Watermark Image"
-msgstr ""
+msgstr "Image en filigrane"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:48
 msgid "Watermark Position"
-msgstr ""
+msgstr "Position du filigrane"
 
 #: ../../googlecharts/controlpanel/controlpanel.py:69
 msgid "Watermark Vertical Space For PNG Export"
-msgstr ""
+msgstr "Espace vertical du filigrane pour l'export PNG"
 
 #: ../../googlecharts/views/edit.py:268
 msgid "Widget deleted"
-msgstr ""
+msgstr "Gadget supprimé"
 
 #: ../../googlecharts/widgets/interfaces.py:16
 msgid "Widget type"
-msgstr ""
+msgstr "Type de gadget"
 
 #: ../../googlecharts/widgets/textarea/interfaces.py:18
 msgid "Widget's body"
-msgstr ""
+msgstr "Corps du gadget"
 
 #: ../../googlecharts/widgets/portlet/interfaces.py:12
 #: ../../googlecharts/widgets/textarea/interfaces.py:12
 msgid "Widget's name"
-msgstr ""
+msgstr "Nom du gadget"
 
 #: ../../googlecharts/widgets/portlet/interfaces.py:28
 #: ../../googlecharts/widgets/textarea/interfaces.py:27
 msgid "Widget's title"
-msgstr ""
+msgstr "Titre du gadget"
 
 #: ../../googlecharts/views/zpt/charts.pt:45
 msgid "embed"
-msgstr "enchâsser"
+msgstr "embarquer"
 
 #: ../../googlecharts/views/zpt/charts.pt:52
 msgid "export to png"
 msgstr "exporter en png"
+
 
