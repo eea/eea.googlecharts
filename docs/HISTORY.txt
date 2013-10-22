@@ -1,6 +1,9 @@
 Changelog
 =========
 
+8.5-dev - (unreleased)
+----------------------
+
 8.4 - (2013-10-22)
 ------------------
 * Feature: Allow to specify a default value for the sort filter
