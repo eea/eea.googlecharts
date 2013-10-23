@@ -1,6 +1,9 @@
 Changelog
 =========
 
+8.6-dev - (unreleased)
+----------------------
+
 8.5 - (2013-10-23)
 ------------------
 * Feature: Added upgrade step for sort filter
