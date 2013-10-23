@@ -4,6 +4,18 @@
   i18n_domain="eea">
 
 
+  <!-- * => 8.5 -->
+  <genericsetup:upgradeSteps
+    source="*"
+    destination="8.5"
+    profile="eea.googlecharts:default">
+
+    <genericsetup:upgradeStep
+      title="migrate sort filters"
+      handler="eea.googlecharts.upgrades.evolve85.migrate_sortfilter"
+      />
+  </genericsetup:upgradeSteps>
+
   <!-- * => 7.5 -->
   <genericsetup:upgradeSteps
     source="*"

@@ -3,6 +3,8 @@ Changelog
 
 8.5-dev - (unreleased)
 ----------------------
+* Feature: Added upgrade step for sort filter
+  [szabozo0 refs #16926]
 
 8.4 - (2013-10-22)
 ------------------
