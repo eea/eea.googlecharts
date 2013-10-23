@@ -3,6 +3,8 @@ Changelog
 
 8.6-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed modal's close button ui issues
+  [tiberich #16928]
 
 8.5 - (2013-10-23)
 ------------------
