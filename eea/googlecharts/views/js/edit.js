@@ -84,14 +84,21 @@ function updateSortOptions(id){
     var values = JSON.parse(jQuery('#googlechartid_' + id + ' .googlechart_columns').val()).prepared;
     var body = jQuery("#googlechartid_" + id).find(".googlechart-sort-box").find("select").empty();
     var disabled_option = jQuery("<option></option>");
-    disabled_option.attr("value", "__disabled__");
+    var selected = body.attr("selected_value");
+    body.attr("value", selected);
+    disabled_option.attr("value", '__disabled__');
     disabled_option.text("Disabled");
+    if (selected === '__disabled__'){
+        disabled_option.attr("selected", "selected");
+    }
     disabled_option.appendTo(body);
     var default_option = jQuery("<option></option>");
     default_option.attr("value", "__default__");
     default_option.text("Enabled, without anything selected");
+    if (selected === '__default__'){
+        default_option.attr("selected", "selected");
+    }
     default_option.appendTo(body);
-    var selected = body.attr("loaded_value");
     jQuery.each(values, function(idx, value){
         if (value.status !== 0){
             var option = jQuery("<option></option>");
@@ -121,7 +128,7 @@ function updateCounters(){
         var filtersNr = jQuery(this).find(".googlechart_filters_list").find("li").length;
         if (JSON.parse(jQuery(this).find(".googlechart_configjson").attr("value")).chartType === 'Table'){
             jQuery(this).find(".googlechart-sort-box").hide();
-            jQuery(this).find(".googlechart-sort-box select").attr("loaded_value", "__disabled__");
+            jQuery(this).find(".googlechart-sort-box select").attr("selected_value", "__disabled__");
         }
         else{
             jQuery(this).find(".googlechart-sort-box").show();
@@ -989,8 +996,9 @@ function addChart(options){
                 .addClass('ui-icon-circlesmall-minus');
         }
     });
-    googlechart.find('.googlechart-sort-box select').attr("loaded_value",settings.sortFilter);
+    googlechart.find('.googlechart-sort-box select').attr("selected_value",settings.sortFilter);
     googlechart.find('.googlechart-sort-box select').change(function(){
+        googlechart.find('.googlechart-sort-box select').attr('selected_value', googlechart.find('.googlechart-sort-box select').attr('value'));
         markChartAsModified(settings.id);
     });
 //    updateSortOptions(settings.id);
