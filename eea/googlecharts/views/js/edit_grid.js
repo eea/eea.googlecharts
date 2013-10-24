@@ -1545,8 +1545,8 @@ function drawDefaultValuesGrid(divId, values_list, multiselect){
 
     for (var i = 0; i < values_list.length; i++) {
         var d = (defaultfilter_data[i] = {});
-        d.value = values_list[i];
-        d.defaultval = false;
+        d.value = values_list[i].value;
+        d.defaultval = values_list[i].defaultval;
     }
 
     var columns = [];
