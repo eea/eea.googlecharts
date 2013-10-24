@@ -201,9 +201,11 @@ function changeChartHiddenState(id){
 }
 
 function addFilter(id, column, filtertype, columnName, defaults){
-    var filter = jQuery("<li class='googlechart_filteritem' id='googlechart_filter_"+id+"_"+column+"'>" +
-                "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden' class='googlechart_filteritem_id'></div><div class='ui-icon ui-icon-close remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
-                '<span>' + available_filter_types[filtertype] + '</span>' +
+    var filter = jQuery("<li class='googlechart_filteritem'  id='googlechart_filter_"+id+"_"+column+"'>" +
+                  "<div class='googlechart_filteritem_"+id+"'>"+
+                  "<div class='ui-icon ui-icon-close remove_filter_icon' title='Delete filter'>x</div>"+
+                  columnName+
+                  "</div>"+
                 "<input type='hidden' class='googlechart_filteritem_type'/>" +
                 "<input type='hidden' class='googlechart_filteritem_column'/>" +
                 "<input type='hidden' class='googlechart_filteritem_defaults'/>" +

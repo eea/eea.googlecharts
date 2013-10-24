@@ -1513,3 +1513,11 @@ li.googlechart > fieldset > div > a > span {
 .googlecharts_defaultsfilter_number_error{
     color:#FF0000;
 }
+
+.googlechart_filteritem {
+    cursor:pointer;
+}
+
+.googlechart_columnfilters_list li{
+    cursor:pointer;
+}
