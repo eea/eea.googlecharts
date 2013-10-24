@@ -288,7 +288,7 @@ function reloadChartNotes(id){
                     minHeight: 600,
                     minWidth: 950,
                     open: function(evt, ui){
-                        var buttons = jQuery(this).parent().find('button');
+                        var buttons = jQuery(this).parent().find("button[title!='close']");
                         buttons.attr('class', 'btn');
                         jQuery(buttons[0]).addClass('btn-inverse');
                         jQuery(buttons[1]).addClass('btn-success');
@@ -343,7 +343,7 @@ function reloadChartNotes(id){
                     modal: true,
                     dialogClass: 'googlechart-dialog',
                     open: function(evt, ui){
-                        var buttons = jQuery(this).parent().find('button');
+                        var buttons = jQuery(this).parent().find("button[title!='close']");
                         buttons.attr('class', 'btn');
                         jQuery(buttons[0]).addClass('btn-danger');
                         jQuery(buttons[1]).addClass('btn-inverse');
@@ -513,7 +513,7 @@ function reloadColumnFilters(id){
                     modal: true,
                     minWidth: 500,
                     open: function(evt, ui){
-                        var buttons = jQuery(this).parent().find('button');
+                        var buttons = jQuery(this).parent().find("button[title!='close']");
                         buttons.attr('class', 'btn');
                         jQuery(buttons[0]).addClass('btn-inverse');
                         jQuery(buttons[1]).addClass('btn-success');
@@ -589,7 +589,7 @@ function reloadColumnFilters(id){
                     modal: true,
                     dialogClass: 'googlechart-dialog',
                     open: function(evt, ui){
-                        var buttons = jQuery(this).parent().find('button');
+                        var buttons = jQuery(this).parent().find("button[title!='close']");
                         buttons.attr('class', 'btn');
                         jQuery(buttons[0]).addClass('btn-danger');
                         jQuery(buttons[1]).addClass('btn-inverse');
@@ -800,7 +800,7 @@ function openAdvancedOptions(id){
             minWidth: 600,
             minHeight: 480,
             open: function(evt, ui){
-                var buttons = jQuery(this).parent().find('button');
+                var buttons = jQuery(this).parent().find("button[title!='close']");
                 buttons.attr('class', 'btn');
                 jQuery(buttons[0]).addClass('btn-success');
                 jQuery(buttons[1]).addClass('btn-inverse');
@@ -2274,7 +2274,7 @@ function columnsMatrixChart(chartType){
                             }],
                         open:function(){
                             // Buttons
-                            var buttons = jQuery(this).parent().find('button');
+                            var buttons = jQuery(this).parent().find("button[title!='close']");
                             buttons.attr('class', 'btn');
                             jQuery(buttons[0]).addClass('btn-success');
                             jQuery(buttons[1]).addClass('btn-inverse');
@@ -2778,7 +2778,7 @@ function openAddChartFilterDialog(id){
         dialogClass: 'googlechart-dialog',
         modal:true,
         open: function(evt, ui){
-            var buttons = jQuery(this).parent().find('button');
+            var buttons = jQuery(this).parent().find("button[title!='close']");
             buttons.attr('class', 'btn');
             jQuery(buttons[0]).addClass('btn-inverse');
             jQuery(buttons[1]).addClass('btn-success');
@@ -2922,7 +2922,7 @@ function openAddChartColumnFilterDialog(id){
         modal:true,
         minWidth:500,
         open: function(evt, ui){
-            var buttons = jQuery(this).parent().find('button');
+            var buttons = jQuery(this).parent().find("button[title!='close']");
             buttons.attr('class', 'btn');
             jQuery(buttons[0]).addClass('btn-inverse');
             jQuery(buttons[1]).addClass('btn-success');
@@ -2995,7 +2995,7 @@ function openAddChartNoteDialog(id){
         minHeight: 600,
         minWidth: 950,
         open: function(evt, ui){
-            var buttons = jQuery(this).parent().find('button');
+            var buttons = jQuery(this).parent().find("button[title!='close']");
             buttons.attr('class', 'btn');
             jQuery(buttons[0]).addClass('btn-inverse');
             jQuery(buttons[1]).addClass('btn-success');
@@ -3423,7 +3423,7 @@ function init_googlecharts_edit(){
             modal:true,
             dialogClass: 'googlechart-dialog',
             open: function(evt, ui){
-                var buttons = jQuery(this).parent().find('button');
+                var buttons = jQuery(this).parent().find("button[title!='close']");
                 buttons.attr('class', 'btn');
                 jQuery(buttons[0]).addClass('btn-danger');
                 jQuery(buttons[1]).addClass('btn-inverse');
@@ -3484,7 +3484,7 @@ function init_googlecharts_edit(){
             modal:true,
             dialogClass: 'googlechart-dialog',
             open: function(evt, ui){
-                var buttons = jQuery(this).parent().find('button');
+                var buttons = jQuery(this).parent().find("button[title!='close']");
                 buttons.attr('class', 'btn');
                 jQuery(buttons[0]).addClass('btn-danger');
                 jQuery(buttons[1]).addClass('btn-inverse');

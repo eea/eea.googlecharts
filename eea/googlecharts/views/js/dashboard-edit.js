@@ -119,7 +119,7 @@ DavizEdit.GoogleDashboard.prototype = {
         dialogClass: 'daviz-confirm-overlay',
         width: 400,
         open: function(evt, ui){
-          var buttons = jQuery(this).parent().find('button');
+          var buttons = jQuery(this).parent().find("button[title!='close']");
           buttons.attr('class', 'btn');
           jQuery(buttons[0]).addClass('btn-inverse');
           jQuery(buttons[1]).addClass('btn-success');
@@ -438,7 +438,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       minHeight: 600,
       minWidth: 950,
       open: function(evt, ui){
-        var buttons = jQuery(this).parent().find('button');
+        var buttons = jQuery(this).parent().find("button[title!='close']");
         buttons.attr('class', 'btn');
         jQuery(buttons[0]).addClass('btn-inverse');
         jQuery(buttons[1]).addClass('btn-success');
@@ -799,7 +799,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         minHeight: 600,
         closeOnEscape: true,
         open: function(){
-          var buttons = jQuery(this).parent().find('button');
+          var buttons = jQuery(this).parent().find("button[title!='close']");
           buttons.attr('class', 'btn');
           jQuery(buttons[0]).addClass('btn-inverse');
           jQuery(buttons[1]).addClass('btn-success');
@@ -870,7 +870,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         modal: true,
         dialogClass: 'googlechart-dialog',
         open: function(evt, ui){
-          var buttons = jQuery(this).parent().find('button');
+          var buttons = jQuery(this).parent().find("button[title!='close']");
           buttons.attr('class', 'btn');
           jQuery(buttons[0]).addClass('btn-danger');
           jQuery(buttons[1]).addClass('btn-inverse');
@@ -1115,7 +1115,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
       modal: true,
       closeOnEscape: true,
       open: function(evt, ui){
-        var buttons = jQuery(this).parent().find('button');
+        var buttons = jQuery(this).parent().find("button[title!='close']");
         buttons.attr('class', 'btn');
         jQuery(buttons[0]).addClass('btn-inverse');
         jQuery(buttons[1]).addClass('btn-success');
@@ -1259,7 +1259,7 @@ DavizEdit.GoogleDashboardFilter.prototype = {
         modal: true,
         dialogClass: 'googlechart-dialog',
         open: function(evt, ui){
-          var buttons = jQuery(this).parent().find('button');
+          var buttons = jQuery(this).parent().find("button[title!='close']");
           buttons.attr('class', 'btn');
           jQuery(buttons[0]).addClass('btn-danger');
           jQuery(buttons[1]).addClass('btn-inverse');
