@@ -201,21 +201,29 @@ function changeChartHiddenState(id){
 }
 
 function addFilter(id, column, filtertype, columnName, defaults){
-    var filter = jQuery("<li class='googlechart_filteritem'  id='googlechart_filter_"+id+"_"+column+"'>" +
-                  "<div class='googlechart_filteritem_"+id+"'>"+
-                  "<div class='ui-icon ui-icon-close remove_filter_icon' title='Delete filter'>x</div>"+
-                  "<div class='ui-icon ui-icon-pencil edit_filter_icon' title='Edit filter'>x</div>"+
-                  "<div class='googlechart_filteritem_id'></div>"+
-                  "</div>"+
-                "<input type='hidden' class='googlechart_filteritem_type'/>" +
-                "<input type='hidden' class='googlechart_filteritem_column'/>" +
-                "<input type='hidden' class='googlechart_filteritem_defaults'/>" +
-             "</li>");
+    filter_id = 'googlechart_filter_'+id+'_'+column;
+    var filter = jQuery("#"+filter_id);
+    var shouldAdd = false;
+    if (filter.length === 0){
+        shouldAdd = true;
+        filter = jQuery("<li class='googlechart_filteritem'  id='"+filter_id+"'>" +
+                      "<div class='googlechart_filteritem_"+id+"'>"+
+                      "<div class='ui-icon ui-icon-close remove_filter_icon' title='Delete filter'>x</div>"+
+                      "<div class='ui-icon ui-icon-pencil edit_filter_icon' title='Edit filter'>x</div>"+
+                      "<div class='googlechart_filteritem_id'></div>"+
+                      "</div>"+
+                    "<input type='hidden' class='googlechart_filteritem_type'/>" +
+                    "<input type='hidden' class='googlechart_filteritem_column'/>" +
+                    "<input type='hidden' class='googlechart_filteritem_defaults'/>" +
+                 "</li>");
+    }
     filter.find(".googlechart_filteritem_id").text(columnName);
     filter.find(".googlechart_filteritem_type").attr("value", filtertype);
     filter.find(".googlechart_filteritem_column").attr("value", column);
     filter.find(".googlechart_filteritem_defaults").attr("value", JSON.stringify(defaults));
-    filter.appendTo("#googlechart_filters_"+id);
+    if (shouldAdd){
+        filter.appendTo("#googlechart_filters_"+id);
+    }
 }
 
 function initializeChartTinyMCE(form){
@@ -2906,7 +2914,7 @@ function openAddEditChartFilterDialog(id, type){
                 }
             },
             {
-                text: "Add",
+                text: "Save",
                 click: function(){
                     var selectedColumn = jQuery(".googlecharts_filter_columns").val();
                     var selectedFilter = jQuery(".googlecharts_filter_type").val();
