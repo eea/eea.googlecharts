@@ -1525,3 +1525,67 @@ function drawColumnFiltersGrid(divId, columns_list){
         }
     });
 }
+
+var defaultfilter_data;
+function eeaDefaultsCheckMarkFormatter(row, cell, value, columnDef, dataContext){
+    if (!value) {
+        return "<span class='ui-icon ui-icon-closethick'></span>";
+    }
+    return "<img src='++resource++slickgrid-images/tick.png'>";
+}
+
+function drawDefaultValuesGrid(divId, values_list, multiselect){
+    defaultfilter_data = [];
+    options = {
+        editable: true,
+        enableCellNavigation: true,
+        asyncEditorLoading: false,
+        autoEdit: true
+    };
+
+    for (var i = 0; i < values_list.length; i++) {
+        var d = (defaultfilter_data[i] = {});
+        d.value = values_list[i];
+        d.defaultval = false;
+    }
+
+    var columns = [];
+    columns.push({
+        id: 'value',
+        name: "Value",
+        field: 'value',
+        width: 205
+    });
+    columns.push({
+        id: 'defaultval',
+        name: "Default",
+        field: 'defaultval',
+        width: 50,
+        cssClass: 'defaultfilters-grid-checkbox',
+        formatter: eeaDefaultsCheckMarkFormatter
+    });
+
+    grid_defaults = new Slick.Grid(divId, defaultfilter_data, columns, options);
+
+    grid_defaults.onClick.subscribe(function (e) {
+        var cell = grid_defaults.getCellFromEvent(e);
+        if (grid_defaults.getColumns()[cell.cell].id == 'defaultval') {
+            if (defaultfilter_data[cell.row].defaultval){
+                defaultfilter_data[cell.row].defaultval = false;
+            }
+            else{
+                if (!multiselect){
+                    for (i = 0; i < defaultfilter_data.length; i++){
+                        defaultfilter_data[i].defaultval = false;
+                        grid_defaults.updateRow(i);
+                    }
+                }
+                defaultfilter_data[cell.row].defaultval = true;
+            }
+            for (i = 0; i < defaultfilter_data.length; i++){
+                grid_defaults.updateRow(i);
+            }
+            e.stopPropagation();
+        }
+    });
+}

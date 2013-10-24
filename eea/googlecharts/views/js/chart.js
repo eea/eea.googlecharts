@@ -102,24 +102,38 @@ function drawGoogleChart(options){
             filterSettings.options.ui = {};
             filterSettings.options.filterColumnLabel = settings.availableColumns[key];
             filterSettings.containerId = filter_div_id;
+            filterSettings.state = {};
 
-            switch(value){
+            switch(value.type){
                 case "0":
                     filterSettings.controlType = 'NumberRangeFilter';
+                    if (value.defaults.length > 0){
+                        filterSettings.state.lowValue=value.defaults[0];
+                        filterSettings.state.highValue=value.defaults[1];
+                    }
                     break;
                 case "1":
                     filterSettings.controlType = 'StringFilter';
+                    if (value.defaults.length > 0){
+                        filterSettings.state.value=value.defaults[0];
+                    }
                     break;
                 case "2":
                     filterSettings.controlType = 'CategoryFilter';
                     filterSettings.options.ui.allowTyping = false;
                     filterSettings.options.ui.allowMultiple = false;
+                    if (value.defaults.length > 0){
+                        filterSettings.state.selectedValues = value.defaults;
+                    }
                     break;
                 case "3":
                     filterSettings.controlType = 'CategoryFilter';
                     filterSettings.options.ui.allowTyping = false;
                     filterSettings.options.ui.allowMultiple = true;
                     filterSettings.options.ui.selectedValuesLayout = 'belowStacked';
+                    if (value.defaults.length > 0){
+                        filterSettings.state.selectedValues = value.defaults;
+                    }
                     break;
             }
             var filter = new google.visualization.ControlWrapper(filterSettings);
@@ -360,7 +374,7 @@ function drawGoogleDashboard(options){
 
     var dashboard_filters = {};
     jQuery.each(settings.filters, function(key, value){
-        dashboard_filters[value.column] = value.type;
+        dashboard_filters[value.column] = {"type":value.type, defaults:[]};
     });
     // Dashboard charts
     jQuery.each(settings.chartsSettings, function(key, value){

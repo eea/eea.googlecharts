@@ -200,16 +200,18 @@ function changeChartHiddenState(id){
     }
 }
 
-function addFilter(id, column, filtertype, columnName){
+function addFilter(id, column, filtertype, columnName, defaults){
     var filter = jQuery("<li class='googlechart_filteritem' id='googlechart_filter_"+id+"_"+column+"'>" +
                 "<h1 class='googlechart_filteritem_"+id+"'><div style='float:left;width:90%;height:20px;overflow:hidden' class='googlechart_filteritem_id'></div><div class='ui-icon ui-icon-close remove_filter_icon' title='Delete filter'>x</div><div style='clear:both'></div></h1>" +
                 '<span>' + available_filter_types[filtertype] + '</span>' +
                 "<input type='hidden' class='googlechart_filteritem_type'/>" +
                 "<input type='hidden' class='googlechart_filteritem_column'/>" +
+                "<input type='hidden' class='googlechart_filteritem_defaults'/>" +
              "</li>");
     filter.find(".googlechart_filteritem_id").text(columnName);
     filter.find(".googlechart_filteritem_type").attr("value", filtertype);
     filter.find(".googlechart_filteritem_column").attr("value", column);
+    filter.find(".googlechart_filteritem_defaults").attr("value", JSON.stringify(defaults));
     filter.appendTo("#googlechart_filters_"+id);
 }
 
@@ -238,18 +240,6 @@ function initializeChartTinyMCE(form){
     });
 
     return true;
-}
-
-function reloadFilters(id){
-    var context = jQuery('#googlechartid_' + id);
-    if(!context.length){
-        return;
-    }
-    
-    var box = jQuery('.googlechart-filters-box', context);
-    var ul = jQuery('.googlechart_filters_list', box).empty();
-    var filters = context.data('filters') || [];
-    
 }
 
 function reloadChartNotes(id){
@@ -1085,10 +1075,6 @@ function addChart(options){
     googlechart.data('columnfilters', settings.columnfilters);
     reloadColumnFilters(settings.id);
 
-    googlechart.data('filters', settings.filters);
-    reloadFilters(settings.id);
-
-
     if (settings.hidden){
         changeChartHiddenState(settings.id);
     }
@@ -1121,12 +1107,12 @@ function addChart(options){
         if (key.indexOf('pre_config_') === -1){
             jQuery(chartColumns.prepared).each(function(idx, column){
                 if (column.name === key){
-                    addFilter(settings.id, key, value, column.fullname);
+                    addFilter(settings.id, key, value.type, column.fullname, value.defaults);
                 }
             });
         }
         else {
-            addFilter(settings.id, key, value, available_columns[key.substr(11)]);
+            addFilter(settings.id, key, value.type, available_columns[key.substr(11)], value.defaults);
         }
     });
     if (shouldMark){
@@ -2649,6 +2635,76 @@ function openEditChart(id){
                 });
 }
 
+function populateDefaults(id){
+    var defaults_div = jQuery(".googlecharts_filter_defaults").empty();
+    var selectedColumnName = jQuery(".googlecharts_filter_columns").attr("value");
+    if (selectedColumnName.indexOf("pre_config_") !== -1){
+        return;
+    }
+
+    var chart_columns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").val();
+    var chart_columns = JSON.parse(chart_columns_str);
+
+    var chart_row_filters_str = jQuery("#googlechartid_"+id+" .googlechart_row_filters").val();
+    var chart_row_filters = {};
+    if (chart_row_filters_str.length > 0){
+        chart_row_filters = JSON.parse(chart_row_filters_str);
+    }
+
+    var columnsFromSettings = getColumnsFromSettings(chart_columns);
+    var options = {
+        originalTable : all_rows,
+        normalColumns : columnsFromSettings.normalColumns,
+        pivotingColumns : columnsFromSettings.pivotColumns,
+        valueColumn : columnsFromSettings.valueColumn,
+        availableColumns : available_columns,
+        filters : chart_row_filters
+    };
+    var transformedTable = transformTable(options);
+    var defaults = [];
+    for (i = 0; i < transformedTable.items.length; i++){
+        defaults.push(transformedTable.items[i][selectedColumnName]);
+    }
+    var isNumber = false;
+    if (typeof(defaults[0]) === "number"){
+        defaults = defaults.sort(function(a,b){return a-b;});
+        isNumber = true;
+    }
+    else{
+        defaults = defaults.sort();
+    }
+    var filter_type = jQuery(".googlecharts_filter_type").attr("value");
+
+    defaults_div.append('<label>Defaults for filter</label>');
+    defaults_div.append('<div class="formHelp">Default values for filters. If empty, the default settings will be used</div>');
+
+    if (filter_type === "0"){
+        defaults_div.append('<div class="googlecharts_defaultsfilter_number"></div>');
+        if (isNumber){
+            jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_min"><label>Min. Value</label><input type="text"/></div>');
+            jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_max"><label>Max. Value</label><input type="text"/></div>');
+            jQuery(".googlecharts_defaultsfilter_number_min input").attr("placeholder", defaults[0]);
+            jQuery(".googlecharts_defaultsfilter_number_max input").attr("placeholder", defaults[defaults.length-1]);
+        }
+        else {
+            jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_error"><b>Warning:</b> Values from selected column are not numbers</div>');
+            return;
+        }
+    }
+    if (filter_type === "1"){
+        defaults_div.append('<div class="googlecharts_defaultsfilter_string"></div>');
+        jQuery(".googlecharts_defaultsfilter_string").append('<div class="googlecharts_defaultsfilter_string"><label>String</label><input type="text"/></div>');
+    }
+    if (filter_type === "2"){
+        defaults_div.append('<div class="googlecharts_defaultsfilter_slickgrid daviz-data-table daviz-slick-table slick_newTable" style="width:270px;height:200px"></div>');
+        drawDefaultValuesGrid(".googlecharts_defaultsfilter_slickgrid", defaults, false);
+    }
+    if (filter_type === "3"){
+        defaults_div.append('<div class="googlecharts_defaultsfilter_slickgrid daviz-data-table daviz-slick-table slick_newTable" style="width:270px;height:200px"></div>');
+        drawDefaultValuesGrid(".googlecharts_defaultsfilter_slickgrid", defaults, true);
+    }
+}
+
 function openAddChartFilterDialog(id){
     jQuery(".googlecharts_filter_config").remove();
 
@@ -2666,6 +2722,8 @@ function openAddChartFilterDialog(id){
             '<select class="googlecharts_filter_type">' +
             '</select>' +
         '</div>' +
+        '<div class="googlecharts_filter_defaults field">'+
+        '</div>'+
     '</div>');
 
     var orderedFilters = jQuery("#googlechart_filters_"+id).sortable('toArray');
@@ -2736,7 +2794,12 @@ function openAddChartFilterDialog(id){
                     jQuery(".googlecharts_filter_type").find("option[value='1']").show();
                     jQuery(".googlecharts_filter_type").find("option[value='0']").attr("selected", "selected");
                 }
+                populateDefaults(id);
             });
+            jQuery(".googlecharts_filter_type").bind("change", function(){
+                populateDefaults(id);
+            });
+            populateDefaults(id);
         },
         buttons:[
             {
@@ -2759,11 +2822,41 @@ function openAddChartFilterDialog(id){
                             }
                         }
                     });
+                    var defaults = [];
+                    if (jQuery(".googlecharts_defaultsfilter_number_error").length !== 0){
+                        alert("Selected column is not compatible with selected filter type");
+                        return;
+                    }
+                    if (selectedFilter === "0"){
+                        var min = jQuery(".googlecharts_defaultsfilter_number_min input").attr("value");
+                        var max = jQuery(".googlecharts_defaultsfilter_number_max input").attr("value");
+                        if (isNaN(min)){
+                            alert("Minimum value is not a number!");
+                            return;
+                        }
+                        if (isNaN(max)){
+                            alert("Maximum value is not a number!");
+                            return;
+                        }
+                        defaults.push(min);
+                        defaults.push(max);
+                    }
+                    if (selectedFilter === "1"){
+                        defaults.push(jQuery(".googlecharts_defaultsfilter_string input").attr("value"));
+                    }
+                    if ((selectedFilter === "2") || (selectedFilter === "3")){
+                        jQuery.each(defaultfilter_data, function(idx, value){
+                            if (value.defaultval){
+                                defaults.push(value.value);
+                            }
+                        });
+                    }
+
                     if ((selectedColumn === '-1') || (selectedFilter === '-1')){
                         alert("Please select column and filter type!");
                     }
                     else{
-                        addFilter(id, selectedColumn, selectedFilter, selectedColumnName);
+                        addFilter(id, selectedColumn, selectedFilter, selectedColumnName, defaults);
                         markChartAsModified(id);
                         jQuery(this).dialog("close");
                     }
@@ -2972,7 +3065,10 @@ function saveCharts(){
         var filters = {};
 
         jQuery(orderedFilter).each(function(index,filter){
-            filters[jQuery("#"+filter+" .googlechart_filteritem_column").attr("value")] = jQuery("#"+filter+" .googlechart_filteritem_type").attr("value");
+            filter_vals = {};
+            filter_vals.type = jQuery("#"+filter+" .googlechart_filteritem_type").attr("value");
+            filter_vals.defaults = JSON.parse(jQuery("#"+filter+" .googlechart_filteritem_defaults").attr("value"));
+            filters[jQuery("#"+filter+" .googlechart_filteritem_column").attr("value")] = filter_vals;
         });
         chart.filters = JSON.stringify(filters);
         chart.notes = chartObj.data('notes') || [];

@@ -84,6 +84,11 @@
     margin-left: 2em;
 }
 
+.googlechart_filteritem h1{
+    background: none !important;
+    font-weight: bold;
+    margin: 0px !important;
+}
 .googlechart-sort-box,
 .googlechart-filters-box,
 .googlechart-columnfilters-box,
@@ -1326,7 +1331,7 @@ li.googlechart > fieldset > div > a > span {
     width:450px;
     float:left;
     margin-right:15px;
-    min-height: 190px;
+    min-height: 285px;
 }
 
 .googlechart_name {
@@ -1499,4 +1504,12 @@ li.googlechart > fieldset > div > a > span {
 
 #google-visualization-charteditor-preview-div-chart {
     z-index: 9999;
+}
+
+.googlecharts_filter_defaults input[type="text"]{
+    width: 210px !important;
+}
+
+.googlecharts_defaultsfilter_number_error{
+    color:#FF0000;
 }
