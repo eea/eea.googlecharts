@@ -3,7 +3,8 @@ Changelog
 
 8.7-dev - (unreleased)
 ----------------------
-
+* Feature: Added default values for filters
+  [szabozo0 refs #16926]
 8.6 - (2013-10-24)
 ------------------
 * Bug fix: Fixed modal's close button ui issues
