@@ -1,6 +1,9 @@
 Changelog
 =========
 
+8.8-dev - (unreleased)
+----------------------
+
 8.7 - (2013-10-25)
 ------------------
 * Feature: Added functionality to edit chart filters
