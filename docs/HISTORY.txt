@@ -3,6 +3,8 @@ Changelog
 
 8.8-dev - (unreleased)
 ----------------------
+* Feature: Added functionality to modify dashboard filters
+  [szabozo0 refs #16926]
 
 8.7 - (2013-10-25)
 ------------------

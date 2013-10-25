@@ -315,6 +315,17 @@ class DashboardEdit(ChartsEdit):
         self.dashboards = 'Changed'
         return _(u'Filter added')
 
+    def filterUpdate(self, **kwargs):
+        """ Update filter
+        """
+        self.dashboard.setdefault('filters', [])
+        for dfilter in self.dashboard['filters']:
+            if kwargs['column'] == dfilter['column']:
+                dfilter['type'] = kwargs['type']
+
+        self.dashboards = 'Changed'
+        return _(u'Filter updated')
+
     def filterDelete(self, **kwargs):
         """ Delete filter
         """
@@ -409,6 +420,8 @@ class DashboardEdit(ChartsEdit):
         #   Filters
         elif action == 'filter.add':
             return self.filterAdd(**kwargs)
+        elif action == 'filter.update':
+            return self.filterUpdate(**kwargs)
         elif action == 'filter.delete':
             return self.filterDelete(**kwargs)
         elif action == 'filters.position':

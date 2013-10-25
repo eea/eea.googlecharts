@@ -1035,7 +1035,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
      .addClass('ui-icon').addClass('ui-icon-plus').addClass('ui-corner-all')
      .prependTo(header)
      .click(function(){
-       self.new_filter(self.box);
+       self.new_edit_filter(self.box, "add");
      });
 
     jQuery("input[name='width']", header).val(width).change(function(){
@@ -1060,27 +1060,48 @@ DavizEdit.GoogleDashboardFilters.prototype = {
 
   draw: function(data){
     var self = this;
-    var filters = data.filters !== undefined ? data.filters : [];
-    jQuery.each(filters, function(index, filter){
-      delete jQuery.data(self.box, 'filter_columns')[filter.column];
-      if(filter.dashboard === undefined){
-        filter.dashboard = {};
-      }
-      if(filter.dashboard.name === undefined){
-        filter.dashboard.name = self.settings.name;
-      }
-      var gfilter = new DavizEdit.GoogleDashboardFilter(self.box, filter);
-    });
+    var dfilter = [];
+    if (data.filters.length > 0){
+        dfilter = jQuery("#"+data.filters[0].column+".dashboard-filter");
+    }
+    if ((data.filters.length === 1) && (dfilter.length !== 0)){
+        // if modified
+        jQuery.each(self.settings.filters, function (ssfkey, ssfval){
+            if (ssfval.column === data.filters[0].column){
+                ssfval.type = data.filters[0].type;
+            }
+        });
+        dfilter.find("dd").text(jQuery.data(self.box, "filter_types")[data.filters[0].type]);
+    }
+    else {
+        // if added
+        var filters = data.filters !== undefined ? data.filters : [];
+        jQuery.each(filters, function(index, filter){
+            delete jQuery.data(self.box, 'filter_columns')[filter.column];
+            if(filter.dashboard === undefined){
+                filter.dashboard = {};
+            }
+            if(filter.dashboard.name === undefined){
+                filter.dashboard.name = self.settings.name;
+            }
+            var gfilter = new DavizEdit.GoogleDashboardFilter(self, self.box, filter);
+        });
+    }
   },
 
-  new_filter: function(context){
+  new_edit_filter: function(context, type){
     var self = this;
-    if(!jQuery.param(jQuery.data(self.box, 'filter_columns'))){
-      return alert("You've added all possible filters!");
+    var fcolumns;
+    if(type === "add"){
+        if(!jQuery.param(jQuery.data(self.box, 'filter_columns'))){
+            return alert("You've added all possible filters!");
+        }
+        fcolumns = jQuery.data(self.box, 'filter_columns');
     }
-
+    else {
+        fcolumns = jQuery.data(self.box, 'all_filter_columns');
+    }
     var ftypes = jQuery.data(self.box, 'filter_types');
-    var fcolumns = jQuery.data(self.box, 'filter_columns');
     var widget = jQuery('<div>')
       .html([
       '<form>',
@@ -1097,19 +1118,37 @@ DavizEdit.GoogleDashboardFilters.prototype = {
       '</form>'].join('\n'));
 
     jQuery.each(fcolumns, function(key, val){
-      var option = jQuery('<option>')
-        .val(key).text(val)
-        .appendTo(jQuery("select[name='column']", widget));
+        var option = jQuery('<option>')
+            .val(key).text(val);
+        if (type !== "add"){
+            if (key === type){
+                option.attr("selected", "selected");
+            }
+        }
+        option.appendTo(jQuery("select[name='column']", widget));
+        if (type !== "add"){
+            jQuery("select[name='column']", widget).attr("disabled", "disabled");
+        }
     });
-
     jQuery.each(ftypes, function(key, val){
-      var option = jQuery('<option>')
-        .val(key).text(val)
-        .appendTo(jQuery("select[name='type']", widget));
+        var option = jQuery('<option>')
+            .val(key).text(val);
+        if (type !== "add"){
+            jQuery.each(self.settings.filters, function(fkey, fval){
+                if ((fval.column === type) && (fval.type === key)){
+                    option.attr("selected", "selected");
+                }
+            });
+        }
+        option.appendTo(jQuery("select[name='type']", widget));
     });
 
+    var dialogTitle = "Edit Filter";
+    if (type === "add"){
+        dialogTitle = "Add Filter";
+    }
     widget.dialog({
-      title: "Add Filter",
+      title: dialogTitle,
       dialogClass: 'googlechart-dialog',
       bgiframe: true,
       modal: true,
@@ -1128,10 +1167,11 @@ DavizEdit.GoogleDashboardFilters.prototype = {
           }
         },
         {
-          text: "Add",
+          text: "Save",
           click: function(){
+            jQuery("select[name='column']").attr("disabled",false);
             var form = jQuery('form', widget);
-            self.new_filter_onSave(form);
+            self.new_edit_filter_onSave(form, type);
             widget.dialog("close");
           }
         }
@@ -1139,21 +1179,26 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     });
   },
 
-  new_filter_onSave: function(form){
+  new_edit_filter_onSave: function(form, type){
     var self = this;
     var query = {};
     jQuery.each(form.serializeArray(), function(){
       query[this.name] = this.value;
     });
 
-    query.action = 'filter.add';
+    if (type === "add"){
+        query.action = 'filter.add';
+    }
+    else {
+        query.action = 'filter.update';
+    }
     query.dashboard = self.settings.name;
 
     form = self.context.parents('.daviz-view-form');
     var action = form.length ? form.attr('action') : '';
     action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
 
-    DavizEdit.Status.start("Adding...");
+    DavizEdit.Status.start("Saving...");
     jQuery.post(action, query, function(data){
       delete query.action;
       self.draw({filters: [query]});
@@ -1207,9 +1252,10 @@ DavizEdit.GoogleDashboardFilters.prototype = {
   }
 };
 
-DavizEdit.GoogleDashboardFilter = function(context, options){
+DavizEdit.GoogleDashboardFilter = function(parent, context, options){
   var self = this;
   self.context = context;
+  self.parent = parent;
   self.box = jQuery('.box-body', self.context);
   self.settings = {};
   if(options){
@@ -1234,6 +1280,17 @@ DavizEdit.GoogleDashboardFilter.prototype = {
       ].join('\n'))
       .appendTo(self.box);
 
+
+    // Edit
+    jQuery('<div>')
+      .addClass('ui-icon').addClass('ui-icon-pencil')
+      .attr('title', 'Edit filter')
+      .text('x')
+      .prependTo(self.box)
+      .click(function(){
+        self.parent.new_edit_filter(self.parent.context, self.settings.column);
+      });
+
     // Delete "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"
     jQuery('<div>')
       .addClass('ui-icon').addClass('ui-icon-close')
@@ -1243,6 +1300,7 @@ DavizEdit.GoogleDashboardFilter.prototype = {
       .click(function(){
         self.remove();
       });
+
   },
 
   remove: function(){
