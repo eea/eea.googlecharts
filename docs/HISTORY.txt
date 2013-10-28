@@ -3,6 +3,8 @@ Changelog
 
 8.8-dev - (unreleased)
 ----------------------
+* Bug fix: Updated metadata.xml
+  [szabozo0 refs #16926]
 * Feature: Added functionality to modify dashboard filters
   [szabozo0 refs #16926]
 
