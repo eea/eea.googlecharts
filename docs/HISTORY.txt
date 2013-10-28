@@ -1,6 +1,9 @@
 Changelog
 =========
 
+8.9-dev - (unreleased)
+----------------------
+
 8.8 - (2013-10-28)
 ------------------
 * Bug fix: Updated metadata.xml
