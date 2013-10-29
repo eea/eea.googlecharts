@@ -2792,6 +2792,7 @@ function populateDefaults(id, type){
 
 function openAddEditChartFilterDialog(id, type){
     jQuery(".googlecharts_filter_config").remove();
+    jQuery("#googlechartid_tmp_edit_dashboard").remove();
 
     var addfilterdialog = jQuery('' +
     '<div class="googlecharts_filter_config">' +
