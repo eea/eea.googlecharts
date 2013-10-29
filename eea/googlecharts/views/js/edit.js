@@ -2674,7 +2674,9 @@ function populateDefaults(id, type){
     var transformedTable = transformTable(options);
     var defaults = [];
     for (i = 0; i < transformedTable.items.length; i++){
-        defaults.push(transformedTable.items[i][selectedColumnName]);
+        if (jQuery.inArray(transformedTable.items[i][selectedColumnName], defaults) === -1){
+            defaults.push(transformedTable.items[i][selectedColumnName]);
+        }
     }
     var isNumber = false;
     if (typeof(defaults[0]) === "number"){
