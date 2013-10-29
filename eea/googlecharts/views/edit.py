@@ -322,6 +322,7 @@ class DashboardEdit(ChartsEdit):
         for dfilter in self.dashboard['filters']:
             if kwargs['column'] == dfilter['column']:
                 dfilter['type'] = kwargs['type']
+                dfilter['defaults'] = kwargs['defaults']
 
         self.dashboards = 'Changed'
         return _(u'Filter updated')

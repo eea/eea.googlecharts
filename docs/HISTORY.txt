@@ -3,6 +3,8 @@ Changelog
 
 8.9-dev - (unreleased)
 ----------------------
+* Feature: Added default values for dashboard filters
+  [szabozo0 refs #16926]
 
 8.8 - (2013-10-28)
 ------------------

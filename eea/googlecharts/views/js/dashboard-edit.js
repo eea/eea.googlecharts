@@ -1035,7 +1035,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
      .addClass('ui-icon').addClass('ui-icon-plus').addClass('ui-corner-all')
      .prependTo(header)
      .click(function(){
-       self.new_edit_filter(self.box, "add");
+       self.new_edit_filter(self.box, "add", "[]");
      });
 
     jQuery("input[name='width']", header).val(width).change(function(){
@@ -1089,7 +1089,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     }
   },
 
-  new_edit_filter: function(context, type){
+  new_edit_filter: function(context, type, filter_defaults){
     var self = this;
     var fcolumns;
     if(type === "add"){
@@ -1105,19 +1105,43 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     var widget = jQuery('<div>')
       .html([
       '<form>',
-        '<div class="field">',
-            '<label>Column</label>',
-            '<div class="formHelp">Filter Column</div>',
-            '<select name="column"></select>',
-        '</div>',
-        '<div class="field">',
-            '<label>Type</label>',
-            '<div class="formHelp">Filter Type</div>',
-            '<select name="type"></select>',
+        '<div id="googlechartid_tmp_edit_dashboard">',
+            '<div class="field">',
+                '<label>Column</label>',
+                '<div class="formHelp">Filter Column</div>',
+                '<select name="column" class="googlecharts_filter_columns"></select>',
+            '</div>',
+            '<div class="field">',
+                '<label>Type</label>',
+                '<div class="formHelp">Filter Type</div>',
+                '<select name="type" class="googlecharts_filter_type"></select>',
+            '</div>',
+            '<div class="googlecharts_filter_defaults field">',
+            '</div>',
+            '<input type="hidden" class="googlechart_columns"/>',
+            '<input type="hidden" class="googlechart_row_filters"/>',
+            '<div class="field">',
+            '<input type="hidden" name="defaults" class="googlechart_filteritem_defaults"/>',
+            '<input type="hidden" class="googlechart_filteritem_type"/>',
+            '</div>',
         '</div>',
       '</form>'].join('\n'));
 
+
+    var sorted_columns = [];
     jQuery.each(fcolumns, function(key, val){
+        sorted_columns.push(val);
+    });
+    sorted_columns = sorted_columns.sort();
+    var fcolumns2 = {};
+    jQuery.each(sorted_columns, function(idx, val){
+        jQuery.each(fcolumns, function(key2, val2){
+            if (val === val2){
+                fcolumns2[key2] = val2;
+            }
+        });
+    });
+    jQuery.each(fcolumns2, function(key, val){
         var option = jQuery('<option>')
             .val(key).text(val);
         if (type !== "add"){
@@ -1147,6 +1171,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     if (type === "add"){
         dialogTitle = "Add Filter";
     }
+    jQuery(".googlechart-dialog").remove();
     widget.dialog({
       title: dialogTitle,
       dialogClass: 'googlechart-dialog',
@@ -1154,10 +1179,49 @@ DavizEdit.GoogleDashboardFilters.prototype = {
       modal: true,
       closeOnEscape: true,
       open: function(evt, ui){
+        var tmp_id = "tmp_edit_dashboard";
+        var chart_columns = {};
+        chart_columns.original = [];
+        chart_columns.prepared = [];
+        jQuery.each(available_columns, function(key, value){
+            var original = {};
+            original.name = key;
+            original.status = 1;
+            var prepared = {};
+            prepared.name = key;
+            prepared.fullname = value;
+            prepared.status = 1;
+            chart_columns.original.push(original);
+            chart_columns.prepared.push(prepared);
+        });
+        jQuery("#googlechartid_tmp_edit_dashboard .googlechart_columns").attr("value", JSON.stringify(chart_columns));
+        jQuery("#googlechartid_tmp_edit_dashboard .googlechart_row_filters").attr("value", "");
+        jQuery("#googlechartid_tmp_edit_dashboard .googlechart_filteritem_defaults").attr("value", filter_defaults);
+        jQuery("#googlechartid_tmp_edit_dashboard .googlechart_filteritem_type").attr("value", jQuery("#googlechartid_tmp_edit_dashboard .googlecharts_filter_type").attr("value"));
+
         var buttons = jQuery(this).parent().find("button[title!='close']");
         buttons.attr('class', 'btn');
         jQuery(buttons[0]).addClass('btn-inverse');
         jQuery(buttons[1]).addClass('btn-success');
+        jQuery(".googlecharts_filter_columns").bind("change", function(){
+            jQuery(".googlecharts_filter_type").find("option:selected").removeAttr("selected");
+            if (jQuery(".googlecharts_filter_columns").attr("value").indexOf("pre_config_") === 0){
+                jQuery(".googlecharts_filter_type").find("option[value='0']").hide();
+                jQuery(".googlecharts_filter_type").find("option[value='1']").hide();
+                jQuery(".googlecharts_filter_type").find("option[value='2']").attr("selected", "selected");
+            }
+            else{
+                jQuery(".googlecharts_filter_type").find("option[value='0']").show();
+                jQuery(".googlecharts_filter_type").find("option[value='1']").show();
+                jQuery(".googlecharts_filter_type").find("option[value='0']").attr("selected", "selected");
+            }
+            populateDefaults(tmp_id, type);
+        });
+        jQuery(".googlecharts_filter_type").bind("change", function(){
+            populateDefaults(tmp_id, type);
+        });
+
+        populateDefaults(tmp_id, type);
       },
       buttons: [
         {
@@ -1169,7 +1233,52 @@ DavizEdit.GoogleDashboardFilters.prototype = {
         {
           text: "Save",
           click: function(){
+            var disabled_status = jQuery("select[name='column']").attr("disabled");
             jQuery("select[name='column']").attr("disabled",false);
+            var selectedColumn = jQuery(".googlecharts_filter_columns").val();
+            var selectedFilter = jQuery(".googlecharts_filter_type").val();
+            var selectedColumnName = "";
+            jQuery(".googlecharts_filter_columns").find("option").each(function(idx, filter){
+                if (jQuery(filter).attr("value") === selectedColumn){
+                    selectedColumnName = jQuery(filter).html();
+                    if (selectedColumnName.indexOf("(pre-pivot)") !== -1){
+                        selectedColumnName = selectedColumnName.substr(0,selectedColumnName.length - 12);
+                    }
+                }
+            });
+            var defaults = [];
+            if (jQuery(".googlecharts_defaultsfilter_number_error").length !== 0){
+                jQuery("select[name='column']").attr("disabled",disabled_status);
+                alert("Selected column is not compatible with selected filter type");
+                return;
+            }
+            if (selectedFilter === "0"){
+                var min = jQuery(".googlecharts_defaultsfilter_number_min input").attr("value");
+                var max = jQuery(".googlecharts_defaultsfilter_number_max input").attr("value");
+                if (isNaN(min)){
+                    alert("Minimum value is not a number!");
+                    jQuery("select[name='column']").attr("disabled",disabled_status);
+                    return;
+                }
+                if (isNaN(max)){
+                    alert("Maximum value is not a number!");
+                    jQuery("select[name='column']").attr("disabled",disabled_status);
+                    return;
+                }
+                defaults.push(min);
+                defaults.push(max);
+            }
+            if (selectedFilter === "1"){
+                defaults.push(jQuery(".googlecharts_defaultsfilter_string input").attr("value"));
+            }
+            if ((selectedFilter === "2") || (selectedFilter === "3")){
+                jQuery.each(defaultfilter_data, function(idx, value){
+                    if (value.defaultval){
+                        defaults.push(value.value);
+                    }
+                });
+            }
+            jQuery("#googlechartid_tmp_edit_dashboard .googlechart_filteritem_defaults").attr("value", JSON.stringify(defaults));
             var form = jQuery('form', widget);
             self.new_edit_filter_onSave(form, type);
             widget.dialog("close");
@@ -1194,6 +1303,21 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     }
     query.dashboard = self.settings.name;
 
+    var found = false;
+    jQuery.each(self.settings.filters, function(idx, filter){
+        if (filter.column === query.column){
+            filter.type = query.type;
+            filter.defaults = query.defaults;
+            found = true;
+        }
+    });
+    if (!found){
+        var filter = {};
+        filter.column = query.column;
+        filter.type = query.type;
+        filter.defaults = query.defaults;
+        self.settings.filters.push(filter);
+    }
     form = self.context.parents('.daviz-view-form');
     var action = form.length ? form.attr('action') : '';
     action = action.split('@@')[0] + '@@googlechart.googledashboard.edit';
@@ -1288,7 +1412,16 @@ DavizEdit.GoogleDashboardFilter.prototype = {
       .text('x')
       .prependTo(self.box)
       .click(function(){
-        self.parent.new_edit_filter(self.parent.context, self.settings.column);
+        var filter_defaults = "[]";
+        jQuery.each(self.parent.settings.filters, function(idx, filter){
+            if (filter.column === self.settings.column){
+                filter_defaults = filter.defaults;
+            }
+        });
+        if (filter_defaults === ""){
+            filter_defaults = "[]";
+        }
+        self.parent.new_edit_filter(self.parent.context, self.settings.column, filter_defaults);
       });
 
     // Delete "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"

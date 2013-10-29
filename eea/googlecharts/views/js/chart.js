@@ -374,7 +374,12 @@ function drawGoogleDashboard(options){
 
     var dashboard_filters = {};
     jQuery.each(settings.filters, function(key, value){
-        dashboard_filters[value.column] = {"type":value.type, defaults:[]};
+        var def_str = value.defaults;
+        if ((def_str === undefined) || (def_str = "")){
+            def_str = "[]";
+        }
+        var defaults = JSON.parse(value.defaults);
+        dashboard_filters[value.column] = {"type":value.type, defaults:defaults};
     });
     // Dashboard charts
     jQuery.each(settings.chartsSettings, function(key, value){

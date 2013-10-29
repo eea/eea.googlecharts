@@ -2692,8 +2692,14 @@ function populateDefaults(id, type){
     var edit_filter_type = "-1";
     var edit_filter_defaults = [];
     if (type !== "add"){
-        edit_filter_type = jQuery("#" + type + " .googlechart_filteritem_type").attr("value");
-        edit_filter_defaults = JSON.parse(jQuery("#" + type + " .googlechart_filteritem_defaults").attr("value"));
+        if (id !== "tmp_edit_dashboard"){
+            edit_filter_type = jQuery("#" + type + " .googlechart_filteritem_type").attr("value");
+            edit_filter_defaults = JSON.parse(jQuery("#" + type + " .googlechart_filteritem_defaults").attr("value"));
+        }
+        else{
+            edit_filter_type = jQuery("#googlechartid_tmp_edit_dashboard .googlechart_filteritem_type").attr("value");
+            edit_filter_defaults = JSON.parse(jQuery("#googlechartid_tmp_edit_dashboard .googlechart_filteritem_defaults").attr("value"));
+        }
     }
     if (filter_type === "0"){
         defaults_div.append('<div class="googlecharts_defaultsfilter_number"></div>');
@@ -2705,8 +2711,18 @@ function populateDefaults(id, type){
                 jQuery(".googlecharts_defaultsfilter_number_max input").attr("placeholder", defaults[defaults.length-1]);
             }
             else{
-                jQuery(".googlecharts_defaultsfilter_number_min input").attr("value", edit_filter_defaults[0]);
-                jQuery(".googlecharts_defaultsfilter_number_max input").attr("value", edit_filter_defaults[edit_filter_defaults.length-1]);
+                if (edit_filter_defaults[0].length !== 0){
+                    jQuery(".googlecharts_defaultsfilter_number_min input").attr("value", edit_filter_defaults[0]);
+                }
+                else{
+                    jQuery(".googlecharts_defaultsfilter_number_min input").attr("placeholder", defaults[0]);
+                }
+                if (edit_filter_defaults[edit_filter_defaults.length-1].length !== 0){
+                    jQuery(".googlecharts_defaultsfilter_number_max input").attr("value", edit_filter_defaults[edit_filter_defaults.length-1]);
+                }
+                else {
+                    jQuery(".googlecharts_defaultsfilter_number_max input").attr("placeholder", defaults[defaults.length-1]);
+                }
             }
         }
         else {
