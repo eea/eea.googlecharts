@@ -9,6 +9,18 @@ var chartsForPaletteReorder = ["LineChart",
                                 "ImageSparkLine",
                                 "AnnotatedTimeLine"];
 
+function updateHashForCustomFilter(attr_name, attr_values){
+    var hash = window.location.hash.split("_filters=")[0];
+    var query_params = window.location.hash.split("_filters=")[1];
+    if (query_params === undefined){
+        query_params = "{}";
+    }
+    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+    query_params[attr_name] = attr_values;
+    query_params = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));
+    window.location.hash = hash + "_filters=" + query_params;
+}
+
 function addCustomFilter(options){
     var settings = {
         customTitle : '',
@@ -123,6 +135,25 @@ function applySortOnChart(options){
         options.sortFilterChart.setDataTable(tmpDataView);
         options.sortFilterChart.draw();
     }
+
+    var sortBy_name = "__default__";
+    if (sortBy === undefined){
+        sortBy = "__default__";
+    }
+    var shortSortBy = sortBy;
+    var sortBy_ext = "";
+    if (sortBy.substr(sortBy.length - 11) === ' (reversed)'){
+        shortSortBy = sortBy.substr(0, sortBy.length - 11);
+        sortBy_ext = "_reversed";
+    }
+    jQuery.each(available_columns, function(key, value){
+        if (value === shortSortBy){
+            sortBy_name = key + sortBy_ext;
+        }
+    });
+    if (options.updateHash){
+        updateHashForCustomFilter('sortFilter', [sortBy_name]);
+    }
 }
 
 function applyCustomFilters(options){
@@ -141,7 +172,8 @@ function addSortFilter(options){
         filterDataTable : null,
         filterChart : null,
         enableEmptyRows : false,
-        sortFilterValue : '__default__'
+        sortFilterValue : '__default__',
+        updateHash : false
     };
 
     jQuery.extend(settings, options);
@@ -162,7 +194,8 @@ function addSortFilter(options){
         sortFilterChart : sortFilterChart,
         sortFilterDataTable : sortFilterDataTable,
         sortFilterArray : sortFilterArray,
-        enableEmptyRows : settings.enableEmptyRows
+        enableEmptyRows : settings.enableEmptyRows,
+        updateHash : settings.updateHash
     };
 
     var paramsForReadyHandler = {

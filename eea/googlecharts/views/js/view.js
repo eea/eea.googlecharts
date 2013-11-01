@@ -49,6 +49,43 @@ function putImageDivInPosition(div_id, position){
     }
 }
 
+function updateHashForRowFilter(filter, type){
+    if (filter){
+        var columnLabel = filter.getOptions().filterColumnLabel;
+        var columnName = '';
+        var values = [];
+        jQuery.each(available_columns, function(key, value){
+            if (value === columnLabel){
+                columnName = key;
+            }
+        });
+        if (type === "0"){
+            values.push(filter.getState().lowValue);
+            values.push(filter.getState().highValue);
+        }
+        if (type === "1"){
+            values.push(filter.getState().value);
+        }
+        if ((type === "2") || (type === "3")){
+            values = filter.getState().selectedValues;
+        }
+        var hash = window.location.hash.split("_filters=")[0];
+        var query_params = window.location.hash.split("_filters=")[1];
+        if (query_params === undefined){
+            query_params = "{}";
+        }
+        query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+
+        if (query_params.rowFilters === undefined){
+            query_params.rowFilters = {};
+        }
+        query_params.rowFilters[columnName] = values;
+
+        query_params = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));
+        window.location.hash = hash + "_filters=" + query_params;
+    }
+}
+
 function drawChart(value, other_options){
     var other_settings = {
         merged_rows : '',
@@ -59,15 +96,33 @@ function drawChart(value, other_options){
 
     jQuery.extend(other_settings, other_options);
 
+    var query_params = window.location.hash.split("_filters=")[1];
+    if (query_params === undefined){
+        query_params = "{}";
+    }
+    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+
     var chart_id = value[0];
     var chart_json = value[1];
     var chart_columns = value[2];
     var chart_filters = value[3];
+    if (query_params.rowFilters !== undefined){
+        jQuery.each(chart_filters, function(key, value){
+            if (query_params.rowFilters[key] !== undefined){
+                value.defaults = query_params.rowFilters[key];
+            }
+        });
+    }
+
     var chart_width = value[4];
     var chart_height = value[5];
     var chart_filterposition = value[6];
     var chart_options = value[7];
     var chart_sortFilter = value[9];
+    if (query_params.sortFilter !== undefined){
+        chart_sortFilter = query_params.sortFilter[0];
+    }
+
     var chart_hasPNG = (value[10]==='True'?true:false);
     var chart_row_filters = value[11];
     var chart_sortBy = value[12];
@@ -208,7 +263,8 @@ function drawChart(value, other_options){
         columnFilters : chart_columnFilters,
         columnTypes : transformedTable.properties,
         originalTable : other_settings.merged_rows,
-        visibleColumns : columnsFromSettings.columns
+        visibleColumns : columnsFromSettings.columns,
+        updateHash : true
     };
     drawGoogleChart(googlechart_params);
 }
@@ -232,6 +288,13 @@ function drawDashboard(value, other_options){
     };
 
     jQuery.extend(settings, value);
+
+    var query_params = window.location.hash.split("_filters=")[1];
+    if (query_params === undefined){
+        query_params = "{}";
+    }
+    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+
 
     jQuery("#googlechart_export_button").hide();
     jQuery("#googlechart_embed_button").show();
@@ -304,16 +367,26 @@ function drawDashboard(value, other_options){
         jQuery('#googlechart_filters', jQuery('#googlechart_dashboard')).height(settings.filtersBox.height);
     }
 
+    var dashboard_filters = settings.filters;
+    if (query_params.rowFilters !== undefined){
+        jQuery.each(dashboard_filters, function(idx, value){
+            if (query_params.rowFilters[value.column] !== undefined){
+                value.defaults = JSON.stringify(query_params.rowFilters[value.column]);
+            }
+        });
+    }
+
     var googledashboard_params = {
         chartsDashboard : 'googlechart_dashboard',
         chartViewsDiv : 'googlechart_view',
         chartFiltersDiv : 'googlechart_filters',
         chartsSettings : settings.widgets,
-        filters : settings.filters,
+        filters : dashboard_filters,
         rows : other_settings.merged_rows,
         columns : other_settings.available_columns,
         charts : other_settings.googlechart_config_array,
-        dashboardName: value.name
+        dashboardName: value.name,
+        updateHash : true
     };
 
     drawGoogleDashboard(googledashboard_params);
@@ -456,9 +529,15 @@ jQuery(document).ready(function($){
 
     // First tab is a google charts tab
     var api = jQuery("ul.chart-tabs").data('tabs');
+    var hash = document.location.hash;
+    if (hash === ""){
+        hash = jQuery(api.getTabs()[0]).attr("href");
+        document.location.hash = hash;
+    }
+    hash = hash.split("_filters=")[0];
     var index = 0;
     jQuery.each(api.getTabs(), function(idx, tab){
-        if(jQuery(tab).attr('href') == window.location.hash){
+        if(jQuery(tab).attr('href') == hash){
             index = idx;
             return false;
         }

@@ -22,7 +22,8 @@ function drawGoogleChart(options){
         columnFilters : [],
         columnTypes: {},
         originalTable : '',
-        visibleColumns : ''
+        visibleColumns : '',
+        updateHash : false
     };
     jQuery.extend(settings, options);
     jQuery("<div class='googlechart_loading_img'></div>").appendTo("#"+settings.chartViewDiv);
@@ -139,6 +140,9 @@ function drawGoogleChart(options){
             var filter = new google.visualization.ControlWrapper(filterSettings);
 
             google.visualization.events.addListener(filter, 'statechange', function(event){
+                if (settings.updateHash){
+                    updateHashForRowFilter(filter, value.type);
+                }
                 settings.customFilterHandler(settings.customFilterOptions);
             });
 
@@ -220,7 +224,8 @@ function drawGoogleChart(options){
             filterDataTable : settings.chartDataTable,
             filterChart : chart,
             enableEmptyRows : settings.chartOptions.enableEmptyRows,
-            sortFilterValue : settings.sortFilter
+            sortFilterValue : settings.sortFilter,
+            updateHash : settings.updateHash
         };
         if (settings.sortFilter !== '__enabled__'){
             if (settings.sortFilter.substring(settings.sortFilter.length - 9) !== '_reversed'){
@@ -364,7 +369,8 @@ function drawGoogleDashboard(options){
         rows : {},
         columns : {},
         charts : [],
-        dashboardName : ""
+        dashboardName : "",
+        updateHash : false
     };
     jQuery.extend(settings, options);
 
@@ -539,7 +545,8 @@ function drawGoogleDashboard(options){
                 sortFilter : '__disabled__',
                 customFilterHandler : dashboardFilterChanged,
                 customFilterOptions : customFilterOptions,
-                originalTable : settings.rows
+                originalTable : settings.rows,
+                updateHash : settings.updateHash
             };
             var tmp_chart = drawGoogleChart(chart_options);
             jQuery.each(tmp_chart.filters, function(idx, filter){

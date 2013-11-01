@@ -3,6 +3,8 @@ Changelog
 
 8.9-dev - (unreleased)
 ----------------------
+* Feature: WIP: Added filter values via url for charts and dashboards
+  [szabozo0 refs #17066]
 * Feature: Added default values for dashboard filters
   [szabozo0 refs #16926]
 
