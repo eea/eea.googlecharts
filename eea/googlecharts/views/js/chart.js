@@ -38,8 +38,6 @@ function drawGoogleChart(options){
     }
 
     jQuery("#"+settings.chartViewDiv).width(settings.chartWidth).height(settings.chartHeight);
-    $("#"+settings.chartViewDiv).children().addClass("googlechart_hidden_element");
-    jQuery("#"+settings.chartFiltersDiv).addClass("googlechart_hidden_element");
 
     settings.chartJson.options.allowHtml = true;
     settings.chartJson.options.width = settings.chartWidth;
@@ -162,10 +160,7 @@ function drawGoogleChart(options){
         dashboard.bind(filtersArray, chart);
 
         google.visualization.events.addListener(dashboard, 'ready', function(event){
-            if ((defaults_preconfig === undefined) || (defaults_preconfig.length === 0)){
-                jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
-                jQuery(".googlechart_hidden_element").removeClass("googlechart_hidden_element");
-            }
+            jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartReadyEvent();
         });
 
@@ -186,10 +181,7 @@ function drawGoogleChart(options){
     else {
         chart.setDataTable(dataView);
         google.visualization.events.addListener(chart, 'ready', function(event){
-            if ((defaults_preconfig === undefined) || (defaults_preconfig.length === 0)){
-                jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
-                jQuery(".googlechart_hidden_element").removeClass("googlechart_hidden_element");
-            }
+            jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartReadyEvent();
         });
 

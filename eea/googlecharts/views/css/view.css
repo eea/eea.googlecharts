@@ -374,7 +374,3 @@ ul.googlechart_tabs li:first-of-type a:hover {
     background-image: url(../../++resource++eea.jquery.images/ajax-loader.gif);
     display:block !important;
 }
-
-.googlechart_hidden_element{
-    display:none;
-}
