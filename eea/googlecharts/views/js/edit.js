@@ -2649,33 +2649,39 @@ function openEditChart(id){
 function populateDefaults(id, type){
     var defaults_div = jQuery(".googlecharts_filter_defaults").empty();
     var selectedColumnName = jQuery(".googlecharts_filter_columns").attr("value");
-    if (selectedColumnName.indexOf("pre_config_") !== -1){
-        return;
-    }
-
-    var chart_columns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").val();
-    var chart_columns = JSON.parse(chart_columns_str);
-
-    var chart_row_filters_str = jQuery("#googlechartid_"+id+" .googlechart_row_filters").val();
-    var chart_row_filters = {};
-    if (chart_row_filters_str.length > 0){
-        chart_row_filters = JSON.parse(chart_row_filters_str);
-    }
-
-    var columnsFromSettings = getColumnsFromSettings(chart_columns);
-    var options = {
-        originalTable : all_rows,
-        normalColumns : columnsFromSettings.normalColumns,
-        pivotingColumns : columnsFromSettings.pivotColumns,
-        valueColumn : columnsFromSettings.valueColumn,
-        availableColumns : available_columns,
-        filters : chart_row_filters
-    };
-    var transformedTable = transformTable(options);
     var defaults = [];
-    for (i = 0; i < transformedTable.items.length; i++){
-        if (jQuery.inArray(transformedTable.items[i][selectedColumnName], defaults) === -1){
-            defaults.push(transformedTable.items[i][selectedColumnName]);
+    var tableForFields;
+    if (selectedColumnName.indexOf("pre_config_") !== -1){
+        selectedColumnName = selectedColumnName.substr(11);
+        tableForFields = all_rows;
+        jQuery(".googlecharts_filter_defaults").hide();
+    }
+    else {
+        jQuery(".googlecharts_filter_defaults").show();
+        var chart_columns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").val();
+        var chart_columns = JSON.parse(chart_columns_str);
+
+        var chart_row_filters_str = jQuery("#googlechartid_"+id+" .googlechart_row_filters").val();
+        var chart_row_filters = {};
+        if (chart_row_filters_str.length > 0){
+            chart_row_filters = JSON.parse(chart_row_filters_str);
+        }
+
+        var columnsFromSettings = getColumnsFromSettings(chart_columns);
+        var options = {
+            originalTable : all_rows,
+            normalColumns : columnsFromSettings.normalColumns,
+            pivotingColumns : columnsFromSettings.pivotColumns,
+            valueColumn : columnsFromSettings.valueColumn,
+            availableColumns : available_columns,
+            filters : chart_row_filters
+        };
+        var transformedTable = transformTable(options);
+        tableForFields = transformedTable;
+    }
+    for (i = 0; i < tableForFields.items.length; i++){
+        if (jQuery.inArray(tableForFields.items[i][selectedColumnName], defaults) === -1){
+            defaults.push(tableForFields.items[i][selectedColumnName]);
         }
     }
     var isNumber = false;

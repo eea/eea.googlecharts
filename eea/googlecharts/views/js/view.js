@@ -79,13 +79,18 @@ function updateHashForRowFilter(filter, type){
         if (query_params.rowFilters === undefined){
             query_params.rowFilters = {};
         }
-        query_params.rowFilters[columnName] = values;
+        if (values.length > 0){
+            query_params.rowFilters[columnName] = values;
+        }
+        else {
+            delete(query_params.rowFilters[columnName]);
+        }
 
         query_params = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));
         window.location.hash = hash + "_filters=" + query_params;
     }
 }
-
+var isFirstLoad = true;
 function drawChart(value, other_options){
     var other_settings = {
         merged_rows : '',

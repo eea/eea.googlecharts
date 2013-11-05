@@ -38,6 +38,8 @@ function drawGoogleChart(options){
     }
 
     jQuery("#"+settings.chartViewDiv).width(settings.chartWidth).height(settings.chartHeight);
+    $("#"+settings.chartViewDiv).children().addClass("googlechart_hidden_element");
+    jQuery("#"+settings.chartFiltersDiv).addClass("googlechart_hidden_element");
 
     settings.chartJson.options.allowHtml = true;
     settings.chartJson.options.width = settings.chartWidth;
@@ -160,7 +162,10 @@ function drawGoogleChart(options){
         dashboard.bind(filtersArray, chart);
 
         google.visualization.events.addListener(dashboard, 'ready', function(event){
-            jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
+            if ((defaults_preconfig === undefined) || (defaults_preconfig.length === 0)){
+                jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
+                jQuery(".googlechart_hidden_element").removeClass("googlechart_hidden_element");
+            }
             settings.chartReadyEvent();
         });
 
@@ -181,7 +186,10 @@ function drawGoogleChart(options){
     else {
         chart.setDataTable(dataView);
         google.visualization.events.addListener(chart, 'ready', function(event){
-            jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
+            if ((defaults_preconfig === undefined) || (defaults_preconfig.length === 0)){
+                jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
+                jQuery(".googlechart_hidden_element").removeClass("googlechart_hidden_element");
+            }
             settings.chartReadyEvent();
         });
 
@@ -210,7 +218,7 @@ function drawGoogleChart(options){
             if (key.indexOf('pre_config_') === 0){
                 var pre_config_option = {
                     filterTitle : key.substr(11),
-                    filterType : value
+                    filterType : value.type
                 };
                 pre_config_options.filters.push(pre_config_option);
             }
