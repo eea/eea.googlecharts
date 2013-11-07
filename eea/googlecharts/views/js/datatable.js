@@ -281,7 +281,7 @@ function applyFormattersOnDataTable(options){
             if (formatters.hasOwnProperty("patternformatter")){
                 formatter = formatters.patternformatter;
                 if (formatter.enabled){
-                    var patternformatter = new google.visualization.PatternFormat(formatter.pattern);
+                    var patternformatter = new google.visualization.PatternFormat(decodeStr(formatter.pattern));
                     patternformatter.format(settings.datatable, [idx]);
                 }
             }
