@@ -1116,7 +1116,7 @@ function loadFormatters(colFullName){
 }
 function moveMenu(e){
     jQuery(".slick-header-menu").appendTo(".googlechart-dialog").offset({ top: e.pageY, left: e.pageX});
-    jQuery(".slick-header-menu")
+    jQuery(".slick-header-menu");
 }
 
 function enableGridFormatters(){

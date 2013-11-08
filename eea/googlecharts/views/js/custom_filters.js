@@ -76,14 +76,10 @@ function addCustomFilter(options){
 
     if (settings.customPrefix.substr(0,13) === "columnfilter_"){
         defaults = [];
-        jQuery.each(settings.defaultValues, function(idx, def_value){
-            jQuery.each(available_columns, function(key, value){
-                if (def_value === value){
-                    defaults.push(key);
-                }
-            });
+        jQuery.each(settings.defaultValues, function(idx, value){
+            defaults.push(value);
         });
-        updateHashForColumnFilter(settings.customPrefix.substr(13), defaults);
+        updateHashForColumnFilter("columnfilter_"+settings.customPrefix.substr(13), defaults);
     }
 
     var filterData = google.visualization.arrayToDataTable(settings.customValues);
@@ -484,6 +480,28 @@ function applyColumnFilters(options){
     drawChart(config, other_settings);
 }
 
+var defaults_columnfilter = [];
+
+var isFirstColumnFilters = true;
+
+function updateColumnFiltersFromHash(options){
+    if (defaults_columnfilter.length > 0){
+        var default_columnfilter = defaults_columnfilter.pop();
+        if (default_columnfilter.title !== options.customTitle){
+            defaults_columnfilter.push(default_columnfilter);
+            return;
+        }
+        var columnLabel = default_columnfilter.title.replace(/[^A-Za-z0-9]/g, '_');
+        jQuery.each(options.columnFiltersObj, function(idx, filter){
+            var filterLabel = filter.getOption("filterColumnLabel").replace(/[^A-Za-z0-9]/g, '_');
+            if (filterLabel === columnLabel){
+                filter.setState({"selectedValues":default_columnfilter.defaults});
+            }
+        });
+        applyColumnFilters(options);
+    }
+}
+
 function addColumnFilters(options){
     var settings = {
         dashboardDiv : '',
@@ -497,16 +515,40 @@ function addColumnFilters(options){
     jQuery.extend(settings, options);
     var columnFriendlyNames = settings.columns;
     columnFiltersColumnsWithNames = [];
-    var paramsForHandler = {
-        dashboardDiv : settings.dashboardDiv,
-        chartViewDiv : settings.chartViewDiv,
-        filtersDiv : settings.filtersDiv,
-        columnFiltersObj : settings.columnFiltersObj,
-        columnFriendlyNames : columnFriendlyNames,
-        columnTypes: settings.columnTypes
-    };
+
+    if (isFirstColumnFilters){
+        isFirstColumnFilters = false;
+        var hash = window.location.hash.split("_filters=")[0];
+        var query_params = window.location.hash.split("_filters=")[1];
+        if (query_params === undefined){
+            query_params = "{}";
+        }
+
+        query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+        if (query_params.columnFilters === undefined){
+            query_params.columnFilters = {};
+        }
+        jQuery.each(query_params.columnFilters, function(key, defaults){
+            if (key.substr(0,13) === 'columnfilter_'){
+                var default_columnfilter = {};
+                default_columnfilter.title = key.substr(13);
+                default_columnfilter.defaults = defaults;
+                defaults_columnfilter.push(default_columnfilter);
+            }
+        });
+    }
+
 
     jQuery.each(settings.columnFilters.reverse(), function(idx, columnFilter){
+        var paramsForHandler = {
+            dashboardDiv : settings.dashboardDiv,
+            chartViewDiv : settings.chartViewDiv,
+            filtersDiv : settings.filtersDiv,
+            columnFiltersObj : settings.columnFiltersObj,
+            columnFriendlyNames : columnFriendlyNames,
+            columnTypes: settings.columnTypes,
+            customTitle: columnFilter.title.replace(/[^A-Za-z0-9]/g, '_')
+        };
         var values = [[columnFilter.title]];
         var defaultValues = [];
         jQuery.each(columnFilter.settings.defaults, function(idx, defaultcol){
@@ -517,7 +559,7 @@ function addColumnFilters(options){
         });
         var options2 = {
             customTitle : columnFilter.title,
-            customPrefix : 'columnfilter_' + columnFilter.title,
+            customPrefix : 'columnfilter_' + columnFilter.title.replace(/[^A-Za-z0-9]/g, '_'),
             filtersDiv: settings.filtersDiv,
             customValues : values,
             customAllowMultiple : (columnFilter.type === '1' ? true : false),
@@ -525,6 +567,7 @@ function addColumnFilters(options){
             defaultValues : defaultValues,
             allowNone : columnFilter.allowempty,
             paramsForHandler : paramsForHandler,
+            customReadyHandler : updateColumnFiltersFromHash,
             hideFilter : columnFilter.hideFilter
         };
         settings.columnFiltersObj.push(addCustomFilter(options2));
@@ -674,7 +717,7 @@ function addPreConfigFilters(options){
         }
         jQuery.each(query_params.columnFilters, function(key, defaults){
             if (key.substr(0,11) === 'pre_config_'){
-                default_preconfig = {};
+                var default_preconfig = {};
                 default_preconfig.title = key.substr(11);
                 default_preconfig.defaults = defaults;
                 defaults_preconfig.push(default_preconfig);
