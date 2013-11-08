@@ -2621,6 +2621,7 @@ function openEditChart(id){
                     editorDialog = jQuery(this);
                 },
                 close:function(){
+                    jQuery(".slick-header-menu").remove();
                     charteditor_css.remove();
                 },
                 resize:function(){

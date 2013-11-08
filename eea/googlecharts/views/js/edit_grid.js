@@ -244,6 +244,7 @@ function filterApplyFlags() {
 }
 
 function enableGridFilters(){
+    jQuery(".slick-header-menu").remove();
     filter_grid_filters = [];
     jQuery("body").delegate("#slick-menu-cancel","click", function(){
         jQuery(".slick-header-menu").remove();
