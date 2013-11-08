@@ -62,24 +62,28 @@ function addCustomFilter(options){
         paramsForHandler : null,
         filterType : 'CategoryFilter',
         filterAllowTyping : false,
-        hideFilter : false
+        hideFilter : false,
+        updateHash : false
     };
     jQuery.extend(settings, options);
-    var defaults = [];
-    if (settings.customPrefix.substr(0,18) === "pre_config_filter_"){
-        defaults = [];
-        jQuery.each(settings.defaultValues, function(idx, value){
-            defaults.push(value[0]);
-        });
-        updateHashForColumnFilter("pre_config_"+settings.customPrefix.substr(18), defaults);
-    }
 
-    if (settings.customPrefix.substr(0,13) === "columnfilter_"){
-        defaults = [];
-        jQuery.each(settings.defaultValues, function(idx, value){
-            defaults.push(value);
-        });
-        updateHashForColumnFilter("columnfilter_"+settings.customPrefix.substr(13), defaults);
+    if (settings.updateHash){
+        var defaults = [];
+        if (settings.customPrefix.substr(0,18) === "pre_config_filter_"){
+            defaults = [];
+            jQuery.each(settings.defaultValues, function(idx, value){
+                defaults.push(value[0]);
+            });
+            updateHashForColumnFilter("pre_config_"+settings.customPrefix.substr(18), defaults);
+        }
+
+        if (settings.customPrefix.substr(0,13) === "columnfilter_"){
+            defaults = [];
+            jQuery.each(settings.defaultValues, function(idx, value){
+                defaults.push(value);
+            });
+            updateHashForColumnFilter("columnfilter_"+settings.customPrefix.substr(13), defaults);
+        }
     }
 
     var filterData = google.visualization.arrayToDataTable(settings.customValues);
@@ -246,7 +250,8 @@ function addSortFilter(options){
         sortFilterChart : sortFilterChart,
         sortFilterDataTable : sortFilterDataTable,
         sortFilterArray : sortFilterArray,
-        enableEmptyRows : settings.enableEmptyRows
+        enableEmptyRows : settings.enableEmptyRows,
+        updateHash : settings.updateHash
     };
 
     var options2 = {
@@ -257,7 +262,8 @@ function addSortFilter(options){
         customAllowMultiple : false,
         customHandler : applyCustomFilters,
         paramsForHandler : paramsForHandler,
-        enableEmptyRows : settings.enableEmptyRows
+        enableEmptyRows : settings.enableEmptyRows,
+        updateHash : settings.updateHash
     };
 
     if (settings.sortFilterValue !== '__default__'){
@@ -508,9 +514,10 @@ function addColumnFilters(options){
         chartViewDiv : '',
         filtersDiv : '',
         columnFilters : [],
-        columns: {},
-        columnTypes: {},
-        columnFiltersObj: []
+        columns : {},
+        columnTypes : {},
+        columnFiltersObj : [],
+        updateHash : false
     };
     jQuery.extend(settings, options);
     var columnFriendlyNames = settings.columns;
@@ -546,8 +553,9 @@ function addColumnFilters(options){
             filtersDiv : settings.filtersDiv,
             columnFiltersObj : settings.columnFiltersObj,
             columnFriendlyNames : columnFriendlyNames,
-            columnTypes: settings.columnTypes,
-            customTitle: columnFilter.title.replace(/[^A-Za-z0-9]/g, '_')
+            columnTypes : settings.columnTypes,
+            customTitle : columnFilter.title.replace(/[^A-Za-z0-9]/g, '_'),
+            updateHash : settings.updateHash
         };
         var values = [[columnFilter.title]];
         var defaultValues = [];
@@ -568,7 +576,8 @@ function addColumnFilters(options){
             allowNone : columnFilter.allowempty,
             paramsForHandler : paramsForHandler,
             customReadyHandler : updateColumnFiltersFromHash,
-            hideFilter : columnFilter.hideFilter
+            hideFilter : columnFilter.hideFilter,
+            updateHash : settings.updateHash
         };
         settings.columnFiltersObj.push(addCustomFilter(options2));
     });
@@ -695,7 +704,8 @@ function addPreConfigFilters(options){
         transformedTable : '',
         filtersDiv : '',
         dashboardDiv : '',
-        filters : []
+        filters : [],
+        updateHash : false
     };
     jQuery.extend(settings, options);
     var preConfigFiltersObj = [];
@@ -819,7 +829,8 @@ function addPreConfigFilters(options){
             allCustomHelperFilters : allCustomHelperFiltersTitle,
             thisCustomHelperFilters : thisCustomHelperFilters,
             availableColumns : settings.availableColumns,
-            customTitle : customTitle
+            customTitle : customTitle,
+            updateHash : settings.updateHash
         };
 
         var options2 = {
@@ -834,7 +845,8 @@ function addPreConfigFilters(options){
             defaultValues : mainDefaults,
             allowNone : false,
             customReadyHandler : updatePreConfigFiltersFromHash,
-            preConfigFiltersObj : preConfigFiltersObj
+            preConfigFiltersObj : preConfigFiltersObj,
+            updateHash : settings.updateHash
         };
         preConfigFiltersObj.push(addCustomFilter(options2));
     });

@@ -204,7 +204,8 @@ function drawGoogleChart(options){
             dashboardDiv : settings.chartDashboard,
             chartViewDiv :  settings.chartViewDiv,
             columnFiltersObj : columnFiltersObj,
-            filters : []
+            filters : [],
+            updateHash : settings.updateHash
         };
         jQuery.each(settings.chartFilters, function(key, value){
             if (key.indexOf('pre_config_') === 0){
@@ -319,7 +320,8 @@ function drawGoogleChart(options){
             columnFilters : settings.columnFilters,
             columns : settings.availableColumns,
             columnTypes : settings.columnTypes,
-            columnFiltersObj : columnFiltersObj
+            columnFiltersObj : columnFiltersObj,
+            updateHash : settings.updateHash
         };
         addColumnFilters(options3);
     }
