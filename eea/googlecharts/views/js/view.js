@@ -402,15 +402,18 @@ function showEmbed(){
     var iframeWidth = chartObj.width();
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
     var iframeSrc;
+    var query_params = window.location.hash.split("_filters=")[1];
     if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
         iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
                     "&chartWidth=" + chartObj.attr('chart_width') +
                     "&chartHeight=" + chartObj.attr('chart_height') +
-                    "&customStyle=.googlechart_view{margin-left:0px%3B}";
+                    "&customStyle=.googlechart_view{margin-left:0px%3B}" +
+                    "#_filters=" + query_params;
     }
     else{
         iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+ 
-                    "&customStyle=.googlechart_view{margin-left:0px%3B}";
+                    "&customStyle=.googlechart_view{margin-left:0px%3B}" +
+                    "#_filters=" + query_params;
     }
     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
     var hasPNG = chartObj.attr('chart_hasPNG');
