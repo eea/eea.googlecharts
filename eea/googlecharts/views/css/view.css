@@ -349,25 +349,41 @@ ul.googlechart_tabs li:first-of-type a:hover {
     display: none;
 }
 
-#daviz-view ul.google-visualization-controls-categoryfilter-selected {
+#daviz-view ul.google-visualization-controls-categoryfilter-selected,
+.googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected {
     list-style-type: none;
     margin: 0;
     max-width: 100% ! important;
 }
 
-#daviz-view ul.google-visualization-controls-categoryfilter-selected li {
+#daviz-view ul.google-visualization-controls-categoryfilter-selected li,
+.googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li {
     display: block;
     white-space: normal;
+    background: transparent !important;
+    border:none !important;
 }
 
-#daviz-view ul.google-visualization-controls-categoryfilter-selected li div {
+#daviz-view ul.google-visualization-controls-categoryfilter-selected li div
+.googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li div {
+
     display: inline;
 }
 
-#daviz-view ul.google-visualization-controls-categoryfilter-selected li div.goog-link-button-disabled {
+#daviz-view ul.google-visualization-controls-categoryfilter-selected li div.goog-link-button-disabled
+.googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li div.goog-link-button-disabled {
     display: none;
 }
 
+#daviz-view ul.google-visualization-controls-categoryfilter-selected li div.goog-control,
+.googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li div.goog-control {
+    padding: 0.4em !important;
+    background-color: #ececec !important;
+}
+
+.googlechart_dashboard{
+    font:80% Arial, FreeSans, sans-serif;
+}
 .googlechart_loading_img {
     width:100px;
     height:100px;
