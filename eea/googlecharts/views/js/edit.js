@@ -1552,7 +1552,7 @@ function updateWithStatus(){
         }
         if (value.status === 2){
             pivots.push(value.nr);
-            pivotsHtml += "<div class='pivotedColumn'>"+value.name+"<a style='float:right' href='#' onclick='removePivot("+value.nr+")'><span title='Delete pivot' class='ui-icon ui-icon-trash'>x</span></a></div><div style='clear:both'></div>";
+            pivotsHtml += "<div class='pivotedColumn'>"+value.name+"<a style='float:right' href='#' onclick='removePivot(event, "+value.nr+")'><span title='Delete pivot' class='ui-icon ui-icon-trash'>x</span></a></div><div style='clear:both'></div>";
             jQuery(originalColumn).attr("value",2);
         }
         if (value.status === 3){
@@ -1612,7 +1612,8 @@ function updateWithStatus(){
     });
 }
 
-function removePivot(nr){
+function removePivot(event, nr){
+    event.preventDefault();
     var hasPivot = false;
     var valueColumn = -1;
     jQuery.each(columnsForPivot,function(key, value){
