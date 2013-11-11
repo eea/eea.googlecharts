@@ -27,6 +27,9 @@ function updateHashForSortFilter(attr_name, attr_values){
 }
 
 function updateHashForColumnFilter(attr_name, attr_defaults){
+    if (attr_name.substr(0,27) === "columnfilter_custom_helper_"){
+        return;
+    }
     var hash = window.location.hash.split("_filters=")[0];
     var query_params = window.location.hash.split("_filters=")[1];
     if (query_params === undefined){
