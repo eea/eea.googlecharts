@@ -16,6 +16,12 @@ function drawDashboardEmbed(options){
 
     jQuery.extend(settings, options);
 
+    var query_params = window.location.hash.split("_filters=")[1];
+    if (query_params === undefined){
+        query_params = "{}";
+    }
+    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+
     jQuery.each(settings.googlechart_config_array, function(key, config){
         config[1].options.title = config[1].options.title + " — " + settings.main_title;
     });
@@ -93,6 +99,13 @@ function drawDashboardEmbed(options){
         jQuery('#googlechart_filters_' + settings.vhash, jQuery('#googlechart_dashboard_' + settings.vhash)).height(settings.dashboard_config.filtersBox.height);
     }
 
+    if (query_params.rowFilters !== undefined){
+        jQuery.each(settings.dashboard_config.filters, function(idx, value){
+            if (query_params.rowFilters[value.column] !== undefined){
+                value.defaults = JSON.stringify(query_params.rowFilters[value.column]);
+            }
+        });
+    }
     var googledashboard_params = {
         chartsDashboard : 'googlechart_dashboard_'+settings.vhash,
         chartViewsDiv : 'googlechart_view_'+settings.vhash,
