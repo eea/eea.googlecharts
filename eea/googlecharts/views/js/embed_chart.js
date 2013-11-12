@@ -146,9 +146,10 @@ function drawChart(value, other_options){
     var tableForChart = prepareForChart(options);
 
     embedchart_json.options.title = other_settings.name + " — " + other_settings.main_title;
+    //TODO: remove after fixing multiselect filter layout #17373
     jQuery.each(embedchart_filters,function(key,value){
-        if ((value === "3") && (other_settings.isInline !== 'True')){
-            embedchart_filters[key] = "2";
+        if ((value.type === "3") && (other_settings.isInline !== 'True')){
+            embedchart_filters[key].type = "2";
         }
     });
 
