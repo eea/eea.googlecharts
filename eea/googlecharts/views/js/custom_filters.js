@@ -197,7 +197,7 @@ function applySortOnChart(options){
         shortSortBy = sortBy.substr(0, sortBy.length - 11);
         sortBy_ext = "_reversed";
     }
-    jQuery.each(available_columns, function(key, value){
+    jQuery.each(options.availableColumns, function(key, value){
         if (value === shortSortBy){
             sortBy_name = key + sortBy_ext;
         }
@@ -226,7 +226,6 @@ function addSortFilter(options){
         sortFilterValue : '__default__',
         updateHash : false
     };
-
     jQuery.extend(settings, options);
 
     var sortFilterChart = settings.filterChart;
@@ -246,15 +245,8 @@ function addSortFilter(options){
         sortFilterDataTable : sortFilterDataTable,
         sortFilterArray : sortFilterArray,
         enableEmptyRows : settings.enableEmptyRows,
-        updateHash : settings.updateHash
-    };
-
-    var paramsForReadyHandler = {
-        sortFilterChart : sortFilterChart,
-        sortFilterDataTable : sortFilterDataTable,
-        sortFilterArray : sortFilterArray,
-        enableEmptyRows : settings.enableEmptyRows,
-        updateHash : settings.updateHash
+        updateHash : settings.updateHash,
+        availableColumns : settings.availableColumns
     };
 
     var options2 = {

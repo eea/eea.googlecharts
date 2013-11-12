@@ -226,7 +226,8 @@ function drawGoogleChart(options){
             filterChart : chart,
             enableEmptyRows : settings.chartOptions.enableEmptyRows,
             sortFilterValue : settings.sortFilter,
-            updateHash : settings.updateHash
+            updateHash : settings.updateHash,
+            availableColumns : settings.availableColumns
         };
         if (settings.sortFilter !== '__enabled__'){
             if (settings.sortFilter.substring(settings.sortFilter.length - 9) !== '_reversed'){
