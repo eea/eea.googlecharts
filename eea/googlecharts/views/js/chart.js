@@ -95,7 +95,15 @@ function drawGoogleChart(options){
                 return;
             }
             var filter_div_id = settings.chartFiltersDiv + "_" + key;
-            var filter_div = "<div id='" + filter_div_id + "'></div>";
+
+            var filter_div;
+            if (!jQuery("#"+settings.chartFiltersDiv).hasClass("googledashboard-hidden-helper-filters")){
+                filter_div = "<div class='googlechart_filter' id='" + filter_div_id + "'></div>";
+            }
+            else{
+                filter_div = "<div id='" + filter_div_id + "'></div>";
+            }
+
             jQuery(filter_div).appendTo("#" + settings.chartFiltersDiv);
 
             var filterSettings = {};

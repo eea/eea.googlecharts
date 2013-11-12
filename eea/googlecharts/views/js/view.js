@@ -398,7 +398,8 @@ function drawDashboard(value, other_options){
 }
 
 function showEmbed(){
-    jQuery(".googlechart_embed_ignore_filters").remove();
+    jQuery(".googlechart_ignore_filters").remove();
+    jQuery(".googlechart_hide_filters").remove();
     var chartObj = jQuery("#googlechart_dashboard");
     var iframeWidth = chartObj.width();
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
@@ -418,9 +419,15 @@ function showEmbed(){
     }
     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
     var hasPNG = chartObj.attr('chart_hasPNG');
-    var embedHtml = '<div>' +
+    var embedHtml = '<div class="googlechart_embed_form">' +
                         '<h3>Interactive chart: </h3>'+
-                        'Ignore configured filters <input class="googlechart_embed_ignore_filters" type="checkbox"/>'+
+                        '<div class="googlechart_ignore_filters">'+
+                            'Ignore configured filters <input class="googlechart_embed_ignore_filters" type="checkbox"/><br/>'+
+                        '</div>'+
+                        '<div class="googlechart_hide_filters">' +
+                            'Hide the following filters: <br/>' +
+                            '<table><tr><td>All</td><td><input class="googlechart_hide_filter" type="checkbox" filter_id="all"/></td></tr></table>'+
+                        '</div>'+
                         '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>';
     if (hasPNG === 'true'){
         var chart_id = chartObj.attr("chart_id");
@@ -438,15 +445,48 @@ function showEmbed(){
         title: "Embed code",
         modal:true,
         open: function(evt, ui){
+                if (jQuery(".googlechart_filter").length === 0){
+                    jQuery(".googlechart_hide_filters").hide();
+                    jQuery(".googlechart_ignore_filters").hide();
+                }
+                else{
+                    jQuery.each(jQuery(".googlechart_filter"), function(idx, filter){
+                        var filter_id = jQuery(filter).attr("id");
+                        var filter_label = jQuery(filter).find(".google-visualization-controls-label").text();
+                        jQuery("<tr><td>"+filter_label+"</td><td><input class='googlechart_hide_filter' type='checkbox' filter_id='"+filter_id+"'/></td></tr>").appendTo(".googlechart_hide_filters table");
+                    });
+                }
                 jQuery('.iframeCode', this)[0].focus();
                 jQuery('.iframeCode', this)[0].select();
                 jQuery(this).delegate('textarea', 'click', function(){
                     this.focus();
                     this.select();
                 });
-                jQuery(this).delegate(".googlechart_embed_ignore_filters", "change", function(){
-                    var iframeSrc;
+                jQuery(this).delegate(".googlechart_embed_form input", "change", function(){
+                    if (jQuery(this).attr("filter_id") === 'all'){
+                        jQuery(".googlechart_hide_filter").prop("checked", jQuery(this).prop("checked"));
+                    }
+
+                    var hide_filters = [];
+                    jQuery.each(jQuery(".googlechart_hide_filter"), function(idx, filter){
+                        if (jQuery(filter).attr("filter_id") !== 'all'){
+                            if (jQuery(filter).prop("checked")){
+                                hide_filters.push(jQuery(filter).attr("filter_id"));
+                            }
+                        }
+                    });
+                    if (hide_filters.length !== jQuery(".googlechart_hide_filter").length - 1){
+                        jQuery("input.googlechart_hide_filter[filter_id='all']").prop("checked", false);
+                    }
+                    else {
+                        jQuery("input.googlechart_hide_filter[filter_id='all']").prop("checked", true);
+                    }
                     var query_params = window.location.hash.split("_filters=")[1];
+                    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+                    query_params.hideFilters = hide_filters;
+                    query_params = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));
+
+                    var iframeSrc;
                     if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
                         iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
                             "&chartWidth=" + chartObj.attr('chart_width') +
@@ -581,4 +621,5 @@ jQuery(document).ready(function($){
         index: index
     });
 
+    jQuery(window).trigger("hashchange");
 });

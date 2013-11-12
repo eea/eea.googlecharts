@@ -101,7 +101,7 @@ function addCustomFilter(options){
         filterFilterDiv = "<div id='" + filterFilterDivId + "' style='display:none;'></div>";
     }
     else{
-        filterFilterDiv = "<div id='" + filterFilterDivId + "'></div>";
+        filterFilterDiv = "<div class='googlechart_filter' id='" + filterFilterDivId + "'></div>";
     }
     jQuery(filterFilterDiv).prependTo("#" + settings.filtersDiv);
 

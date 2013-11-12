@@ -390,3 +390,8 @@ ul.googlechart_tabs li:first-of-type a:hover {
     background-image: url(../../++resource++eea.jquery.images/ajax-loader.gif);
     display:block !important;
 }
+
+.goog-menu-vertical {
+    max-height: 80% !important;
+    overflow: auto !important;
+}
