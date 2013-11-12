@@ -398,6 +398,7 @@ function drawDashboard(value, other_options){
 }
 
 function showEmbed(){
+    jQuery(".googlechart_embed_ignore_filters").remove();
     var chartObj = jQuery("#googlechart_dashboard");
     var iframeWidth = chartObj.width();
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
@@ -419,6 +420,7 @@ function showEmbed(){
     var hasPNG = chartObj.attr('chart_hasPNG');
     var embedHtml = '<div>' +
                         '<h3>Interactive chart: </h3>'+
+                        'Ignore configured filters <input class="googlechart_embed_ignore_filters" type="checkbox"/>'+
                         '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>';
     if (hasPNG === 'true'){
         var chart_id = chartObj.attr("chart_id");
@@ -436,13 +438,33 @@ function showEmbed(){
         title: "Embed code",
         modal:true,
         open: function(evt, ui){
-            jQuery('.iframeCode', this)[0].focus();
-            jQuery('.iframeCode', this)[0].select();
-            jQuery(this).delegate('textarea', 'click', function(){
-                this.focus();
-                this.select();
-            });
-        }
+                jQuery('.iframeCode', this)[0].focus();
+                jQuery('.iframeCode', this)[0].select();
+                jQuery(this).delegate('textarea', 'click', function(){
+                    this.focus();
+                    this.select();
+                });
+                jQuery(this).delegate(".googlechart_embed_ignore_filters", "change", function(){
+                    var iframeSrc;
+                    var query_params = window.location.hash.split("_filters=")[1];
+                    if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
+                        iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
+                            "&chartWidth=" + chartObj.attr('chart_width') +
+                            "&chartHeight=" + chartObj.attr('chart_height') +
+                            "&customStyle=.googlechart_view{margin-left:0px%3B}";
+                    }
+                    else{
+                        iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+ 
+                            "&customStyle=.googlechart_view{margin-left:0px%3B}";
+                    }
+                    if (jQuery(".googlechart_embed_ignore_filters").attr("checked") !== 'checked'){
+                        iframeSrc += "#_filters=" + query_params;
+                    }
+                    var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
+                    jQuery(".iframeCode").text(iframeCode);
+
+                });
+            }
         }
     );
 }
