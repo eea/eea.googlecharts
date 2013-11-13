@@ -405,6 +405,9 @@ function showEmbed(){
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
     var iframeSrc;
     var query_params = window.location.hash.split("_filters=")[1];
+    if (query_params === undefined){
+       query_params = "{}";
+    }
     if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
         iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
                     "&chartWidth=" + chartObj.attr('chart_width') +
