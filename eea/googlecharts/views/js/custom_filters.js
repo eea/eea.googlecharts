@@ -101,7 +101,24 @@ function addCustomFilter(options){
         filterFilterDiv = "<div id='" + filterFilterDivId + "' style='display:none;'></div>";
     }
     else{
-        filterFilterDiv = "<div class='googlechart_filter' id='" + filterFilterDivId + "'></div>";
+        var hideFilter = false;
+        var query_params = window.location.hash.split("_filters=")[1];
+        if (query_params === undefined){
+            query_params = "{}";
+        }
+        query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+        if (query_params.hideFilters !== undefined){
+            if (jQuery.inArray(('googlechart_filters_' + settings.customPrefix+"_custom_filter"), query_params.hideFilters) !== -1){
+                hideFilter = true;
+            }
+        }
+        if (hideFilter){
+            filterFilterDiv = "<div class='googlechart_filter' id='" + filterFilterDivId + "' style='display:none'></div>";
+        }
+        else {
+            filterFilterDiv = "<div class='googlechart_filter' id='" + filterFilterDivId + "'></div>";
+        }
+
     }
     jQuery(filterFilterDiv).prependTo("#" + settings.filtersDiv);
 

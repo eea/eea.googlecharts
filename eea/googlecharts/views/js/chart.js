@@ -98,7 +98,23 @@ function drawGoogleChart(options){
 
             var filter_div;
             if (!jQuery("#"+settings.chartFiltersDiv).hasClass("googledashboard-hidden-helper-filters")){
-                filter_div = "<div class='googlechart_filter' id='" + filter_div_id + "'></div>";
+                var hideFilter = false;
+                var query_params = window.location.hash.split("_filters=")[1];
+                if (query_params === undefined){
+                    query_params = "{}";
+                }
+                query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+                if (query_params.hideFilters !== undefined){
+                    if (jQuery.inArray(('googlechart_filters_' + key), query_params.hideFilters) !== -1){
+                        hideFilter = true;
+                    }
+                }
+                if (hideFilter){
+                    filter_div = "<div class='googlechart_filter' id='" + filter_div_id + "' style='display:none'></div>";
+                }
+                else {
+                    filter_div = "<div class='googlechart_filter' id='" + filter_div_id + "'></div>";
+                }
             }
             else{
                 filter_div = "<div id='" + filter_div_id + "'></div>";

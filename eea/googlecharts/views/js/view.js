@@ -482,6 +482,9 @@ function showEmbed(){
                         jQuery("input.googlechart_hide_filter[filter_id='all']").prop("checked", true);
                     }
                     var query_params = window.location.hash.split("_filters=")[1];
+                    if (query_params === undefined){
+                        query_params = "{}";
+                    }
                     query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
                     query_params.hideFilters = hide_filters;
                     query_params = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));
