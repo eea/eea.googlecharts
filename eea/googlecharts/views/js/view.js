@@ -425,11 +425,11 @@ function showEmbed(){
     var embedHtml = '<div class="googlechart_embed_form">' +
                         '<h3>Interactive chart: </h3>'+
                         '<div class="googlechart_ignore_filters">'+
-                            'Ignore configured filters <input class="googlechart_embed_ignore_filters" type="checkbox"/><br/>'+
+                            'Remember my filter choices <input class="googlechart_embed_ignore_filters" type="checkbox" checked="checked"/><br/>'+
                         '</div>'+
                         '<div class="googlechart_hide_filters">' +
-                            'Hide the following filters: <br/>' +
-                            '<table><tr><td>All</td><td><input class="googlechart_hide_filter" type="checkbox" filter_id="all"/></td></tr></table>'+
+                            'Include the following filters: <br/>' +
+                            '<table><tr><td style="width:200px">All</td><td><input class="googlechart_hide_filter" type="checkbox" filter_id="all" checked="checked"/></td></tr></table>'+
                         '</div>'+
                         '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>';
     if (hasPNG === 'true'){
@@ -456,7 +456,7 @@ function showEmbed(){
                     jQuery.each(jQuery(".googlechart_filter"), function(idx, filter){
                         var filter_id = jQuery(filter).attr("id");
                         var filter_label = jQuery(filter).find(".google-visualization-controls-label").text();
-                        jQuery("<tr><td>"+filter_label+"</td><td><input class='googlechart_hide_filter' type='checkbox' filter_id='"+filter_id+"'/></td></tr>").appendTo(".googlechart_hide_filters table");
+                        jQuery("<tr><td>"+filter_label+"</td><td><input class='googlechart_hide_filter' type='checkbox' checked='checked' filter_id='"+filter_id+"'/></td></tr>").appendTo(".googlechart_hide_filters table");
                     });
                 }
                 jQuery('.iframeCode', this)[0].focus();
@@ -473,16 +473,16 @@ function showEmbed(){
                     var hide_filters = [];
                     jQuery.each(jQuery(".googlechart_hide_filter"), function(idx, filter){
                         if (jQuery(filter).attr("filter_id") !== 'all'){
-                            if (jQuery(filter).prop("checked")){
+                            if (!jQuery(filter).prop("checked")){
                                 hide_filters.push(jQuery(filter).attr("filter_id"));
                             }
                         }
                     });
                     if (hide_filters.length !== jQuery(".googlechart_hide_filter").length - 1){
-                        jQuery("input.googlechart_hide_filter[filter_id='all']").prop("checked", false);
+                        jQuery("input.googlechart_hide_filter[filter_id='all']").prop("checked", true);
                     }
                     else {
-                        jQuery("input.googlechart_hide_filter[filter_id='all']").prop("checked", true);
+                        jQuery("input.googlechart_hide_filter[filter_id='all']").prop("checked", false);
                     }
                     var query_params = window.location.hash.split("_filters=")[1];
                     if (query_params === undefined){
@@ -503,7 +503,7 @@ function showEmbed(){
                         iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+ 
                             "&customStyle=.googlechart_view{margin-left:0px%3B}";
                     }
-                    if (jQuery(".googlechart_embed_ignore_filters").attr("checked") !== 'checked'){
+                    if (jQuery(".googlechart_embed_ignore_filters").attr("checked") === 'checked'){
                         iframeSrc += "#_filters=" + query_params;
                     }
                     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";

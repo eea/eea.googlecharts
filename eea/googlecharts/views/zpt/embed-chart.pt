@@ -80,7 +80,10 @@
                     }
                 });
             }
+            if (query_params.sortFilter !== undefined){
+                sortFilter_$vhash = query_params.sortFilter[0];
 
+            }
             var googlechart_config_array_$vhash = [];
             var settings_$vhash = [];
             var other_options_$vhash = {};
