@@ -166,18 +166,11 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .googlechart_filters label {
     display: block;
     font-weight: normal;
-    color: white;
+    color: black;
     padding: 5px 10px;
     font-size: 14px;
     line-height: 1.6;
-    text-shadow: 1px 1px 1px #555;
-    background-color: #777C1F;
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#b1c748), to(#777c1f));
-    background-image: -webkit-linear-gradient(center top , #b1c748, #777c1f);
-    background-image: -moz-linear-gradient(center top , #b1c748, #777c1f);
-    background-image: -ms-linear-gradient(center top , #b1c748, #777c1f);
-    background-image: -o-linear-gradient(center top , #b1c748, #777c1f);
-    box-shadow: 0px 2px 2px #888;
+    background-color: #E2E2E2;
     max-height: 25px;
     overflow: hidden;
     margin-bottom: 1em;
@@ -360,8 +353,9 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li {
     display: block;
     white-space: normal;
-    background: transparent !important;
+/*    background: transparent !important;*/
     border:none !important;
+    background-color: #ececec !important;
 }
 
 #daviz-view ul.google-visualization-controls-categoryfilter-selected li div
