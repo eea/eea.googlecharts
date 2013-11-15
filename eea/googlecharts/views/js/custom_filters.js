@@ -9,13 +9,10 @@ var chartsForPaletteReorder = ["LineChart",
                                 "ImageSparkLine",
                                 "AnnotatedTimeLine"];
 
-function updateHashForSortFilter(attr_name, attr_values){
+function updateHashForSortFilter(attr_name, attr_values, updateHash, obj){
     var hash = window.location.hash.split("_filters=")[0];
-    var query_params = window.location.hash.split("_filters=")[1];
-    if (query_params === undefined){
-        query_params = "{}";
-    }
-    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+    var query_params = getQueryParams(obj);
+
     if (attr_values.length > 0){
         query_params[attr_name] = attr_values;
     }
@@ -23,23 +20,22 @@ function updateHashForSortFilter(attr_name, attr_values){
         delete (query_params[attr_name]);
     }
     query_params = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));
-    window.location.hash = hash + "_filters=" + query_params;
+
+    if (updateHash){
+        window.location.hash = hash + "_filters=" + query_params;
+    }
+    else {
+        jQuery(obj).closest("div.googlechart_dashboard").attr("query_params", query_params);
+    }
 }
 
-function updateHashForColumnFilter(attr_name, attr_defaults){
+function updateHashForColumnFilter(attr_name, attr_defaults, updateHash, obj){
     if (attr_name.substr(0,27) === "columnfilter_custom_helper_"){
         return;
     }
     var hash = window.location.hash.split("_filters=")[0];
-    var query_params = window.location.hash.split("_filters=")[1];
-    if (query_params === undefined){
-        query_params = "{}";
-    }
-    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+    var query_params = getQueryParams(obj);
 
-    if (query_params.columnFilters === undefined){
-        query_params.columnFilters = {};
-    }
     if (attr_defaults.length > 0){
         query_params.columnFilters[attr_name] = attr_defaults;
     }
@@ -48,7 +44,12 @@ function updateHashForColumnFilter(attr_name, attr_defaults){
     }
 
     query_params = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));
-    window.location.hash = hash + "_filters=" + query_params;
+    if (updateHash){
+        window.location.hash = hash + "_filters=" + query_params;
+    }
+    else {
+        jQuery(obj).closest("div.googlechart_dashboard").attr("query_params", query_params);
+    }
 }
 
 function addCustomFilter(options){
@@ -70,24 +71,24 @@ function addCustomFilter(options){
     };
     jQuery.extend(settings, options);
 
-    if (settings.updateHash){
-        var defaults = [];
-        if (settings.customPrefix.substr(0,18) === "pre_config_filter_"){
-            defaults = [];
-            jQuery.each(settings.defaultValues, function(idx, value){
-                defaults.push(value[0]);
-            });
-            updateHashForColumnFilter("pre_config_"+settings.customPrefix.substr(18), defaults);
-        }
-
-        if (settings.customPrefix.substr(0,13) === "columnfilter_"){
-            defaults = [];
-            jQuery.each(settings.defaultValues, function(idx, value){
-                defaults.push(value);
-            });
-            updateHashForColumnFilter("columnfilter_"+settings.customPrefix.substr(13), defaults);
-        }
+    var defaults = [];
+    if (settings.customPrefix.substr(0,18) === "pre_config_filter_"){
+        defaults = [];
+        jQuery.each(settings.defaultValues, function(idx, value){
+            defaults.push(value[0]);
+        });
+        updateHashForColumnFilter("pre_config_"+settings.customPrefix.substr(18), defaults, settings.updateHash, "#"+settings.filtersDiv);
     }
+
+    if (settings.customPrefix.substr(0,13) === "columnfilter_"){
+        defaults = [];
+        jQuery.each(settings.defaultValues, function(idx, value){
+            defaults.push(value);
+        });
+        updateHashForColumnFilter("columnfilter_"+settings.customPrefix.substr(13), defaults, settings.updateHash, "#"+settings.filtersDiv);
+    }
+
+    updateFilterDivs();
 
     var filterData = google.visualization.arrayToDataTable(settings.customValues);
 
@@ -102,11 +103,7 @@ function addCustomFilter(options){
     }
     else{
         var hideFilter = false;
-        var query_params = window.location.hash.split("_filters=")[1];
-        if (query_params === undefined){
-            query_params = "{}";
-        }
-        query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+        var query_params = getQueryParams("#"+filterFilterDivId);
         if (query_params.hideFilters !== undefined){
             if (jQuery.inArray(('googlechart_filters_' + settings.customPrefix+"_custom_filter"), query_params.hideFilters) !== -1){
                 hideFilter = true;
@@ -128,6 +125,10 @@ function addCustomFilter(options){
         'options': {'height': '13em', 'width': '20em'}
     });
 
+    var layout = 'side';
+    if (jQuery("#" + settings.filtersDiv).hasClass("googlechart_filters_side")){
+        layout = 'belowStacked';
+    }
     var filterFilter = new google.visualization.ControlWrapper({
         'controlType': settings.filterType,
         'containerId': filterFilterDivId,
@@ -137,7 +138,7 @@ function addCustomFilter(options){
                 'allowNone' : settings.allowNone,
                 'allowTyping': settings.allowTyping,
                 'allowMultiple': settings.customAllowMultiple,
-                'selectedValuesLayout': 'belowStacked'
+                'selectedValuesLayout': layout
             }
         }
     });
@@ -219,9 +220,9 @@ function applySortOnChart(options){
             sortBy_name = key + sortBy_ext;
         }
     });
-    if (options.updateHash){
-        updateHashForSortFilter('sortFilter', [sortBy_name]);
-    }
+
+    updateHashForSortFilter('sortFilter', [sortBy_name], options.updateHash, "#"+options.sortFilterChart.getContainerId());
+    updateFilterDivs();
 }
 
 function applyCustomFilters(options){
@@ -538,15 +539,8 @@ function addColumnFilters(options){
     if (isFirstColumnFilters){
         isFirstColumnFilters = false;
         var hash = window.location.hash.split("_filters=")[0];
-        var query_params = window.location.hash.split("_filters=")[1];
-        if (query_params === undefined){
-            query_params = "{}";
-        }
+        var query_params = getQueryParams("#"+settings.filtersDiv);
 
-        query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
-        if (query_params.columnFilters === undefined){
-            query_params.columnFilters = {};
-        }
         jQuery.each(query_params.columnFilters, function(key, defaults){
             if (key.substr(0,13) === 'columnfilter_'){
                 var default_columnfilter = {};
@@ -728,15 +722,7 @@ function addPreConfigFilters(options){
     if (isFirstPreConfigFilters){
         isFirstPreConfigFilters = false;
         var hash = window.location.hash.split("_filters=")[0];
-        var query_params = window.location.hash.split("_filters=")[1];
-        if (query_params === undefined){
-            query_params = "{}";
-        }
-
-        query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
-        if (query_params.columnFilters === undefined){
-            query_params.columnFilters = {};
-        }
+        var query_params = getQueryParams(settings.filtersDiv);
         jQuery.each(query_params.columnFilters, function(key, defaults){
             if (key.substr(0,11) === 'pre_config_'){
                 var default_preconfig = {};

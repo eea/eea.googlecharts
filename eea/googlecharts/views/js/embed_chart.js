@@ -30,6 +30,17 @@ function drawChart(value, other_options){
     var embedchart_sortBy = value[12];
     var embedchart_sortAsc = true;
 
+    var query_params = getQueryParams("#googlechart_table_" + other_settings.vhash);
+    jQuery.each(embedchart_filters, function(key, value){
+        if (query_params.rowFilters[key] !== undefined){
+            value.defaults = query_params.rowFilters[key];
+        }
+    });
+
+    if (query_params.sortFilter !== undefined){
+        embedchart_sortFilter = query_params.sortFilter[0];
+    }
+
     var sortAsc_str = value[13];
     if (sortAsc_str === 'desc'){
         embedchart_sortAsc = false;
@@ -60,7 +71,7 @@ function drawChart(value, other_options){
             "<div id='googlechart_table_"+other_settings.vhash+"' class='googlechart_table googlechart_table_left'>"+
                 "<div id='googlechart_top_images_"+other_settings.vhash+"'></div>"+
                 "<div style='clear: both'></div>" +
-                "<div id='googlechart_filters_"+other_settings.vhash+"' class='embedded-side-filters googlechart_filters'></div>"+
+                "<div id='googlechart_filters_"+other_settings.vhash+"' class='embedded-side-filters googlechart_filters googlechart_filters_side'></div>"+
                 "<div id='googlechart_view_"+other_settings.vhash+"' class='googlechart embedded-chart'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_bottom_images_"+other_settings.vhash+"'></div>"+
@@ -85,7 +96,7 @@ function drawChart(value, other_options){
                 "<div id='googlechart_top_images_"+other_settings.vhash+"'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_view_"+other_settings.vhash+"' class='googlechart embedded-chart'></div>"+
-                "<div id='googlechart_filters_"+other_settings.vhash+"' class='embedded-side-filters googlechart_filters'></div>"+
+                "<div id='googlechart_filters_"+other_settings.vhash+"' class='embedded-side-filters googlechart_filters googlechart_filters_side'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_bottom_images_"+other_settings.vhash+"'></div>"+
                 "<div style='clear: both'></div>" +
@@ -146,12 +157,6 @@ function drawChart(value, other_options){
     var tableForChart = prepareForChart(options);
 
     embedchart_json.options.title = other_settings.name + " — " + other_settings.main_title;
-    //TODO: remove after fixing multiselect filter layout #17373
-    jQuery.each(embedchart_filters,function(key,value){
-        if ((value.type === "3") && (other_settings.isInline !== 'True')){
-            embedchart_filters[key].type = "2";
-        }
-    });
 
     var googlechart_params = {
         chartDashboard : 'googlechart_dashboard_'+other_settings.vhash,

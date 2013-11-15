@@ -49,48 +49,6 @@ function putImageDivInPosition(div_id, position){
     }
 }
 
-function updateHashForRowFilter(filter, type){
-    if (filter){
-        var columnLabel = filter.getOptions().filterColumnLabel;
-        var columnName = '';
-        var values = [];
-        jQuery.each(available_columns, function(key, value){
-            if (value === columnLabel){
-                columnName = key;
-            }
-        });
-        if (type === "0"){
-            values.push(filter.getState().lowValue);
-            values.push(filter.getState().highValue);
-        }
-        if (type === "1"){
-            values.push(filter.getState().value);
-        }
-        if ((type === "2") || (type === "3")){
-            values = filter.getState().selectedValues;
-        }
-        var hash = window.location.hash.split("_filters=")[0];
-        var query_params = window.location.hash.split("_filters=")[1];
-        if (query_params === undefined){
-            query_params = "{}";
-        }
-        query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
-
-        if (query_params.rowFilters === undefined){
-            query_params.rowFilters = {};
-        }
-        if (values.length > 0){
-            query_params.rowFilters[columnName] = values;
-        }
-        else {
-            delete(query_params.rowFilters[columnName]);
-        }
-
-        query_params = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));
-        window.location.hash = hash + "_filters=" + query_params;
-    }
-}
-var isFirstLoad = true;
 function drawChart(value, other_options){
     var other_settings = {
         merged_rows : '',
@@ -101,11 +59,7 @@ function drawChart(value, other_options){
 
     jQuery.extend(other_settings, other_options);
 
-    var query_params = window.location.hash.split("_filters=")[1];
-    if (query_params === undefined){
-        query_params = "{}";
-    }
-    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+    var query_params = getQueryParams();
 
     var chart_id = value[0];
     var chart_json = value[1];
@@ -155,7 +109,7 @@ function drawChart(value, other_options){
             "<div id='googlechart_table' class='googlechart_table googlechart_table_top'>"+
                 "<div id='googlechart_top_images'></div>"+
                 "<div style='clear: both'></div>" +
-                "<div id='googlechart_filters'></div>"+
+                "<div id='googlechart_filters' class='googlechart_filters'></div>"+
                 "<div id='googlechart_view' class='googlechart'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_bottom_images'></div>"+
@@ -167,7 +121,7 @@ function drawChart(value, other_options){
             "<div id='googlechart_table' class='googlechart_table googlechart_table_left'>"+
                 "<div id='googlechart_top_images'></div>"+
                 "<div style='clear: both'></div>" +
-                "<div id='googlechart_filters'></div>"+
+                "<div id='googlechart_filters' class='googlechart_filters googlechart_filters_side'></div>"+
                 "<div id='googlechart_view' class='googlechart'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_bottom_images'></div>"+
@@ -180,7 +134,7 @@ function drawChart(value, other_options){
                 "<div id='googlechart_top_images'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_view' class='googlechart'></div>"+
-                "<div id='googlechart_filters'></div>"+
+                "<div id='googlechart_filters' class='googlechart_filters'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_bottom_images'></div>"+
                 "<div style='clear: both'></div>" +
@@ -192,7 +146,7 @@ function drawChart(value, other_options){
                 "<div id='googlechart_top_images'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_view' class='googlechart'></div>"+
-                "<div id='googlechart_filters'></div>"+
+                "<div id='googlechart_filters' class='googlechart_filters googlechart_filters_side'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_bottom_images'></div>"+
                 "<div style='clear: both'></div>" +
@@ -294,12 +248,7 @@ function drawDashboard(value, other_options){
 
     jQuery.extend(settings, value);
 
-    var query_params = window.location.hash.split("_filters=")[1];
-    if (query_params === undefined){
-        query_params = "{}";
-    }
-    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
-
+    var query_params = getQueryParams();
 
     jQuery("#googlechart_export_button").hide();
     jQuery("#googlechart_embed_button").show();
@@ -484,11 +433,7 @@ function showEmbed(){
                     else {
                         jQuery("input.googlechart_hide_filter[filter_id='all']").prop("checked", false);
                     }
-                    var query_params = window.location.hash.split("_filters=")[1];
-                    if (query_params === undefined){
-                        query_params = "{}";
-                    }
-                    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+                    var query_params = getQueryParams();
                     query_params.hideFilters = hide_filters;
                     query_params = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));
 

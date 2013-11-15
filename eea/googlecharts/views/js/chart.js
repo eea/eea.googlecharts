@@ -1,3 +1,86 @@
+function getQueryParams(obj){
+    var query_params = window.location.hash.split("_filters=")[1];
+    if (jQuery(obj).closest("div.googlechart_dashboard").attr("query_params") !== undefined){
+        query_params = jQuery(obj).closest("div.googlechart_dashboard").attr("query_params");
+    }
+    if (query_params === undefined){
+        query_params = "{}";
+    }
+    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+
+    if (query_params.rowFilters === undefined){
+        query_params.rowFilters = {};
+    }
+
+    if (query_params.columnFilters === undefined){
+        query_params.columnFilters = {};
+    }
+    console.log(JSON.stringify(query_params));
+    return query_params;
+}
+
+function updateHashForRowFilter(availableColumns, filter, type, updateHash){
+    if (filter){
+        var columnLabel = filter.getOptions().filterColumnLabel;
+        var columnName = '';
+        var values = [];
+        jQuery.each(availableColumns, function(key, value){
+            if (value === columnLabel){
+                columnName = key;
+            }
+        });
+        if (type === "0"){
+            values.push(filter.getState().lowValue);
+            values.push(filter.getState().highValue);
+        }
+        if (type === "1"){
+            values.push(filter.getState().value);
+        }
+        if ((type === "2") || (type === "3")){
+            values = filter.getState().selectedValues;
+        }
+        var hash = window.location.hash.split("_filters=")[0];
+
+        var query_params = getQueryParams("#"+filter.getContainerId());
+
+        if (values.length > 0){
+            query_params.rowFilters[columnName] = values;
+        }
+        else {
+            delete(query_params.rowFilters[columnName]);
+        }
+
+        query_params = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));
+        if (updateHash){
+            window.location.hash = hash + "_filters=" + query_params;
+        }
+        else{
+            jQuery("#"+filter.getContainerId()).closest("div.googlechart_dashboard").attr("query_params", query_params);
+        }
+    }
+}
+
+function updateFilterDivs(){
+    jQuery.each(jQuery("li.goog-container-horizontal"), function(idx, filterValue){
+        if (jQuery(filterValue).closest(".googlechart_filters").hasClass("googlechart_filters_side")){
+            return;
+        }
+        if (!jQuery(filterValue).hasClass("eea-moved-in-container")){
+            jQuery("<div class='eea-filter-value-container'></div>").appendTo(jQuery(filterValue));
+            jQuery(filterValue).addClass("eea-moved-in-container");
+            jQuery(filterValue).find(".goog-inline-block").appendTo(jQuery(filterValue).find(".eea-filter-value-container"));
+        }
+    });
+    jQuery.each(jQuery("ul.google-visualization-controls-categoryfilter-selected"), function(idx, filterUl){
+        if (jQuery(filterUl).closest(".googlechart_filters").hasClass("googlechart_filters_side")){
+            return;
+        }
+        var container = jQuery(filterUl).closest("div.googlechart_filter");
+        var button = jQuery(container).find("div.goog-menu-button");
+        jQuery(filterUl).width(jQuery(container).width() - jQuery(button).width() - 10);
+    });
+}
+
 function drawGoogleChart(options){
     var settings = {
         chartDashboard : '',
@@ -99,11 +182,8 @@ function drawGoogleChart(options){
             var filter_div;
             if (!jQuery("#"+settings.chartFiltersDiv).hasClass("googledashboard-hidden-helper-filters")){
                 var hideFilter = false;
-                var query_params = window.location.hash.split("_filters=")[1];
-                if (query_params === undefined){
-                    query_params = "{}";
-                }
-                query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+                var query_params = getQueryParams("#"+settings.chartFiltersDiv);
+
                 if (query_params.hideFilters !== undefined){
                     if (jQuery.inArray(('googlechart_filters_' + key), query_params.hideFilters) !== -1){
                         hideFilter = true;
@@ -155,7 +235,10 @@ function drawGoogleChart(options){
                     filterSettings.controlType = 'CategoryFilter';
                     filterSettings.options.ui.allowTyping = false;
                     filterSettings.options.ui.allowMultiple = true;
-                    filterSettings.options.ui.selectedValuesLayout = 'belowStacked';
+                    filterSettings.options.ui.selectedValuesLayout = 'side';
+                    if (jQuery("#"+settings.chartFiltersDiv).hasClass('googlechart_filters_side')){
+                        filterSettings.options.ui.selectedValuesLayout = 'belowStacked';
+                    }
                     if (value.defaults.length > 0){
                         filterSettings.state.selectedValues = value.defaults;
                     }
@@ -164,10 +247,9 @@ function drawGoogleChart(options){
             var filter = new google.visualization.ControlWrapper(filterSettings);
 
             google.visualization.events.addListener(filter, 'statechange', function(event){
-                if (settings.updateHash){
-                    updateHashForRowFilter(filter, value.type);
-                }
+                updateHashForRowFilter(settings.availableColumns, filter, value.type, settings.updateHash);
                 settings.customFilterHandler(settings.customFilterOptions);
+                updateFilterDivs();
             });
 
             filtersArray.push(filter);
@@ -186,6 +268,7 @@ function drawGoogleChart(options){
         google.visualization.events.addListener(dashboard, 'ready', function(event){
             jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartReadyEvent();
+            updateFilterDivs();
         });
 
         google.visualization.events.addListener(dashboard, 'error', function(event){
@@ -197,6 +280,7 @@ function drawGoogleChart(options){
             google.visualization.events.addListener(value, 'statechange', function(event){
                 applyCustomFilters(customFilterParams);
             });
+            updateFilterDivs();
         });
 
 

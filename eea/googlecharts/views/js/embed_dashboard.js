@@ -16,11 +16,7 @@ function drawDashboardEmbed(options){
 
     jQuery.extend(settings, options);
 
-    var query_params = window.location.hash.split("_filters=")[1];
-    if (query_params === undefined){
-        query_params = "{}";
-    }
-    query_params = JSON.parse(decodeURIComponent(query_params).split(";").join(","));
+    var query_params = getQueryParams();
 
     jQuery.each(settings.googlechart_config_array, function(key, config){
         config[1].options.title = config[1].options.title + " — " + settings.main_title;

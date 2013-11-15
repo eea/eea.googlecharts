@@ -67,23 +67,6 @@
             var GoogleChartsConfig_$vhash = $GoogleChartsConfig;
             var isInline_$vhash = '$inline';
 
-            var query_params = window.location.hash.split('_filters=')[1];
-            if (query_params === undefined){
-                query_params = '{}';
-            }
-            query_params = JSON.parse(decodeURIComponent(query_params).split(';').join(','));
-
-            if (query_params.rowFilters !== undefined){
-                jQuery.each(chart_filters_$vhash, function(key, value){
-                    if (query_params.rowFilters[key] !== undefined){
-                        value.defaults = query_params.rowFilters[key];
-                    }
-                });
-            }
-            if (query_params.sortFilter !== undefined){
-                sortFilter_$vhash = query_params.sortFilter[0];
-
-            }
             var googlechart_config_array_$vhash = [];
             var settings_$vhash = [];
             var other_options_$vhash = {};

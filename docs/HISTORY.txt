@@ -3,6 +3,8 @@ Changelog
 
 8.9-dev - (unreleased)
 ----------------------
+* Feature: WIP Improving multiselect layout
+  [szabozo0 refs #17373]
 * Feature: Added possibility to hide filters on embedded charts
   [szabozo0 refs #17066]
 * Feature: Added filter values via url for charts and dashboards
