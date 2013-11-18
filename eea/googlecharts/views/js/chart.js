@@ -15,7 +15,6 @@ function getQueryParams(obj){
     if (query_params.columnFilters === undefined){
         query_params.columnFilters = {};
     }
-    console.log(JSON.stringify(query_params));
     return query_params;
 }
 

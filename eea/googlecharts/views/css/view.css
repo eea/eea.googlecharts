@@ -443,3 +443,21 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .googlechart_dashboard div.googlechart_filter li div.goog-inline-block{
     background-color: transparent !important;
 }
+
+.google-visualization-controls-rangefilter-thumblabel {
+    color: black !important;
+    font-weight: normal !important;
+}
+
+.google-visualization-controls-slider-thumb {
+    border: 1px solid gray !important;
+    background-color: #E2E2E2 !important;
+}
+
+.google-visualization-controls-slider-horizontal {
+    border: 1px solid gray !important;
+}
+
+.google-visualization-controls-slider-handle {
+    background-color: gray !important;
+}
