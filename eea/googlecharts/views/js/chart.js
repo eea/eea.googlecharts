@@ -78,6 +78,14 @@ function updateFilterDivs(){
         var button = jQuery(container).find("div.goog-menu-button");
         jQuery(filterUl).width(jQuery(container).width() - jQuery(button).width() - 10);
     });
+    jQuery.each(jQuery(".googlechart_filter"), function(idx, filter){
+        filterWidth = jQuery(filter).width();
+        filterLeft = jQuery(filter).offset().left;
+        containerWidth = jQuery(filter).closest(".googlechart_filters").width();
+        if ((containerWidth - filterWidth - filterLeft) < filterWidth){
+            jQuery(filter).after("<div style='clear:both'></div>");
+        }
+    });
 }
 
 function drawGoogleChart(options){
