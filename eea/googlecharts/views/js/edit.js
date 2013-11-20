@@ -3456,11 +3456,30 @@ function drawPreviewChart(chartObj, width, height){
             }
 
             jQuery('.preview-container').append(
-                jQuery('<div class="chartArea"><span>Drag & Resize Chart Area</span></div>'));
+                jQuery('<div class="chartArea">'+
+                            '<div class="googlechartarea-input">'+
+                                'top: <input class="googlechartarea-size googlechartarea-top" type="number"/>px'+
+                            '</div>'+
+                            '<div class="googlechartarea-input">'+
+                                'left: <input class="googlechartarea-size googlechartarea-left" type="number"/>px'+
+                            '</div>'+
+                            '<div class="googlechart-drag_drop">'+
+                                '<span>Drag & Resize Chart Area</span>'+
+                                '<div class="googlechartarea-input">'+
+                                    'Or set the size: '+
+                                    '<input class="googlechartarea-size googlechartarea-width" type="number"/>x'+
+                                    '<input class="googlechartarea-size googlechartarea-height" type="number"/>px'+
+                                '</div>'+
+                            ' </div>'+
+                        '</div>'));
             var container_offset = jQuery(".preview-container").offset();
             jQuery(".chartArea").offset({left:container_offset.left + chartAreaLeft, top:container_offset.top + chartAreaTop});
             jQuery(".chartArea").width(chartAreaWidth);
             jQuery(".chartArea").height(chartAreaHeight);
+            jQuery(".googlechartarea-width").attr("value", chartAreaWidth);
+            jQuery(".googlechartarea-height").attr("value", chartAreaHeight);
+            jQuery(".googlechartarea-left").attr("value", chartAreaLeft);
+            jQuery(".googlechartarea-top").attr("value", chartAreaTop);
             jQuery('.chartArea').draggable({
                 containment:".preview-container",
                 stop: function(){
@@ -3484,6 +3503,15 @@ function drawPreviewChart(chartObj, width, height){
                     chartObj.attr("hasChartArea", true);
                     drawPreviewChart(chartObj, width, height);
                 }
+            });
+            jQuery('.googlechartarea-size').change(function(){
+                var tmp_left = parseInt(jQuery(".googlechartarea-left").attr("value"), 0);
+                var tmp_top = parseInt(jQuery(".googlechartarea-top").attr("value"), 0);
+                var tmp_width = parseInt(jQuery(".googlechartarea-width").attr("value"), 0);
+                var tmp_height = parseInt(jQuery(".googlechartarea-height").attr("value"), 0);
+                chartObj.attr("chartArea", JSON.stringify({left:tmp_left, top:tmp_top, width:tmp_width, height:tmp_height}));
+                chartObj.attr("hasChartArea", true);
+                drawPreviewChart(chartObj, width, height);
             });
         }
     });

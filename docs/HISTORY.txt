@@ -3,6 +3,8 @@ Changelog
 
 8.9-dev - (unreleased)
 ----------------------
+* Feature: Added possibility to set the chart area manually
+  [szabozo0 refs #16927]
 * Feature: WIP Improving multiselect layout
   [szabozo0 refs #17373]
 * Feature: Added possibility to hide filters on embedded charts

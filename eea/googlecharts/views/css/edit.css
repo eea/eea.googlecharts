@@ -1414,17 +1414,24 @@ li.googlechart > fieldset > div > a > span {
 .chartArea{
     z-index: 9999;
     border: 2px dotted green;
-    position: absolute;
+    position:relative;
     font-size: 20px;
     font-weight: bold;
     display:table;
     color:gray;
 }
 
-.chartArea span{
-    display:table-cell;
-    vertical-align:middle;
+.chartArea div.googlechart-drag_drop{
     text-align:center;
+    position:absolute;
+    overflow:auto;
+    margin:auto;
+    height:100px;
+    width:50%;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
 }
 .chartsize {
     width:50px;
@@ -1520,4 +1527,15 @@ li.googlechart > fieldset > div > a > span {
 
 .googlechart_columnfilters_list li{
     cursor:pointer;
+}
+
+input.googlechartarea-size {
+    width:50px;
+    height:20px;
+    padding:0;
+    margin:0px;
+}
+
+div.googlechartarea-input {
+    font-size:14px;
 }
