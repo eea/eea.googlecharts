@@ -82,7 +82,8 @@ function updateFilterDivs(){
         filterWidth = jQuery(filter).width();
         filterLeft = jQuery(filter).offset().left;
         containerWidth = jQuery(filter).closest(".googlechart_filters").width();
-        if ((containerWidth - filterWidth - filterLeft) < filterWidth){
+        containerLeft = jQuery(filter).closest(".googlechart_filters").offset().left;
+        if ((containerWidth + containerLeft - filterWidth - filterLeft) < filterWidth){
             jQuery(filter).after("<div style='clear:both'></div>");
         }
     });
