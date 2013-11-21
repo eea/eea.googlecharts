@@ -1,8 +1,11 @@
 Changelog
 =========
 
-8.9-dev - (unreleased)
+9.0-dev - (unreleased)
 ----------------------
+
+8.9 - (2013-11-20)
+------------------
 * Feature: Added possibility to set the chart area manually
   [szabozo0 refs #16927]
 * Feature: WIP Improving multiselect layout
