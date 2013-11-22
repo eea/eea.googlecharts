@@ -8,3 +8,5 @@
 <script type="text/javascript" src="++resource++eea.googlecharts.embed_chart.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.embed_dashboard.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
+
+<script type="text/javascript" src="++resource++eea.googlecharts.inline_resize.js"></script>

@@ -461,3 +461,48 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .google-visualization-controls-slider-handle {
     background-color: gray !important;
 }
+
+a.googlechart-inline-resize {
+    border-bottom: 0;
+    float: right;
+}
+
+.custom-overlay-mask {
+    position: absolute;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 9999;
+}
+
+.googlechart-fullchart-resizable {
+    border: 2px solid green;
+    position: absolute;
+    z-index: 10000;
+}
+
+.googlechart-fullchart-header {
+    width: 100%;
+    background-color: #e2e2e2;
+    opacity: 0;
+    -webkit-transition: opacity .5s;
+    -moz-transition: opacity .5s;
+    -o-transition: opacity .5s;
+    transition: opacity .5s;
+    text-align: center;
+}
+
+.googlechart-fullchart-header input {
+    width: 50px;
+    line-height: 1.2;
+    padding: 0;
+    height: 17px;
+    margin-top: 5px;
+}
+.googlechart-fullchart-resizable:hover .googlechart-fullchart-header{
+    opacity: 1;
+}
+
+.googlechart-inline-cancel,
+.googlechart-inline-apply {
+    float: right;
+    margin-left: 3px;
+}
