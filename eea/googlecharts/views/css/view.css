@@ -475,7 +475,7 @@ a.googlechart-inline-resize {
 
 .googlechart-fullchart-resizable {
     border: 2px solid green;
-    position: absolute;
+    position:absolute;
     z-index: 10000;
 }
 
@@ -488,15 +488,18 @@ a.googlechart-inline-resize {
     -o-transition: opacity .5s;
     transition: opacity .5s;
     text-align: center;
+    z-index: 10002;
+    position: relative;
 }
 
-.googlechart-fullchart-header input {
+input.googlechart-chart-size {
     width: 50px;
     line-height: 1.2;
     padding: 0;
     height: 17px;
     margin-top: 5px;
 }
+
 .googlechart-fullchart-resizable:hover .googlechart-fullchart-header{
     opacity: 1;
 }
@@ -505,4 +508,13 @@ a.googlechart-inline-resize {
 .googlechart-inline-apply {
     float: right;
     margin-left: 3px;
+}
+
+.googlechart-chartarea-resizable {
+    border: 2px dotted green;
+    z-index: 10001;
+}
+
+.googlechart-fullchart-header-hidden{
+    opacity: 0 !important;
 }
