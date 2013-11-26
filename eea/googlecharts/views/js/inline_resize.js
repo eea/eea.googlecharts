@@ -340,37 +340,67 @@ DavizInlineResizer.ChartResizer.prototype = {
                 })
                 .appendTo(".googlechart-fullchart-resizable");
 
+            jQuery("<div>")
+                .addClass("googlechart-chartarea-input googlechart-chartarea-size-input")
+                .appendTo(".googlechart-chartarea-resizable");
+
+            jQuery("<span>")
+                .text("Drag & Resize Chart Area")
+                .appendTo(".googlechart-chartarea-size-input");
+
+            jQuery("<div>")
+                .text("Or set the size: ")
+                .addClass("googlechart-chartarea-size-input-fields")
+                .appendTo(".googlechart-chartarea-size-input");
+
+            jQuery("<div>")
+                .addClass("googlechart-chartarea-input googlechart-chartarea-top-input")
+                .appendTo(".googlechart-chartarea-resizable");
+
+            jQuery("<div style='clear:both'></div>")
+                .appendTo(".googlechart-chartarea-resizable");
+
+            jQuery("<div>")
+                .addClass("googlechart-chartarea-input googlechart-chartarea-left-input")
+                .appendTo(".googlechart-chartarea-resizable");
+
             jQuery("<input>")
                 .addClass("googlechart-chartarea-width googlechart-chart-size")
                 .attr("type", "number")
-                .appendTo(".googlechart-chartarea-resizable");
+                .appendTo(".googlechart-chartarea-size-input-fields");
 
             jQuery("<span>x</span>")
-                .appendTo(".googlechart-chartarea-resizable");
+                .appendTo(".googlechart-chartarea-size-input-fields");
 
             jQuery("<input>")
                 .addClass("googlechart-chartarea-height googlechart-chart-size")
                 .attr("type", "number")
-                .appendTo(".googlechart-chartarea-resizable");
+                .appendTo(".googlechart-chartarea-size-input-fields");
 
             jQuery("<span>px</span>")
-                .appendTo(".googlechart-chartarea-resizable");
+                .appendTo(".googlechart-chartarea-size-input-fields");
+
+            jQuery("<span>top: </span>")
+                .appendTo(".googlechart-chartarea-top-input");
 
             jQuery("<input>")
                 .addClass("googlechart-chartarea-top googlechart-chart-size")
                 .attr("type", "number")
-                .appendTo(".googlechart-chartarea-resizable");
+                .appendTo(".googlechart-chartarea-top-input");
 
-            jQuery("<span>x</span>")
-                .appendTo(".googlechart-chartarea-resizable");
+            jQuery("<span>px</span>")
+                .appendTo(".googlechart-chartarea-top-input");
+
+            jQuery("<span>left: </span>")
+                .appendTo(".googlechart-chartarea-left-input");
 
             jQuery("<input>")
                 .addClass("googlechart-chartarea-left googlechart-chart-size")
                 .attr("type", "number")
-                .appendTo(".googlechart-chartarea-resizable");
+                .appendTo(".googlechart-chartarea-left-input");
 
             jQuery("<span>px</span>")
-                .appendTo(".googlechart-chartarea-resizable");
+                .appendTo(".googlechart-chartarea-left-input");
 
         }
 
