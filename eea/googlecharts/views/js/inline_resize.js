@@ -1,3 +1,13 @@
+var resizableCharts = ['LineChart',
+                        'ComboChart',
+                        'AreaChart',
+                        'SteppedAreaChart',
+                        'ColumnChart',
+                        'BarChart',
+                        'ScatterChart',
+                        'BubbleChart',
+                        'PieChart'];
+
 function chartAreaAttribute2px(value, size){
     var pixels = 0;
     if (typeof(value) === "string"){
@@ -33,17 +43,31 @@ DavizInlineResizer.ChartResizer.prototype = {
         var self = this;
         self.hash = self.context.attr("id").substr(22);
         self.defaultSize = self.getSizes();
-        self.startResize();
 
         var chart_settings = window['settings_' + self.hash];
-        self.defaultChartAreaSize = {
-            width: chart_settings[7].chartArea.width,
-            height: chart_settings[7].chartArea.height,
-            top: chart_settings[7].chartArea.top,
-            left: chart_settings[7].chartArea.left
-        };
+        self.chartAreaConfigurable = false;
+        if (resizableCharts.indexOf(chart_settings[1].chartType) !== -1){
+            self.chartAreaConfigurable = true;
+        }
+
+        self.chartAreaConfigured = false;
+        self.startResize();
+
+        if (self.chartAreaConfigurable){
+            if (chart_settings[7].chartArea !== undefined){
+                self.chartAreaConfigured = true;
+                self.defaultChartAreaSize = {
+                    width: chart_settings[7].chartArea.width,
+                    height: chart_settings[7].chartArea.height,
+                    top: chart_settings[7].chartArea.top,
+                    left: chart_settings[7].chartArea.left
+                };
+            }
+        }
+        self.chartAreaConfiguredFromSettings = self.chartAreaConfigured;
 
         self.setChartAreaSizes();
+
     },
 
     updateMasks: function(sizes){
@@ -86,14 +110,20 @@ DavizInlineResizer.ChartResizer.prototype = {
         chart_settings[5] = settings.height;
         chart_settings[1].options.width = settings.width;
         chart_settings[1].options.height = settings.height;
-        if ((settings.areaLeft !== 0) ||
-            (settings.areaTop !== 0) ||
-            (settings.areaWidth !== 0) ||
-            (settings.areaHeight !== 0)){
-            chart_settings[7].chartArea.left = settings.areaLeft * 100 / settings.width + "%";
-            chart_settings[7].chartArea.top = settings.areaTop * 100 / settings.height + "%";
-            chart_settings[7].chartArea.width = settings.areaWidth * 100 / settings.width + "%";
-            chart_settings[7].chartArea.height = settings.areaHeight * 100 / settings.height + "%";
+
+        if (self.chartAreaConfigurable){
+            if ((settings.areaLeft !== 0) ||
+                (settings.areaTop !== 0) ||
+                (settings.areaWidth !== 0) ||
+                (settings.areaHeight !== 0)){
+                if (self.chartAreaConfigured){
+                    chart_settings[7].chartArea = {};
+                    chart_settings[7].chartArea.left = settings.areaLeft * 100 / settings.width + "%";
+                    chart_settings[7].chartArea.top = settings.areaTop * 100 / settings.height + "%";
+                    chart_settings[7].chartArea.width = settings.areaWidth * 100 / settings.width + "%";
+                    chart_settings[7].chartArea.height = settings.areaHeight * 100 / settings.height + "%";
+                }
+            }
         }
         drawChart(chart_settings, other_options);
         self.setChartAreaSizes();
@@ -121,10 +151,19 @@ DavizInlineResizer.ChartResizer.prototype = {
         chart_settings[1].options.width = self.defaultSize.chartWidth;
         chart_settings[1].options.height = self.defaultSize.chartHeight;
 
-        chart_settings[7].chartArea.width = self.defaultChartAreaSize.width;
-        chart_settings[7].chartArea.height = self.defaultChartAreaSize.height;
-        chart_settings[7].chartArea.top = self.defaultChartAreaSize.top;
-        chart_settings[7].chartArea.left = self.defaultChartAreaSize.left;
+        if (self.chartAreaConfigurable){
+            if (self.chartAreaConfiguredFromSettings){
+                chart_settings[7].chartArea.width = self.defaultChartAreaSize.width;
+                chart_settings[7].chartArea.height = self.defaultChartAreaSize.height;
+                chart_settings[7].chartArea.top = self.defaultChartAreaSize.top;
+                chart_settings[7].chartArea.left = self.defaultChartAreaSize.left;
+            }
+            else{
+                self.chartAreaConfigured = false;
+                delete(chart_settings[7].chartArea);
+                delete(chart_settings[1].options.chartArea);
+            }
+        }
 
         var options = {
             width: self.defaultSize.chartWidth,
@@ -151,6 +190,9 @@ DavizInlineResizer.ChartResizer.prototype = {
 
     setChartAreaSizes: function() {
         var self = this;
+        if (!self.chartAreaConfigurable){
+            return;
+        }
         var size = self.getSizes();
         parentOffset = jQuery(".googlechart-chartarea-resizable")
                             .parent()
@@ -158,10 +200,17 @@ DavizInlineResizer.ChartResizer.prototype = {
 
         var chart_settings = window['settings_' + self.hash];
 
-        var chartAreaWidth = chartAreaAttribute2px(chart_settings[7].chartArea.width, size.chartWidth);
-        var chartAreaHeight = chartAreaAttribute2px(chart_settings[7].chartArea.height, size.chartHeight);
-        var chartAreaLeft = chartAreaAttribute2px(chart_settings[7].chartArea.left, size.chartWidth);
-        var chartAreaTop = chartAreaAttribute2px(chart_settings[7].chartArea.top, size.chartHeight);
+        var chartAreaWidth = Math.round(size.chartWidth * 80 / 100);
+        var chartAreaHeight = Math.round(size.chartHeight * 80 / 100);
+        var chartAreaLeft = Math.round(size.chartWidth * 10 / 100);
+        var chartAreaTop = Math.round(size.chartHeight * 10 / 100);
+
+        if (self.chartAreaConfigured){
+            chartAreaWidth = chartAreaAttribute2px(chart_settings[7].chartArea.width, size.chartWidth);
+            chartAreaHeight = chartAreaAttribute2px(chart_settings[7].chartArea.height, size.chartHeight);
+            chartAreaLeft = chartAreaAttribute2px(chart_settings[7].chartArea.left, size.chartWidth);
+            chartAreaTop = chartAreaAttribute2px(chart_settings[7].chartArea.top, size.chartHeight);
+        }
 
         jQuery(".googlechart-chartarea-width")
             .attr("value", chartAreaWidth);
@@ -189,7 +238,6 @@ DavizInlineResizer.ChartResizer.prototype = {
     drawOverlays: function(hash){
         var self = this;
         var sizes = self.getSizes();
-
         self.updateMasks(sizes);
         jQuery("<div>")
             .addClass("googlechart-fullchart-resizable")
@@ -248,95 +296,113 @@ DavizInlineResizer.ChartResizer.prototype = {
         jQuery("<div style='clear:both'></div>")
             .appendTo(".googlechart-fullchart-header");
 
-        jQuery("<div>")
-            .addClass("googlechart-chartarea-resizable")
-            .hover(
-                function(){
-                    jQuery(".googlechart-fullchart-header")
-                        .addClass("googlechart-fullchart-header-hidden");
-                },
-                function(){
-                    jQuery(".googlechart-fullchart-header")
-                        .removeClass("googlechart-fullchart-header-hidden");
-                }
-            )
-            .resizable({
-                containment:".googlechart-fullchart-resizable",
-                resize: function(){
-                    jQuery(".googlechart-chartarea-width")
-                        .attr("value", jQuery(this).width());
-                    jQuery(".googlechart-chartarea-height")
-                        .attr("value", jQuery(this).height());
-                },
-                stop: function(){
-                    jQuery(".googlechart-chartarea-width")
-                        .trigger("change");
-                }
-            })
-            .draggable({
-                containment:".googlechart-fullchart-resizable",
-                drag: function(){
-                    parentOffset = jQuery(".googlechart-chartarea-resizable")
-                            .parent()
-                            .offset();
-                    jQuery(".googlechart-chartarea-left")
-                        .attr("value", jQuery(this).offset().left - parentOffset.left);
-                    jQuery(".googlechart-chartarea-top")
-                        .attr("value", jQuery(this).offset().top - parentOffset.top);
-                },
-                stop: function(){
-                    jQuery(".googlechart-chartarea-left")
-                        .trigger("change");
-                }
-            })
-            .appendTo(".googlechart-fullchart-resizable");
+        if (self.chartAreaConfigurable){
+            jQuery("<div>")
+                .addClass("googlechart-chartarea-resizable")
+                .hover(
+                    function(){
+                        jQuery(".googlechart-fullchart-header")
+                            .addClass("googlechart-fullchart-header-hidden");
+                    },
+                    function(){
+                        jQuery(".googlechart-fullchart-header")
+                            .removeClass("googlechart-fullchart-header-hidden");
+                    }
+                )
+                .resizable({
+                    containment:".googlechart-fullchart-resizable",
+                    resize: function(){
+                        jQuery(".googlechart-chartarea-width")
+                            .attr("value", jQuery(this).width());
+                        jQuery(".googlechart-chartarea-height")
+                            .attr("value", jQuery(this).height());
+                    },
+                    stop: function(){
+                        jQuery(".googlechart-chartarea-width")
+                            .trigger("change");
+                    }
+                })
+                .draggable({
+                    containment:".googlechart-fullchart-resizable",
+                    drag: function(){
+                        parentOffset = jQuery(".googlechart-chartarea-resizable")
+                                .parent()
+                                .offset();
+                        jQuery(".googlechart-chartarea-left")
+                            .attr("value", jQuery(this).offset().left - parentOffset.left);
+                        jQuery(".googlechart-chartarea-top")
+                            .attr("value", jQuery(this).offset().top - parentOffset.top);
+                    },
+                    stop: function(){
+                        jQuery(".googlechart-chartarea-left")
+                            .trigger("change");
+                    }
+                })
+                .appendTo(".googlechart-fullchart-resizable");
 
-        jQuery("<input>")
-            .addClass("googlechart-chartarea-width googlechart-chart-size")
-            .attr("type", "number")
-            .appendTo(".googlechart-chartarea-resizable");
+            jQuery("<input>")
+                .addClass("googlechart-chartarea-width googlechart-chart-size")
+                .attr("type", "number")
+                .appendTo(".googlechart-chartarea-resizable");
 
-        jQuery("<span>x</span>")
-            .appendTo(".googlechart-chartarea-resizable");
+            jQuery("<span>x</span>")
+                .appendTo(".googlechart-chartarea-resizable");
 
-        jQuery("<input>")
-            .addClass("googlechart-chartarea-height googlechart-chart-size")
-            .attr("type", "number")
-            .appendTo(".googlechart-chartarea-resizable");
+            jQuery("<input>")
+                .addClass("googlechart-chartarea-height googlechart-chart-size")
+                .attr("type", "number")
+                .appendTo(".googlechart-chartarea-resizable");
 
-        jQuery("<span>px</span>")
-            .appendTo(".googlechart-chartarea-resizable");
+            jQuery("<span>px</span>")
+                .appendTo(".googlechart-chartarea-resizable");
 
-        jQuery("<input>")
-            .addClass("googlechart-chartarea-top googlechart-chart-size")
-            .attr("type", "number")
-            .appendTo(".googlechart-chartarea-resizable");
+            jQuery("<input>")
+                .addClass("googlechart-chartarea-top googlechart-chart-size")
+                .attr("type", "number")
+                .appendTo(".googlechart-chartarea-resizable");
 
-        jQuery("<span>x</span>")
-            .appendTo(".googlechart-chartarea-resizable");
+            jQuery("<span>x</span>")
+                .appendTo(".googlechart-chartarea-resizable");
 
-        jQuery("<input>")
-            .addClass("googlechart-chartarea-left googlechart-chart-size")
-            .attr("type", "number")
-            .appendTo(".googlechart-chartarea-resizable");
+            jQuery("<input>")
+                .addClass("googlechart-chartarea-left googlechart-chart-size")
+                .attr("type", "number")
+                .appendTo(".googlechart-chartarea-resizable");
 
-        jQuery("<span>px</span>")
-            .appendTo(".googlechart-chartarea-resizable");
+            jQuery("<span>px</span>")
+                .appendTo(".googlechart-chartarea-resizable");
 
+        }
 
         jQuery(".googlechart-chart-size").change(function(){
             var width = parseInt(jQuery(".googlechart-fullchart-width").attr("value"),0);
             var height = parseInt(jQuery(".googlechart-fullchart-height").attr("value"),0);
-            var areaWidth = parseInt(jQuery(".googlechart-chartarea-width").attr("value"),0);
-            var areaHeight = parseInt(jQuery(".googlechart-chartarea-height").attr("value"),0);
-            var areaLeft = parseInt(jQuery(".googlechart-chartarea-left").attr("value"),0);
-            var areaTop = parseInt(jQuery(".googlechart-chartarea-top").attr("value"),0);
+
+            var areaWidth = 0;
+            var areaHeight = 0;
+            var areaLeft = 0;
+            var areaTop = 0;
+
+            if (self.chartAreaConfigurable){
+                areaWidth = parseInt(jQuery(".googlechart-chartarea-width").attr("value"),0);
+                areaHeight = parseInt(jQuery(".googlechart-chartarea-height").attr("value"),0);
+                areaLeft = parseInt(jQuery(".googlechart-chartarea-left").attr("value"),0);
+                areaTop = parseInt(jQuery(".googlechart-chartarea-top").attr("value"),0);
+            }
+
             if ((jQuery(this).hasClass("googlechart-fullchart-width")) ||
                 (jQuery(this).hasClass("googlechart-fullchart-height"))){
                 areaWidth = 0;
                 areaHeight = 0;
                 areaLeft = 0;
                 areaTop = 0;
+            }
+
+            if ((jQuery(this).hasClass("googlechart-chartarea-width")) ||
+                (jQuery(this).hasClass("googlechart-chartarea-height")) ||
+                (jQuery(this).hasClass("googlechart-chartarea-top")) ||
+                (jQuery(this).hasClass("googlechart-chartarea-left"))){
+                    self.chartAreaConfigured = true;
             }
 
             var options = {
@@ -380,7 +446,13 @@ jQuery.fn.EEAChartResizer = function(){
 
 jQuery(document).ready(function($){
     var resizeButton = "<a class='standardButton googlechart-inline-resize'>Resize chart</div>";
-    jQuery(".embedded-daviz-visualization .standardButton").after(resizeButton);
+
+    jQuery.each(jQuery(".embedded-daviz-visualization .standardButton"), function(){
+        if ((jQuery(this).closest("dd").find("div.figure-chart-live").length > 0) &&
+            (jQuery(this).closest("dd").find("div.isChart").length > 0)) {
+            jQuery(this).after(resizeButton);
+        }
+    });
 
     jQuery("a.googlechart-inline-resize").click(function(){
         var chartToResize;
