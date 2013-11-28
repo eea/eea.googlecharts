@@ -137,9 +137,21 @@ DavizInlineResizer.ChartResizer.prototype = {
     applyResize: function(hash){
         var self = this;
         self.disableResize();
+        var chart_settings = window['settings_' + self.hash];
 
         var sizes = self.getSizes();
-        var value = {width:sizes.chartWidth, height:sizes.chartHeight};
+        var value = {
+            chart_id:chart_settings[0],
+            width:sizes.chartWidth,
+            height:sizes.chartHeight,
+        };
+
+        if (self.chartAreaConfigured){
+            value.chartAreaWidth = chart_settings[7].chartArea.width,
+            value.chartAreaHeight = chart_settings[7].chartArea.height,
+            value.chartAreaTop = chart_settings[7].chartArea.top,
+            value.chartAreaLeft = chart_settings[7].chartArea.left
+        }
         jQuery(self.context).trigger(DavizInlineResizer.Events.charts.resized, value);
     },
 
