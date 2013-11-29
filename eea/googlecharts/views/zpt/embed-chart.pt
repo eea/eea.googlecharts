@@ -86,7 +86,7 @@
                 settings_$vhash.push(sortBy_$vhash);
                 settings_$vhash.push(sortAsc_str_$vhash);
                 settings_$vhash.push(chart_columnFilters_$vhash);
-                if (isInline_$vhash){
+                if (isInline_$vhash === 'True'){
                     var tmp_view_id = '#googlechart_dashboard_$vhash';
                     var tmp_chart_id = GoogleChartsConfig_$vhash[0].id;
                     var custom_settings = jQuery(tmp_view_id).closest('dd').find('.chart-custom-settings');

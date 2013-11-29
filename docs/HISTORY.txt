@@ -3,7 +3,7 @@ Changelog
 
 9.1-dev - (unreleased)
 ----------------------
-* Feature: WIP Allow resize of daviz inside an indicator
+* Feature: Allow resize of daviz inside an indicator
   [szabozo0 refs #17453]
 
 9.0 - (2013-11-21)
