@@ -3,6 +3,10 @@ Changelog
 
 9.1-dev - (unreleased)
 ----------------------
+* Bugfix: Updated layout for modified googlecharts api (some prefixes for classes were changed by google)
+  [szabozo0]
+* Feature: Allow resize of daviz inside an indicator
+  [szabozo0 refs #17453]
 
 9.0 - (2013-11-21)
 ------------------

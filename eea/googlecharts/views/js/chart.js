@@ -60,14 +60,14 @@ function updateHashForRowFilter(availableColumns, filter, type, updateHash){
 }
 
 function updateFilterDivs(){
-    jQuery.each(jQuery("li.goog-container-horizontal"), function(idx, filterValue){
+    jQuery.each(jQuery("li.charts-container-horizontal"), function(idx, filterValue){
         if (jQuery(filterValue).closest(".googlechart_filters").hasClass("googlechart_filters_side")){
             return;
         }
         if (!jQuery(filterValue).hasClass("eea-moved-in-container")){
             jQuery("<div class='eea-filter-value-container'></div>").appendTo(jQuery(filterValue));
             jQuery(filterValue).addClass("eea-moved-in-container");
-            jQuery(filterValue).find(".goog-inline-block").appendTo(jQuery(filterValue).find(".eea-filter-value-container"));
+            jQuery(filterValue).find(".charts-inline-block").appendTo(jQuery(filterValue).find(".eea-filter-value-container"));
         }
     });
     jQuery.each(jQuery("ul.google-visualization-controls-categoryfilter-selected"), function(idx, filterUl){
@@ -75,7 +75,8 @@ function updateFilterDivs(){
             return;
         }
         var container = jQuery(filterUl).closest("div.googlechart_filter");
-        var button = jQuery(container).find("div.goog-menu-button");
+        var button = jQuery(container).find("div.charts-menu-button");
+        debugger;
         jQuery(filterUl).width(jQuery(container).width() - jQuery(button).width() - 10);
     });
     jQuery.each(jQuery(".googlechart_filter"), function(idx, filter){
