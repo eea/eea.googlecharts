@@ -344,8 +344,8 @@ ul.googlechart_tabs li:first-of-type a:hover {
 
 #daviz-view ul.google-visualization-controls-categoryfilter-selected,
 .googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected {
-    list-style-type: none;
-    margin: 0;
+    list-style-type: none !important;
+    margin: 0 !important;
     max-width: 100% ! important;
 }
 
@@ -546,4 +546,8 @@ input.googlechart-chart-size {
 
 .googlechart-chartarea-resizable:hover .googlechart-chartarea-input{
     opacity: 1;
+}
+
+.charts-inline-block {
+    font-size: 12px;
 }

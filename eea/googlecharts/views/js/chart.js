@@ -76,6 +76,7 @@ function updateFilterDivs(){
         }
         var container = jQuery(filterUl).closest("div.googlechart_filter");
         var button = jQuery(container).find("div.charts-menu-button");
+        debugger;
         jQuery(filterUl).width(jQuery(container).width() - jQuery(button).width() - 10);
     });
     jQuery.each(jQuery(".googlechart_filter"), function(idx, filter){
