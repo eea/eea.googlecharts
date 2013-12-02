@@ -129,7 +129,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
     width: 130px;
 }
 
-.goog-inline-block input {
+.charts-inline-block input {
     width: 90%;
 }
 
@@ -364,13 +364,13 @@ ul.googlechart_tabs li:first-of-type a:hover {
     display: inline;
 }
 
-#daviz-view ul.google-visualization-controls-categoryfilter-selected li div.goog-link-button-disabled
-.googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li div.goog-link-button-disabled {
+#daviz-view ul.google-visualization-controls-categoryfilter-selected li div.charts-link-button-disabled
+.googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li div.charts-link-button-disabled {
     display: none;
 }
 
-#daviz-view ul.google-visualization-controls-categoryfilter-selected li div.goog-control,
-.googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li div.goog-control {
+#daviz-view ul.google-visualization-controls-categoryfilter-selected li div.charts-control,
+.googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li div.charts-control {
     padding: 0.3em !important;
 }
 
@@ -384,7 +384,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
     display:block !important;
 }
 
-.goog-menu-vertical {
+.charts-menu-vertical {
     max-height: 80% !important;
     overflow: auto !important;
 }
@@ -424,14 +424,14 @@ ul.googlechart_tabs li:first-of-type a:hover {
     float: none;
 }
 
-#googlechart_dashboard div.googlechart_filter .goog-menu-button,
-.googlechart_dashboard div.googlechart_filter .goog-menu-button{
+#googlechart_dashboard div.googlechart_filter .charts-menu-button,
+.googlechart_dashboard div.googlechart_filter .charts-menu-button{
     vertical-align:top;
     margin-right:5px;
 }
 
-#googlechart_dashboard .google-visualization-controls-categoryfilter>.goog-inline-block>.goog-menu-button,
-.googlechart_dashboard .google-visualization-controls-categoryfilter>.goog-inline-block>.goog-menu-button {
+#googlechart_dashboard .google-visualization-controls-categoryfilter>.charts-inline-block>.charts-menu-button,
+.googlechart_dashboard .google-visualization-controls-categoryfilter>.charts-inline-block>.charts-menu-button {
     margin-top:0px;
 }
 
@@ -439,8 +439,8 @@ ul.googlechart_tabs li:first-of-type a:hover {
     float:left;
 }
 
-#googlechart_dashboard div.googlechart_filter li div.goog-inline-block,
-.googlechart_dashboard div.googlechart_filter li div.goog-inline-block{
+#googlechart_dashboard div.googlechart_filter li div.charts-inline-block,
+.googlechart_dashboard div.googlechart_filter li div.charts-inline-block{
     background-color: transparent !important;
 }
 
