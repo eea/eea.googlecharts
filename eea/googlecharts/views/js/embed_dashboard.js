@@ -37,7 +37,7 @@ function drawDashboardEmbed(options){
                 "<div id='googlechart_top_images_" + settings.vhash + "'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_view_" + settings.vhash + "' class='googlechart'></div>"+
-                "<div id='googlechart_filters_" + settings.vhash + "'></div>"+
+                "<div id='googlechart_filters_" + settings.vhash + "' class='googlechart_filters'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_bottom_images_" + settings.vhash + "'></div>"+
                 "<div style='clear: both'></div>" +
@@ -47,7 +47,7 @@ function drawDashboardEmbed(options){
             "<div id='googlechart_table_" + settings.vhash + "' class='googlechart_table googlechart_table_top googlechart_dashboard_table'>"+
                 "<div id='googlechart_top_images_" + settings.vhash + "'></div>"+
                 "<div style='clear: both'></div>" +
-                "<div id='googlechart_filters_" + settings.vhash + "'></div>"+
+                "<div id='googlechart_filters_" + settings.vhash + "' class='googlechart_filters'></div>"+
                 "<div id='googlechart_view_" + settings.vhash + "' class='googlechart'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_bottom_images_" + settings.vhash + "'></div>"+

@@ -60,6 +60,33 @@ function updateHashForRowFilter(availableColumns, filter, type, updateHash){
 }
 
 function updateFilterDivs(){
+    jQuery.each(jQuery("div.googlechart_filter"), function(idx, filter){
+        var filterId = jQuery(filter).attr("id");
+        var filterName = filterId.substr(20);
+        var filterType = "rowFilter";
+        if (filterId === 'googlechart_filters_sortfilter_custom_filter'){
+            var customPos = filterName.indexOf("_custom_filter");
+            filterType = "sortFilter"
+            filterName = filterName.substr(0, customPos);
+        }
+        else {
+            var customPos = filterName.indexOf("_custom_filter");
+            if (customPos !== -1){
+                filterType = "columnFilter";
+                filterName = filterName.substr(0, customPos);
+            }
+        }
+        if (filterName.indexOf("pre_config_filter_") === 0){
+            filterName = "pre_config_" + filterName.substr(18);
+        }
+        var filterInfo = {};
+        filterInfo.filterType = filterType;
+        if (filterType !== "sortFilter"){
+            filterInfo.filterNameForValueParams = filterName;
+        }
+        filterInfo.filterNameForHiddenParams = filterId;
+        jQuery(filter).attr("filterInfo", JSON.stringify(filterInfo));
+    })
     jQuery.each(jQuery("li.charts-container-horizontal"), function(idx, filterValue){
         if (jQuery(filterValue).closest(".googlechart_filters").hasClass("googlechart_filters_side")){
             return;
@@ -71,6 +98,9 @@ function updateFilterDivs(){
         }
     });
     jQuery.each(jQuery("ul.google-visualization-controls-categoryfilter-selected"), function(idx, filterUl){
+        if (jQuery(filterUl).closest(".googlechart_filters").length === 0){
+            return;
+        }
         if (jQuery(filterUl).closest(".googlechart_filters").hasClass("googlechart_filters_side")){
             return;
         }
@@ -299,6 +329,7 @@ function drawGoogleChart(options){
         google.visualization.events.addListener(chart, 'ready', function(event){
             jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartReadyEvent();
+            updateFilterDivs();
         });
 
         google.visualization.events.addListener(chart, 'error', function(event){

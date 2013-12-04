@@ -148,10 +148,12 @@ function addCustomFilter(options){
 
     google.visualization.events.addListener(filterFilter, 'statechange', function(event){
         settings.customHandler(settings.paramsForHandler);
+        updateFilterDivs();
     });
 
     google.visualization.events.addListener(filterDashboard, 'ready', function(event){
         settings.customReadyHandler(settings.paramsForHandler);
+        updateFilterDivs();
     });
 
 
