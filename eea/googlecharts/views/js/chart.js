@@ -64,13 +64,14 @@ function updateFilterDivs(){
         var filterId = jQuery(filter).attr("id");
         var filterName = filterId.substr(20);
         var filterType = "rowFilter";
+        var customPos;
         if (filterId === 'googlechart_filters_sortfilter_custom_filter'){
-            var customPos = filterName.indexOf("_custom_filter");
-            filterType = "sortFilter"
+            customPos = filterName.indexOf("_custom_filter");
+            filterType = "sortFilter";
             filterName = filterName.substr(0, customPos);
         }
         else {
-            var customPos = filterName.indexOf("_custom_filter");
+            customPos = filterName.indexOf("_custom_filter");
             if (customPos !== -1){
                 filterType = "columnFilter";
                 filterName = filterName.substr(0, customPos);
@@ -86,7 +87,7 @@ function updateFilterDivs(){
         }
         filterInfo.filterNameForHiddenParams = filterId;
         jQuery(filter).attr("filterInfo", JSON.stringify(filterInfo));
-    })
+    });
     jQuery.each(jQuery("li.charts-container-horizontal"), function(idx, filterValue){
         if (jQuery(filterValue).closest(".googlechart_filters").hasClass("googlechart_filters_side")){
             return;
