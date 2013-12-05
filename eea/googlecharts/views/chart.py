@@ -314,9 +314,9 @@ class View(ViewForm):
                     found = True
                     config = chart
                     config['chart_id'] = chart_id
-                    config['json'] = config['config']
-                    config['row_filters_str'] = config['row_filters']
-                    config['sortAsc_str'] = config['sortAsc']
+                    config['json'] = config.get('config', '{}')
+                    config['row_filters_str'] = config.get('row_filters', '{}')
+                    config['sortAsc_str'] = config.get('sortAsc', '')
             if not found:
                 config = {}
                 config['name'] = ""
