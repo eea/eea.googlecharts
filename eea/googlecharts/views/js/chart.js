@@ -535,7 +535,7 @@ function drawGoogleDashboard(options){
         if ((def_str === undefined) || (def_str = "")){
             def_str = "[]";
         }
-        var defaults = JSON.parse(value.defaults);
+        var defaults = JSON.parse(def_str);
         dashboard_filters[value.column] = {"type":value.type, defaults:defaults};
     });
     // Dashboard charts
