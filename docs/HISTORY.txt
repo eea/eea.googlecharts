@@ -3,6 +3,8 @@ Changelog
 
 9.2-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed charteditor problems on customize tab
+  [szabozo0 refs #17629]
 
 9.1 - (2013-12-09)
 ------------------

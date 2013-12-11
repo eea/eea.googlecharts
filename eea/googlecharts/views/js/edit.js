@@ -1265,6 +1265,12 @@ function openEditor(elementId) {
 
     var tableForChart = prepareForChart(options);
 
+    // workaround for charteditor issue #17629
+    for (var i = 0; i < tableForChart.getNumberOfColumns(); i++){
+        tableForChart.getColumnProperties(i);
+    }
+    // end of workaround
+
     chart.dataTable = tableForChart;
 
     chart.options.title = title;
