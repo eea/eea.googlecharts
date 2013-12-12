@@ -876,12 +876,12 @@ dl.portlet .dashboard-widget,
 }
 
 .googlechart_chart_config_clickable{
-    left:11px;
+    left:14px;
     border:1px solid #CCC;
 }
 
 .googlechart_table_config_clickable{
-    left:341px;
+    left:344px;
     border:1px solid #CCC;
 }
 
@@ -1538,4 +1538,18 @@ input.googlechartarea-size {
 
 div.googlechartarea-input {
     font-size:14px;
+}
+
+.googlecharts-customdialog{
+    background-color: white;
+    position:absolute !important;
+    display:block;
+    z-index:100;
+    overflow:hidden;
+    border-radius: 5px;
+    box-shadow: 0px 0px 100px #000;
+}
+
+.customDialogHeader{
+    border-bottom: 1px solid #ccc;
 }

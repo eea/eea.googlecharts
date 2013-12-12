@@ -1792,7 +1792,7 @@ function chartEditorSave(id){
     jQuery("#googlechartid_"+id+" .googlechart_sortBy").attr("value",sortBy_str);
     jQuery("#googlechartid_"+id+" .googlechart_sortAsc").attr("value",sortAsc_str);
     markChartAsModified(id);
-    editorDialog.dialog("close");
+    editorDialog.close();
     drawChart(id, checkSVG_withThumb);
     //remove invalid filters
     var filtersPrefix = "googlechart_filters_"+id;
@@ -1816,7 +1816,7 @@ function chartEditorSave(id){
 }
 
 function chartEditorCancel(){
-    editorDialog.dialog("close");
+    editorDialog.close();
 }
 
 function updatePalette() {
@@ -2480,7 +2480,7 @@ function openEditChart(id){
 //        '<div id="googlechart_overlay" style="display:none; background: transparent;"><div class="contentWrap" style="width:200px;height:200px; border:1px solid red; background-color:#fff">xxx</div></div>'+
         '<div class="chart_config_tabs" style="padding-top:10px;">'+
             '<div class="googlechart_maximize_chart_config googlechart_config_head googlechart_config_head_selected" style="float:left">Chart Configurator</div>'+
-            '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:341px" title="Click to enlarge Table Configurator">Table Configurator</div>'+
+            '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:344px" title="Click to enlarge Table Configurator">Table Configurator</div>'+
             "<div style='float:right;'>"+
                 '<div class="buttons">' +
                 "<input type='button' class='btn btn-success' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
@@ -2616,17 +2616,11 @@ function openEditChart(id){
     });
     var width = jQuery(window).width() * 0.95;
     var height = jQuery(window).height() * 0.95;
-    editcolumnsdialog.dialog({title:"Chart Editor",
-                dialogClass: 'googlechart-dialog',
-                modal:true,
+    editcolumnsdialog.CustomDialog({title:"Chart Editor",
+                dialogClass: 'googlecharts-customdialog',
                 width: width,
                 minWidth:990,
                 height: height,
-                resizable:true,
-                closeOnEscape:false,
-                create:function(){
-                    editorDialog = jQuery(this);
-                },
                 close:function(){
                     jQuery(".slick-header-menu").remove();
                     charteditor_css.remove();
@@ -2638,6 +2632,8 @@ function openEditChart(id){
                     setTimeout(fillEditorDialog, 500);
                 }
                 });
+    editorDialog = editcolumnsdialog.data("dialog");
+
 }
 
 function populateDefaults(id, type){
@@ -3845,3 +3841,122 @@ jQuery(document).ready(function(){
         init_googlecharts_edit();
     });
 });
+
+/*if (window.DavizEdit === undefined){
+    var DavizEdit = {'version': 'eea.googlecharts'};
+}*/
+
+DavizEdit.CustomDialog = function(context, options){
+    var self = this;
+    self.context = context;
+    self.initialize(options);
+};
+
+DavizEdit.CustomDialog.prototype = {
+    initialize: function(options){
+        var self = this;
+        self.settings = {
+            dialogClass: "",
+            title : "Dialog",
+            width : 600,
+            height : 400,
+            minWidth : 0,
+            create : function(){},
+            close: function(){},
+            resize: function(){},
+            open: function(){}
+        };
+        self.context.data("dialog", self);
+        jQuery.extend(self.settings, options);
+        if (self.settings.minWidth > self.settings.width){
+            self.settings.width = self.settings.minWidth;
+        }
+        self.drawDialog();
+    },
+
+    drawDialog: function(){
+        var self = this;
+        self.settings.create();
+        var windowWidth = jQuery(window).width();
+        var windowHeight = jQuery(window).height();
+        var windowTop = jQuery(window).scrollTop();
+        var windowLeft = jQuery(window).scrollLeft();
+        var left = (windowWidth - self.settings.width)/2 + windowLeft;
+        var top = (windowHeight - self.settings.height)/2 + windowTop;
+        jQuery("<div>")
+            .addClass("ui-widget-overlay ui-front")
+            .appendTo("body");
+        var dialog = jQuery("<div>")
+                        .addClass("ui-dialog ui-widget ui-widget-content ui-corner-all")
+                        .addClass(self.settings.dialogClass)
+                        .css("width", self.settings.width)
+                        .css("height", self.settings.height)
+                        .css("left", left)
+                        .css("top", top)
+                        .resizable({
+                            minWidth:self.settings.minWidth,
+                            stop: function(){
+                                self.settings.resize();
+                            },
+                            resize: function(){
+                                console.log("resize");
+                                jQuery(".custom-dialog-content")
+                                    .css("width", jQuery(this).width()-30)
+                                    .css("height", jQuery(this).height()-40);
+                            }
+                        })
+                        .draggable({handle:".customDialogHeader"});
+        var dialogHeader = jQuery("<div>")
+                            .text(self.settings.title)
+                            .addClass("customDialogHeader")
+                            .addClass("ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix")
+                            .appendTo(dialog);
+        var closeBtn = jQuery("<button>")
+                            .attr("title", "close")
+                            .attr("role", "button")
+                            .addClass("ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close")
+                            .hover(
+                                function(){
+                                    jQuery(this)
+                                        .addClass("ui-state-hover ui-state-active");
+                                },
+                                function(){
+                                    jQuery(this)
+                                        .removeClass("ui-state-hover ui-state-active");
+                                }
+                            )
+                            .click(
+                                function(){
+                                    self.close();
+                                }
+                            );
+        jQuery("<span>")
+            .addClass("ui-button-icon-primary ui-icon ui-icon-closethick")
+            .appendTo(closeBtn);
+        jQuery("<span>")
+            .addClass("ui-button-text")
+            .text("close")
+            .appendTo(closeBtn);
+        closeBtn.appendTo(dialogHeader);
+        self.context
+                .addClass("ui-dialog-content ui-widget-content custom-dialog-content")
+                .css("width",self.settings.width-30)
+                .css("height",self.settings.height-40);
+        self.context.appendTo(dialog);
+        dialog.appendTo("body");
+        self.settings.open();
+    },
+
+    close: function(){
+        var self = this;
+        jQuery(".ui-widget-overlay").remove();
+        self.settings.close();
+        self.context.closest(".googlecharts-customdialog").remove();
+    }
+};
+
+jQuery.fn.CustomDialog = function(options){
+    return this.each(function(){
+        var customDialog = new DavizEdit.CustomDialog(jQuery(this), options);
+    });
+};

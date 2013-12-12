@@ -3,6 +3,8 @@ Changelog
 
 9.2-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed chartditor conflict with jquery dialogs
+  [szabozo0 refs #17629]
 * Bugfix: Fixed charteditor problems on customize tab
   [szabozo0 refs #17629]
 
