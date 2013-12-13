@@ -25,7 +25,7 @@
     <style type="text/css" tal:content="view/get_customstyle">
     </style>
 </head>
-<body>
+<body onhashchange="hashchanged();">
     <metal:chart use-macro="here/embed-dashboard/macros/dashboard"/>
 
     <a tal:condition="python:not inline" style="float:right"
@@ -91,6 +91,12 @@
                 drawDashboardEmbed(settings_$vhash);
             }
         });
+        function hashchanged(){
+            if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
+                drawDashboardEmbed(settings_$vhash);
+            }
+        };
+
         ">
     </script>
 
