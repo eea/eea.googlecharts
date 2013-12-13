@@ -20,7 +20,7 @@ The filters are passed in the hash of the page. It is an encoded JSON but commas
 Differences between simple visualization pages and embedded charts
 ------------------------------------------------------------------
 
-| The query params for simple views and embedded charts is the same, 
+| The query params for simple views and embedded charts is the same,
 | The only difference is that in case of a view page the hash contains the id of the chart, and in the case of the embed the hash only contains the filters
 
     | **Example:** 
@@ -48,7 +48,7 @@ The filters are composed from the following parts:
 
 sortFilter
 ^^^^^^^^^^
-    | In this parameter we can configure the default sort order for the data in the chart. 
+    | In this parameter we can configure the default sort order for the data in the chart.
     | The value for the sortFilter is a list with a single element, what can be: "**__default__**", "**__disabled__**", **<columnname>** or **<columnname_reversed>**
 
 hideFilters
@@ -91,31 +91,39 @@ Use the filterinfo attribute from chart filters
 
 Examples of how to build queries for charts:
 --------------------------------------------
-1.  Set the query parameters for a chart
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1.  Set the query parameters for embedded charts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     | Starting from this chart: http://daviz.eionet.europa.eu/visualisations/data-visualization-2/#tab-chart_3.
-    | When we open the page, the url doesn't contain any parameters, because there are no values selected for the filters. But when  a country or an activity is selected, the url will be updated with the query:
-    | http://daviz.eionet.europa.eu/visualisations/data-visualization-2/#tab-chart_3_filters=%7B%22rowFilters%22%3A%7B%22country%22%3A%5B%22Austria%22%3B%22Belgium%22%5D%7D%3B%22columnFilters%22%3A%7B%7D%7D
+    | If we use the embed option for chart, the popup will prompt if we want to use the current values of the filters in the embed and if we want to hide the filters (we can select one by one, or all of them). By default all filters are used and displayed in the iframe, and it's code looks like:
 
-    | We can decode and parse the filter params:
-    | ``query_params = JSON.parse(decodeURIComponent("%7B%22rowFilters%22%3A%7B%22country%22%3A%5B%22Austria%22%3B%22Belgium%22%5D%7D%3B%22columnFilters%22%3A%7B%7D%7D").split(";").join(","))`` 
-    | and we have a json with the settings:  
-    | ``{rowFilters: {country: ["Austria", "Belgium"]}, columnFilters: {}}``
+    ``<iframe width='1856' height='857' src='http://daviz.eionet.europa.eu/visualisations/data-visualization-2/embed-chart?chart=chart_3&chartWidth=1000&chartHeight=600&customStyle=.googlechart_view{margin-left:0px%3B}#_filters={}'></iframe>``
 
-    | If we add a new value for the country rowfilter:
-    | ``query_params.rowFilters.country.push("Bulgaria")``
-    | then encode it:
-    | ``encodeURIComponent(JSON.stringify(query_params).split(",").join(";"))``
-    | and update the url with the new filter param and reload the page, the country filter will have now "Austria", "Belgium", "Bulgaria" selected
-    
-2. Hiding filters embedded chart 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    | After embedding the previous chart in a page decode and parse the parameters
-    | Hide a filter with the params:
-    | ``query_params.hideFilters = []``
+    | Put the code in a page and let's make some customization
 
-    | Find out the name of the filter as described in section **How to figure out which filter in which section goes?**
-    | update the query_params
-    | ``query_params.hideFilters.push("googlechart_filters_country")``
-    | encode it, update the embed string, and reload the page.
-    | The country filter is not displayed anymore. It's values are still applied to the chart
+    | The interesting part of the source for the iframe is after the **#_filters** part, where the filters are configured. As we didn't select anything, the option for filters is empty.
+
+    | Now get the original query parameters:
+
+        | ``var src = $("iframe").attr("src");``
+        | ``var src_array = src.split("#_filters=");``
+        | ``var query_params = JSON.parse(decodeURIComponent(src_array[1]).split(";").join(","));``
+
+    | query_params in this moment is empty: {}
+
+    | **set some filters:**
+    | To find out the name of the filter and where it should be placed, check **How to figure out which filter in which section goes?**
+
+        | ``query_params.rowFilters = {};``
+        | ``query_params.rowFilters.country = ["Austria", "Belgium"];``
+
+    | **hide a filter:**
+
+        | ``query_params.hideFilters = ["googlechart_filters_main_activity"];``
+
+    | build the new src for the iframe:
+
+        | ``src_array[1] = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));``
+        | ``src = src_array.join("#_filters=");``
+        | ``$("iframe").attr("src", src);``
+
+
