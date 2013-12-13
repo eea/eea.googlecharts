@@ -21,9 +21,8 @@
             .googlechart_filters {margin-top:0px !important;}
             body {margin:1px; overflow: hidden;}
         </style>
-
     </head>
-    <body>
+    <body onhashchange="hashchanged();">
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
         <a tal:condition="python:not inline" style="float:right"
            tal:attributes="href view/context/absolute_url"
@@ -134,6 +133,12 @@
                     drawChart(settings_$vhash, other_options_$vhash);
                 }
             });
+            function hashchanged(){
+                if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
+                    drawChart(settings_$vhash, other_options_$vhash);
+                }
+            };
+
             ">
     </script>
 
