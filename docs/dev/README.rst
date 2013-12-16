@@ -102,7 +102,7 @@ Examples of how to build queries for charts:
 
     | The interesting part of the source for the iframe is after the **#_filters** part, where the filters are configured. As we didn't select anything, the option for filters is empty.
 
-    | Now get the original query parameters:
+    | **Now get the original query parameters:**
 
         | ``var src = $("iframe").attr("src");``
         | ``var src_array = src.split("#_filters=");``
@@ -120,10 +120,25 @@ Examples of how to build queries for charts:
 
         | ``query_params.hideFilters = ["googlechart_filters_main_activity"];``
 
-    | build the new src for the iframe:
+    | **build the new src for the iframe:**
 
         | ``src_array[1] = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));``
         | ``src = src_array.join("#_filters=");``
         | ``$("iframe").attr("src", src);``
 
+2.  Set sort order for embedded charts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    | The sort option can only be set on non table charts.
+    | Let's start from a chart with the Sort Filter enabled: http://daviz.eionet.europa.eu/visualisations/data-visualization-31#tab-chart_2, and embed it in a page.
+    | **Get the original query parameters as described in the previous section**
+
+    | **set the sort option**
+
+    | ``query_params.sortFilter = ['country'];``
+
+    |  **hide it**
+
+    |  ``query_params.hideFilters = ["googlechart_filters_sortfilter_custom_filter"];``
+
+    | **build the new src for the iframe**
 
