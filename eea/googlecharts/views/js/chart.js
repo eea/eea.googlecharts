@@ -80,12 +80,25 @@ function updateFilterDivs(){
         if (filterName.indexOf("pre_config_filter_") === 0){
             filterName = "pre_config_" + filterName.substr(18);
         }
+        var chart_id = jQuery(this).closest(".googlechart_table").attr("id");
+        var chart_id_array = chart_id.split("_");
+        var chart_hash = "";
+        if (chart_id_array[chart_id_array.length - 1] !== "table"){
+            chart_hash = chart_id_array[chart_id_array.length - 1];
+        }
         var filterInfo = {};
+        var tmp_filterName = filterName;
+        var tmp_filterId = filterId;
+        if (chart_hash !== ""){
+            tmp_filterName = tmp_filterName.replace(chart_hash + "_", "");
+            tmp_filterId = tmp_filterId.replace(chart_hash + "_", "");
+        }
+
         filterInfo.filterType = filterType;
         if (filterType !== "sortFilter"){
-            filterInfo.filterNameForValueParams = filterName;
+            filterInfo.filterNameForValueParams = tmp_filterName;
         }
-        filterInfo.filterNameForHiddenParams = filterId;
+        filterInfo.filterNameForHiddenParams = tmp_filterId;
         jQuery(filter).attr("filterInfo", JSON.stringify(filterInfo));
     });
     jQuery.each(jQuery("li.charts-container-horizontal"), function(idx, filterValue){
