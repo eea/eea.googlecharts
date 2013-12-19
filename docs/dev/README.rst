@@ -1,6 +1,6 @@
-================
-EEA Googlecharts
-================
+=====================
+EEA Google Charts API
+=====================
 .. image:: http://ci.eionet.europa.eu/job/eea.googlecharts-www/badge/icon
   :target: http://ci.eionet.europa.eu/job/eea.googlecharts-www/lastBuild
 .. image:: http://ci.eionet.europa.eu/job/eea.googlecharts-plone4/badge/icon
