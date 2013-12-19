@@ -1554,3 +1554,32 @@ div.googlechartarea-input {
 .customDialogHeader{
     border-bottom: 1px solid #ccc;
 }
+
+.pivotInput {
+    display:none;
+}
+
+.activePivotInput {
+    display:block;
+}
+
+#pivots {
+    float:left;
+}
+
+.pivotsPreviewTable {
+    float:left;
+    margin-left:10px;
+}
+.titleRowForPivot > td{
+    background-color: #F3F3F3;
+    border: 1px solid #CCC;
+    border-bottom: 2px solid #CCC;
+    text-align: center;
+}
+
+.detailRowForPivot > td{
+    border: 0;
+    border-bottom: 0;
+    padding: 0;
+}

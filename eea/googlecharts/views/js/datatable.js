@@ -55,6 +55,7 @@ function transformTable(options){
     pivotTable.items = [];
     pivotTable.available_columns = {};
     pivotTable.properties = {};
+    pivotTable.pivotLevels = {};
 
     jQuery.each(settings.normalColumns,function(normal_index, normal_column){
         pivotTable.properties[normal_column] = settings.originalTable.properties[normal_column];
@@ -74,6 +75,10 @@ function transformTable(options){
         });
 
         if (settings.valueColumn !== ''){
+            if (pivotTable.pivotLevels[settings.valueColumn] === undefined){
+                pivotTable.pivotLevels[settings.valueColumn] = {};
+            }
+            var node = pivotTable.pivotLevels[settings.valueColumn];
             var pivotColumnName = settings.valueColumn;
             var pivotColumnLabel = settings.availableColumns[settings.valueColumn];
             var pivotValue = row[settings.valueColumn];
@@ -81,6 +86,10 @@ function transformTable(options){
             jQuery(settings.pivotingColumns).each(function(pivot_index, pivot_column){
                 pivotColumnLabel += " " + row[pivot_column];
                 pivotColumnName += " " + row[pivot_column];
+                if (node[pivotColumnName] === undefined){
+                    node[pivotColumnName] = {};
+                }
+                node = node[pivotColumnName];
             });
 
             var pivotColumn = pivotColumnName.replace(/[^A-Za-z0-9]/g, '_');
@@ -153,6 +162,7 @@ function transformTable(options){
         }
         filteredPivotTable.items.push(row);
     });
+    filteredPivotTable.pivotLevels = pivotTable.pivotLevels;
     return filteredPivotTable;
 }
 

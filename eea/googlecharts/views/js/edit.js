@@ -1379,6 +1379,27 @@ function generateNewTableForChart(){
     openEditor("tmp_chart");
 }
 
+function populatePivotPreviewTable(columns){
+    var table = "<tr class='titleRowForPivot'>";
+    jQuery.each(columns, function(key, value){
+        table += "<td>"+key+"</td>";
+    });
+    table += "</tr>";
+
+    table += "<tr class='detailRowForPivot'>";
+    jQuery.each(columns, function(key, value){
+        if (!jQuery.isEmptyObject(value)){
+            var newTable = "<table>";
+            newTable += populatePivotPreviewTable(columns[key]);
+            newTable += "</table>";
+            table += "<td>"+newTable+"</td>";
+        }
+    });
+    table += "</tr>";
+
+    return table;
+}
+
 function generateNewTable(sortOrder, isFirst){
     var columns = jQuery("#originalColumns").find("th");
 
@@ -1448,6 +1469,9 @@ function generateNewTable(sortOrder, isFirst){
         drawGrid("#newTable", transformedTable.items, transformedTable.available_columns, filterable_columns);
         setGridColumnsOrder(sortOrder);
     }
+    jQuery.each(transformedTable.pivotLevels, function(key, value){
+        jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
+    });
 }
 
 function isAvailableChart(chartType){
@@ -1549,6 +1573,7 @@ function updateWithStatus(){
     var pivots = [];
     var hidden = [];
     jQuery("#pivots").remove();
+    jQuery(".pivotsPreviewTable").remove();
     var pivotsHtml = "<div id='pivots'>";
     jQuery.each(columnsForPivot,function(key, value){
         var originalColumn = jQuery("#originalColumns").find("[column_id='"+key+"']").find("select");
@@ -1567,6 +1592,8 @@ function updateWithStatus(){
         }
     });
     pivotsHtml += "</div>";
+    pivotsHtml += "<table class='pivotsPreviewTable'></table>";
+    pivotsHtml += "<div style='clear:both'></div>";
     if (valueColumn === -1){
         jQuery(".columnheader").each(function(idx,value){
             jQuery(value).show();
@@ -2528,17 +2555,26 @@ function openEditChart(id){
                         '<div class="ui-icon ui-icon-circlesmall-plus">expand</div>'+
                     '</div>'+
                     '<div class="pivotingTable">' +
-                    '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable table">'+
-                        '<tr id="pivotConfigHeader"></tr>'+
-                        '<tr id="pivotConfigDropZones"></tr>'+
-                    '</table>'+
+                        '<div style="clear:both"></div>'+
+                        '<div>'+
+                            '<input type="radio" name="pivotingTable_type" checked="checked" value="pivot"/>pivot<br/>'+
+                            '<input type="radio" name="pivotingTable_type" value="unpivot"/>unpivot'+
+                        '</div>'+
+                        '<div class="pivotingTable_unpivot pivotInput">'+
+                            'Unpivot base: <input type="text"/><br/>'+
+                            'Delimiter: <input type="text"/><br/>'+
+                            'New column label: <input type="text"/><br/>'+
+                        '</div>'+
+                        '<div class="pivotingTable_pivot activePivotInput pivotInput">'+
+                            '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable table">'+
+                                '<tr id="pivotConfigHeader"></tr>'+
+                                '<tr id="pivotConfigDropZones"></tr>'+
+                            '</table>'+
+                        '</div>'+
                     '</div>' +
                     '<div style="clear:both"></div>'+
                     '<div>'+
                         '<span class="label">Table for chart</span>' +
-//                        '<div class="buttons-bar">'+
-//                      '<input type="button" class="column-show-hide-button context btn" value="Table pivots" id="tablePivots"/>' +
-//                      '</div>' +
                     '</div>'+
                     "<div style='clear:both;'> </div>" +
                     '<div id="newTable" class="daviz-data-table slick_newTable" style="height:300px;">'+
@@ -2550,6 +2586,7 @@ function openEditChart(id){
             '</div>'+
         '</div>'+
     '</div>');
+
 
     jQuery('#googlechart_overlay').remove();
     jQuery('<div id="googlechart_overlay" style="display:none;">'+
@@ -2633,6 +2670,18 @@ function openEditChart(id){
                 }
                 });
     editorDialog = editcolumnsdialog.data("dialog");
+
+    jQuery("input[name='pivotingTable_type']").change(function(){
+        debugger;
+        if (jQuery("input[name='pivotingTable_type']:checked").attr("value") === "pivot"){
+            jQuery(".pivotingTable_pivot").addClass("activePivotInput");
+            jQuery(".pivotingTable_unpivot").removeClass("activePivotInput");
+        }
+        else {
+            jQuery(".pivotingTable_unpivot").addClass("activePivotInput");
+            jQuery(".pivotingTable_pivot").removeClass("activePivotInput");
+        }
+    });
 
 }
 
