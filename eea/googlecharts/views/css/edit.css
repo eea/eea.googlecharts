@@ -968,7 +968,8 @@ select[name=googlechart_filterposition] {
     z-index:1004;
 }
 
-.pivotingTable {
+.pivotingTable,
+.unpivotingForm{
     display: none;
 }
 
@@ -1149,12 +1150,18 @@ div[title='Format'].slick-header-menuitem {
     background-image : url(../../++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png);
 }
 
-#pivotingTableLabel {
+#pivotingTableLabel,
+#unpivotingFormLabel{
     float:left;
     cursor:pointer;
 }
 
-#pivotingTableLabel > .ui-icon{
+#unpivotingFormLabel{
+    margin-bottom:3px;
+}
+
+#pivotingTableLabel > .ui-icon,
+#unpivotingFormLabel > .ui-icon{
     float:right; background-color:#999;
     background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_ffffff_256x240.png);
 }
@@ -1555,14 +1562,6 @@ div.googlechartarea-input {
     border-bottom: 1px solid #ccc;
 }
 
-.pivotInput {
-    display:none;
-}
-
-.activePivotInput {
-    display:block;
-}
-
 #pivots {
     float:left;
 }
@@ -1582,4 +1581,38 @@ div.googlechartarea-input {
     border: 0;
     border-bottom: 0;
     padding: 0;
+}
+
+.activefields {
+    display: block !important;
+}
+
+.findexistingpivotsfields {
+    display: none;
+}
+
+.annotator-controls{
+    z-index:99999;
+}
+
+.unpivot-settings {
+    padding:100px;
+}
+
+.annotator-item:first-child textarea{
+    min-height:100px !important;
+    min-width:320px !important;
+}
+
+.annotator-resize{
+    display:none;
+}
+
+.googlechartAnnotationColumnName input,
+.googlechartAnnotationColumnName input:focus{
+    outline: -webkit-focus-ring-color auto 5px !important;
+}
+
+.googlechartAnnotationViewerTable{
+    font-size : 14px;
 }

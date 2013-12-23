@@ -1469,9 +1469,8 @@ function generateNewTable(sortOrder, isFirst){
         drawGrid("#newTable", transformedTable.items, transformedTable.available_columns, filterable_columns);
         setGridColumnsOrder(sortOrder);
     }
-    jQuery.each(transformedTable.pivotLevels, function(key, value){
-        jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
-    });
+
+    return transformedTable.pivotLevels;
 }
 
 function isAvailableChart(chartType){
@@ -1664,7 +1663,11 @@ function removePivot(event, nr){
         valueColumn.status = 0;
     }
     updateWithStatus();
-    generateNewTable();
+    var pivotLevels = generateNewTable();
+    jQuery.each(pivotLevels, function(key, value){
+        jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
+    });
+
 }
 
 function checkVisiblePivotValueColumns(){
@@ -1714,7 +1717,10 @@ function populateTableForPivot(){
             column.status = 0;
         }
         updateWithStatus();
-        generateNewTable();
+        var pivotLevels = generateNewTable();
+        jQuery.each(pivotLevels, function(key, value){
+            jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
+        });
     });
 }
 
@@ -2435,7 +2441,7 @@ function fillEditorDialog(){
     jQuery(columnsSettings.prepared).each(function(idx, prepared){
         loadedSortOrder.push([prepared.name, (prepared.status === 1?'visible':'hidden')]);
     });
-    generateNewTable(loadedSortOrder, true);
+    var pivotLevels = generateNewTable(loadedSortOrder, true);
 
     populateTableForPivot();
     $(".draggable").draggable({
@@ -2456,7 +2462,10 @@ function fillEditorDialog(){
                     updateStatus();
                 }
                 updateWithStatus();
-                generateNewTable();
+                var pivotLevels = generateNewTable();
+                jQuery.each(pivotLevels, function(key, value){
+                    jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
+                });
                 pivotDragStatus = 0;
             }
     });
@@ -2472,6 +2481,11 @@ function fillEditorDialog(){
     });
     updateWithStatus();
 
+    jQuery.each(pivotLevels, function(key, value){
+        jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
+    });
+
+
     jQuery("#pivotingTableLabel").click(function(){
         var tmp_icon = jQuery("#pivotingTableLabel").find(".ui-icon");
         if (tmp_icon.hasClass("ui-icon-circlesmall-plus")){
@@ -2483,9 +2497,147 @@ function fillEditorDialog(){
         jQuery(".pivotingTable").toggle();
     });
 
+    jQuery("#unpivotingFormLabel").click(function(){
+        var tmp_icon = jQuery("#unpivotingFormLabel").find(".ui-icon");
+        if (tmp_icon.hasClass("ui-icon-circlesmall-plus")){
+            tmp_icon.removeClass("ui-icon-circlesmall-plus").addClass("ui-icon-circlesmall-minus");
+        }
+        else {
+            tmp_icon.removeClass("ui-icon-circlesmall-minus").addClass("ui-icon-circlesmall-plus");
+        }
+        jQuery(".unpivotingForm").toggle();
+    });
+
     jQuery("#googlechart_overlay").overlay({
         mask: 'black'
     });
+    jQuery.each(available_columns, function(idx, value){
+        jQuery("<option>")
+            .attr("value", value)
+            .text(value)
+            .appendTo(".unpivot-pivotedcolumns");
+    });
+    jQuery(".unpivot-pivotedcolumns").change(function(){
+        jQuery(".unpivot-settings").empty();
+        jQuery("<div>")
+            .text(jQuery(this).attr("value"))
+            .annotator()
+            .annotator("addPlugin", "EEAGoogleChartsUnpivotAnnotation")
+            .appendTo(".unpivot-settings");
+    });
+}
+
+function showFindExistingPivotsDialog(){
+    jQuery("<div>")
+        .addClass("findexistingpivots")
+        .dialog({title:"Find Existing Pivots",
+            dialogClass: 'googlechart-dialog',
+            modal: true,
+            open: function(evt, ui){
+                jQuery("<input>")
+                    .attr("type", "radio")
+                    .attr("name", "findtype")
+                    .attr("value", "manual")
+                    .attr("checked", "checked")
+                    .appendTo(".findexistingpivots");
+                jQuery("<span>")
+                    .text("Manual")
+                    .appendTo(".findexistingpivots");
+                jQuery("<div>")
+                    .attr("style", "clear:both")
+                    .appendTo(".findexistingpivots");
+                jQuery("<input>")
+                    .attr("type", "radio")
+                    .attr("name", "findtype")
+                    .attr("value", "expression")
+                    .appendTo(".findexistingpivots");
+                jQuery("<span>")
+                    .text("Expression")
+                    .appendTo(".findexistingpivots");
+                jQuery("<div>")
+                    .addClass("manualfields findexistingpivotsfields activefields")
+                    .text("asad fasd fas faf as s fa fdasf\nasdfasf dasfd asd f\ndfasd as f\nafasdf a f\nasf as dfa dsa f\n")
+                    .appendTo(".findexistingpivots");
+                jQuery("<div>")
+                    .addClass("expressionfields findexistingpivotsfields")
+                    .text("b")
+                    .appendTo(".findexistingpivots");
+                jQuery("input[name='findtype']").change(function(){
+                    if (jQuery("input[name='findtype']:checked").attr("value") === "manual"){
+                        jQuery(".manualfields").addClass("activefields");
+                        jQuery(".expressionfields").removeClass("activefields");
+                    }
+                    else{
+                        jQuery(".manualfields").removeClass("activefields");
+                        jQuery(".expressionfields").addClass("activefields");
+                    }
+                });
+            },
+            buttons:[
+                {
+                    text: "Cancel",
+                    click: function(){
+                        jQuery(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Find",
+                    click: function(){
+/*                    var selectedColumn = jQuery(".googlecharts_filter_columns").val();
+                    var selectedFilter = jQuery(".googlecharts_filter_type").val();
+                    var selectedColumnName = "";
+                    jQuery(".googlecharts_filter_columns").find("option").each(function(idx, filter){
+                        if (jQuery(filter).attr("value") === selectedColumn){
+                            selectedColumnName = jQuery(filter).html();
+                            if (selectedColumnName.indexOf("(pre-pivot)") !== -1){
+                                selectedColumnName = selectedColumnName.substr(0,selectedColumnName.length - 12);
+                            }
+                        }
+                    });
+                    var defaults = [];
+                    if (jQuery(".googlecharts_defaultsfilter_number_error").length !== 0){
+                        alert("Selected column is not compatible with selected filter type");
+                        return;
+                    }
+                    if (selectedFilter === "0"){
+                        var min = jQuery(".googlecharts_defaultsfilter_number_min input").attr("value");
+                        var max = jQuery(".googlecharts_defaultsfilter_number_max input").attr("value");
+                        if (isNaN(min)){
+                            alert("Minimum value is not a number!");
+                            return;
+                        }
+                        if (isNaN(max)){
+                            alert("Maximum value is not a number!");
+                            return;
+                        }
+                        defaults.push(min);
+                        defaults.push(max);
+                    }
+                    if (selectedFilter === "1"){
+                        defaults.push(jQuery(".googlecharts_defaultsfilter_string input").attr("value"));
+                    }
+                    if ((selectedFilter === "2") || (selectedFilter === "3")){
+                        jQuery.each(defaultfilter_data, function(idx, value){
+                            if (value.defaultval){
+                                defaults.push(value.value);
+                            }
+                        });
+                    }
+
+                    if ((selectedColumn === '-1') || (selectedFilter === '-1')){
+                        alert("Please select column and filter type!");
+                    }
+                    else{
+                        addFilter(id, selectedColumn, selectedFilter, selectedColumnName, defaults);
+                        markChartAsModified(id);
+                        jQuery(this).dialog("close");
+                    }*/
+                    
+                    }
+                }
+            ]
+        });
+
 }
 
 function openEditChart(id){
@@ -2551,26 +2703,30 @@ function openEditChart(id){
             '<h3 style="display:none;"><a href="#">Table Editor</a></h3>' +
             '<div class="googlechart_accordion_container">' +
                 '<div class="googlechart_accordion_table">' +
+
+                    '<div id="unpivotingFormLabel" class="label">Unpivot' + //xxx
+                        '<div class="ui-icon ui-icon-circlesmall-plus">expand</div>'+
+                    '</div>'+
+                    '<div class="unpivotingForm">' +
+                        '<div style="clear:both"></div>'+
+                        'Select one of the pivoted columns:'+
+                        '<select class="unpivot-pivotedcolumns">'+
+                        '</select>'+
+                        '<div class="unpivot-settings">'+
+                        '</div>'+
+                    '</div>' +
+                    '<div style="clear:both"></div>'+
+
                     '<div id="pivotingTableLabel" class="label">Table pivots' + //xxx
                         '<div class="ui-icon ui-icon-circlesmall-plus">expand</div>'+
                     '</div>'+
                     '<div class="pivotingTable">' +
                         '<div style="clear:both"></div>'+
-                        '<div>'+
-                            '<input type="radio" name="pivotingTable_type" checked="checked" value="pivot"/>pivot<br/>'+
-                            '<input type="radio" name="pivotingTable_type" value="unpivot"/>unpivot'+
-                        '</div>'+
-                        '<div class="pivotingTable_unpivot pivotInput">'+
-                            'Unpivot base: <input type="text"/><br/>'+
-                            'Delimiter: <input type="text"/><br/>'+
-                            'New column label: <input type="text"/><br/>'+
-                        '</div>'+
-                        '<div class="pivotingTable_pivot activePivotInput pivotInput">'+
-                            '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable table">'+
-                                '<tr id="pivotConfigHeader"></tr>'+
-                                '<tr id="pivotConfigDropZones"></tr>'+
-                            '</table>'+
-                        '</div>'+
+                        '<input type="button" value="find existing pivots" class="google-find-existing-pivots" onClick="showFindExistingPivotsDialog()"/>'+
+                        '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable table">'+
+                            '<tr id="pivotConfigHeader"></tr>'+
+                            '<tr id="pivotConfigDropZones"></tr>'+
+                        '</table>'+
                     '</div>' +
                     '<div style="clear:both"></div>'+
                     '<div>'+
@@ -2670,19 +2826,6 @@ function openEditChart(id){
                 }
                 });
     editorDialog = editcolumnsdialog.data("dialog");
-
-    jQuery("input[name='pivotingTable_type']").change(function(){
-        debugger;
-        if (jQuery("input[name='pivotingTable_type']:checked").attr("value") === "pivot"){
-            jQuery(".pivotingTable_pivot").addClass("activePivotInput");
-            jQuery(".pivotingTable_unpivot").removeClass("activePivotInput");
-        }
-        else {
-            jQuery(".pivotingTable_unpivot").addClass("activePivotInput");
-            jQuery(".pivotingTable_pivot").removeClass("activePivotInput");
-        }
-    });
-
 }
 
 function populateDefaults(id, type){
@@ -4009,3 +4152,187 @@ jQuery.fn.CustomDialog = function(options){
         var customDialog = new DavizEdit.CustomDialog(jQuery(this), options);
     });
 };
+
+Annotator.Plugin.EEAGoogleChartsUnpivotAnnotation = (function() {
+
+    function EEAGoogleChartsUnpivotAnnotation(element, options) {
+        this.element = element;
+        this.options = options;
+        jQuery(window).bind("EEAGoogleChartsUnpivotAnnotation.events.inputChanged", this.changeTextArea)
+    }
+
+    EEAGoogleChartsUnpivotAnnotation.prototype.pluginInit = function() {
+
+        this.annotator.editor.addField({
+            label: 'dummyField',
+            type: 'input',
+            load: this.overrideEditor
+        });
+
+        this.annotator.viewer.addField({
+            load: this.overrideViewer
+        })
+    };
+
+    EEAGoogleChartsUnpivotAnnotation.prototype.overrideEditor = function(annotation){
+        jQuery(this.element).parent().find("textarea")
+            .attr("placeholder", "")
+            .attr("readonly", "readonly")
+            .css("color", "transparent")
+            .addClass("hiddenAnnotatorTextArea");
+
+        var annotation = jQuery(".hiddenAnnotatorTextArea").attr("value");
+
+        var obj = jQuery(this.element).parent().find("textarea").parent();
+        jQuery(this.element).remove();
+        jQuery(".googlechartAnnotationEditorTable").html("");
+        jQuery(".googlechartAnnotationViewerTable").remove();
+        jQuery("<table>")
+            .attr("style", "position:absolute; left:10px; top:-95px;")
+            .addClass("googlechartAnnotationEditorTable")
+            .appendTo(obj);
+        jQuery("<tr>")
+            .addClass("googlechartAnnotationColumnType")
+            .appendTo(".googlechartAnnotationEditorTable")
+        jQuery("<td>")
+            .text("Column Type")
+            .appendTo(".googlechartAnnotationColumnType")
+        jQuery("<td>")
+            .html("<select>")
+            .appendTo(".googlechartAnnotationColumnType")
+        jQuery("<option>")
+            .attr("value", "base")
+            .text("base")
+            .appendTo(".googlechartAnnotationColumnType select");
+        jQuery("<option>")
+            .attr("value", "pivot")
+            .text("pivot")
+            .appendTo(".googlechartAnnotationColumnType select");
+
+        jQuery("<tr>")
+            .addClass("googlechartAnnotationColumnName")
+            .appendTo(".googlechartAnnotationEditorTable")
+        jQuery("<td>")
+            .text("Column Name")
+            .appendTo(".googlechartAnnotationColumnName")
+        jQuery("<td>")
+            .html("<input type='text' style='padding:3px;margin-top:5px; margin-bottom:5px;'>")
+            .appendTo(".googlechartAnnotationColumnName")
+
+        jQuery("<tr>")
+            .addClass("googlechartAnnotationValueType")
+            .appendTo(".googlechartAnnotationEditorTable")
+        jQuery("<td>")
+            .text("Value Type")
+            .appendTo(".googlechartAnnotationValueType")
+        jQuery("<td>")
+            .html("<select>")
+            .appendTo(".googlechartAnnotationValueType")
+        jQuery("<option>")
+            .attr("value", "string")
+            .text("string")
+            .appendTo(".googlechartAnnotationValueType select");
+        jQuery("<option>")
+            .attr("value", "number")
+            .text("number")
+            .appendTo(".googlechartAnnotationValueType select");
+        jQuery("<option>")
+            .attr("value", "year")
+            .text("year")
+            .appendTo(".googlechartAnnotationValueType select");
+        jQuery("<option>")
+            .attr("value", "date")
+            .text("date")
+            .appendTo(".googlechartAnnotationValueType select");
+
+        jQuery(".googlechartAnnotationEditorTable select").bind("change", function(){
+            jQuery(window).trigger("EEAGoogleChartsUnpivotAnnotation.events.inputChanged");
+        })
+
+        jQuery(".googlechartAnnotationEditorTable input").bind("change", function(){
+            jQuery(window).trigger("EEAGoogleChartsUnpivotAnnotation.events.inputChanged");
+        })
+
+        if (annotation !== ""){
+            annotation = JSON.parse(annotation);
+            jQuery(".googlechartAnnotationColumnType select").attr("value", annotation.colType);
+            jQuery(".googlechartAnnotationColumnName input").attr("value", annotation.colName);
+            jQuery(".googlechartAnnotationValueType select").attr("value", annotation.valType);
+        }
+        else {
+            jQuery(window).trigger("EEAGoogleChartsUnpivotAnnotation.events.inputChanged");
+        }
+    };
+
+    EEAGoogleChartsUnpivotAnnotation.prototype.overrideViewer = function(annotation){
+        if (jQuery(".googlechartAnnotationEditorTable").is(":visible")){
+            return;
+        }
+        obj = $(".annotator-widget.annotator-listing");
+        var annotation = obj.find("div:first").text();
+        annotation = JSON.parse(annotation);
+        obj.find("div").remove();
+
+        jQuery("<table style='margin:10px'>")
+            .addClass("googlechartAnnotationViewerTable")
+            .appendTo(obj);
+        jQuery("<tr>")
+            .addClass("googlechartAnnotationColumnType")
+            .appendTo(".googlechartAnnotationViewerTable")
+        jQuery("<td>")
+            .text("Column Type:")
+            .appendTo(".googlechartAnnotationColumnType")
+        jQuery("<td style='font-weight:bold; padding-left:5px;'>")
+            .text(annotation.colType)
+            .appendTo(".googlechartAnnotationColumnType")
+        if (annotation.colType === 'base'){
+            return;
+        }
+        jQuery("<tr>")
+            .addClass("googlechartAnnotationColumnName")
+            .appendTo(".googlechartAnnotationViewerTable")
+        jQuery("<td>")
+            .text("Column Name:")
+            .appendTo(".googlechartAnnotationColumnName")
+        jQuery("<td style='font-weight:bold; padding-left:5px;'>")
+            .text(annotation.colName)
+            .appendTo(".googlechartAnnotationColumnName")
+
+        jQuery("<tr>")
+            .addClass("googlechartAnnotationValueType")
+            .appendTo(".googlechartAnnotationViewerTable")
+        jQuery("<td>")
+            .text("Value Type:")
+            .appendTo(".googlechartAnnotationValueType")
+        jQuery("<td style='font-weight:bold; padding-left:5px;'>")
+            .text(annotation.valType)
+            .appendTo(".googlechartAnnotationValueType")
+    };
+
+    EEAGoogleChartsUnpivotAnnotation.prototype.changeTextArea = function(){
+        var colType = jQuery(".googlechartAnnotationColumnType select option:selected").attr("value")
+        var colName = jQuery(".googlechartAnnotationColumnName input").attr("value")
+        var valType = jQuery(".googlechartAnnotationValueType select option:selected").attr("value")
+        var obj = {}
+        obj.colType = colType;
+        obj.colName = colName;
+        obj.valType = valType;
+        $("li.annotator-item textarea").attr("value", JSON.stringify(obj));
+        if (colType === 'base'){
+            jQuery(".googlechartAnnotationColumnName").hide()
+            jQuery(".googlechartAnnotationValueType").hide()
+        }
+        else {
+            jQuery(".googlechartAnnotationColumnName").show()
+            jQuery(".googlechartAnnotationValueType").show()
+        }
+    };
+
+    EEAGoogleChartsUnpivotAnnotation.prototype.getAnnotations = function(){
+        return $('.annotator-hl').addBack().map(function() {
+            return $(this).data("annotation");
+        });
+    }
+
+    return EEAGoogleChartsUnpivotAnnotation;
+})();

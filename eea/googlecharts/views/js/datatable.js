@@ -86,10 +86,10 @@ function transformTable(options){
             jQuery(settings.pivotingColumns).each(function(pivot_index, pivot_column){
                 pivotColumnLabel += " " + row[pivot_column];
                 pivotColumnName += " " + row[pivot_column];
-                if (node[pivotColumnName] === undefined){
-                    node[pivotColumnName] = {};
+                if (node[row[pivot_column]] === undefined){
+                    node[row[pivot_column]] = {};
                 }
-                node = node[pivotColumnName];
+                node = node[row[pivot_column]];
             });
 
             var pivotColumn = pivotColumnName.replace(/[^A-Za-z0-9]/g, '_');
