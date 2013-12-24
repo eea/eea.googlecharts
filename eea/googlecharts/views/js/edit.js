@@ -2531,7 +2531,7 @@ function fillEditorDialog(){
                 .text(value)
                 .appendTo(".unpivot-settings")
                 .annotator()
-                .annotator("addPlugin", "EEAGoogleChartsUnpivotAnnotation")
+                .annotator("addPlugin", "EEAGoogleChartsUnpivotAnnotation");
         }
     });
     jQuery(".unpivot-pivotedcolumns").change(function(){
@@ -2541,12 +2541,12 @@ function fillEditorDialog(){
             .text(jQuery(this).attr("value"))
             .appendTo(".unpivot-settings")
             .annotator()
-            .annotator("addPlugin", "EEAGoogleChartsUnpivotAnnotation")
+            .annotator("addPlugin", "EEAGoogleChartsUnpivotAnnotation");
     });
     var unpivotsettings = jQuery("#googlechartid_tmp_chart").data("unpivotsettings");
     if (!jQuery.isEmptyObject(unpivotsettings)){
         jQuery(".unpivot-pivotedcolumns")
-            .attr("value", unpivotsettings.columnName)
+            .attr("value", unpivotsettings.columnName);
 
         jQuery(".unpivot-settings").empty();
         jQuery("<div>")
@@ -2554,7 +2554,7 @@ function fillEditorDialog(){
             .text(unpivotsettings.columnName)
             .appendTo(".unpivot-settings")
             .annotator()
-            .annotator("addPlugin", "EEAGoogleChartsUnpivotAnnotation")
+            .annotator("addPlugin", "EEAGoogleChartsUnpivotAnnotation");
 
         jQuery.each(unpivotsettings.settings, function(idx, settings){
             var annotation = {};
@@ -2570,8 +2570,7 @@ function fillEditorDialog(){
             range.endOffset = settings.end;
             annotation.ranges = [];
             annotation.ranges.push(range);
-            $(".columnForUnpivot").data('annotator').setupAnnotation(annotation)
-
+            jQuery(".columnForUnpivot").data('annotator').setupAnnotation(annotation);
         });
     }
 }
@@ -2768,20 +2767,20 @@ function openEditChart(id){
                 });
     editorDialog = editcolumnsdialog.data("dialog");
     jQuery(".apply-unpivot").bind("click", function(){
-        var annotations = jQuery(".columnForUnpivot").data("annotator").plugins.EEAGoogleChartsUnpivotAnnotation.getAnnotations()
+        var annotations = jQuery(".columnForUnpivot").data("annotator").plugins.EEAGoogleChartsUnpivotAnnotation.getAnnotations();
         var unpivotSettings = {};
         unpivotSettings.columnName = jQuery(".unpivot-pivotedcolumns").attr("value");
         unpivotSettings.settings = [];
         jQuery.each(annotations, function(idx, annotation){
-            var settings = {}
+            var settings = {};
             settings.start = annotation.ranges[0].startOffset;
             settings.end = annotation.ranges[0].endOffset;
-            json_annotation = JSON.parse(annotation.text)
+            json_annotation = JSON.parse(annotation.text);
             settings.colType = json_annotation.colType;
             settings.colName = json_annotation.colName;
             settings.valType = json_annotation.valType;
             unpivotSettings.settings.push(settings);
-        })
+        });
         jQuery("#googlechartid_tmp_chart").data("unpivotsettings", unpivotSettings);
         // TODO apply unpivot
     });
@@ -4133,7 +4132,7 @@ Annotator.Plugin.EEAGoogleChartsUnpivotAnnotation = (function() {
 
         this.annotator.viewer.addField({
             load: this.overrideViewer
-        })
+        });
     };
 
     EEAGoogleChartsUnpivotAnnotation.prototype.overrideEditor = function(annotation){
@@ -4143,7 +4142,7 @@ Annotator.Plugin.EEAGoogleChartsUnpivotAnnotation = (function() {
             .css("color", "transparent")
             .addClass("hiddenAnnotatorTextArea");
 
-        var annotation = jQuery(".hiddenAnnotatorTextArea").attr("value");
+        var annot = jQuery(".hiddenAnnotatorTextArea").attr("value");
 
         var obj = jQuery(this.element).parent().find("textarea").parent();
         jQuery(this.element).remove();
@@ -4155,13 +4154,13 @@ Annotator.Plugin.EEAGoogleChartsUnpivotAnnotation = (function() {
             .appendTo(obj);
         jQuery("<tr>")
             .addClass("googlechartAnnotationColumnType")
-            .appendTo(".googlechartAnnotationEditorTable")
+            .appendTo(".googlechartAnnotationEditorTable");
         jQuery("<td>")
             .text("Column Type")
-            .appendTo(".googlechartAnnotationColumnType")
+            .appendTo(".googlechartAnnotationColumnType");
         jQuery("<td>")
             .html("<select>")
-            .appendTo(".googlechartAnnotationColumnType")
+            .appendTo(".googlechartAnnotationColumnType");
         jQuery("<option>")
             .attr("value", "base")
             .text("base")
@@ -4173,23 +4172,23 @@ Annotator.Plugin.EEAGoogleChartsUnpivotAnnotation = (function() {
 
         jQuery("<tr>")
             .addClass("googlechartAnnotationColumnName")
-            .appendTo(".googlechartAnnotationEditorTable")
+            .appendTo(".googlechartAnnotationEditorTable");
         jQuery("<td>")
             .text("Column Name")
-            .appendTo(".googlechartAnnotationColumnName")
+            .appendTo(".googlechartAnnotationColumnName");
         jQuery("<td>")
             .html("<input type='text' style='padding:3px;margin-top:5px; margin-bottom:5px;'>")
-            .appendTo(".googlechartAnnotationColumnName")
+            .appendTo(".googlechartAnnotationColumnName");
 
         jQuery("<tr>")
             .addClass("googlechartAnnotationValueType")
-            .appendTo(".googlechartAnnotationEditorTable")
+            .appendTo(".googlechartAnnotationEditorTable");
         jQuery("<td>")
             .text("Value Type")
-            .appendTo(".googlechartAnnotationValueType")
+            .appendTo(".googlechartAnnotationValueType");
         jQuery("<td>")
             .html("<select>")
-            .appendTo(".googlechartAnnotationValueType")
+            .appendTo(".googlechartAnnotationValueType");
         jQuery("<option>")
             .attr("value", "string")
             .text("string")
@@ -4209,17 +4208,17 @@ Annotator.Plugin.EEAGoogleChartsUnpivotAnnotation = (function() {
 
         jQuery(".googlechartAnnotationEditorTable select").bind("change", function(){
             jQuery(window).trigger("EEAGoogleChartsUnpivotAnnotation.events.inputChanged");
-        })
+        });
 
         jQuery(".googlechartAnnotationEditorTable input").bind("change", function(){
             jQuery(window).trigger("EEAGoogleChartsUnpivotAnnotation.events.inputChanged");
-        })
+        });
 
-        if (annotation !== ""){
-            annotation = JSON.parse(annotation);
-            jQuery(".googlechartAnnotationColumnType select").attr("value", annotation.colType);
-            jQuery(".googlechartAnnotationColumnName input").attr("value", annotation.colName);
-            jQuery(".googlechartAnnotationValueType select").attr("value", annotation.valType);
+        if (annot !== ""){
+            annot = JSON.parse(annot);
+            jQuery(".googlechartAnnotationColumnType select").attr("value", annot.colType);
+            jQuery(".googlechartAnnotationColumnName input").attr("value", annot.colName);
+            jQuery(".googlechartAnnotationValueType select").attr("value", annot.valType);
         }
         jQuery(window).trigger("EEAGoogleChartsUnpivotAnnotation.events.inputChanged");
     };
@@ -4228,9 +4227,9 @@ Annotator.Plugin.EEAGoogleChartsUnpivotAnnotation = (function() {
         if (jQuery(".googlechartAnnotationEditorTable").is(":visible")){
             return;
         }
-        obj = $(".annotator-widget.annotator-listing");
-        var annotation = obj.find("div:first").text();
-        annotation = JSON.parse(annotation);
+        obj = jQuery(".annotator-widget.annotator-listing");
+        var annot = obj.find("div:first").text();
+        annot = JSON.parse(annot);
         obj.find("div").remove();
 
         jQuery("<table style='margin:10px'>")
@@ -4238,61 +4237,61 @@ Annotator.Plugin.EEAGoogleChartsUnpivotAnnotation = (function() {
             .appendTo(obj);
         jQuery("<tr>")
             .addClass("googlechartAnnotationColumnType")
-            .appendTo(".googlechartAnnotationViewerTable")
+            .appendTo(".googlechartAnnotationViewerTable");
         jQuery("<td>")
             .text("Column Type:")
-            .appendTo(".googlechartAnnotationColumnType")
+            .appendTo(".googlechartAnnotationColumnType");
         jQuery("<td style='font-weight:bold; padding-left:5px;'>")
-            .text(annotation.colType)
-            .appendTo(".googlechartAnnotationColumnType")
-        if (annotation.colType === 'base'){
+            .text(annot.colType)
+            .appendTo(".googlechartAnnotationColumnType");
+        if (annot.colType === 'base'){
             return;
         }
         jQuery("<tr>")
             .addClass("googlechartAnnotationColumnName")
-            .appendTo(".googlechartAnnotationViewerTable")
+            .appendTo(".googlechartAnnotationViewerTable");
         jQuery("<td>")
             .text("Column Name:")
-            .appendTo(".googlechartAnnotationColumnName")
+            .appendTo(".googlechartAnnotationColumnName");
         jQuery("<td style='font-weight:bold; padding-left:5px;'>")
-            .text(annotation.colName)
-            .appendTo(".googlechartAnnotationColumnName")
+            .text(annot.colName)
+            .appendTo(".googlechartAnnotationColumnName");
 
         jQuery("<tr>")
             .addClass("googlechartAnnotationValueType")
-            .appendTo(".googlechartAnnotationViewerTable")
+            .appendTo(".googlechartAnnotationViewerTable");
         jQuery("<td>")
             .text("Value Type:")
-            .appendTo(".googlechartAnnotationValueType")
+            .appendTo(".googlechartAnnotationValueType");
         jQuery("<td style='font-weight:bold; padding-left:5px;'>")
-            .text(annotation.valType)
-            .appendTo(".googlechartAnnotationValueType")
+            .text(annot.valType)
+            .appendTo(".googlechartAnnotationValueType");
     };
 
     EEAGoogleChartsUnpivotAnnotation.prototype.changeTextArea = function(){
-        var colType = jQuery(".googlechartAnnotationColumnType select option:selected").attr("value")
-        var colName = jQuery(".googlechartAnnotationColumnName input").attr("value")
-        var valType = jQuery(".googlechartAnnotationValueType select option:selected").attr("value")
-        var obj = {}
+        var colType = jQuery(".googlechartAnnotationColumnType select option:selected").attr("value");
+        var colName = jQuery(".googlechartAnnotationColumnName input").attr("value");
+        var valType = jQuery(".googlechartAnnotationValueType select option:selected").attr("value");
+        var obj = {};
         obj.colType = colType;
         obj.colName = colName;
         obj.valType = valType;
-        $("li.annotator-item textarea").attr("value", JSON.stringify(obj));
+        jQuery("li.annotator-item textarea").attr("value", JSON.stringify(obj));
         if (colType === 'base'){
-            jQuery(".googlechartAnnotationColumnName").hide()
-            jQuery(".googlechartAnnotationValueType").hide()
+            jQuery(".googlechartAnnotationColumnName").hide();
+            jQuery(".googlechartAnnotationValueType").hide();
         }
         else {
-            jQuery(".googlechartAnnotationColumnName").show()
-            jQuery(".googlechartAnnotationValueType").show()
+            jQuery(".googlechartAnnotationColumnName").show();
+            jQuery(".googlechartAnnotationValueType").show();
         }
     };
 
     EEAGoogleChartsUnpivotAnnotation.prototype.getAnnotations = function(){
-        return $('.annotator-hl').addBack().map(function() {
-            return $(this).data("annotation");
+        return jQuery('.annotator-hl').addBack().map(function() {
+            return jQuery(this).data("annotation");
         });
-    }
+    };
 
     return EEAGoogleChartsUnpivotAnnotation;
 })();
