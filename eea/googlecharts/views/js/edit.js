@@ -644,6 +644,8 @@ function saveThumb(value, useName){
     var chart_row_filters = value[8];
     var chart_sortBy = value[9];
     var chart_sortAsc = value[10];
+    var chart_unpivotsettings = value[11];
+    // TODO apply unpivotsettings;
 
     var columnsFromSettings = getColumnsFromSettings(chart_columns);
     var options = {
@@ -869,7 +871,8 @@ function addChart(options){
         row_filters : "",
         sortBy : "",
         sortAsc : "",
-        columnfilters : []
+        columnfilters : [],
+        unpivotsettings : {}
     };
     jQuery.extend(settings, options);
 
@@ -1072,6 +1075,8 @@ function addChart(options){
 
     googlechart.data('columnfilters', settings.columnfilters);
     reloadColumnFilters(settings.id);
+
+    googlechart.data('unpivotsettings', settings.unpivotsettings);
 
     if (settings.hidden){
         changeChartHiddenState(settings.id);
@@ -1731,6 +1736,7 @@ function chartEditorSave(id){
         alert("Chart is not properly configured");
         return;
     }
+    var unpivotsettings = jQuery("#googlechartid_tmp_chart").data("unpivotsettings");
     var settings_str = chartEditor.getChartWrapper().toJSON();
     chartEditor.closeDialog();
     var columnsSettings = {};
@@ -1739,7 +1745,7 @@ function chartEditorSave(id){
     var hasNormal = false;
     var hasPivot = false;
     var hasValue = false;
-    var tmpPreparedColumns = JSON.parse($("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
+    var tmpPreparedColumns = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
     jQuery("#originalColumns").find("th").each(function(){
         var original = {};
         original.name = jQuery(this).attr("column_id");
@@ -1824,6 +1830,7 @@ function chartEditorSave(id){
     jQuery("#googlechartid_"+id+" .googlechart_row_filters").attr("value",row_filters_str);
     jQuery("#googlechartid_"+id+" .googlechart_sortBy").attr("value",sortBy_str);
     jQuery("#googlechartid_"+id+" .googlechart_sortAsc").attr("value",sortAsc_str);
+    jQuery("#googlechartid_"+id).data("unpivotsettings", unpivotsettings);
     markChartAsModified(id);
     editorDialog.close();
     drawChart(id, checkSVG_withThumb);
@@ -2511,133 +2518,62 @@ function fillEditorDialog(){
     jQuery("#googlechart_overlay").overlay({
         mask: 'black'
     });
+    jQuery(".unpivot-settings").empty();
     jQuery.each(available_columns, function(idx, value){
         jQuery("<option>")
             .attr("value", value)
             .text(value)
             .appendTo(".unpivot-pivotedcolumns");
+
+        if (jQuery(".unpivot-settings").text() === ""){
+            jQuery("<div>")
+                .addClass("columnForUnpivot")
+                .text(value)
+                .appendTo(".unpivot-settings")
+                .annotator()
+                .annotator("addPlugin", "EEAGoogleChartsUnpivotAnnotation")
+        }
     });
     jQuery(".unpivot-pivotedcolumns").change(function(){
         jQuery(".unpivot-settings").empty();
         jQuery("<div>")
+            .addClass("columnForUnpivot")
             .text(jQuery(this).attr("value"))
+            .appendTo(".unpivot-settings")
             .annotator()
             .annotator("addPlugin", "EEAGoogleChartsUnpivotAnnotation")
-            .appendTo(".unpivot-settings");
     });
-}
+    var unpivotsettings = jQuery("#googlechartid_tmp_chart").data("unpivotsettings");
+    if (!jQuery.isEmptyObject(unpivotsettings)){
+        jQuery(".unpivot-pivotedcolumns")
+            .attr("value", unpivotsettings.columnName)
 
-function showFindExistingPivotsDialog(){
-    jQuery("<div>")
-        .addClass("findexistingpivots")
-        .dialog({title:"Find Existing Pivots",
-            dialogClass: 'googlechart-dialog',
-            modal: true,
-            open: function(evt, ui){
-                jQuery("<input>")
-                    .attr("type", "radio")
-                    .attr("name", "findtype")
-                    .attr("value", "manual")
-                    .attr("checked", "checked")
-                    .appendTo(".findexistingpivots");
-                jQuery("<span>")
-                    .text("Manual")
-                    .appendTo(".findexistingpivots");
-                jQuery("<div>")
-                    .attr("style", "clear:both")
-                    .appendTo(".findexistingpivots");
-                jQuery("<input>")
-                    .attr("type", "radio")
-                    .attr("name", "findtype")
-                    .attr("value", "expression")
-                    .appendTo(".findexistingpivots");
-                jQuery("<span>")
-                    .text("Expression")
-                    .appendTo(".findexistingpivots");
-                jQuery("<div>")
-                    .addClass("manualfields findexistingpivotsfields activefields")
-                    .text("asad fasd fas faf as s fa fdasf\nasdfasf dasfd asd f\ndfasd as f\nafasdf a f\nasf as dfa dsa f\n")
-                    .appendTo(".findexistingpivots");
-                jQuery("<div>")
-                    .addClass("expressionfields findexistingpivotsfields")
-                    .text("b")
-                    .appendTo(".findexistingpivots");
-                jQuery("input[name='findtype']").change(function(){
-                    if (jQuery("input[name='findtype']:checked").attr("value") === "manual"){
-                        jQuery(".manualfields").addClass("activefields");
-                        jQuery(".expressionfields").removeClass("activefields");
-                    }
-                    else{
-                        jQuery(".manualfields").removeClass("activefields");
-                        jQuery(".expressionfields").addClass("activefields");
-                    }
-                });
-            },
-            buttons:[
-                {
-                    text: "Cancel",
-                    click: function(){
-                        jQuery(this).dialog("close");
-                    }
-                },
-                {
-                    text: "Find",
-                    click: function(){
-/*                    var selectedColumn = jQuery(".googlecharts_filter_columns").val();
-                    var selectedFilter = jQuery(".googlecharts_filter_type").val();
-                    var selectedColumnName = "";
-                    jQuery(".googlecharts_filter_columns").find("option").each(function(idx, filter){
-                        if (jQuery(filter).attr("value") === selectedColumn){
-                            selectedColumnName = jQuery(filter).html();
-                            if (selectedColumnName.indexOf("(pre-pivot)") !== -1){
-                                selectedColumnName = selectedColumnName.substr(0,selectedColumnName.length - 12);
-                            }
-                        }
-                    });
-                    var defaults = [];
-                    if (jQuery(".googlecharts_defaultsfilter_number_error").length !== 0){
-                        alert("Selected column is not compatible with selected filter type");
-                        return;
-                    }
-                    if (selectedFilter === "0"){
-                        var min = jQuery(".googlecharts_defaultsfilter_number_min input").attr("value");
-                        var max = jQuery(".googlecharts_defaultsfilter_number_max input").attr("value");
-                        if (isNaN(min)){
-                            alert("Minimum value is not a number!");
-                            return;
-                        }
-                        if (isNaN(max)){
-                            alert("Maximum value is not a number!");
-                            return;
-                        }
-                        defaults.push(min);
-                        defaults.push(max);
-                    }
-                    if (selectedFilter === "1"){
-                        defaults.push(jQuery(".googlecharts_defaultsfilter_string input").attr("value"));
-                    }
-                    if ((selectedFilter === "2") || (selectedFilter === "3")){
-                        jQuery.each(defaultfilter_data, function(idx, value){
-                            if (value.defaultval){
-                                defaults.push(value.value);
-                            }
-                        });
-                    }
+        jQuery(".unpivot-settings").empty();
+        jQuery("<div>")
+            .addClass("columnForUnpivot")
+            .text(unpivotsettings.columnName)
+            .appendTo(".unpivot-settings")
+            .annotator()
+            .annotator("addPlugin", "EEAGoogleChartsUnpivotAnnotation")
 
-                    if ((selectedColumn === '-1') || (selectedFilter === '-1')){
-                        alert("Please select column and filter type!");
-                    }
-                    else{
-                        addFilter(id, selectedColumn, selectedFilter, selectedColumnName, defaults);
-                        markChartAsModified(id);
-                        jQuery(this).dialog("close");
-                    }*/
-                    
-                    }
-                }
-            ]
+        jQuery.each(unpivotsettings.settings, function(idx, settings){
+            var annotation = {};
+            var value = {};
+            value.colType = settings.colType;
+            value.colName = settings.colName;
+            value.valType = settings.valType;
+            annotation.text = JSON.stringify(value);
+            var range = {};
+            range.start = "";
+            range.startOffset = settings.start;
+            range.end = "";
+            range.endOffset = settings.end;
+            annotation.ranges = [];
+            annotation.ranges.push(range);
+            $(".columnForUnpivot").data('annotator').setupAnnotation(annotation)
+
         });
-
+    }
 }
 
 function openEditChart(id){
@@ -2651,6 +2587,7 @@ function openEditChart(id){
     var tmp_row_filters = jQuery("#googlechartid_"+id+" .googlechart_row_filters").attr('value');
     var tmp_sortBy = jQuery("#googlechartid_"+id+" .googlechart_sortBy").attr('value');
     var tmp_sortAsc = jQuery("#googlechartid_"+id+" .googlechart_sortAsc").attr('value');
+    var tmp_unpivotsettings = jQuery("#googlechartid_"+id).data("unpivotsettings");
     isFirstEdit = true;
 
     jQuery(".googlecharts_columns_config").remove();
@@ -2704,16 +2641,19 @@ function openEditChart(id){
             '<div class="googlechart_accordion_container">' +
                 '<div class="googlechart_accordion_table">' +
 
-                    '<div id="unpivotingFormLabel" class="label">Unpivot' + //xxx
+                    '<div id="unpivotingFormLabel" class="label">Find pivots' + //xxx
                         '<div class="ui-icon ui-icon-circlesmall-plus">expand</div>'+
                     '</div>'+
                     '<div class="unpivotingForm">' +
                         '<div style="clear:both"></div>'+
-                        'Select one of the pivoted columns:'+
+                        '1. Select one of the pivoted columns:'+
                         '<select class="unpivot-pivotedcolumns">'+
-                        '</select>'+
-                        '<div class="unpivot-settings">'+
-                        '</div>'+
+                        '</select><br/>'+
+                        '2. Select the base part from the column name, click the "note" icon and select "base" as type of the column<br/>'+
+                        '3. One by one Select the pivoted parts from the column name, click the "note" icon and select "pivot" as type of the column, enter the name of the column where this value should be stored and select the type of the values<br/>'+
+                        '4. Click on the "Unpivot" button and see the results on the "Table pivots" section<br/>'+
+                        '<div class="unpivot-settings"></div><br/>'+
+                        '<input type="button" value="unpivot" class="apply-unpivot btn"/><br/>'+
                     '</div>' +
                     '<div style="clear:both"></div>'+
 
@@ -2722,7 +2662,6 @@ function openEditChart(id){
                     '</div>'+
                     '<div class="pivotingTable">' +
                         '<div style="clear:both"></div>'+
-                        '<input type="button" value="find existing pivots" class="google-find-existing-pivots" onClick="showFindExistingPivotsDialog()"/>'+
                         '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable table">'+
                             '<tr id="pivotConfigHeader"></tr>'+
                             '<tr id="pivotConfigDropZones"></tr>'+
@@ -2757,6 +2696,8 @@ function openEditChart(id){
     editcolumnsdialog.attr("chart_id", id);
     editcolumnsdialog.attr("palette_id", tmp_paletteId);
 
+
+    editcolumnsdialog.find("#googlechartid_tmp_chart").data("unpivotsettings", tmp_unpivotsettings);
     editcolumnsdialog.find(".googlechart_configjson").attr("value", tmp_config);
     editcolumnsdialog.find(".googlechart_columns").attr("value", tmp_columns);
     editcolumnsdialog.find(".googlechart_paletteid").attr("value", tmp_paletteId);
@@ -2826,6 +2767,24 @@ function openEditChart(id){
                 }
                 });
     editorDialog = editcolumnsdialog.data("dialog");
+    jQuery(".apply-unpivot").bind("click", function(){
+        var annotations = jQuery(".columnForUnpivot").data("annotator").plugins.EEAGoogleChartsUnpivotAnnotation.getAnnotations()
+        var unpivotSettings = {};
+        unpivotSettings.columnName = jQuery(".unpivot-pivotedcolumns").attr("value");
+        unpivotSettings.settings = [];
+        jQuery.each(annotations, function(idx, annotation){
+            var settings = {}
+            settings.start = annotation.ranges[0].startOffset;
+            settings.end = annotation.ranges[0].endOffset;
+            json_annotation = JSON.parse(annotation.text)
+            settings.colType = json_annotation.colType;
+            settings.colName = json_annotation.colName;
+            settings.valType = json_annotation.valType;
+            unpivotSettings.settings.push(settings);
+        })
+        jQuery("#googlechartid_tmp_chart").data("unpivotsettings", unpivotSettings);
+        // TODO apply unpivot
+    });
 }
 
 function populateDefaults(id, type){
@@ -3386,6 +3345,7 @@ function saveCharts(){
         chart.notes = chartObj.data('notes') || [];
 
         chart.columnfilters = chartObj.data('columnfilters') || [];
+        chart.unpivotsettings = chartObj.data('unpivotsettings') || {};
 
         charts.push(chart);
         if (chart.isThumb){
@@ -3422,6 +3382,7 @@ function saveCharts(){
                     if (sortAsc_str === 'desc'){
                         sortAsc = false;
                     }
+                    var unpivotsettings = chartObj.data("unpivotsettings");
 
                     if (config_str){
                         chartSettings[1] = JSON.parse(config_str);
@@ -3443,7 +3404,7 @@ function saveCharts(){
                         chartSettings[8] = row_filters;
                         chartSettings[9] = sortBy;
                         chartSettings[10] = sortAsc;
-
+                        chartSettings[11] = unpivotsettings;
                         saveThumb(chartSettings, true);
                     }
                 }
@@ -3527,7 +3488,8 @@ function loadCharts(){
                 hidden : chart.hidden,
                 row_filters: chart.row_filters,
                 sortBy : chart.sortBy,
-                sortAsc : chart.sortAsc
+                sortAsc : chart.sortAsc,
+                unpivotsettings : chart.unpivotsettings
             };
 
             addChart(options);
@@ -4091,7 +4053,6 @@ DavizEdit.CustomDialog.prototype = {
                                 self.settings.resize();
                             },
                             resize: function(){
-                                console.log("resize");
                                 jQuery(".custom-dialog-content")
                                     .css("width", jQuery(this).width()-30)
                                     .css("height", jQuery(this).height()-40);
@@ -4158,7 +4119,8 @@ Annotator.Plugin.EEAGoogleChartsUnpivotAnnotation = (function() {
     function EEAGoogleChartsUnpivotAnnotation(element, options) {
         this.element = element;
         this.options = options;
-        jQuery(window).bind("EEAGoogleChartsUnpivotAnnotation.events.inputChanged", this.changeTextArea)
+        jQuery(window).unbind("EEAGoogleChartsUnpivotAnnotation.events.inputChanged");
+        jQuery(window).bind("EEAGoogleChartsUnpivotAnnotation.events.inputChanged", this.changeTextArea);
     }
 
     EEAGoogleChartsUnpivotAnnotation.prototype.pluginInit = function() {
@@ -4259,9 +4221,7 @@ Annotator.Plugin.EEAGoogleChartsUnpivotAnnotation = (function() {
             jQuery(".googlechartAnnotationColumnName input").attr("value", annotation.colName);
             jQuery(".googlechartAnnotationValueType select").attr("value", annotation.valType);
         }
-        else {
-            jQuery(window).trigger("EEAGoogleChartsUnpivotAnnotation.events.inputChanged");
-        }
+        jQuery(window).trigger("EEAGoogleChartsUnpivotAnnotation.events.inputChanged");
     };
 
     EEAGoogleChartsUnpivotAnnotation.prototype.overrideViewer = function(annotation){

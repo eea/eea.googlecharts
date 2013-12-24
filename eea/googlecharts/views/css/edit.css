@@ -1596,7 +1596,7 @@ div.googlechartarea-input {
 }
 
 .unpivot-settings {
-    padding:100px;
+    padding:30px;
 }
 
 .annotator-item:first-child textarea{
@@ -1614,5 +1614,13 @@ div.googlechartarea-input {
 }
 
 .googlechartAnnotationViewerTable{
-    font-size : 14px;
+    font-size: 14px;
+}
+
+.unpivot-settings {
+    font-size: 20px;
+}
+
+.unpivot-settings .annotator-hl {
+    background-color: #E96565;
 }
