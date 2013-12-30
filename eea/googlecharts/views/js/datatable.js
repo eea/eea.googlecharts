@@ -1,5 +1,121 @@
 var allowedTypesForCharts = ['string', 'number', 'boolean', 'date', 'datetime', 'timeofday'];
 
+function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
+    var defaultColumnName = columnName;
+    var ranges = [];
+    jQuery.each(unpivotSettings.settings, function(idx, value){
+        if (ranges.length !== 0){
+            ranges[ranges.length-1].length = value.start - ranges[ranges.length-1].start;
+        }
+        var range = {}
+        range.start = value.end;
+        ranges.push(range);
+    });
+    ranges.pop();
+    var separators = [];
+    jQuery.each(ranges, function(idx, value){
+        separators.push(unpivotSettings.columnName.substr(value.start, value.length));
+    });
+    var components = [];
+    jQuery.each(separators, function(idx, separator){
+        var component = {};
+        splittedColumnName = columnName.split(separator);
+        components.push(splittedColumnName[0]);
+        splittedColumnName.shift();
+        columnName = splittedColumnName.join(separator);
+    });
+    if (columnName !== ""){
+        components.push(columnName);
+    }
+    var values = {};
+    if (components.length === unpivotSettings.settings.length){
+        jQuery.each(unpivotSettings.settings, function(idx, settings){
+            var value = {}
+            if (settings.colType === 'base'){
+                value.name = components[idx];
+                value.value = defaultvalue;
+                value.type = defaulttype;
+            }
+            else {
+                value.name = settings.colName;
+                value.value = components[idx];
+                value.type = settings.valType;
+            }
+            values[value.name.replace(/[^A-Za-z0-9]/g, '_')] = value;
+        });
+    }
+    return values;
+}
+
+function unpivotTable(settings){
+    if (jQuery.isEmptyObject(settings.unpivotSettings)){
+        return settings.originalTable;
+    }
+    var unpivotedTable = {};
+    unpivotedTable.items = [];
+    unpivotedTable.properties = {};
+    var baseProperties;
+    jQuery.each(settings.originalTable.items, function(row_nr, row){
+        var fixed_values = {};
+        var new_rows = [];
+        jQuery.each(row, function(col_id, value){
+            var colProp = settings.originalTable.properties[col_id];
+            if (colProp !== undefined){
+                colLabel = colProp.label;
+                var splitted = splitColumn(colLabel, value, settings.originalTable.properties[col_id].columnType, settings.unpivotSettings);
+                if (jQuery.isEmptyObject(splitted)){
+                    fixed_values[col_id] = value
+                    unpivotedTable.properties[col_id] = settings.originalTable.properties[col_id];
+                }
+                else {
+                    baseProperties = settings.originalTable.properties[col_id];
+                    var new_row = {};
+                    jQuery.each(splitted, function(key,value){
+                        new_row[key] = value.value;
+                    })
+                    new_rows.push(new_row);
+                }
+            }
+        })
+        jQuery.each(new_rows, function(idx, new_row){
+            jQuery.each(fixed_values, function(key, value){
+                new_row[key] = value;
+            })
+        });
+        jQuery.each(new_rows, function(idx, row){
+            unpivotedTable.items.push(row);
+        })
+    });
+    jQuery.each(settings.unpivotSettings.settings, function(idx, up_settings){
+        var new_prop;
+        if (up_settings.colType === 'pivot'){
+            new_prop = {
+                columnType : up_settings.valType,
+                label : up_settings.colName,
+                valueType : up_settings.valType
+            }
+            unpivotedTable.properties[up_settings.colName.replace(/[^A-Za-z0-9]/g, '_')] = new_prop;
+        }
+        else {
+            var col_id = settings.unpivotSettings.columnName.replace(/[^A-Za-z0-9]/g, '_')
+            var colName = settings.unpivotSettings.columnName.substr(up_settings.start, up_settings.end-up_settings.start);
+            new_prop = {
+                columnType : baseProperties.columnType,
+                label : colName,
+                valueType : baseProperties.valueType
+            }
+            unpivotedTable.properties[colName.replace(/[^A-Za-z0-9]/g, '_')] = new_prop;
+
+        }
+    })
+    var order = 0;
+    jQuery.each(unpivotedTable.properties, function(idx, value){
+        value.order = order;
+        order ++;
+    });
+    return unpivotedTable;
+}
+
 function decodeStr(encodedStr){
     if (!encodedStr){
         encodedStr = '';
@@ -39,9 +155,11 @@ function addEmptyRows(dataview){
     return modifiedTmpDataView;
 }
 
+
 function transformTable(options){
     var settings = {
         originalTable : '',
+        unpivotSettings: {settings:[]},
         normalColumns : '',
         pivotingColumns : '',
         valueColumn : '',
@@ -49,6 +167,13 @@ function transformTable(options){
         filters: {}
     };
     jQuery.extend(settings, options);
+
+    var unpivotSettings = {
+        originalTable : settings.originalTable,
+        unpivotSettings : settings.unpivotSettings
+    };
+    var unpivotedTable = unpivotTable(unpivotSettings);
+//    unpivotedTable = settings.originalTable;
     var additionalColumns = {};
 
     var pivotTable = {};
@@ -58,11 +183,11 @@ function transformTable(options){
     pivotTable.pivotLevels = {};
 
     jQuery.each(settings.normalColumns,function(normal_index, normal_column){
-        pivotTable.properties[normal_column] = settings.originalTable.properties[normal_column];
+        pivotTable.properties[normal_column] = unpivotedTable.properties[normal_column];
         pivotTable.available_columns[normal_column] = settings.availableColumns[normal_column];
     });
 
-    jQuery(settings.originalTable.items).each(function(row_index, row){
+    jQuery(unpivotedTable.items).each(function(row_index, row){
         var newRow = {};
         var isNewRow = true;
 
@@ -97,9 +222,9 @@ function transformTable(options){
 
             pivotTable.available_columns[pivotColumn] = pivotColumnLabel;
             pivotTable.properties[pivotColumn] = {
-                valueType : settings.originalTable.properties[settings.valueColumn].valueType,
-                order : settings.originalTable.properties[settings.valueColumn].order,
-                columnType : settings.originalTable.properties[settings.valueColumn].columnType,
+                valueType : unpivotedTable.properties[settings.valueColumn].valueType,
+                order : unpivotedTable.properties[settings.valueColumn].order,
+                columnType : unpivotedTable.properties[settings.valueColumn].columnType,
                 label : pivotColumnLabel
             };
 

@@ -632,6 +632,29 @@ function reloadColumnFilters(id){
     });
 }
 
+function getAvailable_columns_and_rows(unpivotSettings){
+    if (jQuery.isEmptyObject(unpivotSettings)){
+        return {
+            available_columns:available_columns,
+            all_rows:all_rows
+        }
+    }
+    var unpivotOptions = {
+        originalTable : all_rows,
+        unpivotSettings : unpivotSettings
+    }
+    var unpivotedTable = unpivotTable(unpivotOptions);
+    var tmp_available_columns = {};
+    jQuery.each(unpivotedTable.properties, function(key, value){
+        tmp_available_columns[key] = value.label;
+    });
+    var rows_and_columns = {
+        all_rows : unpivotedTable,
+        available_columns : tmp_available_columns
+    }
+    return rows_and_columns;
+}
+
 function saveThumb(value, useName){
     var chart_id = value[0];
     var chart_json = value[1];
@@ -653,7 +676,7 @@ function saveThumb(value, useName){
         normalColumns : columnsFromSettings.normalColumns,
         pivotingColumns : columnsFromSettings.pivotColumns,
         valueColumn : columnsFromSettings.valueColumn,
-        availableColumns : available_columns,
+        availableColumns : getAvailable_columns_and_rows({}).available_columns,
         filters : chart_row_filters
 
     };
@@ -1115,7 +1138,7 @@ function addChart(options){
             });
         }
         else {
-            addFilter(settings.id, key, value.type, available_columns[key.substr(11)], value.defaults);
+            addFilter(settings.id, key, value.type, getAvailable_columns_and_rows({}).available_columns[key.substr(11)], value.defaults);
         }
     });
     if (shouldMark){
@@ -1228,8 +1251,9 @@ function openEditor(elementId) {
         normalColumns : columnsFromSettings.normalColumns,
         pivotingColumns : columnsFromSettings.pivotColumns,
         valueColumn : columnsFromSettings.valueColumn,
-        availableColumns : available_columns,
-        filters: row_filters
+        availableColumns : getAvailable_columns_and_rows({}).available_columns,
+        filters: row_filters,
+        unpivotSettings : jQuery("#googlechartid_tmp_chart").data("unpivotsettings")
     };
 
     var transformedTable = transformTable(options);
@@ -1446,8 +1470,9 @@ function generateNewTable(sortOrder, isFirst){
         normalColumns : normalColumns,
         pivotingColumns : pivotColumns,
         valueColumn : valueColumn,
-        availableColumns : available_columns
+        availableColumns : getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings")).available_columns,
 //        filters : row_filters
+        unpivotSettings : jQuery("#googlechartid_tmp_chart").data("unpivotsettings")
     };
 
     var transformedTable = transformTable(options);
@@ -1995,7 +2020,7 @@ function columnsMatrixChart(chartType){
         normalColumns : normalColumns,
         pivotingColumns : pivotColumns,
         valueColumn : valueColumn,
-        availableColumns : available_columns,
+        availableColumns : getAvailable_columns_and_rows({}).available_columns,
         filters: row_filters
     };
 
@@ -2399,7 +2424,8 @@ function fillEditorDialog(){
         jQuery(option).appendTo("#googlechart_palettes");
     });
     updatePalette();
-    jQuery.each(available_columns, function(column_key,column_name){
+    var tmp_cols_and_rows = getAvailable_columns_and_rows(jQuery("#googlechartid_"+id).data("unpivotsettings"));
+    jQuery.each(tmp_cols_and_rows.available_columns, function(column_key,column_name){
         var originalStatus = 0;
         jQuery(columnsSettings.original).each(function(idx, original){
             if (original.name === column_key){
@@ -2435,9 +2461,9 @@ function fillEditorDialog(){
         jQuery(column).appendTo("#originalColumns");
     });
 
-    jQuery.each(all_rows.items, function(row_index,row){
+    jQuery.each(tmp_cols_and_rows.all_rows.items, function(row_index,row){
         var tableRow = "<tr>";
-        jQuery.each(available_columns, function(column_key,column_name){
+        jQuery.each(tmp_cols_and_rows.available_columns, function(column_key,column_name){
             tableRow += "<td>" + row[column_key] + "</td>";
         });
         tableRow += "</tr>";
@@ -2519,7 +2545,7 @@ function fillEditorDialog(){
         mask: 'black'
     });
     jQuery(".unpivot-settings").empty();
-    jQuery.each(available_columns, function(idx, value){
+    jQuery.each(tmp_cols_and_rows.available_columns, function(idx, value){
         jQuery("<option>")
             .attr("value", value)
             .text(value)
@@ -2652,7 +2678,7 @@ function openEditChart(id){
                         '3. One by one Select the pivoted parts from the column name, click the "note" icon and select "pivot" as type of the column, enter the name of the column where this value should be stored and select the type of the values<br/>'+
                         '4. Click on the "Unpivot" button and see the results on the "Table pivots" section<br/>'+
                         '<div class="unpivot-settings"></div><br/>'+
-                        '<input type="button" value="unpivot" class="apply-unpivot btn"/><br/>'+
+                        '<input type="button" value="Find pivot" class="apply-unpivot btn"/><br/>'+
                     '</div>' +
                     '<div style="clear:both"></div>'+
 
@@ -2781,6 +2807,7 @@ function openEditChart(id){
             settings.valType = json_annotation.valType;
             unpivotSettings.settings.push(settings);
         });
+
         jQuery("#googlechartid_tmp_chart").data("unpivotsettings", unpivotSettings);
         // TODO apply unpivot
     });
@@ -2813,7 +2840,7 @@ function populateDefaults(id, type){
             normalColumns : columnsFromSettings.normalColumns,
             pivotingColumns : columnsFromSettings.pivotColumns,
             valueColumn : columnsFromSettings.valueColumn,
-            availableColumns : available_columns,
+            availableColumns : getAvailable_columns_and_rows({}).available_columns,
             filters : chart_row_filters
         };
         var transformedTable = transformTable(options);
@@ -2998,7 +3025,7 @@ function openAddEditChartFilterDialog(id, type){
                     filter_columns.push(value.name);
                     var column = jQuery('<option style="background-color:gray"></option>');
                     column.attr("value", "pre_config_" + value.name);
-                    column.text(available_columns[value.name] + " (pre-pivot)");
+                    column.text(getAvailable_columns_and_rows({}).available_columns[value.name] + " (pre-pivot)");
                     jQuery(".googlecharts_filter_columns", addfilterdialog).append(column);
                     empty = false;
                 }
@@ -3019,7 +3046,7 @@ function openAddEditChartFilterDialog(id, type){
         var originalColumns2 = JSON.parse(chartColumns_str).original;
         jQuery(originalColumns2).each(function(index, value){
             if ("pre_config_"+value.name === edit_filter_col){
-                edit_col_label = available_columns[value.name] + " (pre-pivot)";
+                edit_col_label = getAvailable_columns_and_rows({}).available_columns[value.name] + " (pre-pivot)";
             }
         });
 
@@ -3515,7 +3542,7 @@ function addNewChart(){
     var newColumns = {};
     newColumns.original = [];
     newColumns.prepared = [];
-    jQuery.each(available_columns,function(key,value){
+    jQuery.each(getAvailable_columns_and_rows({settings:[]}).available_columns,function(key,value){
         var newOriginal = {};
         newOriginal.name = key;
         newOriginal.status = 1;
