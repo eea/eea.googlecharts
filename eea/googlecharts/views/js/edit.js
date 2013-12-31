@@ -637,12 +637,12 @@ function getAvailable_columns_and_rows(unpivotSettings){
         return {
             available_columns:available_columns,
             all_rows:all_rows
-        }
+        };
     }
     var unpivotOptions = {
         originalTable : all_rows,
         unpivotSettings : unpivotSettings
-    }
+    };
     var unpivotedTable = unpivotTable(unpivotOptions);
     var tmp_available_columns = {};
     jQuery.each(unpivotedTable.properties, function(key, value){
@@ -651,7 +651,7 @@ function getAvailable_columns_and_rows(unpivotSettings){
     var rows_and_columns = {
         all_rows : unpivotedTable,
         available_columns : tmp_available_columns
-    }
+    };
     return rows_and_columns;
 }
 
@@ -1206,7 +1206,8 @@ function setConfiguratorMessage(message_key) {
 function openEditor(elementId) {
     isFirstEdit = true;
     jQuery(".google-visualization-charteditor-dialog").remove();
-    chartId = elementId;
+//    chartId = elementId;
+    chartId = "tmp_chart";
     var chartObj = jQuery("#googlechartid_"+elementId);
     var title = chartObj.find(".googlechart_name").attr("value");
 
@@ -1251,7 +1252,7 @@ function openEditor(elementId) {
         normalColumns : columnsFromSettings.normalColumns,
         pivotingColumns : columnsFromSettings.pivotColumns,
         valueColumn : columnsFromSettings.valueColumn,
-        availableColumns : getAvailable_columns_and_rows({}).available_columns,
+        availableColumns : getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings")).available_columns,
         filters: row_filters,
         unpivotSettings : jQuery("#googlechartid_tmp_chart").data("unpivotsettings")
     };
@@ -1711,6 +1712,8 @@ function checkVisiblePivotValueColumns(){
 }
 
 function populateTableForPivot(){
+    jQuery("#pivotConfigHeader").empty();
+    jQuery("#pivotConfigDropZones").empty();
     jQuery.each(columnsForPivot,function(key, value){
         var th =
                 "<th class='columnheader' columnnr='"+value.nr+"'>"+
@@ -1915,9 +1918,9 @@ function updatePalette() {
 }
 
 function updateMatrixChartScrolls(){
-    var pos = $(".matrixCharts_zone").position();
-    $("#matrixCharthorizontalscroll").css("left",pos.left);
-    $("#matrixChartverticalscroll").css("top",pos.top);
+    var pos = jQuery(".matrixCharts_zone").position();
+    jQuery("#matrixCharthorizontalscroll").css("left",pos.left);
+    jQuery("#matrixChartverticalscroll").css("top",pos.top);
 }
 
 function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
@@ -2386,7 +2389,7 @@ function columnsMatrixChart(chartType){
                 });
             }
     });
-    $("#matrixCharts_container").scroll(updateMatrixChartScrolls);
+    jQuery("#matrixCharts_container").scroll(updateMatrixChartScrolls);
     updateMatrixChartScrolls();
     DavizEdit.Status.stop("Done");
 }
@@ -2404,9 +2407,14 @@ function resizeTableConfigurator(forced){
     }
 }
 
-function fillEditorDialog(){
-    var id = jQuery(".googlecharts_columns_config").attr("chart_id");
-    var tmp_paletteId = jQuery(".googlecharts_columns_config").attr("palette_id");
+function fillEditorDialog(options){
+    console.log("2");
+    columnsForPivot = {};
+//    var id = jQuery(".googlecharts_columns_config").attr("chart_id");
+    var id = "tmp_chart";
+    if (!options.skippalette){
+        var tmp_paletteId = jQuery(".googlecharts_columns_config").attr("palette_id");
+    }
     var columns_str = jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value");
     var columnsSettings = {};
     if (!columns_str){
@@ -2416,15 +2424,19 @@ function fillEditorDialog(){
         columnsSettings = JSON.parse(jQuery("#googlechartid_"+id+" .googlechart_columns").attr("value"));
     }
     var columnCount = 0;
-    jQuery.each(chartPalettes, function(paletteId, paletteSettings){
-        if (tmp_paletteId === ""){
-            tmp_paletteId = paletteId;
-        }
-        var option = "<option value='"+paletteId+"' "+ ((tmp_paletteId === paletteId) ? 'selected="selected"':'')+">"+paletteSettings.name+"</option>";
-        jQuery(option).appendTo("#googlechart_palettes");
-    });
+    if (!options.skippalette){
+        jQuery.each(chartPalettes, function(paletteId, paletteSettings){
+            if (tmp_paletteId === ""){
+                tmp_paletteId = paletteId;
+            }
+            var option = "<option value='"+paletteId+"' "+ ((tmp_paletteId === paletteId) ? 'selected="selected"':'')+">"+paletteSettings.name+"</option>";
+            jQuery(option).appendTo("#googlechart_palettes");
+        });
+    }
     updatePalette();
     var tmp_cols_and_rows = getAvailable_columns_and_rows(jQuery("#googlechartid_"+id).data("unpivotsettings"));
+    
+    jQuery("#originalColumns").empty();
     jQuery.each(tmp_cols_and_rows.available_columns, function(column_key,column_name){
         var originalStatus = 0;
         jQuery(columnsSettings.original).each(function(idx, original){
@@ -2461,6 +2473,7 @@ function fillEditorDialog(){
         jQuery(column).appendTo("#originalColumns");
     });
 
+//    jQuery("#originalTable").empty();
     jQuery.each(tmp_cols_and_rows.all_rows.items, function(row_index,row){
         var tableRow = "<tr>";
         jQuery.each(tmp_cols_and_rows.available_columns, function(column_key,column_name){
@@ -2477,7 +2490,7 @@ function fillEditorDialog(){
     var pivotLevels = generateNewTable(loadedSortOrder, true);
 
     populateTableForPivot();
-    $(".draggable").draggable({
+    jQuery(".draggable").draggable({
             containment:"#headers",
             delay: 300,
             revert:false,
@@ -2486,11 +2499,11 @@ function fillEditorDialog(){
                     alert("At least 2 visible column are required");
                     return false;
                 }
-                pivotDraggedColumn = parseInt($(ui.helper).attr("columnnr"),10);
+                pivotDraggedColumn = parseInt(jQuery(ui.helper).attr("columnnr"),10);
                 hideDropZone(pivotDraggedColumn);
             },
             stop:function(event, ui){
-                $(ui.helper).attr("style","position:relative");
+                jQuery(ui.helper).attr("style","position:relative");
                 if (pivotDragStatus === 1){
                     updateStatus();
                 }
@@ -2502,15 +2515,15 @@ function fillEditorDialog(){
                 pivotDragStatus = 0;
             }
     });
-    $(".droppable").droppable({
-      hoverClass: "hoveredDrop",
-      drop: function(event, ui){
-        pivotDragStatus = 1;
-        pivotDroppedColumn = pivotTmpDroppedColumn;
-      },
-      over: function(event, ui){
-        pivotTmpDroppedColumn = jQuery(".hoveredDrop").attr("columnnr");
-      }
+    jQuery(".droppable").droppable({
+        hoverClass: "hoveredDrop",
+        drop: function(event, ui){
+            pivotDragStatus = 1;
+            pivotDroppedColumn = pivotTmpDroppedColumn;
+        },
+        over: function(event, ui){
+            pivotTmpDroppedColumn = jQuery(".hoveredDrop").attr("columnnr");
+        }
     });
     updateWithStatus();
 
@@ -2518,7 +2531,8 @@ function fillEditorDialog(){
         jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
     });
 
-
+    jQuery("#pivotingTableLabel").unbind("click");
+    jQuery("#unpivotingFormLabel").unbind("click");
     jQuery("#pivotingTableLabel").click(function(){
         var tmp_icon = jQuery("#pivotingTableLabel").find(".ui-icon");
         if (tmp_icon.hasClass("ui-icon-circlesmall-plus")){
@@ -2545,7 +2559,8 @@ function fillEditorDialog(){
         mask: 'black'
     });
     jQuery(".unpivot-settings").empty();
-    jQuery.each(tmp_cols_and_rows.available_columns, function(idx, value){
+    jQuery(".unpivot-pivotedcolumns").empty();
+    jQuery.each(available_columns, function(idx, value){
         jQuery("<option>")
             .attr("value", value)
             .text(value)
@@ -2599,6 +2614,10 @@ function fillEditorDialog(){
             jQuery(".columnForUnpivot").data('annotator').setupAnnotation(annotation);
         });
     }
+}
+
+function fillEditorDialogWithDelay(){
+    fillEditorDialog({});
 }
 
 function openEditChart(id){
@@ -2677,8 +2696,10 @@ function openEditChart(id){
                         '2. Select the base part from the column name, click the "note" icon and select "base" as type of the column<br/>'+
                         '3. One by one Select the pivoted parts from the column name, click the "note" icon and select "pivot" as type of the column, enter the name of the column where this value should be stored and select the type of the values<br/>'+
                         '4. Click on the "Unpivot" button and see the results on the "Table pivots" section<br/>'+
+                        '<b>Note:</b> Be carefull that pivot values should not contain characters used as separators<br/>'+
                         '<div class="unpivot-settings"></div><br/>'+
-                        '<input type="button" value="Find pivot" class="apply-unpivot btn"/><br/>'+
+                        '<input type="button" value="Find pivot" class="apply-unpivot btn"/>'+
+                        '<input type="button" value="Reset" class="reset-unpivot btn"/><br/>'+
                     '</div>' +
                     '<div style="clear:both"></div>'+
 
@@ -2788,10 +2809,13 @@ function openEditChart(id){
                     resizeTableConfigurator(false);
                 },
                 open:function(){
-                    setTimeout(fillEditorDialog, 500);
+                    console.log("1");
+                    setTimeout(fillEditorDialogWithDelay, 500);
                 }
                 });
     editorDialog = editcolumnsdialog.data("dialog");
+    jQuery(".apply-unpivot").unbind("click");
+    jQuery(".reset-unpivot").unbind("click");
     jQuery(".apply-unpivot").bind("click", function(){
         var annotations = jQuery(".columnForUnpivot").data("annotator").plugins.EEAGoogleChartsUnpivotAnnotation.getAnnotations();
         var unpivotSettings = {};
@@ -2804,12 +2828,61 @@ function openEditChart(id){
             json_annotation = JSON.parse(annotation.text);
             settings.colType = json_annotation.colType;
             settings.colName = json_annotation.colName;
+            if (settings.colType === "base"){
+                settings.colName = unpivotSettings.columnName.substr(settings.start, settings.end-settings.start);
+            }
             settings.valType = json_annotation.valType;
-            unpivotSettings.settings.push(settings);
+            var shouldAdd = true;
+            jQuery.each(unpivotSettings.settings, function(idx, up_settings){
+                if (up_settings.colName === settings.colName){
+                    shouldAdd = false;
+                }
+            });
+            if (shouldAdd){
+                unpivotSettings.settings.push(settings);
+            }
         });
 
         jQuery("#googlechartid_tmp_chart").data("unpivotsettings", unpivotSettings);
-        // TODO apply unpivot
+
+        var newtablesettings = getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings"));
+        var newColumnsSettings = {original:[],prepared:[]};
+        jQuery.each(newtablesettings.available_columns, function(key,value){
+            newColumnsSettings.original.push({name:key, status:1});
+            newColumnsSettings.prepared.push({name:key, status:1, fullname:value});
+        });
+        jQuery("#googlechartid_tmp_chart .googlechart_columns").attr("value", JSON.stringify(newColumnsSettings));
+        fillEditorDialog({skippalette:true});
+        jQuery.each(columnsForPivot, function(key, column){
+            jQuery.each(unpivotSettings.settings, function(u_key, u_settings){
+                if (column.name === u_settings.colName){
+                    if (u_settings.colType === 'base'){
+                        column.status = 1;
+                    }
+                    if (u_settings.colType === 'pivot'){
+                        column.status = 2;
+                    }
+                }
+            });
+        });
+        updateWithStatus();
+        var pivotLevels = generateNewTable();
+        jQuery.each(pivotLevels, function(key, value){
+            jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
+        });
+    });
+    jQuery(".reset-unpivot").bind("click", function(){
+        var unpivotSettings = {};
+        jQuery("#googlechartid_tmp_chart").data("unpivotsettings", unpivotSettings);
+        var newtablesettings = getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings"));
+        var newColumnsSettings = {original:[],prepared:[]};
+        jQuery.each(newtablesettings.available_columns, function(key,value){
+            newColumnsSettings.original.push({name:key, status:1});
+            newColumnsSettings.prepared.push({name:key, status:1, fullname:value});
+        });
+        jQuery("#googlechartid_tmp_chart .googlechart_columns").attr("value", JSON.stringify(newColumnsSettings));
+        fillEditorDialog({skippalette:true});
+        updateWithStatus();
     });
 }
 

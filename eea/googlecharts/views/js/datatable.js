@@ -7,7 +7,7 @@ function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
         if (ranges.length !== 0){
             ranges[ranges.length-1].length = value.start - ranges[ranges.length-1].start;
         }
-        var range = {}
+        var range = {};
         range.start = value.end;
         ranges.push(range);
     });
@@ -30,7 +30,7 @@ function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
     var values = {};
     if (components.length === unpivotSettings.settings.length){
         jQuery.each(unpivotSettings.settings, function(idx, settings){
-            var value = {}
+            var value = {};
             if (settings.colType === 'base'){
                 value.name = components[idx];
                 value.value = defaultvalue;
@@ -64,7 +64,7 @@ function unpivotTable(settings){
                 colLabel = colProp.label;
                 var splitted = splitColumn(colLabel, value, settings.originalTable.properties[col_id].columnType, settings.unpivotSettings);
                 if (jQuery.isEmptyObject(splitted)){
-                    fixed_values[col_id] = value
+                    fixed_values[col_id] = value;
                     unpivotedTable.properties[col_id] = settings.originalTable.properties[col_id];
                 }
                 else {
@@ -72,19 +72,19 @@ function unpivotTable(settings){
                     var new_row = {};
                     jQuery.each(splitted, function(key,value){
                         new_row[key] = value.value;
-                    })
+                    });
                     new_rows.push(new_row);
                 }
             }
-        })
+        });
         jQuery.each(new_rows, function(idx, new_row){
             jQuery.each(fixed_values, function(key, value){
                 new_row[key] = value;
-            })
+            });
         });
         jQuery.each(new_rows, function(idx, row){
             unpivotedTable.items.push(row);
-        })
+        });
     });
     jQuery.each(settings.unpivotSettings.settings, function(idx, up_settings){
         var new_prop;
@@ -93,21 +93,21 @@ function unpivotTable(settings){
                 columnType : up_settings.valType,
                 label : up_settings.colName,
                 valueType : up_settings.valType
-            }
+            };
             unpivotedTable.properties[up_settings.colName.replace(/[^A-Za-z0-9]/g, '_')] = new_prop;
         }
         else {
-            var col_id = settings.unpivotSettings.columnName.replace(/[^A-Za-z0-9]/g, '_')
+            var col_id = settings.unpivotSettings.columnName.replace(/[^A-Za-z0-9]/g, '_');
             var colName = settings.unpivotSettings.columnName.substr(up_settings.start, up_settings.end-up_settings.start);
             new_prop = {
                 columnType : baseProperties.columnType,
                 label : colName,
                 valueType : baseProperties.valueType
-            }
+            };
             unpivotedTable.properties[colName.replace(/[^A-Za-z0-9]/g, '_')] = new_prop;
 
         }
-    })
+    });
     var order = 0;
     jQuery.each(unpivotedTable.properties, function(idx, value){
         value.order = order;
