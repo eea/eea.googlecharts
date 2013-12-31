@@ -633,6 +633,7 @@ function reloadColumnFilters(id){
 }
 
 function getAvailable_columns_and_rows(unpivotSettings){
+    debugger;
     if (jQuery.isEmptyObject(unpivotSettings)){
         return {
             available_columns:available_columns,
@@ -2023,7 +2024,8 @@ function columnsMatrixChart(chartType){
         normalColumns : normalColumns,
         pivotingColumns : pivotColumns,
         valueColumn : valueColumn,
-        availableColumns : getAvailable_columns_and_rows({}).available_columns,
+        availableColumns : getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings")).available_columns,
+        unpivotSettings : jQuery("#googlechartid_tmp_chart").data("unpivotsettings"),
         filters: row_filters
     };
 
@@ -2408,7 +2410,6 @@ function resizeTableConfigurator(forced){
 }
 
 function fillEditorDialog(options){
-    console.log("2");
     columnsForPivot = {};
 //    var id = jQuery(".googlecharts_columns_config").attr("chart_id");
     var id = "tmp_chart";
@@ -2435,7 +2436,7 @@ function fillEditorDialog(options){
     }
     updatePalette();
     var tmp_cols_and_rows = getAvailable_columns_and_rows(jQuery("#googlechartid_"+id).data("unpivotsettings"));
-    
+
     jQuery("#originalColumns").empty();
     jQuery.each(tmp_cols_and_rows.available_columns, function(column_key,column_name){
         var originalStatus = 0;
@@ -2809,7 +2810,6 @@ function openEditChart(id){
                     resizeTableConfigurator(false);
                 },
                 open:function(){
-                    console.log("1");
                     setTimeout(fillEditorDialogWithDelay, 500);
                 }
                 });
