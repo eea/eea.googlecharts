@@ -633,7 +633,6 @@ function reloadColumnFilters(id){
 }
 
 function getAvailable_columns_and_rows(unpivotSettings){
-    debugger;
     if (jQuery.isEmptyObject(unpivotSettings)){
         return {
             available_columns:available_columns,
@@ -669,7 +668,6 @@ function saveThumb(value, useName){
     var chart_sortBy = value[9];
     var chart_sortAsc = value[10];
     var chart_unpivotsettings = value[11];
-    // TODO apply unpivotsettings;
 
     var columnsFromSettings = getColumnsFromSettings(chart_columns);
     var options = {
@@ -678,8 +676,8 @@ function saveThumb(value, useName){
         pivotingColumns : columnsFromSettings.pivotColumns,
         valueColumn : columnsFromSettings.valueColumn,
         availableColumns : getAvailable_columns_and_rows({}).available_columns,
-        filters : chart_row_filters
-
+        filters : chart_row_filters,
+        unpivotSettings : chart_unpivotsettings
     };
     var transformedTable = transformTable(options);
 
@@ -3541,6 +3539,7 @@ function saveCharts(){
                     else{
                         columnsSettings = JSON.parse(columns_str);
                     }
+                    var unpivotsettings = chartObj.data("unpivotsettings");
                     chartSettings[2] = columnsSettings;
                     chartSettings[3] = "";
                     chartSettings[4] = chartObj.find(".googlechart_width").attr("value");
@@ -3550,6 +3549,7 @@ function saveCharts(){
                     chartSettings[8] = row_filters;
                     chartSettings[9] = sortBy;
                     chartSettings[10] = sortAsc;
+                    chartSettings[11] = unpivotsettings;
 
                     saveThumb(chartSettings);
                     DavizEdit.Status.stop(data);
