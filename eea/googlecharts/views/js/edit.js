@@ -675,7 +675,7 @@ function saveThumb(value, useName){
         normalColumns : columnsFromSettings.normalColumns,
         pivotingColumns : columnsFromSettings.pivotColumns,
         valueColumn : columnsFromSettings.valueColumn,
-        availableColumns : getAvailable_columns_and_rows({}).available_columns,
+        availableColumns : getAvailable_columns_and_rows(chart_unpivotsettings).available_columns,
         filters : chart_row_filters,
         unpivotSettings : chart_unpivotsettings
     };
@@ -1127,7 +1127,6 @@ function addChart(options){
     else{
         chartColumns = JSON.parse(settings.columns);
     }
-
     jQuery.each(settings.filters,function(key,value){
         if (key.indexOf('pre_config_') === -1){
             jQuery(chartColumns.prepared).each(function(idx, column){
@@ -1137,7 +1136,7 @@ function addChart(options){
             });
         }
         else {
-            addFilter(settings.id, key, value.type, getAvailable_columns_and_rows({}).available_columns[key.substr(11)], value.defaults);
+            addFilter(settings.id, key, value.type, getAvailable_columns_and_rows(settings.unpivotsettings).available_columns[key.substr(11)], value.defaults);
         }
     });
     if (shouldMark){
@@ -2911,8 +2910,9 @@ function populateDefaults(id, type){
             normalColumns : columnsFromSettings.normalColumns,
             pivotingColumns : columnsFromSettings.pivotColumns,
             valueColumn : columnsFromSettings.valueColumn,
-            availableColumns : getAvailable_columns_and_rows({}).available_columns,
-            filters : chart_row_filters
+            availableColumns : getAvailable_columns_and_rows(jQuery("#googlechartid_"+id).data("unpivotsettings")).available_columns,
+            filters : chart_row_filters,
+            unpivotSettings : jQuery("#googlechartid_"+id).data("unpivotsettings")
         };
         var transformedTable = transformTable(options);
         tableForFields = transformedTable;
@@ -3096,7 +3096,7 @@ function openAddEditChartFilterDialog(id, type){
                     filter_columns.push(value.name);
                     var column = jQuery('<option style="background-color:gray"></option>');
                     column.attr("value", "pre_config_" + value.name);
-                    column.text(getAvailable_columns_and_rows({}).available_columns[value.name] + " (pre-pivot)");
+                    column.text(getAvailable_columns_and_rows(jQuery("#googlechartid_"+id).data("unpivotsettings")).available_columns[value.name] + " (pre-pivot)");
                     jQuery(".googlecharts_filter_columns", addfilterdialog).append(column);
                     empty = false;
                 }
@@ -3117,7 +3117,7 @@ function openAddEditChartFilterDialog(id, type){
         var originalColumns2 = JSON.parse(chartColumns_str).original;
         jQuery(originalColumns2).each(function(index, value){
             if ("pre_config_"+value.name === edit_filter_col){
-                edit_col_label = getAvailable_columns_and_rows({}).available_columns[value.name] + " (pre-pivot)";
+                edit_col_label = getAvailable_columns_and_rows(jQuery("#googlechartid_"+id).data("unpivotsettings")).available_columns[value.name] + " (pre-pivot)";
             }
         });
 
@@ -3615,7 +3615,7 @@ function addNewChart(){
     var newColumns = {};
     newColumns.original = [];
     newColumns.prepared = [];
-    jQuery.each(getAvailable_columns_and_rows({settings:[]}).available_columns,function(key,value){
+    jQuery.each(getAvailable_columns_and_rows({}).available_columns,function(key,value){
         var newOriginal = {};
         newOriginal.name = key;
         newOriginal.status = 1;
