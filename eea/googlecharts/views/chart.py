@@ -258,6 +258,9 @@ class View(ViewForm):
         """
         return chart.get('sortFilter', '__disabled__')
 
+    def get_unpivotSettings(self, chart):
+        return json.dumps(chart.get('unpivotsettings', {}))
+
     @property
     def tabs(self):
         """ Tabs in view mode
