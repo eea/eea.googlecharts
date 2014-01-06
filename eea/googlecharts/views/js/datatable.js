@@ -71,7 +71,12 @@ function unpivotTable(settings){
                     baseProperties = settings.originalTable.properties[col_id];
                     var new_row = {};
                     jQuery.each(splitted, function(key,value){
-                        new_row[key] = value.value;
+                        if (value.type === "number"){
+                            new_row[key] = parseFloat(value.value);
+                        }
+                        else {
+                            new_row[key] = value.value;
+                        }
                     });
                     new_rows.push(new_row);
                 }
@@ -113,6 +118,7 @@ function unpivotTable(settings){
         value.order = order;
         order ++;
     });
+//    debugger;
     return unpivotedTable;
 }
 

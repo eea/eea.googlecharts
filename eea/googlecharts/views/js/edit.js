@@ -4297,14 +4297,6 @@ Annotator.Plugin.EEAGoogleChartsUnpivotAnnotation = (function() {
             .attr("value", "number")
             .text("number")
             .appendTo(".googlechartAnnotationValueType select");
-        jQuery("<option>")
-            .attr("value", "year")
-            .text("year")
-            .appendTo(".googlechartAnnotationValueType select");
-        jQuery("<option>")
-            .attr("value", "date")
-            .text("date")
-            .appendTo(".googlechartAnnotationValueType select");
 
         jQuery(".googlechartAnnotationEditorTable select").bind("change", function(){
             jQuery(window).trigger("EEAGoogleChartsUnpivotAnnotation.events.inputChanged");
