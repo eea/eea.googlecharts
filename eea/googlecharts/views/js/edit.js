@@ -3649,12 +3649,14 @@ function drawPreviewChart(chartObj, width, height){
     var row_filters_str = chartObj.find(".googlechart_row_filters").attr('value');
     var sortBy = chartObj.find(".googlechart_sortBy").attr('value');
     var sortAsc_str = chartObj.find(".googlechart_sortAsc").attr('value');
+    var unpivotsettings_str = JSON.stringify(chartObj.data('unpivotsettings'));
     var query = {
                 "preview_id":chartObj.find(".googlechart_id").attr("value"),
                 "preview_tmp_chart":'{"row_filters_str":"'+encodeURIComponent(row_filters_str)+'",'+
                                     '"sortBy":"'+encodeURIComponent(sortBy)+'",'+
                                     '"sortAsc_str":"'+encodeURIComponent(sortAsc_str)+'",'+
                                     '"json":"'+encodeURIComponent(config_str)+'",'+
+                                    '"unpivotsettings":"'+encodeURIComponent(unpivotsettings_str)+'",'+
                                     '"options":"'+encodeURIComponent(modified_adv_options_str)+'",'+
                                     '"columns":"'+encodeURIComponent(chartObj.find(".googlechart_columns").attr("value"))+'",'+
                                     '"width":'+width+','+
