@@ -3127,6 +3127,13 @@ function openAddEditChartFilterDialog(id, type){
             buttons.attr('class', 'btn');
             jQuery(buttons[0]).addClass('btn-inverse');
             jQuery(buttons[1]).addClass('btn-success');
+
+            if (jQuery(".googlecharts_filter_columns").attr("value").indexOf("pre_config_") === 0){
+                jQuery(".googlecharts_filter_type").find("option[value='0']").hide();
+                jQuery(".googlecharts_filter_type").find("option[value='1']").hide();
+                jQuery(".googlecharts_filter_type").find("option[value='2']").attr("selected", "selected");
+            }
+
             jQuery(".googlecharts_filter_columns").bind("change", function(){
                 jQuery(".googlecharts_filter_type").find("option:selected").removeAttr("selected");
                 if (jQuery(".googlecharts_filter_columns").attr("value").indexOf("pre_config_") === 0){

@@ -196,9 +196,9 @@ function drawChart(value, other_options){
         unpivotSettings : chart_unpivotSettings
     };
 
+    var transformedTable = transformTable(options);
     other_settings.merged_rows = tmp_columns_and_rows.all_rows;
     other_settings.available_columns = tmp_columns_and_rows.available_columns;
-    var transformedTable = transformTable(options);
 
     options = {
         originalDataTable : transformedTable,
