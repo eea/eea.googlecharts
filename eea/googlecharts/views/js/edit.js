@@ -2851,18 +2851,6 @@ function openEditChart(id){
 
         jQuery("#googlechartid_tmp_chart .googlechart_columns").attr("value", JSON.stringify(newColumnsSettings));
         fillEditorDialog({skippalette:true});
-        jQuery.each(columnsForPivot, function(key, column){
-            jQuery.each(unpivotSettings.settings, function(u_key, u_settings){
-                if (column.name === u_settings.colName){
-                    if (u_settings.colType === 'base'){
-                        column.status = 1;
-                    }
-                    if (u_settings.colType === 'pivot'){
-                        column.status = 2;
-                    }
-                }
-            });
-        });
         updateWithStatus();
         var pivotLevels = generateNewTable();
         jQuery.each(pivotLevels, function(key, value){
