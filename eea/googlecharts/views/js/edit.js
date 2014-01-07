@@ -1220,6 +1220,7 @@ function openEditor(elementId) {
         sortAsc = false;
     }
 
+
     var columnsFromSettings = getColumnsFromSettings(chartColumns);
 
     var options = {
@@ -2668,8 +2669,8 @@ function openEditChart(id){
                         '1. Select one of the pivoted columns:'+
                         '<select class="unpivot-pivotedcolumns">'+
                         '</select><br/>'+
-                        '2. Select the base part from the column name, click the "note" icon and select "base" as type of the column<br/>'+
-                        '3. One by one Select the pivoted parts from the column name, click the "note" icon and select "pivot" as type of the column, enter the name of the column where this value should be stored and select the type of the values<br/>'+
+                        '2. With your mouse select the base part from the column name, click the "note" icon and select "base" as type of the column<br/>'+
+                        '3. One by one select the pivoted parts from the column name, click the "note" icon and select "pivot" as type of the column, enter the name of the column where this value should be stored and select the type of the values<br/>'+
                         '4. Click on the "Find pivot" button and see the results on the "Table pivots" section<br/>'+
                         '<b>Note:</b> Be carefull that pivot values should not contain characters used as separators<br/>'+
                         '<div class="unpivot-settings"></div><br/>'+
@@ -2816,15 +2817,38 @@ function openEditChart(id){
                 unpivotSettings.settings.push(settings);
             }
         });
+        var newtablesettings;
+        var newColumnsSettings = {original:[],prepared:[]};
+        try{
+            newtablesettings = getAvailable_columns_and_rows(unpivotSettings, available_columns, all_rows);
 
+            jQuery.each(newtablesettings.available_columns, function(key,value){
+                newColumnsSettings.original.push({name:key, status:1});
+                newColumnsSettings.prepared.push({name:key, status:1, fullname:value});
+            });
+
+            var columnsFromSettings = getColumnsFromSettings(newColumnsSettings);
+            var options = {
+                originalTable : all_rows,
+                normalColumns : columnsFromSettings.normalColumns,
+                pivotingColumns : columnsFromSettings.pivotColumns,
+                valueColumn : columnsFromSettings.valueColumn,
+                availableColumns : newtablesettings.available_columns,
+//                filters : chart_row_filters,
+                unpivotSettings : unpivotSettings
+            };
+            var transformedTable = transformTable(options);
+            if (transformedTable.items.length === 0){
+                throw "invalid unpivot settings";
+            }
+
+        }
+        catch(err){
+            alert("Invalid unpivot settings!")
+            return;
+        }
         jQuery("#googlechartid_tmp_chart").data("unpivotsettings", unpivotSettings);
 
-        var newtablesettings = getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings"), available_columns, all_rows);
-        var newColumnsSettings = {original:[],prepared:[]};
-        jQuery.each(newtablesettings.available_columns, function(key,value){
-            newColumnsSettings.original.push({name:key, status:1});
-            newColumnsSettings.prepared.push({name:key, status:1, fullname:value});
-        });
         jQuery("#googlechartid_tmp_chart .googlechart_columns").attr("value", JSON.stringify(newColumnsSettings));
         fillEditorDialog({skippalette:true});
         jQuery.each(columnsForPivot, function(key, column){

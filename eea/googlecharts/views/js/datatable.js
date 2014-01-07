@@ -25,6 +25,15 @@ function getAvailable_columns_and_rows(unpivotSettings, availableColumnsForUnpiv
 
 
 function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
+    var unpivotBase = "";
+    jQuery.each(unpivotSettings.settings, function(idx, value){
+        if (value.colType === "base"){
+            unpivotBase = value.colName;
+        }
+    });
+    if (columnName.indexOf(unpivotBase) !== 0){
+        return {}
+    }
     var defaultColumnName = columnName;
     var ranges = [];
     jQuery.each(unpivotSettings.settings, function(idx, value){
