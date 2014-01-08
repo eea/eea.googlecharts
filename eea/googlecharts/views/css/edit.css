@@ -191,8 +191,6 @@
 .pivotedColumn {
     padding: 4px;
     line-height: 16px;
-    border:1px solid #CCC;
-    border-bottom:2px solid #CCC;
     background-color: #F3F3F3;
     color: #333;
 }
@@ -619,16 +617,17 @@ dl.portlet .dashboard-widget,
 
 .pivotedColumn,
 .draggable {
-    font-weight:normal;
     font-size:14px;
     line-height:16px;
 }
 
 .pivotedColumn {
+    font-weight:bold;
     height:16px;
 }
 
 .draggable {
+    font-weight:normal;
     cursor: move;
 }
 
@@ -1575,12 +1574,6 @@ div.googlechartarea-input {
     border: 1px solid #CCC;
     border-bottom: 2px solid #CCC;
     text-align: center;
-}
-
-.detailRowForPivot > td{
-    border: 0;
-    border-bottom: 0;
-    padding: 0;
 }
 
 .activefields {

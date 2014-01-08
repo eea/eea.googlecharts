@@ -1385,25 +1385,52 @@ function generateNewTableForChart(){
     openEditor("tmp_chart");
 }
 
+var pivotPreviewStructure = [];
+
+function buildPivotsTree(parent, columns, level){
+    var nodesCount;
+    var node = {
+        node: parent,
+        nodesCount: 0,
+        nodes : [],
+    };
+    if (pivotPreviewStructure.length < level){
+        pivotPreviewStructure.push([]);
+    }
+    jQuery.each(columns, function(key, value){
+        var tmp_node = buildPivotsTree(key, value, level + 1);
+        node.nodes.push(tmp_node);
+        node.nodesCount += tmp_node.nodesCount;
+    });
+    if (node.nodesCount === 0){
+        node.nodesCount = 1;
+    }
+    pivotPreviewStructure[level-1].push({node: node.node, nodesCount:node.nodesCount});
+    return node;
+}
+
+
 function populatePivotPreviewTable(columns){
-    var table = "<tr class='titleRowForPivot'>";
-    jQuery.each(columns, function(key, value){
-        table += "<td>"+key+"</td>";
-    });
-    table += "</tr>";
-
-    table += "<tr class='detailRowForPivot'>";
-    jQuery.each(columns, function(key, value){
-        if (!jQuery.isEmptyObject(value)){
-            var newTable = "<table>";
-            newTable += populatePivotPreviewTable(columns[key]);
-            newTable += "</table>";
-            table += "<td>"+newTable+"</td>";
+    pivotPreviewStructure = [];
+    var countedPivots = buildPivotsTree("root", columns, 1);
+    var table_obj = jQuery("<table>");
+    jQuery.each(pivotPreviewStructure, function(row_nr, row){
+        if (row_nr === 0){
+            return;
         }
+        var row_obj = jQuery("<tr>")
+                        .addClass("titleRowForPivot")
+                        .appendTo(table_obj);
+        var head_col = jQuery("<td>").appendTo(row_obj);
+        jQuery("#pivots").find(".pivotedColumn").first().appendTo(head_col)
+        jQuery.each(row, function(col_nr, col){
+            jQuery("<td>")
+                .attr("colspan", col.nodesCount)
+                .text(col.node)
+                .appendTo(row_obj);
+        })
     });
-    table += "</tr>";
-
-    return table;
+    return table_obj[0];
 }
 
 function generateNewTable(sortOrder, isFirst){
