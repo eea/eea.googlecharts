@@ -1115,10 +1115,6 @@ function loadFormatters(colFullName){
         }
     });
 }
-function moveMenu(e){
-    jQuery(".slick-header-menu").appendTo(".googlechart-dialog").offset({ top: e.pageY, left: e.pageX});
-    jQuery(".slick-header-menu");
-}
 
 function enableGridFormatters(){
     jQuery("body").delegate(".slick-menu-disable", "click", function(){
@@ -1207,7 +1203,6 @@ function enableGridFormatters(){
         });
 
         loadFormatters(jQuery(this).parent().attr("title"));
-        moveMenu(e);
     });
 }
 
