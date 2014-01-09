@@ -2688,7 +2688,7 @@ function openEditChart(id){
             '<div class="googlechart_accordion_container">' +
                 '<div class="googlechart_accordion_table">' +
 
-                    '<div id="unpivotingFormLabel" class="label">Find pivots' + //xxx
+                    '<div id="unpivotingFormLabel" class="label">Transform columns to rows (unpivot)' + //xxx
                         '<div class="ui-icon ui-icon-circlesmall-plus">expand</div>'+
                     '</div>'+
                     '<div class="unpivotingForm">' +
@@ -2698,15 +2698,15 @@ function openEditChart(id){
                         '</select><br/>'+
                         '2. With your mouse select the base part from the column name, click the "note" icon and select "base" as type of the column<br/>'+
                         '3. One by one select the pivoted parts from the column name, click the "note" icon and select "pivot" as type of the column, enter the name of the column where this value should be stored and select the type of the values<br/>'+
-                        '4. Click on the "Find pivot" button and see the results on the "Table pivots" section<br/>'+
+                        '4. Click on the "Unpivot" button and see the results on the "Table pivots" section<br/>'+
                         '<b>Note:</b> Be carefull that pivot values should not contain characters used as separators<br/>'+
                         '<div class="unpivot-settings"></div><br/>'+
-                        '<input type="button" value="Find pivot" class="apply-unpivot btn"/>'+
+                        '<input type="button" value="Unpivot" class="apply-unpivot btn"/>'+
                         '<input type="button" value="Reset" class="reset-unpivot btn"/><br/>'+
                     '</div>' +
                     '<div style="clear:both"></div>'+
 
-                    '<div id="pivotingTableLabel" class="label">Table pivots' + //xxx
+                    '<div id="pivotingTableLabel" class="label">Transform rows to columns (pivot)' + //xxx
                         '<div class="ui-icon ui-icon-circlesmall-plus">expand</div>'+
                     '</div>'+
                     '<div class="pivotingTable">' +
