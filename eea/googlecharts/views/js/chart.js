@@ -545,7 +545,7 @@ function drawGoogleDashboard(options){
     var dashboard_filters = {};
     jQuery.each(settings.filters, function(key, value){
         var def_str = value.defaults;
-        if ((def_str === undefined) || (def_str = "")){
+        if ((def_str === undefined) || (def_str === "")){
             def_str = "[]";
         }
         var defaults = JSON.parse(def_str);
@@ -558,9 +558,11 @@ function drawGoogleDashboard(options){
         }
         if (value.wtype === 'googlecharts.widgets.chart'){
             var chartConfig;
+            var chart_unpivotsettings;
             jQuery(settings.charts).each(function(idx, config){
                 if (config[0] === value.name){
                     chartConfig = config;
+                    chart_unpivotSettings = config[15];
                 }
             });
             var chartContainerId = settings.chartViewsDiv+"_" + value.name;
@@ -589,12 +591,14 @@ function drawGoogleDashboard(options){
                 chart_sortAsc = false;
             }
 
+            var tmp_columns_and_rows = getAvailable_columns_and_rows(chart_unpivotSettings, settings.columns, settings.rows);
             var options = {
                 originalTable : settings.rows,
                 normalColumns : columnsFromSettings.normalColumns,
                 pivotingColumns : columnsFromSettings.pivotColumns,
                 valueColumn : columnsFromSettings.valueColumn,
-                availableColumns : settings.columns,
+                availableColumns : tmp_columns_and_rows.available_columns,
+                unpivotSettings : chart_unpivotSettings,
                 filters : chart_row_filters
             };
 

@@ -191,8 +191,6 @@
 .pivotedColumn {
     padding: 4px;
     line-height: 16px;
-    border:1px solid #CCC;
-    border-bottom:2px solid #CCC;
     background-color: #F3F3F3;
     color: #333;
 }
@@ -619,16 +617,17 @@ dl.portlet .dashboard-widget,
 
 .pivotedColumn,
 .draggable {
-    font-weight:normal;
     font-size:14px;
     line-height:16px;
 }
 
 .pivotedColumn {
+    font-weight:bold;
     height:16px;
 }
 
 .draggable {
+    font-weight:normal;
     cursor: move;
 }
 
@@ -968,7 +967,8 @@ select[name=googlechart_filterposition] {
     z-index:1004;
 }
 
-.pivotingTable {
+.pivotingTable,
+.unpivotingForm{
     display: none;
 }
 
@@ -1149,12 +1149,18 @@ div[title='Format'].slick-header-menuitem {
     background-image : url(../../++resource++jquery-ui-themes/sunburst/images/ui-icons_444444_256x240.png);
 }
 
-#pivotingTableLabel {
+#pivotingTableLabel,
+#unpivotingFormLabel{
     float:left;
     cursor:pointer;
 }
 
-#pivotingTableLabel > .ui-icon{
+#unpivotingFormLabel{
+    margin-bottom:3px;
+}
+
+#pivotingTableLabel > .ui-icon,
+#unpivotingFormLabel > .ui-icon{
     float:right; background-color:#999;
     background-image : url(++resource++jquery-ui-themes/sunburst/images/ui-icons_ffffff_256x240.png);
 }
@@ -1553,4 +1559,61 @@ div.googlechartarea-input {
 
 .customDialogHeader{
     border-bottom: 1px solid #ccc;
+}
+
+#pivots {
+    float:left;
+}
+
+.pivotsPreviewTable {
+    float:left;
+    margin-left:10px;
+}
+.titleRowForPivot > td{
+    background-color: #F3F3F3;
+    border: 1px solid #CCC;
+    border-bottom: 2px solid #CCC;
+    text-align: center;
+}
+
+.activefields {
+    display: block !important;
+}
+
+.findexistingpivotsfields {
+    display: none;
+}
+
+.annotator-controls{
+    z-index:99999;
+}
+
+.unpivot-settings {
+    padding:30px;
+}
+
+.annotator-item:first-child textarea{
+    min-height:100px !important;
+    min-width:320px !important;
+}
+
+.annotator-resize{
+    display:none;
+}
+
+.googlechartAnnotationColumnName input,
+.googlechartAnnotationColumnName input:focus{
+    outline: -webkit-focus-ring-color auto 5px !important;
+}
+
+.googlechartAnnotationViewerTable{
+    font-size: 14px;
+}
+
+.unpivot-settings {
+    font-size: 20px;
+}
+
+.unpivot-settings .annotator-hl {
+    background-color: #E96565;
 }

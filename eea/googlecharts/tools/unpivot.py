@@ -27,8 +27,8 @@ if __name__ == '__main__':
         unpivoted_header_row = []
         pivots_nr = 0
         for col in data[0]:
-            if col.split(delimiter)[0] != unpivot_base:
-                unpivoted_header_row.append(col)
+            if col.split(delimiter)[0].strip() != unpivot_base:
+                unpivoted_header_row.append(col.strip())
             else:
                 pivots_nr = pivots_nr + 1
         unpivoted_header_row.append(unpivot_column_label)
@@ -41,20 +41,20 @@ if __name__ == '__main__':
             pivoted_rows = []
             i = 0
             for val in row:
-                if data[0][i] in unpivoted_header_row:
+                if data[0][i].strip() in unpivoted_header_row:
                     unpivoted_values.append(val)
                 else:
                     pivoted_row = []
-                    pivoted_row.append(data[0][i].split(delimiter)[1])
+                    pivoted_row.append(data[0][i].strip().split(delimiter)[1])
                     pivoted_row.append(val)
                     pivoted_rows.append(pivoted_row)
                 i = i + 1
             for pivoted_row in pivoted_rows:
                 unpivoted_row = []
                 for unpivoted_value in unpivoted_values:
-                    unpivoted_row.append(unpivoted_value)
+                    unpivoted_row.append(unpivoted_value.strip())
                 for pivoted_value in pivoted_row:
-                    unpivoted_row.append(pivoted_value)
+                    unpivoted_row.append(pivoted_value.strip())
                 unpivoted.append(unpivoted_row)
 
         datafile = open(output, 'w')

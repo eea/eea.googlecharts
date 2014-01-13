@@ -39,7 +39,7 @@
 <tal:block tal:define="enabled_chart python:False">
 <metal:chart define-macro="chart" tal:condition="enabled_chart">
     <tal:block tal:define="chart view/get_chart; vhash view/get_visualization_hash">
-    <script type="text/javascript" tal:define="sortFilter python: chart.get('sortFilter','__disabled__'); row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart); GoogleChartsConfig view/get_chart_json;"
+    <script type="text/javascript" tal:define="sortFilter python: chart.get('sortFilter','__disabled__'); row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart); GoogleChartsConfig view/get_chart_json; unpivotSettings python:view.get_unpivotSettings(chart)"
         tal:content="structure string:
             var chart_columns_$vhash = ${chart/columns};
             var merged_rows_$vhash = ${chart/data};
@@ -65,6 +65,7 @@
             var chart_columnFilters_$vhash = $columnFilters;
             var GoogleChartsConfig_$vhash = $GoogleChartsConfig;
             var isInline_$vhash = '$inline';
+            var unpivotSettings_$vhash = $unpivotSettings;
 
             var googlechart_config_array_$vhash = [];
             var settings_$vhash = [];
@@ -112,6 +113,7 @@
                         settings_$vhash[7].chartArea = tmp_chartArea;
                     }
                 }
+                settings_$vhash.push(unpivotSettings_$vhash);
                 googlechart_config_array_$vhash.push(settings_$vhash);
 
                 other_options_$vhash = {

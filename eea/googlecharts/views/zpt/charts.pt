@@ -31,8 +31,8 @@
 <tal:block tal:define="charts view/get_charts; dashboards view/get_dashboards">
     <tal:block tal:repeat="chart charts">
         <script type="text/javascript"
-            tal:define="dashboard python:view.get_dashboard_js(chart);sortFilter python:view.get_sortFilter(chart); hasPNG chart/hasPNG | string: false; row_filters python: chart.get('row_filters',{}); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart);"
-            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard, '$sortFilter', '$hasPNG', $row_filters, '$sortBy', '$sortAsc', $columnFilters]);"></script>
+            tal:define="dashboard python:view.get_dashboard_js(chart);sortFilter python:view.get_sortFilter(chart); hasPNG chart/hasPNG | string: false; row_filters python: chart.get('row_filters',{}); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart); unpivotsettings python:view.get_unpivotSettings(chart);"
+            tal:content="string: googlechart_config_array.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard, '$sortFilter', '$hasPNG', $row_filters, '$sortBy', '$sortAsc', $columnFilters, $unpivotsettings]);"></script>
     </tal:block>
 
     <script type="text/javascript" tal:content="string: dashboards_config_array = ${dashboards}">

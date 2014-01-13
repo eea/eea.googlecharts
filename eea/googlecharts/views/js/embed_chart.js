@@ -47,6 +47,7 @@ function drawChart(value, other_options){
     }
 
     var embedchart_columnFilters = value[14];
+    var embedchart_unpivotSettings = value[15];
 
     jQuery("#googlechart_filters_"+other_settings.vhash).remove();
     jQuery("#googlechart_view_"+other_settings.vhash).remove();
@@ -134,16 +135,22 @@ function drawChart(value, other_options){
 
     var columnsFromSettings = getColumnsFromSettings(embedchart_columns);
 
+    var tmp_columns_and_rows = getAvailable_columns_and_rows(embedchart_unpivotSettings, other_settings.available_columns, other_settings.merged_rows);
+
     var options = {
         originalTable : other_settings.merged_rows,
         normalColumns : columnsFromSettings.normalColumns,
         pivotingColumns : columnsFromSettings.pivotColumns,
         valueColumn : columnsFromSettings.valueColumn,
-        availableColumns : other_settings.available_columns,
+        availableColumns : tmp_columns_and_rows.available_columns,
+        unpivotSettings : embedchart_unpivotSettings,
         filters : row_filters
     };
 
     var transformedTable = transformTable(options);
+
+    other_settings.merged_rows = tmp_columns_and_rows.all_rows;
+    other_settings.available_columns = tmp_columns_and_rows.available_columns;
 
     options = {
         originalDataTable : transformedTable,

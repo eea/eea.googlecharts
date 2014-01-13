@@ -116,7 +116,7 @@ class Edit(BrowserView):
         chart['row_filters_str'] = urllib2.unquote(chart['row_filters_str'])
         chart['sortBy'] = urllib2.unquote(chart['sortBy'])
         chart['sortAsc_str'] = urllib2.unquote(chart['sortAsc_str'])
-
+        chart['unpivotsettings'] = json.loads(urllib2.unquote(chart['unpivotsettings']))
         tmp_id = self.request.get('preview_id', 'no_id')
         mutator = queryAdapter(self.context, IVisualizationConfig)
 
