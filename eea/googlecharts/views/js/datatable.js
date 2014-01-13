@@ -1,29 +1,5 @@
 var allowedTypesForCharts = ['string', 'number', 'boolean', 'date', 'datetime', 'timeofday'];
 
-function getAvailable_columns_and_rows(unpivotSettings, availableColumnsForUnpivot, rowsForUnpivot){
-    if (jQuery.isEmptyObject(unpivotSettings)){
-        return {
-            available_columns:availableColumnsForUnpivot,
-            all_rows:rowsForUnpivot
-        };
-    }
-    var unpivotOptions = {
-        originalTable : rowsForUnpivot,
-        unpivotSettings : unpivotSettings
-    };
-    var unpivotedTable = unpivotTable(unpivotOptions);
-    var tmp_available_columns = {};
-    jQuery.each(unpivotedTable.properties, function(key, value){
-        tmp_available_columns[key] = value.label;
-    });
-    var rows_and_columns = {
-        all_rows : unpivotedTable,
-        available_columns : tmp_available_columns
-    };
-    return rows_and_columns;
-}
-
-
 function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
     var unpivotBase = "";
     jQuery.each(unpivotSettings.settings, function(idx, value){
@@ -32,7 +8,7 @@ function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
         }
     });
     if (columnName.indexOf(unpivotBase) !== 0){
-        return {}
+        return {};
     }
     var defaultColumnName = columnName;
     var ranges = [];
@@ -152,6 +128,29 @@ function unpivotTable(settings){
         order ++;
     });
     return unpivotedTable;
+}
+
+function getAvailable_columns_and_rows(unpivotSettings, availableColumnsForUnpivot, rowsForUnpivot){
+    if (jQuery.isEmptyObject(unpivotSettings)){
+        return {
+            available_columns:availableColumnsForUnpivot,
+            all_rows:rowsForUnpivot
+        };
+    }
+    var unpivotOptions = {
+        originalTable : rowsForUnpivot,
+        unpivotSettings : unpivotSettings
+    };
+    var unpivotedTable = unpivotTable(unpivotOptions);
+    var tmp_available_columns = {};
+    jQuery.each(unpivotedTable.properties, function(key, value){
+        tmp_available_columns[key] = value.label;
+    });
+    var rows_and_columns = {
+        all_rows : unpivotedTable,
+        available_columns : tmp_available_columns
+    };
+    return rows_and_columns;
 }
 
 function decodeStr(encodedStr){

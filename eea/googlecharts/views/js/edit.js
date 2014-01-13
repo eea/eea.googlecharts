@@ -1392,7 +1392,7 @@ function buildPivotsTree(parent, columns, level){
     var node = {
         node: parent,
         nodesCount: 0,
-        nodes : [],
+        nodes : []
     };
     if (pivotPreviewStructure.length < level){
         pivotPreviewStructure.push([]);
@@ -1422,13 +1422,13 @@ function populatePivotPreviewTable(columns){
                         .addClass("titleRowForPivot")
                         .appendTo(table_obj);
         var head_col = jQuery("<td>").appendTo(row_obj);
-        jQuery("#pivots").find(".pivotedColumn").first().appendTo(head_col)
+        jQuery("#pivots").find(".pivotedColumn").first().appendTo(head_col);
         jQuery.each(row, function(col_nr, col){
             jQuery("<td>")
                 .attr("colspan", col.nodesCount)
                 .text(col.node)
                 .appendTo(row_obj);
-        })
+        });
     });
     return table_obj[0];
 }
@@ -2871,7 +2871,7 @@ function openEditChart(id){
 
         }
         catch(err){
-            alert("Invalid unpivot settings!")
+            alert("Invalid unpivot settings!");
             return;
         }
         jQuery("#googlechartid_tmp_chart").data("unpivotsettings", unpivotSettings);
