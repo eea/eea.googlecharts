@@ -84,7 +84,16 @@ function unpivotTable(settings){
                             new_row[key] = parseFloat(value.value);
                         }
                         else {
-                            new_row[key] = value.value;
+                            if (value.type === "date"){
+                                var tmp_date = new Date(value.value);
+                                tmp_year = tmp_date.getFullYear();
+                                tmp_month = tmp_date.getMonth();
+                                tmp_day = tmp_date.getDate();
+                                new_row[key] = tmp_year.toString() + "-" + (tmp_month+1).toString() + "-" + tmp_day.toString();
+                            }
+                            else {
+                                new_row[key] = value.value;
+                            }
                         }
                     });
                     new_rows.push(new_row);

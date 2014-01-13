@@ -3,6 +3,8 @@ Changelog
 
 9.2-dev - (unreleased)
 ----------------------
+* Change: Added date type for pivoted columns
+  [szabozo0 refs #17190]
 * Feature: Added unpivoting functionality
   [szabozo0 refs #17190]
 * Bugfix: Fixed chartditor conflict with jquery dialogs
