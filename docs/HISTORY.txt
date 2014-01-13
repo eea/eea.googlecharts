@@ -3,7 +3,7 @@ Changelog
 
 9.2-dev - (unreleased)
 ----------------------
-* Feature: WIP: implementing unpivoting functionality
+* Feature: Added unpivoting functionality
   [szabozo0 refs #17190]
 * Bugfix: Fixed chartditor conflict with jquery dialogs
   [szabozo0 refs #17629]
