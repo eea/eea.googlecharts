@@ -4,6 +4,18 @@
   i18n_domain="eea">
 
 
+  <!-- * => 9.3 -->
+  <genericsetup:upgradeSteps
+    source="*"
+    destination="9.3"
+    profile="eea.googlecharts:default">
+
+    <genericsetup:upgradeDepends
+      title="Install eea.icons"
+      import_profile="eea.icons:default"
+      />
+  </genericsetup:upgradeSteps>
+
   <!-- * => 9.2 -->
   <genericsetup:upgradeSteps
     source="*"

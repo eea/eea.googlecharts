@@ -41,6 +41,7 @@ setup(name=NAME,
           'setuptools',
           'eea.converter >= 6.0',
           'eea.app.visualization > 6.9',
+          'eea.icons',
       ],
       extras_require={
           'test': [

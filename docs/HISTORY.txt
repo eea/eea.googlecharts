@@ -3,6 +3,8 @@ Changelog
 
 9.3-dev - (unreleased)
 ----------------------
+* Bugfix: Added eea.icons as dependency for eea.googlecharts
+  [szabozo0]
 
 9.2 - (2014-01-14)
 ------------------
