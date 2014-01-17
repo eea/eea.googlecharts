@@ -313,6 +313,7 @@ function applyColumnFilters(options){
             skipColorReorder = true;
         }
     });
+    debugger;
     jQuery("#"+options.filtersDiv).html('');
     jQuery("#"+options.chartViewDiv).html('');
     var config = [];
@@ -371,7 +372,9 @@ function applyColumnFilters(options){
                 chart_columns_new.original.push(chart_column_new);
             });
             var usedFilterIdxs = [];
+            debugger;
             jQuery.each(chart_columns_old.prepared, function(idx, chart_column_old){
+            debugger;
                 var columnFilterIdx = -1;
                 var shouldSkip;
                 jQuery.each(chart_columnFilters_old, function(idx, columnFilter_old){
@@ -401,7 +404,7 @@ function applyColumnFilters(options){
                     }
                 }
                 else {
-                    jQuery.each(chart_columnFilters_new[columnFilterIdx].settings.defaults, function(idx, default_col_new){
+                    jQuery.each(chart_columnFilters_new[columnFilterIdx].settings.defaults.sort(), function(idx, default_col_new){
                         var chart_column_new = {};
                         chart_column_new.name = default_col_new;
                         chart_column_new.fullname = options.columnFriendlyNames[default_col_new];
