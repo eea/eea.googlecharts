@@ -3,6 +3,8 @@ Changelog
 
 9.3-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed order of columns when using pre-pivot filters
+  [batradav refs #17088]
 * Bugfix: Fixed order of columns when using columnfilters
   [szabozo0 #17088]
 * Bugfix: Added eea.icons as dependency for eea.googlecharts

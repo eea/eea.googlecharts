@@ -1423,7 +1423,17 @@ function populatePivotPreviewTable(columns){
                         .appendTo(table_obj);
         var head_col = jQuery("<td>").appendTo(row_obj);
         jQuery("#pivots").find(".pivotedColumn").first().appendTo(head_col);
-        jQuery.each(row, function(col_nr, col){
+        jQuery.each(row.sort(function(a,b){
+                    if (a.node > b.node){
+                        return 1;
+                    }
+                    else if (a.node < b.node){
+                        return -1;
+                    }
+                    else {
+                        return 0;
+                    }
+                }), function(col_nr, col){
             jQuery("<td>")
                 .attr("colspan", col.nodesCount)
                 .text(col.node)
@@ -3143,7 +3153,6 @@ function openAddEditChartFilterDialog(id, type){
         jQuery(".googlecharts_filter_columns", addfilterdialog).append(column);
         jQuery(".googlecharts_filter_columns", addfilterdialog).attr("disabled","disabled");
     }
-
     jQuery.each(available_filter_types,function(key,value){
         var column = jQuery('<option></option>');
         column.attr("value", key);
@@ -3170,7 +3179,6 @@ function openAddEditChartFilterDialog(id, type){
             if (jQuery(".googlecharts_filter_columns").attr("value").indexOf("pre_config_") === 0){
                 jQuery(".googlecharts_filter_type").find("option[value='0']").hide();
                 jQuery(".googlecharts_filter_type").find("option[value='1']").hide();
-                jQuery(".googlecharts_filter_type").find("option[value='2']").attr("selected", "selected");
             }
 
             jQuery(".googlecharts_filter_columns").bind("change", function(){
@@ -3895,11 +3903,11 @@ function init_googlecharts_edit(){
     });
 
     jQuery("#googlecharts_list").delegate(".edit_filter_icon","click",function(){
-        var filterToRemove = jQuery(this).closest('.googlechart_filteritem');
+        var filterToEdit = jQuery(this).closest('.googlechart_filteritem');
         chartId = jQuery(this).closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
-        openAddEditChartFilterDialog(id, filterToRemove.attr("id"));
+        openAddEditChartFilterDialog(id, filterToEdit.attr("id"));
     });
 
     jQuery("#googlecharts_list").delegate(".remove_filter_icon","click",function(){

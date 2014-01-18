@@ -231,7 +231,7 @@ function transformTable(options){
         pivotTable.properties[normal_column] = unpivotedTable.properties[normal_column];
         pivotTable.available_columns[normal_column] = settings.availableColumns[normal_column];
     });
-
+    var tmp_available_columns = {};
     jQuery(unpivotedTable.items).each(function(row_index, row){
         var newRow = {};
         var isNewRow = true;
@@ -265,10 +265,11 @@ function transformTable(options){
             var pivotColumn = pivotColumnName.replace(/[^A-Za-z0-9]/g, '_');
             additionalColumns[pivotColumn] = defaultPivotColumnValue;
 
-            pivotTable.available_columns[pivotColumn] = pivotColumnLabel;
+            tmp_available_columns[pivotColumn] = pivotColumnLabel;
             pivotTable.properties[pivotColumn] = {
                 valueType : unpivotedTable.properties[settings.valueColumn].valueType,
-                order : unpivotedTable.properties[settings.valueColumn].order,
+//                order : unpivotedTable.properties[settings.valueColumn].order,
+                order : -1,
                 columnType : unpivotedTable.properties[settings.valueColumn].columnType,
                 label : pivotColumnLabel
             };
@@ -295,6 +296,21 @@ function transformTable(options){
         if (isNewRow){
             pivotTable.items.push(newRow);
         }
+    });
+    var pivotColumnIds = [];
+    var maxOrder = -1;
+    jQuery.each(pivotTable.properties, function(key, property){
+        if (property.order === -1){
+            pivotColumnIds.push(key);
+        }
+        else {
+            maxOrder = Math.max(maxOrder, property.order);
+        }
+    });
+    jQuery.each(pivotColumnIds.sort(), function(idx, columnId){
+        maxOrder++;
+        pivotTable.properties[columnId].order = maxOrder;
+        pivotTable.available_columns[columnId] = tmp_available_columns[columnId];
     });
     var filteredPivotTable = {};
     filteredPivotTable.available_columns = pivotTable.available_columns;
