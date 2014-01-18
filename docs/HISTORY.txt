@@ -9,6 +9,8 @@ Changelog
   [szabozo0 #17088]
 * Bugfix: Added eea.icons as dependency for eea.googlecharts
   [szabozo0]
+* Feature: adding Sphinx-generated documentation in Page Template format
+  [batradav refs #9502]
 
 9.2 - (2014-01-14)
 ------------------
