@@ -2735,7 +2735,7 @@ function openEditChart(id){
                         '2. With your mouse select the base part from the column name, click the "note" icon and select "base" as type of the column<br/>'+
                         '3. One by one select the pivoted parts from the column name, click the "note" icon and select "pivot" as type of the column, enter the name of the column where this value should be stored and select the type of the values<br/>'+
                         '4. Click on the "Unpivot" button and see the results on the "Table pivots" section<br/>'+
-                        '<b>Note:</b> Be carefull that pivot values should not contain characters used as separators<br/>'+
+                        '<b>Note:</b> Be careful that pivot values should not contain characters used as separators<br/>'+
                         '<div class="unpivot-settings"></div><br/>'+
                         '<input type="button" value="Unpivot" class="apply-unpivot btn"/>'+
                         '<input type="button" value="Reset" class="reset-unpivot btn"/><br/>'+
