@@ -29,7 +29,6 @@ var availableChartsForMatrix = {'BarChart':'bar',
 
 var chartsWithoutSVG = ['motionchart',
                         'organizational',
-                        'imagechart',
                         'sparkline',
                         'table',
                         'annotatedtimeline',
@@ -702,7 +701,15 @@ function saveThumb(value, useName){
                                 filename = value[0];
                                 thumb_id += "_" + value[0];
                             }
-                            var svg = jQuery(thumb_id).find("svg").parent().html();
+                            var svg;
+                            var img_url;
+                            img_url = jQuery(thumb_id).find("img").attr("src");
+                            if (img_url === undefined){
+                                svg = jQuery(thumb_id).find("svg").parent().html();
+                            }
+                            else {
+                                img_url = "http://"+img_url.substr(img_url.indexOf("chart.googleapis.com"));
+                            }
                             jQuery(thumb_id).remove();
                             var form = jQuery('.daviz-view-form:has(#googlecharts_config)');
                             var action = form.length ? form.attr('action') : '';
@@ -712,10 +719,17 @@ function saveThumb(value, useName){
                             else {
                                 action = action.split('@@')[0] + "@@googlechart.setthumb";
                             }
+                            var data = {"filename": filename};
+                            if (img_url === undefined){
+                                data.svg = svg;
+                            }
+                            else {
+                                data.imageChart_url = img_url;
+                            }
                             jQuery.ajax({
                                 type: 'POST',
                                 url: action,
-                                data: {"svg":svg, "filename":filename},
+                                data: data,
                                 async: false,
                                 success: function(data){
                                     if (data !== "Success"){

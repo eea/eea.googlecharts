@@ -9,18 +9,26 @@ if (typeof String.prototype.endsWith === "undefined") {
 }
 
 function exportToPng(){
-    var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
-    jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
-    var svg = jQuery("#googlechart_view").find("svg").parent().html();
     var form = jQuery("#export");
-    jQuery("#svg").attr("value",svg);
+    if (jQuery("#googlechart_view img").attr("src") === undefined){
+        var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
+        jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
+        var svg = jQuery("#googlechart_view").find("svg").parent().html();
+        jQuery("#svg").attr("value",svg);
+        jQuery("#imageChart_url").attr("value", '');
+    }
+    else {
+        var img_url = jQuery("#googlechart_view img").attr("src");
+        img_url = "http://"+img_url.substr(img_url.indexOf("chart.googleapis.com"));
+        jQuery("#imageChart_url").attr("value", img_url);
+    }
 
     form.submit();
 }
 
 function checkSVG(){
     var svg = jQuery("#googlechart_view").find("svg");
-    if (svg[0]){
+    if ((svg[0]) || (jQuery("#googlechart_view img").attr("src") !== undefined)){
        jQuery("#googlechart_export_button").show();
     }
 }

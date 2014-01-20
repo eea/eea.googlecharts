@@ -436,11 +436,16 @@ class Export(BrowserView):
         kwargs.update(form)
 
         convert = getUtility(IConvert)
-        img = convert(
-            data=kwargs.get('svg', ''),
-            data_from='svg',
-            data_to='png'
-        )
+        if kwargs.get('svg', '') != '':
+            img = convert(
+                data=kwargs.get('svg', ''),
+                data_from='svg',
+                data_to='png'
+            )
+        if kwargs.get('imageChart_url', '') != '':
+            img_con = urllib2.urlopen(kwargs.get('imageChart_url'))
+            img = img_con.read()
+            img_con.close()
 
         if not img:
             return _("ERROR: An error occured while exporting your image. "
@@ -550,11 +555,16 @@ class SetThumb(BrowserView):
         filename = kwargs.get('filename', 'cover.png')
 
         convert = getUtility(IConvert)
-        img = convert(
-            data=kwargs.get('svg', ''),
-            data_from='svg',
-            data_to='png'
-        )
+        if kwargs.get('svg', '') != '':
+            img = convert(
+                data=kwargs.get('svg', ''),
+                data_from='svg',
+                data_to='png'
+            )
+        if kwargs.get('imageChart_url', '') != '':
+            img_con = urllib2.urlopen(kwargs.get('imageChart_url'))
+            img = img_con.read()
+            img_con.close()
 
         if not img:
             return _("ERROR: An error occured while exporting your image. "

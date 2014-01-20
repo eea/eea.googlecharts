@@ -65,6 +65,7 @@
 
     <form id="export" action='@@googlechart.export' method="POST">
         <input type="hidden" id="svg" name="svg"/>
+        <input type="hidden" id="imageChart_url" name="imageChart_url"/>
         <input type="hidden" id="filename" name="filename"/>
         <input type="hidden" id="type" name="type"/>
         <input type="hidden" id="width" name="width"/>
