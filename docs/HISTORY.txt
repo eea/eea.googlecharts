@@ -3,6 +3,8 @@ Changelog
 
 9.3-dev - (unreleased)
 ----------------------
+* Bugfix: Added resize for radar charts, fixed type icon for daviz tabs
+  [batradav refs #17087]
 * Bugfix: Fixed order of columns when using pre-pivot filters
   [batradav refs #17088]
 * Bugfix: Fixed order of columns when using columnfilters

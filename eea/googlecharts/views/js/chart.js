@@ -1,3 +1,18 @@
+function chartAreaAttribute2px(value, size){
+    var pixels = 0;
+    if (typeof(value) === "string"){
+        if (value.indexOf("%") != -1){
+            pixels = size / 100 * parseFloat(value, 10);
+        }
+    }
+    else {
+        if (typeof(value) === "number"){
+            pixels = value;
+        }
+    }
+    return pixels;
+}
+
 function getQueryParams(obj){
     var query_params = window.location.hash.split("_filters=")[1];
     if (jQuery(obj).closest("div.googlechart_dashboard").attr("query_params") !== undefined){
@@ -161,6 +176,25 @@ function drawGoogleChart(options){
         updateHash : false
     };
     jQuery.extend(settings, options);
+    if (settings.chartJson.chartType === "ImageChart"){
+        var tmp_width = settings.chartWidth;
+        var tmp_height = settings.chartHeight;
+        var tmp_pixels = tmp_width * tmp_height;
+        var max_pixels = 300000;
+        if (tmp_pixels > max_pixels){
+            var tmp_ratio = tmp_width / tmp_height;
+            tmp_height = Math.sqrt(max_pixels/tmp_ratio);
+            tmp_width = tmp_height * tmp_ratio;
+        }
+        settings.chartJson.options.chs = tmp_width.toString() + "," + tmp_height.toString();
+        if (settings.chartOptions.hasOwnProperty("chartArea")){
+            var marginLeft = chartAreaAttribute2px(settings.chartOptions.chartArea.left, tmp_width);
+            var marginRight = tmp_width - marginLeft - chartAreaAttribute2px(settings.chartOptions.chartArea.width, tmp_width);
+            var marginTop = chartAreaAttribute2px(settings.chartOptions.chartArea.top, settings.chartHeight);
+            var marginBottom = tmp_height - marginTop - chartAreaAttribute2px(settings.chartOptions.chartArea.height, tmp_height);
+            settings.chartJson.options.chma = marginLeft + "," + marginRight + "," + marginTop + "," + marginBottom;
+        }
+    }
     jQuery("<div class='googlechart_loading_img'></div>").appendTo("#"+settings.chartViewDiv);
     // XXX Use GoogleChartsConfig for options instead of googlechart_config_array
     var other_settings = jQuery("#"+settings.chartDashboard).data("other_settings");

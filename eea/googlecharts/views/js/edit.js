@@ -43,7 +43,8 @@ var resizableCharts = ['LineChart',
                         'BarChart',
                         'ScatterChart',
                         'BubbleChart',
-                        'PieChart'];
+                        'PieChart',
+                        'ImageChart'];
 
 var matrixChartMatrixMaxDots = 200;
 var matrixChartMinDots = 30;
@@ -1853,6 +1854,17 @@ function chartEditorSave(id){
 
     delete options_json.state;
     var motion_state = chartWrapper.getState();
+    if (settings_json.chartType === "ImageChart"){
+        if (!options_json.hasOwnProperty("chs")){
+            jQuery("#googlechartid_"+id+" .googlechart_width").attr("value","547");
+            jQuery("#googlechartid_"+id+" .googlechart_height").attr("value","547");
+        }
+    }
+    else {
+        delete options_json.chs;
+        delete options_json.chma;
+    }
+
     if (typeof(motion_state) === 'string'){
         options_json.state = motion_state;
     }
@@ -3805,20 +3817,7 @@ function drawPreviewChart(chartObj, width, height){
     });
 
 }
-function chartAreaAttribute2px(value, size){
-    var pixels = 0;
-    if (typeof(value) === "string"){
-        if (value.indexOf("%") != -1){
-            pixels = size / 100 * parseFloat(value, 10);
-        }
-    }
-    else {
-        if (typeof(value) === "number"){
-            pixels = value;
-        }
-    }
-    return pixels;
-}
+
 function init_googlecharts_edit(){
     if(!jQuery("#googlecharts_list").length){
         return;
@@ -4001,6 +4000,20 @@ function init_googlecharts_edit(){
                 jQuery(".preview-controls .chartHeight").attr("value", tmp_height);
             },
             resizeStop: function(){
+                if (JSON.parse(chartObj.find(".googlechart_configjson").attr("value")).chartType === "ImageChart"){
+                    if (jQuery(this).width() * jQuery(this).height() > 300000){
+                        alert("Maximum size of pixels is 300000, You specified " +
+                            parseInt(jQuery(this).width(),10) + "x" +parseInt(jQuery(this).height(),10) +
+                            " what results in " + parseInt(jQuery(this).width(),10) * parseInt(jQuery(this).height(),10) + "px!");
+                        jQuery(this).width(chartObj.attr("widthPrevious"));
+                        jQuery(this).height(chartObj.attr("heightPrevious"));
+                        jQuery(".googlechart-preview-dialog").width(jQuery(".googlechart-preview-dialog").attr("widthPrevious"));
+                        jQuery(".googlechart-preview-dialog").height(jQuery(".googlechart-preview-dialog").attr("heightPrevious"));
+                        jQuery(".preview-controls .chartWidth").attr("value", jQuery(".preview-controls .chartWidth").attr("valuePrevious"));
+                        jQuery(".preview-controls .chartHeight").attr("value", jQuery(".preview-controls .chartHeight").attr("valuePrevious"));
+                        return;
+                    }
+                }
                 var width_ratio = jQuery(this).width() / chartObj.attr("widthPrevious");
                 var height_ratio = jQuery(this).height() / chartObj.attr("heightPrevious");
                 var chartAreaLeft = JSON.parse(chartObj.attr("chartArea")).left * width_ratio;
@@ -4016,6 +4029,10 @@ function init_googlecharts_edit(){
             resizeStart: function(){
                 chartObj.attr("widthPrevious", jQuery(this).width());
                 chartObj.attr("heightPrevious", jQuery(this).height());
+                jQuery(".googlechart-preview-dialog").attr("widthPrevious", jQuery(".googlechart-preview-dialog").width());
+                jQuery(".googlechart-preview-dialog").attr("heightPrevious", jQuery(".googlechart-preview-dialog").height());
+                jQuery(".preview-controls .chartWidth").attr("valuePrevious", jQuery(".preview-controls .chartWidth").attr("value"));
+                jQuery(".preview-controls .chartHeight").attr("valuePrevious", jQuery(".preview-controls .chartHeight").attr("value"));
             },
             create: function(){
                 var adv_options_str = chartObj.find(".googlechart_options").attr("value");
