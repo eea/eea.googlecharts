@@ -1,5 +1,5 @@
 
-<tal:block define="context python: request.PARENTS[-2]; here nocall:context">
+<tal:block define="context python: request.PARENTS[1]; here nocall:context">
 <html metal:use-macro="context/main_template/macros/master"
       i18n:domain="plone">
 
@@ -18,6 +18,7 @@
   <link href='http://fonts.googleapis.com/css?family=Crete+Round' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="../_static/sphinx-bootstrap.css" type="text/css"/>
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css"/>
+  <link rel="stylesheet" href="../_static/theme.css" type="text/css"/>
 </metal:styleslot>
 <metal:javascriptslot fill-slot="javascript_head_slot">
   <script type="text/javascript">
@@ -304,49 +305,6 @@ file within this package source code.</p>
         </div>
     </div>
 </metal:main>
-
-<metal:right-portlet fill-slot="portlets_two_slot">
-      <div class="span3">
-          
-        <div class="sphinxsidebar">
-            <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">EEA Google Charts API</a><ul>
-<li><a class="reference internal" href="#passing-parameters-in-url">Passing parameters in url</a><ul>
-<li><a class="reference internal" href="#differences-between-simple-visualization-pages-and-embedded-charts">Differences between simple visualization pages and embedded charts</a></li>
-<li><a class="reference internal" href="#how-the-filters-should-be-configured">How the filters should be configured</a><ul>
-<li><a class="reference internal" href="#sortfilter">sortFilter</a></li>
-<li><a class="reference internal" href="#hidefilters">hideFilters</a></li>
-<li><a class="reference internal" href="#rowfilters-columnfilters">rowFilters &amp; columnFilters</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#how-to-figure-out-which-filter-in-which-section-goes">How to figure out which filter in which section goes?</a><ul>
-<li><a class="reference internal" href="#use-the-embed-string-of-the-chart">Use the embed string of the chart</a></li>
-<li><a class="reference internal" href="#use-the-filterinfo-attribute-from-chart-filters">Use the filterinfo attribute from chart filters</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#examples-of-how-to-build-queries-for-charts">Examples of how to build queries for charts:</a><ul>
-<li><a class="reference internal" href="#set-the-query-parameters-for-embedded-charts">1.  Set the query parameters for embedded charts</a></li>
-<li><a class="reference internal" href="#set-sort-order-for-embedded-charts">2.  Set sort order for embedded charts</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/API.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-            </div>
-        </div>
-      </div>
-  
-</metal:right-portlet>
 
 </body>
 </html>
