@@ -1,8 +1,8 @@
 Changelog
 =========
 
-9.3-dev - (unreleased)
-----------------------
+9.3 - (2014-01-21)
+------------------
 * Bugfix: Added png export for radar charts
   [szabozo0 refs #17087]
 * Bugfix: Added resize for radar charts, fixed type icon for daviz tabs
