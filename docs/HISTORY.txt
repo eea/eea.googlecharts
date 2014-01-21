@@ -1,6 +1,9 @@
 Changelog
 =========
 
+9.4-dev - (unreleased)
+----------------------
+
 9.3 - (2014-01-21)
 ------------------
 * Bugfix: Added png export for radar charts
