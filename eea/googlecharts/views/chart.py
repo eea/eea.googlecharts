@@ -259,6 +259,8 @@ class View(ViewForm):
         return chart.get('sortFilter', '__disabled__')
 
     def get_unpivotSettings(self, chart):
+        """ Settings for unpivot
+        """
         return json.dumps(chart.get('unpivotsettings', {}))
 
     @property
