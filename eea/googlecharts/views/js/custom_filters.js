@@ -858,6 +858,10 @@ function addPreConfigFilters(options){
             preConfigFiltersObj : preConfigFiltersObj,
             updateHash : settings.updateHash
         };
+        if ((!allowMultiple) && (mainDefaults.length > 1)){
+            options2.allowNone = true;
+            options2.defaultValues = [];
+        }
         preConfigFiltersObj.push(addCustomFilter(options2));
     });
     jQuery.each(customHelperFilters, function (chf_idx, customHelperFilter){
