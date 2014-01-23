@@ -3,6 +3,8 @@ Changelog
 
 9.4-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed notes position when filters are in the right or in the bottom of the chart
+  [szabozo0 refs #18174]
 * Feature: Don't show main column label in pivoted column labels
   [szabozo0 refs #18108]
 9.3 - (2014-01-21)

@@ -552,3 +552,7 @@ input.googlechart-chart-size {
 .charts-inline-block {
     font-size: 12px;
 }
+
+.googlechart-notes {
+    clear:both;
+}

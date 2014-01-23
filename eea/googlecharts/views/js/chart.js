@@ -534,7 +534,12 @@ function drawGoogleChart(options){
                 .html(note.text)
                 .appendTo(notes);
         });
-        jQuery('#' + settings.chartViewDiv).after(notes);
+        if (settings.chartFilterPosition < 2){
+            jQuery('#' + settings.chartViewDiv).after(notes);
+        }
+        else{
+            jQuery('#' + settings.chartFiltersDiv).after(notes);
+        }
     }
     return {'chart': chart, 'filters': filtersArray};
 
