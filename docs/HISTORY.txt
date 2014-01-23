@@ -3,7 +3,8 @@ Changelog
 
 9.4-dev - (unreleased)
 ----------------------
-
+* Feature: Don't show main column label in pivoted column labels
+  [szabozo0 refs #18108]
 9.3 - (2014-01-21)
 ------------------
 * Bugfix: Added png export for radar charts

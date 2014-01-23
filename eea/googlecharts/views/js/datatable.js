@@ -250,7 +250,7 @@ function transformTable(options){
             }
             var node = pivotTable.pivotLevels[settings.valueColumn];
             var pivotColumnName = settings.valueColumn;
-            var pivotColumnLabel = settings.availableColumns[settings.valueColumn];
+            var pivotColumnLabel = ""
             var pivotValue = row[settings.valueColumn];
             var defaultPivotColumnValue; // = undefined;
             jQuery(settings.pivotingColumns).each(function(pivot_index, pivot_column){
@@ -262,6 +262,7 @@ function transformTable(options){
                 node = node[row[pivot_column]];
             });
 
+            pivotColumnLabel = pivotColumnLabel.substr(1);
             var pivotColumn = pivotColumnName.replace(/[^A-Za-z0-9]/g, '_');
             additionalColumns[pivotColumn] = defaultPivotColumnValue;
 
