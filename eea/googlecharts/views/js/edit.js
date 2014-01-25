@@ -929,6 +929,15 @@ function addChart(options){
                     "<span id='googlechart_chart_div_"+settings.id+"'></span>" +
                     "<span>Preview and size adjustments</span></a>"+
                 "</div>" +
+                "<div class='googlechart-filtersposition-box'>" +
+                    "<span>Filters Position</span>"+
+                    "<select name='googlechart_filterposition' onchange='markChartAsModified(\"" + settings.id + "\")'>" +
+                        "<option value='0' " + ((settings.filter_pos === 0) ? "selected='selected'": "") + ">Top</option>" +
+                        "<option value='1' " + ((settings.filter_pos === 1) ? "selected='selected'": "") + ">Left</option>" +
+                        "<option value='2' " + ((settings.filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
+                        "<option value='3' " + ((settings.filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
+                    "</select>" +
+                "</div>" +
                 "<div class='googlechart-sort-box'>"+
                     '<div class="header">' +
                         '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Sort by column<span class="items_counter"></span></span>' +
@@ -946,13 +955,6 @@ function addChart(options){
                     '<div style="padding: 1em" class="body">' +
                         "<ul class='googlechart_filters_list'  id='googlechart_filters_"+settings.id+"'>" +
                         "</ul>" +
-                        "<span>Position</span>"+
-                        "<select name='googlechart_filterposition' onchange='markChartAsModified(\"" + settings.id + "\")'>" +
-                            "<option value='0' " + ((settings.filter_pos === 0) ? "selected='selected'": "") + ">Top</option>" +
-                            "<option value='1' " + ((settings.filter_pos === 1) ? "selected='selected'": "") + ">Left</option>" +
-                            "<option value='2' " + ((settings.filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
-                            "<option value='3' " + ((settings.filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
-                        "</select>" +
                     '</div>' +
                 "</div>" +
                 "<div class='googlechart-columnfilters-box'>" +

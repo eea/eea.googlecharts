@@ -92,7 +92,8 @@
 .googlechart-sort-box,
 .googlechart-filters-box,
 .googlechart-columnfilters-box,
-.googlechart-notes-box {
+.googlechart-notes-box,
+.googlechart-filtersposition-box {
   float:right;
   width:250px;
   padding: 5px;
@@ -1338,7 +1339,7 @@ li.googlechart > fieldset > div > a > span {
     width:450px;
     float:left;
     margin-right:15px;
-    min-height: 285px;
+    min-height: 355px;
 }
 
 .googlechart_name {

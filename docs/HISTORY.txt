@@ -3,6 +3,8 @@ Changelog
 
 9.4-dev - (unreleased)
 ----------------------
+* Feature: Moved filters position in a common place
+  [batradav reds #17861]
 * Bugfix: Fixed pre-pivot filter behaviour, when more columns are visible and single select filter is used
   [szabozo0 refs #18177]
 * Bugfix: Fixed notes position when filters are in the right or in the bottom of the chart
