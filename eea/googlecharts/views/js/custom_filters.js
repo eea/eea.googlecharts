@@ -606,12 +606,16 @@ function applyPreConfigFilters(options){
     }
     var selectedValues = [];
     var objForTrigger;
+    var allowMultiple;
     jQuery.each(options.preConfigFiltersObj, function(idx, columnFilterObj){
         if (columnFilterObj.getOption("filterColumnLabel") === filterTitle){
             selectedValues = columnFilterObj.getState().selectedValues;
+            allowMultiple = columnFilterObj.getOption("ui.allowMultiple");
         }
     });
-
+    if ((selectedValues.length === 0) && (!allowMultiple)){
+        return;
+    }
     var chart_columnFilters_old;
     var chart_columns_old;
     var conf_array = jQuery("#" + options.dashboardDiv).data('other_settings').googlechart_config_array;
