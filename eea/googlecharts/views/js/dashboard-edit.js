@@ -90,8 +90,7 @@ DavizEdit.GoogleDashboard.prototype = {
 
     jQuery("<span>")
       .attr('title', 'Rename')
-      .text('e')
-      .addClass('ui-icon').addClass('ui-icon-pencil')
+      .addClass('eea-icon daviz-menuicon').addClass('eea-icon-pencil')
       .prependTo(header)
       .click(function(){
         self.handle_rename();
@@ -99,8 +98,7 @@ DavizEdit.GoogleDashboard.prototype = {
 
     jQuery('<span>')
       .attr('title', 'Delete')
-      .text('x')
-      .addClass('ui-icon').addClass('ui-icon-trash')
+      .addClass('eea-icon daviz-menuicon').addClass('eea-icon-trash-o')
       .prependTo(header)
       .click(function(){
         self.handle_delete();
@@ -310,8 +308,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
     // Add button
     jQuery("<span>")
      .attr('title', 'Add new widget')
-     .text('+')
-     .addClass('ui-icon').addClass('ui-icon-plus').addClass('ui-corner-all')
+     .addClass('eea-icon').addClass('eea-icon-plus').addClass('ui-corner-all')
      .prependTo(header)
      .click(function(){
        self.new_widget(self.box);
@@ -700,10 +697,13 @@ DavizEdit.GoogleDashboardWidget.prototype = {
       title = 'Show widget';
     }
 
+    var visibility_class = "eea-icon-eye";
+    if(self.settings.dashboard.hidden){
+      visibility_class = "eea-icon-eye-slash"
+    }
     jQuery("<span>")
       .attr('title', title)
-      .text('h')
-      .addClass('ui-icon').addClass('ui-icon-visibility')
+      .addClass('eea-icon daviz-menuicon').addClass(visibility_class)
       .prependTo(header)
       .click(function(){
         self.toggle_visibility();
@@ -711,8 +711,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
 
     jQuery("<span>")
       .attr('title', 'Edit widget')
-      .text('e')
-      .addClass('ui-icon').addClass('ui-icon-pencil')
+      .addClass('eea-icon daviz-menuicon').addClass('eea-icon-pencil')
       .prependTo(header)
       .click(function(){
         self.handle_edit();
@@ -720,8 +719,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
 
     jQuery('<span>')
       .attr('title', 'Delete')
-      .text('x')
-      .addClass('ui-icon').addClass('ui-icon-trash')
+      .addClass('eea-icon daviz-menuicon').addClass('eea-icon-trash-o')
       .prependTo(header)
       .click(function(){
         self.handle_delete();
@@ -911,11 +909,17 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     if(self.settings.dashboard.hidden){
       self.settings.dashboard.hidden = false;
       jQuery('.dashboard-header', self.box).removeClass('dashboard-header-hidden');
-      jQuery('.ui-icon-visibility', self.box).attr('title', 'Hide widget');
+      jQuery('.eea-icon-eye-slash', self.box)
+        .removeClass('eea-icon-eye-slash')
+        .addClass('eea-icon-eye')
+        .attr('title', 'Hide widget');
     }else{
       self.settings.dashboard.hidden = true;
       jQuery('.dashboard-header', self.box).addClass('dashboard-header-hidden');
-      jQuery('.ui-icon-visibility', self.box).attr('title', 'Show widget');
+      jQuery('.eea-icon-eye', self.box)
+        .removeClass('eea-icon-eye')
+        .addClass('eea-icon-eye-slash')
+        .attr('title', 'Show widget');
     }
     self.save();
   },
@@ -1031,8 +1035,8 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     // Add button
     jQuery("<span>")
      .attr('title', 'Add new filter')
-     .text('+')
-     .addClass('ui-icon').addClass('ui-icon-plus').addClass('ui-corner-all')
+//     .text('+')
+     .addClass('eea-icon').addClass('eea-icon-plus').addClass('ui-corner-all')
      .prependTo(header)
      .click(function(){
        self.new_edit_filter(self.box, "add", "[]");
@@ -1407,9 +1411,8 @@ DavizEdit.GoogleDashboardFilter.prototype = {
 
     // Edit
     jQuery('<div>')
-      .addClass('ui-icon').addClass('ui-icon-pencil')
+      .addClass('eea-icon daviz-menuicon').addClass('eea-icon-pencil')
       .attr('title', 'Edit filter')
-      .text('x')
       .prependTo(self.box)
       .click(function(){
         var filter_defaults = "[]";
@@ -1426,9 +1429,8 @@ DavizEdit.GoogleDashboardFilter.prototype = {
 
     // Delete "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"
     jQuery('<div>')
-      .addClass('ui-icon').addClass('ui-icon-close')
+      .addClass('eea-icon daviz-menuicon').addClass('eea-icon-trash-o')
       .attr('title', 'Delete filter')
-      .text('x')
       .prependTo(self.box)
       .click(function(){
         self.remove();

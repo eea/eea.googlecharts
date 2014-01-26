@@ -515,8 +515,8 @@ dl.portlet .dashboard-widget,
     float: left;
 }
 
-.dashboard-charts .ui-icon-plus,
-.dashboard-filters .ui-icon-plus {
+.dashboard-charts .eea-icon-plus,
+.dashboard-filters .eea-icon-plus {
     float: right;
     border: 2px solid #ccc;
     cursor: pointer;
