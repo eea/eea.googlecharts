@@ -1618,3 +1618,19 @@ div.googlechartarea-input {
 .unpivot-settings .annotator-hl {
     background-color: #E96565;
 }
+
+.eea-icon {
+    color:black;
+}
+
+#unpivotingFormLabel .eea-icon,
+#pivotingTableLabel .eea-icon{
+    color: white;
+}
+
+.googlecharts_columnfilter_slickgrid .eea-icon-check,
+.googlecharts_defaultsfilter_slickgrid .eea-icon-check{
+    color: green;
+}
+
+

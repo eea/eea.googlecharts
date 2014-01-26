@@ -195,8 +195,8 @@ function addFilter(id, column, filtertype, columnName, defaults){
         shouldAdd = true;
         filter = jQuery("<li class='googlechart_filteritem'  id='"+filter_id+"'>" +
                       "<div class='googlechart_filteritem_"+id+"'>"+
-                      "<div class='ui-icon ui-icon-close remove_filter_icon' title='Delete filter'>x</div>"+
-                      "<div class='ui-icon ui-icon-pencil edit_filter_icon' title='Edit filter'>x</div>"+
+                      "<div class='eea-icon daviz-menuicon eea-icon-trash-o remove_filter_icon' title='Delete filter'></div>"+
+                      "<div class='eea-icon daviz-menuicon eea-icon-pencil edit_filter_icon' title='Edit filter'></div>"+
                       "<div class='googlechart_filteritem_id'></div>"+
                       "</div>"+
                     "<input type='hidden' class='googlechart_filteritem_type'/>" +
@@ -256,10 +256,9 @@ function reloadChartNotes(id){
 
         // Note edit button
         jQuery('<div>')
-            .addClass('ui-icon')
-            .addClass('ui-icon-pencil')
+            .addClass('eea-icon daviz-menuicon')
+            .addClass('eea-icon-pencil')
             .attr('title', 'Edit note')
-            .text('e')
             .prependTo(li)
             .click(function(){
                 jQuery(".googlecharts_note_config").remove();
@@ -324,10 +323,9 @@ function reloadChartNotes(id){
 
         // Note delete button
         jQuery('<div>')
-            .addClass('ui-icon')
-            .addClass('ui-icon-close')
+            .addClass('eea-icon daviz-menuicon')
+            .addClass('eea-icon-trash-o')
             .attr('title', 'Delete note')
-            .text('x')
             .prependTo(li)
             .click(function(){
                 var deleteButton = jQuery(this);
@@ -439,10 +437,9 @@ function reloadColumnFilters(id){
 
         // Columnfilter edit button
         jQuery('<div>')
-            .addClass('ui-icon')
-            .addClass('ui-icon-pencil')
+            .addClass('eea-icon daviz-menuicon')
+            .addClass('eea-icon-pencil')
             .attr('title', 'Edit columnfilter')
-            .text('e')
             .prependTo(li)
             .click(function(){
                 var cols = [];
@@ -570,10 +567,9 @@ function reloadColumnFilters(id){
 
         // Columnfilter delete button
         jQuery('<div>')
-            .addClass('ui-icon')
-            .addClass('ui-icon-close')
+            .addClass('eea-icon daviz-menuicon')
+            .addClass('eea-icon-trash-o')
             .attr('title', 'Delete column filter')
-            .text('x')
             .prependTo(li)
             .click(function(){
                 var deleteButton = jQuery(this);
@@ -918,9 +914,9 @@ function addChart(options){
 //                "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>x</span>"+
                 "<input class='googlechart_width' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
             "</div>"+
-            "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"+
-            "<div class='ui-icon ui-icon-gear' title='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'>a</div>"+
-            "<div class='ui-icon ui-icon-" + (settings.hidden?"show":"hide") + " googlechart_hide_chart_icon' title='Hide/Show chart'>x</div>"+
+            "<div class='eea-icon daviz-menuicon eea-icon-trash-o remove_chart_icon' title='Delete chart'></div>"+
+            "<div class='eea-icon daviz-menuicon eea-icon-gears' title='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'></div>"+
+            "<div class='eea-icon daviz-menuicon eea-icon-" + (settings.hidden?"eye-slash":"eye") + " googlechart_hide_chart_icon' title='Hide/Show chart'></div>"+
             "<div style='clear:both'> </div>"+
             "</h1>" +
             "<fieldset>" +
@@ -940,7 +936,7 @@ function addChart(options){
                 "</div>" +
                 "<div class='googlechart-sort-box'>"+
                     '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Sort by column<span class="items_counter"></span></span>' +
+                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Sort by column<span class="items_counter"></span></span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
                         '<select>'+
@@ -949,8 +945,8 @@ function addChart(options){
                 "</div>"+
                 "<div class='googlechart-filters-box'>" +
                     '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Row filters <span class="items_counter"></span></span>' +
-                        '<span title="Add new filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartfilter">+</span>' +
+                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Row filters <span class="items_counter"></span></span>' +
+                        '<span title="Add new filter" class="eea-icon daviz-menuicon eea-icon-plus ui-corner-all addgooglechartfilter"></span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
                         "<ul class='googlechart_filters_list'  id='googlechart_filters_"+settings.id+"'>" +
@@ -959,8 +955,8 @@ function addChart(options){
                 "</div>" +
                 "<div class='googlechart-columnfilters-box'>" +
                     '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Column filters <span class="items_counter"></span></span>' +
-                        '<span title="Add column filter" class="ui-icon ui-icon-plus ui-corner-all addgooglechartcolumnfilter">+</span>' +
+                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Column filters <span class="items_counter"></span></span>' +
+                        '<span title="Add column filter" class="daviz-menuicon eea-icon eea-icon-plus ui-corner-all addgooglechartcolumnfilter"></span>' +
                         '<br/><span>Note: If row filters for pivoted columns are used, column filters using pivoted columns will be ignored</span>'+
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
@@ -970,8 +966,8 @@ function addChart(options){
                 "</div>" +
                 "<div class='googlechart-notes-box'>" +
                     '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="ui-icon ui-icon-circlesmall-plus">e</span>Chart notes <span class="items_counter"></span></span>' +
-                        '<span title="Add chart note" class="ui-icon ui-icon-plus ui-corner-all addgooglechartnote">+</span>' +
+                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Chart notes <span class="items_counter"></span></span>' +
+                        '<span title="Add chart note" class="eea-icon daviz-menuicon eea-icon-plus ui-corner-all addgooglechartnote"></span>' +
                     '</div>' +
                     '<div style="padding: 1em" class="body">' +
                         "<ul class='googlechart_notes_list'  id='googlechart_notes_"+settings.id+"'>" +
@@ -993,14 +989,14 @@ function addChart(options){
         var body = googlechart.find('.googlechart-sort-box .body');
         if(body.is(':visible')){
             body.slideUp();
-            jQuery('.googlechart-sort-box .ui-icon-circlesmall-minus', googlechart)
-                .removeClass('ui-icon-circlesmall-minus')
-                .addClass('ui-icon-circlesmall-plus');
+            jQuery('.googlechart-sort-box .eea-icon-minus-square-o', googlechart)
+                .removeClass('eea-icon-minus-square-o')
+                .addClass('eea-icon-plus-square-o');
         }else{
             body.slideDown();
-            jQuery('.googlechart-sort-box .ui-icon-circlesmall-plus', googlechart)
-                .removeClass('ui-icon-circlesmall-plus')
-                .addClass('ui-icon-circlesmall-minus');
+            jQuery('.googlechart-sort-box .eea-icon-plus-square-o', googlechart)
+                .removeClass('eea-icon-plus-square-o')
+                .addClass('eea-icon-minus-square-o');
         }
     });
     googlechart.find('.googlechart-sort-box select').attr("selected_value",settings.sortFilter);
@@ -1013,64 +1009,64 @@ function addChart(options){
     // Filters
 
     googlechart.find('.googlechart-filters-box .body').hide();
-    googlechart.find('.googlechart-filters-box .header .ui-icon-plus').hide();
+    googlechart.find('.googlechart-filters-box .header .eea-icon-plus').hide();
     googlechart.find('.googlechart-filters-box .header .label').click(function(){
         var body = googlechart.find('.googlechart-filters-box .body');
-        var button = googlechart.find('.googlechart-filters-box .ui-icon-plus');
+        var button = googlechart.find('.googlechart-filters-box .eea-icon-plus');
         if(body.is(':visible')){
             body.slideUp();
             button.hide();
-            jQuery('.googlechart-filters-box .ui-icon-circlesmall-minus', googlechart)
-                .removeClass('ui-icon-circlesmall-minus')
-                .addClass('ui-icon-circlesmall-plus');
+            jQuery('.googlechart-filters-box .eea-icon-minus-square-o', googlechart)
+                .removeClass('eea-icon-minus-square-o')
+                .addClass('eea-icon-plus-square-o');
         }else{
             body.slideDown();
             button.show();
-            jQuery('.googlechart-filters-box .ui-icon-circlesmall-plus', googlechart)
-                .removeClass('ui-icon-circlesmall-plus')
-                .addClass('ui-icon-circlesmall-minus');
+            jQuery('.googlechart-filters-box .eea-icon-plus-square-o', googlechart)
+                .removeClass('eea-icon-plus-square-o')
+                .addClass('eea-icon-minus-square-o');
         }
     });
 
     // Column Filters
     googlechart.find('.googlechart-columnfilters-box .body').hide();
-    googlechart.find('.googlechart-columnfilters-box .header .ui-icon-plus').hide();
+    googlechart.find('.googlechart-columnfilters-box .header .eea-icon-plus').hide();
     googlechart.find('.googlechart-columnfilters-box .header .label').click(function(){
         var body = googlechart.find('.googlechart-columnfilters-box .body');
-        var button = googlechart.find('.googlechart-columnfilters-box .ui-icon-plus');
+        var button = googlechart.find('.googlechart-columnfilters-box .eea-icon-plus');
         if(body.is(':visible')){
             body.slideUp();
             button.hide();
-            jQuery('.googlechart-columnfilters-box .ui-icon-circlesmall-minus', googlechart)
-                .removeClass('ui-icon-circlesmall-minus')
-                .addClass('ui-icon-circlesmall-plus');
+            jQuery('.googlechart-columnfilters-box .eea-icon-minus-square-o', googlechart)
+                .removeClass('eea-icon-minus-square-o')
+                .addClass('eea-icon-plus-square-o');
         }else{
             body.slideDown();
             button.show();
-            jQuery('.googlechart-columnfilters-box .ui-icon-circlesmall-plus', googlechart)
-                .removeClass('ui-icon-circlesmall-plus')
-                .addClass('ui-icon-circlesmall-minus');
+            jQuery('.googlechart-columnfilters-box .eea-icon-plus-square-o', googlechart)
+                .removeClass('eea-icon-plus-square-o')
+                .addClass('eea-icon-minus-square-o');
         }
     });
 
     // Notes
     googlechart.find('.googlechart-notes-box .body').hide();
-    googlechart.find('.googlechart-notes-box .header .ui-icon-plus').hide();
+    googlechart.find('.googlechart-notes-box .header .eea-icon-plus').hide();
     googlechart.find('.googlechart-notes-box .header .label').click(function(){
         var body = googlechart.find('.googlechart-notes-box .body');
-        var button = googlechart.find('.googlechart-notes-box .ui-icon-plus');
+        var button = googlechart.find('.googlechart-notes-box .eea-icon-plus');
         if(body.is(':visible')){
             body.slideUp();
             button.hide();
-            jQuery('.googlechart-notes-box .ui-icon-circlesmall-minus', googlechart)
-                .removeClass('ui-icon-circlesmall-minus')
-                .addClass('ui-icon-circlesmall-plus');
+            jQuery('.googlechart-notes-box .eea-icon-minus-square-o', googlechart)
+                .removeClass('eea-icon-minus-square-o')
+                .addClass('eea-icon-plus-square-o');
         }else{
             body.slideDown();
             button.show();
-            jQuery('.googlechart-notes-box .ui-icon-circlesmall-plus', googlechart)
-                .removeClass('ui-icon-circlesmall-plus')
-                .addClass('ui-icon-circlesmall-minus');
+            jQuery('.googlechart-notes-box .eea-icon-plus-square-o', googlechart)
+                .removeClass('eea-icon-plus-square-o')
+                .addClass('eea-icon-minus-square-o');
         }
     });
 
@@ -1643,7 +1639,7 @@ function updateWithStatus(){
         }
         if (value.status === 2){
             pivots.push(value.nr);
-            pivotsHtml += "<div class='pivotedColumn'>"+value.name+"<a style='float:right' href='#' onclick='removePivot(event, "+value.nr+")'><span title='Delete pivot' class='ui-icon ui-icon-trash'>x</span></a></div><div style='clear:both'></div>";
+            pivotsHtml += "<div class='pivotedColumn'>"+value.name+"<a style='float:right' href='#' onclick='removePivot(event, "+value.nr+")'><span title='Delete pivot' class='eea-icon eea-icon-trash-o'></span></a></div><div style='clear:both'></div>";
             jQuery(originalColumn).attr("value",2);
         }
         if (value.status === 3){
@@ -1688,18 +1684,18 @@ function updateWithStatus(){
     }
     jQuery(".columnheader").each(function(idx,value){
         var columnnr = parseInt(jQuery(value).attr("columnnr"), 10);
-        var pivoticonflag = jQuery(".columnheader [columnnr='"+columnnr+"']").find(".pivothidecolumn ");
-        pivoticonflag.removeClass("ui-icon-placeholder").removeClass("ui-icon-hide").removeClass("ui-icon-show");
+        var pivoticonflag = jQuery(".columnheader [columnnr='"+columnnr+"']").find(".pivothidecolumn");
+        pivoticonflag.removeClass("eea-icon-placeholder").removeClass("eea-icon-eye").removeClass("eea-icon-eye-slash");
         if (jQuery.inArray(columnnr, hidden) !== -1){
-            pivoticonflag.addClass("ui-icon-show");
+            pivoticonflag.addClass("eea-icon-eye-slash");
             hideDropZone(columnnr);
         }
         else {
             if (columnnr !== valueColumn){
-                pivoticonflag.addClass("ui-icon-hide");
+                pivoticonflag.addClass("eea-icon-eye");
             }
             else {
-                pivoticonflag.addClass("ui-icon-placeholder");
+                pivoticonflag.addClass("eea-icon-placeholder");
             }
         }
     });
@@ -1748,7 +1744,7 @@ function populateTableForPivot(){
         var th =
                 "<th class='columnheader' columnnr='"+value.nr+"'>"+
                 "<div class='draggable' columnnr='"+value.nr+"'>"+
-                  "<div style='float:right' class='pivothidecolumn ui-icon ui-icon-placeholder'><!-- --></div>"+
+                  "<div style='float:right' class='pivothidecolumn daviz-menuicon eea-icon eea-icon-placeholder'><!-- --></div>"+
                   "<div'>"+ value.name + "</div>" +
                 "</div>"+
                 "</th>";
@@ -1760,7 +1756,7 @@ function populateTableForPivot(){
         jQuery(td).appendTo(jQuery("#pivotConfigDropZones"));
     });
 
-    jQuery(".pivotGooglechartTable .ui-icon").click(function(){
+    jQuery(".pivotGooglechartTable .eea-icon").click(function(){
         var col_nr =  parseInt(jQuery(this).parent().attr("columnnr"), 10);
         var column;
         jQuery.each(columnsForPivot,function(key, value){
@@ -1768,7 +1764,7 @@ function populateTableForPivot(){
                 column = value;
             }
         });
-        if (jQuery(this).hasClass("ui-icon-hide")){
+        if (jQuery(this).hasClass("eea-icon-eye")){
             if (checkVisiblePivotValueColumns() > 1){
                 column.status = 3;
             }
@@ -2575,23 +2571,23 @@ function fillEditorDialog(options){
     jQuery("#pivotingTableLabel").unbind("click");
     jQuery("#unpivotingFormLabel").unbind("click");
     jQuery("#pivotingTableLabel").click(function(){
-        var tmp_icon = jQuery("#pivotingTableLabel").find(".ui-icon");
-        if (tmp_icon.hasClass("ui-icon-circlesmall-plus")){
-            tmp_icon.removeClass("ui-icon-circlesmall-plus").addClass("ui-icon-circlesmall-minus");
+        var tmp_icon = jQuery("#pivotingTableLabel").find(".eea-icon");
+        if (tmp_icon.hasClass("eea-icon-plus-square-o")){
+            tmp_icon.removeClass("eea-icon-plus-square-o").addClass("eea-icon-minus-square-o");
         }
         else {
-            tmp_icon.removeClass("ui-icon-circlesmall-minus").addClass("ui-icon-circlesmall-plus");
+            tmp_icon.removeClass("eea-icon-minus-square-o").addClass("eea-icon-plus-square-o");
         }
         jQuery(".pivotingTable").toggle();
     });
 
     jQuery("#unpivotingFormLabel").click(function(){
-        var tmp_icon = jQuery("#unpivotingFormLabel").find(".ui-icon");
-        if (tmp_icon.hasClass("ui-icon-circlesmall-plus")){
-            tmp_icon.removeClass("ui-icon-circlesmall-plus").addClass("ui-icon-circlesmall-minus");
+        var tmp_icon = jQuery("#unpivotingFormLabel").find(".eea-icon");
+        if (tmp_icon.hasClass("eea-icon-plus-square-o")){
+            tmp_icon.removeClass("eea-icon-plus-square-o").addClass("eea-icon-minus-square-o");
         }
         else {
-            tmp_icon.removeClass("ui-icon-circlesmall-minus").addClass("ui-icon-circlesmall-plus");
+            tmp_icon.removeClass("eea-icon-minus-square-o").addClass("eea-icon-plus-square-o");
         }
         jQuery(".unpivotingForm").toggle();
     });
@@ -2727,7 +2723,7 @@ function openEditChart(id){
                 '<div class="googlechart_accordion_table">' +
 
                     '<div id="unpivotingFormLabel" class="label">Transform columns to rows (unpivot)' + //xxx
-                        '<div class="ui-icon ui-icon-circlesmall-plus">expand</div>'+
+                        '<div class="daviz-menuicon eea-icon eea-icon-plus-square-o"></div>'+
                     '</div>'+
                     '<div class="unpivotingForm">' +
                         '<div style="clear:both"></div>'+
@@ -2745,7 +2741,7 @@ function openEditChart(id){
                     '<div style="clear:both"></div>'+
 
                     '<div id="pivotingTableLabel" class="label">Transform rows to columns (pivot)' + //xxx
-                        '<div class="ui-icon ui-icon-circlesmall-plus">expand</div>'+
+                        '<div class="daviz-menuicon eea-icon eea-icon-plus-square-o"></div>'+
                     '</div>'+
                     '<div class="pivotingTable">' +
                         '<div style="clear:both"></div>'+
@@ -3478,7 +3474,7 @@ function saveCharts(){
         chart.options = chartObj.find(".googlechart_options").attr("value");
         chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
         chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
-        chart.hidden = chartObj.find(".googlechart_hide_chart_icon").hasClass("ui-icon-show");
+        chart.hidden = chartObj.find(".googlechart_hide_chart_icon").hasClass("eea-icon-eye-slash");
         chart.sortFilter = chartObj.find(".googlechart-sort-box select").attr("value");
         chart.hasPNG = chartObj.find(".googlechart_thumb_checkbox").is(":visible");
 
@@ -3893,28 +3889,16 @@ function init_googlecharts_edit(){
         ]});
     });
     jQuery("#googlecharts_list").delegate(".googlechart_hide_chart_icon","click",function(){
-        var oldClass = "ui-icon-hide";
-        var newClass = "ui-icon-show";
+        var oldClass = "eea-icon-eye";
+        var newClass = "eea-icon-eye-slash";
         if (jQuery(this).hasClass(newClass)){
-            oldClass = "ui-icon-show";
-            newClass = "ui-icon-hide";
+            oldClass = "eea-icon-eye-slash";
+            newClass = "eea-icon-eye";
         }
         jQuery(this).removeClass(oldClass).addClass(newClass);
         var chartId = jQuery(this).closest('.googlechart').find('.googlechart_id').attr('value');
         markChartAsModified(chartId);
         changeChartHiddenState(chartId);
-    });
-
-    jQuery("#googlecharts_list").delegate(".googlechart_hide_sort_icon","click",function(){
-        var oldClass = "ui-icon-hide";
-        var newClass = "ui-icon-show";
-        if (jQuery(this).hasClass(newClass)){
-            oldClass = "ui-icon-show";
-            newClass = "ui-icon-hide";
-        }
-        jQuery(this).removeClass(oldClass).addClass(newClass);
-        var chartId = jQuery(this).closest('.googlechart').find('.googlechart_id').attr('value');
-        markChartAsModified(chartId);
     });
 
     jQuery("#googlecharts_list").delegate(".edit_filter_icon","click",function(){

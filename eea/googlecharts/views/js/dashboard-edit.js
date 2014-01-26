@@ -1427,7 +1427,6 @@ DavizEdit.GoogleDashboardFilter.prototype = {
         self.parent.new_edit_filter(self.parent.context, self.settings.column, filter_defaults);
       });
 
-    // Delete "<div class='ui-icon ui-icon-trash remove_chart_icon' title='Delete chart'>x</div>"
     jQuery('<div>')
       .addClass('eea-icon daviz-menuicon').addClass('eea-icon-trash-o')
       .attr('title', 'Delete filter')

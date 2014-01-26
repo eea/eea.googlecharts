@@ -3,8 +3,10 @@ Changelog
 
 9.4-dev - (unreleased)
 ----------------------
+* Feature: Use FontAwesome icons on chart and dashboard configurators
+  [batradav refs #18191]
 * Feature: Moved filters position in a common place
-  [batradav reds #17861]
+  [batradav refs #17861]
 * Bugfix: Fixed pre-pivot filter behaviour, when more columns are visible and single select filter is used
   [szabozo0 refs #18177]
 * Bugfix: Fixed notes position when filters are in the right or in the bottom of the chart

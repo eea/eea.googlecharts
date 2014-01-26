@@ -12,8 +12,9 @@ var ranges_data = [];
 function updateColumnHeaders(){
     generateNewTableForChart();
     jQuery("#newTable").find(".slick-column-name:contains(options)")
-        .addClass("ui-icon")
-        .addClass("ui-icon-gear")
+        .addClass("eea-icon")
+        .addClass("eea-icon-gears")
+        .text("")
         .click(function(){
             jQuery(this).parent().find('.slick-header-menubutton').click();
         }).bind("contextmenu",function(e){
@@ -25,19 +26,23 @@ function updateColumnHeaders(){
     jQuery(".slick-column-sort-icon").remove();
     jQuery.each(grid_colIds, function(colId, colName){
         if (grid_sort_columnId === colId){
-            var slick_sort = jQuery("<span></span>").addClass("slick-column-sort-icon ui-icon");
+            var slick_sort = jQuery("<span></span>").addClass("slick-column-sort-icon eea-icon");
             if (grid_sort_asc){
-                slick_sort.addClass("ui-icon-carat-1-n");
+                slick_sort.addClass("eea-icon-sort-alpha-asc");
             }
             else {
-                slick_sort.addClass("ui-icon-carat-1-s");
+                slick_sort.addClass("eea-icon-sort-alpha-desc");
             }
-            jQuery("#newTable").find(".slick-column-name:contains("+colName+")").prepend(slick_sort);
+            jQuery("#newTable").find(".slick-column-name").filter(function(){
+                return jQuery(this).text() === colName;
+            }).prepend(slick_sort);
         }
         if (grid_filters[colId] !== undefined){
             if (((grid_filters[colId].type === 'hidden') && (grid_filters[colId].values.length !== 0)) || (grid_filters[colId].type === 'visible')){
-                var slick_search = jQuery("<span></span>").addClass("slick-column-search-icon ui-icon ui-icon-search");
-                jQuery("#newTable").find(".slick-column-name:contains("+colName+")").prepend(slick_search);
+                var slick_search = jQuery("<span></span>").addClass("slick-column-search-icon eea-icon eea-icon-search");
+                jQuery("#newTable").find(".slick-column-name").filter(function(){
+                    return jQuery(this).text() === colName;
+                }).prepend(slick_search);
             }
         }
     });
@@ -558,7 +563,7 @@ function setUpBarFormatterForm(form){
 }
 
 function eeaDeleteMarkFormatter(row, cell, value, columnDef, dataContext){
-    return "<span class='ui-icon ui-icon-closethick'></span>";
+    return "<span class='eea-icon eea-icon-trash-o'></span>";
 }
 
 function eeaColorFormatter(row, cell, value, columnDef, dataContext){
@@ -1396,19 +1401,19 @@ var columnfilter_data;
 function eeaCheckMarkFormatter(row, cell, value, columnDef, dataContext){
     if (!value) {
         if (columnDef.name === 'Selectable'){
-            return "<span class='ui-icon ui-icon-closethick'></span>";
+            return "<span class='eea-icon eea-icon-times'></span>";
         }
         if (columnDef.name === 'Visible'){
-            return "<span class='ui-icon ui-icon-cancel'></span>";
+            return "<span class='eea-icon eea-icon-ban'></span>";
         }
         if (columnfilter_data[row].visible){
-            return "<span class='ui-icon ui-icon-closethick'></span>";
+            return "<span class='eea-icon eea-icon-times'></span>";
         }
         else {
-            return "<span class='ui-icon ui-icon-cancel'></span>";
+            return "<span class='eea-icon eea-icon-ban'></span>";
         }
     }
-    return "<img src='++resource++slickgrid-images/tick.png'>";
+    return "<span class='eea-icon eea-icon-check'></span>";
 }
 
 var grid_columns;
@@ -1530,9 +1535,9 @@ function drawColumnFiltersGrid(divId, columns_list){
 var defaultfilter_data;
 function eeaDefaultsCheckMarkFormatter(row, cell, value, columnDef, dataContext){
     if (!value) {
-        return "<span class='ui-icon ui-icon-closethick'></span>";
+        return "<span class='eea-icon eea-icon-times'></span>";
     }
-    return "<img src='++resource++slickgrid-images/tick.png'>";
+    return "<span class='eea-icon eea-icon-check'>";
 }
 
 function drawDefaultValuesGrid(divId, values_list, multiselect){
