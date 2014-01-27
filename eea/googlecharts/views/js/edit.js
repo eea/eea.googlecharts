@@ -914,9 +914,9 @@ function addChart(options){
 //                "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>x</span>"+
                 "<input class='googlechart_width' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
             "</div>"+
-            "<div class='eea-icon daviz-menuicon eea-icon-trash-o remove_chart_icon' title='Delete chart'></div>"+
-            "<div class='eea-icon daviz-menuicon eea-icon-gears' title='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'></div>"+
-            "<div class='eea-icon daviz-menuicon eea-icon-" + (settings.hidden?"eye-slash":"eye") + " googlechart_hide_chart_icon' title='Hide/Show chart'></div>"+
+            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-trash-o remove_chart_icon' title='Delete chart'></div>"+
+            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-gears' title='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'></div>"+
+            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-" + (settings.hidden?"eye-slash":"eye") + " googlechart_hide_chart_icon' title='Hide/Show chart'></div>"+
             "<div style='clear:both'> </div>"+
             "</h1>" +
             "<fieldset>" +
@@ -2568,26 +2568,30 @@ function fillEditorDialog(options){
         jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
     });
 
-    jQuery("#pivotingTableLabel").unbind("click");
-    jQuery("#unpivotingFormLabel").unbind("click");
-    jQuery("#pivotingTableLabel").click(function(){
-        var tmp_icon = jQuery("#pivotingTableLabel").find(".eea-icon");
-        if (tmp_icon.hasClass("eea-icon-plus-square-o")){
-            tmp_icon.removeClass("eea-icon-plus-square-o").addClass("eea-icon-minus-square-o");
+    jQuery("#pivotingTableLabel .eea-menu-item").unbind("click");
+    jQuery("#unpivotingFormLabel .eea-menu-item").unbind("click");
+    jQuery("#pivotingTableLabel .eea-menu-item").click(function(){
+        var tmp_icon = jQuery("#pivotingTableLabel").find(".eea-caret-icon");
+        if (tmp_icon.hasClass("eea-icon-caret-right")){
+            tmp_icon.removeClass("eea-icon-caret-right").addClass("eea-icon-caret-down");
+            jQuery("#pivotingTableLabel").addClass("expanded"); 
         }
         else {
-            tmp_icon.removeClass("eea-icon-minus-square-o").addClass("eea-icon-plus-square-o");
+            tmp_icon.removeClass("eea-icon-caret-down").addClass("eea-icon-caret-right");
+            jQuery("#pivotingTableLabel").removeClass("expanded"); 
         }
         jQuery(".pivotingTable").toggle();
     });
 
-    jQuery("#unpivotingFormLabel").click(function(){
-        var tmp_icon = jQuery("#unpivotingFormLabel").find(".eea-icon");
-        if (tmp_icon.hasClass("eea-icon-plus-square-o")){
-            tmp_icon.removeClass("eea-icon-plus-square-o").addClass("eea-icon-minus-square-o");
+    jQuery("#unpivotingFormLabel .eea-menu-item").click(function(){
+        var tmp_icon = jQuery("#unpivotingFormLabel").find(".eea-caret-icon");
+        if (tmp_icon.hasClass("eea-icon-caret-right")){
+            tmp_icon.removeClass("eea-icon-caret-right").addClass("eea-icon-caret-down");
+            jQuery("#unpivotingFormLabel").addClass("expanded"); 
         }
         else {
-            tmp_icon.removeClass("eea-icon-minus-square-o").addClass("eea-icon-plus-square-o");
+            tmp_icon.removeClass("eea-icon-caret-down").addClass("eea-icon-caret-right");
+            jQuery("#unpivotingFormLabel").removeClass("expanded"); 
         }
         jQuery(".unpivotingForm").toggle();
     });
@@ -2676,8 +2680,8 @@ function openEditChart(id){
     '<div class="googlecharts_columns_config">' +
 //        '<div id="googlechart_overlay" style="display:none; background: transparent;"><div class="contentWrap" style="width:200px;height:200px; border:1px solid red; background-color:#fff">xxx</div></div>'+
         '<div class="chart_config_tabs" style="padding-top:10px;">'+
-            '<div class="googlechart_maximize_chart_config googlechart_config_head googlechart_config_head_selected" style="float:left">Chart Configurator</div>'+
-            '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:344px" title="Click to enlarge Table Configurator">Table Configurator</div>'+
+//            '<div class="googlechart_maximize_chart_config googlechart_config_head googlechart_config_head_selected" style="float:left">Chart Settings</div>'+
+//            '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:344px" title="Click to enlarge Data selection for chart">Data selection for chart</div>'+
             "<div style='float:right;'>"+
                 '<div class="buttons">' +
                 "<input type='button' class='btn btn-success' value='Save' onclick='chartEditorSave(\""+id+"\");'/>" +
@@ -2687,7 +2691,7 @@ function openEditChart(id){
         '</div>'+
         "<div style='clear:both;'> </div>" +
         '<div class="googlechart_config_clickable googlechart_chart_config_clickable googlechart_maximize_chart_config"> </div>' +
-        '<div class="googlechart_config_clickable googlechart_table_config_clickable googlechart_maximize_table_config" title="Click to enlarge Table Configurator"> </div>' +
+        '<div class="googlechart_config_clickable googlechart_table_config_clickable googlechart_maximize_table_config" title="Click to enlarge Data selection for chart"> </div>' +
         '<div class="googlechart_config_messagezone">'+
         '</div>'+
         '<div class="googlechart_chart_config_scaleable googlechart_chart_config_scaleable_maximized">'+
@@ -2721,36 +2725,72 @@ function openEditChart(id){
             '<h3 style="display:none;"><a href="#">Table Editor</a></h3>' +
             '<div class="googlechart_accordion_container">' +
                 '<div class="googlechart_accordion_table">' +
-
-                    '<div id="unpivotingFormLabel" class="label">Transform columns to rows (unpivot)' + //xxx
-                        '<div class="daviz-menuicon eea-icon eea-icon-plus-square-o"></div>'+
+                    '<div id="unpivotingFormLabel" class="label">'+
+                        '<div class="eea-menu-item">'+
+                            '<div class="eea-icon-lg eea-icon eea-caret-icon eea-icon-caret-right" style="float:left;"></div>'+
+                            '<div class="main-label">Unpivot Table</div><div class="sub-label eea-menu-item">&nbsp;(transform columns to rows)</div>' + //xxx
+                            '<img class="pivot-icon" src="../../++resource++eea.googlecharts.images/unpivot-icon.png" style="width:32px;height:32px;"/>'+
+                            '<div style="clear:both"></div>'+
+                        '</div>'+
+                        '<div class="unpivotingForm">'+
+                            '<div class="underlined">'+
+                                '<div class="count">1.</div>'+
+                                '<div class="description">'+
+                                    'Select a column:'+
+                                '</div>'+
+                                '<div class="extra">'+
+                                    '<select class="unpivot-pivotedcolumns">'+
+                                    '</select>'+
+                                '</div>'+
+                                '<div style="clear:both"></div>'+
+                            '</div>'+
+                            '<div style="clear:both"></div>'+
+                            '<div class="underlined">'+
+                                '<div class="count">2.</div>'+
+                                '<div class="description">'+
+                                    'Look at the green-dashed area. Within the column name, select with the mouse<br/>the word you want to become the "base column";<br/>'+
+                                    'then click the "Edit" icon and select "base" as column type<br/><br/>'+
+                                    'Within the column name select with the mouse each word you want to become the "pivot column";<br/>'+
+                                    'then click the "Edit" icon and select "pivot" as column type;<br/>'+
+                                    'enter a name and a "value type" for this pivot column.<br/>'+
+                                    'NOTE: Be careful that pivot values should not contain characters used as separators<br/>'+
+                                '</div>'+
+                                '<div class="extra">'+
+                                    '<div class="unpivot-settings"></div><br/>'+
+                                '</div>'+
+                                '<div style="clear:both"></div>'+
+                            '</div>'+
+                            '<div style="clear:both"></div>'+
+                            '<div>'+
+                                '<div class="count">3.</div>'+
+                                '<div class="description">'+
+                                    'Click on the "Unpivot" button and see the results on the "Table for chart" area<br/>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div style="clear:both"></div>'+
+                            '<input type="button" value="Unpivot" class="apply-unpivot btn"/>'+
+                            '<input type="button" value="Reset" class="reset-unpivot btn"/><br/>'+
+                            '<div style="clear:both"></div>'+
+                        '</div>'+
                     '</div>'+
-                    '<div class="unpivotingForm">' +
-                        '<div style="clear:both"></div>'+
-                        '1. Select one of the pivoted columns:'+
-                        '<select class="unpivot-pivotedcolumns">'+
-                        '</select><br/>'+
-                        '2. With your mouse select the base part from the column name, click the "note" icon and select "base" as type of the column<br/>'+
-                        '3. One by one select the pivoted parts from the column name, click the "note" icon and select "pivot" as type of the column, enter the name of the column where this value should be stored and select the type of the values<br/>'+
-                        '4. Click on the "Unpivot" button and see the results on the "Table pivots" section<br/>'+
-                        '<b>Note:</b> Be careful that pivot values should not contain characters used as separators<br/>'+
-                        '<div class="unpivot-settings"></div><br/>'+
-                        '<input type="button" value="Unpivot" class="apply-unpivot btn"/>'+
-                        '<input type="button" value="Reset" class="reset-unpivot btn"/><br/>'+
-                    '</div>' +
                     '<div style="clear:both"></div>'+
 
-                    '<div id="pivotingTableLabel" class="label">Transform rows to columns (pivot)' + //xxx
-                        '<div class="daviz-menuicon eea-icon eea-icon-plus-square-o"></div>'+
-                    '</div>'+
-                    '<div class="pivotingTable">' +
+                    '<div id="pivotingTableLabel" class="label">'+
+                        '<div class="eea-menu-item">'+
+                            '<div class="eea-icon-lg eea-icon eea-caret-icon eea-icon-caret-right" style="float:left"></div>'+
+                            '<div class="main-label">Pivot Table</div><div class="sub-label">&nbsp;(transform rows to columns)</div>' + //xxx
+                            '<img class="pivot-icon" src="../../++resource++eea.googlecharts.images/pivot-icon.png" style="width:32px;height:32px;"/>'+
+                            '<div style="clear:both"></div>'+
+                        '</div>'+
+                        '<div class="pivotingTable">' +
+                            '<div style="clear:both"></div>'+
+                            '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable table">'+
+                                '<tr id="pivotConfigHeader"></tr>'+
+                                '<tr id="pivotConfigDropZones"></tr>'+
+                            '</table>'+
+                        '</div>' +
                         '<div style="clear:both"></div>'+
-                        '<table id="pivotingTable" class="googlechartTable pivotGooglechartTable table">'+
-                            '<tr id="pivotConfigHeader"></tr>'+
-                            '<tr id="pivotConfigDropZones"></tr>'+
-                        '</table>'+
-                    '</div>' +
-                    '<div style="clear:both"></div>'+
+                    '</div>'+
                     '<div>'+
                         '<span class="label">Table for chart</span>' +
                     '</div>'+
@@ -2796,7 +2836,7 @@ function openEditChart(id){
         jQuery(".googlechart_maximize_chart_config").addClass("googlechart_config_head_selected");
         jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_head_selected");
         jQuery(".googlechart_maximize_chart_config").attr("title","");
-        jQuery(".googlechart_maximize_table_config").attr("title","Click to enlarge Table Configurator");
+        jQuery(".googlechart_maximize_table_config").attr("title","Click to enlarge Data selection for chart");
         jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_hover");
         jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_hover");
     });
@@ -2806,7 +2846,7 @@ function openEditChart(id){
         editcolumnsdialog.find(".googlechart_table_config_scaleable").addClass("googlechart_transition").removeClass("googlechart_table_config_scaleable_minimized").addClass("googlechart_table_config_scaleable_maximized");
         jQuery(".googlechart_maximize_table_config").addClass("googlechart_config_head_selected");
         jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_head_selected");
-        jQuery(".googlechart_maximize_chart_config").attr("title","Click to enlarge Chart Configurator");
+        jQuery(".googlechart_maximize_chart_config").attr("title","Click to enlarge Chart Settings");
         jQuery(".googlechart_maximize_table_config").attr("title","");
         jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_hover");
         jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_hover");

@@ -609,7 +609,9 @@ dl.portlet .dashboard-widget,
 }
 
 .droppable {
+    color: #4d4d4d;
     padding: 1em;
+    border: 1px dashed gray;
 }
 
 .hoveredDrop {
@@ -618,6 +620,7 @@ dl.portlet .dashboard-widget,
 
 .pivotedColumn,
 .draggable {
+    color: #4d4d4d;
     font-size:14px;
     line-height:16px;
 }
@@ -630,6 +633,7 @@ dl.portlet .dashboard-widget,
 .draggable {
     font-weight:normal;
     cursor: move;
+    border: 1px dashed gray;
 }
 
 .googlechart-editor{
@@ -887,12 +891,12 @@ dl.portlet .dashboard-widget,
 }
 
 .googlechart_config_head{
+    width:325px;
     position:absolute;
     border:1px solid #CCC;
     border-bottom:1px solid white;
     height:20px;
     z-index:4000;
-    padding:3px;
     font-weight: normal;
 }
 
@@ -971,6 +975,10 @@ select[name=googlechart_filterposition] {
 .pivotingTable,
 .unpivotingForm{
     display: none;
+    color: #4d4d4d;
+    margin-left:35px;
+    margin-top:15px;
+
 }
 
 .googlechart_thumb_zone {
@@ -1152,8 +1160,22 @@ div[title='Format'].slick-header-menuitem {
 
 #pivotingTableLabel,
 #unpivotingFormLabel{
-    float:left;
+    position:relative;
+    display:block;
     cursor:pointer;
+    background-color: #EAEAEA;
+    color:black;
+    font-weight:normal;
+    font-size:16px;
+    border: 1px solid #A8A8A8;
+    min-height:32px;
+}
+
+#pivotingTableLabel .eea-caret-icon,
+#unpivotingFormLabel .eea-caret-icon{
+    color: #787878;
+    padding-top: 9px;
+    width:30px;
 }
 
 #unpivotingFormLabel{
@@ -1569,6 +1591,8 @@ div.googlechartarea-input {
 .pivotsPreviewTable {
     float:left;
     margin-left:10px;
+    color: #4d4d4d;
+
 }
 .titleRowForPivot > td{
     background-color: #F3F3F3;
@@ -1590,7 +1614,8 @@ div.googlechartarea-input {
 }
 
 .unpivot-settings {
-    padding:30px;
+    border:1px dashed green;
+    padding:55px;
 }
 
 .annotator-item:first-child textarea{
@@ -1623,14 +1648,49 @@ div.googlechartarea-input {
     color:black;
 }
 
-#unpivotingFormLabel .eea-icon,
-#pivotingTableLabel .eea-icon{
-    color: white;
-}
-
 .googlecharts_columnfilter_slickgrid .eea-icon-check,
 .googlecharts_defaultsfilter_slickgrid .eea-icon-check{
     color: green;
 }
 
+.main-label,
+.sub-label {
+    float:left;
+    padding-top:10px;
+}
 
+.sub-label {
+    color: #919191;
+}
+
+.pivot-icon {
+    position:absolute;
+    left:400px;
+}
+
+.expanded {
+    background-color:white !important;
+}
+
+.unpivotingForm > div{
+    padding-bottom:10px;
+}
+
+.unpivotingForm div.underlined {
+    border-bottom:1px solid #cccccc;
+}
+
+.unpivotingForm div.count{
+    width:25px;
+    float:left;
+}
+
+.unpivotingForm div.description{
+    width:700px;
+    float:left;
+    white-space:normal;
+}
+
+.unpivotingForm div.extra{
+    float:left;
+}
