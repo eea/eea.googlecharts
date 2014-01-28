@@ -699,7 +699,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
 
     var visibility_class = "eea-icon-eye";
     if(self.settings.dashboard.hidden){
-      visibility_class = "eea-icon-eye-slash"
+      visibility_class = "eea-icon-eye-slash";
     }
     jQuery("<span>")
       .attr('title', title)

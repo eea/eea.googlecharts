@@ -250,7 +250,7 @@ function transformTable(options){
             }
             var node = pivotTable.pivotLevels[settings.valueColumn];
             var pivotColumnName = settings.valueColumn;
-            var pivotColumnLabel = ""
+            var pivotColumnLabel = "";
             var pivotValue = row[settings.valueColumn];
             var defaultPivotColumnValue; // = undefined;
             jQuery(settings.pivotingColumns).each(function(pivot_index, pivot_column){

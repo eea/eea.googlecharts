@@ -1176,21 +1176,6 @@ function redrawEditorChart() {
     chartWrapper = tmpwrapper;
 }
 
-function setConfiguratorMessage(message_key) {
-    var messageZone = jQuery(".googlechart_config_messagezone");
-    messageZone.html("");
-    if (message_key !== ""){
-        var message = configurator_messages[message_key];
-        if (!message){
-            message = configurator_messages['default'];
-        }
-        messageZone.append('<div class="googlechart_config_messagezone_title"></div>');
-        messageZone.append('<div class="googlechart_config_messagezone_message"></div>');
-        jQuery(".googlechart_config_messagezone_title").html(message.title);
-        jQuery(".googlechart_config_messagezone_message").html(message.message);
-    }
-}
-
 function openEditor(elementId) {
     isFirstEdit = true;
     jQuery(".google-visualization-charteditor-dialog").remove();
@@ -1307,7 +1292,7 @@ function openEditor(elementId) {
         setTimeout(function(){
             redrawEditorChart();
         },100);
-        setConfiguratorMessage("");
+//        setConfiguratorMessage("");
         jQuery(".googlechart_editor_loading").addClass("googlechart_editor_loaded");
         jQuery(".googlechart_palette_loading").removeClass("googlechart_palette_loading");
 
@@ -1316,7 +1301,7 @@ function openEditor(elementId) {
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = false;
-        setConfiguratorMessage(JSON.parse(settings_str).chartType);
+//        setConfiguratorMessage(JSON.parse(settings_str).chartType);
     });
     moveIfFirst();
 
@@ -2437,7 +2422,7 @@ function resizeTableConfigurator(forced){
         var container_heightstr = 'height:'+(fullheight-200)+'px;';
         var accordion_heightstr = 'height:'+(fullheight-200)+'px;';
         var accordion_container_heightstr = 'height:'+(fullheight-200)+'px;';
-        jQuery(".googlechart_table_config_scaleable").removeClass("googlechart_transition").attr("style",container_heightstr);
+        jQuery(".googlechart_table_config_scaleable").attr("style",container_heightstr);
         jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
         jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
         jQuery("#newTable").height(fullheight-250);
@@ -2690,10 +2675,10 @@ function openEditChart(id){
             "</div>"+
         '</div>'+
         "<div style='clear:both;'> </div>" +
-        '<div class="googlechart_config_clickable googlechart_chart_config_clickable googlechart_maximize_chart_config"> </div>' +
-        '<div class="googlechart_config_clickable googlechart_table_config_clickable googlechart_maximize_table_config" title="Click to enlarge Data selection for chart"> </div>' +
-        '<div class="googlechart_config_messagezone">'+
-        '</div>'+
+        '<div class="googlechart_config_clickable googlechart_chart_config_clickable googlechart_maximize_chart_config googlechart_config_head_selected">Chart settings</div>' +
+        '<div class="googlechart_config_clickable googlechart_table_config_clickable googlechart_maximize_table_config" title="Click to enlarge Data selection for chart">Data selection for chart</div>' +
+//        '<div class="googlechart_config_messagezone">'+
+//        '</div>'+
         '<div class="googlechart_chart_config_scaleable googlechart_chart_config_scaleable_maximized">'+
             '<div id="googlechartid_tmp_chart" style="float:left">' +
                 "<input class='googlechart_configjson' type='hidden'/>" +
@@ -2719,6 +2704,7 @@ function openEditChart(id){
                 "<div style='clear:both;'> </div>" +
                 "<div id='googlechart_preview_palette'> </div>"+
             "</div>"+
+            "<div style='clear:both;'> </div>" +
         "</div>"+
         "<div style='clear:both;'> </div>" +
         '<div id="googlechart_table_accordion" class="googlechart_table_config_scaleable googlechart_table_config_scaleable_minimized">' +
@@ -2728,7 +2714,7 @@ function openEditChart(id){
                     '<div id="unpivotingFormLabel" class="label">'+
                         '<div class="eea-menu-item">'+
                             '<div class="eea-icon-lg eea-icon eea-caret-icon eea-icon-caret-right" style="float:left;"></div>'+
-                            '<div class="main-label">Unpivot Table</div><div class="sub-label eea-menu-item">&nbsp;(transform columns to rows)</div>' + //xxx
+                            '<div class="main-label">Unpivot Table</div><div class="sub-label">&nbsp;(transform columns to rows)</div>' + //xxx
                             '<img class="pivot-icon" src="../../++resource++eea.googlecharts.images/unpivot-icon.png" style="width:32px;height:32px;"/>'+
                             '<div style="clear:both"></div>'+
                         '</div>'+
@@ -2768,8 +2754,8 @@ function openEditChart(id){
                                 '</div>'+
                             '</div>'+
                             '<div style="clear:both"></div>'+
-                            '<input type="button" value="Unpivot" class="apply-unpivot btn"/>'+
-                            '<input type="button" value="Reset" class="reset-unpivot btn"/><br/>'+
+                            '<a href="#" class="apply-unpivot btn btn-large disabled">Unpivot</a>'+
+                            '<a href="#" class="reset-unpivot btn btn-large disabled">Reset unpivot</a>'+
                             '<div style="clear:both"></div>'+
                         '</div>'+
                     '</div>'+
@@ -2792,7 +2778,7 @@ function openEditChart(id){
                         '<div style="clear:both"></div>'+
                     '</div>'+
                     '<div>'+
-                        '<span class="label">Table for chart</span>' +
+                        '<span class="tableForChartLabel sub-label">Table for chart</span>' +
                     '</div>'+
                     "<div style='clear:both;'> </div>" +
                     '<div id="newTable" class="daviz-data-table slick_newTable" style="height:300px;">'+
@@ -2830,9 +2816,9 @@ function openEditChart(id){
     editcolumnsdialog.find(".googlechart_sortBy").attr("value", tmp_sortBy);
     editcolumnsdialog.find(".googlechart_sortAsc").attr("value", tmp_sortAsc);
     editcolumnsdialog.delegate(".googlechart_maximize_chart_config","click", function(){
-        jQuery(".googlechart_table_config_scaleable").removeClass("googlechart_transition").attr("style","");
-        editcolumnsdialog.find(".googlechart_table_config_scaleable").addClass("googlechart_transition").removeClass("googlechart_table_config_scaleable_maximized").addClass("googlechart_table_config_scaleable_minimized");
-        editcolumnsdialog.find(".googlechart_chart_config_scaleable").addClass("googlechart_transition").removeClass("googlechart_chart_config_scaleable_minimized").addClass("googlechart_chart_config_scaleable_maximized");
+        jQuery(".googlechart_table_config_scaleable").attr("style","");
+        editcolumnsdialog.find(".googlechart_table_config_scaleable").removeClass("googlechart_table_config_scaleable_maximized").addClass("googlechart_table_config_scaleable_minimized");
+        editcolumnsdialog.find(".googlechart_chart_config_scaleable").removeClass("googlechart_chart_config_scaleable_minimized").addClass("googlechart_chart_config_scaleable_maximized");
         jQuery(".googlechart_maximize_chart_config").addClass("googlechart_config_head_selected");
         jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_head_selected");
         jQuery(".googlechart_maximize_chart_config").attr("title","");
@@ -2842,8 +2828,8 @@ function openEditChart(id){
     });
     editcolumnsdialog.delegate(".googlechart_maximize_table_config","click", function(){
         resizeTableConfigurator(true);
-        editcolumnsdialog.find(".googlechart_chart_config_scaleable").addClass("googlechart_transition").removeClass("googlechart_chart_config_scaleable_maximized").addClass("googlechart_chart_config_scaleable_minimized");
-        editcolumnsdialog.find(".googlechart_table_config_scaleable").addClass("googlechart_transition").removeClass("googlechart_table_config_scaleable_minimized").addClass("googlechart_table_config_scaleable_maximized");
+        editcolumnsdialog.find(".googlechart_chart_config_scaleable").removeClass("googlechart_chart_config_scaleable_maximized").addClass("googlechart_chart_config_scaleable_minimized");
+        editcolumnsdialog.find(".googlechart_table_config_scaleable").removeClass("googlechart_table_config_scaleable_minimized").addClass("googlechart_table_config_scaleable_maximized");
         jQuery(".googlechart_maximize_table_config").addClass("googlechart_config_head_selected");
         jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_head_selected");
         jQuery(".googlechart_maximize_chart_config").attr("title","Click to enlarge Chart Settings");
@@ -2892,7 +2878,8 @@ function openEditChart(id){
     editorDialog = editcolumnsdialog.data("dialog");
     jQuery(".apply-unpivot").unbind("click");
     jQuery(".reset-unpivot").unbind("click");
-    jQuery(".apply-unpivot").bind("click", function(){
+    jQuery(".apply-unpivot").bind("click", function(evt){
+        evt.preventDefault();
         var annotations = jQuery(".columnForUnpivot").data("annotator").plugins.EEAGoogleChartsUnpivotAnnotation.getAnnotations();
         var unpivotSettings = {};
         unpivotSettings.columnName = jQuery(".unpivot-pivotedcolumns").attr("value");
@@ -2958,7 +2945,8 @@ function openEditChart(id){
             jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
         });
     });
-    jQuery(".reset-unpivot").bind("click", function(){
+    jQuery(".reset-unpivot").bind("click", function(evt){
+        evt.preventDefault();
         var unpivotSettings = {};
         jQuery("#googlechartid_tmp_chart").data("unpivotsettings", unpivotSettings);
         var newtablesettings = getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings"), available_columns, all_rows);

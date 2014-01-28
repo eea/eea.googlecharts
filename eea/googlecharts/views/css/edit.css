@@ -826,16 +826,11 @@ dl.portlet .dashboard-widget,
     position:absolute;
 }
 
-.googlechart_transition{
-    transition: all 1s ease;
-    -moz-transition: all 1s ease; /* Firefox 4 */
-    -webkit-transition: all 1s ease; /* Safari and Chrome */
-    -o-transition: all 1s ease; /* Opera */
-}
-
 .googlechart_chart_config_scaleable_maximized {
-    top:180px;
-    width:1068px;
+    top:190px;
+    width:98%;
+    border-top:1px solid black;
+    padding-top:5px;
 }
 
 .googlechart_chart_config_scaleable_minimized {
@@ -846,13 +841,15 @@ dl.portlet .dashboard-widget,
     -moz-transform: scale(0.3); /* Firefox */
     width:1068px !important;
     height:405px !important;
-    top:-105px;
+    top:-100px;
     left:-360px;
 }
 
 .googlechart_table_config_scaleable_maximized {
-    top:180px;
+    top:190px;
     width:98%;
+    border-top:1px solid black;
+    padding-top:5px;
 }
 
 .googlechart_table_config_scaleable_minimized {
@@ -863,8 +860,8 @@ dl.portlet .dashboard-widget,
     -moz-transform: scale(0.3); /* Firefox */
     width:1068px;
     height:405px;
-    top:-105px;
-    left:-30px;
+    top:-100px;
+    left:0px;
 }
 
 .googlechart_accordion_table{
@@ -874,10 +871,15 @@ dl.portlet .dashboard-widget,
 
 .googlechart_config_clickable{
     position:absolute;
-    top:37px;
-    width:325px;
-    height:135px;
+    top:7px;
+    width:340px;
+    height:165px;
     z-index:3000;
+    text-align:center;
+    font-size:20px;
+    padding-top:10px;
+    color:#515151;
+    cursor:pointer;
 }
 
 .googlechart_chart_config_clickable{
@@ -886,7 +888,7 @@ dl.portlet .dashboard-widget,
 }
 
 .googlechart_table_config_clickable{
-    left:344px;
+    left:360px;
     border:1px solid #CCC;
 }
 
@@ -902,6 +904,9 @@ dl.portlet .dashboard-widget,
 
 .googlechart_config_head_selected {
     font-weight: bold;
+    border:1px solid black;
+    border-bottom:1px solid white;
+    height:172px;
 }
 
 .googlechart_config_hover{
@@ -974,6 +979,7 @@ select[name=googlechart_filterposition] {
 
 .pivotingTable,
 .unpivotingForm{
+    cursor:default;
     display: none;
     color: #4d4d4d;
     margin-left:35px;
@@ -1614,7 +1620,7 @@ div.googlechartarea-input {
 }
 
 .unpivot-settings {
-    border:1px dashed green;
+    border:2px dashed green;
     padding:55px;
 }
 
@@ -1693,4 +1699,34 @@ div.googlechartarea-input {
 
 .unpivotingForm div.extra{
     float:left;
+}
+
+.tableForChartLabel{
+    font-size:16px;
+}
+
+.apply-unpivot{
+    width:65px;
+}
+
+.reset-unpivot{
+    width:110px;
+}
+
+.apply-unpivot,
+.reset-unpivot{
+    margin-right:10px;
+    background-color:#d9dadb !important;
+    color:black !important;
+    cursor:pointer !important;
+}
+
+.apply-unpivot:hover,
+.reset-unpivot:hover{
+    background-color:#d9dadb !important;
+    font-weight:bold;
+}
+
+.columnForUnpivot{
+    cursor:text;
 }
