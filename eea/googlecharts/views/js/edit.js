@@ -2680,6 +2680,8 @@ function openEditChart(id){
 //        '<div class="googlechart_config_messagezone">'+
 //        '</div>'+
         '<div class="googlechart_chart_config_scaleable googlechart_chart_config_scaleable_maximized">'+
+            '<div class="googlechart_chart_config_info hint"><span class="eea-icon eea-icon-lightbulb-o"></span>Each chart requires a specific data layout. If chart does not become available you should go to \'Data selection for chart\' and re-order/hide columns accordingly. You may also need to rotate the table (pivot/unpivot).</div>'+
+            "<div style='clear:both;'> </div>" +
             '<div id="googlechartid_tmp_chart" style="float:left">' +
                 "<input class='googlechart_configjson' type='hidden'/>" +
                 "<input class='googlechart_columns' type='hidden'/>" +

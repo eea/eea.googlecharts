@@ -1730,3 +1730,9 @@ div.googlechartarea-input {
 .columnForUnpivot{
     cursor:text;
 }
+
+.googlechart_chart_config_info{
+    padding:5px;
+    float:left;
+    font-weight:bold;
+}
