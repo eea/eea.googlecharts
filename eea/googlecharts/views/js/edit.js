@@ -915,7 +915,7 @@ function addChart(options){
                 "<input class='googlechart_width' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
             "</div>"+
             "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-trash-o remove_chart_icon' title='Delete chart'></div>"+
-            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-gears' title='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'></div>"+
+            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-gear' title='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'></div>"+
             "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-" + (settings.hidden?"eye-slash":"eye") + " googlechart_hide_chart_icon' title='Hide/Show chart'></div>"+
             "<div style='clear:both'> </div>"+
             "</h1>" +
@@ -2680,7 +2680,7 @@ function openEditChart(id){
 //        '<div class="googlechart_config_messagezone">'+
 //        '</div>'+
         '<div class="googlechart_chart_config_scaleable googlechart_chart_config_scaleable_maximized">'+
-            '<div class="googlechart_chart_config_info hint"><span class="eea-icon eea-icon-lightbulb-o"></span>Each chart requires a specific data layout. If chart does not become available you should go to \'Data selection for chart\' and re-order/hide columns accordingly. You may also need to rotate the table (pivot/unpivot).</div>'+
+            '<div class="googlechart_chart_config_info hint"><span class="eea-icon eea-icon-info-circle"></span>Each chart requires a specific data layout. If chart does not become available you should go to \'Data selection for chart\' and re-order/hide columns accordingly. You may also need to rotate the table (pivot/unpivot).</div>'+
             "<div style='clear:both;'> </div>" +
             '<div id="googlechartid_tmp_chart" style="float:left">' +
                 "<input class='googlechart_configjson' type='hidden'/>" +

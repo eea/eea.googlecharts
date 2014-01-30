@@ -13,7 +13,7 @@ function updateColumnHeaders(){
     generateNewTableForChart();
     jQuery("#newTable").find(".slick-column-name:contains(options)")
         .addClass("eea-icon")
-        .addClass("eea-icon-gears")
+        .addClass("eea-icon-gear")
         .text("")
         .click(function(){
             jQuery(this).parent().find('.slick-header-menubutton').click();
