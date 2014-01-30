@@ -3,6 +3,9 @@ Changelog
 
 9.4-dev - (unreleased)
 ----------------------
+# Change: disable certain elements in google chart editor 
+  that are centrally managed elsewhere in daviz, e.g. color picker, title and fonts.
+  [demarant refs #18262]
 * Feature: Updated Chart Editor with new layout
   [szabozo0 refs #18191]
 * Feature: Use FontAwesome icons on chart and dashboard configurators
