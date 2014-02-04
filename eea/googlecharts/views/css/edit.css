@@ -1,9 +1,9 @@
-.google-visualization-charteditor-color, 
+.google-visualization-charteditor-color,
 #google-visualization-charteditor-font-style-title,
 #google-visualization-charteditor-input-chart-title,
 #google-visualization-charteditor-select-font-name {
    /* #18262: hide elements that are centrally managed elsewhere in daviz */
-   display: none;
+/*   display: none !important;*/
 }
 
 .google-visualization-charteditor-dialog{
@@ -1753,4 +1753,25 @@ div.googlechartarea-input {
 .googlechart .eea-icon-minus-square-o:before{
     font-size: 14px;
     text-shadow: none;
+}
+
+.googlechart-palette-cell-replacement{
+    width:100%;
+    height:100%;
+}
+
+.jfk-palette-cell-selected{
+    outline:none !important;
+}
+
+.jfk-palette-cell-selected>.jfk-palette-colorswatch{
+    background-image: none !important;
+}
+
+.jfk-palette{
+    display:none;
+}
+
+.jfk-colormenu .charts-menuheader {
+    display:none !important;
 }

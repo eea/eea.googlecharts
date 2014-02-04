@@ -573,15 +573,6 @@ function eeaColorFormatter(row, cell, value, columnDef, dataContext){
     return "<span></span>";
 }
 
-function hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-}
-
 function getFontColorForColor(hexStr){
     var tmp_color = hexToRgb(hexStr);
     if (tmp_color.r * 0.3 + tmp_color.g * 0.59 + tmp_color.b * 0.11 > 128){

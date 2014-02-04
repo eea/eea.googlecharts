@@ -1,9 +1,28 @@
+
 function toHex(int_nr){
     var hex = Math.round(int_nr).toString(16);
     if (hex.length < 2){
         hex = "0" + hex;
     }
     return hex;
+}
+
+function rgbToHex(r, g, b){
+    return "#" + toHex(r) + toHex(g) + toHex(b);
+}
+
+function hexToRgb(hex){
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+function rgbstrToHex(rgbstr){
+    var components = rgbstr.substr(4,rgbstr.length - 5).split(",");
+    return rgbToHex(parseInt(components[0],10), parseInt(components[1],10), parseInt(components[2],10));
 }
 
 function getGradients(fromR, fromG, fromB, toR, toG, toB, steps){

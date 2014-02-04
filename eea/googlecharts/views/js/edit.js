@@ -1164,7 +1164,13 @@ function redrawChart(){
     chartEditor.getChartWrapper().draw(jQuery("#googlechart_chart_div_"+chartId)[0]);
 }
 
+var skipRedraw = false;
+
 function redrawEditorChart() {
+    if (skipRedraw){
+        skipRedraw = false;
+        return;
+    }
     var tmpwrapper = chartEditor.getChartWrapper();
     var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
     jQuery.each(chartOptions, function(key, value){
@@ -1292,16 +1298,14 @@ function openEditor(elementId) {
         setTimeout(function(){
             redrawEditorChart();
         },100);
-//        setConfiguratorMessage("");
         jQuery(".googlechart_editor_loading").addClass("googlechart_editor_loaded");
         jQuery(".googlechart_palette_loading").removeClass("googlechart_palette_loading");
-
     });
+
     google.visualization.events.addListener(chartEditor, 'error', function(event){
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = false;
-//        setConfiguratorMessage(JSON.parse(settings_str).chartType);
     });
     moveIfFirst();
 
@@ -4173,8 +4177,63 @@ jQuery(document).ready(function(){
     jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
         init_googlecharts_edit();
     });
+
+    overrideGooglePalette();
 });
 
+function overrideGooglePalette(){
+    jQuery(document).delegate(".google-visualization-charteditor-color", "click", function(){
+        var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
+        var selectedPalette = chartPalettes[selectedPaletteId].colors;
+        jQuery(".jfk-colormenu:visible .jfk-palette-cell").show();
+        jQuery(".jfk-palette-colorswatch").empty();
+
+        jQuery(".jfk-colormenu:visible .charts-menuheader").next().hide();
+        jQuery(".jfk-colormenu:visible .charts-menuheader").prev().prev().hide();
+        jQuery(".jfk-colormenu:visible .charts-menuheader").prev().show();
+        jQuery(".jfk-colormenu:visible .charts-menuheader").prev().prev().prev().show();
+        jQuery.each(selectedPalette, function(idx, color){
+            if (idx < 60){
+                jQuery(".jfk-colormenu:visible .charts-menuheader").prev().find(".jfk-palette-colorswatch").eq(idx).html("<div class='googlechart-palette-cell-replacement' style='background-color:"+color+"' title='"+color+"'></div>");
+            }
+        });
+        for (var i = selectedPalette.length; i < 60; i++){
+            jQuery(".jfk-colormenu:visible .charts-menuheader").prev().find(".jfk-palette-cell").eq(i).hide();
+        }
+    });
+    jQuery(document).delegate(".googlechart-palette-cell-replacement", "click", function(){
+        jQuery(".jfk-palette").hide();
+        var new_rgb_color = jQuery(this).css("background-color");
+        var old_rgb_color = jQuery(this).parent().css("background-color");
+        var new_color = rgbstrToHex(new_rgb_color);
+        var old_color = rgbstrToHex(old_rgb_color);
+
+        var oldConfig = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value")
+        var newConfig = JSON.parse(oldConfig.split(old_color).join(new_color));
+
+        jQuery(".charts-flat-menu-button-focused")
+            .find(".charts-flat-menu-button-indicator")
+            .css("background-color", new_rgb_color);
+        delete (newConfig.dataTable);
+
+        var tmpwrapper = chartEditor.getChartWrapper();
+
+        var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+
+        jQuery.each(chartOptions, function(key, value){
+            newConfig.options[key] = value;
+        });
+        jQuery.each(newConfig.options, function(key, value){
+            tmpwrapper.setOption(key,value);
+        });
+
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value", JSON.stringify(newConfig.options));
+
+        skipRedraw = true;
+        tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
+    });
+
+}
 /*if (window.DavizEdit === undefined){
     var DavizEdit = {'version': 'eea.googlecharts'};
 }*/

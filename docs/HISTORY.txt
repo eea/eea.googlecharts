@@ -3,6 +3,8 @@ Changelog
 
 9.5-dev - (unreleased)
 ----------------------
+* Feature: WIP implementing custom palettes in google chart editor
+  [szabozo0 refs #18262]
 
 9.4 - (2014-02-03)
 ------------------
