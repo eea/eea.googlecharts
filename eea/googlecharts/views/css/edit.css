@@ -1,9 +1,8 @@
-.google-visualization-charteditor-color,
 #google-visualization-charteditor-font-style-title,
 #google-visualization-charteditor-input-chart-title,
 #google-visualization-charteditor-select-font-name {
    /* #18262: hide elements that are centrally managed elsewhere in daviz */
-/*   display: none !important;*/
+   display: none !important;
 }
 
 .google-visualization-charteditor-dialog{

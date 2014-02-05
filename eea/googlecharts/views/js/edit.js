@@ -4223,8 +4223,10 @@ function overrideGooglePalette(){
             tmpwrapper.setOption(key,value);
         });
 
-
         chartEditor.setChartWrapper(tmpwrapper);
+        jQuery(".google-visualization-charteditor-section-title:contains('Title')").hide();
+        jQuery(".google-visualization-charteditor-section-title:contains('Title')").next().next().hide();
+        jQuery(".google-visualization-charteditor-section-title:contains('Title')").next().next().next().next().hide();
     });
     jQuery(document).delegate(".google-visualization-charteditor-color", "click", function(){
         saveEditorColors();
