@@ -1164,22 +1164,45 @@ function redrawChart(){
     chartEditor.getChartWrapper().draw(jQuery("#googlechart_chart_div_"+chartId)[0]);
 }
 
-var skipRedraw = false;
+var backupColors = [];
+var backupOptionColors = []
+function updateEditorColors(){
+    var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button-indicator")
+    jQuery.each(colorcontainers, function(idx, container){
+        jQuery(container).css("background-color", backupColors[idx]);
+    });
+
+    var coloroptions = jQuery(".google-visualization-charteditor-select-series-color");
+    jQuery.each(coloroptions, function(idx, option){
+        jQuery(option).css("background-color", backupOptionColors[idx]);
+    });
+
+}
+
+function saveEditorColors(){
+    var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button-indicator")
+    jQuery.each(colorcontainers, function(idx, container){
+        backupColors.push(jQuery(container).css("background-color"));
+    });
+    var coloroptions = jQuery(".google-visualization-charteditor-select-series-color");
+    jQuery.each(coloroptions, function(idx, option){
+        backupOptionColors.push(jQuery(option).css("background-color"));
+    });
+}
 
 function redrawEditorChart() {
-    if (skipRedraw){
-        skipRedraw = false;
-        return;
-    }
     var tmpwrapper = chartEditor.getChartWrapper();
+    var tmpwrapper_json = JSON.parse(tmpwrapper.toJSON());
     var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
-    jQuery.each(chartOptions, function(key, value){
+    jQuery.extend(true, tmpwrapper_json.options, chartOptions);
+    jQuery.each(tmpwrapper_json.options, function(key, value){
         tmpwrapper.setOption(key,value);
     });
 
     tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
 
     chartWrapper = tmpwrapper;
+    updateEditorColors();
 }
 
 function openEditor(elementId) {
@@ -1191,11 +1214,15 @@ function openEditor(elementId) {
     var title = chartObj.find(".googlechart_name").attr("value");
 
     var wrapperString = chartObj.find(".googlechart_configjson").attr('value');
+
+    var chartOptions = chartObj.find(".googlechart_options").attr('value');
+
     var chart;
     var wrapperJSON;
     if (wrapperString.length > 0){
         wrapperJSON = JSON.parse(wrapperString);
         chart = wrapperJSON;
+        jQuery.extend(true, chart.options, JSON.parse(chartOptions));
     }
     else{
         chart = defaultChart;
@@ -2651,6 +2678,8 @@ function fillEditorDialogWithDelay(){
 }
 
 function openEditChart(id){
+    backupColors = [];
+    backupOptionColors = [];
     jQuery("html").append(charteditor_css);
     chartEditor = null;
     var tmp_config = jQuery("#googlechartid_"+id+" .googlechart_configjson").attr('value');
@@ -4182,7 +4211,23 @@ jQuery(document).ready(function(){
 });
 
 function overrideGooglePalette(){
+    jQuery(document).delegate(".google-visualization-charteditor-panel-navigation-cell", "click", function(){
+        backupColors = [];
+        backupOptionColors = [];
+
+        var tmpwrapper = chartEditor.getChartWrapper();
+        var tmpwrapper_json = JSON.parse(tmpwrapper.toJSON());
+        var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+        jQuery.extend(true, tmpwrapper_json.options, chartOptions);
+        jQuery.each(tmpwrapper_json.options, function(key, value){
+            tmpwrapper.setOption(key,value);
+        });
+
+
+        chartEditor.setChartWrapper(tmpwrapper);
+    });
     jQuery(document).delegate(".google-visualization-charteditor-color", "click", function(){
+        saveEditorColors();
         var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
         var selectedPalette = chartPalettes[selectedPaletteId].colors;
         jQuery(".jfk-colormenu:visible .jfk-palette-cell").show();
@@ -4200,6 +4245,11 @@ function overrideGooglePalette(){
         for (var i = selectedPalette.length; i < 60; i++){
             jQuery(".jfk-colormenu:visible .charts-menuheader").prev().find(".jfk-palette-cell").eq(i).hide();
         }
+        for (i = 0; i < 10; i++){
+            var obj = jQuery(".jfk-colormenu:visible .charts-menuheader").prev().prev().prev().find(".jfk-palette-colorswatch").eq(i);
+            var color = obj.css("background-color");
+            obj.html("<div class='googlechart-palette-cell-replacement' style='background-color:"+color+"' title='"+color+"'></div>");
+        }
     });
     jQuery(document).delegate(".googlechart-palette-cell-replacement", "click", function(){
         jQuery(".jfk-palette").hide();
@@ -4208,29 +4258,57 @@ function overrideGooglePalette(){
         var new_color = rgbstrToHex(new_rgb_color);
         var old_color = rgbstrToHex(old_rgb_color);
 
-        var oldConfig = jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value")
-        var newConfig = JSON.parse(oldConfig.split(old_color).join(new_color));
 
-        jQuery(".charts-flat-menu-button-focused")
-            .find(".charts-flat-menu-button-indicator")
-            .css("background-color", new_rgb_color);
-        delete (newConfig.dataTable);
+        var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button")
+        jQuery.each(colorcontainers, function(idx, container){
+            if (jQuery(container).hasClass("charts-flat-menu-button-focused")){
+                backupColors[idx] = new_rgb_color;
+            }
+        });
 
+        var coloroptions = jQuery(".google-visualization-charteditor-select-series-color");
+        jQuery.each(coloroptions, function(idx, option){
+            if (jQuery(option).css("background-color") === old_rgb_color){
+                backupOptionColors[idx] = new_rgb_color;
+            }
+        });
+
+        var currentConfig = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value"));
         var tmpwrapper = chartEditor.getChartWrapper();
 
+        var extraConfig = {};
+
+        function parseTree(tree, spaces, path){
+            if ((tree instanceof Object) && !(tree instanceof Array)){
+                jQuery.each(tree, function(key, subtree){
+                    path.push(key);
+                    parseTree(subtree, spaces + "  ", path)
+                    path.pop();
+                });
+            }
+            else {
+                if (tree === old_color){
+                    var tmp_extra = {};
+                    var node = tmp_extra;
+                    for (var i = 0; i < path.length; i++){
+                        if (i < path.length - 1){
+                            node[path[i]] = {}
+                            node = node[path[i]];
+                        }
+                        else{
+                            node[path[i]] = new_color;
+                        }
+                    }
+                    jQuery.extend(true, extraConfig, tmp_extra);
+                }
+            }
+        }
+        parseTree(currentConfig, "", []);
+
         var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
-
-        jQuery.each(chartOptions, function(key, value){
-            newConfig.options[key] = value;
-        });
-        jQuery.each(newConfig.options, function(key, value){
-            tmpwrapper.setOption(key,value);
-        });
-
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value", JSON.stringify(newConfig.options));
-
-        skipRedraw = true;
-        tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
+        jQuery.extend(true, chartOptions, extraConfig.options);
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value", JSON.stringify(chartOptions))
+        redrawEditorChart();
     });
 
 }

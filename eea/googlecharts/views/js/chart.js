@@ -212,9 +212,7 @@ function drawGoogleChart(options){
     settings.chartJson.options.width = settings.chartWidth;
     settings.chartJson.options.height = settings.chartHeight;
 
-    jQuery.each(settings.chartOptions, function(key, value){
-        settings.chartJson.options[key] = value;
-    });
+    jQuery.extend(true, settings.chartJson.options, settings.chartOptions);
 
     settings.chartJson.dataTable = [];
 
