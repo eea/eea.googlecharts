@@ -1165,9 +1165,9 @@ function redrawChart(){
 }
 
 var backupColors = [];
-var backupOptionColors = []
+var backupOptionColors = [];
 function updateEditorColors(){
-    var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button-indicator")
+    var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button-indicator");
     jQuery.each(colorcontainers, function(idx, container){
         jQuery(container).css("background-color", backupColors[idx]);
     });
@@ -1180,7 +1180,7 @@ function updateEditorColors(){
 }
 
 function saveEditorColors(){
-    var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button-indicator")
+    var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button-indicator");
     jQuery.each(colorcontainers, function(idx, container){
         backupColors.push(jQuery(container).css("background-color"));
     });
@@ -4197,19 +4197,6 @@ function init_googlecharts_edit(){
     loadCharts();
 }
 
-
-jQuery(document).ready(function(){
-    charteditor_css = jQuery("link[rel='stylesheet'][href*='charteditor']");
-    charteditor_css.remove();
-
-    init_googlecharts_edit();
-    jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
-        init_googlecharts_edit();
-    });
-
-    overrideGooglePalette();
-});
-
 function overrideGooglePalette(){
     jQuery(document).delegate(".google-visualization-charteditor-panel-navigation-cell", "click", function(){
         backupColors = [];
@@ -4261,7 +4248,7 @@ function overrideGooglePalette(){
         var old_color = rgbstrToHex(old_rgb_color);
 
 
-        var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button")
+        var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button");
         jQuery.each(colorcontainers, function(idx, container){
             if (jQuery(container).hasClass("charts-flat-menu-button-focused")){
                 backupColors[idx] = new_rgb_color;
@@ -4284,7 +4271,7 @@ function overrideGooglePalette(){
             if ((tree instanceof Object) && !(tree instanceof Array)){
                 jQuery.each(tree, function(key, subtree){
                     path.push(key);
-                    parseTree(subtree, spaces + "  ", path)
+                    parseTree(subtree, spaces + "  ", path);
                     path.pop();
                 });
             }
@@ -4294,7 +4281,7 @@ function overrideGooglePalette(){
                     var node = tmp_extra;
                     for (var i = 0; i < path.length; i++){
                         if (i < path.length - 1){
-                            node[path[i]] = {}
+                            node[path[i]] = {};
                             node = node[path[i]];
                         }
                         else{
@@ -4309,11 +4296,23 @@ function overrideGooglePalette(){
 
         var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
         jQuery.extend(true, chartOptions, extraConfig.options);
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value", JSON.stringify(chartOptions))
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value", JSON.stringify(chartOptions));
         redrawEditorChart();
     });
-
 }
+
+jQuery(document).ready(function(){
+    charteditor_css = jQuery("link[rel='stylesheet'][href*='charteditor']");
+    charteditor_css.remove();
+
+    init_googlecharts_edit();
+    jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
+        init_googlecharts_edit();
+    });
+
+    overrideGooglePalette();
+});
+
 /*if (window.DavizEdit === undefined){
     var DavizEdit = {'version': 'eea.googlecharts'};
 }*/
