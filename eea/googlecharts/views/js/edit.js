@@ -1761,7 +1761,7 @@ function populateTableForPivot(){
                 "<th class='columnheader' columnnr='"+value.nr+"'>"+
                 "<div class='draggable' columnnr='"+value.nr+"'>"+
                   "<div style='float:right' class='pivothidecolumn daviz-menuicon eea-icon eea-icon-placeholder'><!-- --></div>"+
-                  "<div'>"+ value.name + "</div>" +
+                  "<div style='margin-right:30px;'>"+ value.name + "</div>" +
                 "</div>"+
                 "</th>";
         jQuery(th).appendTo(jQuery("#pivotConfigHeader"));
