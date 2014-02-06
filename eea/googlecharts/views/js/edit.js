@@ -1190,11 +1190,31 @@ function saveEditorColors(){
     });
 }
 
+function removeAutomaticColor(root,tree, path){
+    if ((tree instanceof Object) && !(tree instanceof Array)){
+        jQuery.each(tree, function(key, subtree){
+            path.push(key);
+            removeAutomaticColor(root,subtree, path);
+            path.pop();
+        });
+    }
+    else {
+        if (tree === "eea-automatic-color"){
+            var node = root;
+            for (var i = 0; i < path.length - 1; i++){
+                node = node[path[i]];
+            }
+            delete node[path[path.length - 1]];
+        }
+    }
+}
+
 function redrawEditorChart() {
     var tmpwrapper = chartEditor.getChartWrapper();
     var tmpwrapper_json = JSON.parse(tmpwrapper.toJSON());
     var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
     jQuery.extend(true, tmpwrapper_json.options, chartOptions);
+    removeAutomaticColor(tmpwrapper_json, tmpwrapper_json, []);
     jQuery.each(tmpwrapper_json.options, function(key, value){
         tmpwrapper.setOption(key,value);
     });
@@ -1914,7 +1934,9 @@ function chartEditorSave(id){
             }
         }
     }
-    removeRedundant(options_json, [])
+    removeRedundant(options_json, []);
+    removeAutomaticColor(options_json, options_json, []);
+    removeAutomaticColor(settings_json, settings_json, []);
     var settings_str2 = JSON.stringify(settings_json);
     var options_str2 = JSON.stringify(options_json);
 
@@ -4241,10 +4263,16 @@ function overrideGooglePalette(){
         jQuery(".jfk-colormenu:visible .jfk-palette-cell").show();
         jQuery(".jfk-palette-colorswatch").empty();
 
-        jQuery(".jfk-colormenu:visible .charts-menuheader").next().hide();
         jQuery(".jfk-colormenu:visible .charts-menuheader").prev().prev().hide();
         jQuery(".jfk-colormenu:visible .charts-menuheader").prev().show();
         jQuery(".jfk-colormenu:visible .charts-menuheader").prev().prev().prev().show();
+
+        jQuery(".jfk-colormenu:visible .charts-menuheader").next().show();
+        jQuery(".jfk-colormenu:visible .charts-menuheader").next().find("td").hide();
+        jQuery(".jfk-colormenu:visible .charts-menuheader").next().find("td").eq(0).show();
+        jQuery(".jfk-colormenu:visible .charts-menuheader").next().find("td").eq(0).find(".jfk-palette-colorswatch").html("<div class='googlechart-palette-cell-replacement automatic' style='background-color:white;'>Automatic</div>");
+        jQuery(".jfk-colormenu:visible .charts-menuheader").next().find("td").eq(0).find(".jfk-palette-colorswatch").css("width","auto").css("height","auto");
+
         jQuery.each(selectedPalette, function(idx, color){
             if (idx < 60){
                 jQuery(".jfk-colormenu:visible .charts-menuheader").prev().find(".jfk-palette-colorswatch").eq(idx).html("<div class='googlechart-palette-cell-replacement' style='background-color:"+color+"' title='"+color+"'></div>");
@@ -4265,7 +4293,9 @@ function overrideGooglePalette(){
         var old_rgb_color = jQuery(this).parent().css("background-color");
         var new_color = rgbstrToHex(new_rgb_color);
         var old_color = rgbstrToHex(old_rgb_color);
-
+        if (jQuery(this).hasClass("automatic")){
+            new_color = "eea-automatic-color";
+        }
 
         var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button");
         jQuery.each(colorcontainers, function(idx, container){
@@ -4312,8 +4342,8 @@ function overrideGooglePalette(){
             }
         }
         parseTree(currentConfig, []);
-
         var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+        removeAutomaticColor(chartOptions, chartOptions, []);
         jQuery.extend(true, chartOptions, extraConfig.options);
         jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value", JSON.stringify(chartOptions));
         redrawEditorChart();
