@@ -1247,7 +1247,7 @@ function openEditor(elementId) {
     else{
         chart = defaultChart;
     }
-
+    removeAutomaticColor(chart, chart, []);
     var chartColumns_str = jQuery("#googlechartid_"+elementId+" .googlechart_columns").val();
 
     var chartColumns = {};
