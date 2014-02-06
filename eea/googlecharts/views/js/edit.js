@@ -1868,7 +1868,6 @@ function chartEditorSave(id){
     var settings_json = JSON.parse(settings_str);
     settings_json.paletteId = jQuery("#googlechart_palettes").attr("value");
     settings_json.dataTable = [];
-    var settings_str2 = JSON.stringify(settings_json);
 
     var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
     var options_json = JSON.parse(options_str);
@@ -1897,6 +1896,26 @@ function chartEditorSave(id){
         options_json.state = motion_state;
     }
 
+    function removeRedundant(tree, path){
+        if ((tree instanceof Object) && !(tree instanceof Array)){
+            jQuery.each(tree, function(key, subtree){
+                path.push(key);
+                removeRedundant(subtree, path);
+                path.pop();
+            });
+        }
+        else {
+            if (!(tree instanceof Array)){
+                var node = settings_json.options;
+                for (var i = 0; i < path.length - 1; i++){
+                    node = node[path[i]];
+                }
+                delete node[path[path.length - 1]];
+            }
+        }
+    }
+    removeRedundant(options_json, [])
+    var settings_str2 = JSON.stringify(settings_json);
     var options_str2 = JSON.stringify(options_json);
 
     var name_str = jQuery("#googlechartid_tmp_chart .googlechart_name").attr("value");
@@ -4267,11 +4286,11 @@ function overrideGooglePalette(){
 
         var extraConfig = {};
 
-        function parseTree(tree, spaces, path){
+        function parseTree(tree, path){
             if ((tree instanceof Object) && !(tree instanceof Array)){
                 jQuery.each(tree, function(key, subtree){
                     path.push(key);
-                    parseTree(subtree, spaces + "  ", path);
+                    parseTree(subtree, path);
                     path.pop();
                 });
             }
@@ -4292,7 +4311,7 @@ function overrideGooglePalette(){
                 }
             }
         }
-        parseTree(currentConfig, "", []);
+        parseTree(currentConfig, []);
 
         var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
         jQuery.extend(true, chartOptions, extraConfig.options);
