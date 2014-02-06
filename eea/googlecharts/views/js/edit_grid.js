@@ -1202,6 +1202,72 @@ function enableGridFormatters(){
     });
 }
 
+function loadRoles(colFullName){
+    var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
+    var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
+    var colType = "text";
+    jQuery.each(columnProps, function(idx, columnProp){
+        if (columnProp.label === colFullName){
+            colType = columnProp.valueType;
+        }
+    });
+
+    if (colType != "number"){
+        jQuery(".slick-role-title").hide();
+    }
+
+    jQuery(".slick-role-menu-enabled").removeClass("slick-role-menu-enabled");
+    jQuery.each(prepared, function(idx, col){
+        if (col.fullname === colFullName){
+            var role = "data";
+            if (col.hasOwnProperty("role")){
+                role = col.role;
+            }
+            jQuery(".slick-role-" + role).addClass("slick-role-menu-enabled");
+        }
+    });
+}
+
+function saveRoles(colFullName){
+    var columns = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value"));
+    jQuery.each(columns.prepared, function(idx, col){
+        if (col.fullname === colFullName){
+            col.role = jQuery(".slick-role-menu-enabled").attr("role");
+        }
+    });
+    jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value", JSON.stringify(columns));
+}
+
+function enableGridRoles(){
+    jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
+        var role_element = jQuery(".slick-header-menuitem").find("span:contains(-role-)");
+        if (role_element.length === 0){
+            return;
+        }
+        role_element.parent().hide();
+        jQuery(".slick-role-title").remove();
+        jQuery(".slick-role-body").remove();
+
+        var menu = role_element.parent().parent();
+        var role_title = jQuery('<div>').addClass('slick-role-title').text('Role...').appendTo(menu);
+        var roles = jQuery('<div>').addClass('slick-role-body').appendTo(menu);
+        var data = jQuery('<div>').addClass('slick-role-menu slick-role-data').text('data').attr("role","data").appendTo(roles);
+        var olddata = jQuery('<div>').addClass('slick-role-menu slick-role-old-data').text('old-data').attr("role","old-data").appendTo(roles);
+        var interval = jQuery('<div>').addClass('slick-role-menu slick-role-interval').text('interval').attr("role","interval").appendTo(roles);
+        roles.hide();
+        role_title.click(function(){
+            roles.toggle('blind');
+        });
+        var tmp_title = jQuery(this).parent().attr("title")
+        jQuery(".slick-role-menu").click(function(){
+            jQuery(".slick-role-menu-enabled").removeClass("slick-role-menu-enabled");
+            jQuery(this).addClass("slick-role-menu-enabled");
+            saveRoles(tmp_title);
+        });
+        loadRoles(tmp_title);
+    });
+}
+
 function setGridColumnsOrder(sortOrder){
     grid_columnsHiddenById = {};
     var orig_cols = grid.getColumns();
@@ -1260,6 +1326,10 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
                 {title:'-filter-',
                  command:'filter',
                  tooltip: 'Filter',
+                 disabled:true},
+                {title:'-role-',
+                 command:'role',
+                 tooltip: 'Role',
                  disabled:true}
             ]
         }
@@ -1385,6 +1455,7 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
 
     enableGridFormatters();
     enableGridFilters();
+    enableGridRoles();
 }
 
 var columnfilter_data;

@@ -1426,6 +1426,9 @@ function generateNewTableForChart(){
                 if (((newColumn.name === prevColumn.name) || (newColumn.name.indexOf(prevColumn.name+"_") === 0)) && (prevColumn.hasOwnProperty("formatters"))){
                     newColumn.formatters = prevColumn.formatters;
                 }
+                if (((newColumn.name === prevColumn.name) || (newColumn.name.indexOf(prevColumn.name+"_") === 0)) && (prevColumn.hasOwnProperty("role"))){
+                    newColumn.role = prevColumn.role;
+                }
             });
         });
         var columns_str = JSON.stringify(columnsSettings);
@@ -1867,6 +1870,9 @@ function chartEditorSave(id){
                 if (tmpPreparedColumn.fullname === preparedColumn.fullname){
                     if (tmpPreparedColumn.hasOwnProperty("formatters")){
                         preparedColumn.formatters = JSON.parse(JSON.stringify(tmpPreparedColumn.formatters));
+                    }
+                    if (tmpPreparedColumn.hasOwnProperty("role")){
+                        preparedColumn.role = JSON.parse(JSON.stringify(tmpPreparedColumn.role));
                     }
                 }
             });
