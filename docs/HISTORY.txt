@@ -3,7 +3,9 @@ Changelog
 
 9.5-dev - (unreleased)
 ----------------------
-* Feature: WIP implementing custom palettes in google chart editor
+* Bugfix: Fixed css problem on pivot-table
+  [szabozo0 refs #18399]
+* Feature: In the chart editor user can only pick colors from the selected palette
   [szabozo0 refs #18262]
 
 9.4 - (2014-02-03)
