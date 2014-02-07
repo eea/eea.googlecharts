@@ -1314,6 +1314,40 @@ function redrawEditorChart() {
     updateEditorColors();
 }
 
+function addIntervalConfig(){
+    jQuery("<div>")
+        .addClass("google-visualization-charteditor-panel-navigation-cell charts-inline-block charts-tab")
+        .attr("aria-selected", "false")
+        .attr("role", "tab")
+        .text("Intervals")
+        .attr("id", "custom-interval-configurator")
+        .appendTo("#google-visualization-charteditor-panel-navigate-div")
+        .hover(function(){jQuery(this).addClass("charts-tab-hover");})
+        .mouseout(function(){jQuery(this).removeClass("charts-tab-hover");})
+        .click(function(){
+            jQuery(".google-visualization-charteditor-panel-navigation-cell")
+                .removeClass("charts-tab-selected")
+                .attr("aria-selected", "false");
+            jQuery(this)
+                .addClass("charts-tab-selected")
+                .attr("aria-selected", "true");
+            jQuery(".google-visualization-charteditor-panel").eq(0).empty();
+        });
+
+    jQuery(".google-visualization-charteditor-panel-navigation-cell").click(function(){
+        if (jQuery(this).attr("id") !== "custom-interval-configurator"){
+            jQuery("#custom-interval-configurator")
+                .removeClass("charts-tab-selected")
+                .attr("aria-selected", "false");
+
+            jQuery(this)
+                .addClass("charts-tab-selected")
+                .attr("aria-selected", "true");
+
+        }
+    });
+}
+
 function openEditor(elementId) {
     isFirstEdit = true;
     jQuery(".google-visualization-charteditor-dialog").remove();
@@ -1360,11 +1394,15 @@ function openEditor(elementId) {
         sortAsc = false;
     }
 
+    var shouldAddIntervalsToEditor = false;
     var chartColumnsForEditor = {};
     jQuery.extend(true, chartColumnsForEditor, chartColumns);
     jQuery.each(chartColumnsForEditor.prepared, function(idx, prepared_column){
         if (prepared_column.role === 'old-data'){
             prepared_column.status = 0;
+        }
+        if (prepared_column.role === 'interval'){
+            shouldAddIntervalsToEditor = true;
         }
     });
 
@@ -1455,6 +1493,9 @@ function openEditor(elementId) {
 
     setTimeout(function(){
         chartEditor.openDialog(chartWrapper, {});
+        if (shouldAddIntervalsToEditor){
+            addIntervalConfig();
+        }
     },100);
 }
 
@@ -2033,7 +2074,9 @@ function chartEditorSave(id){
                 for (var i = 0; i < path.length - 1; i++){
                     node = node[path[i]];
                 }
-                delete node[path[path.length - 1]];
+                if (node !== undefined){
+                    delete node[path[path.length - 1]];
+                }
             }
         }
     }
@@ -4343,6 +4386,9 @@ function init_googlecharts_edit(){
 
 function overrideGooglePalette(){
     jQuery(document).delegate(".google-visualization-charteditor-panel-navigation-cell", "click", function(){
+        if (jQuery(this).attr("id") === "custom-interval-configurator"){
+            return;
+        }
         backupColors = [];
         backupOptionColors = [];
 
