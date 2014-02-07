@@ -1,3 +1,27 @@
+function fixSVG(container){
+    if (jQuery.browser.mozilla){
+        return;
+    }
+    var base = jQuery("base").attr("href");
+    if (base === undefined){
+        return;
+    }
+
+    var baseForSVG = window.location.href.split("#")[0];
+
+    var rects = jQuery(container).find("rect");
+    jQuery.each(rects, function(idx, rect){
+        var fillVal = jQuery(rect).attr("fill");
+        if (fillVal === undefined){
+            return;
+        }
+        if (fillVal.indexOf("url(") === 0){
+            fillVal = fillVal.replace("url(", "url("+baseForSVG);
+            jQuery(rect).attr("fill", fillVal);
+        }
+    });
+}
+
 function chartAreaAttribute2px(value, size){
     var pixels = 0;
     if (typeof(value) === "string"){
@@ -353,6 +377,7 @@ function drawGoogleChart(options){
             jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartReadyEvent();
             updateFilterDivs();
+            fixSVG("#"+settings.chartViewDiv);
         });
 
         google.visualization.events.addListener(dashboard, 'error', function(event){
@@ -376,13 +401,13 @@ function drawGoogleChart(options){
             jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartReadyEvent();
             updateFilterDivs();
+            fixSVG("#"+settings.chartViewDiv);
         });
 
         google.visualization.events.addListener(chart, 'error', function(event){
             jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartErrorEvent();
         });
-
         chart.draw();
     }
 

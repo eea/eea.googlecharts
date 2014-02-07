@@ -522,6 +522,7 @@ function prepareForChart(options){
     jQuery.each(settings.columns, function(column_index, column){
         var colName = settings.originalDataTable.available_columns[column];
         var colType = settings.originalDataTable.properties[column];
+        var role = "data";
         if(colType === undefined){
             colType = 'string';
         }else{
@@ -530,7 +531,18 @@ function prepareForChart(options){
                 colType = "string";
             }
         }
-        dataForChart.addColumn(colType, colName);
+        jQuery.each(settings.preparedColumns, function(pc_idx, pc_column){
+            if (pc_column.fullname === colName){
+                if (pc_column.hasOwnProperty("role")){
+                    role = pc_column.role;
+                }
+            }
+        });
+        var column_options = {type:colType, label:colName};
+        if ((column_index > 0) && (role !== "data")){
+            column_options.role = role;
+        }
+        dataForChart.addColumn(column_options);
     });
     jQuery(itemsToDisplay).each(function(row_index, row){
         var newRow = [];

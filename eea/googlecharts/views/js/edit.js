@@ -659,7 +659,8 @@ function saveThumb(value, useName){
         columns : columnsFromSettings.columns,
         sortBy : chart_sortBy,
         sortAsc : chart_sortAsc,
-        enableEmptyRows: chart_options.enableEmptyRows
+        enableEmptyRows: chart_options.enableEmptyRows,
+        preparedColumns: chart_columns.prepared
     };
     var tableForChart = prepareForChart(options);
 
@@ -1219,6 +1220,94 @@ function redrawEditorChart() {
         tmpwrapper.setOption(key,value);
     });
 
+
+    var row_filters_str = jQuery("#googlechartid_tmp_chart .googlechart_row_filters").attr('value');
+    var row_filters = {};
+    if (row_filters_str.length > 0){
+        row_filters = JSON.parse(row_filters_str);
+    }
+    var sortBy = jQuery("#googlechartid_tmp_chart .googlechart_sortBy").attr('value');
+    var sortAsc_str = jQuery("#googlechartid_tmp_chart .googlechart_sortAsc").attr('value');
+    var sortAsc = true;
+    if (sortAsc_str === 'desc'){
+        sortAsc = false;
+    }
+
+    var chartColumns_str = jQuery("#googlechartid_tmp_chart .googlechart_columns").val();
+
+    var chartColumns = {};
+    if (chartColumns_str === ""){
+        chartColumns.original = {};
+        chartColumns.prepared = {};
+    }
+    else{
+        chartColumns = JSON.parse(chartColumns_str);
+    }
+
+    var columnsFromSettings = getColumnsFromSettings(chartColumns);
+
+    var options = {
+        originalTable : all_rows,
+        normalColumns : columnsFromSettings.normalColumns,
+        pivotingColumns : columnsFromSettings.pivotColumns,
+        valueColumn : columnsFromSettings.valueColumn,
+        availableColumns : getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings"), available_columns, all_rows).available_columns,
+        filters: row_filters,
+        unpivotSettings : jQuery("#googlechartid_tmp_chart").data("unpivotsettings")
+    };
+
+    var transformedTable = transformTable(options);
+
+    jQuery("#googlechartid_tmp_chart").attr("columnproperties", JSON.stringify(transformedTable.properties));
+
+    options = {
+        originalDataTable : transformedTable,
+        columns : columnsFromSettings.columns,
+        sortBy : sortBy,
+        sortAsc : sortAsc,
+//        preparedColumns: chartColumns.prepared,
+        preparedColumns: chartColumns.prepared,
+        enableEmptyRows: JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value")).enableEmptyRows
+    };
+
+    // check if table contains 2 string columns & 1 or 2 numeric columns (for treemap)
+    var isPossibleTreemap = true;
+    if ((columnsFromSettings.columns.length < 3) || (columnsFromSettings.columns.length > 4)){
+        isPossibleTreemap = false;
+    }
+    else {
+        if (transformedTable.properties[columnsFromSettings.columns[0]].valueType !== 'text'){
+            isPossibleTreemap = false;
+        }
+        if (transformedTable.properties[columnsFromSettings.columns[1]].valueType !== 'text'){
+            isPossibleTreemap = false;
+        }
+        if (transformedTable.properties[columnsFromSettings.columns[2]].valueType !== 'number'){
+            isPossibleTreemap = false;
+        }
+        if ((columnsFromSettings.columns.length === 4) && (transformedTable.properties[columnsFromSettings.columns[3]].valueType !== 'number')){
+            isPossibleTreemap = false;
+        }
+    }
+    if (!isPossibleTreemap){
+        options.limit = 100;
+    }
+
+    var tableForChart = prepareForChart(options);
+
+    // workaround for charteditor issue #17629
+    for (var i = 0; i < tableForChart.getNumberOfColumns(); i++){
+        tableForChart.getColumnProperties(i);
+    }
+    // end of workaround
+
+    //chart.dataTable = tableForChart;
+    tmpwrapper.setDataTable(tableForChart);
+
+    google.visualization.events.addListener(tmpwrapper, 'ready', function(event){
+        fixSVG("#google-visualization-charteditor-preview-div-chart");
+    });
+
     tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
 
     chartWrapper = tmpwrapper;
@@ -1271,8 +1360,15 @@ function openEditor(elementId) {
         sortAsc = false;
     }
 
+    var chartColumnsForEditor = {};
+    jQuery.extend(true, chartColumnsForEditor, chartColumns);
+    jQuery.each(chartColumnsForEditor.prepared, function(idx, prepared_column){
+        if (prepared_column.role === 'old-data'){
+            prepared_column.status = 0;
+        }
+    });
 
-    var columnsFromSettings = getColumnsFromSettings(chartColumns);
+    var columnsFromSettings = getColumnsFromSettings(chartColumnsForEditor);
 
     var options = {
         originalTable : all_rows,
@@ -1293,7 +1389,8 @@ function openEditor(elementId) {
         columns : columnsFromSettings.columns,
         sortBy : sortBy,
         sortAsc : sortAsc,
-        preparedColumns: chartColumns.prepared,
+//        preparedColumns: chartColumns.prepared,
+        preparedColumns: chartColumnsForEditor.prepared,
         enableEmptyRows: JSON.parse(chartObj.find(".googlechart_options").attr("value")).enableEmptyRows
     };
 

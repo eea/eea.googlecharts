@@ -1236,6 +1236,7 @@ function saveRoles(colFullName){
         }
     });
     jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value", JSON.stringify(columns));
+    generateNewTableForChart();
 }
 
 function enableGridRoles(){
@@ -1258,7 +1259,7 @@ function enableGridRoles(){
         role_title.click(function(){
             roles.toggle('blind');
         });
-        var tmp_title = jQuery(this).parent().attr("title")
+        var tmp_title = jQuery(this).parent().attr("title");
         jQuery(".slick-role-menu").click(function(){
             jQuery(".slick-role-menu-enabled").removeClass("slick-role-menu-enabled");
             jQuery(this).addClass("slick-role-menu-enabled");
