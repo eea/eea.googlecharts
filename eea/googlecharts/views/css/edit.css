@@ -1781,3 +1781,20 @@ div.googlechartarea-input {
 .jfk-colormenu .charts-menuheader {
     display:none !important;
 }
+
+#google-visualization-charteditor-intervals-panel .google-visualization-charteditor-section{
+    margin-top: -1px;
+    width: 244px;
+    border: 1px solid #e5e5e5;
+    background: white;
+    padding: 10px 10px 20px;
+}
+
+.eea-googlechart-intervals-config-value{
+    width:auto;
+    float:right;
+}
+
+input[type=text].eea-googlechart-intervals-config-value{
+    width:30px;
+}
