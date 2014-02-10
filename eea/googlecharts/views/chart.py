@@ -438,7 +438,14 @@ class Export(BrowserView):
         kwargs.update(form)
 
         convert = getUtility(IConvert)
-        if kwargs.get('svg', '') != '':
+        svg = kwargs.get('svg', '')
+        filename = kwargs.get('filename', 'export')
+        img = None
+
+        if kwargs.get('export_fmt') == 'svg' and svg != '':
+            return self.export_svg(svg, filename)
+
+        if svg != '':
             img = convert(
                 data=kwargs.get('svg', ''),
                 data_from='svg',
@@ -502,7 +509,6 @@ class Export(BrowserView):
                 logger.exception(err)
 
         ctype = kwargs.get('type', 'image/png')
-        filename = kwargs.get('filename', 'export')
 
         self.request.response.setHeader('content-type', ctype)
         self.request.response.setHeader(
@@ -510,6 +516,18 @@ class Export(BrowserView):
             'attachment; filename="%s.png"' % filename
         )
         return img
+
+    def export_svg(self, svg, filename):
+
+        ctype = 'image/svg+xml'
+
+        self.request.response.setHeader('content-type', ctype)
+        self.request.response.setHeader(
+            'content-disposition',
+            'attachment; filename="%s.svg"' % filename
+        )
+        return svg
+
 
 class SavePNGChart(Export):
     """ Save png version of chart, including qr code and watermark
