@@ -3,6 +3,8 @@ Changelog
 
 9.5-dev - (unreleased)
 ----------------------
+* Feature: Added export to svg
+  [olimpiurob #18411]
 * Feature: WIP: Adding roles for columns, enabling Diff charts, Interval charts
   [szabozo0 refs #18263]
 * Bugfix: Fixed css problem on pivot-table
