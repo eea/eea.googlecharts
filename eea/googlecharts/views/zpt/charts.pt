@@ -56,6 +56,13 @@
                i18n:attributes="value"
                onClick="exportToPng();"
                class="context btn" />
+        <input id="googlechart_export_svg_button"
+               style="display:none;"
+               type="button"
+               value="export to svg"
+               i18n:attributes="value"
+               onClick="exportToSVG();"
+               class="context btn" />
     </div>
 
 
@@ -66,6 +73,7 @@
     <form id="export" action='@@googlechart.export' method="POST">
         <input type="hidden" id="svg" name="svg"/>
         <input type="hidden" id="imageChart_url" name="imageChart_url"/>
+        <input type="hidden" id="export_fmt" name="export_fmt"/>
         <input type="hidden" id="filename" name="filename"/>
         <input type="hidden" id="type" name="type"/>
         <input type="hidden" id="width" name="width"/>

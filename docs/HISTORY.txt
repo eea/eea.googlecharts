@@ -3,8 +3,10 @@ Changelog
 
 9.5-dev - (unreleased)
 ----------------------
-* Feature: Added Diff charts, Interval charts
+* Feature: Adding roles for columns, enabled Diff charts and Interval charts
   [szabozo0 refs #18263]
+* Feature: Added export to svg
+  [olimpiurob #18411]
 * Bugfix: Fixed css problem on pivot-table
   [szabozo0 refs #18399]
 * Feature: In the chart editor user can only pick colors from the selected palette

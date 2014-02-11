@@ -8,6 +8,20 @@ if (typeof String.prototype.endsWith === "undefined") {
     };
 }
 
+function svgCleanup(svg) {
+    svg = jQuery(svg);
+    svg.find('g[clip-path]').removeAttr('clip-path');
+
+    jQuery(svg).find("[fill^='url']").each(function() {
+        var fill = '#' + jQuery(this).attr('fill').split('#')[1];
+        jQuery(this).attr('fill', fill);
+    });
+
+    container = jQuery('<div/>');
+    container.append(svg);
+    return container.html();
+}
+
 function exportToPng(){
     var form = jQuery("#export");
     if (jQuery("#googlechart_view img").attr("src") === undefined){
@@ -16,6 +30,7 @@ function exportToPng(){
         var svg = jQuery("#googlechart_view").find("svg").parent().html();
         jQuery("#svg").attr("value",svg);
         jQuery("#imageChart_url").attr("value", '');
+        jQuery("#export_fmt").attr("value", "png");
     }
     else {
         var img_url = jQuery("#googlechart_view img").attr("src");
@@ -26,10 +41,25 @@ function exportToPng(){
     form.submit();
 }
 
+function exportToSVG(){
+    var form = jQuery("#export");
+    if (jQuery("#googlechart_view img").attr("src") === undefined){
+        var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
+        jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
+        var svg = jQuery("#googlechart_view").find("svg").parent().html();
+        var clean_svg = svgCleanup(svg);
+        jQuery("#svg").attr("value",clean_svg);
+        jQuery("#export_fmt").attr("value", "svg");
+    }
+
+    form.submit();
+}
+
 function checkSVG(){
     var svg = jQuery("#googlechart_view").find("svg");
     if ((svg[0]) || (jQuery("#googlechart_view img").attr("src") !== undefined)){
        jQuery("#googlechart_export_button").show();
+       jQuery("#googlechart_export_svg_button").show();
     }
 }
 
@@ -108,6 +138,7 @@ function drawChart(value, other_options){
     jQuery("#type").attr("value","image/png");
 
     jQuery("#googlechart_export_button").hide();
+    jQuery("#googlechart_export_svg_button").hide();
     jQuery("#googlechart_embed_button").show();
     jQuery("#googlechart_filters").remove();
     jQuery("#googlechart_view").remove();
@@ -265,6 +296,7 @@ function drawDashboard(value, other_options){
     var query_params = getQueryParams();
 
     jQuery("#googlechart_export_button").hide();
+    jQuery("#googlechart_export_svg_button").hide();
     jQuery("#googlechart_embed_button").show();
     jQuery("#googlechart_filters").remove();
     jQuery("#googlechart_view").remove();
