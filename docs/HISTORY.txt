@@ -3,6 +3,8 @@ Changelog
 
 9.5-dev - (unreleased)
 ----------------------
+* Bugfix: embedded googlechart-notes now have the same font-size as non embedded
+  [ichim-david refs #18491]
 * Feature: Adding roles for columns, enabled Diff charts and Interval charts
   [szabozo0 refs #18263]
 * Feature: Added export to svg

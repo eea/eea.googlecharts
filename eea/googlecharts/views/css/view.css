@@ -558,3 +558,14 @@ input.googlechart-chart-size {
 .googlechart-notes {
     clear:both;
 }
+
+/* #18491 embeded charts notes should have the same font size as original charts */
+.googlechart_dashboard .googlechart-notes { 
+    font: 12px Verdana, Arial, Helvetica, sans-serif;
+    line-height: 1.5em;
+}
+
+/* #18491 normalize font size of googlechart-notes when it contains a paragraph */
+#content .googlechart-notes p { 
+    font-size: 100%;
+}
