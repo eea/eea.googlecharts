@@ -538,7 +538,7 @@ function prepareForChart(options){
                 }
             }
         });
-        var column_options = {type:colType, label:colName};
+        var column_options = {type:colType, label:colName, id:column};
         if ((column_index > 0) && (role !== "data")){
             column_options.role = role;
         }

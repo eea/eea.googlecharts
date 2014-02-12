@@ -1860,3 +1860,16 @@ input[type=text].eea-googlechart-intervals-config-value{
 .eea-googlechart-intervals-palette-color-auto:hover{
     border:1px solid black;
 }
+
+.eea-googlechart-column-section{
+    display:none
+}
+
+.eea-googlechart-column-section.active{
+    display:block
+}
+
+.eea-googlechart-intervals-column-selector {
+    float:right;
+    width:180px !important;
+}

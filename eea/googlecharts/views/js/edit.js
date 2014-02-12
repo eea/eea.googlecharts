@@ -1214,13 +1214,15 @@ function redrawEditorChart() {
     var tmpwrapper = chartEditor.getChartWrapper();
     var tmpwrapper_json = JSON.parse(tmpwrapper.toJSON());
     delete tmpwrapper_json.options.intervals;
+    delete tmpwrapper_json.options.interval;
+    tmpwrapper.setOption("intervals", {});
+    tmpwrapper.setOption("interval", {});
     var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
     jQuery.extend(true, tmpwrapper_json.options, chartOptions);
     removeAutomaticColor(tmpwrapper_json, tmpwrapper_json, []);
     jQuery.each(tmpwrapper_json.options, function(key, value){
         tmpwrapper.setOption(key,value);
     });
-
 
     var row_filters_str = jQuery("#googlechartid_tmp_chart .googlechart_row_filters").attr('value');
     var row_filters = {};
@@ -1338,6 +1340,170 @@ function addIntervalConfig(){
                 .addClass("jfk-scrollbar")
                 .attr("id", "google-visualization-charteditor-intervals-panel");
 
+            function addSection(section, name){
+                function addSelect(section, sectionname, title, name, values){
+                    jQuery("<div>")
+                        .addClass("google-visualization-charteditor-section-title charts-inline-block")
+                        .text(title)
+                        .appendTo(section);
+                    jQuery("<select>")
+                        .addClass("eea-googlechart-intervals-" + name)
+                        .addClass("eea-googlechart-intervals-config-value")
+                        .addClass("eea-googlechart-" + sectionname)
+                        .addClass("eea-googlechart-select")
+                        .appendTo(section);
+                    jQuery("<div>")
+                        .attr("style", "clear:both;")
+                        .appendTo(section);
+
+                    jQuery.each(values, function(idx, value){
+                        jQuery("<option>")
+                            .attr("value", value)
+                            .text(value)
+                            .appendTo(".eea-googlechart-"+sectionname+".eea-googlechart-intervals-" + name);
+                    });
+
+                }
+                function addInput(section, sectionname, title, name){
+                    jQuery("<div>")
+                        .addClass("google-visualization-charteditor-section-title charts-inline-block")
+                        .text(title)
+                        .appendTo(section);
+                    jQuery("<input type='text'>")
+                        .addClass("eea-googlechart-intervals-" + name)
+                        .addClass("eea-googlechart-intervals-config-value")
+                        .addClass("eea-googlechart-" + sectionname)
+                        .appendTo(section);
+
+                    jQuery("<div>")
+                        .attr("style", "clear:both;")
+                        .appendTo(section);
+                }
+                function addColorField(section, sectionname, title, name){
+                    jQuery("<div>")
+                        .addClass("google-visualization-charteditor-section-title charts-inline-block")
+                        .text(title)
+                        .appendTo(section);
+                    var colorcontainer = jQuery("<div>")
+                        .addClass("eea-googlechart-intervals-" + name)
+                        .addClass("eea-googlechart-intervals-config-value")
+                        .addClass("eea-googlechart-" + sectionname)
+                        .addClass("charts-inline-block")
+                        .attr("title","Automatic")
+                        .appendTo(section);
+                    jQuery("<div>")
+                        .addClass("charts-flat-menu-button-indicator")
+                        .appendTo(colorcontainer);
+                    jQuery("<div>")
+                        .addClass("eea-icon eea-icon-caret-down")
+                        .appendTo(colorcontainer);
+
+                }
+                var styles = ["auto", "line", "bar", "boxes", "sticks", "points", "area"];
+                var pixels = ["auto", "0px", "1px", "2px", "3px", "4px", "5px", "6px", "7px", "8px", "9px", "10px"];
+                var opacities = ["auto", "0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1"];
+                var curvetypes = ["auto", "function"];
+
+                addSelect(section, name, "Style", "style", styles);
+                var subsection = jQuery("<div>")
+                    .addClass("eea-googlechart-" + name + "-settings")
+                    .appendTo(section)
+                    .hide();
+
+                addSelect(subsection, name, "Line thickness", "linewidth", pixels);
+                addInput(subsection, name, "Bar thickness", "barwidth");
+                addSelect(subsection, name, "Point size", "pointsize", pixels);
+                addInput(subsection, name, "Box width", "boxwidth");
+                addSelect(subsection, name, "Fill opacity", "fillopacity", opacities);
+                addSelect(subsection, name, "Curve type", "curvetype", curvetypes);
+                addColorField(subsection, name, "Color", "color");
+            }
+            function setValuesForSection(name, interval){
+                var style = interval.style || 'auto';
+                var linewidth = interval.lineWidth;
+                if (linewidth === undefined){
+                    linewidth = 'auto';
+                }
+                else {
+                    linewidth = linewidth.toString() + "px";
+                }
+                var barwidth = interval.barWidth || '';
+                var pointsize = interval.pointSize;
+                if (pointsize === undefined){
+                    pointsize = 'auto';
+                }
+                else {
+                    pointsize = pointsize.toString() + "px";
+                }
+                var boxwidth = interval.boxWidth || '';
+                var fillopacity = interval.fillOpacity;
+                if (fillopacity === undefined){
+                    fillopacity = 'auto';
+                }
+
+                var curvetype = interval.curveType;
+                if (curvetype === undefined){
+                    curvetype = 'auto';
+                }
+
+                var color = interval.color;
+                colorTitle = color;
+                if (colorTitle === undefined){
+                    colorTitle = 'Automatic';
+                    color = "#FFFFFF";
+                }
+
+                jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-style").attr("value", style);
+                jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-linewidth").attr("value", linewidth);
+                jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-barwidth").attr("value", barwidth);
+                jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-pointsize").attr("value", pointsize);
+                jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-boxwidth").attr("value", boxwidth);
+                jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-fillopacity").attr("value", fillopacity);
+                jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-curvetype").attr("value", curvetype);
+                jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-color")
+                    .attr("title", colorTitle);
+                jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-color").find(".charts-flat-menu-button-indicator")
+                    .css("background-color", color);
+            }
+            function getValuesForSection(name){
+                var style = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-style").attr("value");
+                var linewidth = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-linewidth").attr("value");
+                var barwidth = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-barwidth").attr("value");
+                var pointsize = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-pointsize").attr("value");
+                var boxwidth = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-boxwidth").attr("value");
+                var fillopacity = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-fillopacity").attr("value");
+                var curvetype = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-curvetype").attr("value");
+                var color = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-color").attr("title");
+                var interval = {};
+                if (style !== "auto"){
+                    interval.style = style;
+                    if (linewidth !== "auto"){
+                        interval.lineWidth = parseInt(linewidth, 10);
+                    }
+                    if (barwidth !== ""){
+                        interval.barWidth = parseFloat(barwidth);
+                        jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-barwidth").attr("value", parseFloat(barwidth));
+                    }
+                    if (pointsize !== "auto"){
+                        interval.pointSize = parseInt(pointsize, 10);
+                    }
+                    if (boxwidth !== ""){
+                        interval.boxWidth = parseFloat(boxwidth);
+                        jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-boxwidth").attr("value", parseFloat(boxwidth));
+                    }
+                    if (fillopacity !== "auto"){
+                        interval.fillOpacity = parseFloat(fillopacity);
+                    }
+                    if (curvetype !== "auto"){
+                        interval.curveType = curvetype;
+                    }
+
+                    if (color !== "Automatic"){
+                        interval.color = color;
+                    }
+                }
+                return interval;
+            }
             jQuery("<div>")
                 .addClass("google-visualization-charteditor-multi-section-title")
                 .text("Global settings")
@@ -1346,162 +1512,58 @@ function addIntervalConfig(){
                 .addClass("google-visualization-charteditor-section")
                 .appendTo(panel);
 
+            addSection(section, "global");
+
             jQuery("<div>")
-                .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                .text("Style")
-                .appendTo(section);
+                .addClass("google-visualization-charteditor-multi-section-title eea-googlechart-intervals-column-title")
+                .text("Columns")
+                .appendTo(panel);
+
             jQuery("<select>")
-                .addClass("eea-googlechart-intervals-style")
-                .addClass("eea-googlechart-intervals-config-value")
-                .addClass("eea-googlechart-global")
-                .addClass("eea-googlechart-select")
-                .appendTo(section);
+                .addClass("google-visualization-charteditor-multi-section-chooser")
+                .addClass("eea-googlechart-intervals-column-selector")
+                .appendTo(".eea-googlechart-intervals-column-title")
+                .change(function(){
+                    jQuery(".eea-googlechart-column-section")
+                        .removeClass("active");
 
-            section = jQuery("<div>")
-                .addClass("eea-googlechart-global-settings")
-                .appendTo(section)
-                .hide();
+                    jQuery(".eea-googlechart-column" + jQuery(this).attr("value"))
+                        .addClass("active");
+                });
 
-            jQuery("<div>")
-                .attr("style", "clear:both;")
-                .appendTo(section);
+            var chartColumns_str = jQuery("#googlechartid_tmp_chart .googlechart_columns").val();
 
-            jQuery("<div>")
-                .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                .text("Line thickness")
-                .appendTo(section);
-            jQuery("<select>")
-                .addClass("eea-googlechart-intervals-linewidth")
-                .addClass("eea-googlechart-intervals-config-value")
-                .addClass("eea-googlechart-global")
-                .addClass("eea-googlechart-select")
-                .appendTo(section);
+            var chartColumns = {};
+            if (chartColumns_str === ""){
+                chartColumns.original = {};
+                chartColumns.prepared = {};
+            }
+            else{
+                chartColumns = JSON.parse(chartColumns_str);
+            }
 
-            jQuery("<div>")
-                .attr("style", "clear:both;")
-                .appendTo(section);
-            jQuery("<div>")
-                .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                .text("Bar thickness")
-                .appendTo(section);
-            jQuery("<input type='text'>")
-                .addClass("eea-googlechart-intervals-barwidth")
-                .addClass("eea-googlechart-intervals-config-value")
-                .addClass("eea-googlechart-global")
-                .appendTo(section);
-
-            jQuery("<div>")
-                .attr("style", "clear:both;")
-                .appendTo(section);
-            jQuery("<div>")
-                .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                .text("Point size")
-                .appendTo(section);
-            jQuery("<select>")
-                .addClass("eea-googlechart-intervals-pointsize")
-                .addClass("eea-googlechart-intervals-config-value")
-                .addClass("eea-googlechart-global")
-                .addClass("eea-googlechart-select")
-                .appendTo(section);
-
-            jQuery("<div>")
-                .attr("style", "clear:both;")
-                .appendTo(section);
-            jQuery("<div>")
-                .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                .text("Box width")
-                .appendTo(section);
-            jQuery("<input type='text'>")
-                .addClass("eea-googlechart-intervals-boxwidth")
-                .addClass("eea-googlechart-intervals-config-value")
-                .addClass("eea-googlechart-global")
-                .appendTo(section);
-
-            jQuery("<div>")
-                .attr("style", "clear:both;")
-                .appendTo(section);
-            jQuery("<div>")
-                .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                .text("Fill opacity")
-                .appendTo(section);
-            jQuery("<select>")
-                .addClass("eea-googlechart-intervals-fillopacity")
-                .addClass("eea-googlechart-intervals-config-value")
-                .addClass("eea-googlechart-global")
-                .addClass("eea-googlechart-select")
-                .appendTo(section);
-
-            jQuery("<div>")
-                .attr("style", "clear:both;")
-                .appendTo(section);
-            jQuery("<div>")
-                .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                .text("Curve type")
-                .appendTo(section);
-            jQuery("<select>")
-                .addClass("eea-googlechart-intervals-curvetype")
-                .addClass("eea-googlechart-intervals-config-value")
-                .addClass("eea-googlechart-global")
-                .addClass("eea-googlechart-select")
-                .appendTo(section);
-
-            jQuery("<div>")
-                .attr("style", "clear:both;")
-                .appendTo(section);
-            jQuery("<div>")
-                .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                .text("Color")
-                .appendTo(section);
-            var colorcontainer = jQuery("<div>")
-                .addClass("eea-googlechart-intervals-color")
-                .addClass("eea-googlechart-intervals-config-value")
-                .addClass("eea-googlechart-global")
-                .addClass("charts-inline-block")
-                .attr("title","Automatic")
-                .appendTo(section);
-            jQuery("<div>")
-                .addClass("charts-flat-menu-button-indicator")
-                .appendTo(colorcontainer);
-            jQuery("<div>")
-                .addClass("eea-icon eea-icon-caret-down")
-                .appendTo(colorcontainer);
-
-            var styles = ["auto", "line", "bar", "boxes", "sticks", "points", "area"];
-            jQuery.each(styles, function(idx, style){
-                jQuery("<option>")
-                    .attr("value", style)
-                    .text(style)
-                    .appendTo(".eea-googlechart-intervals-style");
+            var intervalColumns = [];
+            jQuery.each(chartColumns.prepared, function(idx, prepared_column){
+                if ((prepared_column.role === 'interval') && (prepared_column.status === 1)){
+                    intervalColumns.push({"name":prepared_column.name, "label":prepared_column.fullname});
+                }
             });
 
-            var widths = ["auto", "0px", "1px", "2px", "3px", "4px", "5px", "6px", "7px", "8px", "9px", "10px"];
-            jQuery.each(widths, function(idx, width){
+            for (var i = 0; i < intervalColumns.length; i++){
                 jQuery("<option>")
-                    .attr("value", width)
-                    .text(width)
-                    .appendTo(".eea-googlechart-intervals-linewidth");
-                jQuery("<option>")
-                    .attr("value", width)
-                    .text(width)
-                    .appendTo(".eea-googlechart-intervals-pointsize");
-            });
+                    .attr("value", intervalColumns[i].name)
+                    .text(intervalColumns[i].label)
+                    .appendTo(".eea-googlechart-intervals-column-selector");
 
-            var opacities = ["auto", "0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1"];
-            jQuery.each(opacities, function(idx, opacity){
-                jQuery("<option>")
-                    .attr("value", opacity)
-                    .text(opacity)
-                    .appendTo(".eea-googlechart-intervals-fillopacity");
-            });
+                section = jQuery("<div>")
+                    .addClass("google-visualization-charteditor-section")
+                    .addClass("eea-googlechart-column-section")
+                    .addClass("eea-googlechart-column" + intervalColumns[i].name)
+                    .appendTo(panel);
 
-            var curvetypes = ["auto", "function"];
-            jQuery.each(curvetypes, function(idx, curvetype){
-                jQuery("<option>")
-                    .attr("value", curvetype)
-                    .text(curvetype)
-                    .appendTo(".eea-googlechart-intervals-curvetype");
-            });
-
+                addSection(section, intervalColumns[i].name);
+            }
+            jQuery(".eea-googlechart-intervals-column-selector").trigger("change");
             jQuery(".eea-googlechart-select").focus(function(){
                 jQuery(".eea-googlechart-intervals-color.selected")
                     .removeClass("selected");
@@ -1601,101 +1663,40 @@ function addIntervalConfig(){
             jQuery(".eea-googlechart-intervals-config-value").change(function(){
                 var options = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value"));
                 delete options.intervals;
-                var style = jQuery(".eea-googlechart-global.eea-googlechart-intervals-style").attr("value");
-                var linewidth = jQuery(".eea-googlechart-global.eea-googlechart-intervals-linewidth").attr("value");
-                var barwidth = jQuery(".eea-googlechart-global.eea-googlechart-intervals-barwidth").attr("value");
-                var pointsize = jQuery(".eea-googlechart-global.eea-googlechart-intervals-pointsize").attr("value");
-                var boxwidth = jQuery(".eea-googlechart-global.eea-googlechart-intervals-boxwidth").attr("value");
-                var fillopacity = jQuery(".eea-googlechart-global.eea-googlechart-intervals-fillopacity").attr("value");
-                var curvetype = jQuery(".eea-googlechart-global.eea-googlechart-intervals-curvetype").attr("value");
-                var color = jQuery(".eea-googlechart-global.eea-googlechart-intervals-color").attr("title");
-                if (style !== "auto"){
+                options.interval = {};
+                var globalinterval = getValuesForSection("global");
+                if (globalinterval.style !== undefined){
                     jQuery(".eea-googlechart-global-settings")
                         .show();
-                    options.intervals = {};
-                    options.intervals.style = style;
-                    if (linewidth !== "auto"){
-                        options.intervals.lineWidth = parseInt(linewidth, 10);
-                    }
-                    if (barwidth !== ""){
-                        options.intervals.barWidth = parseFloat(barwidth);
-                        jQuery(".eea-googlechart-global.eea-googlechart-intervals-barwidth").attr("value", parseFloat(barwidth));
-                    }
-                    if (pointsize !== "auto"){
-                        options.intervals.pointSize = parseInt(pointsize, 10);
-                    }
-                    if (boxwidth !== ""){
-                        options.intervals.boxWidth = parseFloat(boxwidth);
-                        jQuery(".eea-googlechart-global.eea-googlechart-intervals-boxwidth").attr("value", parseFloat(boxwidth));
-                    }
-                    if (fillopacity !== "auto"){
-                        options.intervals.fillOpacity = parseFloat(fillopacity);
-                    }
-                    if (curvetype !== "auto"){
-                        options.intervals.curveType = curvetype;
-                    }
-
-                    if (color !== "Automatic"){
-                        options.intervals.color = color;
-                    }
+                    options.intervals = globalinterval;
                 }
                 else{
                     jQuery(".eea-googlechart-global-settings")
                         .hide();
                 }
-
+                for (var i = 0; i < intervalColumns.length; i++){
+                    var interval = getValuesForSection(intervalColumns[i].name);
+                    if (interval.style !== undefined){
+                        jQuery(".eea-googlechart-" + intervalColumns[i].name + "-settings")
+                            .show();
+                        options.interval[intervalColumns[i].name] = interval;
+                    }
+                    else{
+                        jQuery(".eea-googlechart-" + intervalColumns[i].name + "-settings")
+                            .hide();
+                    }
+                }
                 jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value", JSON.stringify(options));
                 redrawEditorChart();
 
             });
 
             var options = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value"));
+            setValuesForSection("global", options.intervals || {});
 
-            var style = (options.intervals || {}).style || 'auto';
-            var linewidth = (options.intervals || {}).lineWidth;
-            if (linewidth === undefined){
-                linewidth = 'auto';
-            }
-            else {
-                linewidth = linewidth.toString() + "px";
-            }
-            var barwidth = (options.intervals || {}).barWidth || '';
-            var pointsize = (options.intervals || {}).pointSize;
-            if (pointsize === undefined){
-                pointsize = 'auto';
-            }
-            else {
-                pointsize = pointsize.toString() + "px";
-            }
-            var boxwidth = (options.intervals || {}).boxWidth || '';
-            var fillopacity = (options.intervals || {}).fillOpacity;
-            if (fillopacity === undefined){
-                fillopacity = 'auto';
-            }
-
-            var curvetype = (options.intervals || {}).curveType;
-            if (curvetype === undefined){
-                curvetype = 'auto';
-            }
-
-            var color = (options.intervals || {}).color;
-            colorTitle = color;
-            if (colorTitle === undefined){
-                colorTitle = 'Automatic';
-                color = "#FFFFFF";
-            }
-
-            jQuery(".eea-googlechart-global.eea-googlechart-intervals-style").attr("value", style);
-            jQuery(".eea-googlechart-global.eea-googlechart-intervals-linewidth").attr("value", linewidth);
-            jQuery(".eea-googlechart-global.eea-googlechart-intervals-barwidth").attr("value", barwidth);
-            jQuery(".eea-googlechart-global.eea-googlechart-intervals-pointsize").attr("value", pointsize);
-            jQuery(".eea-googlechart-global.eea-googlechart-intervals-boxwidth").attr("value", boxwidth);
-            jQuery(".eea-googlechart-global.eea-googlechart-intervals-fillopacity").attr("value", fillopacity);
-            jQuery(".eea-googlechart-global.eea-googlechart-intervals-curvetype").attr("value", curvetype);
-            jQuery(".eea-googlechart-global.eea-googlechart-intervals-color")
-                .attr("title", colorTitle);
-            jQuery(".eea-googlechart-global.eea-googlechart-intervals-color").find(".charts-flat-menu-button-indicator")
-                .css("background-color", color);
+            jQuery.each(options.interval || {}, function(name, settings){
+                setValuesForSection(name, settings || {});
+            });
 
             jQuery(".eea-googlechart-intervals-config-value").eq(0).change();
         });
@@ -2438,7 +2439,9 @@ function chartEditorSave(id){
             if (!(tree instanceof Array)){
                 var node = settings_json.options;
                 for (var i = 0; i < path.length - 1; i++){
-                    node = node[path[i]];
+                    if (node !== undefined){
+                        node = node[path[i]];
+                    }
                 }
                 if (node !== undefined){
                     delete node[path[path.length - 1]];
