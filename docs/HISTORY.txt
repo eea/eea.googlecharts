@@ -1,6 +1,9 @@
 Changelog
 =========
 
+9.6-dev - (unreleased)
+----------------------
+
 9.5 - (2014-02-13)
 ------------------
 * Bugfix: embedded googlechart-notes now have the same font-size as non embedded
