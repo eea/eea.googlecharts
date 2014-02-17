@@ -1782,7 +1782,8 @@ div.googlechartarea-input {
     display:none !important;
 }
 
-#google-visualization-charteditor-intervals-panel .google-visualization-charteditor-section{
+#google-visualization-charteditor-palette-panel .google-visualization-charteditor-section,
+#google-visualization-charteditor-interval-panel .google-visualization-charteditor-section{
     margin-top: -1px;
     width: 244px;
     border: 1px solid #e5e5e5;
@@ -1790,7 +1791,8 @@ div.googlechartarea-input {
     padding: 10px 10px 20px;
 }
 
-.eea-googlechart-intervals-config-value{
+.eea-googlechart-intervals-config-value,
+.eea-googlechart-colorpalettes-config-value{
     width:auto;
     float:right;
     border: 1px solid #dcdcdc !important;
@@ -1871,5 +1873,24 @@ input[type=text].eea-googlechart-intervals-config-value{
 
 .eea-googlechart-intervals-column-selector {
     float:right;
-    width:180px !important;
+    width:330px !important;
+}
+
+.google-visualization-charteditor-settings-td{
+    width: 500px !important;
+}
+
+#google-visualization-charteditor-panel-wrapper,
+#google-visualization-charteditor-panel-navigate-div,
+.google-visualization-charteditor-panel,
+.google-visualization-charteditor-section {
+    width: auto !important;
+}
+
+.google-visualization-charteditor-multi-section-title {
+    width: 400px !important;
+}
+
+#googlechart_palette_select {
+    display: none;
 }

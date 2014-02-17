@@ -1317,16 +1317,71 @@ function redrawEditorChart() {
     updateEditorColors();
 }
 
-function addIntervalConfig(){
+function updatePalette() {
+    var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
+
+    jQuery(".googlechart_preview_color").remove();
+    var selectedPalette = chartPalettes[selectedPaletteId].colors;
+    jQuery(selectedPalette).each(function(idx, color){
+        var tmp_color = "<div class='googlechart_preview_color' style='background-color:"+color+"'> </div>";
+        jQuery(tmp_color).appendTo("#googlechart_preview_palette");
+        jQuery(tmp_color).appendTo("#googlechart_preview_palette_editor");
+    });
+    var clear = "<div style='clear:both;'> </div>";
+    jQuery(clear).appendTo("#googlechart_preview_palette");
+    jQuery(clear).appendTo("#googlechart_preview_palette_editor");
+
+    var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
+    var options_json = JSON.parse(options_str);
+
+    var newColors = [];
+    jQuery(selectedPalette).each(function(idx, color){
+        newColors.push(color);
+    });
+    options_json.colors = newColors;
+    var options_str2 = JSON.stringify(options_json);
+
+    jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value", options_str2);
+
+    jQuery("#googlechartid_tmp_chart").find(".googlechart_paletteid").attr("value",selectedPaletteId);
+    if (chartEditor){
+        redrawEditorChart();
+    }
+}
+
+function addEEACustomGooglechartEditorSelect(section, sectionname, title, name, values){
     jQuery("<div>")
+        .addClass("google-visualization-charteditor-section-title charts-inline-block")
+        .text(title)
+        .appendTo(section);
+    jQuery("<select>")
+        .addClass("eea-googlechart-intervals-" + name)
+        .addClass("eea-googlechart-intervals-config-value")
+        .addClass("eea-googlechart-" + sectionname)
+        .addClass("eea-googlechart-select")
+        .appendTo(section);
+    jQuery("<div>")
+        .attr("style", "clear:both;")
+        .appendTo(section);
+
+    jQuery.each(values, function(idx, value){
+        jQuery("<option>")
+            .attr("value", value)
+            .text(value)
+            .appendTo(".eea-googlechart-"+sectionname+".eea-googlechart-intervals-" + name);
+        });
+}
+
+function addEEACustomGooglechartEditorTab(id, name){
+    var div = jQuery("<div>")
         .addClass("google-visualization-charteditor-panel-navigation-cell charts-inline-block charts-tab")
         .attr("aria-selected", "false")
         .attr("role", "tab")
-        .text("Intervals")
-        .attr("id", "custom-interval-configurator")
-        .appendTo("#google-visualization-charteditor-panel-navigate-div")
+        .text(name)
+        .attr("id", "custom-" + id + "-configurator")
         .hover(function(){jQuery(this).addClass("charts-tab-hover");})
         .mouseout(function(){jQuery(this).removeClass("charts-tab-hover");})
+        .appendTo("#google-visualization-charteditor-panel-navigate-div")
         .click(function(){
             jQuery(".google-visualization-charteditor-panel-navigation-cell")
                 .removeClass("charts-tab-selected")
@@ -1334,36 +1389,84 @@ function addIntervalConfig(){
             jQuery(this)
                 .addClass("charts-tab-selected")
                 .attr("aria-selected", "true");
-            var panel = jQuery(".google-visualization-charteditor-panel")
+            jQuery(".google-visualization-charteditor-panel")
                 .eq(0)
                 .empty()
                 .addClass("jfk-scrollbar")
-                .attr("id", "google-visualization-charteditor-intervals-panel");
+                .attr("id", "google-visualization-charteditor-" + id + "-panel");
+        });
+    jQuery(".google-visualization-charteditor-panel-navigation-cell").click(function(){
+        if (jQuery(this).attr("id") !== "custom-" + id + "-configurator"){
+            jQuery("#custom-" + id + "-configurator")
+                .removeClass("charts-tab-selected")
+                .attr("aria-selected", "false");
 
+            jQuery(this)
+                .addClass("charts-tab-selected")
+                .attr("aria-selected", "true");
+
+        }
+    });
+    return div;
+}
+
+function addPaletteConfig(){
+    var section = addEEACustomGooglechartEditorTab("palette", "Color palette");
+    section.click(function(){
+            var panel = jQuery("#google-visualization-charteditor-palette-panel");
+            jQuery("<div>")
+                .addClass("google-visualization-charteditor-multi-section-title eea-googlechart-palette-title")
+                .text("Palettes")
+                .appendTo(panel);
+
+            var section = jQuery("<div>")
+                .addClass("google-visualization-charteditor-section")
+                .appendTo(panel);
+
+            jQuery("<div>")
+                .addClass("google-visualization-charteditor-section-title charts-inline-block")
+                .text("Select palette")
+                .appendTo(section);
+
+            jQuery("<select>")
+                .addClass("eea-googlechart-colorpalettes")
+                .addClass("eea-googlechart-colorpalettes-config-value")
+                .addClass("eea-googlechart-select")
+                .change(function(){
+                    jQuery("#googlechart_palettes").attr("value", jQuery(this).attr("value"));
+                    updatePalette();
+                })
+                .appendTo(section);
+
+            jQuery("<div>")
+                .attr("style", "clear:both;")
+                .appendTo(section);
+
+            jQuery.each(chartPalettes, function(key, value){
+                jQuery("<option>")
+                    .attr("value", key)
+                    .text(value.name)
+                    .appendTo(".eea-googlechart-colorpalettes");
+                });
+            jQuery("<div>")
+                .attr("id", "googlechart_preview_palette_editor")
+                .appendTo(section);
+            jQuery(".eea-googlechart-colorpalettes-config-value").attr("value", jQuery("#googlechart_palettes").attr("value"));
+            updatePalette();
+    });
+}
+
+function addTrendlineConfig(){
+    addEEACustomGooglechartEditorTab("trendlines", "Trendlines");
+
+}
+
+function addIntervalConfig(){
+    var section = addEEACustomGooglechartEditorTab("interval", "Intervals");
+
+    section.click(function(){
+            var panel = jQuery("#google-visualization-charteditor-interval-panel");
             function addSection(section, name){
-                function addSelect(section, sectionname, title, name, values){
-                    jQuery("<div>")
-                        .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                        .text(title)
-                        .appendTo(section);
-                    jQuery("<select>")
-                        .addClass("eea-googlechart-intervals-" + name)
-                        .addClass("eea-googlechart-intervals-config-value")
-                        .addClass("eea-googlechart-" + sectionname)
-                        .addClass("eea-googlechart-select")
-                        .appendTo(section);
-                    jQuery("<div>")
-                        .attr("style", "clear:both;")
-                        .appendTo(section);
-
-                    jQuery.each(values, function(idx, value){
-                        jQuery("<option>")
-                            .attr("value", value)
-                            .text(value)
-                            .appendTo(".eea-googlechart-"+sectionname+".eea-googlechart-intervals-" + name);
-                    });
-
-                }
                 function addInput(section, sectionname, title, name){
                     jQuery("<div>")
                         .addClass("google-visualization-charteditor-section-title charts-inline-block")
@@ -1404,18 +1507,18 @@ function addIntervalConfig(){
                 var opacities = ["auto", "0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1"];
                 var curvetypes = ["auto", "function"];
 
-                addSelect(section, name, "Style", "style", styles);
+                addEEACustomGooglechartEditorSelect(section, name, "Style", "style", styles);
                 var subsection = jQuery("<div>")
                     .addClass("eea-googlechart-" + name + "-settings")
                     .appendTo(section)
                     .hide();
 
-                addSelect(subsection, name, "Line thickness", "linewidth", pixels);
+                addEEACustomGooglechartEditorSelect(subsection, name, "Line thickness", "linewidth", pixels);
                 addInput(subsection, name, "Bar thickness", "barwidth");
-                addSelect(subsection, name, "Point size", "pointsize", pixels);
+                addEEACustomGooglechartEditorSelect(subsection, name, "Point size", "pointsize", pixels);
                 addInput(subsection, name, "Box width", "boxwidth");
-                addSelect(subsection, name, "Fill opacity", "fillopacity", opacities);
-                addSelect(subsection, name, "Curve type", "curvetype", curvetypes);
+                addEEACustomGooglechartEditorSelect(subsection, name, "Fill opacity", "fillopacity", opacities);
+                addEEACustomGooglechartEditorSelect(subsection, name, "Curve type", "curvetype", curvetypes);
                 addColorField(subsection, name, "Color", "color");
             }
             function setValuesForSection(name, interval){
@@ -1700,19 +1803,6 @@ function addIntervalConfig(){
 
             jQuery(".eea-googlechart-intervals-config-value").eq(0).change();
         });
-
-    jQuery(".google-visualization-charteditor-panel-navigation-cell").click(function(){
-        if (jQuery(this).attr("id") !== "custom-interval-configurator"){
-            jQuery("#custom-interval-configurator")
-                .removeClass("charts-tab-selected")
-                .attr("aria-selected", "false");
-
-            jQuery(this)
-                .addClass("charts-tab-selected")
-                .attr("aria-selected", "true");
-
-        }
-    });
 }
 
 function openEditor(elementId) {
@@ -1860,6 +1950,8 @@ function openEditor(elementId) {
 
     setTimeout(function(){
         chartEditor.openDialog(chartWrapper, {});
+        addPaletteConfig();
+        addTrendlineConfig();
         if (shouldAddIntervalsToEditor){
             addIntervalConfig();
         }
@@ -2496,35 +2588,6 @@ function chartEditorCancel(){
     editorDialog.close();
 }
 
-function updatePalette() {
-    var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
-
-    jQuery(".googlechart_preview_color").remove();
-    var selectedPalette = chartPalettes[selectedPaletteId].colors;
-    jQuery(selectedPalette).each(function(idx, color){
-        var tmp_color = "<div class='googlechart_preview_color' style='background-color:"+color+"'> </div>";
-        jQuery(tmp_color).appendTo("#googlechart_preview_palette");
-    });
-    var clear = "<div style='clear:both;'> </div>";
-    jQuery(clear).appendTo("#googlechart_preview_palette");
-
-    var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
-    var options_json = JSON.parse(options_str);
-
-    var newColors = [];
-    jQuery(selectedPalette).each(function(idx, color){
-        newColors.push(color);
-    });
-    options_json.colors = newColors;
-    var options_str2 = JSON.stringify(options_json);
-
-    jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value", options_str2);
-
-    jQuery("#googlechartid_tmp_chart").find(".googlechart_paletteid").attr("value",selectedPaletteId);
-    if (chartEditor){
-        redrawEditorChart();
-    }
-}
 
 function updateMatrixChartScrolls(){
     var pos = jQuery(".matrixCharts_zone").position();
@@ -4755,7 +4818,7 @@ function init_googlecharts_edit(){
 
 function overrideGooglePalette(){
     jQuery(document).delegate(".google-visualization-charteditor-panel-navigation-cell", "click", function(){
-        if (jQuery(this).attr("id") === "custom-interval-configurator"){
+        if (jQuery.inArray(jQuery(this).attr("id"), ["custom-interval-configurator", "custom-palette-configurator", "custom-trendlines-configurator"]) !== -1){
             return;
         }
         backupColors = [];
@@ -4865,6 +4928,11 @@ function overrideGooglePalette(){
         jQuery.extend(true, chartOptions, extraConfig.options);
         jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value", JSON.stringify(chartOptions));
         redrawEditorChart();
+    });
+    jQuery(document).click(function(evt){
+        if (jQuery(evt.target).closest(".eea-googlechart-intervals-color").length === 0){
+            jQuery(".eea-googlechart-intervals-colorpalette").remove();
+        }
     });
 }
 
