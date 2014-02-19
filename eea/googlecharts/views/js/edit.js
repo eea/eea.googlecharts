@@ -1349,28 +1349,6 @@ function updatePalette() {
     }
 }
 
-function addEEACustomGooglechartEditorSelect(section, sectionname, title, name, values){
-    jQuery("<div>")
-        .addClass("google-visualization-charteditor-section-title charts-inline-block")
-        .text(title)
-        .appendTo(section);
-    jQuery("<select>")
-        .addClass("eea-googlechart-intervals-" + name)
-        .addClass("eea-googlechart-intervals-config-value")
-        .addClass("eea-googlechart-" + sectionname)
-        .addClass("eea-googlechart-select")
-        .appendTo(section);
-    jQuery("<div>")
-        .attr("style", "clear:both;")
-        .appendTo(section);
-
-    jQuery.each(values, function(idx, value){
-        jQuery("<option>")
-            .attr("value", value)
-            .text(value)
-            .appendTo(".eea-googlechart-"+sectionname+".eea-googlechart-intervals-" + name);
-        });
-}
 
 function addEEACustomGooglechartEditorTab(id, name){
     var div = jQuery("<div>")
@@ -1383,6 +1361,7 @@ function addEEACustomGooglechartEditorTab(id, name){
         .mouseout(function(){jQuery(this).removeClass("charts-tab-hover");})
         .appendTo("#google-visualization-charteditor-panel-navigate-div")
         .click(function(){
+            var selected_panel = jQuery(".panel-container").find(".charts-tab-selected").eq(0);
             jQuery(".google-visualization-charteditor-panel-navigation-cell")
                 .removeClass("charts-tab-selected")
                 .attr("aria-selected", "false");
@@ -1394,8 +1373,11 @@ function addEEACustomGooglechartEditorTab(id, name){
                 .empty()
                 .addClass("jfk-scrollbar")
                 .attr("id", "google-visualization-charteditor-" + id + "-panel");
+            selected_panel
+                .attr("aria-selected", "true")
+                .addClass("charts-tab-selected");
         });
-    jQuery(".google-visualization-charteditor-panel-navigation-cell").click(function(){
+    jQuery(".google-visualization-charteditor-settings-td .google-visualization-charteditor-panel-navigation-cell").click(function(){
         if (jQuery(this).attr("id") !== "custom-" + id + "-configurator"){
             jQuery("#custom-" + id + "-configurator")
                 .removeClass("charts-tab-selected")
@@ -1457,8 +1439,126 @@ function addPaletteConfig(){
 }
 
 function addTrendlineConfig(){
-    addEEACustomGooglechartEditorTab("trendlines", "Trendlines");
+    var section = addEEACustomGooglechartEditorTab("trendlines", "Trendlines");
+    section.click(function(){
+        var panel = jQuery("#google-visualization-charteditor-trendlines-panel");
+        function addSection(section, name){
+            function addSelect(section, sectionname, title, name, values){
+                jQuery("<div>")
+                    .addClass("google-visualization-charteditor-section-title charts-inline-block")
+                    .text(title)
+                    .appendTo(section);
+                jQuery("<select>")
+                    .addClass("eea-googlechart-trendlines-" + name)
+                    .addClass("eea-googlechart-trendlines-config-value")
+                    .addClass("eea-googlechart-" + sectionname)
+                    .addClass("eea-googlechart-select")
+                    .appendTo(section);
+                jQuery("<div>")
+                    .attr("style", "clear:both;")
+                    .appendTo(section);
 
+                jQuery.each(values, function(idx, value){
+                    jQuery("<option>")
+                        .attr("value", value)
+                        .text(value)
+                        .appendTo(".eea-googlechart-"+sectionname+".eea-googlechart-trendlines-" + name);
+                });
+            }
+            function addInput(section, sectionname, title, name){
+                jQuery("<div>")
+                    .addClass("google-visualization-charteditor-section-title charts-inline-block")
+                    .text(title)
+                    .appendTo(section);
+                jQuery("<input type='text'>")
+                    .addClass("eea-googlechart-trendlines-" + name)
+                    .addClass("eea-googlechart-trendlines-config-value")
+                    .addClass("eea-googlechart-" + sectionname)
+                    .appendTo(section);
+
+                jQuery("<div>")
+                    .attr("style", "clear:both;")
+                    .appendTo(section);
+            }
+            function addColorField(section, sectionname, title, name){
+                jQuery("<div>")
+                    .addClass("google-visualization-charteditor-section-title charts-inline-block")
+                    .text(title)
+                    .appendTo(section);
+                var colorcontainer = jQuery("<div>")
+                    .addClass("eea-googlechart-trendlines-" + name)
+                    .addClass("eea-googlechart-trendlines-config-value")
+                    .addClass("eea-googlechart-" + sectionname)
+                    .addClass("charts-inline-block")
+                    .attr("title","Automatic")
+                    .appendTo(section);
+                jQuery("<div>")
+                    .addClass("charts-flat-menu-button-indicator")
+                    .appendTo(colorcontainer);
+                jQuery("<div>")
+                    .addClass("eea-icon eea-icon-caret-down")
+                    .appendTo(colorcontainer);
+            }
+//            addSelect(section, name, "Style", "style")
+        }
+        function setValuesForSection(name, trendline){
+        
+        }
+        function getValuesForSection(name){
+        
+        }
+
+        jQuery("<div>")
+            .addClass("google-visualization-charteditor-multi-section-title eea-googlechart-trendlines-column-title")
+            .text("Columns")
+            .appendTo(panel);
+
+        jQuery("<select>")
+            .addClass("google-visualization-charteditor-multi-section-chooser")
+            .addClass("eea-googlechart-trendlines-column-selector")
+            .appendTo(".eea-googlechart-trendlines-column-title")
+            .change(function(){
+                jQuery(".eea-googlechart-column-section")
+                    .removeClass("active");
+
+                jQuery(".eea-googlechart-column" + jQuery(this).attr("value"))
+                    .addClass("active");
+            });
+
+        var chartColumns_str = jQuery("#googlechartid_tmp_chart .googlechart_columns").val();
+
+        var chartColumns = {};
+        if (chartColumns_str === ""){
+            chartColumns.original = {};
+            chartColumns.prepared = {};
+        }
+        else{
+            chartColumns = JSON.parse(chartColumns_str);
+        }
+
+        var columns = [];
+        jQuery.each(chartColumns.prepared, function(idx, prepared_column){
+            if (prepared_column.status === 1){
+                columns.push({"name":prepared_column.name, "label":prepared_column.fullname});
+            }
+        });
+        for (var i = 0; i < columns.length; i++){
+            jQuery("<option>")
+                .attr("value", columns[i].name)
+                .text(columns[i].label)
+                .appendTo(".eea-googlechart-trendlines-column-selector");
+
+            section = jQuery("<div>")
+                .addClass("google-visualization-charteditor-section")
+                .addClass("eea-googlechart-column-section")
+                .addClass("eea-googlechart-column" + columns[i].name)
+                .appendTo(panel);
+
+//            addSection(section, columns[i].name);
+        }
+
+
+    });
 }
 
 function addIntervalConfig(){
@@ -1467,6 +1567,28 @@ function addIntervalConfig(){
     section.click(function(){
             var panel = jQuery("#google-visualization-charteditor-interval-panel");
             function addSection(section, name){
+                function addSelect(section, sectionname, title, name, values){
+                    jQuery("<div>")
+                        .addClass("google-visualization-charteditor-section-title charts-inline-block")
+                        .text(title)
+                        .appendTo(section);
+                    jQuery("<select>")
+                        .addClass("eea-googlechart-intervals-" + name)
+                        .addClass("eea-googlechart-intervals-config-value")
+                        .addClass("eea-googlechart-" + sectionname)
+                        .addClass("eea-googlechart-select")
+                        .appendTo(section);
+                    jQuery("<div>")
+                        .attr("style", "clear:both;")
+                        .appendTo(section);
+
+                    jQuery.each(values, function(idx, value){
+                        jQuery("<option>")
+                            .attr("value", value)
+                            .text(value)
+                            .appendTo(".eea-googlechart-"+sectionname+".eea-googlechart-intervals-" + name);
+                    });
+                }
                 function addInput(section, sectionname, title, name){
                     jQuery("<div>")
                         .addClass("google-visualization-charteditor-section-title charts-inline-block")
@@ -1500,25 +1622,24 @@ function addIntervalConfig(){
                     jQuery("<div>")
                         .addClass("eea-icon eea-icon-caret-down")
                         .appendTo(colorcontainer);
-
                 }
                 var styles = ["auto", "line", "bar", "boxes", "sticks", "points", "area"];
                 var pixels = ["auto", "0px", "1px", "2px", "3px", "4px", "5px", "6px", "7px", "8px", "9px", "10px"];
                 var opacities = ["auto", "0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1"];
                 var curvetypes = ["auto", "function"];
 
-                addEEACustomGooglechartEditorSelect(section, name, "Style", "style", styles);
+                addSelect(section, name, "Style", "style", styles);
                 var subsection = jQuery("<div>")
                     .addClass("eea-googlechart-" + name + "-settings")
                     .appendTo(section)
                     .hide();
 
-                addEEACustomGooglechartEditorSelect(subsection, name, "Line thickness", "linewidth", pixels);
+                addSelect(subsection, name, "Line thickness", "linewidth", pixels);
                 addInput(subsection, name, "Bar thickness", "barwidth");
-                addEEACustomGooglechartEditorSelect(subsection, name, "Point size", "pointsize", pixels);
+                addSelect(subsection, name, "Point size", "pointsize", pixels);
                 addInput(subsection, name, "Box width", "boxwidth");
-                addEEACustomGooglechartEditorSelect(subsection, name, "Fill opacity", "fillopacity", opacities);
-                addEEACustomGooglechartEditorSelect(subsection, name, "Curve type", "curvetype", curvetypes);
+                addSelect(subsection, name, "Fill opacity", "fillopacity", opacities);
+                addSelect(subsection, name, "Curve type", "curvetype", curvetypes);
                 addColorField(subsection, name, "Color", "color");
             }
             function setValuesForSection(name, interval){
@@ -1949,6 +2070,9 @@ function openEditor(elementId) {
     moveIfFirst();
 
     setTimeout(function(){
+        jQuery("#custom-palette-configurator").remove();
+        jQuery("#custom-trendlines-configurator").remove();
+        jQuery("#custom-interval-configurator").remove();
         chartEditor.openDialog(chartWrapper, {});
         addPaletteConfig();
         addTrendlineConfig();
@@ -3068,14 +3192,15 @@ function columnsMatrixChart(chartType){
 }
 function resizeTableConfigurator(forced){
     if ((jQuery(".googlechart_table_config_scaleable_maximized").length > 0) || forced){
+        var fullwidth = jQuery(".googlecharts-customdialog").width();
         var fullheight = jQuery(".googlecharts_columns_config").height();
-        var container_heightstr = 'height:'+(fullheight-200)+'px;';
-        var accordion_heightstr = 'height:'+(fullheight-200)+'px;';
-        var accordion_container_heightstr = 'height:'+(fullheight-200)+'px;';
+        var container_heightstr = 'height:'+(fullheight-100)+'px;width:'+(fullwidth-340)+'px;';
+        var accordion_heightstr = 'height:'+(fullheight-100)+'px;width:'+(fullwidth-340)+'px;';
+        var accordion_container_heightstr = 'height:'+(fullheight-100)+'px;width:'+(fullwidth-340)+'px;';
         jQuery(".googlechart_table_config_scaleable").attr("style",container_heightstr);
         jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
         jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
-        jQuery("#newTable").height(fullheight-250);
+        jQuery("#newTable").height(fullheight-210);
         grid.resizeCanvas();
     }
 }
@@ -3316,6 +3441,7 @@ function openEditChart(id){
     var editcolumnsdialog = jQuery(
     '<div class="googlecharts_columns_config">' +
 //        '<div id="googlechart_overlay" style="display:none; background: transparent;"><div class="contentWrap" style="width:200px;height:200px; border:1px solid red; background-color:#fff">xxx</div></div>'+
+        '<div class="googlechart_chart_config_info hint"><span class="eea-icon eea-icon-info-circle"></span>Each chart requires a specific data layout. If chart does not become available you should go to \'Data selection for chart\' <br/>and re-order/hide columns accordingly. You may also need to rotate the table (pivot/unpivot).</div>'+
         '<div class="chart_config_tabs" style="padding-top:10px;">'+
 //            '<div class="googlechart_maximize_chart_config googlechart_config_head googlechart_config_head_selected" style="float:left">Chart Settings</div>'+
 //            '<div class="googlechart_maximize_table_config googlechart_config_head" style="float:left;left:344px" title="Click to enlarge Data selection for chart">Data selection for chart</div>'+
@@ -3327,12 +3453,13 @@ function openEditChart(id){
             "</div>"+
         '</div>'+
         "<div style='clear:both;'> </div>" +
-        '<div class="googlechart_config_clickable googlechart_chart_config_clickable googlechart_maximize_chart_config googlechart_config_head_selected">Chart settings</div>' +
-        '<div class="googlechart_config_clickable googlechart_table_config_clickable googlechart_maximize_table_config" title="Click to enlarge Data selection for chart">Data selection for chart</div>' +
+        '<div class="panel-container">'+
+            '<div class="google-visualization-charteditor-panel-navigation-cell charts-inline-block charts-tab googlechart_config_clickable googlechart_chart_config_clickable googlechart_maximize_chart_config googlechart_config_head_selected charts-tab-selected">Chart</div>' +
+            '<div class="google-visualization-charteditor-panel-navigation-cell charts-inline-block charts-tab googlechart_config_clickable googlechart_table_config_clickable googlechart_maximize_table_config" title="Click to enlarge Data selection for chart">Data selection for chart</div>' +
+        '</div>'+
 //        '<div class="googlechart_config_messagezone">'+
 //        '</div>'+
         '<div class="googlechart_chart_config_scaleable googlechart_chart_config_scaleable_maximized">'+
-            '<div class="googlechart_chart_config_info hint"><span class="eea-icon eea-icon-info-circle"></span>Each chart requires a specific data layout. If chart does not become available you should go to \'Data selection for chart\' and re-order/hide columns accordingly. You may also need to rotate the table (pivot/unpivot).</div>'+
             "<div style='clear:both;'> </div>" +
             '<div id="googlechartid_tmp_chart" style="float:left">' +
                 "<input class='googlechart_configjson' type='hidden'/>" +
@@ -3470,6 +3597,9 @@ function openEditChart(id){
     editcolumnsdialog.find(".googlechart_sortBy").attr("value", tmp_sortBy);
     editcolumnsdialog.find(".googlechart_sortAsc").attr("value", tmp_sortAsc);
     editcolumnsdialog.delegate(".googlechart_maximize_chart_config","click", function(){
+        jQuery(this).parent().find(".charts-tab-selected")
+            .removeClass("charts-tab-selected");
+        jQuery(this).addClass("charts-tab-selected")
         jQuery(".googlechart_table_config_scaleable").attr("style","");
         editcolumnsdialog.find(".googlechart_table_config_scaleable").removeClass("googlechart_table_config_scaleable_maximized").addClass("googlechart_table_config_scaleable_minimized");
         editcolumnsdialog.find(".googlechart_chart_config_scaleable").removeClass("googlechart_chart_config_scaleable_minimized").addClass("googlechart_chart_config_scaleable_maximized");
@@ -3481,6 +3611,9 @@ function openEditChart(id){
         jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_hover");
     });
     editcolumnsdialog.delegate(".googlechart_maximize_table_config","click", function(){
+        jQuery(this).parent().find(".charts-tab-selected")
+            .removeClass("charts-tab-selected");
+        jQuery(this).addClass("charts-tab-selected")
         resizeTableConfigurator(true);
         editcolumnsdialog.find(".googlechart_chart_config_scaleable").removeClass("googlechart_chart_config_scaleable_maximized").addClass("googlechart_chart_config_scaleable_minimized");
         editcolumnsdialog.find(".googlechart_table_config_scaleable").removeClass("googlechart_table_config_scaleable_minimized").addClass("googlechart_table_config_scaleable_maximized");
@@ -3515,9 +3648,12 @@ function openEditChart(id){
     var height = jQuery(window).height() * 0.95;
     editcolumnsdialog.CustomDialog({title:"Chart Editor",
                 dialogClass: 'googlecharts-customdialog',
-                width: width,
-                minWidth:990,
-                height: height,
+//                width: width,
+                width:950,
+                height:710,
+                minWidth:950,
+                minHeight:710,
+//                height: height,
                 close:function(){
                     jQuery(".slick-header-menu").remove();
                     charteditor_css.remove();
@@ -4817,7 +4953,7 @@ function init_googlecharts_edit(){
 }
 
 function overrideGooglePalette(){
-    jQuery(document).delegate(".google-visualization-charteditor-panel-navigation-cell", "click", function(){
+    jQuery(document).delegate(".google-visualization-charteditor-settings-td .google-visualization-charteditor-panel-navigation-cell", "click", function(){
         if (jQuery.inArray(jQuery(this).attr("id"), ["custom-interval-configurator", "custom-palette-configurator", "custom-trendlines-configurator"]) !== -1){
             return;
         }
@@ -4967,6 +5103,7 @@ DavizEdit.CustomDialog.prototype = {
             width : 600,
             height : 400,
             minWidth : 0,
+            minHeight : 0,
             create : function(){},
             close: function(){},
             resize: function(){},
@@ -4976,6 +5113,9 @@ DavizEdit.CustomDialog.prototype = {
         jQuery.extend(self.settings, options);
         if (self.settings.minWidth > self.settings.width){
             self.settings.width = self.settings.minWidth;
+        }
+        if (self.settings.minHeight > self.settings.height){
+            self.settings.height = self.settings.minHeight;
         }
         self.drawDialog();
     },
@@ -4993,7 +5133,7 @@ DavizEdit.CustomDialog.prototype = {
             .addClass("ui-widget-overlay ui-front")
             .appendTo("body");
         var dialog = jQuery("<div>")
-                        .addClass("ui-dialog ui-widget ui-widget-content ui-corner-all")
+                        .addClass("ui-dialog ui-widget ui-widget-content ui-corner-all eea-custom-dialog")
                         .addClass(self.settings.dialogClass)
                         .css("width", self.settings.width)
                         .css("height", self.settings.height)
@@ -5001,6 +5141,7 @@ DavizEdit.CustomDialog.prototype = {
                         .css("top", top)
                         .resizable({
                             minWidth:self.settings.minWidth,
+                            minHeight:self.settings.minHeight,
                             stop: function(){
                                 self.settings.resize();
                             },
@@ -5035,14 +5176,77 @@ DavizEdit.CustomDialog.prototype = {
                                     self.close();
                                 }
                             );
+        var resizeBtn = jQuery("<button>")
+                            .attr("title", "expand")
+                            .attr("role", "button")
+                            .addClass("ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-resize")
+                            .hover(
+                                function(){
+                                    jQuery(this)
+                                        .addClass("ui-state-hover ui-state-active");
+                                },
+                                function(){
+                                    jQuery(this)
+                                        .removeClass("ui-state-hover ui-state-active");
+                                }
+                            )
+                            .click(
+                                function(){
+                                    var width;
+                                    var height;
+                                    var windowWidth = jQuery(window).width();
+                                    var windowHeight = jQuery(window).height();
+                                    var windowTop = jQuery(window).scrollTop();
+                                    var windowLeft = jQuery(window).scrollLeft();
+                                    if (jQuery(this).find(".eea-icon").hasClass("eea-icon-expand")){
+                                        var width = windowWidth * 0.95;
+                                        var height = windowHeight * 0.95;
+                                        jQuery(this).find(".eea-icon")
+                                            .removeClass("eea-icon-expand")
+                                            .addClass("eea-icon-compress")
+                                        jQuery(this).find(".ui-button-text")
+                                            .text("compress");
+                                    }
+                                    else{
+                                        width = self.settings.width;
+                                        height = self.settings.height;
+                                        jQuery(this).find(".eea-icon")
+                                            .removeClass("eea-icon-compress")
+                                            .addClass("eea-icon-expand")
+                                        jQuery(this).find(".ui-button-text")
+                                            .text("expand");
+                                    }
+                                    var left = (windowWidth - width)/2 + windowLeft;
+                                    var top = (windowHeight - height)/2 + windowTop;
+                                    jQuery(".eea-custom-dialog")
+                                        .css("width", width)
+                                        .css("height", height)
+                                        .css("left", left)
+                                        .css("top", top);
+
+                                    jQuery(".custom-dialog-content")
+                                        .css("width", width-30)
+                                        .css("height", height-40);
+
+                                }
+                            );
+
         jQuery("<span>")
-            .addClass("ui-button-icon-primary ui-icon ui-icon-closethick")
+            .addClass("ui-button-icon-primary eea-icon eea-icon-times")
             .appendTo(closeBtn);
         jQuery("<span>")
             .addClass("ui-button-text")
             .text("close")
             .appendTo(closeBtn);
         closeBtn.appendTo(dialogHeader);
+        jQuery("<span>")
+            .addClass("ui-button-icon-primary eea-icon eea-icon-expand")
+            .appendTo(resizeBtn);
+        jQuery("<span>")
+            .addClass("ui-button-text")
+            .text("expand")
+            .appendTo(resizeBtn);
+        resizeBtn.appendTo(dialogHeader);
         self.context
                 .addClass("ui-dialog-content ui-widget-content custom-dialog-content")
                 .css("width",self.settings.width-30)

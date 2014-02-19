@@ -834,30 +834,43 @@ dl.portlet .dashboard-widget,
     position:absolute;
 }
 
-.googlechart_chart_config_scaleable_maximized {
-    top:190px;
-    width:98%;
-    border-top:1px solid black;
-    padding-top:5px;
+.googlechart_config_clickable:hover{
+    cursor:pointer !important;
+    color:#222 !important;
 }
 
-.googlechart_chart_config_scaleable_minimized {
-    transform: scale(0.3);
-    -ms-transform: scale(0.3); /* IE 9 */
-    -webkit-transform: scale(0.3); /* Safari and Chrome */
-    -o-transform: scale(0.3); /* Opera */
-    -moz-transform: scale(0.3); /* Firefox */
-    width:1068px !important;
-    height:405px !important;
-    top:-100px;
-    left:-360px;
+.googlechart_chart_config_scaleable_minimized #google-visualization-charteditor-preview-div-wrapper{
+    transform: scale(0.475);
+    -ms-transform: scale(0.475); /* IE 9 */
+    -o-transform: scale(0.475); /* Opera */
+    -moz-transform: scale(0.475); /* Firefox */
+    -webkit-transform: scale(0.475); /* Safari and Chrome */
+    margin-left: -453px;
+    margin-top: 305px;
+    border:3px solid #e4e4e4;
 }
+
+.googlechart_chart_config_scaleable_minimized .google-visualization-charteditor-preview-td{
+    overflow:visible;
+}
+
+.googlechart_table_config_scaleable_maximized.googlechart_table_config_scaleable {
+    z-index:9999;
+    left:308px;
+    top:94px;
+    border: 1px solid #e4e4e4;
+    padding: 5px;
+    overflow:hidden;
+}
+
+.googlechart_table_config_scaleable_minimized.googlechart_table_config_scaleable {
+    visibility:hidden;
+}
+
 
 .googlechart_table_config_scaleable_maximized {
     top:190px;
     width:98%;
-    border-top:1px solid black;
-    padding-top:5px;
 }
 
 .googlechart_table_config_scaleable_minimized {
@@ -872,55 +885,15 @@ dl.portlet .dashboard-widget,
     left:0px;
 }
 
+.panel-container{
+    position:absolute;
+    left:310px;
+    top:70px;
+    z-index:9999;
+}
 .googlechart_accordion_table{
     height:455px;
     overflow:auto;
-    margin-top:15px;
-}
-
-.googlechart_config_clickable{
-    position:absolute;
-    top:7px;
-    width:340px;
-    height:165px;
-    z-index:3000;
-    text-align:center;
-    font-size:20px;
-    padding-top:10px;
-    color:#515151;
-    cursor:pointer;
-}
-
-.googlechart_chart_config_clickable{
-    left:14px;
-    border:1px solid #CCC;
-}
-
-.googlechart_table_config_clickable{
-    left:360px;
-    border:1px solid #CCC;
-}
-
-.googlechart_config_head{
-    width:325px;
-    position:absolute;
-    border:1px solid #CCC;
-    border-bottom:1px solid white;
-    height:20px;
-    z-index:4000;
-    font-weight: normal;
-}
-
-.googlechart_config_head_selected {
-    font-weight: bold;
-    border:1px solid black;
-    border-bottom:1px solid white;
-    height:172px;
-}
-
-.googlechart_config_hover{
-    background-color: rgba(66%, 66%, 66%, 0.5);
-    border-bottom:1px solid #CCC;
 }
 
 .googlechart_config_messagezone{
@@ -984,6 +957,10 @@ select[name=googlechart_filterposition] {
 .jfk-textinput,
 #google-visualization-charteditor-panel-wrapper {
     z-index:1004;
+}
+
+.pivotingTable{
+    overflow:auto;
 }
 
 .pivotingTable,
@@ -1871,13 +1848,10 @@ input[type=text].eea-googlechart-intervals-config-value{
     display:block
 }
 
-.eea-googlechart-intervals-column-selector {
+.eea-googlechart-intervals-column-selector,
+.eea-googlechart-trendlines-column-selector {
     float:right;
-    width:330px !important;
-}
-
-.google-visualization-charteditor-settings-td{
-    width: 500px !important;
+    width:180px !important;
 }
 
 #google-visualization-charteditor-panel-wrapper,
@@ -1887,10 +1861,43 @@ input[type=text].eea-googlechart-intervals-config-value{
     width: auto !important;
 }
 
-.google-visualization-charteditor-multi-section-title {
-    width: 400px !important;
+.google-visualization-charteditor-panel{
+    height:350px !important;
+}
+
+#google-visualization-charteditor-panel-wrapper{
+    border:1px solid #e4e4e4;
 }
 
 #googlechart_palette_select {
     display: none;
+}
+
+.google-visualization-charteditor-thumbnail{
+    float:left;
+}
+
+.google-visualization-charteditor-panel-navigation-cell.charts-tab-selected {
+    border: 1px solid #ccc !important;
+    background-color: #eaeaea !important;
+    margin-bottom:0 !important;
+}
+
+.ui-dialog .ui-dialog-titlebar-resize{
+    position: absolute;
+    right: 2em;
+    top: 50%;
+    width: 21px;
+    margin: -10px 0 0 0;
+    padding: 1px;
+    height: 20px;
+}
+
+.ui-button-icon-primary.eea-icon{
+    color:white !important;
+}
+
+.ui-button-icon-primary.eea-icon:before{
+    margin-top:1px;
+    margin-left:3px;
 }
