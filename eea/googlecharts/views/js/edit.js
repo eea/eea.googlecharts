@@ -5228,6 +5228,7 @@ DavizEdit.CustomDialog.prototype = {
                                         .css("width", width-30)
                                         .css("height", height-40);
 
+                                    self.settings.resize();
                                 }
                             );
 

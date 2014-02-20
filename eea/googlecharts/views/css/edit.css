@@ -1616,6 +1616,8 @@ div.googlechartarea-input {
 .unpivot-settings {
     border:2px dashed green;
     padding:55px;
+    margin-left:200px;
+    margin-top:20px;
 }
 
 .annotator-item:first-child textarea{
@@ -1686,7 +1688,7 @@ div.googlechartarea-input {
 }
 
 .unpivotingForm div.description{
-    width:700px;
+    max-width:90%;
     float:left;
     white-space:normal;
     font-size:14px;
