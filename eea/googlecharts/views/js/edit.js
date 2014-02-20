@@ -4977,29 +4977,48 @@ function overrideGooglePalette(){
         saveEditorColors();
         var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
         var selectedPalette = chartPalettes[selectedPaletteId].colors;
+        var grayscale;
+        var custompalette;
+        var automatic;
         jQuery(".jfk-colormenu:visible .jfk-palette-cell").show();
+        jQuery(".jfk-colormenu:visible .charts-menuitem").hide();
+        jQuery.each(jQuery(".jfk-colormenu:visible .jfk-palette"), function(idx, palette){
+            if (jQuery(palette).find("td").eq(0).attr("aria-label") === "RGB (0, 0, 0)"){
+                grayscale = palette;
+                jQuery(palette).show();
+            }
+            else {
+                if (jQuery(palette).find("td").eq(0).attr("aria-label") === "RGB (230, 184, 175)"){
+                    custompalette = palette;
+                    jQuery(palette).show();
+                }
+                else {
+                    if (jQuery(palette).find("td").eq(0).attr("aria-label") === "RGB (51, 102, 204)"){
+                        automatic = palette;
+                        jQuery(palette).show();
+                    }
+                    else {
+                        jQuery(palette).hide();
+                    }
+                }
+            }
+        });
         jQuery(".jfk-palette-colorswatch").empty();
 
-        jQuery(".jfk-colormenu:visible .charts-menuheader").prev().prev().hide();
-        jQuery(".jfk-colormenu:visible .charts-menuheader").prev().show();
-        jQuery(".jfk-colormenu:visible .charts-menuheader").prev().prev().prev().show();
-
-        jQuery(".jfk-colormenu:visible .charts-menuheader").next().show();
-        jQuery(".jfk-colormenu:visible .charts-menuheader").next().find("td").hide();
-        jQuery(".jfk-colormenu:visible .charts-menuheader").next().find("td").eq(0).show();
-        jQuery(".jfk-colormenu:visible .charts-menuheader").next().find("td").eq(0).find(".jfk-palette-colorswatch").html("<div class='googlechart-palette-cell-replacement automatic' style='background-color:white;'>Automatic</div>");
-        jQuery(".jfk-colormenu:visible .charts-menuheader").next().find("td").eq(0).find(".jfk-palette-colorswatch").css("width","auto").css("height","auto");
-
+        jQuery(automatic).find("td").hide();
+        jQuery(automatic).find("td").eq(0).show();
+        jQuery(automatic).find("td").eq(0).find(".jfk-palette-colorswatch").html("<div class='googlechart-palette-cell-replacement automatic' style='background-color:white;'>Automatic</div>");
+        jQuery(automatic).find("td").eq(0).find(".jfk-palette-colorswatch").css("width","auto").css("height","auto");
         jQuery.each(selectedPalette, function(idx, color){
             if (idx < 60){
-                jQuery(".jfk-colormenu:visible .charts-menuheader").prev().find(".jfk-palette-colorswatch").eq(idx).html("<div class='googlechart-palette-cell-replacement' style='background-color:"+color+"' title='"+color+"'></div>");
+                jQuery(custompalette).find(".jfk-palette-colorswatch").eq(idx).html("<div class='googlechart-palette-cell-replacement' style='background-color:"+color+"' title='"+color+"'></div>");
             }
         });
         for (var i = selectedPalette.length; i < 60; i++){
-            jQuery(".jfk-colormenu:visible .charts-menuheader").prev().find(".jfk-palette-cell").eq(i).hide();
+            jQuery(custompalette).find(".jfk-palette-cell").eq(i).hide();
         }
         for (i = 0; i < 10; i++){
-            var obj = jQuery(".jfk-colormenu:visible .charts-menuheader").prev().prev().prev().find(".jfk-palette-colorswatch").eq(i);
+            var obj = jQuery(grayscale).find(".jfk-palette-colorswatch").eq(i);
             var color = obj.css("background-color");
             obj.html("<div class='googlechart-palette-cell-replacement' style='background-color:"+color+"' title='"+color+"'></div>");
         }
