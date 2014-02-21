@@ -890,6 +890,7 @@ dl.portlet .dashboard-widget,
     left:310px;
     top:70px;
     z-index:9999;
+    display:none;
 }
 
 .panel-container div{

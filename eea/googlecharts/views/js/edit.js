@@ -2052,6 +2052,7 @@ function openEditor(elementId) {
 
 
     google.visualization.events.addListener(chartEditor, 'ready', function(event){
+        jQuery(".panel-container").show();
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = true;
