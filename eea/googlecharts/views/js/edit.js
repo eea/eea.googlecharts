@@ -1981,6 +1981,7 @@ function openEditor(elementId) {
         }
         if ((prepared_column.role === 'interval') && (prepared_column.status === 1)){
             shouldAddIntervalsToEditor = true;
+            prepared_column.status = 0;
         }
     });
 
