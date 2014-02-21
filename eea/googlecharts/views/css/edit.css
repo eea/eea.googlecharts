@@ -891,6 +891,11 @@ dl.portlet .dashboard-widget,
     top:70px;
     z-index:9999;
 }
+
+.panel-container div{
+    float:left;
+}
+
 .googlechart_accordion_table{
     height:455px;
     overflow:auto;
@@ -1879,12 +1884,16 @@ input[type=text].eea-googlechart-intervals-config-value{
     float:left;
 }
 
-.google-visualization-charteditor-panel-navigation-cell.charts-tab-selected {
+.google-visualization-charteditor-panel-navigation-cell {
+    border-top-left-radius: 5px !important;
+    border-top-right-radius: 5px !important;
+
     border: 1px solid #ccc !important;
     background-color: #eaeaea !important;
-    margin-bottom:0 !important;
 }
-
+.google-visualization-charteditor-panel-navigation-cell.charts-tab-selected{
+    background-color: white !important;
+}
 .ui-dialog .ui-dialog-titlebar-resize{
     position: absolute;
     right: 2em;
@@ -1902,4 +1911,8 @@ input[type=text].eea-googlechart-intervals-config-value{
 .ui-button-icon-primary.eea-icon:before{
     margin-top:1px;
     margin-left:3px;
+}
+
+#google-visualization-charteditor-preview-div-wrapper {
+    margin-top:1px;
 }
