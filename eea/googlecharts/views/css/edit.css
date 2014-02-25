@@ -7,6 +7,7 @@
 
 .google-visualization-charteditor-dialog{
     z-index:2000;
+    visibility:hidden;
 }
 #googlecharts_config #googlecharts_actionsView{
     margin-top:1em;
@@ -1777,6 +1778,7 @@ div.googlechartarea-input {
 }
 
 .eea-googlechart-intervals-config-value,
+.eea-googlechart-trendlines-config-value,
 .eea-googlechart-colorpalettes-config-value{
     width:auto;
     float:right;
@@ -1788,28 +1790,38 @@ input[type=text].eea-googlechart-intervals-config-value{
     width:30px;
 }
 
-.eea-googlechart-intervals-color{
+input[type=text].eea-googlechart-trendlines-config-value{
+    width:150px;
+}
+
+.eea-googlechart-intervals-color,
+.eea-googlechart-trendlines-color{
     width:38px;
     height:14px;
     padding:6px;
 }
 
-.eea-googlechart-intervals-color .eea-icon {
+.eea-googlechart-intervals-color .eea-icon,
+.eea-googlechart-trendlines-color .eea-icon {
     float:right;
 }
-.eea-googlechart-intervals-color .charts-flat-menu-button-indicator{
+
+.eea-googlechart-intervals-color .charts-flat-menu-button-indicator,
+.eea-googlechart-trendlines-color .charts-flat-menu-button-indicator{
     float:left;
     width:14px;
     height:14px;
     border: 1px solid #dcdcdc !important;
 }
 
-.eea-googlechart-intervals-color.selected{
+.eea-googlechart-intervals-color.selected,
+.eea-googlechart-trendlines-color.selected{
     outline: 5px auto -webkit-focus-ring-color;
     outline-offset: -2px;
 }
 
-.eea-googlechart-intervals-colorpalette {
+.eea-googlechart-intervals-colorpalette,
+.eea-googlechart-trendlines-colorpalette {
     padding:10px;
     width:auto;
     height:auto;
@@ -1821,7 +1833,8 @@ input[type=text].eea-googlechart-intervals-config-value{
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.eea-googlechart-intervals-palette-color{
+.eea-googlechart-intervals-palette-color,
+.eea-googlechart-trendlines-palette-color{
     width:16px;
     height:16px;
     border-right:1px solid white;
@@ -1830,21 +1843,25 @@ input[type=text].eea-googlechart-intervals-config-value{
     float:left;
 }
 
-.eea-googlechart-intervals-palette-color-clickable{
+.eea-googlechart-intervals-palette-color-clickable,
+.eea-googlechart-trendlines-palette-color-clickable{
     cursor: pointer;
 }
 
-.eea-googlechart-intervals-palette-color:hover{
+.eea-googlechart-intervals-palette-color:hover,
+.eea-googlechart-trendlines-palette-color:hover{
     border-right:1px solid black;
     border-top:1px solid black;
     border-bottom:1px solid black;
 }
 
-.eea-googlechart-intervals-palette-color-auto{
+.eea-googlechart-intervals-palette-color-auto,
+.eea-googlechart-trendlines-palette-color-auto{
     float:left;
 }
 
-.eea-googlechart-intervals-palette-color-auto:hover{
+.eea-googlechart-intervals-palette-color-auto:hover,
+.eea-googlechart-trendlines-palette-color-auto:hover{
     border:1px solid black;
 }
 
@@ -1916,4 +1933,16 @@ input[type=text].eea-googlechart-intervals-config-value{
 
 #google-visualization-charteditor-preview-div-wrapper {
     margin-top:1px;
+}
+
+.eea-googlechart-custom-column-title div{
+    margin-top:3px;
+    float:left;
+}
+
+.eea-googlechart-custom-column-title select{
+    background: whiteSmoke;
+    height:25px;
+    margin:0px;
+    font-size:12px;
 }
