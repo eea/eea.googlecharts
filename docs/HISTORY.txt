@@ -3,6 +3,8 @@ Changelog
 
 9.6-dev - (unreleased)
 ----------------------
+* Bugfix: fixed issue with duplicated % on axes
+  [szabozo0 refs #18299]
 * Feature: added interval and trendline charts
   [szabozo0 refs #18263]
 * Bugfix: fixed customized color palettes on editor
