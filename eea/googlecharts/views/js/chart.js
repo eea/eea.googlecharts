@@ -242,6 +242,18 @@ function drawGoogleChart(options){
 
     settings.chartJson.containerId = settings.chartViewDiv;
 
+    var chartOptions = settings.chartJson.options;
+    var dataTable = settings.chartDataTable;
+    var trendlines = {};
+    jQuery.each(chartOptions.trendlines || {}, function(name, trendline){
+        for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
+            if (dataTable.getColumnId(i) === name){
+                trendlines[i - 1] = trendline;
+            }
+        }
+    });
+    settings.chartJson.options.trendlines = trendlines;
+
     var chart = new google.visualization.ChartWrapper(settings.chartJson);
 
     var filtersArray = [];

@@ -3,6 +3,10 @@ Changelog
 
 9.6-dev - (unreleased)
 ----------------------
+* Feature: added interval and trendline charts
+  [szabozo0 refs #18263]
+* Bugfix: fixed customized color palettes on editor
+  [szabozo0 refs #18570]
 
 9.5 - (2014-02-13)
 ------------------
