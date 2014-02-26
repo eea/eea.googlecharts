@@ -255,16 +255,21 @@ function drawGoogleChart(options){
     settings.chartJson.options.trendlines = trendlines;
 
     /* remove duplicated suffixes */
-    jQuery.each(["vAxes", "hAxes"], function(idx, axes){
-        jQuery.each(settings.chartJson.options[axes] || {}, function(axid, ax){
-            var suffix = (ax.formatOptions || {suffix:""}).suffix || "";
-            if (suffix !== ""){
-                if (ax.format !== undefined){
-                    ax.format = ax.format.replace(suffix, "");
-                }
+    jQuery.each(settings.chartJson.options.vAxes || {}, function(axid, ax){
+        var suffix = (ax.formatOptions || {suffix:""}).suffix || "";
+        if (suffix !== ""){
+            if (ax.format !== undefined){
+                ax.format = ax.format.replace(suffix, "");
             }
-        });
+        }
     });
+    var ax = settings.chartJson.options.hAxis || {};
+    var suffix = (ax.formatOptions || {suffix:""}).suffix || "";
+    if (suffix !== ""){
+        if (ax.format !== undefined){
+            ax.format = ax.format.replace(suffix, "");
+        }
+    }
     /* end of removing duplicated suffixes */
 
     var chart = new google.visualization.ChartWrapper(settings.chartJson);
