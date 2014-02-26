@@ -3,6 +3,8 @@ Changelog
 
 9.6-dev - (unreleased)
 ----------------------
+* Bugfix: fixed filters position when switching tabs inside an indicator
+  [szabozo0 refs #18577]
 * Bugfix: fixed issue with duplicated % on axes
   [szabozo0 refs #18299]
 * Feature: added interval and trendline charts
