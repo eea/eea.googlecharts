@@ -1879,11 +1879,14 @@ input[type=text].eea-googlechart-trendlines-config-value{
     width:180px !important;
 }
 
-#google-visualization-charteditor-panel-wrapper,
-#google-visualization-charteditor-panel-navigate-div,
-.google-visualization-charteditor-panel,
-.google-visualization-charteditor-section {
-    width: auto !important;
+#google-visualization-charteditor-panel-wrapper {
+    width:286px !important;
+}
+
+#google-visualization-charteditor-series-select-div .charts-flat-menu-button-caption.charts-inline-block{
+    width:160px;
+    overflow:hidden;
+    padding-right:20px;
 }
 
 .google-visualization-charteditor-panel{
