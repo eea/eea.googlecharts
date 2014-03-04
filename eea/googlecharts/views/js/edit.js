@@ -1202,11 +1202,7 @@ function removeAutomaticColor(root,tree, path){
     }
     else {
         if (tree === "eea-automatic-color"){
-            var node = root;
-            for (var i = 0; i < path.length - 1; i++){
-                node = node[path[i]];
-            }
-            delete node[path[path.length - 1]];
+            tree = "";
         }
     }
 }
