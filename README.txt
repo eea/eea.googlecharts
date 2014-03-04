@@ -56,11 +56,10 @@ Dependencies
 Live demos
 ==========
 
-Daviz showroom:
-  - http://daviz.eionet.europa.eu
-
-Google charts demos:
-  - http://code.google.com/apis/chart/
+* `Basic tutorials <http://www.youtube.com/playlist?list=PLVPSQz7ahsByeq8nVKC7TT9apArEXBrV0>`_
+* `Advanced tutorials <http://www.youtube.com/playlist?list=PLVPSQz7ahsBxbe8pwzFWLQuvDSP9JFn8I>`_
+* `Daviz showroom <http://daviz.eionet.europa.eu>`_
+* `Google charts demos <http://code.google.com/apis/chart/>`_
 
 
 Source code

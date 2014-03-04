@@ -3,6 +3,8 @@ Changelog
 
 9.6-dev - (unreleased)
 ----------------------
+* Change: Link video tutorials within documentation
+  [avoinea]
 * Bugfix: fixed filters position when switching tabs inside an indicator
   [szabozo0 refs #18577]
 * Bugfix: fixed issue with duplicated % on axes
