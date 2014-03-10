@@ -1,6 +1,9 @@
 Changelog
 =========
 
+9.7-dev - (unreleased)
+----------------------
+
 9.6 - (2014-03-10)
 ------------------
 * Change: Link video tutorials within documentation
