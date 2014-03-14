@@ -1539,7 +1539,7 @@ function addTrendlineConfig(){
             addInput(subsection, name, "Label", "label");
             addSelect(subsection, name, "Line thickness", "linewidth", pixels);
             addSelect(subsection, name, "Fill opacity", "fillopacity", opacities);
-            addColorField(subsection, name, "Color", "color");  
+            addColorField(subsection, name, "Color", "color");
         }
         function setValuesForSection(name, trendline){
             var type = trendline.type || 'disabled';
@@ -3595,11 +3595,11 @@ function fillEditorDialog(options){
         var tmp_icon = jQuery("#pivotingTableLabel").find(".eea-caret-icon");
         if (tmp_icon.hasClass("eea-icon-caret-right")){
             tmp_icon.removeClass("eea-icon-caret-right").addClass("eea-icon-caret-down");
-            jQuery("#pivotingTableLabel").addClass("expanded"); 
+            jQuery("#pivotingTableLabel").addClass("expanded");
         }
         else {
             tmp_icon.removeClass("eea-icon-caret-down").addClass("eea-icon-caret-right");
-            jQuery("#pivotingTableLabel").removeClass("expanded"); 
+            jQuery("#pivotingTableLabel").removeClass("expanded");
         }
         jQuery(".pivotingTable").toggle();
     });
@@ -3608,11 +3608,11 @@ function fillEditorDialog(options){
         var tmp_icon = jQuery("#unpivotingFormLabel").find(".eea-caret-icon");
         if (tmp_icon.hasClass("eea-icon-caret-right")){
             tmp_icon.removeClass("eea-icon-caret-right").addClass("eea-icon-caret-down");
-            jQuery("#unpivotingFormLabel").addClass("expanded"); 
+            jQuery("#unpivotingFormLabel").addClass("expanded");
         }
         else {
             tmp_icon.removeClass("eea-icon-caret-down").addClass("eea-icon-caret-right");
-            jQuery("#unpivotingFormLabel").removeClass("expanded"); 
+            jQuery("#unpivotingFormLabel").removeClass("expanded");
         }
         jQuery(".unpivotingForm").toggle();
     });
@@ -3758,6 +3758,9 @@ function openEditChart(id){
                             '<div class="eea-icon-lg eea-icon eea-caret-icon eea-icon-caret-right" style="float:left;"></div>'+
                             '<div class="main-label">Unpivot Table</div><div class="sub-label">&nbsp;(transform columns to rows)</div>' + //xxx
                             '<img class="pivot-icon" src="../../++resource++eea.googlecharts.images/unpivot-icon.png" style="width:32px;height:32px;"/>'+
+                            '<a target="_blank" href="daviz-tutorials.html#unpivot">'+
+                                 '<div class="eea-icon-2x eea-icon eea-icon-youtube-square tutorial-icon" style="float:right;"></div>'+
+                            '</a>'+
                             '<div style="clear:both"></div>'+
                         '</div>'+
                         '<div class="unpivotingForm">'+
@@ -3808,6 +3811,9 @@ function openEditChart(id){
                             '<div class="eea-icon-lg eea-icon eea-caret-icon eea-icon-caret-right" style="float:left"></div>'+
                             '<div class="main-label">Pivot Table</div><div class="sub-label">&nbsp;(transform rows to columns)</div>' + //xxx
                             '<img class="pivot-icon" src="../../++resource++eea.googlecharts.images/pivot-icon.png" style="width:32px;height:32px;"/>'+
+                            '<a target="_blank" href="daviz-tutorials.html#pivot">'+
+                                 '<div class="eea-icon-2x eea-icon eea-icon-youtube-square tutorial-icon" style="float:right;"></div>'+
+                            '</a>'+
                             '<div style="clear:both"></div>'+
                         '</div>'+
                         '<div class="pivotingTable">' +
@@ -3821,6 +3827,9 @@ function openEditChart(id){
                     '</div>'+
                     '<div>'+
                         '<span class="tableForChartLabel sub-label">Table for chart</span>' +
+                        '<a target="_blank" href="daviz-tutorials.html#table" style="float:left">'+
+                            '<div class="eea-icon-2x eea-icon eea-icon-youtube-square tutorial-icon" style="float:right;"></div>'+
+                        '</a>'+
                     '</div>'+
                     "<div style='clear:both;'> </div>" +
                     '<div id="newTable" class="daviz-data-table slick_newTable" style="height:300px;">'+
@@ -5117,7 +5126,7 @@ function init_googlecharts_edit(){
                 var adv_options_str = chartObj.find(".googlechart_options").attr("value");
                 var adv_options = JSON.parse(adv_options_str);
                 var hasChartArea = true;
-                if ((!adv_options.hasOwnProperty("chartArea")) || 
+                if ((!adv_options.hasOwnProperty("chartArea")) ||
                     (!adv_options.chartArea.hasOwnProperty("left")) ||
                     (!adv_options.chartArea.hasOwnProperty("top")) ||
                     (!adv_options.chartArea.hasOwnProperty("width")) ||

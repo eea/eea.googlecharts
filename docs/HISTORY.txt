@@ -3,6 +3,8 @@ Changelog
 
 9.7-dev - (unreleased)
 ----------------------
+* Feature: Added links to tutorials on edit page
+  [szabozo0 refs #18400]
 
 9.6 - (2014-03-10)
 ------------------

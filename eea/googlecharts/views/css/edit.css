@@ -1949,3 +1949,7 @@ input[type=text].eea-googlechart-trendlines-config-value{
     margin:0px;
     font-size:12px;
 }
+
+.eea-menu-item .tutorial-icon {
+   margin-top:10px;
+}
