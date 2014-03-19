@@ -10,6 +10,7 @@ from cStringIO import StringIO
 from zope.component import queryAdapter, getMultiAdapter
 from zope.component import getUtility
 from zope.schema.interfaces import IVocabularyFactory
+from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 from eea.app.visualization.zopera import IFolderish
 from eea.app.visualization.interfaces import IVisualizationConfig
@@ -595,6 +596,36 @@ class SavePNGChart(Export):
         svg_obj = self.context._getOb(svg_filename)
         svg_obj.setExcludeFromNav(True)
         svg_obj.getField('file').getMutator(svg_obj)(kwargs.get('svg',''))
+
+        from Products.CMFCore.utils import getToolByName
+        wftool = getToolByName(svg_obj, "portal_workflow")
+        workflows = wftool.getWorkflowsFor(svg_obj)
+        if len(workflows) > 0:
+            workflow = workflows[0]
+            transitions = workflow.transitions
+            # first publish the svg
+            available_transitions = [transitions[i['id']] for i in
+                                    wftool.getTransitionsFor(svg_obj)]
+
+            to_do = [k for k in available_transitions
+                     if k.new_state_id == 'published']
+
+            for item in to_do:
+                workflow.doActionFor(svg_obj, item.id)
+                break
+
+            # then make it public draft
+            available_transitions = [transitions[i['id']] for i in
+                                    wftool.getTransitionsFor(svg_obj)]
+
+            to_do = [k for k in available_transitions
+                     if k.new_state_id == 'visible']
+
+            for item in to_do:
+                workflow.doActionFor(svg_obj, item.id)
+                break
+            svg_obj.reindexObject()
+
 
         return _("Success")
 
