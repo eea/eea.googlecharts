@@ -171,7 +171,7 @@ class View(ViewForm):
             if chart.get('id') == chart_id:
                 return json.dumps([chart])
 
-    def get_chart_png(self):
+    def get_chart_png_or_svg(self, chart_type):
         """Chart as JSON
         """
         tag = self.request.get('tag', False)
@@ -185,22 +185,31 @@ class View(ViewForm):
 
             if chart.get('hasPNG', False):
                 name = chart.get('id', '')
-                png = self.context[name + '.png']
+                img = self.context[name + chart_type]
+                if chart_type == '.svg':
+                    return img
+
             else:
                 if not safe:
                     return ''
                 config = json.loads(chart.get('config', '{}'))
                 chartType = config.get('chartType', '')
-                png = "googlechart." + chartType.lower() + ".preview.png"
-                png = self.context[png]
+                img = "googlechart." + chartType.lower() + ".preview.png"
+                img = self.context[img]
 
             if tag:
-                return png.tag(width='100%', height="auto")
+                return img.tag(width='100%', height="auto")
 
             self.request.response.setHeader('content-type', 'image/png')
-            return png.index_html(self.request, self.request.response)
+            return img.index_html(self.request, self.request.response)
 
         return ''
+
+    def get_chart_png(self):
+        return self.get_chart_png_or_svg(".png")
+
+    def get_chart_svg(self):
+        return self.get_chart_png_or_svg(".svg")
 
     def get_dashboard_png(self):
         """ Dashboard png

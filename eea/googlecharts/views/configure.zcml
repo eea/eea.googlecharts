@@ -29,6 +29,14 @@
     />
 
   <browser:page
+    name="embed-chart.svg"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".chart.View"
+    attribute="get_chart_svg"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="embed-dashboard"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     template="zpt/embed-dashboard.pt"
@@ -38,6 +46,14 @@
 
   <browser:page
     name="embed-dashboard.png"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".chart.View"
+    attribute="get_dashboard_png"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="embed-dashboard.svg"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".chart.View"
     attribute="get_dashboard_png"
