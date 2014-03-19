@@ -597,7 +597,6 @@ class SavePNGChart(Export):
         svg_obj.setExcludeFromNav(True)
         svg_obj.getField('file').getMutator(svg_obj)(kwargs.get('svg',''))
 
-        from Products.CMFCore.utils import getToolByName
         wftool = getToolByName(svg_obj, "portal_workflow")
         workflows = wftool.getWorkflowsFor(svg_obj)
         if len(workflows) > 0:
