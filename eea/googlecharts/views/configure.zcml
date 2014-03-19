@@ -125,6 +125,15 @@
     />
 
   <browser:page
+    name="googlechart.cleanup_thumbs"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".chart.Export"
+    attribute="cleanup_thumbs"
+    permission="zope2.View"
+    />
+
+
+  <browser:page
     name="googlechart.savepngchart"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".chart.SavePNGChart"

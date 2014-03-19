@@ -3,6 +3,8 @@ Changelog
 
 9.7-dev - (unreleased)
 ----------------------
+* Feature: When saving a visualization, generate and save svg version of the charts
+  [szabozo0 refs #18910]
 * Feature: Added links to tutorials on edit page
   [szabozo0 refs #18400]
 

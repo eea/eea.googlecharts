@@ -528,6 +528,21 @@ class Export(BrowserView):
         )
         return svg
 
+    def cleanup_thumbs(self):
+        thumbs_to_not_delete = ["googlechart.googledashboard.preview.png",
+                    "googlechart.motionchart.preview.png",
+                    "googlechart.organizational.preview.png",
+                    "googlechart.imagechart.preview.png",
+                    "googlechart.sparkline.preview.png",
+                    "googlechart.table.preview.png",
+                    "googlechart.annotatedtimeline.preview.png",
+                    "googlechart.treemap.preview.png"]
+        thumbs_to_delete = []
+        for obj_id in self.context.objectIds():
+            if obj_id not in thumbs_to_not_delete:
+                thumbs_to_delete.append(obj_id)
+
+        self.context.manage_delObjects(thumbs_to_delete)
 
 class SavePNGChart(Export):
     """ Save png version of chart, including qr code and watermark
@@ -539,6 +554,7 @@ class SavePNGChart(Export):
         kwargs.update(form)
         filename = kwargs.get('filename', 'img')
         chart_url = self.context.absolute_url() + "#" + "tab-" + filename
+        svg_filename = filename + ".svg"
         filename = filename + ".png"
         sp = self.siteProperties
         qr_size = sp.get('googlechart.qrcode_size', '70')
@@ -557,9 +573,17 @@ class SavePNGChart(Export):
 
         if filename not in self.context.objectIds():
             filename = self.context.invokeFactory('Image', id=filename)
+
         obj = self.context._getOb(filename)
         obj.setExcludeFromNav(True)
         obj.getField('image').getMutator(obj)(img)
+
+        if svg_filename not in self.context.objectIds():
+            svg_filename = self.context.invokeFactory('File', id=svg_filename)
+        svg_obj = self.context._getOb(svg_filename)
+        svg_obj.setExcludeFromNav(True)
+        svg_obj.getField('file').getMutator(svg_obj)(kwargs.get('svg',''))
+
         return _("Success")
 
 class SetThumb(BrowserView):
