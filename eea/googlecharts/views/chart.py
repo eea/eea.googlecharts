@@ -185,7 +185,10 @@ class View(ViewForm):
 
             if chart.get('hasPNG', False):
                 name = chart.get('id', '')
-                img = self.context[name + chart_type]
+                img = self.context.get(name + chart_type, None)
+                if not img:
+                    chart_type = '.png'
+                    img = self.context.get(name + chart_type, None)
                 if chart_type == '.svg':
                     return img
 
