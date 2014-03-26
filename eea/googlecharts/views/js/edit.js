@@ -3888,9 +3888,14 @@ function openEditChart(id){
     editcolumnsdialog.find(".googlechart_sortBy").attr("value", tmp_sortBy);
     editcolumnsdialog.find(".googlechart_sortAsc").attr("value", tmp_sortAsc);
     editcolumnsdialog.delegate(".googlechart_maximize_chart_config","click", function(){
-        jQuery(this).parent().find(".charts-tab-selected")
+        var clicked = jQuery(this);
+        if (jQuery(this).hasClass("googlechart_minimized_chart_clickable")){
+            clicked = jQuery(".google-visualization-charteditor-panel-navigation-cell.googlechart_maximize_chart_config");
+        }
+        jQuery(".googlechart_minimized_chart_clickable").remove();
+        clicked.parent().find(".charts-tab-selected")
             .removeClass("charts-tab-selected");
-        jQuery(this).addClass("charts-tab-selected");
+        clicked.addClass("charts-tab-selected");
         jQuery(".googlechart_table_config_scaleable").attr("style","");
         editcolumnsdialog.find(".googlechart_table_config_scaleable").removeClass("googlechart_table_config_scaleable_maximized").addClass("googlechart_table_config_scaleable_minimized");
         editcolumnsdialog.find(".googlechart_chart_config_scaleable").removeClass("googlechart_chart_config_scaleable_minimized").addClass("googlechart_chart_config_scaleable_maximized");
@@ -3902,6 +3907,7 @@ function openEditChart(id){
         jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_hover");
     });
     editcolumnsdialog.delegate(".googlechart_maximize_table_config","click", function(){
+        var chart_pos = jQuery("#google-visualization-charteditor-preview-div-wrapper").position();
         jQuery(this).parent().find(".charts-tab-selected")
             .removeClass("charts-tab-selected");
         jQuery(this).addClass("charts-tab-selected");
@@ -3914,6 +3920,14 @@ function openEditChart(id){
         jQuery(".googlechart_maximize_table_config").attr("title","");
         jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_hover");
         jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_hover");
+        jQuery("<div>")
+            .css("left", chart_pos.left)
+            .css("top", chart_pos.top)
+            .width(jQuery("#google-visualization-charteditor-preview-div-wrapper").width())
+            .height(jQuery("#google-visualization-charteditor-preview-div-wrapper").height())
+            .addClass("googlechart_minimized_chart_clickable")
+            .addClass("googlechart_maximize_chart_config")
+            .appendTo(".googlechart_chart_config_scaleable_minimized");
     });
     editcolumnsdialog.delegate(".googlechart_maximize_chart_config", "hover", function(){
         if (jQuery(".googlechart_chart_config_scaleable_maximized").length === 0){

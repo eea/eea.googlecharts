@@ -840,7 +840,14 @@ dl.portlet .dashboard-widget,
     color:#222 !important;
 }
 
-.googlechart_chart_config_scaleable_minimized #google-visualization-charteditor-preview-div-wrapper{
+.googlechart_minimized_chart_clickable{
+    z-index:9999;
+    position:absolute;
+    cursor:pointer;
+}
+
+.googlechart_chart_config_scaleable_minimized #google-visualization-charteditor-preview-div-wrapper,
+.googlechart_chart_config_scaleable_minimized .googlechart_minimized_chart_clickable{
     transform: scale(0.475);
     -ms-transform: scale(0.475); /* IE 9 */
     -o-transform: scale(0.475); /* Opera */
