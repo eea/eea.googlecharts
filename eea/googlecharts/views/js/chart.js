@@ -256,19 +256,13 @@ function drawGoogleChart(options){
 
     /* remove duplicated suffixes */
     jQuery.each(settings.chartJson.options.vAxes || {}, function(axid, ax){
-        var suffix = (ax.formatOptions || {suffix:""}).suffix || "";
-        if (suffix !== ""){
-            if (ax.format !== undefined){
-                ax.format = ax.format.replace(suffix, "");
-            }
+        if (ax.format !== undefined){
+            ax.format = ax.format.replace(/[^0-9.,#]/g, '');
         }
     });
     var ax = settings.chartJson.options.hAxis || {};
-    var suffix = (ax.formatOptions || {suffix:""}).suffix || "";
-    if (suffix !== ""){
-        if (ax.format !== undefined){
-            ax.format = ax.format.replace(suffix, "");
-        }
+    if (ax.format !== undefined){
+        ax.format = ax.format.replace(/[^0-9.,#]/g, '');
     }
     /* end of removing duplicated suffixes */
 
