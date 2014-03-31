@@ -34,7 +34,7 @@ function chartAreaAttribute2px(value, size){
             pixels = value;
         }
     }
-    return pixels;
+    return parseInt(pixels, 10);
 }
 
 function getQueryParams(obj){

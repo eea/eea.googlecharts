@@ -20,7 +20,7 @@ function chartAreaAttribute2px(value, size){
             pixels = value;
         }
     }
-    return Math.round(pixels);
+    return parseInt(pixels,10);
 }
 
 if (window.DavizInlineResizer === undefined){
@@ -212,10 +212,10 @@ DavizInlineResizer.ChartResizer.prototype = {
 
         var chart_settings = window['settings_' + self.hash];
 
-        var chartAreaWidth = Math.round(size.chartWidth * 80 / 100);
-        var chartAreaHeight = Math.round(size.chartHeight * 80 / 100);
-        var chartAreaLeft = Math.round(size.chartWidth * 10 / 100);
-        var chartAreaTop = Math.round(size.chartHeight * 10 / 100);
+        var chartAreaWidth = chartAreaAttribute2px("61.8%", size.chartWidth);
+        var chartAreaHeight = chartAreaAttribute2px("61.8%", size.chartHeight);
+        var chartAreaLeft = chartAreaAttribute2px("19.1%", size.chartWidth);
+        var chartAreaTop = chartAreaAttribute2px("19.1%", size.chartHeight);
 
         if (self.chartAreaConfigured){
             chartAreaWidth = chartAreaAttribute2px(chart_settings[7].chartArea.width, size.chartWidth);
@@ -239,7 +239,7 @@ DavizInlineResizer.ChartResizer.prototype = {
         jQuery(".googlechart-chartarea-resizable")
             .width(chartAreaWidth)
             .height(chartAreaHeight)
-            .offset({left:parentOffset.left + chartAreaLeft, top:parentOffset.top + chartAreaTop});
+            .offset({left:parentOffset.left + chartAreaLeft + 4, top:parentOffset.top + chartAreaTop});
     },
 
     updateChartFromSizes: function() {
