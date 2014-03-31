@@ -5167,26 +5167,19 @@ function init_googlecharts_edit(){
             create: function(){
                 var adv_options_str = chartObj.find(".googlechart_options").attr("value");
                 var adv_options = JSON.parse(adv_options_str);
-                var hasChartArea = true;
-                if ((!adv_options.hasOwnProperty("chartArea")) ||
-                    (!adv_options.chartArea.hasOwnProperty("left")) ||
-                    (!adv_options.chartArea.hasOwnProperty("top")) ||
-                    (!adv_options.chartArea.hasOwnProperty("width")) ||
-                    (!adv_options.chartArea.hasOwnProperty("height"))){
-                    hasChartArea = false;
-                }
-                var chartAreaLeft = width / 100 * 10;
-                var chartAreaTop = height / 100 * 10;
-                var chartAreaWidth = width / 100 * 80;
-                var chartAreaHeight = height / 100 * 80;
-                if (hasChartArea){
-                    chartAreaLeft = chartAreaAttribute2px(adv_options.chartArea.left, width);
-                    chartAreaTop = chartAreaAttribute2px(adv_options.chartArea.top, height);
-                    chartAreaWidth = chartAreaAttribute2px(adv_options.chartArea.width, width);
-                    chartAreaHeight = chartAreaAttribute2px(adv_options.chartArea.height, height);
-                }
+                var chartAreaSettings = {
+                    left: "19.1%",
+                    top: "19.1%",
+                    width: "61.8%",
+                    height: "61.8%"
+                };
+                jQuery.extend(chartAreaSettings, adv_options.chartArea);
+                chartAreaLeft = chartAreaAttribute2px(chartAreaSettings.left, width);
+                chartAreaTop = chartAreaAttribute2px(chartAreaSettings.top, height);
+                chartAreaWidth = chartAreaAttribute2px(chartAreaSettings.width, width);
+                chartAreaHeight = chartAreaAttribute2px(chartAreaSettings.height, height);
                 chartObj.attr("chartArea", JSON.stringify({left: chartAreaLeft, top:chartAreaTop, width:chartAreaWidth, height: chartAreaHeight}));
-                chartObj.attr("hasChartArea", hasChartArea);
+                chartObj.attr("hasChartArea", true);
                 drawPreviewChart(chartObj,
                                 width,
                                 height);

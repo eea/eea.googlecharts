@@ -3,6 +3,8 @@ Changelog
 
 9.7-dev - (unreleased)
 ----------------------
+* Bugfix: Display the correct size of the chart area when first opening "Resize and Size adjustments" for a chart
+  [szabozo0 refs #19052]
 * Bugfix: Ignore all suffix settings from axis format parameter, only use the one from the formatOption parameter
   [szabozo0 refs #18299]
 * Bugfix: Made chart preview clickable on chart editor when Data selection for chart is selected and the preview is minimized
