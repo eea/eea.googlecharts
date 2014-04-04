@@ -3,6 +3,8 @@ Changelog
 
 9.7-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed range filter size when filters are placed in the left/right of the chart
+  [szabozo0 refs #19188]
 * Bugfix: Display the correct size of the chart area when first opening "Resize and Size adjustments" for a chart
   [szabozo0 refs #19052]
 * Bugfix: Ignore all suffix settings from axis format parameter, only use the one from the formatOption parameter

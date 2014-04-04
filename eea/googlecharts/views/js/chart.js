@@ -170,6 +170,18 @@ function updateFilterDivs(){
             jQuery(filter).after("<div style='clear:both'></div>");
         }
     });
+    var containers = [".googlechart_table_left", ".googlechart_table_right"]
+    jQuery.each(containers, function(idx, container){
+        jQuery.each(jQuery(container).find(".google-visualization-controls-rangefilter"), function(idx, filter){
+            labels = jQuery(filter).find(".google-visualization-controls-rangefilter-thumblabel")
+            if (!jQuery(filter).hasClass("eea-beautified")){
+                jQuery(filter).addClass("eea-beautified")
+                jQuery("<br/>").insertAfter(labels.eq(0));
+                jQuery("<br/>").insertBefore(labels.eq(1));
+                labels.eq(1).css("float", "right");
+            }
+        });
+    });
 }
 
 function drawGoogleChart(options){
