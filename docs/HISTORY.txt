@@ -3,6 +3,8 @@ Changelog
 
 9.7-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed charteditor for sparkline charts
+  [szabozo0 refs #19173]
 * Bugfix: Fixed range filter size when filters are placed in the left/right of the chart
   [szabozo0 refs #19188]
 * Bugfix: Display the correct size of the chart area when first opening "Resize and Size adjustments" for a chart

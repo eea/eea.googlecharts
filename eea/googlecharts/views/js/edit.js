@@ -80,6 +80,29 @@ var matrixChartOptions = {
             }
 };
 
+function checkReadyForSparklines(skipwrapper){
+    if ((!skipwrapper) && (chartEditor.getChartWrapper().getChartType() !== 'ImageSparkLine')){
+        return;
+    }
+    if (jQuery("#google-visualization-charteditor-preview-div-chart")
+            .find("table.google-visualization-sparkline-default")
+            .length === 1) {
+        google.visualization.events.trigger(chartEditor, "ready", {});
+        return;
+    }
+    if ((jQuery("#google-visualization-charteditor-preview-div-chart")
+            .find("div.google-visualization-charteditor-data-mismatch")
+            .length === 1) ||
+        (jQuery("#google-visualization-charteditor-preview-div-chart")
+            .text() === 'No Data')) {
+        return;
+    }
+
+    setTimeout(function(){
+        checkReadyForSparklines(skipwrapper);
+    },100);
+}
+
 function svgCleanup(svg) {
     svg = jQuery(svg);
     svg.find('g[clip-path]').removeAttr('clip-path');
@@ -2355,6 +2378,7 @@ function openEditor(elementId) {
         if (shouldAddIntervalsToEditor){
             addIntervalConfig();
         }
+        checkReadyForSparklines(false);
     },100);
 }
 
@@ -5399,6 +5423,12 @@ function overrideGooglePalette(){
     });
 }
 
+function overrideSparklinesThumbnail(){
+    jQuery(document).delegate("#google-visualization-charteditor-thumbnail-imagesparkline", "click", function(){
+        checkReadyForSparklines(true);
+    });
+}
+
 jQuery(document).ready(function(){
     charteditor_css = jQuery("link[rel='stylesheet'][href*='charteditor']");
     charteditor_css.remove();
@@ -5409,6 +5439,7 @@ jQuery(document).ready(function(){
     });
 
     overrideGooglePalette();
+    overrideSparklinesThumbnail();
 });
 
 /*if (window.DavizEdit === undefined){
