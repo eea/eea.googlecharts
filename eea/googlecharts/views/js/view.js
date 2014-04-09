@@ -407,22 +407,20 @@ function showEmbed(){
         iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
                     "&chartWidth=" + chartObj.attr('chart_width') +
                     "&chartHeight=" + chartObj.attr('chart_height') +
-                    "&customStyle=.googlechart_view{margin-left:0px%3B}" +
-                    "#_filters=" + query_params;
+                    "&customStyle=.googlechart_view{margin-left:0px%3B}";
     }
     else{
         iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+ 
-                    "&customStyle=.googlechart_view{margin-left:0px%3B}" +
-                    "#_filters=" + query_params;
+                    "&customStyle=.googlechart_view{margin-left:0px%3B}";
     }
     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
     var hasPNG = chartObj.attr('chart_hasPNG');
     var embedHtml = '<div class="googlechart_embed_form">' +
                         '<h3>Interactive chart: </h3>'+
                         '<div class="googlechart_ignore_filters">'+
-                            'Remember my filter choices <input class="googlechart_embed_ignore_filters" type="checkbox" checked="checked"/><br/>'+
+                            'Remember my filter choices <input class="googlechart_embed_ignore_filters" type="checkbox"/><br/>'+
                         '</div>'+
-                        '<div class="googlechart_hide_filters">' +
+                        '<div class="googlechart_hide_filters" style="display:none">' +
                             'Include the following filters: <br/>' +
                             '<table><tr><td style="width:200px">All</td><td><input class="googlechart_hide_filter" type="checkbox" filter_id="all" checked="checked"/></td></tr></table>'+
                         '</div>'+
@@ -496,6 +494,10 @@ function showEmbed(){
                     }
                     if (jQuery(".googlechart_embed_ignore_filters").attr("checked") === 'checked'){
                         iframeSrc += "#_filters=" + query_params;
+                        jQuery(".googlechart_hide_filters").show();
+                    }
+                    else{
+                        jQuery(".googlechart_hide_filters").hide();
                     }
                     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
                     jQuery(".iframeCode").text(iframeCode);

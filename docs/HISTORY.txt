@@ -3,6 +3,8 @@ Changelog
 
 9.7-dev - (unreleased)
 ----------------------
+* Change: Changed embed popup, by default selected values for filters are not included in the embed string
+  [szabozo0]
 * Bugfix: Fixed charteditor for sparkline charts
   [szabozo0 refs #19173]
 * Bugfix: Fixed range filter size when filters are placed in the left/right of the chart
