@@ -360,11 +360,11 @@ function drawGoogleChart(options){
                         filterSettings.state.lowValue=value.defaults[0];
                         filterSettings.state.highValue=value.defaults[1];
                     }
+console.log(value);
                     if (value.hasOwnProperty("settings")){
                         filterSettings.options.ui = value.settings;
-                        filterSettings.options.ui.myShowRangeValues = value.settings.showRangeValues;
-                        filterSettings.options.ui.showRangeValues = false;
                     }
+                    filterSettings.options.ui.showRangeValues = false;
                     break;
                 case "1":
                     filterSettings.controlType = 'StringFilter';
@@ -409,17 +409,15 @@ function drawGoogleChart(options){
 
             /* workaround for #19292 */
             google.visualization.events.addListener(filter, 'ready', function(event){
-                if (filter.getOptions().ui.myShowRangeValues === 'true'){
-                    var slider = jQuery("#googlechart_filters_hdi").find("div[role='slider']");
-                    jQuery("<span>")
-                        .addClass("google-visualization-controls-rangefilter-thumblabel")
-                        .text(filter.getState().lowValue)
-                        .insertBefore(slider);
-                    jQuery("<span>")
-                        .addClass("google-visualization-controls-rangefilter-thumblabel")
-                        .text(filter.getState().highValue)
-                        .insertAfter(slider);
-                }
+                var slider = jQuery("#"+filter.getContainerId()).find("div[role='slider']");
+                jQuery("<span>")
+                    .addClass("google-visualization-controls-rangefilter-thumblabel")
+                    .text(filter.getState().lowValue)
+                    .insertBefore(slider);
+                jQuery("<span>")
+                    .addClass("google-visualization-controls-rangefilter-thumblabel")
+                    .text(filter.getState().highValue)
+                    .insertAfter(slider);
             });
             /* end of workaround */
 
@@ -674,7 +672,14 @@ function drawGoogleDashboard(options){
             def_str = "[]";
         }
         var defaults = JSON.parse(def_str);
-        dashboard_filters[value.column] = {"type":value.type, defaults:defaults};
+        var filter_settings_str = value.settings;
+
+        if ((filter_settings_str === undefined) || (filter_settings_str === "")){
+            filter_settings_str = "{}";
+        }
+
+        var filter_settings = JSON.parse(filter_settings_str);
+        dashboard_filters[value.column] = {"type":value.type, defaults:defaults, settings:filter_settings};
     });
     // Dashboard charts
     jQuery.each(settings.chartsSettings, function(key, value){

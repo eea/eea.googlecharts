@@ -4092,10 +4092,8 @@ function populateDefaults(id, type, settings){
         ticks:0,
         unitIncrement:0,
         blockIncrement:0,
-        showRangeValues:true,
         orientation:'horizontal'
     };
-
     jQuery.extend(edit_filter_settings, settings);
 
     var defaults_div = jQuery(".googlecharts_filter_defaults").empty();
@@ -4190,42 +4188,38 @@ function populateDefaults(id, type, settings){
             jQuery(".googlecharts_defaultsfilter_number_options").append('<div class="googlecharts_defaultsfilter_number_ticks"><label>Ticks</label><input type="text"/></div><div style="clear:both"></div>');
             jQuery(".googlecharts_defaultsfilter_number_options").append('<div class="googlecharts_defaultsfilter_number_unitincrement"><label>Unit increment</label><input type="text"/></div><div style="clear:both"></div>');
             jQuery(".googlecharts_defaultsfilter_number_options").append('<div class="googlecharts_defaultsfilter_number_blockincrement"><label>Block increment</label><input type="text"/></div><div style="clear:both"></div>');
-            jQuery(".googlecharts_defaultsfilter_number_options").append('<div class="googlecharts_defaultsfilter_number_showrangevalues"><label>Show range values</label><select></select><div style="clear:both"></div>');
             jQuery(".googlecharts_defaultsfilter_number_options").append('<div class="googlecharts_defaultsfilter_number_orientation"><label>Orientation</label><select></select><div style="clear:both"></div>');
 
-            jQuery(".googlecharts_defaultsfilter_number_showrangevalues select").append("<option value='true'>true</option>");
-            jQuery(".googlecharts_defaultsfilter_number_showrangevalues select").append("<option value='false'>false</option>");
             jQuery(".googlecharts_defaultsfilter_number_orientation select").append("<option value='horizontal'>horizontal</option>");
             jQuery(".googlecharts_defaultsfilter_number_orientation select").append("<option value='vertical'>vertical</option>");
 
-            if (edit_filter_settings.step === 0){
+            if ((edit_filter_settings.step === 0) || (edit_filter_settings.step === "")){
                 jQuery(".googlecharts_defaultsfilter_number_step input").attr("placeholder", "auto");
             }
             else{
                 jQuery(".googlecharts_defaultsfilter_number_step input").attr("value", edit_filter_settings.step);
             }
 
-            if (edit_filter_settings.ticks === 0){
+            if ((edit_filter_settings.ticks === 0) || (edit_filter_settings.ticks === '')){
                 jQuery(".googlecharts_defaultsfilter_number_ticks input").attr("placeholder", "auto");
             }
             else{
                 jQuery(".googlecharts_defaultsfilter_number_ticks input").attr("value", edit_filter_settings.ticks);
             }
 
-            if (edit_filter_settings.unitIncrement === 0){
+            if ((edit_filter_settings.unitIncrement === 0) || (edit_filter_settings.unitIncrement === '')){
                 jQuery(".googlecharts_defaultsfilter_number_unitincrement input").attr("placeholder", "auto");
             }
             else{
                 jQuery(".googlecharts_defaultsfilter_number_unitincrement input").attr("value", edit_filter_settings.unitIncrement);
             }
 
-            if (edit_filter_settings.blockIncrement === 0){
+            if ((edit_filter_settings.blockIncrement === 0) || (edit_filter_settings.blockIncrement === '')){
                 jQuery(".googlecharts_defaultsfilter_number_blockincrement input").attr("placeholder", "auto");
             }
             else{
                 jQuery(".googlecharts_defaultsfilter_number_blockincrement input").attr("value", edit_filter_settings.blockIncrement);
             }
-            jQuery(".googlecharts_defaultsfilter_number_showrangevalues select").attr("value", edit_filter_settings.showRangeValues);
             jQuery(".googlecharts_defaultsfilter_number_orientation select").attr("value", edit_filter_settings.orientation);
         }
         else {
@@ -4477,7 +4471,6 @@ function openAddEditChartFilterDialog(id, type, filter_settings){
                         var ticks = jQuery(".googlecharts_defaultsfilter_number_ticks input").attr("value");
                         var unitIncrement = jQuery(".googlecharts_defaultsfilter_number_unitincrement input").attr("value");
                         var blockIncrement = jQuery(".googlecharts_defaultsfilter_number_blockincrement input").attr("value");
-                        var showRangeValues = jQuery(".googlecharts_defaultsfilter_number_showrangevalues select").attr("value");
                         var orientation = jQuery(".googlecharts_defaultsfilter_number_orientation select").attr("value");
                         if (isNaN(step)){
                             alert("Step is not a number!");
@@ -4507,7 +4500,6 @@ function openAddEditChartFilterDialog(id, type, filter_settings){
                         if (blockIncrement !== 0){
                             filter_settings.blockIncrement = blockIncrement;
                         }
-                        filter_settings.showRangeValues = showRangeValues;
                         filter_settings.orientation = orientation;
                     }
                     if (selectedFilter === "1"){

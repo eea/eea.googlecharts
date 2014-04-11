@@ -1039,7 +1039,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
      .addClass('eea-icon').addClass('eea-icon-plus').addClass('ui-corner-all')
      .prependTo(header)
      .click(function(){
-       self.new_edit_filter(self.box, "add", "[]", "{}");
+       self.new_edit_filter(self.box, "add", "[]", {});
      });
 
     jQuery("input[name='width']", header).val(width).change(function(){
@@ -1220,13 +1220,13 @@ DavizEdit.GoogleDashboardFilters.prototype = {
                 jQuery(".googlecharts_filter_type").find("option[value='1']").show();
                 jQuery(".googlecharts_filter_type").find("option[value='0']").attr("selected", "selected");
             }
-            populateDefaults(tmp_id, type);
+            populateDefaults(tmp_id, type, filter_settings);
         });
         jQuery(".googlecharts_filter_type").bind("change", function(){
-            populateDefaults(tmp_id, type);
+            populateDefaults(tmp_id, type, filter_settings);
         });
 
-        populateDefaults(tmp_id, type);
+        populateDefaults(tmp_id, type, filter_settings);
       },
       buttons: [
         {
@@ -1277,7 +1277,6 @@ DavizEdit.GoogleDashboardFilters.prototype = {
                 var ticks = jQuery(".googlecharts_defaultsfilter_number_ticks input").attr("value");
                 var unitIncrement = jQuery(".googlecharts_defaultsfilter_number_unitincrement input").attr("value");
                 var blockIncrement = jQuery(".googlecharts_defaultsfilter_number_blockincrement input").attr("value");
-                var showRangeValues = jQuery(".googlecharts_defaultsfilter_number_showrangevalues select").attr("value");
                 var orientation = jQuery(".googlecharts_defaultsfilter_number_orientation select").attr("value");
                 if (isNaN(step)){
                     alert("Step is not a number!");
@@ -1307,9 +1306,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
                 if (blockIncrement !== 0){
                     ui_filter_settings.blockIncrement = blockIncrement;
                 }
-                ui_filter_settings.showRangeValues = showRangeValues;
                 ui_filter_settings.orientation = orientation;
-
             }
             if (selectedFilter === "1"){
                 defaults.push(jQuery(".googlecharts_defaultsfilter_string input").attr("value"));
@@ -1351,7 +1348,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
         if (filter.column === query.column){
             filter.type = query.type;
             filter.defaults = query.defaults;
-            filter.settings = filter_settings;
+            filter.settings = JSON.stringify(filter_settings);
             query.settings = JSON.stringify(filter_settings);
             found = true;
         }
@@ -1361,7 +1358,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
         filter.column = query.column;
         filter.type = query.type;
         filter.defaults = query.defaults;
-        filter.settings = filter_settings;
+        filter.settings = JSON.stringify(filter_settings);
         query.settings = JSON.stringify(filter_settings);
         self.settings.filters.push(filter);
     }
@@ -1462,12 +1459,16 @@ DavizEdit.GoogleDashboardFilter.prototype = {
         jQuery.each(self.parent.settings.filters, function(idx, filter){
             if (filter.column === self.settings.column){
                 filter_defaults = filter.defaults;
+                filter_settings = filter.settings;
             }
         });
         if (filter_defaults === ""){
             filter_defaults = "[]";
         }
-        self.parent.new_edit_filter(self.parent.context, self.settings.column, filter_defaults, {});
+        if ((filter_settings === undefined) || (filter_settings === "")){
+            filter_settings = "{}";
+        }
+        self.parent.new_edit_filter(self.parent.context, self.settings.column, filter_defaults, JSON.parse(filter_settings));
       });
 
     jQuery('<div>')
