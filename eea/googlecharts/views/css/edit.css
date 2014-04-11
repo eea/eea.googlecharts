@@ -1561,6 +1561,23 @@ li.googlechart > fieldset > div > a > span {
     width: 210px !important;
 }
 
+.googlecharts_defaultsfilter_number input[type="text"] {
+    width: 50px !important;
+    float: right;
+}
+
+.googlecharts_defaultsfilter_number select {
+    width: 100px !important;
+    float: right;
+}
+
+.googlecharts_defaultsfilter_number label {
+    float:left;
+}
+
+.googlecharts_defaultsfilter_number_options{
+    margin-left:10px;
+}
 .googlecharts_defaultsfilter_number_error{
     color:#FF0000;
 }
@@ -1960,3 +1977,4 @@ input[type=text].eea-googlechart-trendlines-config-value{
 .eea-menu-item .tutorial-icon {
    margin-top:10px;
 }
+
