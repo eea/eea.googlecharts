@@ -3,6 +3,8 @@ Changelog
 
 9.7-dev - (unreleased)
 ----------------------
+* Feature: Added new configuration options for range filters
+  [szabozo0 refs #19171]
 * Change: Changed embed popup, by default selected values for filters are not included in the embed string
   [szabozo0]
 * Bugfix: Fixed charteditor for sparkline charts

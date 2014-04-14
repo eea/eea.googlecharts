@@ -360,7 +360,6 @@ function drawGoogleChart(options){
                         filterSettings.state.lowValue=value.defaults[0];
                         filterSettings.state.highValue=value.defaults[1];
                     }
-console.log(value);
                     if (value.hasOwnProperty("settings")){
                         filterSettings.options.ui = value.settings;
                     }
@@ -633,12 +632,19 @@ function dashboardFilterChanged(options){
     var filtersStates = {};
     jQuery(options.dashboardFilters).each(function(idx, filter){
         var filterName = filter.getOption("filterColumnLabel");
-        var filterState = filter.getState();
-        filtersStates[filterName] = filterState;
+        filtersStates[filterName] = {}
+        jQuery.extend(true, filtersStates[filterName], filter.getState());
+
     });
     jQuery(options.hiddenDashboardFilters).each(function(idx, filter){
         var filterName = filter.getOption("filterColumnLabel");
-        filter.setState(filtersStates[filterName]);
+        var state = {};
+        jQuery.extend(true, state, filtersStates[filterName])
+        /* workaround for setting range filters */
+        delete (state.lowThumbAtMinimum);
+        delete (state.highThumbAtMaximum);
+        /* end of workaround */
+        filter.setState(state);
         filter.draw();
     });
     return;
