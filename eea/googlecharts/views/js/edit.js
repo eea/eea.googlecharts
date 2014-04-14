@@ -4169,16 +4169,12 @@ function populateDefaults(id, type, settings){
                 jQuery(".googlecharts_defaultsfilter_number_max input").attr("placeholder", defaults[defaults.length-1]);
             }
             else{
-                if (edit_filter_defaults[0].length !== 0){
+                if (edit_filter_defaults.length !== 0){
                     jQuery(".googlecharts_defaultsfilter_number_min input").attr("value", edit_filter_defaults[0]);
+                    jQuery(".googlecharts_defaultsfilter_number_max input").attr("value", edit_filter_defaults[edit_filter_defaults.length-1]);
                 }
                 else{
                     jQuery(".googlecharts_defaultsfilter_number_min input").attr("placeholder", defaults[0]);
-                }
-                if (edit_filter_defaults[edit_filter_defaults.length-1].length !== 0){
-                    jQuery(".googlecharts_defaultsfilter_number_max input").attr("value", edit_filter_defaults[edit_filter_defaults.length-1]);
-                }
-                else {
                     jQuery(".googlecharts_defaultsfilter_number_max input").attr("placeholder", defaults[defaults.length-1]);
                 }
             }
