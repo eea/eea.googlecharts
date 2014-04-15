@@ -1039,7 +1039,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
      .addClass('eea-icon').addClass('eea-icon-plus').addClass('ui-corner-all')
      .prependTo(header)
      .click(function(){
-       self.new_edit_filter(self.box, "add", "[]");
+       self.new_edit_filter(self.box, "add", "[]", {});
      });
 
     jQuery("input[name='width']", header).val(width).change(function(){
@@ -1093,7 +1093,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     }
   },
 
-  new_edit_filter: function(context, type, filter_defaults){
+  new_edit_filter: function(context, type, filter_defaults, filter_settings){
     var self = this;
     var fcolumns;
     if(type === "add"){
@@ -1201,6 +1201,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
         jQuery("#googlechartid_tmp_edit_dashboard .googlechart_columns").attr("value", JSON.stringify(chart_columns));
         jQuery("#googlechartid_tmp_edit_dashboard .googlechart_row_filters").attr("value", "");
         jQuery("#googlechartid_tmp_edit_dashboard .googlechart_filteritem_defaults").attr("value", filter_defaults);
+        jQuery("#googlechartid_tmp_edit_dashboard .googlechart_filteritem_settings").attr("value", filter_settings);
         jQuery("#googlechartid_tmp_edit_dashboard .googlechart_filteritem_type").attr("value", jQuery("#googlechartid_tmp_edit_dashboard .googlecharts_filter_type").attr("value"));
 
         var buttons = jQuery(this).parent().find("button[title!='close']");
@@ -1219,13 +1220,13 @@ DavizEdit.GoogleDashboardFilters.prototype = {
                 jQuery(".googlecharts_filter_type").find("option[value='1']").show();
                 jQuery(".googlecharts_filter_type").find("option[value='0']").attr("selected", "selected");
             }
-            populateDefaults(tmp_id, type);
+            populateDefaults(tmp_id, type, filter_settings);
         });
         jQuery(".googlecharts_filter_type").bind("change", function(){
-            populateDefaults(tmp_id, type);
+            populateDefaults(tmp_id, type, filter_settings);
         });
 
-        populateDefaults(tmp_id, type);
+        populateDefaults(tmp_id, type, filter_settings);
       },
       buttons: [
         {
@@ -1242,6 +1243,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
             var selectedColumn = jQuery(".googlecharts_filter_columns").val();
             var selectedFilter = jQuery(".googlecharts_filter_type").val();
             var selectedColumnName = "";
+            var ui_filter_settings = {};
             jQuery(".googlecharts_filter_columns").find("option").each(function(idx, filter){
                 if (jQuery(filter).attr("value") === selectedColumn){
                     selectedColumnName = jQuery(filter).html();
@@ -1271,6 +1273,40 @@ DavizEdit.GoogleDashboardFilters.prototype = {
                 }
                 defaults.push(min);
                 defaults.push(max);
+                var step = jQuery(".googlecharts_defaultsfilter_number_step input").attr("value");
+                var ticks = jQuery(".googlecharts_defaultsfilter_number_ticks input").attr("value");
+                var unitIncrement = jQuery(".googlecharts_defaultsfilter_number_unitincrement input").attr("value");
+                var blockIncrement = jQuery(".googlecharts_defaultsfilter_number_blockincrement input").attr("value");
+                var orientation = jQuery(".googlecharts_defaultsfilter_number_orientation select").attr("value");
+                if (isNaN(step)){
+                    alert("Step is not a number!");
+                    return;
+                }
+                if (isNaN(ticks)){
+                    alert("Ticks is not a number!");
+                    return;
+                }
+                if (isNaN(unitIncrement)){
+                    alert("Unit increment is not a number!");
+                    return;
+                }
+                if (isNaN(blockIncrement)){
+                    alert("Block increment is not a number!");
+                    return;
+                }
+                if (step !== 0){
+                    ui_filter_settings.step = step;
+                }
+                if (ticks !== 0){
+                    ui_filter_settings.ticks = ticks;
+                }
+                if (unitIncrement !== 0){
+                    ui_filter_settings.unitIncrement = unitIncrement;
+                }
+                if (blockIncrement !== 0){
+                    ui_filter_settings.blockIncrement = blockIncrement;
+                }
+                ui_filter_settings.orientation = orientation;
             }
             if (selectedFilter === "1"){
                 defaults.push(jQuery(".googlecharts_defaultsfilter_string input").attr("value"));
@@ -1284,7 +1320,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
             }
             jQuery("#googlechartid_tmp_edit_dashboard .googlechart_filteritem_defaults").attr("value", JSON.stringify(defaults));
             var form = jQuery('form', widget);
-            self.new_edit_filter_onSave(form, type);
+            self.new_edit_filter_onSave(form, type, ui_filter_settings);
             widget.dialog("close");
           }
         }
@@ -1292,7 +1328,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     });
   },
 
-  new_edit_filter_onSave: function(form, type){
+  new_edit_filter_onSave: function(form, type, filter_settings){
     var self = this;
     var query = {};
     jQuery.each(form.serializeArray(), function(){
@@ -1312,6 +1348,8 @@ DavizEdit.GoogleDashboardFilters.prototype = {
         if (filter.column === query.column){
             filter.type = query.type;
             filter.defaults = query.defaults;
+            filter.settings = JSON.stringify(filter_settings);
+            query.settings = JSON.stringify(filter_settings);
             found = true;
         }
     });
@@ -1320,6 +1358,8 @@ DavizEdit.GoogleDashboardFilters.prototype = {
         filter.column = query.column;
         filter.type = query.type;
         filter.defaults = query.defaults;
+        filter.settings = JSON.stringify(filter_settings);
+        query.settings = JSON.stringify(filter_settings);
         self.settings.filters.push(filter);
     }
     form = self.context.parents('.daviz-view-form');
@@ -1419,12 +1459,17 @@ DavizEdit.GoogleDashboardFilter.prototype = {
         jQuery.each(self.parent.settings.filters, function(idx, filter){
             if (filter.column === self.settings.column){
                 filter_defaults = filter.defaults;
+                filter_settings = filter.settings;
             }
         });
-        if (filter_defaults === ""){
+
+        if ((filter_defaults === undefined) || (filter_defaults === "")){
             filter_defaults = "[]";
         }
-        self.parent.new_edit_filter(self.parent.context, self.settings.column, filter_defaults);
+        if ((filter_settings === undefined) || (filter_settings === "")){
+            filter_settings = "{}";
+        }
+        self.parent.new_edit_filter(self.parent.context, self.settings.column, filter_defaults, JSON.parse(filter_settings));
       });
 
     jQuery('<div>')

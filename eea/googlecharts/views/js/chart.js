@@ -360,6 +360,10 @@ function drawGoogleChart(options){
                         filterSettings.state.lowValue=value.defaults[0];
                         filterSettings.state.highValue=value.defaults[1];
                     }
+                    if (value.hasOwnProperty("settings")){
+                        filterSettings.options.ui = value.settings;
+                    }
+                    filterSettings.options.ui.showRangeValues = false;
                     break;
                 case "1":
                     filterSettings.controlType = 'StringFilter';
@@ -391,10 +395,30 @@ function drawGoogleChart(options){
             var filter = new google.visualization.ControlWrapper(filterSettings);
 
             google.visualization.events.addListener(filter, 'statechange', function(event){
+                /* workaround for #19292 */
+                if (filter.getControlType() === "NumberRangeFilter"){
+                    jQuery("#"+filter.getContainerId()).find("span.google-visualization-controls-rangefilter-thumblabel").eq(0).text(filter.getState().lowValue);
+                    jQuery("#"+filter.getContainerId()).find("span.google-visualization-controls-rangefilter-thumblabel").eq(1).text(filter.getState().highValue);
+                }
+                /* end of workaround */
                 updateHashForRowFilter(settings.availableColumns, filter, value.type, settings.updateHash);
                 settings.customFilterHandler(settings.customFilterOptions);
                 updateFilterDivs();
             });
+
+            /* workaround for #19292 */
+            google.visualization.events.addListener(filter, 'ready', function(event){
+                var slider = jQuery("#"+filter.getContainerId()).find("div[role='slider']");
+                jQuery("<span>")
+                    .addClass("google-visualization-controls-rangefilter-thumblabel")
+                    .text(filter.getState().lowValue)
+                    .insertBefore(slider);
+                jQuery("<span>")
+                    .addClass("google-visualization-controls-rangefilter-thumblabel")
+                    .text(filter.getState().highValue)
+                    .insertAfter(slider);
+            });
+            /* end of workaround */
 
             filtersArray.push(filter);
         });
@@ -608,12 +632,19 @@ function dashboardFilterChanged(options){
     var filtersStates = {};
     jQuery(options.dashboardFilters).each(function(idx, filter){
         var filterName = filter.getOption("filterColumnLabel");
-        var filterState = filter.getState();
-        filtersStates[filterName] = filterState;
+        filtersStates[filterName] = {};
+        jQuery.extend(true, filtersStates[filterName], filter.getState());
+
     });
     jQuery(options.hiddenDashboardFilters).each(function(idx, filter){
         var filterName = filter.getOption("filterColumnLabel");
-        filter.setState(filtersStates[filterName]);
+        var state = {};
+        jQuery.extend(true, state, filtersStates[filterName]);
+        /* workaround for setting range filters */
+        delete (state.lowThumbAtMinimum);
+        delete (state.highThumbAtMaximum);
+        /* end of workaround */
+        filter.setState(state);
         filter.draw();
     });
     return;
@@ -647,7 +678,14 @@ function drawGoogleDashboard(options){
             def_str = "[]";
         }
         var defaults = JSON.parse(def_str);
-        dashboard_filters[value.column] = {"type":value.type, defaults:defaults};
+        var filter_settings_str = value.settings;
+
+        if ((filter_settings_str === undefined) || (filter_settings_str === "")){
+            filter_settings_str = "{}";
+        }
+
+        var filter_settings = JSON.parse(filter_settings_str);
+        dashboard_filters[value.column] = {"type":value.type, defaults:defaults, settings:filter_settings};
     });
     // Dashboard charts
     jQuery.each(settings.chartsSettings, function(key, value){

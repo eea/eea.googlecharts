@@ -224,7 +224,7 @@ function changeChartHiddenState(id){
     }
 }
 
-function addFilter(id, column, filtertype, columnName, defaults){
+function addFilter(id, column, filtertype, columnName, defaults, filter_settings){
     filter_id = 'googlechart_filter_'+id+'_'+column;
     var filter = jQuery("#"+filter_id);
     var shouldAdd = false;
@@ -239,12 +239,14 @@ function addFilter(id, column, filtertype, columnName, defaults){
                     "<input type='hidden' class='googlechart_filteritem_type'/>" +
                     "<input type='hidden' class='googlechart_filteritem_column'/>" +
                     "<input type='hidden' class='googlechart_filteritem_defaults'/>" +
+                    "<input type='hidden' class='googlechart_filteritem_settings'/>" +
                  "</li>");
     }
     filter.find(".googlechart_filteritem_id").text(columnName);
     filter.find(".googlechart_filteritem_type").attr("value", filtertype);
     filter.find(".googlechart_filteritem_column").attr("value", column);
     filter.find(".googlechart_filteritem_defaults").attr("value", JSON.stringify(defaults));
+    filter.find(".googlechart_filteritem_settings").attr("value", JSON.stringify(filter_settings));
     if (shouldAdd){
         filter.appendTo("#googlechart_filters_"+id);
     }
@@ -1157,15 +1159,19 @@ function addChart(options){
         chartColumns = JSON.parse(settings.columns);
     }
     jQuery.each(settings.filters,function(key,value){
+        var filter_settings = value.settings;
+        if (filter_settings === undefined){
+            filter_settings = {};
+        }
         if (key.indexOf('pre_config_') === -1){
             jQuery(chartColumns.prepared).each(function(idx, column){
                 if (column.name === key){
-                    addFilter(settings.id, key, value.type, column.fullname, value.defaults);
+                    addFilter(settings.id, key, value.type, column.fullname, value.defaults, filter_settings);
                 }
             });
         }
         else {
-            addFilter(settings.id, key, value.type, getAvailable_columns_and_rows(settings.unpivotsettings, available_columns, all_rows).available_columns[key.substr(11)], value.defaults);
+            addFilter(settings.id, key, value.type, getAvailable_columns_and_rows(settings.unpivotsettings, available_columns, all_rows).available_columns[key.substr(11)], value.defaults, filter_settings);
         }
     });
     if (shouldMark){
@@ -4080,7 +4086,16 @@ function openEditChart(id){
     });
 }
 
-function populateDefaults(id, type){
+function populateDefaults(id, type, settings){
+    var edit_filter_settings = {
+        step:0,
+        ticks:0,
+        unitIncrement:0,
+        blockIncrement:0,
+        orientation:'horizontal'
+    };
+    jQuery.extend(edit_filter_settings, settings);
+
     var defaults_div = jQuery(".googlecharts_filter_defaults").empty();
     var selectedColumnName = jQuery(".googlecharts_filter_columns").attr("value");
     var defaults = [];
@@ -4127,6 +4142,13 @@ function populateDefaults(id, type){
     else{
         defaults = defaults.sort();
     }
+    var clean_defaults = [];
+    for (i = 0; i < defaults.length; i++){
+        if (defaults[i] !== undefined){
+            clean_defaults.push(defaults[i]);
+        }
+    }
+    defaults = clean_defaults;
     var filter_type = jQuery(".googlecharts_filter_type").attr("value");
 
     defaults_div.append('<label>Defaults for filter</label>');
@@ -4147,26 +4169,55 @@ function populateDefaults(id, type){
     if (filter_type === "0"){
         defaults_div.append('<div class="googlecharts_defaultsfilter_number"></div>');
         if (isNumber){
-            jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_min"><label>Min. Value</label><input type="text"/></div>');
-            jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_max"><label>Max. Value</label><input type="text"/></div>');
-            if ((type === "add") || (edit_filter_type !== "0")){
-                jQuery(".googlecharts_defaultsfilter_number_min input").attr("placeholder", defaults[0]);
-                jQuery(".googlecharts_defaultsfilter_number_max input").attr("placeholder", defaults[defaults.length-1]);
+            jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_min"><label>Min. Value</label><input type="text"/></div><div style="clear:both"></div>');
+            jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_max"><label>Max. Value</label><input type="text"/></div><div style="clear:both"></div>');
+            jQuery(".googlecharts_defaultsfilter_number_min input").attr("placeholder", defaults[0]);
+            jQuery(".googlecharts_defaultsfilter_number_max input").attr("placeholder", defaults[defaults.length-1]);
+            if (edit_filter_defaults.length > 0){
+                jQuery(".googlecharts_defaultsfilter_number_min input").attr("value", edit_filter_defaults[0]);
+            }
+            if (edit_filter_defaults.length > 1){
+                jQuery(".googlecharts_defaultsfilter_number_max input").attr("value", edit_filter_defaults[edit_filter_defaults.length-1]);
+            }
+            jQuery(".googlecharts_defaultsfilter_number").append('<label>Filter options</label><div style="clear:both"></div>');
+            jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_options"></div>');
+            jQuery(".googlecharts_defaultsfilter_number_options").append('<div class="googlecharts_defaultsfilter_number_step"><label>Step</label><input type="text"/></div><div style="clear:both"></div>');
+            jQuery(".googlecharts_defaultsfilter_number_options").append('<div class="googlecharts_defaultsfilter_number_ticks"><label>Ticks</label><input type="text"/></div><div style="clear:both"></div>');
+            jQuery(".googlecharts_defaultsfilter_number_options").append('<div class="googlecharts_defaultsfilter_number_unitincrement"><label>Unit increment</label><input type="text"/></div><div style="clear:both"></div>');
+            jQuery(".googlecharts_defaultsfilter_number_options").append('<div class="googlecharts_defaultsfilter_number_blockincrement"><label>Block increment</label><input type="text"/></div><div style="clear:both"></div>');
+            jQuery(".googlecharts_defaultsfilter_number_options").append('<div class="googlecharts_defaultsfilter_number_orientation"><label>Orientation</label><select></select><div style="clear:both"></div>');
+
+            jQuery(".googlecharts_defaultsfilter_number_orientation select").append("<option value='horizontal'>horizontal</option>");
+            jQuery(".googlecharts_defaultsfilter_number_orientation select").append("<option value='vertical'>vertical</option>");
+
+            if ((edit_filter_settings.step === 0) || (edit_filter_settings.step === "")){
+                jQuery(".googlecharts_defaultsfilter_number_step input").attr("placeholder", "auto");
             }
             else{
-                if (edit_filter_defaults[0].length !== 0){
-                    jQuery(".googlecharts_defaultsfilter_number_min input").attr("value", edit_filter_defaults[0]);
-                }
-                else{
-                    jQuery(".googlecharts_defaultsfilter_number_min input").attr("placeholder", defaults[0]);
-                }
-                if (edit_filter_defaults[edit_filter_defaults.length-1].length !== 0){
-                    jQuery(".googlecharts_defaultsfilter_number_max input").attr("value", edit_filter_defaults[edit_filter_defaults.length-1]);
-                }
-                else {
-                    jQuery(".googlecharts_defaultsfilter_number_max input").attr("placeholder", defaults[defaults.length-1]);
-                }
+                jQuery(".googlecharts_defaultsfilter_number_step input").attr("value", edit_filter_settings.step);
             }
+
+            if ((edit_filter_settings.ticks === 0) || (edit_filter_settings.ticks === '')){
+                jQuery(".googlecharts_defaultsfilter_number_ticks input").attr("placeholder", "auto");
+            }
+            else{
+                jQuery(".googlecharts_defaultsfilter_number_ticks input").attr("value", edit_filter_settings.ticks);
+            }
+
+            if ((edit_filter_settings.unitIncrement === 0) || (edit_filter_settings.unitIncrement === '')){
+                jQuery(".googlecharts_defaultsfilter_number_unitincrement input").attr("placeholder", "auto");
+            }
+            else{
+                jQuery(".googlecharts_defaultsfilter_number_unitincrement input").attr("value", edit_filter_settings.unitIncrement);
+            }
+
+            if ((edit_filter_settings.blockIncrement === 0) || (edit_filter_settings.blockIncrement === '')){
+                jQuery(".googlecharts_defaultsfilter_number_blockincrement input").attr("placeholder", "auto");
+            }
+            else{
+                jQuery(".googlecharts_defaultsfilter_number_blockincrement input").attr("value", edit_filter_settings.blockIncrement);
+            }
+            jQuery(".googlecharts_defaultsfilter_number_orientation select").attr("value", edit_filter_settings.orientation);
         }
         else {
             jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_error"><b>Warning:</b> Values from selected column are not numbers</div>');
@@ -4231,9 +4282,10 @@ function populateDefaults(id, type){
         defaults_div.append('<div class="googlecharts_defaultsfilter_slickgrid daviz-data-table daviz-slick-table slick_newTable" style="width:270px;height:200px"></div>');
         drawDefaultValuesGrid(".googlecharts_defaultsfilter_slickgrid", defaults_list, true);
     }
+    jQuery(".googlecharts_filter_config").dialog("option", "position", "center");
 }
 
-function openAddEditChartFilterDialog(id, type){
+function openAddEditChartFilterDialog(id, type, filter_settings){
     jQuery(".googlecharts_filter_config").remove();
     jQuery("#googlechartid_tmp_edit_dashboard").remove();
 
@@ -4262,6 +4314,7 @@ function openAddEditChartFilterDialog(id, type){
         edit_filter_type = jQuery("#" + type + " .googlechart_filteritem_type").attr("value");
         edit_filter_col = jQuery("#" + type + " .googlechart_filteritem_column").attr("value");
         edit_filter_defaults = JSON.parse(jQuery("#" + type + " .googlechart_filteritem_defaults").attr("value"));
+        edit_filter_settings = JSON.parse(jQuery("#" + type + " .googlechart_filteritem_settings").attr("value"));
     }
     var orderedFilters = jQuery("#googlechart_filters_"+id).sortable('toArray');
     var used_columns = [];
@@ -4364,12 +4417,12 @@ function openAddEditChartFilterDialog(id, type){
                     jQuery(".googlecharts_filter_type").find("option[value='1']").show();
                     jQuery(".googlecharts_filter_type").find("option[value='0']").attr("selected", "selected");
                 }
-                populateDefaults(id, type);
+                populateDefaults(id, type, filter_settings);
             });
             jQuery(".googlecharts_filter_type").bind("change", function(){
-                populateDefaults(id, type);
+                populateDefaults(id, type, filter_settings);
             });
-            populateDefaults(id, type);
+            populateDefaults(id, type, filter_settings);
         },
         buttons:[
             {
@@ -4384,6 +4437,7 @@ function openAddEditChartFilterDialog(id, type){
                     var selectedColumn = jQuery(".googlecharts_filter_columns").val();
                     var selectedFilter = jQuery(".googlecharts_filter_type").val();
                     var selectedColumnName = "";
+                    var filter_settings = {};
                     jQuery(".googlecharts_filter_columns").find("option").each(function(idx, filter){
                         if (jQuery(filter).attr("value") === selectedColumn){
                             selectedColumnName = jQuery(filter).html();
@@ -4410,9 +4464,44 @@ function openAddEditChartFilterDialog(id, type){
                         }
                         defaults.push(min);
                         defaults.push(max);
+                        var step = jQuery(".googlecharts_defaultsfilter_number_step input").attr("value");
+                        var ticks = jQuery(".googlecharts_defaultsfilter_number_ticks input").attr("value");
+                        var unitIncrement = jQuery(".googlecharts_defaultsfilter_number_unitincrement input").attr("value");
+                        var blockIncrement = jQuery(".googlecharts_defaultsfilter_number_blockincrement input").attr("value");
+                        var orientation = jQuery(".googlecharts_defaultsfilter_number_orientation select").attr("value");
+                        if (isNaN(step)){
+                            alert("Step is not a number!");
+                            return;
+                        }
+                        if (isNaN(ticks)){
+                            alert("Ticks is not a number!");
+                            return;
+                        }
+                        if (isNaN(unitIncrement)){
+                            alert("Unit increment is not a number!");
+                            return;
+                        }
+                        if (isNaN(blockIncrement)){
+                            alert("Block increment is not a number!");
+                            return;
+                        }
+                        if (step !== 0){
+                            filter_settings.step = step;
+                        }
+                        if (ticks !== 0){
+                            filter_settings.ticks = ticks;
+                        }
+                        if (unitIncrement !== 0){
+                            filter_settings.unitIncrement = unitIncrement;
+                        }
+                        if (blockIncrement !== 0){
+                            filter_settings.blockIncrement = blockIncrement;
+                        }
+                        filter_settings.orientation = orientation;
                     }
                     if (selectedFilter === "1"){
                         defaults.push(jQuery(".googlecharts_defaultsfilter_string input").attr("value"));
+                        filter_settings = {};
                     }
                     if ((selectedFilter === "2") || (selectedFilter === "3")){
                         jQuery.each(defaultfilter_data, function(idx, value){
@@ -4426,7 +4515,7 @@ function openAddEditChartFilterDialog(id, type){
                         alert("Please select column and filter type!");
                     }
                     else{
-                        addFilter(id, selectedColumn, selectedFilter, selectedColumnName, defaults);
+                        addFilter(id, selectedColumn, selectedFilter, selectedColumnName, defaults, filter_settings);
                         markChartAsModified(id);
                         jQuery(this).dialog("close");
                     }
@@ -4638,6 +4727,7 @@ function saveCharts(){
             filter_vals = {};
             filter_vals.type = jQuery("#"+filter+" .googlechart_filteritem_type").attr("value");
             filter_vals.defaults = JSON.parse(jQuery("#"+filter+" .googlechart_filteritem_defaults").attr("value"));
+            filter_vals.settings = JSON.parse(jQuery("#"+filter+" .googlechart_filteritem_settings").attr("value"));
             filters[jQuery("#"+filter+" .googlechart_filteritem_column").attr("value")] = filter_vals;
         });
         chart.filters = JSON.stringify(filters);
@@ -5060,7 +5150,8 @@ function init_googlecharts_edit(){
         chartId = jQuery(this).closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
-        openAddEditChartFilterDialog(id, filterToEdit.attr("id"));
+        filter_settings = JSON.parse(jQuery(this).closest('.googlechart_filteritem').find(".googlechart_filteritem_settings").attr("value"));
+        openAddEditChartFilterDialog(id, filterToEdit.attr("id"), filter_settings);
     });
 
     jQuery("#googlecharts_list").delegate(".remove_filter_icon","click",function(){
@@ -5104,7 +5195,7 @@ function init_googlecharts_edit(){
         chartId = jQuery(this).closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
-        openAddEditChartFilterDialog(id, "add");
+        openAddEditChartFilterDialog(id, "add", {});
     });
 
     jQuery("#googlecharts_list").delegate(".addgooglechartcolumnfilter","click",function(){
