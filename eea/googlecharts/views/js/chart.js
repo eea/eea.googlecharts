@@ -632,14 +632,14 @@ function dashboardFilterChanged(options){
     var filtersStates = {};
     jQuery(options.dashboardFilters).each(function(idx, filter){
         var filterName = filter.getOption("filterColumnLabel");
-        filtersStates[filterName] = {}
+        filtersStates[filterName] = {};
         jQuery.extend(true, filtersStates[filterName], filter.getState());
 
     });
     jQuery(options.hiddenDashboardFilters).each(function(idx, filter){
         var filterName = filter.getOption("filterColumnLabel");
         var state = {};
-        jQuery.extend(true, state, filtersStates[filterName])
+        jQuery.extend(true, state, filtersStates[filterName]);
         /* workaround for setting range filters */
         delete (state.lowThumbAtMinimum);
         delete (state.highThumbAtMaximum);

@@ -4142,6 +4142,13 @@ function populateDefaults(id, type, settings){
     else{
         defaults = defaults.sort();
     }
+    var clean_defaults = [];
+    for (i = 0; i < defaults.length; i++){
+        if (defaults[i] !== undefined){
+            clean_defaults.push(defaults[i]);
+        }
+    }
+    defaults = clean_defaults;
     var filter_type = jQuery(".googlecharts_filter_type").attr("value");
 
     defaults_div.append('<label>Defaults for filter</label>');
@@ -4164,19 +4171,13 @@ function populateDefaults(id, type, settings){
         if (isNumber){
             jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_min"><label>Min. Value</label><input type="text"/></div><div style="clear:both"></div>');
             jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_max"><label>Max. Value</label><input type="text"/></div><div style="clear:both"></div>');
-            if ((type === "add") || (edit_filter_type !== "0")){
-                jQuery(".googlecharts_defaultsfilter_number_min input").attr("placeholder", defaults[0]);
-                jQuery(".googlecharts_defaultsfilter_number_max input").attr("placeholder", defaults[defaults.length-1]);
+            jQuery(".googlecharts_defaultsfilter_number_min input").attr("placeholder", defaults[0]);
+            jQuery(".googlecharts_defaultsfilter_number_max input").attr("placeholder", defaults[defaults.length-1]);
+            if (edit_filter_defaults.length > 0){
+                jQuery(".googlecharts_defaultsfilter_number_min input").attr("value", edit_filter_defaults[0]);
             }
-            else{
-                if (edit_filter_defaults.length !== 0){
-                    jQuery(".googlecharts_defaultsfilter_number_min input").attr("value", edit_filter_defaults[0]);
-                    jQuery(".googlecharts_defaultsfilter_number_max input").attr("value", edit_filter_defaults[edit_filter_defaults.length-1]);
-                }
-                else{
-                    jQuery(".googlecharts_defaultsfilter_number_min input").attr("placeholder", defaults[0]);
-                    jQuery(".googlecharts_defaultsfilter_number_max input").attr("placeholder", defaults[defaults.length-1]);
-                }
+            if (edit_filter_defaults.length > 1){
+                jQuery(".googlecharts_defaultsfilter_number_max input").attr("value", edit_filter_defaults[edit_filter_defaults.length-1]);
             }
             jQuery(".googlecharts_defaultsfilter_number").append('<label>Filter options</label><div style="clear:both"></div>');
             jQuery(".googlecharts_defaultsfilter_number").append('<div class="googlecharts_defaultsfilter_number_options"></div>');

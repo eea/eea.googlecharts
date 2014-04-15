@@ -1318,7 +1318,6 @@ DavizEdit.GoogleDashboardFilters.prototype = {
                     }
                 });
             }
-debugger;
             jQuery("#googlechartid_tmp_edit_dashboard .googlechart_filteritem_defaults").attr("value", JSON.stringify(defaults));
             var form = jQuery('form', widget);
             self.new_edit_filter_onSave(form, type, ui_filter_settings);
