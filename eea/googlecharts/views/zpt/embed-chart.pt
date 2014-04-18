@@ -22,7 +22,7 @@
             body {margin:1px; overflow: hidden;}
         </style>
     </head>
-    <body onhashchange="hashchanged();">
+    <body onhashchange="hashchanged();" style="margin:0">
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
         <a tal:condition="python:not inline" style="float:right"
            tal:attributes="href view/context/absolute_url"

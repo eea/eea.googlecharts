@@ -213,6 +213,12 @@ ul.googlechart_tabs li:first-of-type a:hover {
     margin: 0 0px 15px;
 }
 
+.figure-chart-live .googlechart_table_right #googlechart_filters > div,
+.figure-chart-live .googlechart_table_right .googlechart_filters > div {
+    min-width: 150px;
+    max-width: 170px;
+}
+
 .googlechart_table_right #googlechart_view,
 .googlechart_table_right .googlechart_view {
     max-width: 800px;
@@ -239,11 +245,24 @@ ul.googlechart_tabs li:first-of-type a:hover {
     margin: 0 0px 15px 0;
 }
 
+.figure-chart-live .googlechart_table_left #googlechart_filters > div,
+.figure-chart-live .googlechart_table_left .googlechart_filters > div {
+    min-width: 150px;
+    max-width: 170px;
+}
+
 .googlechart_table_left #googlechart_filters .google-visualization-controls-slider-horizontal,
 .googlechart_table_left .googlechart_filters .google-visualization-controls-slider-horizontal,
 .googlechart_table_right #googlechart_filters .google-visualization-controls-slider-horizontal,
 .googlechart_table_right .googlechart_filters .google-visualization-controls-slider-horizontal {
     width:198px !important;
+}
+
+.figure-chart-live .googlechart_table_left #googlechart_filters .google-visualization-controls-slider-horizontal,
+.figure-chart-live .googlechart_table_left .googlechart_filters .google-visualization-controls-slider-horizontal,
+.figure-chart-live .googlechart_table_right #googlechart_filters .google-visualization-controls-slider-horizontal,
+.figure-chart-live .googlechart_table_right .googlechart_filters .google-visualization-controls-slider-horizontal {
+    width:168px !important;
 }
 
 /* Bottom */
@@ -357,6 +376,10 @@ ul.googlechart_tabs li:first-of-type a:hover {
     list-style-type: none !important;
     margin: 0 !important;
     max-width: 100% ! important;
+}
+
+li.eea-moved-in-container{
+    list-style: none !important;
 }
 
 #daviz-view ul.google-visualization-controls-categoryfilter-selected li,

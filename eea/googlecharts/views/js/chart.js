@@ -167,7 +167,10 @@ function updateFilterDivs(){
         containerWidth = jQuery(filter).closest(".googlechart_filters").width();
         containerLeft = jQuery(filter).closest(".googlechart_filters").offset().left;
         if ((containerWidth !== 0) && ((containerWidth + containerLeft - filterWidth - filterLeft) < filterWidth)){
-            jQuery(filter).after("<div style='clear:both'></div>");
+            if (!jQuery(filter).hasClass("eea-beautified")){
+                jQuery(filter).addClass("eea-beautified");
+                jQuery(filter).after("<div style='clear:both'></div>");
+            }
         }
     });
     var containers = [".googlechart_table_left", ".googlechart_table_right"];
