@@ -280,7 +280,7 @@ function drawGoogleChart(options){
         ax.format = ax.format.replace(/[^0-9.,#]/g, '');
     }
     /* end of removing duplicated suffixes */
-
+    settings.chartJson.view = {};
     var chart = new google.visualization.ChartWrapper(settings.chartJson);
 
     var filtersArray = [];

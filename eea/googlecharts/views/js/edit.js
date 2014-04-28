@@ -1253,6 +1253,7 @@ function removeAutomaticColor(root,tree, path){
 
 function redrawEditorChart() {
     var tmpwrapper = chartEditor.getChartWrapper();
+    tmpwrapper.setView();
     var tmpwrapper_json = JSON.parse(tmpwrapper.toJSON());
     delete tmpwrapper_json.options.intervals;
     delete tmpwrapper_json.options.interval;
