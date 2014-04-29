@@ -1,8 +1,8 @@
 Changelog
 =========
 
-9.7-dev - (unreleased)
-----------------------
+9.7 - (2014-04-29)
+------------------
 * Feature: Added new configuration options for range filters
   [szabozo0 refs #19171]
 * Change: Changed embed popup, by default selected values for filters are not included in the embed string
