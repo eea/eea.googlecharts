@@ -3,6 +3,8 @@ Changelog
 
 9.8-dev - (unreleased)
 ----------------------
+* Bugfix: Fixed charteditor layout issues
+  [szabozo0 refs #19176]
 
 9.7 - (2014-04-29)
 ------------------

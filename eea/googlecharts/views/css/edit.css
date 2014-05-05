@@ -865,7 +865,7 @@ dl.portlet .dashboard-widget,
 .googlechart_table_config_scaleable_maximized.googlechart_table_config_scaleable {
     z-index:9999;
     left:308px;
-    top:94px;
+/*    top:94px;*/
     border: 1px solid #e4e4e4;
     padding: 5px;
     overflow:hidden;
@@ -896,8 +896,9 @@ dl.portlet .dashboard-widget,
 .panel-container{
     position:absolute;
     left:310px;
-    top:70px;
+/*    top:70px;*/
     z-index:9999;
+    padding-top:5px;
     display:none;
 }
 
@@ -1935,6 +1936,8 @@ input[type=text].eea-googlechart-trendlines-config-value{
 
     border: 1px solid #ccc !important;
     background-color: #eaeaea !important;
+    font-size:14px;
+    height:19px;
 }
 .google-visualization-charteditor-panel-navigation-cell.charts-tab-selected{
     background-color: white !important;

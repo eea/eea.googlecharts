@@ -1447,6 +1447,7 @@ function addEEACustomGooglechartEditorTab(id, name){
 }
 
 function addPaletteConfig(){
+    jQuery("#google-visualization-charteditor-panel-navigate-div br").remove();
     jQuery("<br />")
         .appendTo("#google-visualization-charteditor-panel-navigate-div");
     var section = addEEACustomGooglechartEditorTab("palette", "Color palette");
@@ -3504,9 +3505,11 @@ function resizeTableConfigurator(forced){
         var container_heightstr = 'height:'+(fullheight-100)+'px;width:'+(fullwidth-340)+'px;';
         var accordion_heightstr = 'height:'+(fullheight-100)+'px;width:'+(fullwidth-340)+'px;';
         var accordion_container_heightstr = 'height:'+(fullheight-100)+'px;width:'+(fullwidth-340)+'px;';
+        var offset = jQuery(".googlechart_table_config_scaleable").offset();
         jQuery(".googlechart_table_config_scaleable").attr("style",container_heightstr);
         jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
         jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
+        jQuery(".googlechart_table_config_scaleable").offset(offset);
         jQuery("#newTable").height(fullheight-210);
         grid.resizeCanvas();
     }
@@ -3938,13 +3941,19 @@ function openEditChart(id){
         jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_hover");
     });
     editcolumnsdialog.delegate(".googlechart_maximize_table_config","click", function(){
+        if (editcolumnsdialog.find(".googlechart_table_config_scaleable").hasClass("googlechart_table_config_scaleable_maximized")){
+            return;
+        }
         var chart_pos = jQuery("#google-visualization-charteditor-preview-div-wrapper").position();
         jQuery(this).parent().find(".charts-tab-selected")
             .removeClass("charts-tab-selected");
         jQuery(this).addClass("charts-tab-selected");
         resizeTableConfigurator(true);
+        var offset = editcolumnsdialog.find("#google-visualization-charteditor-preview-div-wrapper").offset();
+        offset.top = offset.top + 1;
         editcolumnsdialog.find(".googlechart_chart_config_scaleable").removeClass("googlechart_chart_config_scaleable_maximized").addClass("googlechart_chart_config_scaleable_minimized");
         editcolumnsdialog.find(".googlechart_table_config_scaleable").removeClass("googlechart_table_config_scaleable_minimized").addClass("googlechart_table_config_scaleable_maximized");
+        editcolumnsdialog.find(".googlechart_table_config_scaleable").offset(offset);
         jQuery(".googlechart_maximize_table_config").addClass("googlechart_config_head_selected");
         jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_head_selected");
         jQuery(".googlechart_maximize_chart_config").attr("title","Click to enlarge Chart Settings");
@@ -3985,9 +3994,9 @@ function openEditChart(id){
     editcolumnsdialog.CustomDialog({title:"Chart Editor",
                 dialogClass: 'googlecharts-customdialog',
 //                width: width,
-                width:950,
+                width:1100,
                 height:710,
-                minWidth:950,
+                minWidth:1100,
                 minHeight:710,
 //                height: height,
                 close:function(){
