@@ -424,7 +424,15 @@ function showEmbed(){
                             'Include the following filters: <br/>' +
                             '<table><tr><td style="width:200px">All</td><td><input class="googlechart_hide_filter" type="checkbox" filter_id="all" checked="checked"/></td></tr></table>'+
                         '</div>'+
-                        '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>';
+                        '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>' +
+                        '<label for="padding">Padding</label><br/>' +
+                        '<input type="radio" checked="checked" name="padding" class="embed_padding" />Auto' +
+                        '<input type="radio" name="padding" class="embed_padding" />Fixed' +
+                        '<input type="radio" name="padding" class="embed_padding" />Manual<br/>' +
+                        'Top: <input type="text" name="top_p" /><br />' +
+                        'Right: <input type="text" name="right_p" /><br />' +
+                        'Bottom: <input type="text" name="bottom_p" /><br />' +
+                        'Left: <input type="text" name="left_p" /><br />';
     if (hasPNG === 'true'){
         var chart_id = chartObj.attr("chart_id");
         var pngCode = '<a href="'  + baseurl + "#tab-" + chart_id + '">' +
