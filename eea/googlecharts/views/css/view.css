@@ -599,3 +599,31 @@ input.googlechart-chart-size {
 #content .googlechart-notes p { 
     font-size: 100%;
 }
+
+.manual-chart-settings, .manual-padding-settings {
+    width: 25px;
+    margin-right: 3px;
+}
+
+#embed-padding-settings {
+    margin: 5px;
+}
+
+#embed-padding-settings label {
+    width: 125px;
+    float: left;
+    padding: 3px;
+}
+
+.radio-embed {
+    margin: 5px;
+    font-weight: normal;
+}
+
+#manual-paddings {
+    margin: 10px 0 10px 5px;
+}
+
+.manual-settings-error {
+    color: red;
+}

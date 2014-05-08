@@ -143,9 +143,12 @@ class View(ViewForm):
         chart['filterposition'] = self.request.get("filterposition", 0)
         return chart
 
-    def apply_padding(self, chart_settings, padding):
-        """Process padding percentages for requested width/height
+    def get_chart_settings(self, chart_settings, padding):
+        """ Return processed chart_settings
         """
+        if padding == 'auto':
+            return chart_settings
+
         new_settings = deepcopy(chart_settings)
         options = new_settings.get('options')
         c_height = int(new_settings.get('height'))
@@ -226,14 +229,7 @@ class View(ViewForm):
 
         padding = self.request.get("padding", "fixed")
 
-        if (
-                chartWidth != chart_settings["width"] and
-                chartHeight != chart_settings["height"] and
-                padding != "auto"
-        ):
-            return self.apply_padding(chart_settings, padding)
-
-        return chart_settings
+        return self.get_chart_settings(chart_settings, padding)
 
     def get_chart_json(self):
         """Chart as JSON
