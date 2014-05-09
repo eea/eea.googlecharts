@@ -627,3 +627,7 @@ input.googlechart-chart-size {
 .manual-settings-error {
     color: red;
 }
+
+#embed-padding-settings h4 {
+    border-bottom: 1px solid #ececec;
+}
