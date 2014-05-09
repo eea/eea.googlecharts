@@ -605,29 +605,60 @@ input.googlechart-chart-size {
     margin-right: 3px;
 }
 
-#embed-padding-settings {
+.embed-settings #embed-padding-settings {
     margin: 5px;
 }
 
-#embed-padding-settings label {
+.embed-settings label {
     width: 125px;
     float: left;
     padding: 3px;
 }
 
-.radio-embed {
+.embed-settings .radio-embed {
     margin: 5px;
     font-weight: normal;
 }
 
-#manual-paddings {
+.embed-settings #manual-paddings {
     margin: 10px 0 10px 5px;
 }
 
-.manual-settings-error {
+.embed-settings .manual-settings-error {
     color: red;
 }
 
-#embed-padding-settings h4 {
+.embed-settings h4 {
     border-bottom: 1px solid #ececec;
+}
+
+#chart-size-slider {
+    margin: 10px 0 10px 0;
+}
+
+.embed-settings .chart-size {
+    width: 150px;
+    float: left;
+}
+
+.embed-settings .chart-size label {
+    width: 90px;
+}
+
+.embed-settings .aspect-ratio {
+    float: left;
+    line-height: 50px;
+    margin-left: 10px;
+}
+
+#manual-chart-size {
+    margin: 10px 0 0 0;
+}
+
+.embed-settings .embed-controls {
+    float: right;
+}
+
+.embed-settings .chart-size-settings {
+    margin: 10px 0 5px 0;
 }

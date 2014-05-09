@@ -392,8 +392,29 @@ function drawDashboard(value, other_options){
     drawGoogleDashboard(googledashboard_params);
 }
 
+function maintainAspectRatio(elem, aspectRatio) {
+    var val;
+    elem = jQuery(elem);
+
+    if (elem.attr("id") === "manual-chart-width") {
+        val = Math.round(parseInt(elem.attr("value"), 10) / aspectRatio);
+        jQuery("#manual-chart-height").attr("value", val);
+    } else {
+        val = Math.round(parseInt(elem.attr("value"), 10) * aspectRatio);
+        jQuery("#manual-chart-width").attr("value", val);
+        $("#chart-size-slider").slider( "value", val);
+    }
+}
+
 function isPositiveInteger(n) {
     return n >>> 0 === parseFloat(n);
+}
+
+function validateSize(value) {
+    if (jQuery.isNumeric(value) && isPositiveInteger(value)) {
+        return true;
+    }
+    return false;
 }
 
 function getManualPaddings(){
@@ -417,6 +438,8 @@ function showEmbed(){
     jQuery(".googlechart_hide_filters").remove();
     jQuery(".googlechart_embed_form").remove();
     var chartObj = jQuery("#googlechart_dashboard");
+    var chartWidth  = parseInt(chartObj.attr('chart_width'), 10);
+    var chartHeight = parseInt(chartObj.attr('chart_height'), 10);
     var iframeWidth = chartObj.width();
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
     var iframeSrc;
@@ -426,8 +449,8 @@ function showEmbed(){
     }
     if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
         iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
-                    "&chartWidth=" + chartObj.attr('chart_width') +
-                    "&chartHeight=" + chartObj.attr('chart_height') +
+                    "&chartWidth=" + chartWidth +
+                    "&chartHeight=" + chartHeight +
                     "&padding=fixed" +
                     "&customStyle=.googlechart_view{margin-left:0px%3B}";
     }
@@ -447,13 +470,22 @@ function showEmbed(){
                             '<table><tr><td style="width:200px">All</td><td><input class="googlechart_hide_filter" type="checkbox" filter_id="all" checked="checked"/></td></tr></table>'+
                         '</div>'+
                         '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>' +
-                        '<a href="#" class="discreet" id="embed-padding-advanced">Advanced settings</a>' +
-                        '<div id="embed-padding-settings">' +
+                        '<div class="embed-settings">' +
                         '<h4>Chart size</h4>' +
                         '<div id="manual-chart-size">' +
+                        '<div id="chart-size-slider" title="Drag slider to adjust the chart size"></div>' +
+                        '<a href="#" class="discreet embed-controls" id="default-size">Reset to default size</a>' +
+                        '<div class="visualClear"><!-- &nbsp; --></div>' +
                         '<p class="manual-settings-error size-error">Please enter only positive integers!</p>' +
+
+                        '<div class="chart-size-settings"><div class="chart-size">' +
                         '<p><label for="manual-chart-width">Chart width: </label><input type="text" name="manual-chart-width" id="manual-chart-width" class="manual-chart-settings" value="' + chartObj.attr('chart_width') + '"/>px</p>' +
                         '<p><label for="manual-chart-height">Chart height: </label><input type="text" name="manual-chart-height" id="manual-chart-height" class="manual-chart-settings" value="' + chartObj.attr('chart_height') + '"/>px</p></div>' +
+                        '<div class="aspect-ratio"><input type="checkbox" checked="checked" name="aspect-ratio" id="aspect-ratio" class="embed-padding"/>Keep aspect ratio</div>' +
+                        '<div class="visualClear"><!-- &nbsp; --></div></div></div>' +
+                        '<a href="#" class="discreet embed-controls" id="embed-padding-advanced">Advanced settings</a>' +
+                        '<div class="visualClear"><!-- &nbsp; --></div>' +
+                        '<div id="embed-padding-settings">' +
                         '<h4>Padding</h4>' +
                         '<input type="hidden" name="padding-settings" id="padding-settings" value="fixed" />' +
                         '<span title="Keep the percentual chart paddings when resizing" class="radio-embed"><input type="radio" name="padding" class="embed-padding" value="auto" />Auto</span>' +
@@ -464,7 +496,7 @@ function showEmbed(){
                         '<p><label for="top_p">Top padding: </label><input type="text" name="top_p" id="top_p" class="manual-padding-settings" value="0"/>px</p>' +
                         '<p><label for="right_p">Right padding: </label><input type="text" name="right_p" id="right_p" class="manual-padding-settings" value="0"/>px</p>' +
                         '<p><label for="bottom_p">Bottom padding: </label><input type="text" name="bottom_p" id="bottom_p" class="manual-padding-settings" value="0"/>px</p>' +
-                        '<p><label for="left_p">Left padding: </label><input type="text" name="left_p" id="left_p" class="manual-padding-settings" value="0"/>px</p></div></div>';
+                        '<p><label for="left_p">Left padding: </label><input type="text" name="left_p" id="left_p" class="manual-padding-settings" value="0"/>px</p></div></div></div>';
     if (hasPNG === 'true'){
         var chart_id = chartObj.attr("chart_id");
         var pngCode = '<a href="'  + baseurl + "#tab-" + chart_id + '">' +
@@ -494,8 +526,18 @@ function showEmbed(){
                 }
                 var manual_settings = jQuery(".manual-padding-settings");
                 var padding_settings = jQuery("#padding-settings");
+                var aspectRatio = chartWidth / chartHeight;
                 padding_settings.attr("value", "");
-                jQuery('.manual-settings-error').hide();
+                jQuery("#chart-size-slider").slider({
+                    min: 100,
+                    max: 1000,
+                    value: chartObj.attr('chart_width'),
+                    slide: function( event, ui ) {
+                        jQuery('#manual-chart-width').attr("value", ui.value);
+                        jQuery('#manual-chart-width').trigger("change", [true]);
+                    }
+                });
+                jQuery(".manual-settings-error").hide();
 
                 if (!jQuery(".embed-padding[value='manual'").is(":checked")) {
                     manual_settings.attr("disabled", true);
@@ -519,24 +561,44 @@ function showEmbed(){
                     padding_settings.attr("value", getManualPaddings());
                 });
 
-                jQuery(this).delegate(".manual-chart-settings", "change", function() {
+                jQuery(this).delegate(".manual-chart-settings", "change", function(e, keepAspectRatio) {
                     jQuery('.size-error').hide();
                     var value = jQuery(this).val();
                     var default_val;
+
                     if (jQuery(this).attr("id") === 'manual-chart-width') {
                         default_val = chartObj.attr('chart_width');
+
+                        if (!validateSize(value)) {
+                            jQuery(this).attr("value", default_val);
+                            jQuery('.size-error').show();
+                        }
+                        value = parseInt(jQuery(this).val(), 10);
+                        $("#chart-size-slider").slider( "value", value);
+
                     } else {
                         default_val = chartObj.attr('chart_height');
+
+                        if (!validateSize(value)) {
+                            jQuery(this).attr("value", default_val);
+                            jQuery('.size-error').show();
+                        }
+
                     }
-                    if (!jQuery.isNumeric(value) || !isPositiveInteger(value)) {
-                        jQuery(this).attr("value", default_val);
-                        jQuery('.size-error').show();
+                    if (jQuery("#aspect-ratio").is(':checked') || keepAspectRatio) {
+                        maintainAspectRatio(this, aspectRatio);
                     }
                 });
 
                 var p_settings = jQuery("#embed-padding-settings");
                 p_settings.hide();
-
+                jQuery(this).delegate("#default-size", "click", function(evt) {
+                    evt.preventDefault();
+                    jQuery("#chart-size-slider").slider( "value", chartWidth);
+                    jQuery("#manual-chart-width").attr("value", chartWidth);
+                    jQuery("#manual-chart-height").attr("value", chartHeight);
+                    jQuery("#manual-chart-width").trigger("change");
+                });
                 jQuery(this).delegate("#embed-padding-advanced", "click", function(evt) {
                     evt.preventDefault();
                     if (p_settings.is(":hidden")) {
