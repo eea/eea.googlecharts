@@ -633,7 +633,7 @@ input.googlechart-chart-size {
 }
 
 #chart-size-slider {
-    margin: 10px 0 10px 0;
+    margin: 0 0 10px 0;
 }
 
 .embed-settings .chart-size {
@@ -645,10 +645,10 @@ input.googlechart-chart-size {
     width: 90px;
 }
 
-.embed-settings .aspect-ratio {
+.embed-settings .embed-misc-settings {
     float: left;
     line-height: 50px;
-    margin-left: 10px;
+    margin: 5px 0 0 10px;
 }
 
 #manual-chart-size {

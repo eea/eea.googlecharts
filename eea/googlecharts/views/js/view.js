@@ -393,16 +393,19 @@ function drawDashboard(value, other_options){
 }
 
 function maintainAspectRatio(elem, aspectRatio) {
-    var val;
     elem = jQuery(elem);
+    var value = parseInt(elem.attr("value"), 10);
+    var new_value;
 
     if (elem.attr("id") === "manual-chart-width") {
-        val = Math.round(parseInt(elem.attr("value"), 10) / aspectRatio);
-        jQuery("#manual-chart-height").attr("value", val);
+        new_value = Math.round(value / aspectRatio);
+        jQuery("#manual-chart-height").attr("value", new_value);
+        return [value, new_value];
     } else {
-        val = Math.round(parseInt(elem.attr("value"), 10) * aspectRatio);
-        jQuery("#manual-chart-width").attr("value", val);
-        $("#chart-size-slider").slider( "value", val);
+        new_value = Math.round(value * aspectRatio);
+        jQuery("#manual-chart-width").attr("value", new_value);
+        $("#chart-size-slider").slider( "value", new_value);
+        return [new_value, value];
     }
 }
 
@@ -421,6 +424,7 @@ function getManualPaddings(){
     var paddings = [];
     var error = jQuery('.padding-error');
     error.hide();
+
     jQuery(".manual-padding-settings").each(function() {
         var value = jQuery(this).val();
         if (!jQuery.isNumeric(value) || !isPositiveInteger(value)) {
@@ -442,6 +446,8 @@ function showEmbed(){
     var chartHeight = parseInt(chartObj.attr('chart_height'), 10);
     var iframeWidth = chartObj.width();
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
+    var widthDiff = iframeWidth - chartWidth;
+    var heightDiff = iframeHeight - chartHeight;
     var iframeSrc;
     var query_params = window.location.hash.split("_filters=")[1];
     if (query_params === undefined){
@@ -473,15 +479,16 @@ function showEmbed(){
                         '<div class="embed-settings">' +
                         '<h4>Chart size</h4>' +
                         '<div id="manual-chart-size">' +
-                        '<div id="chart-size-slider" title="Drag slider to adjust the chart size"></div>' +
+                        '<p>Drag slider to adjust chart size:</p>' +
+                        '<div id="chart-size-slider" title=""></div>' +
                         '<a href="#" class="discreet embed-controls" id="default-size">Reset to default size</a>' +
                         '<div class="visualClear"><!-- &nbsp; --></div>' +
                         '<p class="manual-settings-error size-error">Please enter only positive integers!</p>' +
-
                         '<div class="chart-size-settings"><div class="chart-size">' +
                         '<p><label for="manual-chart-width">Chart width: </label><input type="text" name="manual-chart-width" id="manual-chart-width" class="manual-chart-settings" value="' + chartObj.attr('chart_width') + '"/>px</p>' +
                         '<p><label for="manual-chart-height">Chart height: </label><input type="text" name="manual-chart-height" id="manual-chart-height" class="manual-chart-settings" value="' + chartObj.attr('chart_height') + '"/>px</p></div>' +
-                        '<div class="aspect-ratio"><input type="checkbox" checked="checked" name="aspect-ratio" id="aspect-ratio" class="embed-padding"/>Keep aspect ratio</div>' +
+                        '<div class="embed-misc-settings"><p title="Keep aspect ratio"><input type="checkbox" checked="checked" name="aspect-ratio" id="aspect-ratio"/>Keep aspect ratio</p>' + 
+                        '<p title="Also resize the parent iframe when resizing the chart"><input type="checkbox" checked="checked" name="resize-iframe" id="resize-iframe"/>Also resize iframe</p></div>' +
                         '<div class="visualClear"><!-- &nbsp; --></div></div></div>' +
                         '<a href="#" class="discreet embed-controls" id="embed-padding-advanced">Advanced settings</a>' +
                         '<div class="visualClear"><!-- &nbsp; --></div>' +
@@ -574,6 +581,9 @@ function showEmbed(){
                             jQuery('.size-error').show();
                         }
                         value = parseInt(jQuery(this).val(), 10);
+                        if (jQuery("#resize-iframe").is(':checked')) {
+                            iframeWidth = value + widthDiff;
+                        }
                         $("#chart-size-slider").slider( "value", value);
 
                     } else {
@@ -583,10 +593,17 @@ function showEmbed(){
                             jQuery(this).attr("value", default_val);
                             jQuery('.size-error').show();
                         }
-
+                        value = parseInt(jQuery(this).val(), 10);
+                        if (jQuery("#resize-iframe").is(':checked')) {
+                            iframeHeight = value + heightDiff;
+                        }
                     }
                     if (jQuery("#aspect-ratio").is(':checked') || keepAspectRatio) {
-                        maintainAspectRatio(this, aspectRatio);
+                        var chartSizes = maintainAspectRatio(this, aspectRatio);
+                        if (chartSizes && jQuery("#resize-iframe").is(':checked')) {
+                            iframeWidth = chartSizes[0] + widthDiff;
+                            iframeHeight = chartSizes[1] + heightDiff;
+                        }
                     }
                 });
 
@@ -597,8 +614,11 @@ function showEmbed(){
                     jQuery("#chart-size-slider").slider( "value", chartWidth);
                     jQuery("#manual-chart-width").attr("value", chartWidth);
                     jQuery("#manual-chart-height").attr("value", chartHeight);
+                    iframeWidth = chartObj.width();
+                    iframeHeight = parseInt(chartObj.height(),10) + 30;
                     jQuery("#manual-chart-width").trigger("change");
                 });
+
                 jQuery(this).delegate("#embed-padding-advanced", "click", function(evt) {
                     evt.preventDefault();
                     if (p_settings.is(":hidden")) {
