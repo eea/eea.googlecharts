@@ -415,6 +415,7 @@ function getManualPaddings(){
 function showEmbed(){
     jQuery(".googlechart_ignore_filters").remove();
     jQuery(".googlechart_hide_filters").remove();
+    jQuery(".googlechart_embed_form").remove();
     var chartObj = jQuery("#googlechart_dashboard");
     var iframeWidth = chartObj.width();
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
@@ -493,6 +494,7 @@ function showEmbed(){
                 }
                 var manual_settings = jQuery(".manual-padding-settings");
                 var padding_settings = jQuery("#padding-settings");
+                padding_settings.attr("value", "");
                 jQuery('.manual-settings-error').hide();
 
                 if (!jQuery(".embed-padding[value='manual'").is(":checked")) {
