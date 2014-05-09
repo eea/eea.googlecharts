@@ -179,7 +179,10 @@ class View(ViewForm):
                 ca_width = req_width - right_p - left_p
                 ca_height = req_height - bottom_p - top_p
             else:
-                top_p, right_p, bottom_p, left_p = padding.split(',')
+                try:
+                    top_p, right_p, bottom_p, left_p = padding.split(',')
+                except ValueError:
+                    top_p, right_p, bottom_p, left_p = [0, 0, 0, 0]
                 ca_height = req_height - int(top_p) - int(bottom_p)
                 ca_width = req_width - int(right_p) - int(left_p)
                 left_p = int(left_p)
