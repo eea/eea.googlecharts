@@ -502,7 +502,6 @@ function showEmbed(){
                 jQuery(this).delegate(".embed-padding", "change", function() {
                     jQuery('.padding-error').hide();
                     if (this.value === 'manual') {
-                        debugger;
                         manual_settings.attr("disabled", false);
                         padding_settings.attr("value", getManualPaddings());
                     } else if (this.value === 'auto') {
