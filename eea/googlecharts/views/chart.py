@@ -18,6 +18,7 @@ from eea.app.visualization.views.view import ViewForm
 from eea.converter.interfaces import IConvert, IWatermark
 from eea.googlecharts.config import EEAMessageFactory as _
 from eea.app.visualization.controlpanel.interfaces import IDavizSettings
+from copy import deepcopy
 from zope.component import queryUtility
 
 logger = logging.getLogger('eea.googlecharts')
@@ -142,6 +143,72 @@ class View(ViewForm):
         chart['filterposition'] = self.request.get("filterposition", 0)
         return chart
 
+    def get_chart_settings(self, chart_settings, padding):
+        """ Return processed chart_settings
+        """
+        if padding == 'auto':
+            return chart_settings
+
+        new_settings = deepcopy(chart_settings)
+        options = new_settings.get('options')
+        c_height = int(new_settings.get('height'))
+        c_width = int(new_settings.get('width'))
+        req_width = int(new_settings.get('chartWidth'))
+        req_height = int(new_settings.get('chartHeight'))
+
+        if options:
+            options = json.loads(options)
+            ca_options = options.get('chartArea')
+
+            if padding == 'fixed':
+                # get original dimensions of the chartArea and padding in %
+                ca_height = float(ca_options.get('height').split('%')[0])
+                ca_width = float(ca_options.get('width').split('%')[0])
+                top_p = float(ca_options.get('top').split('%')[0])
+                left_p = float(ca_options.get('left').split('%')[0])
+
+                # convert to px
+                ca_height = (c_height * ca_height) / 100
+                ca_width = (c_width * ca_width) / 100
+                top_p = (c_height * top_p) / 100
+                left_p = (c_width * left_p) / 100
+
+                # substract right padding and bottom padding
+                right_p = c_width - ca_width - left_p
+                bottom_p = c_height - ca_height - top_p
+                ca_width = req_width - right_p - left_p
+                ca_height = req_height - bottom_p - top_p
+            else:
+                try:
+                    top_p, right_p, bottom_p, left_p = padding.split(',')
+                except ValueError:
+                    top_p, right_p, bottom_p, left_p = [0, 0, 0, 0]
+                ca_height = req_height - int(top_p) - int(bottom_p)
+                ca_width = req_width - int(right_p) - int(left_p)
+                left_p = int(left_p)
+                top_p = int(top_p)
+
+            if ca_height < 100:
+                ca_height = 100
+            if ca_width < 100:
+                ca_width = 100
+
+            # convert new dimensions in % for the required width/height
+            width = (100 * ca_width) / req_width
+            height = (100 * ca_height) / req_height
+            left = (100 * left_p) / req_width
+            top = (100 * top_p) / req_height
+
+            ca_options['width'] = unicode(width) + u'%'
+            ca_options['height'] = unicode(height) + u'%'
+            ca_options['top'] = unicode(top) + u'%'
+            ca_options['left'] = unicode(left) + u'%'
+
+            options['chartArea'] = ca_options
+            new_settings['options'] = json.dumps(options)
+
+            return new_settings
+
     def get_chart(self):
         """ Get chart
         """
@@ -157,11 +224,18 @@ class View(ViewForm):
             chart_settings['data'] = self.get_rows()
             chart_settings['available_columns'] = self.get_columns()
 
-        chart_settings['chartWidth'] = \
-            self.request.get("chartWidth",chart_settings["width"])
-        chart_settings['chartHeight'] = \
-            self.request.get("chartHeight",chart_settings["height"])
-        return chart_settings
+        chartWidth = self.request.get("chartWidth", chart_settings["width"])
+        chartHeight = self.request.get("chartHeight", chart_settings["height"])
+
+        chart_settings['chartWidth'] = chartWidth
+        chart_settings['chartHeight'] = chartHeight
+
+        padding = self.request.get("padding", "fixed")
+
+        if not self.isInline():
+            return self.get_chart_settings(chart_settings, padding)
+        else:
+            return chart_settings
 
     def get_chart_json(self):
         """Chart as JSON

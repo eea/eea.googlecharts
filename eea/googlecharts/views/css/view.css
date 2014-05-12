@@ -599,3 +599,66 @@ input.googlechart-chart-size {
 #content .googlechart-notes p { 
     font-size: 100%;
 }
+
+.manual-chart-settings, .manual-padding-settings {
+    width: 25px;
+    margin-right: 3px;
+}
+
+.embed-settings #embed-padding-settings {
+    margin: 5px;
+}
+
+.embed-settings label {
+    width: 125px;
+    float: left;
+    padding: 3px;
+}
+
+.embed-settings .radio-embed {
+    margin: 5px;
+    font-weight: normal;
+}
+
+.embed-settings #manual-paddings {
+    margin: 10px 0 10px 5px;
+}
+
+.embed-settings .manual-settings-error {
+    color: red;
+}
+
+.embed-settings h4 {
+    border-bottom: 1px solid #ececec;
+}
+
+#chart-size-slider {
+    margin: 0 0 10px 0;
+}
+
+.embed-settings .chart-size {
+    width: 150px;
+    float: left;
+}
+
+.embed-settings .chart-size label {
+    width: 90px;
+}
+
+.embed-settings .embed-misc-settings {
+    float: left;
+    line-height: 50px;
+    margin: 5px 0 0 10px;
+}
+
+#manual-chart-size {
+    margin: 10px 0 0 0;
+}
+
+.embed-settings .embed-controls {
+    float: right;
+}
+
+.embed-settings .chart-size-settings {
+    margin: 10px 0 5px 0;
+}

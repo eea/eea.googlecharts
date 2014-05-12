@@ -392,12 +392,62 @@ function drawDashboard(value, other_options){
     drawGoogleDashboard(googledashboard_params);
 }
 
+function maintainAspectRatio(elem, aspectRatio) {
+    elem = jQuery(elem);
+    var value = parseInt(elem.attr("value"), 10);
+    var new_value;
+
+    if (elem.attr("id") === "manual-chart-width") {
+        new_value = Math.round(value / aspectRatio);
+        jQuery("#manual-chart-height").attr("value", new_value);
+        return [value, new_value];
+    } else {
+        new_value = Math.round(value * aspectRatio);
+        jQuery("#manual-chart-width").attr("value", new_value);
+        $("#chart-size-slider").slider( "value", new_value);
+        return [new_value, value];
+    }
+}
+
+function isPositiveInteger(n) {
+    return n >>> 0 === parseFloat(n);
+}
+
+function validateSize(value) {
+    if (jQuery.isNumeric(value) && isPositiveInteger(value)) {
+        return true;
+    }
+    return false;
+}
+
+function getManualPaddings(){
+    var paddings = [];
+    var error = jQuery('.padding-error');
+    error.hide();
+
+    jQuery(".manual-padding-settings").each(function() {
+        var value = jQuery(this).val();
+        if (!jQuery.isNumeric(value) || !isPositiveInteger(value)) {
+            jQuery(this).attr("value", 0);
+            error.show();
+        }
+        paddings.push(jQuery(this).val());
+    });
+
+    return paddings;
+}
+
 function showEmbed(){
     jQuery(".googlechart_ignore_filters").remove();
     jQuery(".googlechart_hide_filters").remove();
+    jQuery(".googlechart_embed_form").remove();
     var chartObj = jQuery("#googlechart_dashboard");
+    var chartWidth  = parseInt(chartObj.attr('chart_width'), 10);
+    var chartHeight = parseInt(chartObj.attr('chart_height'), 10);
     var iframeWidth = chartObj.width();
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
+    var widthDiff = iframeWidth - chartWidth;
+    var heightDiff = iframeHeight - chartHeight;
     var iframeSrc;
     var query_params = window.location.hash.split("_filters=")[1];
     if (query_params === undefined){
@@ -405,8 +455,9 @@ function showEmbed(){
     }
     if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
         iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
-                    "&chartWidth=" + chartObj.attr('chart_width') +
-                    "&chartHeight=" + chartObj.attr('chart_height') +
+                    "&chartWidth=" + chartWidth +
+                    "&chartHeight=" + chartHeight +
+                    "&padding=fixed" +
                     "&customStyle=.googlechart_view{margin-left:0px%3B}";
     }
     else{
@@ -424,7 +475,35 @@ function showEmbed(){
                             'Include the following filters: <br/>' +
                             '<table><tr><td style="width:200px">All</td><td><input class="googlechart_hide_filter" type="checkbox" filter_id="all" checked="checked"/></td></tr></table>'+
                         '</div>'+
-                        '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>';
+                        '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>' +
+                        '<div class="embed-settings">' +
+                        '<h4>Chart size</h4>' +
+                        '<div id="manual-chart-size">' +
+                        '<p>Drag slider to adjust chart size:</p>' +
+                        '<div id="chart-size-slider" title=""></div>' +
+                        '<a href="#" class="discreet embed-controls" id="default-size">Reset to default size</a>' +
+                        '<div class="visualClear"><!-- &nbsp; --></div>' +
+                        '<p class="manual-settings-error size-error">Please enter only positive integers!</p>' +
+                        '<div class="chart-size-settings"><div class="chart-size">' +
+                        '<p><label for="manual-chart-width">Chart width: </label><input type="text" name="manual-chart-width" id="manual-chart-width" class="manual-chart-settings" value="' + chartObj.attr('chart_width') + '"/>px</p>' +
+                        '<p><label for="manual-chart-height">Chart height: </label><input type="text" name="manual-chart-height" id="manual-chart-height" class="manual-chart-settings" value="' + chartObj.attr('chart_height') + '"/>px</p></div>' +
+                        '<div class="embed-misc-settings"><p title="Keep aspect ratio"><input type="checkbox" checked="checked" name="aspect-ratio" id="aspect-ratio"/>Keep aspect ratio</p>' + 
+                        '<p title="Also resize the parent iframe when resizing the chart"><input type="checkbox" checked="checked" name="resize-iframe" id="resize-iframe"/>Also resize iframe</p></div>' +
+                        '<div class="visualClear"><!-- &nbsp; --></div></div></div>' +
+                        '<a href="#" class="discreet embed-controls" id="embed-padding-advanced">Advanced settings</a>' +
+                        '<div class="visualClear"><!-- &nbsp; --></div>' +
+                        '<div id="embed-padding-settings">' +
+                        '<h4>Padding</h4>' +
+                        '<input type="hidden" name="padding-settings" id="padding-settings" value="fixed" />' +
+                        '<span title="Keep the percentual chart paddings when resizing" class="radio-embed"><input type="radio" name="padding" class="embed-padding" value="auto" />Auto</span>' +
+                        '<span title="Keep the fixed chart paddings when resizing" class="radio-embed"><input type="radio" checked="checked" name="padding" class="embed-padding" value="fixed"/>Fixed</span>' +
+                        '<span title="Use my own padding settings when resizing" class="radio-embed"><input type="radio" name="padding" class="embed-padding" value="manual" />Manual<br/></span>' +
+                        '<div id="manual-paddings">' +
+                        '<p class="manual-settings-error padding-error">Please enter only positive integers!</p>' +
+                        '<p><label for="top_p">Top padding: </label><input type="text" name="top_p" id="top_p" class="manual-padding-settings" value="0"/>px</p>' +
+                        '<p><label for="right_p">Right padding: </label><input type="text" name="right_p" id="right_p" class="manual-padding-settings" value="0"/>px</p>' +
+                        '<p><label for="bottom_p">Bottom padding: </label><input type="text" name="bottom_p" id="bottom_p" class="manual-padding-settings" value="0"/>px</p>' +
+                        '<p><label for="left_p">Left padding: </label><input type="text" name="left_p" id="left_p" class="manual-padding-settings" value="0"/>px</p></div></div></div>';
     if (hasPNG === 'true'){
         var chart_id = chartObj.attr("chart_id");
         var pngCode = '<a href="'  + baseurl + "#tab-" + chart_id + '">' +
@@ -452,6 +531,103 @@ function showEmbed(){
                         jQuery("<tr><td>"+filter_label+"</td><td><input class='googlechart_hide_filter' type='checkbox' checked='checked' filter_id='"+filter_id+"'/></td></tr>").appendTo(".googlechart_hide_filters table");
                     });
                 }
+                var manual_settings = jQuery(".manual-padding-settings");
+                var padding_settings = jQuery("#padding-settings");
+                var aspectRatio = chartWidth / chartHeight;
+                padding_settings.attr("value", "");
+                jQuery("#chart-size-slider").slider({
+                    min: 100,
+                    max: 1000,
+                    value: chartObj.attr('chart_width'),
+                    slide: function( event, ui ) {
+                        jQuery('#manual-chart-width').attr("value", ui.value);
+                        jQuery('#manual-chart-width').trigger("change", [true]);
+                    }
+                });
+                jQuery(".manual-settings-error").hide();
+
+                if (!jQuery(".embed-padding[value='manual'").is(":checked")) {
+                    manual_settings.attr("disabled", true);
+                }
+
+                jQuery(this).delegate(".embed-padding", "change", function() {
+                    jQuery('.padding-error').hide();
+                    if (this.value === 'manual') {
+                        manual_settings.attr("disabled", false);
+                        padding_settings.attr("value", getManualPaddings());
+                    } else if (this.value === 'auto') {
+                        manual_settings.attr("disabled", true);
+                        padding_settings.attr("value", this.value);
+                    } else {
+                        manual_settings.attr("disabled", true);
+                        padding_settings.attr("value", "fixed");
+                    }
+                });
+
+                jQuery(this).delegate(".manual-padding-settings", "change", function() {
+                    padding_settings.attr("value", getManualPaddings());
+                });
+
+                jQuery(this).delegate(".manual-chart-settings", "change", function(e, keepAspectRatio) {
+                    jQuery('.size-error').hide();
+                    var value = jQuery(this).val();
+                    var default_val;
+
+                    if (jQuery(this).attr("id") === 'manual-chart-width') {
+                        default_val = chartObj.attr('chart_width');
+
+                        if (!validateSize(value)) {
+                            jQuery(this).attr("value", default_val);
+                            jQuery('.size-error').show();
+                        }
+                        value = parseInt(jQuery(this).val(), 10);
+                        if (jQuery("#resize-iframe").is(':checked')) {
+                            iframeWidth = value + widthDiff;
+                        }
+                        $("#chart-size-slider").slider( "value", value);
+
+                    } else {
+                        default_val = chartObj.attr('chart_height');
+
+                        if (!validateSize(value)) {
+                            jQuery(this).attr("value", default_val);
+                            jQuery('.size-error').show();
+                        }
+                        value = parseInt(jQuery(this).val(), 10);
+                        if (jQuery("#resize-iframe").is(':checked')) {
+                            iframeHeight = value + heightDiff;
+                        }
+                    }
+                    if (jQuery("#aspect-ratio").is(':checked') || keepAspectRatio) {
+                        var chartSizes = maintainAspectRatio(this, aspectRatio);
+                        if (chartSizes && jQuery("#resize-iframe").is(':checked')) {
+                            iframeWidth = chartSizes[0] + widthDiff;
+                            iframeHeight = chartSizes[1] + heightDiff;
+                        }
+                    }
+                });
+
+                var p_settings = jQuery("#embed-padding-settings");
+                p_settings.hide();
+                jQuery(this).delegate("#default-size", "click", function(evt) {
+                    evt.preventDefault();
+                    jQuery("#chart-size-slider").slider( "value", chartWidth);
+                    jQuery("#manual-chart-width").attr("value", chartWidth);
+                    jQuery("#manual-chart-height").attr("value", chartHeight);
+                    iframeWidth = chartObj.width();
+                    iframeHeight = parseInt(chartObj.height(),10) + 30;
+                    jQuery("#manual-chart-width").trigger("change");
+                });
+
+                jQuery(this).delegate("#embed-padding-advanced", "click", function(evt) {
+                    evt.preventDefault();
+                    if (p_settings.is(":hidden")) {
+                        p_settings.show();
+                    } else {
+                        p_settings.hide();
+                    }
+                });
+
                 jQuery('.iframeCode', this)[0].focus();
                 jQuery('.iframeCode', this)[0].select();
                 jQuery(this).delegate('textarea', 'click', function(){
@@ -482,10 +658,12 @@ function showEmbed(){
                     query_params = encodeURIComponent(JSON.stringify(query_params).split(",").join(";"));
 
                     var iframeSrc;
+                    var padding = jQuery("#padding-settings").val() || 'fixed';
                     if (typeof(chartObj.attr('chart_id')) !== 'undefined'){
                         iframeSrc = baseurl+"/embed-chart?chart=" + chartObj.attr('chart_id') +
-                            "&chartWidth=" + chartObj.attr('chart_width') +
-                            "&chartHeight=" + chartObj.attr('chart_height') +
+                            "&chartWidth=" + jQuery('#manual-chart-width').val() +
+                            "&chartHeight=" + jQuery('#manual-chart-height').val() +
+                            "&padding=" + padding +
                             "&customStyle=.googlechart_view{margin-left:0px%3B}";
                     }
                     else{
