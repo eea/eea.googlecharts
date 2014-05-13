@@ -1,8 +1,8 @@
 Changelog
 =========
 
-9.8-dev - (unreleased)
-----------------------
+9.8 - (2014-05-13)
+------------------
 * Feature: Enhance the embed chart functionality by allowing the user to change
   the chart size and padding for the embed code
   [olimpiurob refs #19161]
