@@ -1977,7 +1977,23 @@ input[type=text].eea-googlechart-trendlines-config-value{
     font-size:12px;
 }
 
-.eea-menu-item .tutorial-icon {
-   margin-top:10px;
+.eea-tutorial {
+    float:right;
+    line-height:24px;
+    margin-left:10px;
+    margin-right:10px;
+    margin-top:5px;
 }
 
+.eea-tutorial span{
+    float:right;
+    color: #205c90;
+    font-size: 11px;
+    text-decoration:underline;
+}
+
+.eea-tutorial .tutorial-icon{
+    float:right;
+    color: #205c90;
+    font-size:24px;
+}

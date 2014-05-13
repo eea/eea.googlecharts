@@ -2218,6 +2218,25 @@ function addIntervalConfig(){
         });
 }
 
+function addTutorialLinks(context) {
+    context.find(".eea-tutorial").empty();
+    jQuery.each(context.find(".eea-tutorial"), function(idx, tutorial){
+        jQuery("<a>")
+            .attr("href", "daviz-tutorials.html#"+jQuery(tutorial).attr("tutorial"))
+            .attr("target", "_blank")
+            .attr("title", "See video help")
+            .appendTo(tutorial);
+        jQuery("<div>")
+            .addClass("eea-icon eea-icon-youtube-play tutorial-icon")
+            .appendTo(jQuery(tutorial).find("a"));
+        jQuery("<span>")
+            .text("See video help")
+            .appendTo(jQuery(tutorial).find("a"));
+        jQuery("<div style='clear:both'></div>")
+            .appendTo(jQuery(tutorial).find("a"));
+    });
+}
+
 function openEditor(elementId) {
     isFirstEdit = true;
     jQuery(".google-visualization-charteditor-dialog").remove();
@@ -3640,7 +3659,10 @@ function fillEditorDialog(options){
 
     jQuery("#pivotingTableLabel .eea-menu-item").unbind("click");
     jQuery("#unpivotingFormLabel .eea-menu-item").unbind("click");
-    jQuery("#pivotingTableLabel .eea-menu-item").click(function(){
+    jQuery("#pivotingTableLabel .eea-menu-item").click(function(event){
+        if (jQuery(event.toElement).closest(".eea-tutorial").length !== 0){
+            return;
+        }
         var tmp_icon = jQuery("#pivotingTableLabel").find(".eea-caret-icon");
         if (tmp_icon.hasClass("eea-icon-caret-right")){
             tmp_icon.removeClass("eea-icon-caret-right").addClass("eea-icon-caret-down");
@@ -3653,7 +3675,10 @@ function fillEditorDialog(options){
         jQuery(".pivotingTable").toggle();
     });
 
-    jQuery("#unpivotingFormLabel .eea-menu-item").click(function(){
+    jQuery("#unpivotingFormLabel .eea-menu-item").click(function(event){
+        if (jQuery(event.toElement).closest(".eea-tutorial").length !== 0){
+            return;
+        }
         var tmp_icon = jQuery("#unpivotingFormLabel").find(".eea-caret-icon");
         if (tmp_icon.hasClass("eea-icon-caret-right")){
             tmp_icon.removeClass("eea-icon-caret-right").addClass("eea-icon-caret-down");
@@ -3807,11 +3832,11 @@ function openEditChart(id){
                             '<div class="eea-icon-lg eea-icon eea-caret-icon eea-icon-caret-right" style="float:left;"></div>'+
                             '<div class="main-label">Unpivot Table</div><div class="sub-label">&nbsp;(transform columns to rows)</div>' + //xxx
                             '<img class="pivot-icon" src="../../++resource++eea.googlecharts.images/unpivot-icon.png" style="width:32px;height:32px;"/>'+
-                            '<div style="display:none">' + //temporarily hide links to tutorials
-                            '<a target="_blank" href="daviz-tutorials.html#unpivot">'+
-                                 '<div class="eea-icon-2x eea-icon eea-icon-youtube-square tutorial-icon" style="float:right;"></div>'+
-                            '</a>'+
-                            '</div>'+
+                            '<div class="eea-tutorial" tutorial="unpivot"></div>'+
+                            '<!--a target="_blank" class="eea-tutorial" href="daviz-tutorials.html#unpivot" title="Tutorials">'+
+                                 '<div class="eea-icon eea-icon-youtube-play tutorial-icon" style="float:right;"></div>'+
+                                 '<span>See video help</span>'+
+                            '</a-->'+
                             '<div style="clear:both"></div>'+
                         '</div>'+
                         '<div class="unpivotingForm">'+
@@ -3862,11 +3887,7 @@ function openEditChart(id){
                             '<div class="eea-icon-lg eea-icon eea-caret-icon eea-icon-caret-right" style="float:left"></div>'+
                             '<div class="main-label">Pivot Table</div><div class="sub-label">&nbsp;(transform rows to columns)</div>' + //xxx
                             '<img class="pivot-icon" src="../../++resource++eea.googlecharts.images/pivot-icon.png" style="width:32px;height:32px;"/>'+
-                            '<div style="display:none">' + //temporarily hide links to tutorials
-                            '<a target="_blank" href="daviz-tutorials.html#pivot">'+
-                                 '<div class="eea-icon-2x eea-icon eea-icon-youtube-square tutorial-icon" style="float:right;"></div>'+
-                            '</a>'+
-                            '</div>'+
+                            '<div class="eea-tutorial" tutorial="pivot"></div>'+
                             '<div style="clear:both"></div>'+
                         '</div>'+
                         '<div class="pivotingTable">' +
@@ -3880,11 +3901,7 @@ function openEditChart(id){
                     '</div>'+
                     '<div>'+
                         '<span class="tableForChartLabel sub-label">Table for chart</span>' +
-                        '<div style="display:none">' + //temporarily hide links to tutorials
-                        '<a target="_blank" href="daviz-tutorials.html#table" style="float:left">'+
-                            '<div class="eea-icon-2x eea-icon eea-icon-youtube-square tutorial-icon" style="float:right;"></div>'+
-                        '</a>'+
-                        '</div>'+
+                        '<div class="eea-tutorial" tutorial="table" style="float:left"></div>'+
                     '</div>'+
                     "<div style='clear:both;'> </div>" +
                     '<div id="newTable" class="daviz-data-table slick_newTable" style="height:300px;">'+
@@ -4094,6 +4111,7 @@ function openEditChart(id){
         fillEditorDialog({skippalette:true});
         updateWithStatus();
     });
+    addTutorialLinks(jQuery(".googlecharts_columns_config"));
 }
 
 function populateDefaults(id, type, settings){
