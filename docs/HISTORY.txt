@@ -1,6 +1,9 @@
 Changelog
 =========
 
+9.9-dev - (unreleased)
+----------------------
+
 9.8 - (2014-05-13)
 ------------------
 * Feature: Enhance the embed chart functionality by allowing the user to change
