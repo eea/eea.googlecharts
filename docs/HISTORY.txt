@@ -3,6 +3,8 @@ Changelog
 
 9.9-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed embed-chart view error when no chartArea settings are defined
+  [olimpiurob refs #19161]
 
 9.8 - (2014-05-13)
 ------------------
