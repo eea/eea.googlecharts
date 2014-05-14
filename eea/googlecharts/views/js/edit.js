@@ -2218,9 +2218,9 @@ function addIntervalConfig(){
         });
 }
 
-function addTutorialLinks(context) {
-    context.find(".eea-tutorial").empty();
-    jQuery.each(context.find(".eea-tutorial"), function(idx, tutorial){
+function updateTutorialLinks() {
+    jQuery(".eea-tutorial").empty();
+    jQuery.each(jQuery(".eea-tutorial"), function(idx, tutorial){
         jQuery("<a>")
             .attr("href", "daviz-tutorials.html#"+jQuery(tutorial).attr("tutorial"))
             .attr("target", "_blank")
@@ -4111,7 +4111,7 @@ function openEditChart(id){
         fillEditorDialog({skippalette:true});
         updateWithStatus();
     });
-    addTutorialLinks(jQuery(".googlecharts_columns_config"));
+    updateTutorialLinks();
 }
 
 function populateDefaults(id, type, settings){
@@ -5559,6 +5559,7 @@ jQuery(document).ready(function(){
 
     overrideGooglePalette();
     overrideSparklinesThumbnail();
+    updateTutorialLinks();
 });
 
 /*if (window.DavizEdit === undefined){
