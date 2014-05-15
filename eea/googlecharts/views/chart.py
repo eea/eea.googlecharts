@@ -529,6 +529,8 @@ class Export(BrowserView):
 
         convert = getUtility(IConvert)
         svg = kwargs.get('svg', '')
+        # Fix for IE inserting double " in some svg attributes"
+        svg = re.sub(r"url\(&quot;(.*?)&quot;\)", r'url(\1)', svg)
         filename = kwargs.get('filename', 'export')
         img = None
 
@@ -537,7 +539,7 @@ class Export(BrowserView):
 
         if svg != '':
             img = convert(
-                data=kwargs.get('svg', ''),
+                data=svg,
                 data_from='svg',
                 data_to='png'
             )

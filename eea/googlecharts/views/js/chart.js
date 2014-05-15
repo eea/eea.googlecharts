@@ -1,5 +1,5 @@
 function fixSVG(container){
-    if (jQuery.browser.mozilla){
+    if (jQuery.browser.mozilla || jQuery.browser.msie){
         return;
     }
     var base = jQuery("base").attr("href");
@@ -9,15 +9,26 @@ function fixSVG(container){
 
     var baseForSVG = window.location.href.split("#")[0];
 
-    var rects = jQuery(container).find("rect");
-    jQuery.each(rects, function(idx, rect){
-        var fillVal = jQuery(rect).attr("fill");
+    var r_elems = jQuery(container).find("rect[fill^='url']");
+    var g_elems = jQuery(container).find("g[clip-path^='url']");
+    var elems = jQuery.merge(r_elems, g_elems);
+
+    jQuery.each(elems, function(idx, elem){
+        var fillVal = jQuery(elem).attr("fill");
+        var clip_path = jQuery(elem).attr("clip-path");
+        var elem_attr, url_val;
         if (fillVal === undefined){
+            elem_attr = 'clip-path';
+            url_val = jQuery(elem).attr("clip-path");
+        } else if (clip_path === undefined) {
+            elem_attr = 'fill';
+            url_val = jQuery(elem).attr("fill");
+        } else {
             return;
         }
-        if (fillVal.indexOf("url(") === 0){
-            fillVal = fillVal.replace("url(", "url("+baseForSVG);
-            jQuery(rect).attr("fill", fillVal);
+        if (url_val.indexOf("url(") === 0){
+            url_val = url_val.replace("url(", "url("+baseForSVG);
+            jQuery(elem).attr(elem_attr, url_val);
         }
     });
 }

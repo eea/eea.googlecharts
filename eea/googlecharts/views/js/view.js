@@ -10,11 +10,28 @@ if (typeof String.prototype.endsWith === "undefined") {
 
 function svgCleanup(svg) {
     svg = jQuery(svg);
-    svg.find('g[clip-path]').removeAttr('clip-path');
+    svg.attr("xmlns","http://www.w3.org/2000/svg");
+    var r_elems = svg.find("rect[fill^='url']");
+    var g_elems = svg.find("g[clip-path^='url']");
+    var elems = jQuery.merge(r_elems, g_elems);
 
-    jQuery(svg).find("[fill^='url']").each(function() {
-        var fill = '#' + jQuery(this).attr('fill').split('#')[1];
-        jQuery(this).attr('fill', fill);
+    jQuery.each(elems, function(idx, elem){
+        var fillVal = jQuery(elem).attr("fill");
+        var clip_path = jQuery(elem).attr("clip-path");
+        var elem_attr, url_val;
+        if (fillVal === undefined){
+            elem_attr = 'clip-path';
+            url_val = jQuery(elem).attr("clip-path");
+        } else if (clip_path === undefined) {
+            elem_attr = 'fill';
+            url_val = jQuery(elem).attr("fill");
+        } else {
+            return;
+        }
+        if (url_val.indexOf("url(") === 0){
+            url_val = 'url(#' + url_val.split('#')[1].split('"').join('');
+            jQuery(elem).attr(elem_attr, url_val);
+        }
     });
 
     container = jQuery('<div/>');
@@ -24,11 +41,12 @@ function svgCleanup(svg) {
 
 function exportToPng(){
     var form = jQuery("#export");
+
     if (jQuery("#googlechart_view img").attr("src") === undefined){
-        var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
-        jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
         var svg = jQuery("#googlechart_view").find("svg").parent().html();
-        jQuery("#svg").attr("value",svg);
+        var clean_svg = svgCleanup(svg);
+
+        jQuery("#svg").attr("value",clean_svg);
         jQuery("#imageChart_url").attr("value", '');
         jQuery("#export_fmt").attr("value", "png");
     }
@@ -750,15 +768,17 @@ var googleChartOnTabClick = function(settings){
 
 jQuery(document).ready(function($){
     // workaround for firefox issue: http://taskman.eionet.europa.eu/issues/9941
-    if (jQuery.browser.mozilla){
-        var href = document.location.href;
-        var href_array = href.split("#");
-        if (!href_array[0].endsWith("/")){
-            href_array[0] = href_array[0] + "/";
-            var href2 = href_array.join("#");
-            document.location = href2;
-        }
-    }
+    // Removed workaround as the issue has been already fixed. Details here: 
+    // https://code.google.com/p/google-visualization-api-issues/issues/detail?id=598
+    // if (jQuery.browser.mozilla){
+    //     var href = document.location.href;
+    //     var href_array = href.split("#");
+    //     if (!href_array[0].endsWith("/")){
+    //         href_array[0] = href_array[0] + "/";
+    //         var href2 = href_array.join("#");
+    //         document.location = href2;
+    //     }
+    // }
     // end of workaround
 
     if (typeof(googlechart_config_array) == 'undefined'){

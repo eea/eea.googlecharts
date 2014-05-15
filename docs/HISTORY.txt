@@ -3,6 +3,8 @@ Changelog
 
 10.0-dev - (unreleased)
 -----------------------
+* Bug fix: Fixed charts inconsistent display and export feature across browsers
+  [olimpiurob refs #19513]
 
 9.9 - (2014-05-14)
 ------------------
