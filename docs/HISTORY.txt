@@ -3,6 +3,9 @@ Changelog
 
 10.0-dev - (unreleased)
 -----------------------
+* Bug fix: Hide the export to svg button when dealing with charts created using
+  img (e.g. radar charts)
+  [olimpiurob refs #19728]
 * Bug fix: Fixed charts inconsistent display and export feature across browsers
   [olimpiurob refs #19513]
 

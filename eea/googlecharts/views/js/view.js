@@ -76,8 +76,10 @@ function exportToSVG(){
 function checkSVG(){
     var svg = jQuery("#googlechart_view").find("svg");
     if ((svg[0]) || (jQuery("#googlechart_view img").attr("src") !== undefined)){
-       jQuery("#googlechart_export_button").show();
-       jQuery("#googlechart_export_svg_button").show();
+        jQuery("#googlechart_export_button").show();
+        if(svg[0]) {
+            jQuery("#googlechart_export_svg_button").show();
+        }
     }
 }
 
