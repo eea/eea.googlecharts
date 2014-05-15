@@ -2220,6 +2220,8 @@ function addIntervalConfig(){
 }
 
 function updateTutorialLinks() {
+    //temporary disable
+    return
     jQuery(".eea-tutorial").empty();
     jQuery.each(jQuery(".eea-tutorial"), function(idx, tutorial){
         jQuery("<a>")
