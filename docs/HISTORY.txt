@@ -1,6 +1,9 @@
 Changelog
 =========
 
+10.1-dev - (unreleased)
+-----------------------
+
 10.0 - (2014-05-15)
 -------------------
 * Feature: Possibility to duplicate (copy & paste) chart configuration
