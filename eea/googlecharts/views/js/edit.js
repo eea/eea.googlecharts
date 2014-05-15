@@ -958,6 +958,7 @@ function addChart(options){
             "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-trash-o remove_chart_icon' title='Delete chart'></div>"+
             "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-gear' title='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'></div>"+
             "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-" + (settings.hidden?"eye-slash":"eye") + " googlechart_hide_chart_icon' title='Hide/Show chart'></div>"+
+            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-copy duplicate_chart_icon' title='Duplicate chart'></div>"+
             "<div style='clear:both'> </div>"+
             "</h1>" +
             "<fieldset>" +
@@ -4716,6 +4717,76 @@ function openAddChartNoteDialog(id){
     });
 }
 
+function getChartOptions(chart_id){
+    var chartObj = jQuery("#"+chart_id);
+    var chart = {};
+    chart.id = chartObj.find(".googlechart_id").attr("value");
+    chart.name = chartObj.find(".googlechart_name").attr("value");
+    chart.config = chartObj.find(".googlechart_configjson").attr("value");
+    chart.row_filters = chartObj.find(".googlechart_row_filters").attr("value");
+    chart.sortBy = chartObj.find(".googlechart_sortBy").attr("value");
+    chart.sortAsc = chartObj.find(".googlechart_sortAsc").attr("value");
+    chart.width = chartObj.find(".googlechart_width").attr("value");
+    chart.height = chartObj.find(".googlechart_height").attr("value");
+    chart.filterposition = chartObj.find("[name='googlechart_filterposition']").val();
+    chart.options = chartObj.find(".googlechart_options").attr("value");
+    chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
+    chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
+    chart.hidden = chartObj.find(".googlechart_hide_chart_icon").hasClass("eea-icon-eye-slash");
+    chart.sortFilter = chartObj.find(".googlechart-sort-box select").attr("value");
+    chart.hasPNG = chartObj.find(".googlechart_thumb_checkbox").is(":visible");
+
+    config = JSON.parse(chart.config);
+    config.options.title = chart.name;
+    config.dataTable = [];
+    chart.config = JSON.stringify(config);
+    chart.columns = chartObj.find(".googlechart_columns").attr("value");
+    var id = "googlechart_filters_"+chart.id;
+    var orderedFilter = jQuery("#googlechart_filters_"+chart.id).sortable('toArray');
+    var filters = {};
+
+    jQuery(orderedFilter).each(function(index,filter){
+        filter_vals = {};
+        filter_vals.type = jQuery("#"+filter+" .googlechart_filteritem_type").attr("value");
+        filter_vals.defaults = JSON.parse(jQuery("#"+filter+" .googlechart_filteritem_defaults").attr("value"));
+        filter_vals.settings = JSON.parse(jQuery("#"+filter+" .googlechart_filteritem_settings").attr("value"));
+        filters[jQuery("#"+filter+" .googlechart_filteritem_column").attr("value")] = filter_vals;
+    });
+    chart.filters = JSON.stringify(filters);
+    chart.notes = chartObj.data('notes') || [];
+
+    chart.columnfilters = chartObj.data('columnfilters') || [];
+    chart.unpivotsettings = chartObj.data('unpivotsettings') || {};
+
+    return chart;
+}
+
+function getNextChartName(chartName){
+  var max_id = 0;
+    jQuery.each(jQuery(".googlechart_id"), function(){
+        this_id = jQuery(this).attr("value");
+        if (this_id.substr(0,chartName.length) === chartName){
+            chartId = this_id.substr(chartName.length);
+            if (parseInt(chartId,10) > max_id){
+                max_id = parseInt(chartId,10);
+            }
+        }
+    });
+    return chartName+(max_id+1);
+}
+
+function getNextChartTitle(chartTitle){
+  var latest = 1;
+  jQuery('.googlechart_name').each(function(){
+    var title = jQuery(this).val();
+    if(title.indexOf(chartTitle + ' (Copy ') !== -1){
+      latest += 1;
+    }
+  });
+
+  return chartTitle + ' (Copy ' + latest + ')';
+}
+
 function saveCharts(){
     DavizEdit.Status.start("Saving Charts");
     var ordered = jQuery('#googlecharts_list').sortable('toArray');
@@ -4725,44 +4796,7 @@ function saveCharts(){
     jQuery(ordered).each(function(index, value){
         var chartObj = jQuery("#"+value);
         chartObj.removeClass("googlechart_modified");
-        var chart = {};
-        chart.id = chartObj.find(".googlechart_id").attr("value");
-        chart.name = chartObj.find(".googlechart_name").attr("value");
-        chart.config = chartObj.find(".googlechart_configjson").attr("value");
-        chart.row_filters = chartObj.find(".googlechart_row_filters").attr("value");
-        chart.sortBy = chartObj.find(".googlechart_sortBy").attr("value");
-        chart.sortAsc = chartObj.find(".googlechart_sortAsc").attr("value");
-        chart.width = chartObj.find(".googlechart_width").attr("value");
-        chart.height = chartObj.find(".googlechart_height").attr("value");
-        chart.filterposition = chartObj.find("[name='googlechart_filterposition']").val();
-        chart.options = chartObj.find(".googlechart_options").attr("value");
-        chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
-        chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
-        chart.hidden = chartObj.find(".googlechart_hide_chart_icon").hasClass("eea-icon-eye-slash");
-        chart.sortFilter = chartObj.find(".googlechart-sort-box select").attr("value");
-        chart.hasPNG = chartObj.find(".googlechart_thumb_checkbox").is(":visible");
-
-        config = JSON.parse(chart.config);
-        config.options.title = chart.name;
-        config.dataTable = [];
-        chart.config = JSON.stringify(config);
-        chart.columns = chartObj.find(".googlechart_columns").attr("value");
-        var id = "googlechart_filters_"+chart.id;
-        var orderedFilter = jQuery("#googlechart_filters_"+chart.id).sortable('toArray');
-        var filters = {};
-
-        jQuery(orderedFilter).each(function(index,filter){
-            filter_vals = {};
-            filter_vals.type = jQuery("#"+filter+" .googlechart_filteritem_type").attr("value");
-            filter_vals.defaults = JSON.parse(jQuery("#"+filter+" .googlechart_filteritem_defaults").attr("value"));
-            filter_vals.settings = JSON.parse(jQuery("#"+filter+" .googlechart_filteritem_settings").attr("value"));
-            filters[jQuery("#"+filter+" .googlechart_filteritem_column").attr("value")] = filter_vals;
-        });
-        chart.filters = JSON.stringify(filters);
-        chart.notes = chartObj.data('notes') || [];
-
-        chart.columnfilters = chartObj.data('columnfilters') || [];
-        chart.unpivotsettings = chartObj.data('unpivotsettings') || {};
+        var chart = getChartOptions(value);
 
         charts.push(chart);
         if (chart.isThumb){
@@ -4927,17 +4961,7 @@ function loadCharts(){
 
 function addNewChart(){
     var chartName = "chart_";
-    var max_id = 0;
-    jQuery.each(jQuery(".googlechart_id"), function(){
-        this_id = jQuery(this).attr("value");
-        if (this_id.substr(0,chartName.length) === chartName){
-            chartId = this_id.substr(chartName.length);
-            if (parseInt(chartId,10) > max_id){
-                max_id = parseInt(chartId,10);
-            }
-        }
-    });
-    var newChartId = chartName+(max_id+1);
+    var newChartId = getNextChartName(chartName);
 
     var newColumns = {};
     newColumns.original = [];
@@ -4972,6 +4996,19 @@ function addNewChart(){
     jQuery('html, body').animate({
         scrollTop: newChart.offset().top
     });
+}
+
+function duplicateChart(chartName){
+  var options = getChartOptions(chartName);
+  var newChartId = getNextChartName(chartName);
+  options.isThumb = false;
+  options.id = newChartId;
+  options.name = getNextChartTitle(options.name);
+  options.filters = JSON.parse(options.filters);
+
+  addChart(options);
+  var newChart = jQuery("#googlechartid_"+newChartId);
+  markChartAsModified(newChartId);
 }
 
 function drawPreviewChart(chartObj, width, height){
@@ -5126,7 +5163,14 @@ function init_googlecharts_edit(){
             }
         }
     });
+
     jQuery("#addgooglechart").click(addNewChart);
+
+    jQuery("#googlecharts_list").delegate(".duplicate_chart_icon", "click", function(){
+      var chartName = jQuery(this).closest('.googlechart').attr('id');
+      return duplicateChart(chartName);
+    });
+
     jQuery("#googlecharts_list").delegate(".remove_chart_icon","click",function(){
         var chartId = jQuery(this).closest('.googlechart').attr('id');
         var chartToRemove = jQuery("#"+chartId).find(".googlechart_id").attr('value');
