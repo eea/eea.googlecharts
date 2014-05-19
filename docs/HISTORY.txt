@@ -3,6 +3,8 @@ Changelog
 
 10.1-dev - (unreleased)
 -----------------------
+* Bug fix: Fixed chart editor layout issues with 'Data selection for chart' tab
+  [olimpiurob refs #19331]
 * Bug fix: Fixed charts matrix layout issue with many columns
   [olimpiurob refs #19331]
 * Feature: Added date and datetime to allowed pairs of columns for other

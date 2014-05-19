@@ -3265,7 +3265,7 @@ function columnsMatrixChart(chartType){
     var container_width = (matrixChart_zone_size_width + matrixChartSize + 60 > width) ? width - matrixChartSize - 60 : matrixChart_zone_size_width;
     var container_height = (matrixChart_zone_size_height + matrixChartSize + 40 > height) ? height - matrixChartSize - 40: matrixChart_zone_size_height;
     var matrixChartDialog = "" +
-        "<div class='matrixChart_dialog matrix_dlg'>" +
+        "<div class='matrixChart_dialog hideOverflow'>" +
             "<div id='matrixChart_type_selector' style='display:table-cell;vertical-align:middle;float:left;width:" + matrixChartSize + "px;height:" + matrixChartSize + "px'>"+
             "<div style='width:" + matrixChartSize + "px;height:" + matrixChartSize + "px'><select></select></div>"+
             "</div>"+
@@ -3524,15 +3524,15 @@ function resizeTableConfigurator(forced){
     if ((jQuery(".googlechart_table_config_scaleable_maximized").length > 0) || forced){
         var fullwidth = jQuery(".googlecharts-customdialog").width();
         var fullheight = jQuery(".googlecharts_columns_config").height();
-        var container_heightstr = 'height:'+(fullheight-100)+'px;width:'+(fullwidth-340)+'px;';
-        var accordion_heightstr = 'height:'+(fullheight-100)+'px;width:'+(fullwidth-340)+'px;';
-        var accordion_container_heightstr = 'height:'+(fullheight-100)+'px;width:'+(fullwidth-340)+'px;';
+        var container_heightstr = 'height:'+(fullheight-125)+'px;width:'+(fullwidth-340)+'px;';
+        var accordion_heightstr = 'height:'+(fullheight-125)+'px;width:'+(fullwidth-340)+'px;';
+        var accordion_container_heightstr = 'height:'+(fullheight-125)+'px;width:'+(fullwidth-340)+'px;';
         var offset = jQuery(".googlechart_table_config_scaleable").offset();
         jQuery(".googlechart_table_config_scaleable").attr("style",container_heightstr);
         jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
         jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
         jQuery(".googlechart_table_config_scaleable").offset(offset);
-        jQuery("#newTable").height(fullheight-210);
+        jQuery("#newTable").height(fullheight-235);
         grid.resizeCanvas();
     }
 }
@@ -3777,7 +3777,7 @@ function openEditChart(id){
 
     jQuery(".googlecharts_columns_config").remove();
     var editcolumnsdialog = jQuery(
-    '<div class="googlecharts_columns_config">' +
+    '<div class="googlecharts_columns_config hideOverflow">' +
 //        '<div id="googlechart_overlay" style="display:none; background: transparent;"><div class="contentWrap" style="width:200px;height:200px; border:1px solid red; background-color:#fff">xxx</div></div>'+
         '<div class="googlechart_chart_config_info hint"><span class="eea-icon eea-icon-info-circle"></span>Each chart requires a specific data layout. If chart does not become available you should go to \'Data selection for chart\' <br/>and re-order/hide columns accordingly. You may also need to rotate the table (pivot/unpivot).</div>'+
         '<div class="chart_config_tabs" style="padding-top:10px;">'+
@@ -4015,9 +4015,9 @@ function openEditChart(id){
                 dialogClass: 'googlecharts-customdialog',
 //                width: width,
                 width:1100,
-                height:710,
+                height:735,
                 minWidth:1100,
-                minHeight:710,
+                minHeight:735,
 //                height: height,
                 close:function(){
                     jQuery(".slick-header-menu").remove();

@@ -1998,6 +1998,6 @@ input[type=text].eea-googlechart-trendlines-config-value{
     font-size:24px;
 }
 
-.matrixChart_dialog.matrix_dlg {
+.googlecharts_columns_config.hideOverflow, .matrixChart_dialog.hideOverflow {
     overflow: hidden;
 }
