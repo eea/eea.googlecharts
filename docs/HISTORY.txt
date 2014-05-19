@@ -1,8 +1,8 @@
 Changelog
 =========
 
-10.1-dev - (unreleased)
------------------------
+10.1 - (2014-05-19)
+-------------------
 * Bug fix: Fixed chart editor layout issues with 'Data selection for chart' tab
   [olimpiurob refs #19331]
 * Bug fix: Fixed charts matrix layout issue with many columns
