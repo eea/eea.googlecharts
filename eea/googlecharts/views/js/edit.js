@@ -2221,7 +2221,7 @@ function addIntervalConfig(){
 
 function updateTutorialLinks() {
     //temporary disable
-    return
+    return;
     jQuery(".eea-tutorial").empty();
     jQuery.each(jQuery(".eea-tutorial"), function(idx, tutorial){
         jQuery("<a>")
@@ -3171,7 +3171,7 @@ function columnsMatrixChart(chartType){
     var allAllowedColumnNamesForMatrix = [];
     var allAllowedColumnNiceNamesForMatrix = [];
 
-    var unAllowedTypes = ['number', 'boolean', 'date', 'datetime', 'timeofday'];
+    var unAllowedTypes = ['number', 'boolean', 'timeofday'];
 
     jQuery.each(columns_tmp, function(idx, value){
         var columnName = value.id;
@@ -3265,7 +3265,7 @@ function columnsMatrixChart(chartType){
     var container_width = (matrixChart_zone_size_width + matrixChartSize + 60 > width) ? width - matrixChartSize - 60 : matrixChart_zone_size_width;
     var container_height = (matrixChart_zone_size_height + matrixChartSize + 40 > height) ? height - matrixChartSize - 40: matrixChart_zone_size_height;
     var matrixChartDialog = "" +
-        "<div class='matrixChart_dialog'>" +
+        "<div class='matrixChart_dialog matrix_dlg'>" +
             "<div id='matrixChart_type_selector' style='display:table-cell;vertical-align:middle;float:left;width:" + matrixChartSize + "px;height:" + matrixChartSize + "px'>"+
             "<div style='width:" + matrixChartSize + "px;height:" + matrixChartSize + "px'><select></select></div>"+
             "</div>"+
@@ -5723,8 +5723,14 @@ DavizEdit.CustomDialog.prototype = {
                                     var windowTop = jQuery(window).scrollTop();
                                     var windowLeft = jQuery(window).scrollLeft();
                                     if (jQuery(this).find(".eea-icon").hasClass("eea-icon-expand")){
-                                        width = windowWidth * 0.95;
-                                        height = windowHeight * 0.95;
+                                        width = self.settings.width;
+                                        height = self.settings.height;
+                                        if (width < windowWidth * 0.95) {
+                                            width = windowWidth * 0.95;
+                                        }
+                                        if (height < windowHeight * 0.95) {
+                                            height = windowHeight * 0.95;
+                                        }
                                         jQuery(this).find(".eea-icon")
                                             .removeClass("eea-icon-expand")
                                             .addClass("eea-icon-compress");

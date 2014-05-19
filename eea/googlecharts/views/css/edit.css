@@ -1997,3 +1997,7 @@ input[type=text].eea-googlechart-trendlines-config-value{
     color: #205c90;
     font-size:24px;
 }
+
+.matrixChart_dialog.matrix_dlg {
+    overflow: hidden;
+}

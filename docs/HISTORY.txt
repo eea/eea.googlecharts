@@ -3,6 +3,14 @@ Changelog
 
 10.1-dev - (unreleased)
 -----------------------
+* Bug fix: Fixed charts matrix layout issue with many columns
+  [olimpiurob refs #19331]
+* Feature: Added date and datetime to allowed pairs of columns for other
+  matrices
+  [olimpiurob refs #19331]
+* Bug fix: Do not change size of the chart editor if the window is smaller than
+  the original one
+  [olimpiurob refs #19331]
 
 10.0 - (2014-05-15)
 -------------------
