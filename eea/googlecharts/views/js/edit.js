@@ -2219,27 +2219,6 @@ function addIntervalConfig(){
         });
 }
 
-function updateTutorialLinks() {
-    //temporary disable
-    return;
-    jQuery(".eea-tutorial").empty();
-    jQuery.each(jQuery(".eea-tutorial"), function(idx, tutorial){
-        jQuery("<a>")
-            .attr("href", "daviz-tutorials.html#"+jQuery(tutorial).attr("tutorial"))
-            .attr("target", "_blank")
-            .attr("title", "See video help")
-            .appendTo(tutorial);
-        jQuery("<div>")
-            .addClass("eea-icon eea-icon-youtube-play tutorial-icon")
-            .appendTo(jQuery(tutorial).find("a"));
-        jQuery("<span>")
-            .text("See video help")
-            .appendTo(jQuery(tutorial).find("a"));
-        jQuery("<div style='clear:both'></div>")
-            .appendTo(jQuery(tutorial).find("a"));
-    });
-}
-
 function openEditor(elementId) {
     isFirstEdit = true;
     jQuery(".google-visualization-charteditor-dialog").remove();

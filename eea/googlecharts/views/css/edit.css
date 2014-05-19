@@ -1,3 +1,6 @@
+#googlechart-googlecharts-tab {
+    padding: 2em 2em 1em 1em;
+}
 #google-visualization-charteditor-font-style-title,
 #google-visualization-charteditor-input-chart-title,
 #google-visualization-charteditor-select-font-name {
@@ -246,7 +249,7 @@
 }
 
 #gcharts-dashboards-edit {
-    padding: 1em;
+    padding: 2em 2em 1em 1em;
 }
 
 #gcharts-dashboards-edit .add-button {
@@ -274,9 +277,7 @@
 }
 
 #gcharts-dashboards-edit .edit-button.selected {
-    box-shadow: none;
     position: relative;
-    border-color: white;
 }
 
 #gcharts-dashboards-edit .edit-button.selected:after {
@@ -1975,29 +1976,4 @@ input[type=text].eea-googlechart-trendlines-config-value{
     height:25px;
     margin:0px;
     font-size:12px;
-}
-
-.eea-tutorial {
-    float:right;
-    line-height:24px;
-    margin-left:10px;
-    margin-right:10px;
-    margin-top:5px;
-}
-
-.eea-tutorial span{
-    float:right;
-    color: #205c90;
-    font-size: 11px;
-    text-decoration:underline;
-}
-
-.eea-tutorial .tutorial-icon{
-    float:right;
-    color: #205c90;
-    font-size:24px;
-}
-
-.googlecharts_columns_config.hideOverflow, .matrixChart_dialog.hideOverflow {
-    overflow: hidden;
 }

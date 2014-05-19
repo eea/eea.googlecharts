@@ -63,7 +63,6 @@
             hideNotes: true
         };
 
-        debugger;
         drawGoogleChart(googlechart_params);
     });
     function exportToPng(){
