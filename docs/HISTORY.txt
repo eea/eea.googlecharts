@@ -3,6 +3,8 @@ Changelog
 
 10.2-dev - (unreleased)
 -----------------------
+* Bugfix: Removed debug code from js
+  [szabozo0]
 
 10.1 - (2014-05-19)
 -------------------
