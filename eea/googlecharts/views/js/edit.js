@@ -1252,6 +1252,12 @@ function removeAutomaticColor(root,tree, path){
     }
 }
 
+function updateCustomSettings() {
+    var configJSON = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
+    var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+    debugger;
+}
+
 function redrawEditorChart() {
     var tmpwrapper = chartEditor.getChartWrapper();
     tmpwrapper.setView();
@@ -1365,12 +1371,106 @@ function redrawEditorChart() {
 
     google.visualization.events.addListener(tmpwrapper, 'ready', function(event){
         fixSVG("#google-visualization-charteditor-preview-div-chart");
+        jQuery(".charts-tab:contains('Customize')").off("click").on("click", function(evt){
+            setTimeout(function(){
+                var l_style = jQuery('#line-style');
+                var p_style = jQuery('#point-style');
+                var series_cfg = jQuery("#google-visualization-charteditor-series-items");
+
+                if (!l_style.length) {
+                    var line_thickness = jQuery(".google-visualization-charteditor-section-title:contains('Line thickness')");
+                    var line_gap = line_thickness.nextAll('.google-visualization-charteditor-item-gap').first();
+                    l_style = jQuery('<div>', {
+                        'class': 'google-visualization-charteditor-section-title charts-inline-block',
+                        'id': 'line-style',
+                        'text': 'Line style'
+                    });
+                    var l_style_float_end = jQuery('<div>', {
+                        'class': 'google-visualization-charteditor-float-end',
+                        'id': 'l-style-float-end'
+                    });
+                    var l_style_gap = jQuery('<div>', {
+                        'class': 'google-visualization-charteditor-item-gap'
+                    });
+
+                    line_gap.after(l_style);
+                    l_style.after(l_style_float_end);
+                    l_style_float_end.after(l_style_gap);
+                }
+                if (!p_style.length) {
+                    var point_size = jQuery(".google-visualization-charteditor-section-title:contains('Point size')");
+                    var point_gap = point_size.nextAll('.google-visualization-charteditor-item-gap').first();
+                    p_style = jQuery('<div>', {
+                        'class': 'google-visualization-charteditor-section-title charts-inline-block',
+                        'id': 'point-style',
+                        'text': 'Point style'
+                    });
+                    var p_style_float_end = jQuery('<div>', {
+                        'class': 'google-visualization-charteditor-float-end',
+                        'id': 'p-style-float-end'
+                    });
+                    var p_style_gap = jQuery('<div>', {
+                        'class': 'google-visualization-charteditor-item-gap'
+                    });
+
+                    point_gap.after(p_style);
+                    p_style.after(p_style_float_end);
+                    p_style_float_end.after(p_style_gap);
+                }
+                updateCustomSettings();
+            }, 1);
+        });
+        jQuery(".charts-menuitem").off("click").on("click", function(evt){
+            // var marker = jQuery(this).find('.google-visualization-charteditor-select-series-color');
+            // var sel;
+            // if (marker.length) {
+            //     sel = marker.next('span').text();
+            //     var div_sel = jQuery("#google-visualization-charteditor-series-select-div");
+            //     var caption = div_sel.find('.charts-flat-menu-button-caption').text();
+            //     if (sel === caption) {
+            //         var series_settings = jQuery(".google-visualization-charteditor-section-title");
+            //         jQuery.each(series_settings, function(key, value) {
+            //             if (jQuery(this).text() === "Line thickness") {
+            //                 disabled = jQuery(this).next().children(":visible").attr("aria-disabled");
+            //                 if (disabled !== "true") {
+            //                     var gap = jQuery(this).nextUntil('.google-visualization-charteditor-item-gap');
+            //                     gap.append('<div>OMFGOMFGOMFGM</div>');
+            //                 }
+            //             }
+            //         });
+            //     }
+            // }
+            var div_sel = jQuery("#google-visualization-charteditor-series-select-div");
+            var caption = div_sel.find('.charts-flat-menu-button-caption').text();
+            var series_settings = jQuery(".google-visualization-charteditor-section-title");
+            jQuery.each(series_settings, function(key, value) {
+                var parent = jQuery(this).parent();
+                var label = jQuery(this).text();
+                if (label === "Line thickness" || label === "Point size") {
+                    disabled = jQuery(this).next().children(":visible").attr("aria-disabled");
+                    if (disabled !== "true") {
+                        var gap = jQuery(this).nextUntil('.google-visualization-charteditor-item-gap');
+                        console.log(jQuery(gap));
+                        // var lineCfg = parent.find("#line-config");
+                        // var pointsCfg = parent.find("#points-config")
+                        // if (!lineDash.length) {
+                        //     lineDash = jQuery('<div>', {
+                        //         'id': "line-config",
+                        //     });
+                        //     gap.append(lineDash);
+                        // }
+                        // lineDash.html(caption);
+                    }
+                }
+            });
+        });
     });
 
     tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
 
     chartWrapper = tmpwrapper;
     updateEditorColors();
+
 }
 
 function updatePalette() {
