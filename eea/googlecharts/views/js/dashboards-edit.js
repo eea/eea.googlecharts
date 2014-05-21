@@ -99,7 +99,6 @@ DavizEdit.GoogleDashboards.prototype = {
       .addClass('add-button')
       .appendTo(self.context)
       .click(function(){
-        debugger;
         self.add();
       });
 
