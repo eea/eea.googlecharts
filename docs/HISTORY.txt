@@ -12,6 +12,9 @@ Changelog
 * Bug fix: Use column id for unpivot if label is missing
   [batradav refs #19051]
 
+* Change: slight optimisations of jQuery selectors in edit.js
+  [batradav refs #19051]
+
 10.1 - (2014-05-19)
 -------------------
 * Bug fix: Fixed chart editor layout issues with 'Data selection for chart' tab

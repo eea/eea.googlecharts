@@ -84,17 +84,19 @@ function checkReadyForSparklines(skipwrapper){
     if ((!skipwrapper) && (chartEditor.getChartWrapper().getChartType() !== 'ImageSparkLine')){
         return;
     }
-    if (jQuery("#google-visualization-charteditor-preview-div-chart")
+
+    var preview_chart = jQuery("#google-visualization-charteditor-preview-div-chart");
+
+    if (preview_chart
             .find("table.google-visualization-sparkline-default")
             .length === 1) {
         google.visualization.events.trigger(chartEditor, "ready", {});
         return;
     }
-    if ((jQuery("#google-visualization-charteditor-preview-div-chart")
+    if ((preview_chart
             .find("div.google-visualization-charteditor-data-mismatch")
             .length === 1) ||
-        (jQuery("#google-visualization-charteditor-preview-div-chart")
-            .text() === 'No Data')) {
+        (preview_chart.text() === 'No Data')) {
         return;
     }
 
@@ -108,8 +110,9 @@ function svgCleanup(svg) {
     svg.find('g[clip-path]').removeAttr('clip-path');
 
     jQuery(svg).find("[fill^='url']").each(function() {
-        var fill = '#' + jQuery(this).attr('fill').split('#')[1];
-        jQuery(this).attr('fill', fill);
+        var elem = jQuery(this);
+        var fill = '#' + elem.attr('fill').split('#')[1];
+        elem.attr('fill', fill);
     });
 
     container = jQuery('<div/>');
@@ -159,35 +162,38 @@ function updateSortOptions(id){
 
 function updateCounters(){
     jQuery(".googlechart").each(function(){
-        updateSortOptions(jQuery(this).find(".googlechart_id").attr("value"));
-        var columnFiltersNr = jQuery(this).find(".googlechart-columnfilters-box").find("li").length;
-        var notesNr = jQuery(this).find(".googlechart-notes-box").find("li").length;
-        var filtersNr = jQuery(this).find(".googlechart_filters_list").find("li").length;
-        if (JSON.parse(jQuery(this).find(".googlechart_configjson").attr("value")).chartType === 'Table'){
-            jQuery(this).find(".googlechart-sort-box").hide();
-            jQuery(this).find(".googlechart-sort-box select").attr("selected_value", "__disabled__");
+        var elem = jQuery(this);
+        updateSortOptions(elem.find(".googlechart_id").attr("value"));
+        var columnFiltersNr = elem.find(".googlechart-columnfilters-box").find("li").length;
+        var notesNr = elem.find(".googlechart-notes-box").find("li").length;
+        var filtersNr = elem.find(".googlechart_filters_list").find("li").length;
+        if (JSON.parse(elem.find(".googlechart_configjson").attr("value")).chartType === 'Table'){
+            elem.find(".googlechart-sort-box").hide();
+            elem.find(".googlechart-sort-box select").attr("selected_value", "__disabled__");
         }
         else{
-            jQuery(this).find(".googlechart-sort-box").show();
+            elem.find(".googlechart-sort-box").show();
         }
-        jQuery(this).find(".googlechart-columnfilters-box").find(".items_counter").text("("+columnFiltersNr+")");
-        jQuery(this).find(".googlechart-notes-box").find(".items_counter").text("("+notesNr+")");
-        jQuery(this).find(".googlechart-filters-box").find(".items_counter").text("("+filtersNr+")");
+        elem.find(".googlechart-columnfilters-box").find(".items_counter").text("("+columnFiltersNr+")");
+        elem.find(".googlechart-notes-box").find(".items_counter").text("("+notesNr+")");
+        elem.find(".googlechart-filters-box").find(".items_counter").text("("+filtersNr+")");
     });
 }
 
 function checkSVG(id){
     var tmp_config_str = jQuery("#googlechartid_"+id).find(".googlechart_configjson").attr("value");
     var tmp_config = JSON.parse(tmp_config_str);
+    var chart_thumb_id = jQuery("#googlechart_thumb_id_"+id);
+    var chart_thumb_text = jQuery("#googlechart_thumb_text_"+id);
     if (jQuery.inArray(tmp_config.chartType.toLowerCase(), chartsWithoutSVG) === -1){//xxx
-        jQuery("#googlechart_thumb_id_"+id).show();
-        jQuery("#googlechart_thumb_text_"+id).show();
+        chart_thumb_id.show();
+        chart_thumb_text.show();
         return true;
     }
     else{
-        jQuery("#googlechart_thumb_id_"+id).hide();
-        jQuery("#googlechart_thumb_text_"+id).hide();
-        jQuery("#googlechart_thumb_id_"+id).attr("checked",false);
+        chart_thumb_id.hide();
+        chart_thumb_text.hide();
+        chart_thumb_id.attr("checked",false);
         return false;
     }
 }
@@ -1186,11 +1192,12 @@ var editedChartStatus = false;
 
 function moveIfFirst(){
     if (isFirstEdit){
-        if (jQuery(".google-visualization-charteditor-dialog").length > 0){
-            jQuery(".google-visualization-charteditor-dialog").css("visibility", "visible");
-            jQuery(".google-visualization-charteditor-dialog").appendTo("#googlechart_editor_container");
-            jQuery(".google-visualization-charteditor-dialog").removeClass("modal-dialog");
-            jQuery(".google-visualization-charteditor-dialog").addClass("googlechart-editor");
+        var charteditor_dialog = jQuery(".google-visualization-charteditor-dialog");
+        if (charteditor_dialog.length > 0){
+            charteditor_dialog.css("visibility", "visible");
+            charteditor_dialog.appendTo("#googlechart_editor_container");
+            charteditor_dialog.removeClass("modal-dialog");
+            charteditor_dialog.addClass("googlechart-editor");
             isFirstEdit = false;
         }
         else{
@@ -1262,7 +1269,9 @@ function redrawEditorChart() {
     tmpwrapper.setOption("intervals", {});
     tmpwrapper.setOption("interval", {});
     tmpwrapper.setOption("trendlines", {});
-    var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+    var tmp_chart = jQuery("#googlechartid_tmp_chart");
+    var tmp_chart_options = tmp_chart.find(".googlechart_options").attr("value");
+    var chartOptions = JSON.parse(tmp_chart_options);
     var dataTable = tmpwrapper_json.dataTable;
     var trendlines = {};
 
@@ -1280,19 +1289,19 @@ function redrawEditorChart() {
         tmpwrapper.setOption(key,value);
     });
 
-    var row_filters_str = jQuery("#googlechartid_tmp_chart .googlechart_row_filters").attr('value');
+    var row_filters_str = jQuery(".googlechart_row_filters", tmp_chart).attr('value');
     var row_filters = {};
     if (row_filters_str.length > 0){
         row_filters = JSON.parse(row_filters_str);
     }
-    var sortBy = jQuery("#googlechartid_tmp_chart .googlechart_sortBy").attr('value');
-    var sortAsc_str = jQuery("#googlechartid_tmp_chart .googlechart_sortAsc").attr('value');
+    var sortBy = jQuery(".googlechart_sortBy", tmp_chart).attr('value');
+    var sortAsc_str = jQuery(".googlechart_sortAsc", tmp_chart).attr('value');
     var sortAsc = true;
     if (sortAsc_str === 'desc'){
         sortAsc = false;
     }
 
-    var chartColumns_str = jQuery("#googlechartid_tmp_chart .googlechart_columns").val();
+    var chartColumns_str = jQuery(".googlechart_columns", tmp_chart).val();
 
     var chartColumns = {};
     if (chartColumns_str === ""){
@@ -1310,14 +1319,14 @@ function redrawEditorChart() {
         normalColumns : columnsFromSettings.normalColumns,
         pivotingColumns : columnsFromSettings.pivotColumns,
         valueColumn : columnsFromSettings.valueColumn,
-        availableColumns : getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings"), available_columns, all_rows).available_columns,
+        availableColumns : getAvailable_columns_and_rows(tmp_chart.data("unpivotsettings"), available_columns, all_rows).available_columns,
         filters: row_filters,
-        unpivotSettings : jQuery("#googlechartid_tmp_chart").data("unpivotsettings")
+        unpivotSettings : tmp_chart.data("unpivotsettings")
     };
 
     var transformedTable = transformTable(options);
 
-    jQuery("#googlechartid_tmp_chart").attr("columnproperties", JSON.stringify(transformedTable.properties));
+    tmp_chart.attr("columnproperties", JSON.stringify(transformedTable.properties));
 
     options = {
         originalDataTable : transformedTable,
@@ -1326,7 +1335,7 @@ function redrawEditorChart() {
         sortAsc : sortAsc,
 //        preparedColumns: chartColumns.prepared,
         preparedColumns: chartColumns.prepared,
-        enableEmptyRows: JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value")).enableEmptyRows
+        enableEmptyRows: JSON.parse(tmp_chart_options).enableEmptyRows
     };
 
     // check if table contains 2 string columns & 1 or 2 numeric columns (for treemap)
@@ -1387,7 +1396,8 @@ function updatePalette() {
     jQuery(clear).appendTo("#googlechart_preview_palette");
     jQuery(clear).appendTo("#googlechart_preview_palette_editor");
 
-    var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
+    var tmp_chart_options = jQuery("#googlechartid_tmp_chart .googlechart_options");
+    var options_str = tmp_chart_options.attr("value");
     var options_json = JSON.parse(options_str);
 
     var newColors = [];
@@ -1397,7 +1407,7 @@ function updatePalette() {
     options_json.colors = newColors;
     var options_str2 = JSON.stringify(options_json);
 
-    jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value", options_str2);
+    tmp_chart_options.attr("value", options_str2);
 
     jQuery("#googlechartid_tmp_chart").find(".googlechart_paletteid").attr("value",selectedPaletteId);
     if (chartEditor){
@@ -1729,7 +1739,8 @@ function addTrendlineConfig(){
         });
 
         jQuery(".eea-googlechart-trendlines-config-value").change(function(){
-            var options = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value"));
+            var tmp_chart_options = jQuery("#googlechartid_tmp_chart .googlechart_options");
+            var options = JSON.parse(tmp_chart_options.attr("value"));
             delete options.trendlines;
             options.trendlines = {};
             for (var i = 0; i < columns.length; i++){
@@ -1744,17 +1755,18 @@ function addTrendlineConfig(){
                         .hide();
                 }
             }
-            jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value", JSON.stringify(options));
+            tmp_chart_options.attr("value", JSON.stringify(options));
             redrawEditorChart();
         });
 
         jQuery(".eea-googlechart-trendlines-color").click(function(evt){
             var colorcontainer = jQuery(this);
             jQuery(".eea-googlechart-trendlines-colorpalette").remove();
-            var parentleft = jQuery(".googlecharts-customdialog").offset().left;
-            var parenttop = jQuery(".googlecharts-customdialog").offset().top;
-            var left = jQuery(this).offset().left;
-            var top = jQuery(this).offset().top;
+            var customdialog = jQuery(".googlecharts-customdialog");
+            var parentleft = customdialog.offset().left;
+            var parenttop = customdialog.offset().top;
+            var left = colorcontainer.offset().left;
+            var top = colorcontainer.offset().top;
             jQuery(":focus").blur();
             jQuery("<div>")
                 .addClass("eea-googlechart-trendlines-colorpalette")
@@ -3375,8 +3387,9 @@ function columnsMatrixChart(chartType){
                     jQuery('.matrixChart_dialog').dialog('option','height', 'auto');
                 }
                 jQuery(".matrixChart_dialog").delegate(".matrixChart_overlay","hover",function(){
-                    var col_nr = jQuery(this).attr("col_nr");
-                    var row_nr = jQuery(this).attr("row_nr");
+                    var elem = jQuery(this);
+                    var col_nr = elem.attr("col_nr");
+                    var row_nr = elem.attr("row_nr");
                     jQuery(".horizontalScrollItem[col_nr='"+col_nr+"']").find(".scrollName").find("div").addClass("selectedScrollItem");
                     jQuery(".verticalScrollItem[col_nr='"+row_nr+"']").find(".scrollName").find("div").addClass("selectedScrollItem");
                 });
@@ -3386,8 +3399,9 @@ function columnsMatrixChart(chartType){
                 });
                 jQuery(".matrixChart_dialog").delegate(".matrixChart_overlay","click",function(){
                     jQuery("#matrixChart_chart_dialog").remove();
-                    var col_nr = parseInt(jQuery(this).attr("col_nr"), 10);
-                    var row_nr = parseInt(jQuery(this).attr("row_nr"), 10);
+                    var elem = jQuery(this);
+                    var col_nr = parseInt(elem.attr("col_nr"), 10);
+                    var row_nr = parseInt(elem.attr("row_nr"), 10);
                     var sc_col_name1;
                     var sc_col_name2;
                     var sc_col1;
@@ -3943,7 +3957,7 @@ function openEditChart(id){
     editcolumnsdialog.find(".googlechart_sortAsc").attr("value", tmp_sortAsc);
     editcolumnsdialog.delegate(".googlechart_maximize_chart_config","click", function(){
         var clicked = jQuery(this);
-        if (jQuery(this).hasClass("googlechart_minimized_chart_clickable")){
+        if (clicked.hasClass("googlechart_minimized_chart_clickable")){
             clicked = jQuery(".google-visualization-charteditor-panel-navigation-cell.googlechart_maximize_chart_config");
         }
         jQuery(".googlechart_minimized_chart_clickable").remove();
@@ -3964,10 +3978,11 @@ function openEditChart(id){
         if (editcolumnsdialog.find(".googlechart_table_config_scaleable").hasClass("googlechart_table_config_scaleable_maximized")){
             return;
         }
+        var elem = jQuery(this);
         var chart_pos = jQuery("#google-visualization-charteditor-preview-div-wrapper").position();
-        jQuery(this).parent().find(".charts-tab-selected")
+        elem.parent().find(".charts-tab-selected")
             .removeClass("charts-tab-selected");
-        jQuery(this).addClass("charts-tab-selected");
+        elem.addClass("charts-tab-selected");
         resizeTableConfigurator(true);
         var offset = editcolumnsdialog.find("#google-visualization-charteditor-preview-div-wrapper").offset();
         offset.top = offset.top + 1;
@@ -5057,28 +5072,28 @@ function drawPreviewChart(chartObj, width, height){
         type:'post',
         data:query,
         success:function(data){
-            jQuery('#preview-iframe').append(
-                jQuery('<div class="preview-container"></div>'));
-            jQuery(".preview-container").width(width);
-            jQuery(".preview-container").height(height);
-            jQuery('.preview-container').append(
+            var preview_container = jQuery('<div class="preview-container"></div>');
+            jQuery('#preview-iframe').append(preview_container);
+            preview_container.width(width);
+            preview_container.height(height);
+            preview_container.append(
                 jQuery('<iframe>')
                     .attr('src', chartObj.attr('preview_href')+"?preview_id="+data)
                     .attr('width', width)
                     .attr('height', height));
 
 
-            jQuery('.preview-container').append(
-                jQuery('<div class="preview-mask"></div>'));
-            jQuery(".preview-mask").width(width);
-            jQuery(".preview-mask").height(height);
+            var preview_mask = jQuery('<div class="preview-mask"></div>');
+            preview_container.append(preview_mask);
+            preview_mask.width(width);
+            preview_mask.height(height);
 
             var chart_type = JSON.parse(chartObj.find(".googlechart_configjson").attr("value")).chartType;
             if (resizableCharts.indexOf(chart_type) === -1){
                 return;
             }
 
-            jQuery('.preview-container').append(
+            preview_container.append(
                 jQuery('<div class="chartArea">'+
                             '<div class="googlechartarea-input">'+
                                 'top: <input class="googlechartarea-size googlechartarea-top" type="number"/>px'+
@@ -5095,43 +5110,51 @@ function drawPreviewChart(chartObj, width, height){
                                 '</div>'+
                             ' </div>'+
                         '</div>'));
-            var container_offset = jQuery(".preview-container").offset();
-            jQuery(".chartArea").offset({left:container_offset.left + chartAreaLeft, top:container_offset.top + chartAreaTop});
-            jQuery(".chartArea").width(chartAreaWidth);
-            jQuery(".chartArea").height(chartAreaHeight);
-            jQuery(".googlechartarea-width").attr("value", chartAreaWidth);
-            jQuery(".googlechartarea-height").attr("value", chartAreaHeight);
-            jQuery(".googlechartarea-left").attr("value", chartAreaLeft);
-            jQuery(".googlechartarea-top").attr("value", chartAreaTop);
-            jQuery('.chartArea').draggable({
+            var container_offset = preview_container.offset();
+            var chart_area = jQuery(".chartArea");
+            var chart_area_width = jQuery(".googlechartarea-width");
+            var chart_area_height = jQuery(".googlechartarea-height");
+            var chart_area_left = jQuery(".googlechartarea-left");
+            var chart_area_top = jQuery(".googlechartarea-top");
+
+            chart_area.offset({left:container_offset.left + chartAreaLeft, top:container_offset.top + chartAreaTop});
+            chart_area.width(chartAreaWidth);
+            chart_area.height(chartAreaHeight);
+            chart_area_width.attr("value", chartAreaWidth);
+            chart_area_height.attr("value", chartAreaHeight);
+            chart_area_left.attr("value", chartAreaLeft);
+            chart_area_top.attr("value", chartAreaTop);
+            chart_area.draggable({
                 containment:".preview-container",
                 stop: function(){
-                    var tmp_left = jQuery(this).offset().left - jQuery(".preview-container").offset().left;
-                    var tmp_top = jQuery(this).offset().top - jQuery(".preview-container").offset().top;
-                    var tmp_width = jQuery(this).width();
-                    var tmp_height = jQuery(this).height();
+                    var elem = jQuery(this);
+                    var tmp_left = elem.offset().left - preview_container.offset().left;
+                    var tmp_top = elem.offset().top - preview_container.offset().top;
+                    var tmp_width = elem.width();
+                    var tmp_height = elem.height();
                     chartObj.attr("chartArea", JSON.stringify({left:tmp_left, top:tmp_top, width:tmp_width, height:tmp_height}));
                     chartObj.attr("hasChartArea", true);
                     drawPreviewChart(chartObj, width, height);
                 }
             });
-            jQuery('.chartArea').resizable({
+            chart_area.resizable({
                 containment:".preview-container",
                 stop: function(){
-                    var tmp_left = jQuery(this).offset().left - jQuery(".preview-container").offset().left;
-                    var tmp_top = jQuery(this).offset().top - jQuery(".preview-container").offset().top;
-                    var tmp_width = jQuery(this).width();
-                    var tmp_height = jQuery(this).height();
+                    var elem = jQuery(this);
+                    var tmp_left = elem.offset().left - preview_container.offset().left;
+                    var tmp_top = elem.offset().top - preview_container.offset().top;
+                    var tmp_width = elem.width();
+                    var tmp_height = elem.height();
                     chartObj.attr("chartArea", JSON.stringify({left:tmp_left, top:tmp_top, width:tmp_width, height:tmp_height}));
                     chartObj.attr("hasChartArea", true);
                     drawPreviewChart(chartObj, width, height);
                 }
             });
             jQuery('.googlechartarea-size').change(function(){
-                var tmp_left = parseInt(jQuery(".googlechartarea-left").attr("value"), 0);
-                var tmp_top = parseInt(jQuery(".googlechartarea-top").attr("value"), 0);
-                var tmp_width = parseInt(jQuery(".googlechartarea-width").attr("value"), 0);
-                var tmp_height = parseInt(jQuery(".googlechartarea-height").attr("value"), 0);
+                var tmp_left = parseInt(chart_area_left.attr("value"), 0);
+                var tmp_top = parseInt(chart_area_top.attr("value"), 0);
+                var tmp_width = parseInt(chart_area_width.attr("value"), 0);
+                var tmp_height = parseInt(chart_area_height.attr("value"), 0);
                 chartObj.attr("chartArea", JSON.stringify({left:tmp_left, top:tmp_top, width:tmp_width, height:tmp_height}));
                 chartObj.attr("hasChartArea", true);
                 drawPreviewChart(chartObj, width, height);
@@ -5209,28 +5232,31 @@ function init_googlecharts_edit(){
     jQuery("#googlecharts_list").delegate(".googlechart_hide_chart_icon","click",function(){
         var oldClass = "eea-icon-eye";
         var newClass = "eea-icon-eye-slash";
-        if (jQuery(this).hasClass(newClass)){
+        var elem = jQuery(this);
+        if (elem.hasClass(newClass)){
             oldClass = "eea-icon-eye-slash";
             newClass = "eea-icon-eye";
         }
-        jQuery(this).removeClass(oldClass).addClass(newClass);
-        var chartId = jQuery(this).closest('.googlechart').find('.googlechart_id').attr('value');
+        elem.removeClass(oldClass).addClass(newClass);
+        var chartId = elem.closest('.googlechart').find('.googlechart_id').attr('value');
         markChartAsModified(chartId);
         changeChartHiddenState(chartId);
     });
 
     jQuery("#googlecharts_list").delegate(".edit_filter_icon","click",function(){
-        var filterToEdit = jQuery(this).closest('.googlechart_filteritem');
-        chartId = jQuery(this).closest('.googlechart').attr('id');
+        var elem = jQuery(this);
+        var filterToEdit = elem.closest('.googlechart_filteritem');
+        chartId = elem.closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
-        filter_settings = JSON.parse(jQuery(this).closest('.googlechart_filteritem').find(".googlechart_filteritem_settings").attr("value"));
+        filter_settings = JSON.parse(elem.closest('.googlechart_filteritem').find(".googlechart_filteritem_settings").attr("value"));
         openAddEditChartFilterDialog(id, filterToEdit.attr("id"), filter_settings);
     });
 
     jQuery("#googlecharts_list").delegate(".remove_filter_icon","click",function(){
-        var filterToRemove = jQuery(this).closest('.googlechart_filteritem');
-        chartId = jQuery(this).closest('.googlechart').attr('id');
+        var elem = jQuery(this);
+        var filterToRemove = elem.closest('.googlechart_filteritem');
+        chartId = elem.closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
         var title = filterToRemove.find('.googlechart_filteritem_id').html();
@@ -5313,19 +5339,21 @@ function init_googlecharts_edit(){
             height:height + 90,
             title:'Preview and size adjustments',
             resize: function() {
-                var tmp_width = width + (jQuery(this).width() - jQuery(this).attr("widthOriginal"));
-                var tmp_height = height + (jQuery(this).height() - jQuery(this).attr("heightOriginal"));
+                var elem = jQuery(this);
+                var tmp_width = width + (elem.width() - elem.attr("widthOriginal"));
+                var tmp_height = height + (elem.height() - elem.attr("heightOriginal"));
                 jQuery(".preview-controls .chartWidth").attr("value", tmp_width);
                 jQuery(".preview-controls .chartHeight").attr("value", tmp_height);
             },
             resizeStop: function(){
+                var elem = jQuery(this);
                 if (JSON.parse(chartObj.find(".googlechart_configjson").attr("value")).chartType === "ImageChart"){
-                    if (jQuery(this).width() * jQuery(this).height() > 300000){
+                    if (elem.width() * elem.height() > 300000){
                         alert("Maximum size of pixels is 300000, You specified " +
-                            parseInt(jQuery(this).width(),10) + "x" +parseInt(jQuery(this).height(),10) +
-                            " what results in " + parseInt(jQuery(this).width(),10) * parseInt(jQuery(this).height(),10) + "px!");
-                        jQuery(this).width(chartObj.attr("widthPrevious"));
-                        jQuery(this).height(chartObj.attr("heightPrevious"));
+                            parseInt(elem.width(),10) + "x" +parseInt(elem.height(),10) +
+                            " what results in " + parseInt(elem.width(),10) * parseInt(elem.height(),10) + "px!");
+                        elem.width(chartObj.attr("widthPrevious"));
+                        elem.height(chartObj.attr("heightPrevious"));
                         jQuery(".googlechart-preview-dialog").width(jQuery(".googlechart-preview-dialog").attr("widthPrevious"));
                         jQuery(".googlechart-preview-dialog").height(jQuery(".googlechart-preview-dialog").attr("heightPrevious"));
                         jQuery(".preview-controls .chartWidth").attr("value", jQuery(".preview-controls .chartWidth").attr("valuePrevious"));
@@ -5333,21 +5361,22 @@ function init_googlecharts_edit(){
                         return;
                     }
                 }
-                var width_ratio = jQuery(this).width() / chartObj.attr("widthPrevious");
-                var height_ratio = jQuery(this).height() / chartObj.attr("heightPrevious");
+                var width_ratio = elem.width() / chartObj.attr("widthPrevious");
+                var height_ratio = elem.height() / chartObj.attr("heightPrevious");
                 var chartAreaLeft = JSON.parse(chartObj.attr("chartArea")).left * width_ratio;
                 var chartAreaTop = JSON.parse(chartObj.attr("chartArea")).top * height_ratio;
                 var chartAreaWidth = JSON.parse(chartObj.attr("chartArea")).width * width_ratio;
                 var chartAreaHeight = JSON.parse(chartObj.attr("chartArea")).height * height_ratio;
                 chartObj.attr("chartArea", JSON.stringify({left:chartAreaLeft, top:chartAreaTop, width:chartAreaWidth, height:chartAreaHeight}));
                 drawPreviewChart(chartObj,
-                         width + (jQuery(this).width() - jQuery(this).attr("widthOriginal")),
-                         height + (jQuery(this).height() - jQuery(this).attr("heightOriginal"))
+                         width + (elem.width() - elem.attr("widthOriginal")),
+                         height + (elem.height() - elem.attr("heightOriginal"))
                         );
             },
             resizeStart: function(){
-                chartObj.attr("widthPrevious", jQuery(this).width());
-                chartObj.attr("heightPrevious", jQuery(this).height());
+                var elem = jQuery(this);
+                chartObj.attr("widthPrevious", elem.width());
+                chartObj.attr("heightPrevious", elem.height());
                 jQuery(".googlechart-preview-dialog").attr("widthPrevious", jQuery(".googlechart-preview-dialog").width());
                 jQuery(".googlechart-preview-dialog").attr("heightPrevious", jQuery(".googlechart-preview-dialog").height());
                 jQuery(".preview-controls .chartWidth").attr("valuePrevious", jQuery(".preview-controls .chartWidth").attr("value"));
@@ -5421,10 +5450,11 @@ function init_googlecharts_edit(){
                     jQuery("#preview-iframe").dialog("close");
                     markChartAsModified(chartObj.find(".googlechart_id").attr("value"));
                 });
+                var elem = jQuery(this);
                 jQuery(".preview-controls .chartWidth").attr("value", width);
                 jQuery(".preview-controls .chartHeight").attr("value", height);
-                jQuery(this).attr("widthOriginal", jQuery(this).width());
-                jQuery(this).attr("heightOriginal", jQuery(this).height());
+                elem.attr("widthOriginal", elem.width());
+                elem.attr("heightOriginal", elem.height());
                 chartObj.attr("widthPrevious", width);
                 chartObj.attr("heightPrevious", height);
             }
@@ -5463,9 +5493,10 @@ function overrideGooglePalette(){
         });
 
         chartEditor.setChartWrapper(tmpwrapper);
-        jQuery(".google-visualization-charteditor-section-title:contains('Title')").hide();
-        jQuery(".google-visualization-charteditor-section-title:contains('Title')").next().next().hide();
-        jQuery(".google-visualization-charteditor-section-title:contains('Title')").next().next().next().next().hide();
+        var section_title = jQuery(".google-visualization-charteditor-section-title:contains('Title')");
+        section_title.hide();
+        section_title.next().next().hide();
+        section_title.next().next().next().next().hide();
     });
     jQuery(document).delegate(".google-visualization-charteditor-color", "click", function(){
         saveEditorColors();
@@ -5518,12 +5549,13 @@ function overrideGooglePalette(){
         }
     });
     jQuery(document).delegate(".googlechart-palette-cell-replacement", "click", function(){
+        var elem = jQuery(this);
         jQuery(".jfk-palette").hide();
-        var new_rgb_color = jQuery(this).css("background-color");
-        var old_rgb_color = jQuery(this).parent().css("background-color");
+        var new_rgb_color = elem.css("background-color");
+        var old_rgb_color = elem.parent().css("background-color");
         var new_color = rgbstrToHex(new_rgb_color);
         var old_color = rgbstrToHex(old_rgb_color);
-        if (jQuery(this).hasClass("automatic")){
+        if (elem.hasClass("automatic")){
             new_color = "eea-automatic-color";
         }
 
@@ -5670,9 +5702,10 @@ DavizEdit.CustomDialog.prototype = {
                                 self.settings.resize();
                             },
                             resize: function(){
+                                var elem = jQuery(this);
                                 jQuery(".custom-dialog-content")
-                                    .css("width", jQuery(this).width()-30)
-                                    .css("height", jQuery(this).height()-40);
+                                    .css("width", elem.width()-30)
+                                    .css("height", elem.height()-40);
                             }
                         })
                         .draggable({handle:".customDialogHeader"});
@@ -5722,7 +5755,8 @@ DavizEdit.CustomDialog.prototype = {
                                     var windowHeight = jQuery(window).height();
                                     var windowTop = jQuery(window).scrollTop();
                                     var windowLeft = jQuery(window).scrollLeft();
-                                    if (jQuery(this).find(".eea-icon").hasClass("eea-icon-expand")){
+                                    var elem = jQuery(this);
+                                    if (elem.find(".eea-icon").hasClass("eea-icon-expand")){
                                         width = self.settings.width;
                                         height = self.settings.height;
                                         if (width < windowWidth * 0.95) {
@@ -5731,19 +5765,19 @@ DavizEdit.CustomDialog.prototype = {
                                         if (height < windowHeight * 0.95) {
                                             height = windowHeight * 0.95;
                                         }
-                                        jQuery(this).find(".eea-icon")
+                                        elem.find(".eea-icon")
                                             .removeClass("eea-icon-expand")
                                             .addClass("eea-icon-compress");
-                                        jQuery(this).find(".ui-button-text")
+                                        elem.find(".ui-button-text")
                                             .text("compress");
                                     }
                                     else{
                                         width = self.settings.width;
                                         height = self.settings.height;
-                                        jQuery(this).find(".eea-icon")
+                                        elem.find(".eea-icon")
                                             .removeClass("eea-icon-compress")
                                             .addClass("eea-icon-expand");
-                                        jQuery(this).find(".ui-button-text")
+                                        elem.find(".ui-button-text")
                                             .text("expand");
                                     }
                                     var left = (windowWidth - width)/2 + windowLeft;
