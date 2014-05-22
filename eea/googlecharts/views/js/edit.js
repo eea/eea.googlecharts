@@ -1264,21 +1264,22 @@ function setCustomSetting(series, opt, key, value) {
             col_id = col.name;
         }
     });
-    if (options_json.custom === undefined) {
-        options_json.custom = {};
+    if (options_json.series === undefined) {
+        options_json.series = {};
     }
-    if (options_json.custom[col_id] === undefined) {
-        options_json.custom[col_id] = {};
+    if (options_json.series[col_id] === undefined) {
+        options_json.series[col_id] = {};
     }
     if (opt === "lineDashStyle") {
-        options_json.custom[col_id][opt] = value;
+        options_json.series[col_id][opt] = value;
     } else {
-        if (options_json.custom[col_id][opt] === undefined) {
-            options_json.custom[col_id][opt] = {};
+        if (options_json.series[col_id][opt] === undefined) {
+            options_json.series[col_id][opt] = {};
         }
-        options_json.custom[col_id][opt][key] = value;
+        options_json.series[col_id][opt][key] = value;
     }
     jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value", JSON.stringify(options_json));
+    redrawEditorChart();
 }
 
 function updateCustomSettings() {
@@ -1315,12 +1316,14 @@ function updateCustomSettings() {
     });
     var line_style = '';
     var p_options = {};
-    if (chartOptions.custom[col_id] !== undefined){
-        if (chartOptions.custom[col_id]["lineDashStyle"] !== undefined) {
-            line_style = chartOptions.custom[col_id]["lineDashStyle"];
-        }
-        if (chartOptions.custom[col_id]["pointShape"] !== undefined) {
-            p_options = chartOptions.custom[col_id]["pointShape"];
+    if (chartOptions["series"] !== undefined) {
+        if (chartOptions.series[col_id] !== undefined){
+            if (chartOptions.series[col_id]["lineDashStyle"] !== undefined) {
+                line_style = chartOptions.series[col_id]["lineDashStyle"];
+            }
+            if (chartOptions.series[col_id]["pointShape"] !== undefined) {
+                p_options = chartOptions.series[col_id]["pointShape"];
+            }
         }
     }
     jQuery("#line-style-input").attr("value", line_style);
@@ -1346,6 +1349,7 @@ function redrawEditorChart() {
     var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
     var dataTable = tmpwrapper_json.dataTable;
     var trendlines = {};
+    var series = {};
 
     jQuery.each(chartOptions.trendlines || {}, function(name, trendline){
         jQuery.each(dataTable.cols, function(idx, col){
@@ -1355,6 +1359,22 @@ function redrawEditorChart() {
         });
     });
     chartOptions.trendlines = trendlines;
+    jQuery.each(chartOptions.series || {}, function(name, opt){
+        jQuery.each(dataTable.cols, function(idx, col){
+            var def_opt = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
+            if (def_opt.options.series[idx] !== undefined) {
+                series[idx] = def_opt.options.series[idx];
+            }
+            if (col.id === name){
+                if (series[idx - 1] !== undefined) {
+                    jQuery.extend(true, series[idx - 1], opt);
+                } else {
+                    series[idx - 1] = opt;
+                }
+            }
+        });
+    });
+    chartOptions.series = series;
     jQuery.extend(true, tmpwrapper_json.options, chartOptions);
     removeAutomaticColor(tmpwrapper_json, tmpwrapper_json, []);
     jQuery.each(tmpwrapper_json.options, function(key, value){
@@ -2453,7 +2473,10 @@ function openEditor(elementId) {
     if (wrapperString.length > 0){
         wrapperJSON = JSON.parse(wrapperString);
         chart = wrapperJSON;
-        jQuery.extend(true, chart.options, JSON.parse(chartOptions));
+        var cleanChartOptions = {};
+        jQuery.extend(true, cleanChartOptions, JSON.parse(chartOptions));
+        delete cleanChartOptions["series"];
+        jQuery.extend(true, chart.options, cleanChartOptions);
     }
     else{
         chart = defaultChart;
@@ -3168,7 +3191,6 @@ function chartEditorSave(id){
     if (typeof(motion_state) === 'string'){
         options_json.state = motion_state;
     }
-
     function removeRedundant(tree, path){
         if ((tree instanceof Object) && !(tree instanceof Array)){
             jQuery.each(tree, function(key, subtree){
@@ -5653,7 +5675,10 @@ function overrideGooglePalette(){
         var tmpwrapper = chartEditor.getChartWrapper();
         var tmpwrapper_json = JSON.parse(tmpwrapper.toJSON());
         var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
-        jQuery.extend(true, tmpwrapper_json.options, chartOptions);
+        var cleanChartOptions = {};
+        jQuery.extend(true, cleanChartOptions, chartOptions);
+        delete cleanChartOptions["series"];
+        jQuery.extend(true, tmpwrapper_json.options, cleanChartOptions);
         jQuery.each(tmpwrapper_json.options, function(key, value){
             tmpwrapper.setOption(key,value);
         });

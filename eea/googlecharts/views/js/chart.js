@@ -261,8 +261,10 @@ function drawGoogleChart(options){
     settings.chartJson.options.allowHtml = true;
     settings.chartJson.options.width = settings.chartWidth;
     settings.chartJson.options.height = settings.chartHeight;
-
-    jQuery.extend(true, settings.chartJson.options, settings.chartOptions);
+    var cleanChartOptions = {};
+    jQuery.extend(true, cleanChartOptions, settings.chartOptions);
+    delete cleanChartOptions["series"];
+    jQuery.extend(true, settings.chartJson.options, cleanChartOptions);
 
     settings.chartJson.dataTable = [];
 
@@ -271,6 +273,7 @@ function drawGoogleChart(options){
     var chartOptions = settings.chartJson.options;
     var dataTable = settings.chartDataTable;
     var trendlines = {};
+    var series = {};
     jQuery.each(chartOptions.trendlines || {}, function(name, trendline){
         for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
             if (dataTable.getColumnId(i) === name){
@@ -280,6 +283,21 @@ function drawGoogleChart(options){
     });
     settings.chartJson.options.trendlines = trendlines;
 
+    jQuery.each(settings.chartOptions.series || {}, function(name, opt){
+        for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
+            if (settings.chartJson.options.series[i] !== undefined) {
+                series[i] = settings.chartJson.options.series[i];
+            }
+            if (dataTable.getColumnId(i) === name){
+                if (series[i - 1] !== undefined) {
+                    jQuery.extend(true, series[i - 1], opt);
+                } else {
+                    series[i - 1] = opt;
+                }
+            }
+        }
+    });
+    settings.chartJson.options.series = series;
     /* remove duplicated suffixes */
     jQuery.each(settings.chartJson.options.vAxes || {}, function(axid, ax){
         if (ax.format !== undefined){
