@@ -9,6 +9,9 @@ Changelog
 * Change: slight optimisations of jQuery selectors in edit.js
   [batradav refs #19051]
 
+* Change: display data mismatch information for valid data
+  [batradav refs #19195]
+
 10.2 - (2014-05-20)
 -------------------
 * Bugfix: Removed debug code from js

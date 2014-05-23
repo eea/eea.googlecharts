@@ -2357,6 +2357,61 @@ function openEditor(elementId) {
     google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
 
 
+    function addHelperDisplay(chartEditor){
+      var readyListener = null;
+      var readyCalled = false;
+
+
+      /* Since the API does not reveal a way to retrieve the
+         data mismatch messages the following workaround is used
+
+         the google_charts_* variables defined here may change in
+         the obfuscated and minified version of the API.
+      */
+
+      var google_charts_class = "Hh";
+      var google_charts_function = "PJa";
+      var google_charts_target = "l";
+
+      var mismatchInfoDisplay = jQuery(".googlechart_chart_config_info.hint");
+      var initialInfoDisplayContents = mismatchInfoDisplay.html();
+
+
+      function cleanupHelper(){
+          var contents = mismatchInfoDisplay.html();
+          mismatchInfoDisplay.html(contents.replace("doesn't", "does"));
+      }
+
+
+      var handleClick = function(){
+        google.visualization.events.removeListener(readyListener);
+        readyCalled = true;
+
+        var oldEditorTarget = jQuery(chartEditor[google_charts_class][google_charts_target]);
+        chartEditor[google_charts_class][google_charts_target] = mismatchInfoDisplay.get(0);
+
+        var chartType = chartEditor.getChartWrapper().getChartType();
+
+
+        jQuery.when(chartEditor[google_charts_class][google_charts_function](chartType)).then(function(){
+          readyListener = google.visualization.events.addListener(chartEditor, 'ready', handleClick);
+          readyCalled = false;
+          cleanupHelper();
+        });
+
+
+        chartEditor[google_charts_class][google_charts_target] = oldEditorTarget.get(0);
+      };
+
+
+      readyListener = google.visualization.events.addListener(chartEditor, 'ready', handleClick);
+      google.visualization.events.addListener(chartEditor, 'error', function(){
+          if(!readyCalled){
+            mismatchInfoDisplay.html(initialInfoDisplayContents);
+            }
+          });
+    }
+
     google.visualization.events.addListener(chartEditor, 'ready', function(event){
         jQuery(".panel-container").show();
         var settings_str = chartEditor.getChartWrapper().toJSON();
@@ -2391,7 +2446,9 @@ function openEditor(elementId) {
         jQuery("#custom-palette-configurator").remove();
         jQuery("#custom-trendlines-configurator").remove();
         jQuery("#custom-interval-configurator").remove();
-        chartEditor.openDialog(chartWrapper, {});
+        jQuery.when(chartEditor.openDialog(chartWrapper, {})).then(function(){
+            addHelperDisplay(chartEditor);
+        });
         addPaletteConfig();
         if (shouldAddTrendlinesToEditor){
             addTrendlineConfig();
