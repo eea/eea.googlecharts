@@ -3,14 +3,16 @@ Changelog
 
 10.3-dev - (unreleased)
 -----------------------
+* Bug fix: Use column id for unpivot if label is missing
+  [batradav refs #19051]
+
+* Change: slight optimisations of jQuery selectors in edit.js
+  [batradav refs #19051]
 
 10.2 - (2014-05-20)
 -------------------
 * Bugfix: Removed debug code from js
   [szabozo0]
-
-* Bug fix: Use column id for unpivot if label is missing
-  [batradav refs #19051]
 
 10.1 - (2014-05-19)
 -------------------
