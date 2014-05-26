@@ -1309,6 +1309,145 @@ function getValidatedLineDashStyle(value){
     }
 }
 
+function redrawEditorChart() {
+    var tmpwrapper = chartEditor.getChartWrapper();
+    tmpwrapper.setView();
+    var tmpwrapper_json = JSON.parse(tmpwrapper.toJSON());
+    delete tmpwrapper_json.options.intervals;
+    delete tmpwrapper_json.options.interval;
+    delete tmpwrapper_json.options.trendlines;
+    tmpwrapper.setOption("intervals", {});
+    tmpwrapper.setOption("interval", {});
+    tmpwrapper.setOption("trendlines", {});
+    var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+    var dataTable = tmpwrapper_json.dataTable;
+    var trendlines = {};
+    var series = {};
+
+    jQuery.each(chartOptions.trendlines || {}, function(name, trendline){
+        jQuery.each(dataTable.cols, function(idx, col){
+            if (col.id === name){
+                trendlines[idx - 1] = trendline;
+            }
+        });
+    });
+    chartOptions.trendlines = trendlines;
+    var def_opt = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
+    jQuery.each(chartOptions.series || {}, function(name, opt){
+        jQuery.each(dataTable.cols, function(idx, col){
+            if (def_opt.options.series[idx] !== undefined) {
+                series[idx] = def_opt.options.series[idx];
+            }
+            if (col.id === name){
+                if (series[idx - 1] !== undefined) {
+                    jQuery.extend(true, series[idx - 1], opt);
+                } else {
+                    series[idx - 1] = opt;
+                }
+            }
+        });
+    });
+    chartOptions.series = series;
+    jQuery.extend(true, tmpwrapper_json.options, chartOptions);
+    removeAutomaticColor(tmpwrapper_json, tmpwrapper_json, []);
+    jQuery.each(tmpwrapper_json.options, function(key, value){
+        tmpwrapper.setOption(key,value);
+    });
+
+    var row_filters_str = jQuery("#googlechartid_tmp_chart .googlechart_row_filters").attr('value');
+    var row_filters = {};
+    if (row_filters_str.length > 0){
+        row_filters = JSON.parse(row_filters_str);
+    }
+    var sortBy = jQuery("#googlechartid_tmp_chart .googlechart_sortBy").attr('value');
+    var sortAsc_str = jQuery("#googlechartid_tmp_chart .googlechart_sortAsc").attr('value');
+    var sortAsc = true;
+    if (sortAsc_str === 'desc'){
+        sortAsc = false;
+    }
+
+    var chartColumns_str = jQuery("#googlechartid_tmp_chart .googlechart_columns").val();
+
+    var chartColumns = {};
+    if (chartColumns_str === ""){
+        chartColumns.original = {};
+        chartColumns.prepared = {};
+    }
+    else{
+        chartColumns = JSON.parse(chartColumns_str);
+    }
+
+    var columnsFromSettings = getColumnsFromSettings(chartColumns);
+
+    var options = {
+        originalTable : all_rows,
+        normalColumns : columnsFromSettings.normalColumns,
+        pivotingColumns : columnsFromSettings.pivotColumns,
+        valueColumn : columnsFromSettings.valueColumn,
+        availableColumns : getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings"), available_columns, all_rows).available_columns,
+        filters: row_filters,
+        unpivotSettings : jQuery("#googlechartid_tmp_chart").data("unpivotsettings")
+    };
+
+    var transformedTable = transformTable(options);
+
+    jQuery("#googlechartid_tmp_chart").attr("columnproperties", JSON.stringify(transformedTable.properties));
+
+    options = {
+        originalDataTable : transformedTable,
+        columns : columnsFromSettings.columns,
+        sortBy : sortBy,
+        sortAsc : sortAsc,
+//        preparedColumns: chartColumns.prepared,
+        preparedColumns: chartColumns.prepared,
+        enableEmptyRows: JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value")).enableEmptyRows
+    };
+
+    // check if table contains 2 string columns & 1 or 2 numeric columns (for treemap)
+    var isPossibleTreemap = true;
+    if ((columnsFromSettings.columns.length < 3) || (columnsFromSettings.columns.length > 4)){
+        isPossibleTreemap = false;
+    }
+    else {
+        if (transformedTable.properties[columnsFromSettings.columns[0]].valueType !== 'text'){
+            isPossibleTreemap = false;
+        }
+        if (transformedTable.properties[columnsFromSettings.columns[1]].valueType !== 'text'){
+            isPossibleTreemap = false;
+        }
+        if (transformedTable.properties[columnsFromSettings.columns[2]].valueType !== 'number'){
+            isPossibleTreemap = false;
+        }
+        if ((columnsFromSettings.columns.length === 4) && (transformedTable.properties[columnsFromSettings.columns[3]].valueType !== 'number')){
+            isPossibleTreemap = false;
+        }
+    }
+    if (!isPossibleTreemap){
+        options.limit = 100;
+    }
+
+    var tableForChart = prepareForChart(options);
+
+    // workaround for charteditor issue #17629
+    for (var i = 0; i < tableForChart.getNumberOfColumns(); i++){
+        tableForChart.getColumnProperties(i);
+    }
+    // end of workaround
+
+    //chart.dataTable = tableForChart;
+    tmpwrapper.setDataTable(tableForChart);
+
+    google.visualization.events.addListener(tmpwrapper, 'ready', function(event){
+        fixSVG("#google-visualization-charteditor-preview-div-chart");
+    });
+
+    tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
+
+    chartWrapper = tmpwrapper;
+    updateEditorColors();
+
+}
+
 function setCustomSetting(series, opt, key, value) {
     var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
     var options_json = JSON.parse(options_str);
@@ -1401,8 +1540,12 @@ function updateCustomSettings() {
     }
     jQuery("#line-style-input").attr("value", line_style);
     jQuery("#point-sides-input").attr("value", p_options.sides || '');
+    var selected_type = p_options.type;
+    if (!selected_type) {
+        selected_type = "circle";
+    }
     jQuery("#point-shape option").filter(function() {
-        return jQuery(this).text() == p_options.type;
+        return jQuery(this).text() == selected_type;
     }).prop('selected', true);
     if (p_options.type === "star" || p_options.type === "polygon") {
         jQuery("#point-sides-input").attr("disabled", false);
@@ -1557,151 +1700,6 @@ function addCustomSettings() {
         p_shape_rotation_float_end.after(p_shape_rotation_gap);
     }
     updateCustomSettings();
-
-}
-
-function redrawEditorChart() {
-    var tmpwrapper = chartEditor.getChartWrapper();
-    tmpwrapper.setView();
-    var tmpwrapper_json = JSON.parse(tmpwrapper.toJSON());
-    delete tmpwrapper_json.options.intervals;
-    delete tmpwrapper_json.options.interval;
-    delete tmpwrapper_json.options.trendlines;
-    tmpwrapper.setOption("intervals", {});
-    tmpwrapper.setOption("interval", {});
-    tmpwrapper.setOption("trendlines", {});
-    var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
-    var dataTable = tmpwrapper_json.dataTable;
-    var trendlines = {};
-    var series = {};
-
-    jQuery.each(chartOptions.trendlines || {}, function(name, trendline){
-        jQuery.each(dataTable.cols, function(idx, col){
-            if (col.id === name){
-                trendlines[idx - 1] = trendline;
-            }
-        });
-    });
-    chartOptions.trendlines = trendlines;
-    var def_opt = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
-    jQuery.each(chartOptions.series || {}, function(name, opt){
-        jQuery.each(dataTable.cols, function(idx, col){
-            if (def_opt.options.series[idx] !== undefined) {
-                series[idx] = def_opt.options.series[idx];
-            }
-            if (col.id === name){
-                if (series[idx - 1] !== undefined) {
-                    jQuery.extend(true, series[idx - 1], opt);
-                } else {
-                    series[idx - 1] = opt;
-                }
-            }
-        });
-    });
-    chartOptions.series = series;
-    jQuery.extend(true, tmpwrapper_json.options, chartOptions);
-    removeAutomaticColor(tmpwrapper_json, tmpwrapper_json, []);
-    jQuery.each(tmpwrapper_json.options, function(key, value){
-        tmpwrapper.setOption(key,value);
-    });
-
-    var row_filters_str = jQuery("#googlechartid_tmp_chart .googlechart_row_filters").attr('value');
-    var row_filters = {};
-    if (row_filters_str.length > 0){
-        row_filters = JSON.parse(row_filters_str);
-    }
-    var sortBy = jQuery("#googlechartid_tmp_chart .googlechart_sortBy").attr('value');
-    var sortAsc_str = jQuery("#googlechartid_tmp_chart .googlechart_sortAsc").attr('value');
-    var sortAsc = true;
-    if (sortAsc_str === 'desc'){
-        sortAsc = false;
-    }
-
-    var chartColumns_str = jQuery("#googlechartid_tmp_chart .googlechart_columns").val();
-
-    var chartColumns = {};
-    if (chartColumns_str === ""){
-        chartColumns.original = {};
-        chartColumns.prepared = {};
-    }
-    else{
-        chartColumns = JSON.parse(chartColumns_str);
-    }
-
-    var columnsFromSettings = getColumnsFromSettings(chartColumns);
-
-    var options = {
-        originalTable : all_rows,
-        normalColumns : columnsFromSettings.normalColumns,
-        pivotingColumns : columnsFromSettings.pivotColumns,
-        valueColumn : columnsFromSettings.valueColumn,
-        availableColumns : getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings"), available_columns, all_rows).available_columns,
-        filters: row_filters,
-        unpivotSettings : jQuery("#googlechartid_tmp_chart").data("unpivotsettings")
-    };
-
-    var transformedTable = transformTable(options);
-
-    jQuery("#googlechartid_tmp_chart").attr("columnproperties", JSON.stringify(transformedTable.properties));
-
-    options = {
-        originalDataTable : transformedTable,
-        columns : columnsFromSettings.columns,
-        sortBy : sortBy,
-        sortAsc : sortAsc,
-//        preparedColumns: chartColumns.prepared,
-        preparedColumns: chartColumns.prepared,
-        enableEmptyRows: JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value")).enableEmptyRows
-    };
-
-    // check if table contains 2 string columns & 1 or 2 numeric columns (for treemap)
-    var isPossibleTreemap = true;
-    if ((columnsFromSettings.columns.length < 3) || (columnsFromSettings.columns.length > 4)){
-        isPossibleTreemap = false;
-    }
-    else {
-        if (transformedTable.properties[columnsFromSettings.columns[0]].valueType !== 'text'){
-            isPossibleTreemap = false;
-        }
-        if (transformedTable.properties[columnsFromSettings.columns[1]].valueType !== 'text'){
-            isPossibleTreemap = false;
-        }
-        if (transformedTable.properties[columnsFromSettings.columns[2]].valueType !== 'number'){
-            isPossibleTreemap = false;
-        }
-        if ((columnsFromSettings.columns.length === 4) && (transformedTable.properties[columnsFromSettings.columns[3]].valueType !== 'number')){
-            isPossibleTreemap = false;
-        }
-    }
-    if (!isPossibleTreemap){
-        options.limit = 100;
-    }
-
-    var tableForChart = prepareForChart(options);
-
-    // workaround for charteditor issue #17629
-    for (var i = 0; i < tableForChart.getNumberOfColumns(); i++){
-        tableForChart.getColumnProperties(i);
-    }
-    // end of workaround
-
-    //chart.dataTable = tableForChart;
-    tmpwrapper.setDataTable(tableForChart);
-
-    google.visualization.events.addListener(tmpwrapper, 'ready', function(event){
-        fixSVG("#google-visualization-charteditor-preview-div-chart");
-        jQuery(".charts-tab:contains('Customize')").off("click").on("click", function(evt){
-            setTimeout(addCustomSettings, 1);
-        });
-        jQuery(".charts-menuitem").off("click").on("click", function(evt){
-            updateCustomSettings();
-        });
-    });
-
-    tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
-
-    chartWrapper = tmpwrapper;
-    updateEditorColors();
 
 }
 
@@ -5780,6 +5778,17 @@ function init_googlecharts_edit(){
     loadCharts();
 }
 
+function manageCustomSettings() {
+    jQuery("body").off("click", ".charts-tab:contains('Customize')")
+        .on("click", ".charts-tab:contains('Customize')", function(evt){
+            setTimeout(addCustomSettings, 1);    
+        });
+    jQuery("body").off("click", ".charts-menuitem")
+        .on("click", ".charts-menuitem", function(evt){
+        updateCustomSettings();
+    });
+}
+
 function overrideGooglePalette(){
     jQuery(document).delegate(".google-visualization-charteditor-settings-td .google-visualization-charteditor-panel-navigation-cell", "click", function(){
         if (jQuery.inArray(jQuery(this).attr("id"), ["custom-interval-configurator", "custom-palette-configurator", "custom-trendlines-configurator"]) !== -1){
@@ -5943,6 +5952,7 @@ jQuery(document).ready(function(){
     overrideGooglePalette();
     overrideSparklinesThumbnail();
     updateTutorialLinks();
+    manageCustomSettings();
 });
 
 /*if (window.DavizEdit === undefined){
