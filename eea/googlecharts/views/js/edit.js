@@ -1507,18 +1507,26 @@ function updateCustomSettings() {
         if (label === "Line thickness" || label === "Point size") {
             disabled = jQuery(this).next().children(":visible").attr("aria-disabled");
             if (disabled === "true") {
-                jQuery("#line-style-input").attr("value", "");
+                if (jQuery("#line-style-input").attr("value") !== "") {
+                    jQuery("#line-style-input").attr("value", "");
+                    setCustomSetting(line_caption, "lineDashStyle", '', '');
+                }
                 jQuery("#line-style-input").attr("disabled", true);
-                jQuery("#point-sides-input").attr("value", "");
+                if (jQuery("#point-sides-input").attr("value") !== "") {
+                    jQuery("#point-sides-input").attr("value", "");
+                    setCustomSetting(line_caption, "pointShape", "sides", '');
+                }
                 jQuery("#point-sides-input").attr("disabled", true);
-                jQuery("#point-shape").attr("value", "");
+                if (jQuery("#point-shape").attr("value") !== "") {
+                    jQuery("#point-shape").attr("value", "");
+                    setCustomSetting(line_caption, "pointShape", "type", '');
+                }
                 jQuery("#point-shape").attr("disabled", true);
-                jQuery("#point-rotation").attr("value", "");
+                if (jQuery("#point-rotation").attr("value") !== "") {
+                    jQuery("#point-rotation").attr("value", "");
+                    setCustomSetting(line_caption, "pointShape", "rotation", '');
+                }
                 jQuery("#point-rotation").attr("disabled", true);
-                setCustomSetting(line_caption, "lineDashStyle", '', '');
-                setCustomSetting(line_caption, "pointShape", "type", '');
-                setCustomSetting(line_caption, "pointShape", "sides", '');
-                setCustomSetting(line_caption, "pointShape", "rotation", '');
                 disable_custom = true;
             }
         }
