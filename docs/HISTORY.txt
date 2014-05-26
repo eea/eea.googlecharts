@@ -3,6 +3,8 @@ Changelog
 
 10.3-dev - (unreleased)
 -----------------------
+* Feature: Added settings for lines and points shapes in chart editor
+  [olimpiurob refs #19279]
 * Bug fix: Use column id for unpivot if label is missing
   [batradav refs #19051]
 
