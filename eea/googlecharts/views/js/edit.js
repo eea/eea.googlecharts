@@ -2373,17 +2373,58 @@ function openEditor(elementId) {
       var google_charts_function = "PJa";
       var google_charts_target = "l";
 
-      var mismatchInfoDisplay = jQuery(".googlechart_chart_config_info.hint");
-      var initialInfoDisplayContents = mismatchInfoDisplay.html();
+      var mismatchInfoDisplay = jQuery("<div>").attr("id", "mismatchInfoDisplay");
+      jQuery(".googlechart_chart_config_info.hint").append(mismatchInfoDisplay);
 
+      mismatchInfoDisplay.on("DOMSubtreeModified", function(){
+        repositionDataTab();
+      });
 
-      function cleanupHelper(){
-          var contents = mismatchInfoDisplay.html();
-          mismatchInfoDisplay.html(contents.replace("doesn't", "does"));
+      function hideEmptyThumbnail(){
+        var thumb = jQuery("#google-visualization-charteditor-preview-mismatch-thumbnail");
+        var thumb_background = thumb.css("background");
+
+        if(thumb_background.indexOf("url") === -1){
+          thumb.hide();
+        }
       }
 
+      function displayWarningSign(ev_type){
+        if(ev_type === "error"){
+          var warning_sign = jQuery("<div>&#9888;</div>");
+          warning_sign.css({
+            "font-size": "250px",
+            "text-align": "center",
+            "line-height": "300px"
+          });
+          jQuery("#google-visualization-charteditor-preview-div-chart").html(warning_sign);
+        }
+      }
 
-      var handleClick = function(){
+      function restyleMismatchMessage(){
+        jQuery(".google-visualization-charteditor-data-mismatch").css("padding", 0);
+        jQuery(".google-visualization-charteditor-data-mismatch-header").css({
+          "margin-left": 0,
+          "margin-top": "10px"
+        });
+        mismatchInfoDisplay.css("width", "100%");
+      }
+
+      function finalCleanup(ev_type){
+        hideEmptyThumbnail();
+        displayWarningSign(ev_type);
+        restyleMismatchMessage();
+      }
+
+      var repositionDataTab = function(){
+        var panel_container = jQuery(".panel-container");
+        var panel_container_height = panel_container.height();
+        var panel_container_offset = panel_container.offset();
+        panel_container_offset.top += panel_container_height + 5;
+        jQuery(".googlechart_table_config_scaleable").offset(panel_container_offset);
+      };
+
+      var handleClick = function(ev_type){
         google.visualization.events.removeListener(readyListener);
         readyCalled = true;
 
@@ -2396,7 +2437,7 @@ function openEditor(elementId) {
         jQuery.when(chartEditor[google_charts_class][google_charts_function](chartType)).then(function(){
           readyListener = google.visualization.events.addListener(chartEditor, 'ready', handleClick);
           readyCalled = false;
-          cleanupHelper();
+          finalCleanup(ev_type);
         });
 
 
@@ -2407,7 +2448,7 @@ function openEditor(elementId) {
       readyListener = google.visualization.events.addListener(chartEditor, 'ready', handleClick);
       google.visualization.events.addListener(chartEditor, 'error', function(){
           if(!readyCalled){
-            mismatchInfoDisplay.html(initialInfoDisplayContents);
+            handleClick("error");
             }
           });
     }
@@ -5769,68 +5810,35 @@ DavizEdit.CustomDialog.prototype = {
                                     self.close();
                                 }
                             );
-        var resizeBtn = jQuery("<button>")
-                            .attr("title", "expand")
-                            .attr("role", "button")
-                            .addClass("ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-resize")
-                            .hover(
-                                function(){
-                                    jQuery(this)
-                                        .addClass("ui-state-hover ui-state-active");
-                                },
-                                function(){
-                                    jQuery(this)
-                                        .removeClass("ui-state-hover ui-state-active");
-                                }
-                            )
-                            .click(
-                                function(){
-                                    var width;
-                                    var height;
-                                    var windowWidth = jQuery(window).width();
-                                    var windowHeight = jQuery(window).height();
-                                    var windowTop = jQuery(window).scrollTop();
-                                    var windowLeft = jQuery(window).scrollLeft();
-                                    var elem = jQuery(this);
-                                    if (elem.find(".eea-icon").hasClass("eea-icon-expand")){
-                                        width = self.settings.width;
-                                        height = self.settings.height;
-                                        if (width < windowWidth * 0.95) {
-                                            width = windowWidth * 0.95;
-                                        }
-                                        if (height < windowHeight * 0.95) {
-                                            height = windowHeight * 0.95;
-                                        }
-                                        elem.find(".eea-icon")
-                                            .removeClass("eea-icon-expand")
-                                            .addClass("eea-icon-compress");
-                                        elem.find(".ui-button-text")
-                                            .text("compress");
-                                    }
-                                    else{
-                                        width = self.settings.width;
-                                        height = self.settings.height;
-                                        elem.find(".eea-icon")
-                                            .removeClass("eea-icon-compress")
-                                            .addClass("eea-icon-expand");
-                                        elem.find(".ui-button-text")
-                                            .text("expand");
-                                    }
-                                    var left = (windowWidth - width)/2 + windowLeft;
-                                    var top = (windowHeight - height)/2 + windowTop;
-                                    jQuery(".eea-custom-dialog")
-                                        .css("width", width)
-                                        .css("height", height)
-                                        .css("left", left)
-                                        .css("top", top);
+        var expandDialog = function(){
+            var width;
+            var height;
+            var windowWidth = jQuery(window).width();
+            var windowHeight = jQuery(window).height();
+            var windowTop = jQuery(window).scrollTop();
+            var windowLeft = jQuery(window).scrollLeft();
+            width = self.settings.width;
+            height = self.settings.height;
+            if (width < windowWidth * 0.95) {
+                width = windowWidth * 0.95;
+            }
+            if (height < windowHeight * 0.95) {
+                height = windowHeight * 0.95;
+            }
+            var left = (windowWidth - width)/2 + windowLeft;
+            var top = (windowHeight - height)/2 + windowTop;
+            jQuery(".eea-custom-dialog")
+                .css("width", width)
+                .css("height", height)
+                .css("left", left)
+                .css("top", top);
 
-                                    jQuery(".custom-dialog-content")
-                                        .css("width", width-30)
-                                        .css("height", height-40);
+            jQuery(".custom-dialog-content")
+                .css("width", width-30)
+                .css("height", height-40);
 
-                                    self.settings.resize();
-                                }
-                            );
+            self.settings.resize();
+        };
 
         jQuery("<span>")
             .addClass("ui-button-icon-primary eea-icon eea-icon-times")
@@ -5840,14 +5848,6 @@ DavizEdit.CustomDialog.prototype = {
             .text("close")
             .appendTo(closeBtn);
         closeBtn.appendTo(dialogHeader);
-        jQuery("<span>")
-            .addClass("ui-button-icon-primary eea-icon eea-icon-expand")
-            .appendTo(resizeBtn);
-        jQuery("<span>")
-            .addClass("ui-button-text")
-            .text("expand")
-            .appendTo(resizeBtn);
-        resizeBtn.appendTo(dialogHeader);
         self.context
                 .addClass("ui-dialog-content ui-widget-content custom-dialog-content")
                 .css("width",self.settings.width-30)
@@ -5855,6 +5855,7 @@ DavizEdit.CustomDialog.prototype = {
         self.context.appendTo(dialog);
         dialog.appendTo("body");
         self.settings.open();
+        expandDialog();
     },
 
     close: function(){
