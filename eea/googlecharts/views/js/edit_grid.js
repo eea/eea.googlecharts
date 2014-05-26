@@ -1207,17 +1207,26 @@ function loadRoles(colFullName){
     var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
     var colType = "text";
     jQuery.each(columnProps, function(key, columnProp){
-        if (columnProp.label === colFullName || key){
+        if (colFullName === (columnProp.label || key)){
             colType = columnProp.valueType;
         }
     });
-//    if (colType != "number"){
-//        jQuery(".slick-role-title").hide();
-//    }
+    jQuery(".slick-role-menu").hide();
+
+    var valid_roles = {
+        "number" : ["data", "old-data", "interval", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"],
+        "text" : ["data", "annotation", "annotationText", "tooltip"],
+        "date" : ["data", "annotation", "annotationText", "tooltip"],
+        "boolean" : ["data", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"]
+    };
+
+    jQuery.each(valid_roles[colType], function(key, role){
+        jQuery(".slick-role-" + role).show();
+    });
 
     jQuery(".slick-role-menu-enabled").removeClass("slick-role-menu-enabled");
     jQuery.each(prepared, function(idx, col){
-        if (col.fullname === colFullName){
+        if (colFullName === col.fullname){
             var role = "data";
             if (col.hasOwnProperty("role")){
                 role = col.role;
