@@ -70,7 +70,7 @@ function unpivotTable(settings){
         jQuery.each(row, function(col_id, value){
             var colProp = settings.originalTable.properties[col_id];
             if (colProp !== undefined){
-                colLabel = colProp.label;
+                colLabel = colProp.label || col_id;
                 var splitted = splitColumn(colLabel, value, settings.originalTable.properties[col_id].columnType, settings.unpivotSettings);
                 if (jQuery.isEmptyObject(splitted)){
                     fixed_values[col_id] = value;

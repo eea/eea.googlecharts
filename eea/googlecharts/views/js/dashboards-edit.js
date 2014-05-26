@@ -62,6 +62,21 @@ DavizEdit.GoogleDashboards.prototype = {
   onReload: function(){
     var self = this;
     self.context.empty();
+    jQuery("<div>")
+        .addClass("eea-tutorial")
+        .attr("tutorial", "dashboard")
+        .attr("message", "Configure dashboards or")
+        .attr("style", "float:left")
+        .css("display", "block")
+        .css("margin-bottom", "20px")
+        .css("margin-top", "10px")
+        .css("margin-left", "0px")
+        .css("font-size", "16px")
+        .appendTo(self.context);
+    jQuery("<div>")
+        .attr("style", "clear:both")
+        .appendTo(self.context);
+    updateTutorialLinks();
     try{
         self.context.sortable('destroy');
     } catch(err) {}

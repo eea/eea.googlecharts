@@ -3,6 +3,9 @@
     <script type="text/javascript" tal:content="string:ajax_baseurl = '${ajax_baseurl}';available_columns = ${view/get_columns};all_rows = ${view/get_allrows}">
     </script>
 
+    <div class="eea-tutorial" style="float:left; display:block; margin-left:0px; margin-top:10px; margin-bottom:20px;font-size:16px;" tutorial="edit chart" message="Configure google charts or"></div>
+    <div style="clear:both"></div>
+
     <input id="addgooglechart"
            type="button"
            value="Add another visualization"
@@ -10,7 +13,6 @@
            i18n:attributes="value"
            style="float:left;" />
 
-    <div class="eea-tutorial" style="float:left;" tutorial="edit chart"></div>
     <div style="clear:both"></div>
     <ul id="googlecharts_list"></ul>
 </div>

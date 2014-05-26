@@ -967,8 +967,8 @@ function loadFormatters(colFullName){
     var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
     var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
     var colType = "text";
-    jQuery.each(columnProps, function(idx, columnProp){
-        if (columnProp.label === colFullName){
+    jQuery.each(columnProps, function(key, columnProp){
+        if (columnProp.label === colFullName || key){
             colType = columnProp.valueType;
         }
     });
@@ -1206,15 +1206,14 @@ function loadRoles(colFullName){
     var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
     var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
     var colType = "text";
-    jQuery.each(columnProps, function(idx, columnProp){
-        if (columnProp.label === colFullName){
+    jQuery.each(columnProps, function(key, columnProp){
+        if (columnProp.label === colFullName || key){
             colType = columnProp.valueType;
         }
     });
-
-    if (colType != "number"){
-        jQuery(".slick-role-title").hide();
-    }
+//    if (colType != "number"){
+//        jQuery(".slick-role-title").hide();
+//    }
 
     jQuery(".slick-role-menu-enabled").removeClass("slick-role-menu-enabled");
     jQuery.each(prepared, function(idx, col){
@@ -1241,6 +1240,7 @@ function saveRoles(colFullName){
 
 function enableGridRoles(){
     jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
+        var available_roles = ["data", "old-data", "interval", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"];
         var role_element = jQuery(".slick-header-menuitem").find("span:contains(-role-)");
         if (role_element.length === 0){
             return;
@@ -1252,9 +1252,16 @@ function enableGridRoles(){
         var menu = role_element.parent().parent();
         var role_title = jQuery('<div>').addClass('slick-role-title').text('Role...').appendTo(menu);
         var roles = jQuery('<div>').addClass('slick-role-body').appendTo(menu);
-        var data = jQuery('<div>').addClass('slick-role-menu slick-role-data').text('data').attr("role","data").appendTo(roles);
-        var olddata = jQuery('<div>').addClass('slick-role-menu slick-role-old-data').text('old-data').attr("role","old-data").appendTo(roles);
-        var interval = jQuery('<div>').addClass('slick-role-menu slick-role-interval').text('interval').attr("role","interval").appendTo(roles);
+
+        jQuery.each(available_roles, function(idx, role){
+            jQuery('<div>')
+                .addClass("slick-role-menu")
+                .addClass("slick-role-" + role)
+                .text(role)
+                .attr("role", role)
+                .appendTo(roles);
+        });
+
         roles.hide();
         role_title.click(function(){
             roles.toggle('blind');

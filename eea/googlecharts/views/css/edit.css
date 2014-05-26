@@ -1,3 +1,6 @@
+#googlechart-googlecharts-tab {
+    padding: 2em 2em 1em 1em;
+}
 #google-visualization-charteditor-font-style-title,
 #google-visualization-charteditor-input-chart-title,
 #google-visualization-charteditor-select-font-name {
@@ -246,7 +249,7 @@
 }
 
 #gcharts-dashboards-edit {
-    padding: 1em;
+    padding: 2em 2em 1em 1em;
 }
 
 #gcharts-dashboards-edit .add-button {
@@ -274,9 +277,7 @@
 }
 
 #gcharts-dashboards-edit .edit-button.selected {
-    box-shadow: none;
     position: relative;
-    border-color: white;
 }
 
 #gcharts-dashboards-edit .edit-button.selected:after {
