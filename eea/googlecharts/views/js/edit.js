@@ -2231,7 +2231,10 @@ function addIntervalConfig(){
         });
 }
 
+var shouldListenErrorEvent;
+
 function openEditor(elementId) {
+    shouldListenErrorEvent = true;
     isFirstEdit = true;
     jQuery(".google-visualization-charteditor-dialog").remove();
 //    chartId = elementId;
@@ -2361,7 +2364,6 @@ function openEditor(elementId) {
       var readyListener = null;
       var readyCalled = false;
 
-
       /* Since the API does not reveal a way to retrieve the
          data mismatch messages the following workaround is used
 
@@ -2425,6 +2427,7 @@ function openEditor(elementId) {
       };
 
       var handleClick = function(ev_type){
+        shouldListenErrorEvent = false;
         google.visualization.events.removeListener(readyListener);
         readyCalled = true;
 
@@ -2466,6 +2469,10 @@ function openEditor(elementId) {
     });
 
     google.visualization.events.addListener(chartEditor, 'error', function(event){
+        if (!shouldListenErrorEvent){
+            shouldListenErrorEvent = true;
+            return;
+        }
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = false;
