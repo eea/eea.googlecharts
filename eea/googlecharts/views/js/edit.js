@@ -2359,8 +2359,8 @@ function openEditor(elementId) {
     chartEditor = new google.visualization.ChartEditor();
     google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
 
-
     function addHelperDisplay(chartEditor){
+
       var readyListener = null;
       var readyCalled = false;
 
@@ -2375,8 +2375,14 @@ function openEditor(elementId) {
       var google_charts_function = "PJa";
       var google_charts_target = "l";
 
-      var mismatchInfoDisplay = jQuery("<div>").attr("id", "mismatchInfoDisplay");
-      jQuery(".googlechart_chart_config_info.hint").append(mismatchInfoDisplay);
+      var mismatchInfoDisplay = function(){
+        var elem = jQuery("#mismatchInfoDisplay");
+        if(elem.length === 0){
+          elem = jQuery("<div>").attr("id", "mismatchInfoDisplay");
+          jQuery(".googlechart_chart_config_info.hint").append(elem);
+        }
+        return elem;
+      }();
 
       mismatchInfoDisplay.on("DOMSubtreeModified", function(){
         repositionDataTab();
@@ -2436,24 +2442,45 @@ function openEditor(elementId) {
 
         var chartType = chartEditor.getChartWrapper().getChartType();
 
-
         jQuery.when(chartEditor[google_charts_class][google_charts_function](chartType)).then(function(){
           readyListener = google.visualization.events.addListener(chartEditor, 'ready', handleClick);
           readyCalled = false;
           finalCleanup(ev_type);
         });
 
-
         chartEditor[google_charts_class][google_charts_target] = oldEditorTarget.get(0);
       };
 
+      function expandCollapseMismatch(){
+        var expandCollapse = jQuery("#expandCollapseMismatch");
+        if(expandCollapse.length === 0){
+          expandCollapse = jQuery('<div id="expandCollapseMismatch" class="eea-icon-lg eea-icon eea-caret-icon eea-icon-caret-down"><span class="ex_text">Show/hide details</span></div>');
+          expandCollapse.on("click", function(){
+              var self = jQuery(this);
+              self.toggleClass("eea-icon-caret-down");
+              self.toggleClass("eea-icon-caret-right");
+              mismatchInfoDisplay.toggle();
+              repositionDataTab();
+          });
+          mismatchInfoDisplay.before(expandCollapse);
+          expandCollapse.find(".ex_text").css({
+            "font-size": "small"
+          });
+        }
+        return expandCollapse;
+      }
+      var expandCollapse = expandCollapseMismatch();
 
-      readyListener = google.visualization.events.addListener(chartEditor, 'ready', handleClick);
+      readyListener = google.visualization.events.addListener(chartEditor, 'ready', function(){
+          expandCollapse.show();
+          handleClick();
+      });
       google.visualization.events.addListener(chartEditor, 'error', function(){
           if(!readyCalled){
             handleClick("error");
             }
           });
+
     }
 
     google.visualization.events.addListener(chartEditor, 'ready', function(event){
@@ -2490,13 +2517,12 @@ function openEditor(elementId) {
         }
     }
 
+    addHelperDisplay(chartEditor);
     setTimeout(function(){
         jQuery("#custom-palette-configurator").remove();
         jQuery("#custom-trendlines-configurator").remove();
         jQuery("#custom-interval-configurator").remove();
-        jQuery.when(chartEditor.openDialog(chartWrapper, {})).then(function(){
-            addHelperDisplay(chartEditor);
-        });
+        chartEditor.openDialog(chartWrapper, {});
         addPaletteConfig();
         if (shouldAddTrendlinesToEditor){
             addTrendlineConfig();
