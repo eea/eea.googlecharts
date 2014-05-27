@@ -1765,6 +1765,7 @@ div.googlechartarea-input {
     padding:5px;
     float:left;
     font-weight:bold;
+    width: 86%;
 }
 
 .googlechart .eea-icon-plus-square-o:before,
