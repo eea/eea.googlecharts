@@ -2411,10 +2411,16 @@ function openEditor(elementId) {
 
       function restyleMismatchMessage(){
         jQuery(".google-visualization-charteditor-data-mismatch").css("padding", 0);
-        jQuery(".google-visualization-charteditor-data-mismatch-header").css({
+        var header = jQuery(".google-visualization-charteditor-data-mismatch-header");
+        header.css({
           "margin-left": 0,
           "margin-top": "10px"
         });
+
+        // remove "data doens't match" text
+        header.next().next().remove();
+        header.next().remove();
+
         mismatchInfoDisplay.css("width", "100%");
       }
 
@@ -2433,14 +2439,21 @@ function openEditor(elementId) {
       };
 
       var handleClick = function(ev_type){
+
+        var chartType = chartEditor.getChartWrapper().getChartType();
+        if(chartType === "Table" || chartType === "ImageChart"){
+            hideMismatchData();
+            return;
+        }
+
+        showMismatchData();
+
         shouldListenErrorEvent = false;
         google.visualization.events.removeListener(readyListener);
         readyCalled = true;
 
         var oldEditorTarget = jQuery(chartEditor[google_charts_class][google_charts_target]);
         chartEditor[google_charts_class][google_charts_target] = mismatchInfoDisplay.get(0);
-
-        var chartType = chartEditor.getChartWrapper().getChartType();
 
         jQuery.when(chartEditor[google_charts_class][google_charts_function](chartType)).then(function(){
           readyListener = google.visualization.events.addListener(chartEditor, 'ready', handleClick);
@@ -2449,6 +2462,7 @@ function openEditor(elementId) {
         });
 
         chartEditor[google_charts_class][google_charts_target] = oldEditorTarget.get(0);
+        resizeTableConfigurator(true);
       };
 
       function expandCollapseMismatch(){
@@ -2465,12 +2479,23 @@ function openEditor(elementId) {
           });
           mismatchInfoDisplay.before(expandCollapse);
           expandCollapse.find(".ex_text").css({
-            "font-size": "small"
+            "font-size": "small",
+            "cursor": "pointer"
           });
         }
         return expandCollapse;
       }
       var expandCollapse = expandCollapseMismatch();
+
+      function showMismatchData(){
+        mismatchInfoDisplay.show();
+        expandCollapse.show();
+      }
+
+      function hideMismatchData(){
+        mismatchInfoDisplay.hide();
+        expandCollapse.hide();
+      }
 
       readyListener = google.visualization.events.addListener(chartEditor, 'ready', function(){
           expandCollapse.show();
