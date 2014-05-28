@@ -2461,6 +2461,7 @@ function openEditor(elementId) {
               self.toggleClass("eea-icon-caret-right");
               mismatchInfoDisplay.toggle();
               repositionDataTab();
+              resizeTableConfigurator(true);
           });
           mismatchInfoDisplay.before(expandCollapse);
           expandCollapse.find(".ex_text").css({
@@ -3648,15 +3649,18 @@ function resizeTableConfigurator(forced){
     if ((jQuery(".googlechart_table_config_scaleable_maximized").length > 0) || forced){
         var fullwidth = jQuery(".googlecharts-customdialog").width();
         var fullheight = jQuery(".googlecharts_columns_config").height();
-        var container_heightstr = 'height:'+(fullheight-125)+'px;width:'+(fullwidth-340)+'px;';
-        var accordion_heightstr = 'height:'+(fullheight-125)+'px;width:'+(fullwidth-340)+'px;';
-        var accordion_container_heightstr = 'height:'+(fullheight-125)+'px;width:'+(fullwidth-340)+'px;';
+        var chart_preview = jQuery(".google-visualization-charteditor-preview-td");
+        var newTable = jQuery("#newTable");
+        var helperheight = chart_preview.offset().top;
+        var container_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
+        var accordion_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
+        var accordion_container_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
         var offset = jQuery(".googlechart_table_config_scaleable").offset();
         jQuery(".googlechart_table_config_scaleable").attr("style",container_heightstr);
         jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
         jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
         jQuery(".googlechart_table_config_scaleable").offset(offset);
-        jQuery("#newTable").height(fullheight-235);
+        newTable.height(fullheight - newTable.offset().top + 30);
         grid.resizeCanvas();
     }
 }
@@ -4113,6 +4117,7 @@ function openEditChart(id){
             .addClass("googlechart_minimized_chart_clickable")
             .addClass("googlechart_maximize_chart_config")
             .appendTo(".googlechart_chart_config_scaleable_minimized");
+        resizeTableConfigurator(true);
     });
     editcolumnsdialog.delegate(".googlechart_maximize_chart_config", "hover", function(){
         if (jQuery(".googlechart_chart_config_scaleable_maximized").length === 0){
