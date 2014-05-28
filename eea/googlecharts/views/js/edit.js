@@ -1344,8 +1344,10 @@ function redrawEditorChart() {
     var def_opt = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
     jQuery.each(chartOptions.series || {}, function(name, opt){
         jQuery.each(dataTable.cols, function(idx, col){
-            if (def_opt.options.series[idx] !== undefined) {
-                series[idx] = def_opt.options.series[idx];
+            if (def_opt.options.series !== undefined) {
+                if (def_opt.options.series[idx] !== undefined) {
+                    series[idx] = def_opt.options.series[idx];
+                }
             }
             if (col.id === name){
                 if (series[idx - 1] !== undefined) {
