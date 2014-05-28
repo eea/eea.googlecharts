@@ -2482,14 +2482,17 @@ function openEditor(elementId) {
             "font-size": "small",
             "cursor": "pointer"
           });
+          expandCollapse.hide();
         }
         return expandCollapse;
       }
       var expandCollapse = expandCollapseMismatch();
 
       function showMismatchData(){
-        mismatchInfoDisplay.show();
-        expandCollapse.show();
+        if(!expandCollapse.is(":visible")){
+          expandCollapse.show();
+          mismatchInfoDisplay.show();
+        }
       }
 
       function hideMismatchData(){
