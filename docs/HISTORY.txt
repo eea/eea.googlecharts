@@ -3,6 +3,9 @@ Changelog
 
 10.3-dev - (unreleased)
 -----------------------
+* Featyre: WIP Adding customizable tooltips for columns
+  [szabozo0 refs #19175]
+
 * Bug fix: Use column id for unpivot if label is missing
   [batradav refs #19051]
 

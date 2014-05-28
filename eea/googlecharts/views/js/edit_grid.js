@@ -1247,6 +1247,44 @@ function saveRoles(colFullName){
     generateNewTableForChart();
 }
 
+function enableGridCustomTooltip(){
+    jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
+        var customtooltip_element = jQuery(".slick-header-menuitem").find("span:contains(-customtooltip-)");
+        if (customtooltip_element.length === 0){
+            return;
+        }
+        customtooltip_element.parent().hide();
+        jQuery(".slick-customtooltip-title").remove();
+        jQuery(".slick-customtooltip-body").remove();
+
+        var menu = customtooltip_element.parent().parent();
+        var customtooltip_title = jQuery('<div>').addClass('slick-customtooltip-title').text('Custom Tooltip...').appendTo(menu);
+        var customtooltip = jQuery('<div>').addClass('slick-customtooltip-body').appendTo(menu);
+        jQuery("<label>")
+            .text("Template for tooltip")
+            .appendTo(customtooltip);
+        jQuery("<div>")
+            .addClass("textareacontainer")
+            .appendTo(customtooltip);
+        jQuery("<textarea>")
+            .attr("id", "customtooltip_field")
+            .appendTo(".textareacontainer");
+
+        var isTiniMCE = initializeChartTinyMCE(jQuery(".slick-customtooltip-body"));
+        if (isTiniMCE){
+            jQuery(".textareacontainer")
+                .addClass("withtinymce");
+        }
+        customtooltip.hide();
+
+        customtooltip_title.click(function(){
+            customtooltip.toggle();
+        });
+        var tmp_title = jQuery(this).parent().attr("title");
+    });
+
+}
+
 function enableGridRoles(){
     jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
         var available_roles = ["data", "old-data", "interval", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"];
@@ -1336,6 +1374,10 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
                  command:'showColumn'},
                 {title:'Hide column',
                  command:'hideColumn'},
+                {title:'-customtooltip-',
+                 command:'customtooltip',
+                 tooltip:'Custom Tooltip',
+                 disabled:true},
                 {title:'-format-',
                  command:'format',
                  tooltip: 'Format',
@@ -1473,6 +1515,7 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
     enableGridFormatters();
     enableGridFilters();
     enableGridRoles();
+    enableGridCustomTooltip();
 }
 
 var columnfilter_data;

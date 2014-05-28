@@ -1055,14 +1055,42 @@ div[title='Format'].slick-header-menuitem {
 .slick-format-title,
 .slick-format-menu,
 .slick-format-form,
+.slick-customtooltip-title,
+.slick-customtooltip-menu,
 .slick-role-title,
-.slick-role-menu{
+.slick-role-menu,
+.slick-customtooltip-body label,
+.slick-customtooltip-body .textareacontainer{
     clear:both;
     font-size:11px;
     padding: 0.2em;
     padding-left: 2em;
     cursor: pointer;
     border-top: 1px solid #AAA;
+}
+
+.slick-customtooltip-body label{
+    margin-left:10px;
+    border:0;
+}
+
+.slick-customtooltip-body .textareacontainer,
+.slick-customtooltip-body span{
+    margin-left:30px;
+    width:420px;
+    height:120px;
+    padding:0 !important;
+    cursor:text;
+    border:0;
+}
+.slick-customtooltip-body .textareacontainer.withtinymce{
+    width:450px;
+    height:195px;
+}
+
+#customtooltip_field{
+    width:400px;
+    height:100px;
 }
 
 .slick-filter-type{
@@ -1090,6 +1118,8 @@ div[title='Format'].slick-header-menuitem {
     font-style:normal;
 }
 
+.slick-customtooltip-title:hover,
+.slick-customtooltip-menu:hover,
 .slick-role-title:hover,
 .slick-role-menu:hover,
 .slick-filter-title:hover,
