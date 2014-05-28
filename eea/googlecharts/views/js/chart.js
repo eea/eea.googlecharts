@@ -285,8 +285,10 @@ function drawGoogleChart(options){
 
     jQuery.each(settings.chartOptions.series || {}, function(name, opt){
         for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
-            if (settings.chartJson.options.series[i] !== undefined) {
-                series[i] = settings.chartJson.options.series[i];
+            if (settings.chartJson.options.series !== undefined) {
+                if (settings.chartJson.options.series[i] !== undefined) {
+                    series[i] = settings.chartJson.options.series[i];
+                }
             }
             if (dataTable.getColumnId(i) === name){
                 if (series[i - 1] !== undefined) {
