@@ -2392,7 +2392,35 @@ function openEditor(elementId) {
       */
 
       var google_charts_class = "Hh";
-      var google_charts_function = "PJa";
+      var google_charts_function = null;
+
+      function get_google_charts_function(){
+        /* parse the google_charts_class object and find the correct function based on it's code
+          (this is needed because the function name changes based on the active locale)
+        */
+        var the_object = chartEditor[google_charts_class];
+        var keys = [];
+        for (var key in the_object) {
+          keys.push(key);
+        }
+        for (var i=0; i<keys.length && i<keys.length; i++) {
+          if(!the_object){
+            continue;
+          }
+
+          try{
+            var to_string = the_object[keys[i]].toString();
+            if (to_string.indexOf("$7(this.l,") != -1){
+              console.log(keys[i]);
+              return keys[i];
+            }
+          }
+          catch(err){
+            continue;
+          }
+        }
+      }
+
       var google_charts_target = "l";
 
       var mismatchInfoDisplay = function(){
@@ -2466,21 +2494,44 @@ function openEditor(elementId) {
             return;
         }
 
+
+        /* the google_charts_class may not be initialized at
+           the time we initialize the event handler so the
+           google_charts_function can not be retrieved.
+           This makes sure that it is found out as soon as possible.
+        */
+        if(google_charts_function === null && chartEditor[google_charts_class]){
+          google_charts_function = get_google_charts_function();
+        }
+
+        // display the expand/collapse and the mismatch information elements
         showMismatchData();
 
+
+        // disable save validation (as fetching the mismatch data will always trigger an error event)
         shouldListenErrorEvent = false;
+
+        // remove the listener that triggered this handler as the mismatch data fetching will re-trigger it
         google.visualization.events.removeListener(readyListener);
+
+        // avoid handling the "error" event if we triggered it
         readyCalled = true;
 
+        // save the original mismatch data target and set it to our own element
         var oldEditorTarget = jQuery(chartEditor[google_charts_class][google_charts_target]);
         chartEditor[google_charts_class][google_charts_target] = mismatchInfoDisplay.get(0);
 
+        // fetch mismatch data and do final cleanup
         jQuery.when(chartEditor[google_charts_class][google_charts_function](chartType)).then(function(){
           readyListener = google.visualization.events.addListener(chartEditor, 'ready', handleClick);
           readyCalled = false;
           finalCleanup(ev_type);
         });
 
+        /* reset the mismatch data target to the original and resize the
+           configuration table (needed for when the "Data selection for chart"
+           tab is selected)
+        */
         chartEditor[google_charts_class][google_charts_target] = oldEditorTarget.get(0);
         resizeTableConfigurator(true);
       };
@@ -2521,7 +2572,6 @@ function openEditor(elementId) {
       }
 
       readyListener = google.visualization.events.addListener(chartEditor, 'ready', function(){
-          expandCollapse.show();
           handleClick();
       });
       google.visualization.events.addListener(chartEditor, 'error', function(){
