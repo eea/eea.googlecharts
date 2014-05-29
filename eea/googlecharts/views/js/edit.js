@@ -270,13 +270,19 @@ function initializeChartTinyMCE(form){
       data.autoresize = true;
       data.resizing = false;
       // XXX Remove some buttons as they have bugs
-      data.buttons = jQuery.map(data.buttons, function(button){
-        if(button === 'save'){
-          return;
-        }else{
-          return button;
-        }
-      });
+      function removeSave(buttons){
+        return jQuery.map(buttons, function(button){
+          if(button === 'save'){
+            return;
+          }else{
+            return button;
+          }
+        });
+      }
+      data.buttons = removeSave(data.buttons);
+      var advanced_buttons = data.theme_advanced_buttons1.split(",");
+      advanced_buttons = removeSave(advanced_buttons);
+      data.theme_advanced_buttons1 = advanced_buttons.join(",");
       textarea.attr('data-mce-config', JSON.stringify(data));
 
       window.initTinyMCE(document);
@@ -2715,6 +2721,9 @@ function generateNewTableForChart(){
                 if (((newColumn.name === prevColumn.name) || (newColumn.name.indexOf(prevColumn.name+"_") === 0)) && (prevColumn.hasOwnProperty("role"))){
                     newColumn.role = prevColumn.role;
                 }
+                if (((newColumn.name === prevColumn.name) || (newColumn.name.indexOf(prevColumn.name+"_") === 0)) && (prevColumn.hasOwnProperty("customTooltip"))){
+                    newColumn.customTooltip = prevColumn.customTooltip;
+                }
             });
         });
         var columns_str = JSON.stringify(columnsSettings);
@@ -3160,6 +3169,10 @@ function chartEditorSave(id){
                     if (tmpPreparedColumn.hasOwnProperty("role")){
                         preparedColumn.role = JSON.parse(JSON.stringify(tmpPreparedColumn.role));
                     }
+                    if (tmpPreparedColumn.hasOwnProperty("customTooltip")){
+                        preparedColumn.customTooltip = JSON.parse(JSON.stringify(tmpPreparedColumn.customTooltip));
+                    }
+
                 }
             });
             columnsSettings.prepared.push(preparedColumn);
