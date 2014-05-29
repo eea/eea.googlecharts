@@ -1202,6 +1202,92 @@ function enableGridFormatters(){
     });
 }
 
+function applyCustomTooltip(button, enabled){
+    var properties = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value"));
+    var columnFriendlyName = jQuery(".slick-header-column-active").attr("title");
+    var columnProperty = {};
+    jQuery.each(properties.prepared, function(idx, property){
+        if (property.fullname === columnFriendlyName){
+            columnProperty = property;
+        }
+    });
+
+    columnProperty.customTooltip = {tooltip: jQuery("#customtooltip_field").attr("value"),
+                                    enabled: enabled};
+
+    jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value", JSON.stringify(properties));
+    generateNewTableForChart();
+}
+
+function loadCustomTooltip(colFullName){
+    var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
+    var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
+
+    jQuery(".slick-customtooltip-title").removeClass("slick-customtooltip-menu-enabled");
+    jQuery.each(prepared, function(idx, col){
+        if (col.fullname === colFullName){
+            if (col.hasOwnProperty("customTooltip")){
+                customTooltip = col.customTooltip;
+                if (customTooltip.enabled){
+                    jQuery(".slick-customtooltip-title").addClass("slick-customtooltip-menu-enabled");
+                }
+                jQuery("#customtooltip_field").attr("value", customTooltip.tooltip);
+            }
+        }
+    });
+}
+
+function enableGridCustomTooltip(){
+    jQuery("body").delegate(".slick-menu-disable-customtooltip", "click", function(){
+        jQuery(this).parent().prev().removeClass('slick-customtooltip-menu-enabled');
+        applyCustomTooltip(this, false);
+    });
+    jQuery("body").delegate(".slick-menu-enable-customtooltip", "click", function(){
+        jQuery(this).parent().prev().addClass('slick-customtooltip-menu-enabled');
+        applyCustomTooltip(this, true);
+    });
+    jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
+        var customtooltip_element = jQuery(".slick-header-menuitem").find("span:contains(-customtooltip-)");
+        if (customtooltip_element.length === 0){
+            return;
+        }
+        customtooltip_element.parent().hide();
+        jQuery(".slick-customtooltip-title").remove();
+        jQuery(".slick-customtooltip-body").remove();
+
+        var menu = customtooltip_element.parent().parent();
+        var customtooltip_title = jQuery('<div>').addClass('slick-customtooltip-title').text('Custom Tooltip...').appendTo(menu);
+        var customtooltip = jQuery('<div>').addClass('slick-customtooltip-body').appendTo(menu);
+        jQuery("<label>")
+            .text("Template for tooltip")
+            .appendTo(customtooltip);
+        jQuery("<div>")
+            .addClass("textareacontainer")
+            .appendTo(customtooltip);
+        jQuery("<textarea>")
+            .attr("id", "customtooltip_field")
+            .appendTo(".textareacontainer");
+
+        var isTiniMCE = initializeChartTinyMCE(jQuery(".slick-customtooltip-body"));
+        if (isTiniMCE){
+            jQuery(".textareacontainer")
+                .addClass("withtinymce");
+        }
+
+        jQuery("<input class='slick-menu-disable-customtooltip btn' type='button' value='disable'/>").appendTo(customtooltip);
+        jQuery("<input class='slick-menu-enable-customtooltip btn' type='button' value='update and enable tooltip'/>").appendTo(customtooltip);
+
+        customtooltip.hide();
+
+        customtooltip_title.click(function(){
+            customtooltip.toggle();
+        });
+        var tmp_title = jQuery(this).parent().attr("title");
+        loadCustomTooltip(tmp_title);
+    });
+
+}
+
 function loadRoles(colFullName){
     var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
     var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
@@ -1247,43 +1333,6 @@ function saveRoles(colFullName){
     generateNewTableForChart();
 }
 
-function enableGridCustomTooltip(){
-    jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
-        var customtooltip_element = jQuery(".slick-header-menuitem").find("span:contains(-customtooltip-)");
-        if (customtooltip_element.length === 0){
-            return;
-        }
-        customtooltip_element.parent().hide();
-        jQuery(".slick-customtooltip-title").remove();
-        jQuery(".slick-customtooltip-body").remove();
-
-        var menu = customtooltip_element.parent().parent();
-        var customtooltip_title = jQuery('<div>').addClass('slick-customtooltip-title').text('Custom Tooltip...').appendTo(menu);
-        var customtooltip = jQuery('<div>').addClass('slick-customtooltip-body').appendTo(menu);
-        jQuery("<label>")
-            .text("Template for tooltip")
-            .appendTo(customtooltip);
-        jQuery("<div>")
-            .addClass("textareacontainer")
-            .appendTo(customtooltip);
-        jQuery("<textarea>")
-            .attr("id", "customtooltip_field")
-            .appendTo(".textareacontainer");
-
-        var isTiniMCE = initializeChartTinyMCE(jQuery(".slick-customtooltip-body"));
-        if (isTiniMCE){
-            jQuery(".textareacontainer")
-                .addClass("withtinymce");
-        }
-        customtooltip.hide();
-
-        customtooltip_title.click(function(){
-            customtooltip.toggle();
-        });
-        var tmp_title = jQuery(this).parent().attr("title");
-    });
-
-}
 
 function enableGridRoles(){
     jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
