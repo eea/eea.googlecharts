@@ -2383,6 +2383,7 @@ function openEditor(elementId) {
 
       var readyListener = null;
       var readyCalled = false;
+      var firstClick = true;
 
       /* Since the API does not reveal a way to retrieve the
          data mismatch messages the following workaround is used
@@ -2411,7 +2412,6 @@ function openEditor(elementId) {
           try{
             var to_string = the_object[keys[i]].toString();
             if (to_string.indexOf("$7(this.l,") != -1){
-              console.log(keys[i]);
               return keys[i];
             }
           }
@@ -2507,7 +2507,6 @@ function openEditor(elementId) {
         // display the expand/collapse and the mismatch information elements
         showMismatchData();
 
-
         // disable save validation (as fetching the mismatch data will always trigger an error event)
         shouldListenErrorEvent = false;
 
@@ -2534,6 +2533,16 @@ function openEditor(elementId) {
         */
         chartEditor[google_charts_class][google_charts_target] = oldEditorTarget.get(0);
         resizeTableConfigurator(true);
+
+        if(firstClick){
+          firstClick = false;
+          if(expandCollapse.hasClass("eea-icon-caret-down")){
+            setTimeout(function(){
+              expandCollapse.click();
+            }, 600);
+          }
+        }
+
       };
 
       function expandCollapseMismatch(){
@@ -2544,7 +2553,7 @@ function openEditor(elementId) {
               var self = jQuery(this);
               self.toggleClass("eea-icon-caret-down");
               self.toggleClass("eea-icon-caret-right");
-              mismatchInfoDisplay.toggle();
+              mismatchInfoDisplay.fadeToggle();
               repositionDataTab();
               resizeTableConfigurator(true);
           });
