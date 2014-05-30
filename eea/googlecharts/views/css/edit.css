@@ -1185,6 +1185,11 @@ div[title='Format'].slick-header-menuitem {
     float: right;
 }
 
+.label-for-column-select,
+.slick-menu-insert-customtooltip,
+.columns-for-tooltip {
+    float:left;
+}
 .slick-column-search-icon {
     float:left;
 }

@@ -1237,6 +1237,44 @@ function loadCustomTooltip(colFullName){
     });
 }
 
+function insertTextAtTextareaCursor(txtarea,text) {
+    //var txtarea = document.getElementById(areaId);
+    //var txtarea = $("#"+ID).next('textarea')[0];
+    var scrollPos = txtarea.scrollTop;
+    var strPos = 0;
+    var br = ((txtarea.selectionStart || txtarea.selectionStart == '0') ? "ff" : (document.selection ? "ie" : false ) );
+    var range;
+    if (br == "ie") {
+        txtarea.focus();
+        range = document.selection.createRange();
+        range.moveStart('character', -txtarea.value.length);
+        strPos = range.text.length;
+    }
+    else if (br == "ff") {
+            strPos = txtarea.selectionStart;
+    }
+
+    var front = (txtarea.value).substring(0,strPos);
+    var back = (txtarea.value).substring(strPos,txtarea.value.length);
+    txtarea.value=front+text+back;
+    strPos = strPos + text.length;
+    if (br == "ie") {
+        txtarea.focus();
+        range = document.selection.createRange();
+        range.moveStart('character', -txtarea.value.length);
+        range.moveStart('character', strPos);
+        range.moveEnd('character', 0);
+        range.select();
+    }
+    else if (br == "ff") {
+        txtarea.selectionStart = strPos;
+        txtarea.selectionEnd = strPos;
+        txtarea.focus();
+    }
+    txtarea.scrollTop = scrollPos;
+}
+
+
 function enableGridCustomTooltip(){
     jQuery("body").delegate(".slick-menu-disable-customtooltip", "click", function(){
         jQuery(this).parent().prev().removeClass('slick-customtooltip-menu-enabled');
@@ -1246,6 +1284,7 @@ function enableGridCustomTooltip(){
         jQuery(this).parent().prev().addClass('slick-customtooltip-menu-enabled');
         applyCustomTooltip(this, true);
     });
+
     jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
         var customtooltip_element = jQuery(".slick-header-menuitem").find("span:contains(-customtooltip-)");
         if (customtooltip_element.length === 0){
@@ -1261,6 +1300,25 @@ function enableGridCustomTooltip(){
         jQuery("<label>")
             .text("Template for tooltip")
             .appendTo(customtooltip);
+
+        jQuery("<label>")
+            .addClass("label-for-column-select")
+            .text("Select column")
+            .appendTo(customtooltip);
+
+        jQuery("<select>")
+            .addClass("columns-for-tooltip")
+            .appendTo(customtooltip);
+        jQuery("#newTable .slick-header .slick-header-columns .slick-header-column").each(function(idx, name){
+            if (jQuery(name).text() === ""){
+                return;
+            }
+            jQuery("<option>")
+                    .attr("value", jQuery(name).text())
+                    .text(jQuery(name).text())
+                    .appendTo(jQuery(".columns-for-tooltip"));
+        });
+        jQuery("<input class='slick-menu-insert-customtooltip btn' type='button' value='insert in template'/>").appendTo(customtooltip);
         jQuery("<div>")
             .addClass("textareacontainer")
             .appendTo(customtooltip);
@@ -1284,6 +1342,24 @@ function enableGridCustomTooltip(){
         });
         var tmp_title = jQuery(this).parent().attr("title");
         loadCustomTooltip(tmp_title);
+        jQuery(".slick-menu-insert-customtooltip").bind("click", function(){
+            var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
+            var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
+            var colFullName = jQuery(".columns-for-tooltip").attr("value");
+            var colName = "";
+            jQuery.each(prepared, function(idx, col){
+                if (col.fullname === colFullName){
+                    colName = "{" + col.name + "}";
+                }
+            });
+
+            if (jQuery(".slick-customtooltip-body .textareacontainer").hasClass("withtinymce")){
+                tinyMCE.activeEditor.execCommand('mceInsertContent', false, colName);
+            }
+            else{
+                insertTextAtTextareaCursor(jQuery("#customtooltip_field")[0], colName);
+            }
+        });
     });
 
 }
