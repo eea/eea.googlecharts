@@ -495,7 +495,8 @@ function prepareForChart(options){
         sortBy : '',
         sortAsc : true,
         preparedColumns : '',
-        enableEmptyRows : false
+        enableEmptyRows : false,
+        isEditor : false
     };
     jQuery.extend(settings, options);
 
@@ -518,7 +519,7 @@ function prepareForChart(options){
         itemsToDisplay = tmpItemsToDisplay;
     }
     var dataForChart = new google.visualization.DataTable();
-
+    var columnsForChart = [];
     jQuery.each(settings.columns, function(column_index, column){
         var colName = settings.originalDataTable.available_columns[column];
         var colType = settings.originalDataTable.properties[column];
@@ -531,22 +532,57 @@ function prepareForChart(options){
                 colType = "string";
             }
         }
+        var customtooltip;
+        var isTooltip = false;
         jQuery.each(settings.preparedColumns, function(pc_idx, pc_column){
             if (pc_column.fullname === colName){
                 if (pc_column.hasOwnProperty("role")){
                     role = pc_column.role;
+                    if (role === 'tooltip'){
+                        isTooltip = true;
+                    }
                 }
+                customtooltip = pc_column.customTooltip;
             }
         });
         var column_options = {type:colType, label:colName, id:column};
         if ((column_index > 0) && (role !== "data")){
             column_options.role = role;
         }
-        dataForChart.addColumn(column_options);
+        var shouldAddColumn = true;
+        if ((settings.isEditor) && (isTooltip)){
+            shouldAddColumn = false;
+        }
+        if (shouldAddColumn){
+            dataForChart.addColumn(column_options);
+            columnsForChart.push({column:column, type:'normal'});
+        }
+        if (customtooltip){
+            if (customtooltip.enabled){
+                var customtooltip_column_options = {type:"string",
+                                                    label:"customtooltip_for_" + colName,
+                                                    id:"customtooltip_for_" + column,
+                                                    role:"tooltip",
+                                                    p: {'html': true}};
+                if (!settings.isEditor){
+                    dataForChart.addColumn(customtooltip_column_options);
+                    columnsForChart.push({column:customtooltip_column_options.id, type:'customtooltip', template:jQuery('<textarea />').html(customtooltip.tooltip).text()});
+                }
+            }
+        }
     });
     jQuery(itemsToDisplay).each(function(row_index, row){
         var newRow = [];
-        jQuery(settings.columns).each(function(column_index, column){
+        jQuery(columnsForChart).each(function(column_index, column_settings){
+            if (column_settings.type === 'customtooltip'){
+                var tooltip_column = column_settings.template;
+                jQuery.each(row, function(key, value){
+                    tooltip_column = tooltip_column.split("{"+key+"}").join(value);
+                });
+                newRow.push(tooltip_column);
+                return;
+            }
+            var column = column_settings.column;
             var newColumn = row[column];
 
             var colType = settings.originalDataTable.properties[column];
@@ -563,7 +599,6 @@ function prepareForChart(options){
                     colType = "string";
                 }
             }
-
 
             if (colType === "date"){
                 newColumn = jQuery.datepicker.parseDate("yy-mm-dd",newColumn);

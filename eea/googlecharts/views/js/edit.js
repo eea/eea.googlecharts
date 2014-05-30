@@ -711,7 +711,8 @@ function saveThumb(value, useName){
         sortBy : chart_sortBy,
         sortAsc : chart_sortAsc,
         enableEmptyRows: chart_options.enableEmptyRows,
-        preparedColumns: chart_columns.prepared
+        preparedColumns: chart_columns.prepared,
+        isEditor : true
     };
     var tableForChart = prepareForChart(options);
 
@@ -1366,6 +1367,7 @@ function redrawEditorChart() {
     if (!isPossibleTreemap){
         options.limit = 100;
     }
+    options.isEditor = true;
 
     var tableForChart = prepareForChart(options);
 
@@ -2367,7 +2369,7 @@ function openEditor(elementId) {
     if (!isPossibleTreemap){
         options.limit = 100;
     }
-
+    options.isEditor = true;
     var tableForChart = prepareForChart(options);
 
     // workaround for charteditor issue #17629
@@ -3477,7 +3479,8 @@ function columnsMatrixChart(chartType){
             columns : columnNamesForMatrix,
             limit : dotsForMatrixChart,
             sortBy : sortBy,
-            sortAsc : sortAsc
+            sortAsc : sortAsc,
+            isEditor : true
         };
 
         data = prepareForChart(options);
@@ -3490,7 +3493,8 @@ function columnsMatrixChart(chartType){
             columns : allColumnNamesForMatrix,
             limit : dotsForMatrixChart,
             sortBy : sortBy,
-            sortAsc : sortAsc
+            sortAsc : sortAsc,
+            isEditor : true
         };
         data = prepareForChart(options);
     }
@@ -3653,7 +3657,8 @@ function columnsMatrixChart(chartType){
                             originalDataTable : transformedTable,
                             columns : columnNamesForMatrix,
                             sortBy : sortBy,
-                            sortAsc : sortAsc
+                            sortAsc : sortAsc,
+                            isEditor : true
                         };
 
                         chart_data = prepareForChart(options);
@@ -3667,7 +3672,8 @@ function columnsMatrixChart(chartType){
                             originalDataTable : transformedTable,
                             columns : allColumnNamesForMatrix,
                             sortBy : sortBy,
-                            sortAsc : sortAsc
+                            sortAsc : sortAsc,
+                            isEditor : true
                         };
                         chart_data = prepareForChart(options);
                     }
