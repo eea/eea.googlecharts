@@ -2631,7 +2631,12 @@ function openEditor(elementId) {
         }
     }
 
-    addHelperDisplay(chartEditor);
+    try{
+      addHelperDisplay(chartEditor);
+    }
+    catch(err){
+      // can't initialize helper
+    }
     setTimeout(function(){
         jQuery("#custom-palette-configurator").remove();
         jQuery("#custom-trendlines-configurator").remove();
