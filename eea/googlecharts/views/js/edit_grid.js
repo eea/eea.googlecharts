@@ -1630,6 +1630,13 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
 
     var headerMenuPlugin = new Slick.Plugins.HeaderMenu();
 
+    //fix for tinymce, the styles for tinymce are outside the slick menu, and by default clicking on it triggers the hideMenu method
+    jQuery(document.body).bind("mousedown", function(e){
+        if (jQuery(e.target).is("span") && jQuery(e.target).hasClass("mceText")){
+            e.target = jQuery(".slick-header-menu")[0];
+        }
+    });
+
     headerMenuPlugin.onCommand.subscribe(menuOnCommandHandler);
     grid.registerPlugin(headerMenuPlugin);
 
