@@ -20,8 +20,11 @@ from eea.googlecharts.config import EEAMessageFactory as _
 from eea.app.visualization.controlpanel.interfaces import IDavizSettings
 from copy import deepcopy
 from zope.component import queryUtility
+from zope.lifecycleevent import ObjectModifiedEvent
+from zope.event import notify
 
 logger = logging.getLogger('eea.googlecharts')
+
 
 class View(ViewForm):
     """ GoogleChartsView
@@ -621,20 +624,29 @@ class Export(BrowserView):
         return svg
 
     def cleanup_thumbs(self):
-        thumbs_to_not_delete = ["googlechart.googledashboard.preview.png",
-                    "googlechart.motionchart.preview.png",
-                    "googlechart.organizational.preview.png",
-                    "googlechart.imagechart.preview.png",
-                    "googlechart.sparkline.preview.png",
-                    "googlechart.table.preview.png",
-                    "googlechart.annotatedtimeline.preview.png",
-                    "googlechart.treemap.preview.png"]
+        form = getattr(self.request, 'form', {})
+        charts = form.get("charts_assets", [])
+        if charts:
+            charts = charts.split(",")
+
+        thumbs_to_not_delete = charts + [
+            "googlechart.googledashboard.preview.png",
+            "googlechart.motionchart.preview.png",
+            "googlechart.organizational.preview.png",
+            "googlechart.imagechart.preview.png",
+            "googlechart.sparkline.preview.png",
+            "googlechart.table.preview.png",
+            "googlechart.annotatedtimeline.preview.png",
+            "googlechart.treemap.preview.png"
+        ]
         thumbs_to_delete = []
         for obj_id in self.context.objectIds():
             if obj_id not in thumbs_to_not_delete:
                 thumbs_to_delete.append(obj_id)
 
         self.context.manage_delObjects(thumbs_to_delete)
+        notify(ObjectModifiedEvent(self.context))
+
 
 class SavePNGChart(Export):
     """ Save png version of chart, including qr code and watermark
@@ -670,40 +682,43 @@ class SavePNGChart(Export):
         obj.setExcludeFromNav(True)
         obj.getField('image').getMutator(obj)(img)
 
-        if svg_filename not in self.context.objectIds():
-            svg_filename = self.context.invokeFactory('File', id=svg_filename)
-        svg_obj = self.context._getOb(svg_filename)
-        svg_obj.setExcludeFromNav(True)
-        svg_obj.getField('file').getMutator(svg_obj)(kwargs.get('svg',''))
+        svg_data = kwargs.get('svg', '')
+        if svg_data:
+            if svg_filename not in self.context.objectIds():
+                svg_filename = self.context.invokeFactory('File',
+                                                          id=svg_filename)
+            svg_obj = self.context._getOb(svg_filename)
+            svg_obj.setExcludeFromNav(True)
+            svg_obj.getField('file').getMutator(svg_obj)(kwargs.get('svg', ''))
 
-        wftool = getToolByName(svg_obj, "portal_workflow")
-        workflows = wftool.getWorkflowsFor(svg_obj)
-        if len(workflows) > 0:
-            workflow = workflows[0]
-            transitions = workflow.transitions
-            # first publish the svg
-            available_transitions = [transitions[i['id']] for i in
-                                    wftool.getTransitionsFor(svg_obj)]
+            wftool = getToolByName(svg_obj, "portal_workflow")
+            workflows = wftool.getWorkflowsFor(svg_obj)
+            if len(workflows) > 0:
+                workflow = workflows[0]
+                transitions = workflow.transitions
+                # first publish the svg
+                available_transitions = [transitions[i['id']] for i in
+                                        wftool.getTransitionsFor(svg_obj)]
 
-            to_do = [k for k in available_transitions
-                     if k.new_state_id == 'published']
+                to_do = [k for k in available_transitions
+                         if k.new_state_id == 'published']
 
-            for item in to_do:
-                workflow.doActionFor(svg_obj, item.id)
-                break
+                for item in to_do:
+                    workflow.doActionFor(svg_obj, item.id)
+                    break
 
-            # then make it public draft
-            available_transitions = [transitions[i['id']] for i in
-                                    wftool.getTransitionsFor(svg_obj)]
+                # then make it public draft
+                available_transitions = [transitions[i['id']] for i in
+                                        wftool.getTransitionsFor(svg_obj)]
 
-            to_do = [k for k in available_transitions
-                     if k.new_state_id == 'visible']
+                to_do = [k for k in available_transitions
+                         if k.new_state_id == 'visible']
 
-            for item in to_do:
-                workflow.doActionFor(svg_obj, item.id)
-                break
-            svg_obj.reindexObject()
-
+                for item in to_do:
+                    workflow.doActionFor(svg_obj, item.id)
+                    break
+                svg_obj.reindexObject()
+                notify(ObjectModifiedEvent(svg_obj))
 
         return _("Success")
 
@@ -742,6 +757,7 @@ class SetThumb(BrowserView):
         obj.setExcludeFromNav(True)
         obj.getField('image').getMutator(obj)(img)
         self.context.getOrdering().moveObjectsToTop(ids=[obj.getId()])
+        notify(ObjectModifiedEvent(obj))
         return _("Success")
 
 class DashboardView(ViewForm):
