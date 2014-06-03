@@ -1557,36 +1557,39 @@ function updateCustomSettings() {
     jQuery("#point-sides-input").attr("disabled", false);
     jQuery("#point-shape").attr("disabled", false);
     jQuery("#point-rotation").attr("disabled", false);
-    jQuery.each(series_settings, function(key, value) {
-        var parent = jQuery(this).parent();
-        var label = jQuery(this).text();
-        if (label === "Line thickness" || label === "Point size") {
-            disabled = jQuery(this).next().children(":visible").attr("aria-disabled");
-            if (disabled === "true") {
-                if (jQuery("#line-style-input").attr("value") !== "") {
-                    jQuery("#line-style-input").attr("value", "");
-                    setCustomSetting(line_caption, "lineDashStyle", '', '');
-                }
-                jQuery("#line-style-input").attr("disabled", true);
-                if (jQuery("#point-sides-input").attr("value") !== "") {
-                    jQuery("#point-sides-input").attr("value", "");
-                    setCustomSetting(line_caption, "pointShape", "sides", '');
-                }
-                jQuery("#point-sides-input").attr("disabled", true);
-                if (jQuery("#point-shape").attr("value") !== "") {
-                    jQuery("#point-shape").attr("value", "");
-                    setCustomSetting(line_caption, "pointShape", "type", '');
-                }
-                jQuery("#point-shape").attr("disabled", true);
-                if (jQuery("#point-rotation").attr("value") !== "") {
-                    jQuery("#point-rotation").attr("value", "");
-                    setCustomSetting(line_caption, "pointShape", "rotation", '');
-                }
-                jQuery("#point-rotation").attr("disabled", true);
-                disable_custom = true;
-            }
+
+    var line_thickness_select = jQuery("#google-visualization-charteditor-series-combo-line-size-series-0").parent();
+    var point_size_select = jQuery("#google-visualization-charteditor-series-combo-point-size-series-0").parent();
+    var line_disabled = line_thickness_select.children(':visible').attr("aria-disabled");
+    var point_disabled = point_size_select.children(':visible').attr("aria-disabled");
+
+    if (line_disabled === "true") {
+        if (jQuery("#line-style-input").attr("value") !== "") {
+            jQuery("#line-style-input").attr("value", "");
+            setCustomSetting(line_caption, "lineDashStyle", '', '');
         }
-    });
+        jQuery("#line-style-input").attr("disabled", true);
+        disable_custom = true;
+    }
+    if (point_disabled === "true") {
+        if (jQuery("#point-sides-input").attr("value") !== "") {
+            jQuery("#point-sides-input").attr("value", "");
+            setCustomSetting(line_caption, "pointShape", "sides", '');
+        }
+        jQuery("#point-sides-input").attr("disabled", true);
+        if (jQuery("#point-shape").attr("value") !== "") {
+            jQuery("#point-shape").attr("value", "");
+            setCustomSetting(line_caption, "pointShape", "type", '');
+        }
+        jQuery("#point-shape").attr("disabled", true);
+        if (jQuery("#point-rotation").attr("value") !== "") {
+            jQuery("#point-rotation").attr("value", "");
+            setCustomSetting(line_caption, "pointShape", "rotation", '');
+        }
+        jQuery("#point-rotation").attr("disabled", true);
+        disable_custom = true;
+    }
+
     if (disable_custom) {
         return;
     }
@@ -1627,8 +1630,8 @@ function addCustomSettings() {
     var line_caption = div_sel.find('.charts-flat-menu-button-caption').text();
 
     if (!l_style.length) {
-        var line_thickness = jQuery(".google-visualization-charteditor-section-title:contains('Line thickness')");
-        var line_gap = line_thickness.nextAll('.google-visualization-charteditor-item-gap').first();
+        var line_thickness_select = jQuery("#google-visualization-charteditor-series-combo-line-size-series-0").parent();
+        var line_gap = line_thickness_select.nextAll('.google-visualization-charteditor-item-gap').first();
         l_style = jQuery('<div>', {
             'class': 'google-visualization-charteditor-section-title charts-inline-block daviz-custom-widget-title',
             'id': 'line-style',
@@ -1656,8 +1659,8 @@ function addCustomSettings() {
         l_style_float_end.after(l_style_gap);
     }
     if (!p_shape_style.length) {
-        var point_size = jQuery(".google-visualization-charteditor-section-title:contains('Point size')");
-        var point_gap = point_size.nextAll('.google-visualization-charteditor-item-gap').first();
+        var point_size_select = jQuery("#google-visualization-charteditor-series-combo-point-size-series-0").parent();
+        var point_gap = point_size_select.nextAll('.google-visualization-charteditor-item-gap').first();
         var shapes = ["circle", "triangle", "square", "diamond", "star", "polygon"];
         p_shape_style = jQuery('<div>', {
             'class': 'google-visualization-charteditor-section-title charts-inline-block daviz-custom-widget-title',
@@ -6077,8 +6080,8 @@ function init_googlecharts_edit(){
 }
 
 function manageCustomSettings() {
-    jQuery("body").off("click", ".charts-tab:contains('Customize')")
-        .on("click", ".charts-tab:contains('Customize')", function(evt){
+    jQuery("body").off("click", "#google-visualization-charteditor-panel-navigate-div div:nth-child(3)")
+        .on("click", "#google-visualization-charteditor-panel-navigate-div div:nth-child(3)", function(evt){
             setTimeout(addCustomSettings, 1);    
         });
     jQuery("body").off("click", ".charts-menuitem")

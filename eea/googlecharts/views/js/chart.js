@@ -284,19 +284,23 @@ function drawGoogleChart(options){
     });
     settings.chartJson.options.trendlines = trendlines;
 
+    var series_counter = 0;
     jQuery.each(settings.chartOptions.series || {}, function(name, opt){
         for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
             if (settings.chartJson.options.series !== undefined) {
                 if (settings.chartJson.options.series[i] !== undefined) {
-                    series[i] = settings.chartJson.options.series[i];
+                    series[series_counter] = settings.chartJson.options.series[i];
                 }
             }
             if (dataTable.getColumnId(i) === name){
-                if (series[i - 1] !== undefined) {
-                    jQuery.extend(true, series[i - 1], opt);
+                if (series[series_counter - 1] !== undefined) {
+                    jQuery.extend(true, series[series_counter - 1], opt);
                 } else {
-                    series[i - 1] = opt;
+                    series[series_counter - 1] = opt;
                 }
+            }
+            if (dataTable.getColumnRole(i) === "" || dataTable.getColumnRole(i) === "data") {
+                series_counter++;
             }
         }
     });
