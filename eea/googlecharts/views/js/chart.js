@@ -274,7 +274,10 @@ function drawGoogleChart(options){
     var chartOptions = settings.chartJson.options;
     var dataTable = settings.chartDataTable;
     var trendlines = {};
-    var series = {};
+    var series_settings = {};
+    series_settings[settings.chartId] = {};
+    var series = series_settings[settings.chartId];
+
     jQuery.each(chartOptions.trendlines || {}, function(name, trendline){
         for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
             if (dataTable.getColumnId(i) === name){
@@ -288,7 +291,7 @@ function drawGoogleChart(options){
     jQuery.each(settings.chartOptions.series || {}, function(name, opt){
         for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
             if (settings.chartJson.options.series !== undefined) {
-                if (settings.chartJson.options.series[i] !== undefined) {
+                if (settings.chartJson.options.series[i] !== undefined && settings.chartJson.options.series[i] !== null) {
                     series[series_counter] = settings.chartJson.options.series[i];
                 }
             }
