@@ -270,13 +270,19 @@ function initializeChartTinyMCE(form){
       data.autoresize = true;
       data.resizing = false;
       // XXX Remove some buttons as they have bugs
-      data.buttons = jQuery.map(data.buttons, function(button){
-        if(button === 'save'){
-          return;
-        }else{
-          return button;
-        }
-      });
+      function removeSave(buttons){
+        return jQuery.map(buttons, function(button){
+          if(button === 'save'){
+            return;
+          }else{
+            return button;
+          }
+        });
+      }
+      data.buttons = removeSave(data.buttons);
+      var advanced_buttons = data.theme_advanced_buttons1.split(",");
+      advanced_buttons = removeSave(advanced_buttons);
+      data.theme_advanced_buttons1 = advanced_buttons.join(",");
       textarea.attr('data-mce-config', JSON.stringify(data));
 
       window.initTinyMCE(document);
@@ -705,7 +711,8 @@ function saveThumb(value, useName){
         sortBy : chart_sortBy,
         sortAsc : chart_sortAsc,
         enableEmptyRows: chart_options.enableEmptyRows,
-        preparedColumns: chart_columns.prepared
+        preparedColumns: chart_columns.prepared,
+        isEditor : true
     };
     var tableForChart = prepareForChart(options);
 
@@ -777,6 +784,43 @@ function saveThumb(value, useName){
                                 success: function(data){
                                     if (data !== "Success"){
                                         DavizEdit.Status.stop("Can't generate thumb from the chart called: " + chart_json.options.title);
+                                    }
+                                    var saved_chart_id = "googlechartid_" + value[0];
+                                    var action = this.url.split("@@")[1];
+                                    if (action === "googlechart.setthumb") {
+                                        jQuery("#" + saved_chart_id).attr("data-cover-persisted", true);
+                                    } else if (action === "googlechart.savepngchart") {
+                                        jQuery("#" + saved_chart_id).attr("data-persisted", true);
+                                    }
+                                    var available_charts = jQuery("#googlecharts_list").children();
+                                    var cover_available = jQuery("#googlecharts_list").children("[data-cover-persisted]");
+                                    var cover_persisted = jQuery("#googlecharts_list").children("[data-cover-persisted='true']");
+                                    var saved_charts = jQuery("#googlecharts_list").children("[data-persisted='true']");
+                                    if (available_charts.length === saved_charts.length) {
+                                        var charts_assets = [];
+                                        jQuery.each(available_charts, function(idx, val) {
+                                            var chartconfig_input = jQuery(val).find(".googlechart_configjson");
+                                            var chart_id_input = jQuery(val).find(".googlechart_id");
+                                            if (chartconfig_input && chart_id_input) {
+                                                var chart_config = JSON.parse(chartconfig_input.attr("value"));
+                                                var chart_id = chart_id_input.attr("value");
+                                                charts_assets.push(chart_id+'.png');
+                                                if (chart_config.chartType !== 'ImageChart') {
+                                                    charts_assets.push(chart_id+'.svg');
+                                                }
+                                            }
+                                        });
+                                        if ((cover_available.length > 0 && cover_persisted.length >0) || cover_available.length <= 0) {
+                                            if (cover_available.length > 0 && cover_persisted.length >0) {
+                                                charts_assets.push("cover.png");
+                                            }
+                                            var charts_assets_q ={'charts_assets': charts_assets.toString()};
+                                            jQuery.ajax({
+                                                   url:ajax_baseurl+"/googlechart.cleanup_thumbs",
+                                                   data:charts_assets_q,
+                                                   type:'post'
+                                             });
+                                        }
                                     }
                                  }
                             });
@@ -1436,6 +1480,7 @@ function redrawEditorChart() {
     if (!isPossibleTreemap){
         options.limit = 100;
     }
+    options.isEditor = true;
 
     var tableForChart = prepareForChart(options);
 
@@ -2571,6 +2616,26 @@ function addIntervalConfig(){
         });
 }
 
+function resizeTableConfigurator(forced){
+    if ((jQuery(".googlechart_table_config_scaleable_maximized").length > 0) || forced){
+        var fullwidth = jQuery(".googlecharts-customdialog").width();
+        var fullheight = jQuery(".googlecharts_columns_config").height();
+        var chart_preview = jQuery(".google-visualization-charteditor-preview-td");
+        var newTable = jQuery("#newTable");
+        var helperheight = chart_preview.offset().top;
+        var container_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
+        var accordion_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
+        var accordion_container_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
+        var offset = jQuery(".googlechart_table_config_scaleable").offset();
+        jQuery(".googlechart_table_config_scaleable").attr("style",container_heightstr);
+        jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
+        jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
+        jQuery(".googlechart_table_config_scaleable").offset(offset);
+        newTable.height(fullheight - newTable.offset().top + 30);
+        grid.resizeCanvas();
+    }
+}
+
 var shouldListenErrorEvent;
 
 function openEditor(elementId) {
@@ -2684,7 +2749,7 @@ function openEditor(elementId) {
     if (!isPossibleTreemap){
         options.limit = 100;
     }
-
+    options.isEditor = true;
     var tableForChart = prepareForChart(options);
 
     // workaround for charteditor issue #17629
@@ -2702,10 +2767,11 @@ function openEditor(elementId) {
     chartEditor = new google.visualization.ChartEditor();
     google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
 
-
     function addHelperDisplay(chartEditor){
+
       var readyListener = null;
       var readyCalled = false;
+      var firstClick = true;
 
       /* Since the API does not reveal a way to retrieve the
          data mismatch messages the following workaround is used
@@ -2715,11 +2781,44 @@ function openEditor(elementId) {
       */
 
       var google_charts_class = "Hh";
-      var google_charts_function = "PJa";
+      var google_charts_function = null;
+
+      function get_google_charts_function(){
+        /* parse the google_charts_class object and find the correct function based on it's code
+          (this is needed because the function name changes based on the active locale)
+        */
+        var the_object = chartEditor[google_charts_class];
+        var keys = [];
+        for (var key in the_object) {
+          keys.push(key);
+        }
+        for (var i=0; i<keys.length && i<keys.length; i++) {
+          if(!the_object){
+            continue;
+          }
+
+          try{
+            var to_string = the_object[keys[i]].toString();
+            if (to_string.indexOf("$7(this.l,") != -1){
+              return keys[i];
+            }
+          }
+          catch(err){
+            continue;
+          }
+        }
+      }
+
       var google_charts_target = "l";
 
-      var mismatchInfoDisplay = jQuery("<div>").attr("id", "mismatchInfoDisplay");
-      jQuery(".googlechart_chart_config_info.hint").append(mismatchInfoDisplay);
+      var mismatchInfoDisplay = function(){
+        var elem = jQuery("#mismatchInfoDisplay");
+        if(elem.length === 0){
+          elem = jQuery("<div>").attr("id", "mismatchInfoDisplay");
+          jQuery(".googlechart_chart_config_info.hint").append(elem);
+        }
+        return elem;
+      }();
 
       mismatchInfoDisplay.on("DOMSubtreeModified", function(){
         repositionDataTab();
@@ -2748,10 +2847,16 @@ function openEditor(elementId) {
 
       function restyleMismatchMessage(){
         jQuery(".google-visualization-charteditor-data-mismatch").css("padding", 0);
-        jQuery(".google-visualization-charteditor-data-mismatch-header").css({
+        var header = jQuery(".google-visualization-charteditor-data-mismatch-header");
+        header.css({
           "margin-left": 0,
           "margin-top": "10px"
         });
+
+        // remove "data doens't match" text
+        header.next().next().remove();
+        header.next().remove();
+
         mismatchInfoDisplay.css("width", "100%");
       }
 
@@ -2770,33 +2875,108 @@ function openEditor(elementId) {
       };
 
       var handleClick = function(ev_type){
+
+        var chartType = chartEditor.getChartWrapper().getChartType();
+        if(chartType === "Table" || chartType === "ImageChart"){
+            hideMismatchData();
+            return;
+        }
+
+
+        /* the google_charts_class may not be initialized at
+           the time we initialize the event handler so the
+           google_charts_function can not be retrieved.
+           This makes sure that it is found out as soon as possible.
+        */
+        if(google_charts_function === null && chartEditor[google_charts_class]){
+          google_charts_function = get_google_charts_function();
+        }
+
+        // display the expand/collapse and the mismatch information elements
+        showMismatchData();
+
+        // disable save validation (as fetching the mismatch data will always trigger an error event)
         shouldListenErrorEvent = false;
+
+        // remove the listener that triggered this handler as the mismatch data fetching will re-trigger it
         google.visualization.events.removeListener(readyListener);
+
+        // avoid handling the "error" event if we triggered it
         readyCalled = true;
 
+        // save the original mismatch data target and set it to our own element
         var oldEditorTarget = jQuery(chartEditor[google_charts_class][google_charts_target]);
         chartEditor[google_charts_class][google_charts_target] = mismatchInfoDisplay.get(0);
 
-        var chartType = chartEditor.getChartWrapper().getChartType();
-
-
+        // fetch mismatch data and do final cleanup
         jQuery.when(chartEditor[google_charts_class][google_charts_function](chartType)).then(function(){
           readyListener = google.visualization.events.addListener(chartEditor, 'ready', handleClick);
           readyCalled = false;
           finalCleanup(ev_type);
         });
 
-
+        /* reset the mismatch data target to the original and resize the
+           configuration table (needed for when the "Data selection for chart"
+           tab is selected)
+        */
         chartEditor[google_charts_class][google_charts_target] = oldEditorTarget.get(0);
+        resizeTableConfigurator(true);
+
+        if(firstClick){
+          firstClick = false;
+          if(expandCollapse.hasClass("eea-icon-caret-down")){
+            setTimeout(function(){
+              expandCollapse.click();
+            }, 600);
+          }
+        }
+
       };
 
+      function expandCollapseMismatch(){
+        var expandCollapse = jQuery("#expandCollapseMismatch");
+        if(expandCollapse.length === 0){
+          expandCollapse = jQuery('<div id="expandCollapseMismatch" class="eea-icon-lg eea-icon eea-caret-icon eea-icon-caret-down"><span class="ex_text">Show/hide details</span></div>');
+          expandCollapse.on("click", function(){
+              var self = jQuery(this);
+              self.toggleClass("eea-icon-caret-down");
+              self.toggleClass("eea-icon-caret-right");
+              mismatchInfoDisplay.fadeToggle();
+              repositionDataTab();
+              resizeTableConfigurator(true);
+          });
+          mismatchInfoDisplay.before(expandCollapse);
+          expandCollapse.find(".ex_text").css({
+            "font-size": "small",
+            "cursor": "pointer"
+          });
+          expandCollapse.hide();
+        }
+        return expandCollapse;
+      }
+      var expandCollapse = expandCollapseMismatch();
 
-      readyListener = google.visualization.events.addListener(chartEditor, 'ready', handleClick);
+      function showMismatchData(){
+        if(!expandCollapse.is(":visible")){
+          expandCollapse.show();
+          mismatchInfoDisplay.show();
+        }
+      }
+
+      function hideMismatchData(){
+        mismatchInfoDisplay.hide();
+        expandCollapse.hide();
+      }
+
+      readyListener = google.visualization.events.addListener(chartEditor, 'ready', function(){
+          handleClick();
+      });
       google.visualization.events.addListener(chartEditor, 'error', function(){
           if(!readyCalled){
             handleClick("error");
             }
           });
+
     }
 
     google.visualization.events.addListener(chartEditor, 'ready', function(event){
@@ -2833,13 +3013,17 @@ function openEditor(elementId) {
         }
     }
 
+    try{
+      addHelperDisplay(chartEditor);
+    }
+    catch(err){
+      // can't initialize helper
+    }
     setTimeout(function(){
         jQuery("#custom-palette-configurator").remove();
         jQuery("#custom-trendlines-configurator").remove();
         jQuery("#custom-interval-configurator").remove();
-        jQuery.when(chartEditor.openDialog(chartWrapper, {})).then(function(){
-            addHelperDisplay(chartEditor);
-        });
+        chartEditor.openDialog(chartWrapper, {});
         addPaletteConfig();
         if (shouldAddTrendlinesToEditor){
             addTrendlineConfig();
@@ -2918,6 +3102,9 @@ function generateNewTableForChart(){
                 }
                 if (((newColumn.name === prevColumn.name) || (newColumn.name.indexOf(prevColumn.name+"_") === 0)) && (prevColumn.hasOwnProperty("role"))){
                     newColumn.role = prevColumn.role;
+                }
+                if (((newColumn.name === prevColumn.name) || (newColumn.name.indexOf(prevColumn.name+"_") === 0)) && (prevColumn.hasOwnProperty("customTooltip"))){
+                    newColumn.customTooltip = prevColumn.customTooltip;
                 }
             });
         });
@@ -3364,6 +3551,10 @@ function chartEditorSave(id){
                     if (tmpPreparedColumn.hasOwnProperty("role")){
                         preparedColumn.role = JSON.parse(JSON.stringify(tmpPreparedColumn.role));
                     }
+                    if (tmpPreparedColumn.hasOwnProperty("customTooltip")){
+                        preparedColumn.customTooltip = JSON.parse(JSON.stringify(tmpPreparedColumn.customTooltip));
+                    }
+
                 }
             });
             columnsSettings.prepared.push(preparedColumn);
@@ -3667,7 +3858,8 @@ function columnsMatrixChart(chartType){
             columns : columnNamesForMatrix,
             limit : dotsForMatrixChart,
             sortBy : sortBy,
-            sortAsc : sortAsc
+            sortAsc : sortAsc,
+            isEditor : true
         };
 
         data = prepareForChart(options);
@@ -3680,7 +3872,8 @@ function columnsMatrixChart(chartType){
             columns : allColumnNamesForMatrix,
             limit : dotsForMatrixChart,
             sortBy : sortBy,
-            sortAsc : sortAsc
+            sortAsc : sortAsc,
+            isEditor : true
         };
         data = prepareForChart(options);
     }
@@ -3843,7 +4036,8 @@ function columnsMatrixChart(chartType){
                             originalDataTable : transformedTable,
                             columns : columnNamesForMatrix,
                             sortBy : sortBy,
-                            sortAsc : sortAsc
+                            sortAsc : sortAsc,
+                            isEditor : true
                         };
 
                         chart_data = prepareForChart(options);
@@ -3857,7 +4051,8 @@ function columnsMatrixChart(chartType){
                             originalDataTable : transformedTable,
                             columns : allColumnNamesForMatrix,
                             sortBy : sortBy,
-                            sortAsc : sortAsc
+                            sortAsc : sortAsc,
+                            isEditor : true
                         };
                         chart_data = prepareForChart(options);
                     }
@@ -3959,22 +4154,6 @@ function columnsMatrixChart(chartType){
     jQuery("#matrixCharts_container").scroll(updateMatrixChartScrolls);
     updateMatrixChartScrolls();
     DavizEdit.Status.stop("Done");
-}
-function resizeTableConfigurator(forced){
-    if ((jQuery(".googlechart_table_config_scaleable_maximized").length > 0) || forced){
-        var fullwidth = jQuery(".googlecharts-customdialog").width();
-        var fullheight = jQuery(".googlecharts_columns_config").height();
-        var container_heightstr = 'height:'+(fullheight-125)+'px;width:'+(fullwidth-340)+'px;';
-        var accordion_heightstr = 'height:'+(fullheight-125)+'px;width:'+(fullwidth-340)+'px;';
-        var accordion_container_heightstr = 'height:'+(fullheight-125)+'px;width:'+(fullwidth-340)+'px;';
-        var offset = jQuery(".googlechart_table_config_scaleable").offset();
-        jQuery(".googlechart_table_config_scaleable").attr("style",container_heightstr);
-        jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
-        jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
-        jQuery(".googlechart_table_config_scaleable").offset(offset);
-        jQuery("#newTable").height(fullheight-235);
-        grid.resizeCanvas();
-    }
 }
 
 function fillEditorDialog(options){
@@ -4429,6 +4608,7 @@ function openEditChart(id){
             .addClass("googlechart_minimized_chart_clickable")
             .addClass("googlechart_maximize_chart_config")
             .appendTo(".googlechart_chart_config_scaleable_minimized");
+        resizeTableConfigurator(true);
     });
     editcolumnsdialog.delegate(".googlechart_maximize_chart_config", "hover", function(){
         if (jQuery(".googlechart_chart_config_scaleable_maximized").length === 0){
@@ -5240,10 +5420,11 @@ function saveCharts(){
         var chartObj = jQuery("#"+value);
         chartObj.removeClass("googlechart_modified");
         var chart = getChartOptions(value);
-
+        chartObj.attr("data-persisted", false);
         charts.push(chart);
         if (chart.isThumb){
             thumbId = chart.id;
+            chartObj.attr("data-cover-persisted", false);
         }
 
     });
@@ -5252,119 +5433,112 @@ function saveCharts(){
     var query = {'charts':jsonStr};
 
     jQuery.ajax({
-           url:ajax_baseurl+"/googlechart.cleanup_thumbs",
-           type:'post',
-           success:function(){
-                      jQuery.ajax({
-                          url:ajax_baseurl+"/googlechart.submit_charts",
-                          type:'post',
-                          data:query,
-                          success:function(data){
-                              // save static image charts for all charts if available
-                              var chartObjs = jQuery("#googlecharts_list li.googlechart");
-                              jQuery(chartObjs).each(function(idx, chartObj){
-                                  chartObj = jQuery(chartObj);
-                                  if (chartObj.find(".googlechart_thumb_checkbox").is(":visible")){
-                                      var chartSettings=[];
-                                      chartSettings[0] = chartObj.find(".googlechart_id").attr("value");
-                                      var config_str = chartObj.find(".googlechart_configjson").attr("value");
+      url:ajax_baseurl+"/googlechart.submit_charts",
+      type:'post',
+      data:query,
+      success:function(data){
+          // save static image charts for all charts if available
+          var chartObjs = jQuery("#googlecharts_list li.googlechart");
+          jQuery(chartObjs).each(function(idx, chartObj){
+              chartObj = jQuery(chartObj);
+              if (chartObj.find(".googlechart_thumb_checkbox").is(":visible")){
+                  var chartSettings=[];
+                  chartSettings[0] = chartObj.find(".googlechart_id").attr("value");
+                  var config_str = chartObj.find(".googlechart_configjson").attr("value");
 
-                                      var row_filters_str = chartObj.find(".googlechart_row_filters").attr("value");
-                                      var row_filters = {};
-                                      if (row_filters_str.length > 0){
-                                          row_filters = JSON.parse(row_filters_str);
-                                      }
-                                      var sortBy = chartObj.find(".googlechart_sortBy").attr("value");
-                                      var sortAsc_str = chartObj.find(".googlechart_sortAsc").attr("value");
-                                      var sortAsc = true;
-                                      if (sortAsc_str === 'desc'){
-                                          sortAsc = false;
-                                      }
-                                      var unpivotsettings = chartObj.data("unpivotsettings");
+                  var row_filters_str = chartObj.find(".googlechart_row_filters").attr("value");
+                  var row_filters = {};
+                  if (row_filters_str.length > 0){
+                      row_filters = JSON.parse(row_filters_str);
+                  }
+                  var sortBy = chartObj.find(".googlechart_sortBy").attr("value");
+                  var sortAsc_str = chartObj.find(".googlechart_sortAsc").attr("value");
+                  var sortAsc = true;
+                  if (sortAsc_str === 'desc'){
+                      sortAsc = false;
+                  }
+                  var unpivotsettings = chartObj.data("unpivotsettings");
 
-                                      if (config_str){
-                                          chartSettings[1] = JSON.parse(config_str);
-                                          var columns_str = chartObj.find(".googlechart_columns").attr("value");
-                                          var columnsSettings = {};
-                                          if (!columns_str){
-                                              columnsSettings.prepared = [];
-                                              columnsSettings.original = [];
-                                          }
-                                          else{
-                                              columnsSettings = JSON.parse(columns_str);
-                                          }
-                                          chartSettings[2] = columnsSettings;
-                                          chartSettings[3] = "";
-                                          chartSettings[4] = chartObj.find(".googlechart_width").attr("value");
-                                          chartSettings[5] = chartObj.find(".googlechart_height").attr("value");
-                                          chartSettings[6] = "";
-                                          chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
-                                          chartSettings[8] = row_filters;
-                                          chartSettings[9] = sortBy;
-                                          chartSettings[10] = sortAsc;
-                                          chartSettings[11] = unpivotsettings;
-                                          saveThumb(chartSettings, true);
-                                      }
-                                  }
-                              });
+                  if (config_str){
+                      chartSettings[1] = JSON.parse(config_str);
+                      var columns_str = chartObj.find(".googlechart_columns").attr("value");
+                      var columnsSettings = {};
+                      if (!columns_str){
+                          columnsSettings.prepared = [];
+                          columnsSettings.original = [];
+                      }
+                      else{
+                          columnsSettings = JSON.parse(columns_str);
+                      }
+                      chartSettings[2] = columnsSettings;
+                      chartSettings[3] = "";
+                      chartSettings[4] = chartObj.find(".googlechart_width").attr("value");
+                      chartSettings[5] = chartObj.find(".googlechart_height").attr("value");
+                      chartSettings[6] = "";
+                      chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
+                      chartSettings[8] = row_filters;
+                      chartSettings[9] = sortBy;
+                      chartSettings[10] = sortAsc;
+                      chartSettings[11] = unpivotsettings;
+                      saveThumb(chartSettings, true);
+                  }
+              }
+          });
 
-                              if (thumbId){
-                                  var chartSettings=[];
-                                  var chartObj = jQuery("#googlechartid_"+thumbId);
-                                  chartSettings[0] = thumbId;
-                                  var config_str = chartObj.find(".googlechart_configjson").attr("value");
-                                  if (!config_str){
-                                      DavizEdit.Status.stop(data);
-                                  }
-                                  else{
-                                      chartSettings[1] = JSON.parse(config_str);
-                                      var columns_str = chartObj.find(".googlechart_columns").attr("value");
+          if (thumbId){
+              var chartSettings=[];
+              var chartObj = jQuery("#googlechartid_"+thumbId);
+              chartSettings[0] = thumbId;
+              var config_str = chartObj.find(".googlechart_configjson").attr("value");
+              if (!config_str){
+                  DavizEdit.Status.stop(data);
+              }
+              else{
+                  chartSettings[1] = JSON.parse(config_str);
+                  var columns_str = chartObj.find(".googlechart_columns").attr("value");
 
-                                      var row_filters_str = chartObj.find(".googlechart_row_filters").attr("value");
-                                      var row_filters = {};
-                                      if (row_filters_str.length > 0){
-                                          row_filters = JSON.parse(row_filters_str);
-                                      }
-                                      var sortBy = chartObj.find(".googlechart_sortBy").attr("value");
-                                      var sortAsc_str = chartObj.find(".googlechart_sortAsc").attr("value");
-                                      var sortAsc = true;
-                                      if (sortAsc_str === 'desc'){
-                                          sortAsc = false;
-                                      }
+                  var row_filters_str = chartObj.find(".googlechart_row_filters").attr("value");
+                  var row_filters = {};
+                  if (row_filters_str.length > 0){
+                      row_filters = JSON.parse(row_filters_str);
+                  }
+                  var sortBy = chartObj.find(".googlechart_sortBy").attr("value");
+                  var sortAsc_str = chartObj.find(".googlechart_sortAsc").attr("value");
+                  var sortAsc = true;
+                  if (sortAsc_str === 'desc'){
+                      sortAsc = false;
+                  }
 
-                                      var columnsSettings = {};
-                                      if (!columns_str){
-                                          columnsSettings.prepared = [];
-                                          columnsSettings.original = [];
-                                      }
-                                      else{
-                                          columnsSettings = JSON.parse(columns_str);
-                                      }
-                                      var unpivotsettings = chartObj.data("unpivotsettings");
-                                      chartSettings[2] = columnsSettings;
-                                      chartSettings[3] = "";
-                                      chartSettings[4] = chartObj.find(".googlechart_width").attr("value");
-                                      chartSettings[5] = chartObj.find(".googlechart_height").attr("value");
-                                      chartSettings[6] = "";
-                                      chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
-                                      chartSettings[8] = row_filters;
-                                      chartSettings[9] = sortBy;
-                                      chartSettings[10] = sortAsc;
-                                      chartSettings[11] = unpivotsettings;
+                  var columnsSettings = {};
+                  if (!columns_str){
+                      columnsSettings.prepared = [];
+                      columnsSettings.original = [];
+                  }
+                  else{
+                      columnsSettings = JSON.parse(columns_str);
+                  }
+                  var unpivotsettings = chartObj.data("unpivotsettings");
+                  chartSettings[2] = columnsSettings;
+                  chartSettings[3] = "";
+                  chartSettings[4] = chartObj.find(".googlechart_width").attr("value");
+                  chartSettings[5] = chartObj.find(".googlechart_height").attr("value");
+                  chartSettings[6] = "";
+                  chartSettings[7] = JSON.parse(chartObj.find(".googlechart_options").attr("value"));
+                  chartSettings[8] = row_filters;
+                  chartSettings[9] = sortBy;
+                  chartSettings[10] = sortAsc;
+                  chartSettings[11] = unpivotsettings;
 
-                                      saveThumb(chartSettings);
-                                      DavizEdit.Status.stop(data);
-                                  }
-                              }
-                              else {
-                                  DavizEdit.Status.stop("There is no chart selected for thumbnail");
-                              }
-                              jQuery(document).trigger('google-charts-changed');
-                          }
-                      });
-
-           }
-           });
+                  saveThumb(chartSettings);
+                  DavizEdit.Status.stop(data);
+              }
+          }
+          else {
+              DavizEdit.Status.stop("There is no chart selected for thumbnail");
+          }
+          jQuery(document).trigger('google-charts-changed');
+      }
+    });
 }
 
 function loadCharts(){

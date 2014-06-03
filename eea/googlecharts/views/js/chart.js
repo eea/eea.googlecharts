@@ -270,6 +270,7 @@ function drawGoogleChart(options){
 
     settings.chartJson.containerId = settings.chartViewDiv;
 
+    settings.chartJson.options.tooltip = {isHtml : true};
     var chartOptions = settings.chartJson.options;
     var dataTable = settings.chartDataTable;
     var trendlines = {};

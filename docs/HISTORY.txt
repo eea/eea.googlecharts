@@ -5,6 +5,17 @@ Changelog
 -----------------------
 * Feature: Added settings for lines and points shapes in chart editor
   [olimpiurob refs #19279]
+
+* Bug fix: Change the chart's svg workflow only if it's not visible
+  [olimpiurob refs #19900]
+
+* Bug fix: Fixed slow daviz saving process by editing the daviz assets (png/svg)
+  instead of recreating them at each save.
+  [olimpiurob refs #19900]
+
+* Feature: WIP Adding customizable tooltips for columns
+  [szabozo0 refs #19175]
+
 * Bug fix: Use column id for unpivot if label is missing
   [batradav refs #19051]
 

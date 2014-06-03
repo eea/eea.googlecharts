@@ -1202,6 +1202,168 @@ function enableGridFormatters(){
     });
 }
 
+function applyCustomTooltip(button, enabled){
+    var properties = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value"));
+    var columnFriendlyName = jQuery(".slick-header-column-active").attr("title");
+    var columnProperty = {};
+    jQuery.each(properties.prepared, function(idx, property){
+        if (property.fullname === columnFriendlyName){
+            columnProperty = property;
+        }
+    });
+
+    columnProperty.customTooltip = {tooltip: jQuery("#customtooltip_field").attr("value"),
+                                    enabled: enabled};
+
+    jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value", JSON.stringify(properties));
+    generateNewTableForChart();
+}
+
+function loadCustomTooltip(colFullName){
+    var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
+    var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
+
+    jQuery(".slick-customtooltip-title").removeClass("slick-customtooltip-menu-enabled");
+    jQuery.each(prepared, function(idx, col){
+        if (col.fullname === colFullName){
+            if (col.hasOwnProperty("customTooltip")){
+                customTooltip = col.customTooltip;
+                if (customTooltip.enabled){
+                    jQuery(".slick-customtooltip-title").addClass("slick-customtooltip-menu-enabled");
+                }
+                jQuery("#customtooltip_field").attr("value", customTooltip.tooltip);
+            }
+        }
+    });
+}
+
+function insertTextAtTextareaCursor(txtarea,text) {
+    //var txtarea = document.getElementById(areaId);
+    //var txtarea = $("#"+ID).next('textarea')[0];
+    var scrollPos = txtarea.scrollTop;
+    var strPos = 0;
+    var br = ((txtarea.selectionStart || txtarea.selectionStart == '0') ? "ff" : (document.selection ? "ie" : false ) );
+    var range;
+    if (br == "ie") {
+        txtarea.focus();
+        range = document.selection.createRange();
+        range.moveStart('character', -txtarea.value.length);
+        strPos = range.text.length;
+    }
+    else if (br == "ff") {
+            strPos = txtarea.selectionStart;
+    }
+
+    var front = (txtarea.value).substring(0,strPos);
+    var back = (txtarea.value).substring(strPos,txtarea.value.length);
+    txtarea.value=front+text+back;
+    strPos = strPos + text.length;
+    if (br == "ie") {
+        txtarea.focus();
+        range = document.selection.createRange();
+        range.moveStart('character', -txtarea.value.length);
+        range.moveStart('character', strPos);
+        range.moveEnd('character', 0);
+        range.select();
+    }
+    else if (br == "ff") {
+        txtarea.selectionStart = strPos;
+        txtarea.selectionEnd = strPos;
+        txtarea.focus();
+    }
+    txtarea.scrollTop = scrollPos;
+}
+
+
+function enableGridCustomTooltip(){
+    jQuery("body").delegate(".slick-menu-disable-customtooltip", "click", function(){
+        jQuery(this).parent().prev().removeClass('slick-customtooltip-menu-enabled');
+        applyCustomTooltip(this, false);
+    });
+    jQuery("body").delegate(".slick-menu-enable-customtooltip", "click", function(){
+        jQuery(this).parent().prev().addClass('slick-customtooltip-menu-enabled');
+        applyCustomTooltip(this, true);
+    });
+
+    jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
+        var customtooltip_element = jQuery(".slick-header-menuitem").find("span:contains(-customtooltip-)");
+        if (customtooltip_element.length === 0){
+            return;
+        }
+        customtooltip_element.parent().hide();
+        jQuery(".slick-customtooltip-title").remove();
+        jQuery(".slick-customtooltip-body").remove();
+
+        var menu = customtooltip_element.parent().parent();
+        var customtooltip_title = jQuery('<div>').addClass('slick-customtooltip-title').text('Custom Tooltip...').appendTo(menu);
+        var customtooltip = jQuery('<div>').addClass('slick-customtooltip-body').appendTo(menu);
+        jQuery("<label>")
+            .text("Template for tooltip")
+            .appendTo(customtooltip);
+
+        jQuery("<label>")
+            .addClass("label-for-column-select")
+            .text("Select column")
+            .appendTo(customtooltip);
+
+        jQuery("<select>")
+            .addClass("columns-for-tooltip")
+            .appendTo(customtooltip);
+        jQuery("#newTable .slick-header .slick-header-columns .slick-header-column").each(function(idx, name){
+            if (jQuery(name).text() === ""){
+                return;
+            }
+            jQuery("<option>")
+                    .attr("value", jQuery(name).text())
+                    .text(jQuery(name).text())
+                    .appendTo(jQuery(".columns-for-tooltip"));
+        });
+        jQuery("<input class='slick-menu-insert-customtooltip btn' type='button' value='insert in template'/>").appendTo(customtooltip);
+        jQuery("<div>")
+            .addClass("textareacontainer")
+            .appendTo(customtooltip);
+        jQuery("<textarea>")
+            .attr("id", "customtooltip_field")
+            .appendTo(".textareacontainer");
+
+        var isTiniMCE = initializeChartTinyMCE(jQuery(".slick-customtooltip-body"));
+        if (isTiniMCE){
+            jQuery(".textareacontainer")
+                .addClass("withtinymce");
+        }
+
+        jQuery("<input class='slick-menu-disable-customtooltip btn' type='button' value='disable'/>").appendTo(customtooltip);
+        jQuery("<input class='slick-menu-enable-customtooltip btn' type='button' value='update and enable tooltip'/>").appendTo(customtooltip);
+
+        customtooltip.hide();
+
+        customtooltip_title.click(function(){
+            customtooltip.toggle();
+        });
+        var tmp_title = jQuery(this).parent().attr("title");
+        loadCustomTooltip(tmp_title);
+        jQuery(".slick-menu-insert-customtooltip").bind("click", function(){
+            var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
+            var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
+            var colFullName = jQuery(".columns-for-tooltip").attr("value");
+            var colName = "";
+            jQuery.each(prepared, function(idx, col){
+                if (col.fullname === colFullName){
+                    colName = "{" + col.name + "}";
+                }
+            });
+
+            if (jQuery(".slick-customtooltip-body .textareacontainer").hasClass("withtinymce")){
+                tinyMCE.activeEditor.execCommand('mceInsertContent', false, colName);
+            }
+            else{
+                insertTextAtTextareaCursor(jQuery("#customtooltip_field")[0], colName);
+            }
+        });
+    });
+
+}
+
 function loadRoles(colFullName){
     var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
     var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
@@ -1246,6 +1408,7 @@ function saveRoles(colFullName){
     jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value", JSON.stringify(columns));
     generateNewTableForChart();
 }
+
 
 function enableGridRoles(){
     jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
@@ -1336,6 +1499,10 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
                  command:'showColumn'},
                 {title:'Hide column',
                  command:'hideColumn'},
+                {title:'-customtooltip-',
+                 command:'customtooltip',
+                 tooltip:'Custom Tooltip',
+                 disabled:true},
                 {title:'-format-',
                  command:'format',
                  tooltip: 'Format',
@@ -1463,6 +1630,13 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
 
     var headerMenuPlugin = new Slick.Plugins.HeaderMenu();
 
+    //fix for tinymce, the styles for tinymce are outside the slick menu, and by default clicking on it triggers the hideMenu method
+    jQuery(document.body).bind("mousedown", function(e){
+        if (jQuery(e.target).is("span") && jQuery(e.target).hasClass("mceText")){
+            e.target = jQuery(".slick-header-menu")[0];
+        }
+    });
+
     headerMenuPlugin.onCommand.subscribe(menuOnCommandHandler);
     grid.registerPlugin(headerMenuPlugin);
 
@@ -1473,6 +1647,7 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
     enableGridFormatters();
     enableGridFilters();
     enableGridRoles();
+    enableGridCustomTooltip();
 }
 
 var columnfilter_data;
