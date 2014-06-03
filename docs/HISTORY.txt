@@ -3,7 +3,7 @@ Changelog
 
 10.3-dev - (unreleased)
 -----------------------
-* Bug fix: Change the newly created svg's workflow only if it's not visible
+* Bug fix: Change the chart's svg workflow only if it's not visible
   [olimpiurob refs #19900]
 
 * Bug fix: Fixed slow daviz saving process by editing the daviz assets (png/svg)
