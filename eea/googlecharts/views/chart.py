@@ -696,27 +696,30 @@ class SavePNGChart(Export):
             if len(workflows) > 0:
                 workflow = workflows[0]
                 transitions = workflow.transitions
-                # first publish the svg
-                available_transitions = [transitions[i['id']] for i in
-                                        wftool.getTransitionsFor(svg_obj)]
+                state = wftool.getInfoFor(svg_obj, 'review_state')
 
-                to_do = [k for k in available_transitions
-                         if k.new_state_id == 'published']
+                if state != 'visible':
+                    available_transitions = [transitions[i['id']] for i in
+                                            wftool.getTransitionsFor(svg_obj)]
 
-                for item in to_do:
-                    workflow.doActionFor(svg_obj, item.id)
-                    break
+                    to_do = [k for k in available_transitions
+                             if k.new_state_id == 'published']
 
-                # then make it public draft
-                available_transitions = [transitions[i['id']] for i in
-                                        wftool.getTransitionsFor(svg_obj)]
+                    for item in to_do:
+                        workflow.doActionFor(svg_obj, item.id)
+                        break
 
-                to_do = [k for k in available_transitions
-                         if k.new_state_id == 'visible']
+                    # then make it public draft
+                    available_transitions = [transitions[i['id']] for i in
+                                            wftool.getTransitionsFor(svg_obj)]
 
-                for item in to_do:
-                    workflow.doActionFor(svg_obj, item.id)
-                    break
+                    to_do = [k for k in available_transitions
+                             if k.new_state_id == 'visible']
+
+                    for item in to_do:
+                        workflow.doActionFor(svg_obj, item.id)
+                        break
+
                 svg_obj.reindexObject()
                 notify(ObjectModifiedEvent(svg_obj))
 
