@@ -1077,15 +1077,9 @@ div[title='Format'].slick-header-menuitem {
 .slick-customtooltip-body .textareacontainer,
 .slick-customtooltip-body span{
     margin-left:30px;
-    width:420px;
-    height:120px;
     padding:0 !important;
     cursor:text;
     border:0;
-}
-.slick-customtooltip-body .textareacontainer.withtinymce{
-    width:450px;
-    height:195px;
 }
 
 #customtooltip_field{
