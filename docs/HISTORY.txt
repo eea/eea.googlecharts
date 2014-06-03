@@ -10,7 +10,7 @@ Changelog
   instead of recreating them at each save.
   [olimpiurob refs #19900]
 
-* Feature: WIP Adding customizable tooltips for columns
+* Feature: Added customizable tooltips for columns
   [szabozo0 refs #19175]
 
 * Bug fix: Use column id for unpivot if label is missing

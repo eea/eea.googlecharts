@@ -591,7 +591,10 @@ function prepareForChart(options){
                                                 p: {'html': true}};
             if (!settings.isEditor){
                 dataForChart.addColumn(defaulttooltip_column_options);
-                columnsForChart.push({column:defaulttooltip_column_options.id, type:'customtooltip', template:column+": <b>{"+column+"}</b><br/>"+settings.columns[0]+": <b>{"+settings.columns[0]+"}</b>"});
+                columnsForChart.push({column:defaulttooltip_column_options.id,
+                                    type:'customtooltip',
+                                    template:settings.originalDataTable.available_columns[column]+": <b>{"+column+"}</b><br/>"+settings.originalDataTable.available_columns[settings.columns[0]]+": <b>{"+settings.columns[0]+"}</b>"
+                                    });
             }
         }
     });
