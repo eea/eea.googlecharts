@@ -1303,6 +1303,63 @@ function removeAutomaticColor(root,tree, path){
     }
 }
 
+function validatePointRotation(rotation){
+    try {
+        if(isNaN(rotation)) {
+            throw "Please enter a value betweet 0 and 360 degrees";
+        }
+        if(rotation > 360) {
+            throw "Bigger than 360!Please enter a value betweet 0 and 360 degrees";
+        }
+        if(rotation < 0) {
+            throw "Negative number! Please enter a value betweet 0 and 360 degrees";
+        }
+    }
+    catch(err) {
+        alert(err);
+        return false;
+    }
+    return true;    
+}
+
+function validatePointSides(sides){
+    try {
+        if(isNaN(sides)) {
+            throw "Please enter a numeric positive value representing the number of sides";
+        }
+        if(sides < 0) {
+            throw "Negative number! Please enter a numeric positive value representing the number of sides";
+        }
+    }
+    catch(err) {
+        alert(err);
+        return false;
+    }
+    return true;    
+}
+
+function getValidatedLineDashStyle(value){
+    try { 
+        var values = value.split(',');
+        var int_values = [];
+        jQuery.each(values, function(idx, val){
+            if(isNaN(val)) {
+                throw "Please enter only numeric positive integers separated by , (comma)";
+            }
+            var int_val = parseInt(val, 10);
+            if (int_val < 0) {
+                throw "Please enter only numeric positive integers separated by , (comma)";
+            }
+            int_values.push(int_val);
+        });
+        return int_values;
+    }
+    catch(err) {
+        alert(err);
+        return false;
+    }
+}
+
 function redrawEditorChart() {
     var tmpwrapper = chartEditor.getChartWrapper();
     tmpwrapper.setView();
@@ -1318,6 +1375,7 @@ function redrawEditorChart() {
     var chartOptions = JSON.parse(tmp_chart_options);
     var dataTable = tmpwrapper_json.dataTable;
     var trendlines = {};
+    var series = {};
 
     jQuery.each(chartOptions.trendlines || {}, function(name, trendline){
         jQuery.each(dataTable.cols, function(idx, col){
@@ -1327,6 +1385,24 @@ function redrawEditorChart() {
         });
     });
     chartOptions.trendlines = trendlines;
+    var def_opt = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
+    jQuery.each(chartOptions.series || {}, function(name, opt){
+        jQuery.each(dataTable.cols, function(idx, col){
+            if (def_opt.options.series !== undefined) {
+                if (def_opt.options.series[idx] !== undefined) {
+                    series[idx] = def_opt.options.series[idx];
+                }
+            }
+            if (col.id === name){
+                if (series[idx - 1] !== undefined) {
+                    jQuery.extend(true, series[idx - 1], opt);
+                } else {
+                    series[idx - 1] = opt;
+                }
+            }
+        });
+    });
+    chartOptions.series = series;
     jQuery.extend(true, tmpwrapper_json.options, chartOptions);
     removeAutomaticColor(tmpwrapper_json, tmpwrapper_json, []);
     jQuery.each(tmpwrapper_json.options, function(key, value){
@@ -1425,6 +1501,273 @@ function redrawEditorChart() {
 
     chartWrapper = tmpwrapper;
     updateEditorColors();
+
+}
+
+function setCustomSetting(series, opt, key, value) {
+    var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
+    var options_json = JSON.parse(options_str);
+    var configJSON = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
+    var s_columns = JSON.parse($("#googlechartid_tmp_chart .googlechart_columns").attr("value"));
+    var prep_columns = s_columns.prepared;
+    var col_id;
+    jQuery.each(prep_columns, function(idx, col) {
+        if (col.fullname === series) {
+            col_id = col.name;
+        }
+    });
+    if (options_json.series === undefined) {
+        options_json.series = {};
+    }
+    if (options_json.series[col_id] === undefined) {
+        options_json.series[col_id] = {};
+    }
+    if (opt === "lineDashStyle") {
+        options_json.series[col_id][opt] = value;
+    } else {
+        if (options_json.series[col_id][opt] === undefined) {
+            options_json.series[col_id][opt] = {};
+        }
+        if (value !== "") {
+            options_json.series[col_id][opt][key] = value;
+        } else {
+            delete options_json.series[col_id][opt][key];
+        }
+    }
+    jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value", JSON.stringify(options_json));
+    redrawEditorChart();
+}
+
+function updateCustomSettings() {
+    var configJSON = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
+    var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+    var div_sel = jQuery("#google-visualization-charteditor-series-select-div");
+    var line_caption = div_sel.find('.charts-flat-menu-button-caption').text();
+    var s_columns = JSON.parse($("#googlechartid_tmp_chart .googlechart_columns").attr("value"));
+    var prep_columns = s_columns.prepared;
+    var col_id;
+    var disable_custom = false;
+    jQuery.each(prep_columns, function(idx, col) {
+        if (col.fullname === line_caption) {
+            col_id = col.name;
+        }
+    });
+    var series_settings = jQuery(".google-visualization-charteditor-section-title");
+    jQuery("#line-style-input").attr("disabled", false);
+    jQuery("#point-sides-input").attr("disabled", false);
+    jQuery("#point-shape").attr("disabled", false);
+    jQuery("#point-rotation").attr("disabled", false);
+
+    var line_thickness_select = jQuery("#google-visualization-charteditor-series-combo-line-size-series-0").parent();
+    var point_size_select = jQuery("#google-visualization-charteditor-series-combo-point-size-series-0").parent();
+    var line_disabled = line_thickness_select.children(':visible').attr("aria-disabled");
+    var point_disabled = point_size_select.children(':visible').attr("aria-disabled");
+
+    if (line_disabled === "true") {
+        if (jQuery("#line-style-input").attr("value") !== "") {
+            jQuery("#line-style-input").attr("value", "");
+            setCustomSetting(line_caption, "lineDashStyle", '', '');
+        }
+        jQuery("#line-style-input").attr("disabled", true);
+        disable_custom = true;
+    }
+    if (point_disabled === "true") {
+        if (jQuery("#point-sides-input").attr("value") !== "") {
+            jQuery("#point-sides-input").attr("value", "");
+            setCustomSetting(line_caption, "pointShape", "sides", '');
+        }
+        jQuery("#point-sides-input").attr("disabled", true);
+        if (jQuery("#point-shape").attr("value") !== "") {
+            jQuery("#point-shape").attr("value", "");
+            setCustomSetting(line_caption, "pointShape", "type", '');
+        }
+        jQuery("#point-shape").attr("disabled", true);
+        if (jQuery("#point-rotation").attr("value") !== "") {
+            jQuery("#point-rotation").attr("value", "");
+            setCustomSetting(line_caption, "pointShape", "rotation", '');
+        }
+        jQuery("#point-rotation").attr("disabled", true);
+        disable_custom = true;
+    }
+
+    if (disable_custom) {
+        return;
+    }
+    var line_style = '';
+    var p_options = {};
+    if (chartOptions.series !== undefined) {
+        if (chartOptions.series[col_id] !== undefined){
+            if (chartOptions.series[col_id].lineDashStyle !== undefined) {
+                line_style = chartOptions.series[col_id].lineDashStyle;
+            }
+            if (chartOptions.series[col_id].pointShape !== undefined) {
+                p_options = chartOptions.series[col_id].pointShape;
+            }
+        }
+    }
+    jQuery("#line-style-input").attr("value", line_style);
+    jQuery("#point-sides-input").attr("value", p_options.sides || '');
+    var selected_type = p_options.type;
+    if (!selected_type) {
+        selected_type = "circle";
+    }
+    jQuery("#point-shape option").filter(function() {
+        return jQuery(this).text() == selected_type;
+    }).prop('selected', true);
+    if (p_options.type === "star" || p_options.type === "polygon") {
+        jQuery("#point-sides-input").attr("disabled", false);
+    } else {
+        jQuery("#point-sides-input").attr("disabled", true);
+    }
+    jQuery("#point-rotation").attr("value", p_options.rotation || '');
+}
+
+function addCustomSettings() {
+    var l_style = jQuery('#line-style');
+    var p_shape_style = jQuery('#point-style');
+    var series_cfg = jQuery("#google-visualization-charteditor-series-items");
+    var div_sel = jQuery("#google-visualization-charteditor-series-select-div");
+    var line_caption = div_sel.find('.charts-flat-menu-button-caption').text();
+
+    if (!l_style.length) {
+        var line_thickness_select = jQuery("#google-visualization-charteditor-series-combo-line-size-series-0").parent();
+        var line_gap = line_thickness_select.nextAll('.google-visualization-charteditor-item-gap').first();
+        l_style = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-section-title charts-inline-block daviz-custom-widget-title',
+            'id': 'line-style',
+            'text': 'Line style'
+        });
+        var l_style_float_end = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-float-end',
+            'id': 'l-style-float-end'
+        });
+        var l_input = jQuery("<input type='text' id='line-style-input' title='A value of 5,1,3 means a 5-length dash, a 1-length gap, a 3-length dash, a 5-length gap, and so on.'>")
+            .addClass("google-visualization-charteditor-mid-input charts-inline-block")
+            .appendTo(l_style_float_end);
+        var l_style_gap = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-item-gap daviz-custom-widget-gap'
+        });
+        l_input.on("blur", function(evt){
+            var valid_values = getValidatedLineDashStyle(this.value);
+            if (valid_values) {
+                line_caption = div_sel.find('.charts-flat-menu-button-caption').text();
+                setCustomSetting(line_caption, "lineDashStyle", '', valid_values);
+            }
+        });
+        line_gap.after(l_style);
+        l_style.after(l_style_float_end);
+        l_style_float_end.after(l_style_gap);
+    }
+    if (!p_shape_style.length) {
+        var point_size_select = jQuery("#google-visualization-charteditor-series-combo-point-size-series-0").parent();
+        var point_gap = point_size_select.nextAll('.google-visualization-charteditor-item-gap').first();
+        var shapes = ["circle", "triangle", "square", "diamond", "star", "polygon"];
+        p_shape_style = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-section-title charts-inline-block daviz-custom-widget-title',
+            'id': 'point-style',
+            'text': 'Point shape'
+        });
+
+        var p_shape_style_float_end = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-float-end',
+            'id': 'p-style-float-end'
+        });
+
+        var p_shape = jQuery("<select id='point-shape'>")
+            .css("width", "80px")
+            .addClass("charts-select charts-inline-block")
+            .appendTo(p_shape_style_float_end);
+
+        jQuery.each(shapes, function (i, item) {
+            p_shape.append($('<option>', {
+                "value": item,
+                "text" : item 
+            }));
+        });
+
+        p_shape.on("change", function(evt) {
+            line_caption = div_sel.find('.charts-flat-menu-button-caption').text();
+            if (this.value === "star" || this.value === "polygon") {
+                jQuery("#point-sides-input").attr("disabled", false);
+            } else {
+                jQuery("#point-sides-input").attr("disabled", true);
+                jQuery("#point-sides-input").attr("value", "");
+                setCustomSetting(line_caption, "pointShape", 'sides', "");                            
+            }
+            setCustomSetting(line_caption, "pointShape", "type", this.value);
+        });
+        
+        var p_shape_style_gap = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-item-gap daviz-custom-widget-gap'
+        });
+        
+        point_gap.after(p_shape_style);
+        p_shape_style.after(p_shape_style_float_end);
+        p_shape_style_float_end.after(p_shape_style_gap);
+
+        var p_shape_sides = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-section-title charts-inline-block daviz-custom-widget-title',
+            'id': 'point-style-sides',
+            'text': 'Point sides'
+        });
+
+        var p_shape_sides_float_end = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-float-end'
+        });
+
+        var p_sides = jQuery("<input type='text' id='point-sides-input' title='Enter the number of sides for the point shape'>")
+            .css("width", "25px")
+            .addClass("charts-inline-block")
+            .appendTo(p_shape_sides_float_end);
+
+        p_sides.on("blur", function(evt){
+            if (validatePointSides(this.value)) {
+                var sides = parseInt(this.value, 10) || '';
+                line_caption = div_sel.find('.charts-flat-menu-button-caption').text();
+                setCustomSetting(line_caption, "pointShape", 'sides', sides);
+            }
+        });
+
+        var p_shape_sides_gap = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-item-gap daviz-custom-widget-gap'
+        });
+
+        p_shape_style_gap.after(p_shape_sides);
+        p_shape_sides.after(p_shape_sides_float_end);
+        p_shape_sides_float_end.after(p_shape_sides_gap);
+
+        var p_shape_rotation = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-section-title charts-inline-block daviz-custom-widget-title',
+            'id': 'point-style-rotation',
+            'text': 'Point rotation'
+        });
+
+        var p_shape_rotation_float_end = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-float-end'
+        });
+
+        var p_rotation = jQuery("<input type='text' id='point-rotation' title='Enter a value between 0 and 360 degrees'>")
+            .css("width", "25px")
+            .addClass("charts-inline-block daviz-custom-widget")
+            .appendTo(p_shape_rotation_float_end);
+
+        p_rotation.on("blur", function(evt){
+            if (validatePointRotation(this.value)) {
+                var rotation = parseInt(this.value, 10) || '';
+                line_caption = div_sel.find('.charts-flat-menu-button-caption').text();
+                setCustomSetting(line_caption, "pointShape", 'rotation', rotation);
+            }
+        });
+        
+        var p_shape_rotation_gap = jQuery('<div>', {
+            'class': 'google-visualization-charteditor-item-gap daviz-custom-widget-gap'
+        });
+        p_shape_sides_gap.after(p_shape_rotation);
+        p_shape_rotation.after(p_shape_rotation_float_end);
+        p_shape_rotation_float_end.after(p_shape_rotation_gap);
+    }
+    updateCustomSettings();
+
 }
 
 function updatePalette() {
@@ -2316,7 +2659,10 @@ function openEditor(elementId) {
     if (wrapperString.length > 0){
         wrapperJSON = JSON.parse(wrapperString);
         chart = wrapperJSON;
-        jQuery.extend(true, chart.options, JSON.parse(chartOptions));
+        var cleanChartOptions = {};
+        jQuery.extend(true, cleanChartOptions, JSON.parse(chartOptions));
+        delete cleanChartOptions.series;
+        jQuery.extend(true, chart.options, cleanChartOptions);
     }
     else{
         chart = defaultChart;
@@ -3259,7 +3605,6 @@ function chartEditorSave(id){
     if (typeof(motion_state) === 'string'){
         options_json.state = motion_state;
     }
-
     function removeRedundant(tree, path){
         if ((tree instanceof Object) && !(tree instanceof Array)){
             jQuery.each(tree, function(key, subtree){
@@ -5734,6 +6079,17 @@ function init_googlecharts_edit(){
     loadCharts();
 }
 
+function manageCustomSettings() {
+    jQuery("body").off("click", "#google-visualization-charteditor-panel-navigate-div div:nth-child(3)")
+        .on("click", "#google-visualization-charteditor-panel-navigate-div div:nth-child(3)", function(evt){
+            setTimeout(addCustomSettings, 1);    
+        });
+    jQuery("body").off("click", ".charts-menuitem")
+        .on("click", ".charts-menuitem", function(evt){
+        updateCustomSettings();
+    });
+}
+
 function overrideGooglePalette(){
     jQuery(document).delegate(".google-visualization-charteditor-settings-td .google-visualization-charteditor-panel-navigation-cell", "click", function(){
         if (jQuery.inArray(jQuery(this).attr("id"), ["custom-interval-configurator", "custom-palette-configurator", "custom-trendlines-configurator"]) !== -1){
@@ -5745,7 +6101,10 @@ function overrideGooglePalette(){
         var tmpwrapper = chartEditor.getChartWrapper();
         var tmpwrapper_json = JSON.parse(tmpwrapper.toJSON());
         var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
-        jQuery.extend(true, tmpwrapper_json.options, chartOptions);
+        var cleanChartOptions = {};
+        jQuery.extend(true, cleanChartOptions, chartOptions);
+        delete cleanChartOptions.series;
+        jQuery.extend(true, tmpwrapper_json.options, cleanChartOptions);
         jQuery.each(tmpwrapper_json.options, function(key, value){
             tmpwrapper.setOption(key,value);
         });
@@ -5896,6 +6255,7 @@ jQuery(document).ready(function(){
     overrideGooglePalette();
     overrideSparklinesThumbnail();
     updateTutorialLinks();
+    manageCustomSettings();
 });
 
 /*if (window.DavizEdit === undefined){
