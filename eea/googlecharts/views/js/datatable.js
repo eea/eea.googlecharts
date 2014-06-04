@@ -584,17 +584,19 @@ function prepareForChart(options){
             }
         }
         if ((!hasTooltip) && (!isTooltip)){
-            var defaulttooltip_column_options = {type:"string",
-                                                label:"defaulttooltip_for_" + colName,
-                                                id:"defaulttooltip_for_" + column,
-                                                role:"tooltip",
-                                                p: {'html': true}};
-            if (!settings.isEditor){
-                dataForChart.addColumn(defaulttooltip_column_options);
-                columnsForChart.push({column:defaulttooltip_column_options.id,
-                                    type:'customtooltip',
-                                    template:settings.originalDataTable.available_columns[column]+": <b>{"+column+"}</b><br/>"+settings.originalDataTable.available_columns[settings.columns[0]]+": <b>{"+settings.columns[0]+"}</b>"
-                                    });
+            if ((role === 'data') || (role === '')){
+                var defaulttooltip_column_options = {type:"string",
+                                                    label:"defaulttooltip_for_" + colName,
+                                                    id:"defaulttooltip_for_" + column,
+                                                    role:"tooltip",
+                                                    p: {'html': true}};
+                if (!settings.isEditor){
+                    dataForChart.addColumn(defaulttooltip_column_options);
+                    columnsForChart.push({column:defaulttooltip_column_options.id,
+                                        type:'customtooltip',
+                                        template:settings.originalDataTable.available_columns[column]+": <b>{"+column+"}</b><br/>"+settings.originalDataTable.available_columns[settings.columns[0]]+": <b>{"+settings.columns[0]+"}</b>"
+                                        });
+                }
             }
         }
     });
