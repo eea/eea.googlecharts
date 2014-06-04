@@ -261,8 +261,10 @@ function drawGoogleChart(options){
     settings.chartJson.options.allowHtml = true;
     settings.chartJson.options.width = settings.chartWidth;
     settings.chartJson.options.height = settings.chartHeight;
-
-    jQuery.extend(true, settings.chartJson.options, settings.chartOptions);
+    var cleanChartOptions = {};
+    jQuery.extend(true, cleanChartOptions, settings.chartOptions);
+    delete cleanChartOptions["series"];
+    jQuery.extend(true, settings.chartJson.options, cleanChartOptions);
 
     settings.chartJson.dataTable = [];
 
@@ -272,6 +274,10 @@ function drawGoogleChart(options){
     var chartOptions = settings.chartJson.options;
     var dataTable = settings.chartDataTable;
     var trendlines = {};
+    var series_settings = {};
+    series_settings[settings.chartId] = {};
+    var series = series_settings[settings.chartId];
+
     jQuery.each(chartOptions.trendlines || {}, function(name, trendline){
         for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
             if (dataTable.getColumnId(i) === name){
@@ -281,6 +287,27 @@ function drawGoogleChart(options){
     });
     settings.chartJson.options.trendlines = trendlines;
 
+    var series_counter = 0;
+    jQuery.each(settings.chartOptions.series || {}, function(name, opt){
+        for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
+            if (settings.chartJson.options.series !== undefined) {
+                if (settings.chartJson.options.series[i] !== undefined && settings.chartJson.options.series[i] !== null) {
+                    series[series_counter] = settings.chartJson.options.series[i];
+                }
+            }
+            if (dataTable.getColumnId(i) === name){
+                if (series[series_counter - 1] !== undefined) {
+                    jQuery.extend(true, series[series_counter - 1], opt);
+                } else {
+                    series[series_counter - 1] = opt;
+                }
+            }
+            if (dataTable.getColumnRole(i) === "" || dataTable.getColumnRole(i) === "data") {
+                series_counter++;
+            }
+        }
+    });
+    settings.chartJson.options.series = series;
     /* remove duplicated suffixes */
     jQuery.each(settings.chartJson.options.vAxes || {}, function(axid, ax){
         if (ax.format !== undefined){
