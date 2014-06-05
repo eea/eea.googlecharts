@@ -39,6 +39,7 @@ setup(name=NAME,
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'lxml',
           'eea.converter >= 6.0',
           'eea.app.visualization > 6.9',
           'eea.icons',
