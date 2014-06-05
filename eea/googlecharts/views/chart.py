@@ -4,6 +4,7 @@ import json
 import logging
 import urllib2
 import hashlib
+import lxml.etree
 import re
 from PIL import Image
 from cStringIO import StringIO
@@ -271,7 +272,12 @@ class View(ViewForm):
                     chart_type = '.png'
                     img = self.context.get(name + chart_type, None)
                 if chart_type == '.svg':
-                    return img
+                    svg_str = img.get_data()
+                    svg_obj = lxml.etree.fromstring(svg_str)
+                    svg_obj.set("xmlns", "http://www.w3.org/2000/svg")
+                    svg_str = lxml.etree.tostring(svg_obj)
+                    self.request.response.setHeader('content-type', 'image/svg+xml')
+                    return svg_str
 
             else:
                 if not safe:
@@ -375,6 +381,10 @@ class View(ViewForm):
             if chart.get('hasPNG', False):
                 tab['fallback-image'] = \
                     self.context.absolute_url() + "/" + name + ".png"
+                hasSVG = self.context.get(name + ".svg", False)
+                if hasSVG:
+                    tab['fallback-image'] = \
+                        self.context.absolute_url() + "/embed-chart.svg?chart=" + name
                 tab['realchart'] = True
             else:
                 tab['fallback-image'] = \

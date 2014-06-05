@@ -3,6 +3,9 @@ Changelog
 
 10.3-dev - (unreleased)
 -----------------------
+* Change: If possible fallback to svg when js is disabled
+  [szabozo0 refs #19971]
+
 * Feature: Added settings for lines and points shapes in chart editor
   [olimpiurob refs #19279]
 
