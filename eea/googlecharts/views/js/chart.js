@@ -788,7 +788,8 @@ function drawGoogleDashboard(options){
                 sortBy : chart_sortBy,
                 sortAsc : chart_sortAsc,
                 preparedColumns : chartConfig[2].prepared,
-                enableEmptyRows : chartConfig[7].enableEmptyRows
+                enableEmptyRows : chartConfig[7].enableEmptyRows,
+                chartType : chartConfig[1].chartType
             };
 
             var tableForChart = prepareForChart(options);
@@ -864,7 +865,8 @@ function drawGoogleDashboard(options){
 
             options = {
                 originalDataTable : transformedTable,
-                columns : normalColumns
+                columns : normalColumns,
+                chartType : 'Table'
             };
 
             var tableForChart = prepareForChart(options);

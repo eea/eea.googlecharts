@@ -23,11 +23,13 @@
     background: url("../../++resource++mini2.png") no-repeat scroll 0 -84px transparent;
 }
 
-.googlechart_class_AreaChart span{
+.googlechart_class_AreaChart span,
+.googlechart_class_SteppedAreaChart span{
     background: url("../../++resource++mini2.png") no-repeat scroll 0 -105px transparent;
 }
 
-.googlechart_class_ColumnChart span{
+.googlechart_class_ColumnChart span,
+.googlechart_class_Histogram span{
     background: url("../../++resource++mini2.png") no-repeat scroll 0 0px transparent;
 }
 

@@ -158,7 +158,8 @@ function drawChart(value, other_options){
         sortBy : embedchart_sortBy,
         sortAsc : embedchart_sortAsc,
         preparedColumns : embedchart_columns.prepared,
-        enableEmptyRows : embedchart_options.enableEmptyRows
+        enableEmptyRows : embedchart_options.enableEmptyRows,
+        chartType : embedchart_json.chartType
     };
 
     var tableForChart = prepareForChart(options);

@@ -1,4 +1,5 @@
 var allowedTypesForCharts = ['string', 'number', 'boolean', 'date', 'datetime', 'timeofday'];
+var allowedChartsForTooltips = ['BarChart', 'ColumnChart', 'LineChart', 'ComboChart', 'AreaChart', 'SteppedAreaChart', 'ScatterChart'];
 
 function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
     var unpivotBase = "";
@@ -496,9 +497,12 @@ function prepareForChart(options){
         sortAsc : true,
         preparedColumns : '',
         enableEmptyRows : false,
-        isEditor : false
+        chartType : 'barchart'
     };
     jQuery.extend(settings, options);
+    if (jQuery.inArray(settings.chartType, allowedChartsForTooltips) === -1){
+        settings.hideTooltips = true;
+    };
 
     var tmpItemsToDisplay = settings.originalDataTable.items;
     var itemsToDisplay = [];
@@ -520,6 +524,7 @@ function prepareForChart(options){
     }
     var dataForChart = new google.visualization.DataTable();
     var columnsForChart = [];
+    var isFirstColumn = true;
     jQuery.each(settings.columns, function(column_index, column){
         var hasTooltip = false;
         var colName = settings.originalDataTable.available_columns[column];
@@ -562,7 +567,7 @@ function prepareForChart(options){
             column_options.role = role;
         }
         var shouldAddColumn = true;
-        if ((settings.isEditor) && (isTooltip)){
+        if ((settings.hideTooltips) && (isTooltip)){
             shouldAddColumn = false;
         }
         if (shouldAddColumn){
@@ -576,21 +581,21 @@ function prepareForChart(options){
                                                     id:"customtooltip_for_" + column,
                                                     role:"tooltip",
                                                     p: {'html': true}};
-                if (!settings.isEditor){
+                if (!settings.hideTooltips){
                     dataForChart.addColumn(customtooltip_column_options);
                     columnsForChart.push({column:customtooltip_column_options.id, type:'customtooltip', template:jQuery('<textarea/>').html(customtooltip.tooltip).text()});
                 }
                 hasTooltip = true;
             }
         }
-        if ((!hasTooltip) && (!isTooltip)){
+        if ((!hasTooltip) && (!isTooltip) && (!isFirstColumn)){
             if ((role === 'data') || (role === '')){
                 var defaulttooltip_column_options = {type:"string",
                                                     label:"defaulttooltip_for_" + colName,
                                                     id:"defaulttooltip_for_" + column,
                                                     role:"tooltip",
                                                     p: {'html': true}};
-                if (!settings.isEditor){
+                if (!settings.hideTooltips){
                     dataForChart.addColumn(defaulttooltip_column_options);
                     columnsForChart.push({column:defaulttooltip_column_options.id,
                                         type:'customtooltip',
@@ -599,6 +604,7 @@ function prepareForChart(options){
                 }
             }
         }
+        isFirstColumn = false;
     });
     jQuery(itemsToDisplay).each(function(row_index, row){
         var newRow = [];

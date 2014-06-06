@@ -1396,6 +1396,12 @@ div[title='Format'].slick-header-menuitem {
     height: 68px;
 }
 
+.googlechart-preview-histogram {
+    background: no-repeat url(../../++resource++thumbs17.png) 0 -3996px;
+    width: 110px;
+    height: 68px;
+}
+
 li.googlechart > fieldset > div > a > span {
     display:block;
 }

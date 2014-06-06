@@ -712,7 +712,7 @@ function saveThumb(value, useName){
         sortAsc : chart_sortAsc,
         enableEmptyRows: chart_options.enableEmptyRows,
         preparedColumns: chart_columns.prepared,
-        isEditor : true
+        chartType : 'editor'
     };
     var tableForChart = prepareForChart(options);
 
@@ -1480,7 +1480,7 @@ function redrawEditorChart() {
     if (!isPossibleTreemap){
         options.limit = 100;
     }
-    options.isEditor = true;
+    options.chartType = 'editor';
 
     var tableForChart = prepareForChart(options);
 
@@ -2752,7 +2752,7 @@ function openEditor(elementId) {
     if (!isPossibleTreemap){
         options.limit = 100;
     }
-    options.isEditor = true;
+    options.chartType = 'editor';
     var tableForChart = prepareForChart(options);
 
     // workaround for charteditor issue #17629
@@ -3862,7 +3862,7 @@ function columnsMatrixChart(chartType){
             limit : dotsForMatrixChart,
             sortBy : sortBy,
             sortAsc : sortAsc,
-            isEditor : true
+            chartType : 'editor'
         };
 
         data = prepareForChart(options);
@@ -3876,7 +3876,7 @@ function columnsMatrixChart(chartType){
             limit : dotsForMatrixChart,
             sortBy : sortBy,
             sortAsc : sortAsc,
-            isEditor : true
+            chartType : 'editor'
         };
         data = prepareForChart(options);
     }
@@ -4040,7 +4040,7 @@ function columnsMatrixChart(chartType){
                             columns : columnNamesForMatrix,
                             sortBy : sortBy,
                             sortAsc : sortAsc,
-                            isEditor : true
+                            chartType : 'editor'
                         };
 
                         chart_data = prepareForChart(options);
@@ -4055,7 +4055,7 @@ function columnsMatrixChart(chartType){
                             columns : allColumnNamesForMatrix,
                             sortBy : sortBy,
                             sortAsc : sortAsc,
-                            isEditor : true
+                            chartType : 'editor'
                         };
                         chart_data = prepareForChart(options);
                     }
