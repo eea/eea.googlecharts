@@ -1,6 +1,9 @@
 Changelog
 =========
 
+10.4-dev - (unreleased)
+-----------------------
+
 10.3 - (2014-06-06)
 -------------------
 * Change: If possible fallback to svg when js is disabled
