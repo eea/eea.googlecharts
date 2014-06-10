@@ -5,12 +5,12 @@
             <div class="daviz-preview-chart">
                 <div style="clear:both"></div>
                 <div class="googlechart_top_images_noscript">
-                    <div class="left">
+                    <div class="left" style="float:left">
                         <tal:block tal:repeat="img tab/extra_images">
                             <img tal:condition="python: img['position']=='Top' and img['alignment']=='Left'" tal:attributes="src img/img"/>
                         </tal:block>
                     </div>
-                    <div class="right">
+                    <div class="right" style="float:right">
                         <tal:block tal:repeat="img tab/extra_images">
                             <img tal:condition="python: img['position']=='Top' and img['alignment']=='Right'" tal:attributes="src img/img"/>
                         </tal:block>
@@ -23,12 +23,12 @@
                 </div>
                 <div style="clear:both"></div>
                 <div class="googlechart_bottom_images_noscript">
-                    <div class="left">
+                    <div class="left" style="float:left">
                         <tal:block tal:repeat="img tab/extra_images">
                             <img tal:condition="python: img['position']=='Bottom' and img['alignment']=='Left'" tal:attributes="src img/img"/>
                         </tal:block>
                     </div>
-                    <div class="right">
+                    <div class="right" style="float:right">
                         <tal:block tal:repeat="img tab/extra_images">
                             <img tal:condition="python: img['position']=='Bottom' and img['alignment']=='Right'" tal:attributes="src img/img"/>
                         </tal:block>
