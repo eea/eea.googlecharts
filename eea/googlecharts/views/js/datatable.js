@@ -502,7 +502,7 @@ function prepareForChart(options){
     jQuery.extend(settings, options);
     if (jQuery.inArray(settings.chartType, allowedChartsForTooltips) === -1){
         settings.hideTooltips = true;
-    };
+    }
 
     var tmpItemsToDisplay = settings.originalDataTable.items;
     var itemsToDisplay = [];
@@ -774,4 +774,4 @@ patched_each = function(obj, callback, args){
         }
     }
         return obj;
-}
+};

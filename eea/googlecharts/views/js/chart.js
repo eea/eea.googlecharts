@@ -263,7 +263,7 @@ function drawGoogleChart(options){
     settings.chartJson.options.height = settings.chartHeight;
     var cleanChartOptions = {};
     jQuery.extend(true, cleanChartOptions, settings.chartOptions);
-    delete cleanChartOptions["series"];
+    delete cleanChartOptions.series;
     jQuery.extend(true, settings.chartJson.options, cleanChartOptions);
 
     settings.chartJson.dataTable = [];
