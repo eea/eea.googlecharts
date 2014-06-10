@@ -1,8 +1,8 @@
 Changelog
 =========
 
-10.4-dev - (unreleased)
------------------------
+10.4 - (2014-06-10)
+-------------------
 * Bugfix: Use a patched each function
   [szabozo0 refs #20002]
 * Change: Added qr code and watermark on noscript version of the view page
