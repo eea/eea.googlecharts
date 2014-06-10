@@ -379,7 +379,7 @@ class View(ViewForm):
                 'tabname': 'tab-%s' % name.replace('.', '-'),
             }
             qr_url = '%s?cht=qr&chld=H|0&chs=%sx%s&chl=%s%s%s' \
-                %("http://chart.apis.google.com/chart",
+                % ("http://chart.apis.google.com/chart",
                     self.qr_size(),
                     self.qr_size(),
                     self.context.absolute_url(),
@@ -649,7 +649,8 @@ class Export(BrowserView):
         return img
 
     def export_svg(self, svg, filename):
-
+        """export to svg
+        """
         ctype = 'image/svg+xml'
 
         self.request.response.setHeader('content-type', ctype)
@@ -660,6 +661,8 @@ class Export(BrowserView):
         return svg
 
     def cleanup_thumbs(self):
+        """remove old thumbnails
+        """
         form = getattr(self.request, 'form', {})
         charts = form.get("charts_assets", [])
         if charts:
