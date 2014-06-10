@@ -378,6 +378,32 @@ class View(ViewForm):
                 'css': 'googlechart_class_%s' % chartType,
                 'tabname': 'tab-%s' % name.replace('.', '-'),
             }
+            qr_url = '%s?cht=qr&chld=H|0&chs=%sx%s&chl=%s%s%s' \
+                %("http://chart.apis.google.com/chart",
+                    self.qr_size(),
+                    self.qr_size(),
+                    self.context.absolute_url(),
+                    "%23",
+                    name)
+            qr_img = {"position": self.qr_position(),
+                    "img" : qr_url}
+
+            wm_img = {"position": self.wm_position(),
+                    "img" : self.wm_path()}
+            tab['extra_images'] = []
+            if (qr_img['position'] != 'Disabled'):
+                tab['extra_images'].append(qr_img)
+            if (wm_img['position'] != 'Disabled'):
+                tab['extra_images'].append(wm_img)
+            for img in tab['extra_images']:
+                if (img['position'].find("Right") != -1):
+                    img['alignment'] = 'Right'
+                else:
+                    img['alignment'] = 'Left'
+                if (img['position'].find("Bottom") != -1):
+                    img['position'] = 'Bottom'
+                else:
+                    img['position'] = 'Top'
             if chart.get('hasPNG', False):
                 tab['fallback-image'] = \
                     self.context.absolute_url() + "/" + name + ".png"

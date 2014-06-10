@@ -3,6 +3,8 @@ Changelog
 
 10.4-dev - (unreleased)
 -----------------------
+* Change: Added qr code and watermark on noscript version of the view page
+  [szabozo0 refs #19971]
 
 10.3 - (2014-06-06)
 -------------------

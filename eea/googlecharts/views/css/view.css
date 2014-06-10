@@ -664,3 +664,16 @@ input.googlechart-chart-size {
 .embed-settings .chart-size-settings {
     margin: 10px 0 5px 0;
 }
+
+.googlechart_top_images_noscript .left,
+.googlechart_bottom_images_noscript .left{
+    float:left;
+}
+.googlechart_top_images_noscript img{
+    padding:0;
+}
+
+.googlechart_top_images_noscript .right,
+.googlechart_bottom_images_noscript .right{
+    float:right;
+}

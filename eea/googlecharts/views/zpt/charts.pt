@@ -3,9 +3,36 @@
             tal:attributes="id string:tab-${tab/name}">
         <noscript tal:define="realchart python:tab.get('realchart', False)">
             <div class="daviz-preview-chart">
+                <div style="clear:both"></div>
+                <div class="googlechart_top_images_noscript">
+                    <div class="left">
+                        <tal:block tal:repeat="img tab/extra_images">
+                            <img tal:condition="python: img['position']=='Top' and img['alignment']=='Left'" tal:attributes="src img/img"/>
+                        </tal:block>
+                    </div>
+                    <div class="right">
+                        <tal:block tal:repeat="img tab/extra_images">
+                            <img tal:condition="python: img['position']=='Top' and img['alignment']=='Right'" tal:attributes="src img/img"/>
+                        </tal:block>
+                    </div>
+                </div>
+                <div style="clear:both"></div>
                 <img tal:attributes="alt tab/name; src tab/fallback-image" />
                 <div class="daviz-tab-norealchart" i18n:translate="" tal:condition="not:realchart">
                   This is NOT a real chart. To see the real chart, you need Javascript enabled in your browser.
+                </div>
+                <div style="clear:both"></div>
+                <div class="googlechart_bottom_images_noscript">
+                    <div class="left">
+                        <tal:block tal:repeat="img tab/extra_images">
+                            <img tal:condition="python: img['position']=='Bottom' and img['alignment']=='Left'" tal:attributes="src img/img"/>
+                        </tal:block>
+                    </div>
+                    <div class="right">
+                        <tal:block tal:repeat="img tab/extra_images">
+                            <img tal:condition="python: img['position']=='Bottom' and img['alignment']=='Right'" tal:attributes="src img/img"/>
+                        </tal:block>
+                    </div>
                 </div>
             </div>
         </noscript>
