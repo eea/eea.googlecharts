@@ -276,7 +276,8 @@ class View(ViewForm):
                     svg_obj = lxml.etree.fromstring(svg_str)
                     svg_obj.set("xmlns", "http://www.w3.org/2000/svg")
                     svg_str = lxml.etree.tostring(svg_obj)
-                    self.request.response.setHeader('content-type', 'image/svg+xml')
+                    self.request.response.setHeader('content-type',
+                                                    'image/svg+xml')
                     return svg_str
 
             else:
@@ -296,9 +297,13 @@ class View(ViewForm):
         return ''
 
     def get_chart_png(self):
+        """ get the png version of the chart
+        """
         return self.get_chart_png_or_svg(".png")
 
     def get_chart_svg(self):
+        """ get the svg version of the chart
+        """
         return self.get_chart_png_or_svg(".svg")
 
     def get_dashboard_png(self):
@@ -410,7 +415,8 @@ class View(ViewForm):
                 hasSVG = self.context.get(name + ".svg", False)
                 if hasSVG:
                     tab['fallback-image'] = \
-                        self.context.absolute_url() + "/embed-chart.svg?chart=" + name
+                        self.context.absolute_url() + \
+                            "/embed-chart.svg?chart=" + name
                 tab['realchart'] = True
             else:
                 tab['fallback-image'] = \
