@@ -24,7 +24,7 @@ function updateColumnHeaders(){
 
     jQuery(".slick-column-search-icon").remove();
     jQuery(".slick-column-sort-icon").remove();
-    jQuery.each(grid_colIds, function(colId, colName){
+    patched_each(grid_colIds, function(colId, colName){
         if (grid_sort_columnId === colId){
             var slick_sort = jQuery("<span></span>").addClass("slick-column-sort-icon eea-icon");
             if (grid_sort_asc){
@@ -50,7 +50,7 @@ function updateColumnHeaders(){
 
 function gridFilter(item) {
     var retVal = true;
-    jQuery.each(grid_colIds, function(colId, colName){
+    patched_each(grid_colIds, function(colId, colName){
         var val = "";
         try{
             val = decodeStr(item[colId].toString());
@@ -146,7 +146,7 @@ function menuOnCommandHandler(e, args){
 
     var colId;
     if (command == "hideAll"){
-        jQuery.each(grid_colIds, function(colId, colName){
+        patched_each(grid_colIds, function(colId, colName){
             grid_columnsHiddenById[colId] = true;
         });
         grid.invalidate();
@@ -156,7 +156,7 @@ function menuOnCommandHandler(e, args){
         grid.invalidate();
     }
     if (command == "reverse"){
-        jQuery.each(grid_colIds, function(colId, colName){
+        patched_each(grid_colIds, function(colId, colName){
             if (grid_columnsHiddenById[colId]){
                 delete grid_columnsHiddenById[colId];
             }
@@ -887,7 +887,7 @@ function applyFormatters(button, enabled){
     var properties = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value"));
     var columnFriendlyName = jQuery(".slick-header-column-active").attr("title");
     var columnProperty = {};
-    jQuery.each(properties.prepared, function(idx, property){
+    patched_each(properties.prepared, function(idx, property){
         if (property.fullname === columnFriendlyName){
             columnProperty = property;
         }
@@ -918,7 +918,7 @@ function applyFormatters(button, enabled){
     if (jQuery(button).parent().hasClass("colorformatter")){
         columnProperty.formatters.colorformatter = {};
         var ranges = [];
-        jQuery.each(ranges_grid.getData(), function(idx, row){
+        patched_each(ranges_grid.getData(), function(idx, row){
             var range = {};
             range.from = row.from;
             range.to = row.to;
@@ -967,7 +967,7 @@ function loadFormatters(colFullName){
     var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
     var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
     var colType = "text";
-    jQuery.each(columnProps, function(key, columnProp){
+    patched_each(columnProps, function(key, columnProp){
         if (columnProp.label === colFullName || key){
             colType = columnProp.valueType;
         }
@@ -994,7 +994,7 @@ function loadFormatters(colFullName){
     }
 
     jQuery(".slick-format-menu").removeClass("slick-format-menu-enabled");
-    jQuery.each(prepared, function(idx, col){
+    patched_each(prepared, function(idx, col){
         if (col.fullname === colFullName){
             if (col.hasOwnProperty("formatters")){
                 var formatter;
@@ -1026,7 +1026,7 @@ function loadFormatters(colFullName){
                     }
 
                     ranges_grid.invalidateRow(ranges_data.length);
-                    jQuery.each(formatter.ranges, function(idx, range){
+                    patched_each(formatter.ranges, function(idx, range){
                         var row = {};
                         row.from = range.from;
                         row.to = range.to;
@@ -1206,7 +1206,7 @@ function applyCustomTooltip(button, enabled){
     var properties = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value"));
     var columnFriendlyName = jQuery(".slick-header-column-active").attr("title");
     var columnProperty = {};
-    jQuery.each(properties.prepared, function(idx, property){
+    patched_each(properties.prepared, function(idx, property){
         if (property.fullname === columnFriendlyName){
             columnProperty = property;
         }
@@ -1224,7 +1224,7 @@ function loadCustomTooltip(colFullName){
     var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
 
     jQuery(".slick-customtooltip-title").removeClass("slick-customtooltip-menu-enabled");
-    jQuery.each(prepared, function(idx, col){
+    patched_each(prepared, function(idx, col){
         if (col.fullname === colFullName){
             if (col.hasOwnProperty("customTooltip")){
                 customTooltip = col.customTooltip;
@@ -1347,7 +1347,7 @@ function enableGridCustomTooltip(){
             var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
             var colFullName = jQuery(".columns-for-tooltip").attr("value");
             var colName = "";
-            jQuery.each(prepared, function(idx, col){
+            patched_each(prepared, function(idx, col){
                 if (col.fullname === colFullName){
                     colName = "{" + col.name + "}";
                 }
@@ -1368,7 +1368,7 @@ function loadRoles(colFullName){
     var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
     var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
     var colType = "text";
-    jQuery.each(columnProps, function(key, columnProp){
+    patched_each(columnProps, function(key, columnProp){
         if (colFullName === (columnProp.label || key)){
             colType = columnProp.valueType;
         }
@@ -1382,12 +1382,12 @@ function loadRoles(colFullName){
         "boolean" : ["data", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"]
     };
 
-    jQuery.each(valid_roles[colType], function(key, role){
+    patched_each(valid_roles[colType], function(key, role){
         jQuery(".slick-role-" + role).show();
     });
 
     jQuery(".slick-role-menu-enabled").removeClass("slick-role-menu-enabled");
-    jQuery.each(prepared, function(idx, col){
+    patched_each(prepared, function(idx, col){
         if (colFullName === col.fullname){
             var role = "data";
             if (col.hasOwnProperty("role")){
@@ -1400,7 +1400,7 @@ function loadRoles(colFullName){
 
 function saveRoles(colFullName){
     var columns = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value"));
-    jQuery.each(columns.prepared, function(idx, col){
+    patched_each(columns.prepared, function(idx, col){
         if (col.fullname === colFullName){
             col.role = jQuery(".slick-role-menu-enabled").attr("role");
         }
@@ -1425,7 +1425,7 @@ function enableGridRoles(){
         var role_title = jQuery('<div>').addClass('slick-role-title').text('Role...').appendTo(menu);
         var roles = jQuery('<div>').addClass('slick-role-body').appendTo(menu);
 
-        jQuery.each(available_roles, function(idx, role){
+        patched_each(available_roles, function(idx, role){
             jQuery('<div>')
                 .addClass("slick-role-menu")
                 .addClass("slick-role-" + role)
@@ -1570,7 +1570,7 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
         grid_sort_asc = false;
     }
 
-    jQuery.each(data[0], function(key,value){
+    patched_each(data[0], function(key,value){
         grid_colIds[key] = data_colnames[key];
         var header = header_nofilter;
         if (jQuery.inArray(key, filterable_columns) !== -1){
@@ -1678,7 +1678,7 @@ function menuOnColumnsCommandHandler(e, args){
     if (command == "columnFiltersSelectAll"){
         newValue = true;
     }
-    jQuery.each(columnfilter_data, function(idx, row){
+    patched_each(columnfilter_data, function(idx, row){
         row.selectable = newValue;
     });
     grid_columns.invalidateAllRows();

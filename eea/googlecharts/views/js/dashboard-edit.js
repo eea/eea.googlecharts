@@ -492,7 +492,7 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       dashboard: self.settings.name
     };
 
-    jQuery.each(form.serializeArray(), function(){
+    patched_each(form.serializeArray(), function(){
       query[this.name] = this.value;
     });
     query[self.settings.name + '.actions.save'] = 'ajax';
@@ -839,7 +839,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     }
     var action = self.settings.dashboard.name + '.actions.save';
     var query = {};
-    jQuery.each(form.serializeArray(), function(){
+    patched_each(form.serializeArray(), function(){
       query[this.name] = this.value;
     });
     query.name = self.settings.name;
@@ -1070,7 +1070,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     }
     if ((data.filters.length === 1) && (dfilter.length !== 0)){
         // if modified
-        jQuery.each(self.settings.filters, function (ssfkey, ssfval){
+        patched_each(self.settings.filters, function (ssfkey, ssfval){
             if (ssfval.column === data.filters[0].column){
                 ssfval.type = data.filters[0].type;
             }
@@ -1080,7 +1080,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     else {
         // if added
         var filters = data.filters !== undefined ? data.filters : [];
-        jQuery.each(filters, function(index, filter){
+        patched_each(filters, function(index, filter){
             delete jQuery.data(self.box, 'filter_columns')[filter.column];
             if(filter.dashboard === undefined){
                 filter.dashboard = {};
@@ -1133,19 +1133,19 @@ DavizEdit.GoogleDashboardFilters.prototype = {
 
 
     var sorted_columns = [];
-    jQuery.each(fcolumns, function(key, val){
+    patched_each(fcolumns, function(key, val){
         sorted_columns.push(val);
     });
     sorted_columns = sorted_columns.sort();
     var fcolumns2 = {};
-    jQuery.each(sorted_columns, function(idx, val){
-        jQuery.each(fcolumns, function(key2, val2){
+    patched_each(sorted_columns, function(idx, val){
+        patched_each(fcolumns, function(key2, val2){
             if (val === val2){
                 fcolumns2[key2] = val2;
             }
         });
     });
-    jQuery.each(fcolumns2, function(key, val){
+    patched_each(fcolumns2, function(key, val){
         var option = jQuery('<option>')
             .val(key).text(val);
         if (type !== "add"){
@@ -1158,11 +1158,11 @@ DavizEdit.GoogleDashboardFilters.prototype = {
             jQuery("select[name='column']", widget).attr("disabled", "disabled");
         }
     });
-    jQuery.each(ftypes, function(key, val){
+    patched_each(ftypes, function(key, val){
         var option = jQuery('<option>')
             .val(key).text(val);
         if (type !== "add"){
-            jQuery.each(self.settings.filters, function(fkey, fval){
+            patched_each(self.settings.filters, function(fkey, fval){
                 if ((fval.column === type) && (fval.type === key)){
                     option.attr("selected", "selected");
                 }
@@ -1187,7 +1187,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
         var chart_columns = {};
         chart_columns.original = [];
         chart_columns.prepared = [];
-        jQuery.each(available_columns, function(key, value){
+        patched_each(available_columns, function(key, value){
             var original = {};
             original.name = key;
             original.status = 1;
@@ -1312,7 +1312,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
                 defaults.push(jQuery(".googlecharts_defaultsfilter_string input").attr("value"));
             }
             if ((selectedFilter === "2") || (selectedFilter === "3")){
-                jQuery.each(defaultfilter_data, function(idx, value){
+                patched_each(defaultfilter_data, function(idx, value){
                     if (value.defaultval){
                         defaults.push(value.value);
                     }
@@ -1331,7 +1331,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
   new_edit_filter_onSave: function(form, type, filter_settings){
     var self = this;
     var query = {};
-    jQuery.each(form.serializeArray(), function(){
+    patched_each(form.serializeArray(), function(){
       query[this.name] = this.value;
     });
 
@@ -1344,7 +1344,7 @@ DavizEdit.GoogleDashboardFilters.prototype = {
     query.dashboard = self.settings.name;
 
     var found = false;
-    jQuery.each(self.settings.filters, function(idx, filter){
+    patched_each(self.settings.filters, function(idx, filter){
         if (filter.column === query.column){
             filter.type = query.type;
             filter.defaults = query.defaults;
@@ -1456,7 +1456,7 @@ DavizEdit.GoogleDashboardFilter.prototype = {
       .prependTo(self.box)
       .click(function(){
         var filter_defaults = "[]";
-        jQuery.each(self.parent.settings.filters, function(idx, filter){
+        patched_each(self.parent.settings.filters, function(idx, filter){
             if (filter.column === self.settings.column){
                 filter_defaults = filter.defaults;
                 filter_settings = filter.settings;

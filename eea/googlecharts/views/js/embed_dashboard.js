@@ -18,7 +18,7 @@ function drawDashboardEmbed(options){
 
     var query_params = getQueryParams();
 
-    jQuery.each(settings.googlechart_config_array, function(key, config){
+    patched_each(settings.googlechart_config_array, function(key, config){
         config[1].options.title = config[1].options.title + " — " + settings.main_title;
     });
 
@@ -96,7 +96,7 @@ function drawDashboardEmbed(options){
     }
 
     if (query_params.rowFilters !== undefined){
-        jQuery.each(settings.dashboard_config.filters, function(idx, value){
+        patched_each(settings.dashboard_config.filters, function(idx, value){
             if (query_params.rowFilters[value.column] !== undefined){
                 value.defaults = JSON.stringify(query_params.rowFilters[value.column]);
             }

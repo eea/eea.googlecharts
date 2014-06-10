@@ -3,7 +3,7 @@ var allowedChartsForTooltips = ['BarChart', 'ColumnChart', 'LineChart', 'ComboCh
 
 function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
     var unpivotBase = "";
-    jQuery.each(unpivotSettings.settings, function(idx, value){
+    patched_each(unpivotSettings.settings, function(idx, value){
         if (value.colType === "base"){
             unpivotBase = value.colName;
         }
@@ -13,7 +13,7 @@ function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
     }
     var defaultColumnName = columnName;
     var ranges = [];
-    jQuery.each(unpivotSettings.settings, function(idx, value){
+    patched_each(unpivotSettings.settings, function(idx, value){
         if (ranges.length !== 0){
             ranges[ranges.length-1].length = value.start - ranges[ranges.length-1].start;
         }
@@ -23,11 +23,11 @@ function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
     });
     ranges.pop();
     var separators = [];
-    jQuery.each(ranges, function(idx, value){
+    patched_each(ranges, function(idx, value){
         separators.push(unpivotSettings.columnName.substr(value.start, value.length));
     });
     var components = [];
-    jQuery.each(separators, function(idx, separator){
+    patched_each(separators, function(idx, separator){
         var component = {};
         splittedColumnName = columnName.split(separator);
         components.push(splittedColumnName[0]);
@@ -39,7 +39,7 @@ function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
     }
     var values = {};
     if (components.length === unpivotSettings.settings.length){
-        jQuery.each(unpivotSettings.settings, function(idx, settings){
+        patched_each(unpivotSettings.settings, function(idx, settings){
             var value = {};
             if (settings.colType === 'base'){
                 value.name = components[idx];
@@ -65,10 +65,10 @@ function unpivotTable(settings){
     unpivotedTable.items = [];
     unpivotedTable.properties = {};
     var baseProperties;
-    jQuery.each(settings.originalTable.items, function(row_nr, row){
+    patched_each(settings.originalTable.items, function(row_nr, row){
         var fixed_values = {};
         var new_rows = [];
-        jQuery.each(row, function(col_id, value){
+        patched_each(row, function(col_id, value){
             var colProp = settings.originalTable.properties[col_id];
             if (colProp !== undefined){
                 colLabel = colProp.label || col_id;
@@ -80,7 +80,7 @@ function unpivotTable(settings){
                 else {
                     baseProperties = settings.originalTable.properties[col_id];
                     var new_row = {};
-                    jQuery.each(splitted, function(key,value){
+                    patched_each(splitted, function(key,value){
                         if (value.type === "number"){
                             new_row[key] = parseFloat(value.value);
                         }
@@ -101,16 +101,16 @@ function unpivotTable(settings){
                 }
             }
         });
-        jQuery.each(new_rows, function(idx, new_row){
-            jQuery.each(fixed_values, function(key, value){
+        patched_each(new_rows, function(idx, new_row){
+            patched_each(fixed_values, function(key, value){
                 new_row[key] = value;
             });
         });
-        jQuery.each(new_rows, function(idx, row){
+        patched_each(new_rows, function(idx, row){
             unpivotedTable.items.push(row);
         });
     });
-    jQuery.each(settings.unpivotSettings.settings, function(idx, up_settings){
+    patched_each(settings.unpivotSettings.settings, function(idx, up_settings){
         var new_prop;
         if (up_settings.colType === 'pivot'){
             new_prop = {
@@ -133,7 +133,7 @@ function unpivotTable(settings){
         }
     });
     var order = 0;
-    jQuery.each(unpivotedTable.properties, function(idx, value){
+    patched_each(unpivotedTable.properties, function(idx, value){
         value.order = order;
         order ++;
     });
@@ -153,7 +153,7 @@ function getAvailable_columns_and_rows(unpivotSettings, availableColumnsForUnpiv
     };
     var unpivotedTable = unpivotTable(unpivotOptions);
     var tmp_available_columns = {};
-    jQuery.each(unpivotedTable.properties, function(key, value){
+    patched_each(unpivotedTable.properties, function(key, value){
         tmp_available_columns[key] = value.label;
     });
     var rows_and_columns = {
@@ -175,17 +175,17 @@ function addEmptyRows(dataview){
     row_ids = dataview.getViewRows();
     var modifiedDataForChart = new google.visualization.DataTable();
     var emptyRow = [];
-    jQuery.each(col_ids, function(col_idx, col_id){
+    patched_each(col_ids, function(col_idx, col_id){
         var colName = dataview.getColumnLabel(col_id);
         var colType = dataview.getColumnType(col_id);
         modifiedDataForChart.addColumn(colType, colName);
         emptyRow.push(null);
     });
     modifiedDataForChart.addRow(emptyRow);
-    jQuery.each(row_ids, function(row_idx, row_id){
+    patched_each(row_ids, function(row_idx, row_id){
         var newRow = [];
         var shouldAdd = false;
-        jQuery.each(col_ids, function(col_idx, col_id){
+        patched_each(col_ids, function(col_idx, col_id){
             var value = dataview.getValue(row_idx, col_idx);
             if (value !== null){
                 shouldAdd = true;
@@ -228,7 +228,7 @@ function transformTable(options){
     pivotTable.properties = {};
     pivotTable.pivotLevels = {};
 
-    jQuery.each(settings.normalColumns,function(normal_index, normal_column){
+    patched_each(settings.normalColumns,function(normal_index, normal_column){
         pivotTable.properties[normal_column] = unpivotedTable.properties[normal_column];
         pivotTable.available_columns[normal_column] = settings.availableColumns[normal_column];
     });
@@ -241,7 +241,7 @@ function transformTable(options){
             newRow[column] = row[column];
         });
 
-        jQuery.each(additionalColumns,function(column_key, column_value){
+        patched_each(additionalColumns,function(column_key, column_value){
             newRow[column_key] = column_value;
         });
 
@@ -301,7 +301,7 @@ function transformTable(options){
     });
     var pivotColumnIds = [];
     var maxOrder = -1;
-    jQuery.each(pivotTable.properties, function(key, property){
+    patched_each(pivotTable.properties, function(key, property){
         if (property.order === -1){
             pivotColumnIds.push(key);
         }
@@ -309,7 +309,7 @@ function transformTable(options){
             maxOrder = Math.max(maxOrder, property.order);
         }
     });
-    jQuery.each(pivotColumnIds.sort(), function(idx, columnId){
+    patched_each(pivotColumnIds.sort(), function(idx, columnId){
         maxOrder++;
         pivotTable.properties[columnId].order = maxOrder;
         pivotTable.available_columns[columnId] = tmp_available_columns[columnId];
@@ -322,7 +322,7 @@ function transformTable(options){
     jQuery(pivotTable.items).each(function(row_index, row){
         var shouldDisplay = true;
         if (settings.filters){
-            jQuery.each(settings.filters, function(column, column_filter){
+            patched_each(settings.filters, function(column, column_filter){
                 var val = "";
                 try{
                     val = decodeStr(row[column].toString());
@@ -330,7 +330,7 @@ function transformTable(options){
                 catch(err){}
                 var filtertype = (column_filter.type?column_filter.type:'hidden');
                 var foundVal = false;
-                jQuery.each(column_filter.values, function(idx, col_val){
+                patched_each(column_filter.values, function(idx, col_val){
                     if (val === decodeStr(col_val)){
                         foundVal = true;
                     }
@@ -389,7 +389,7 @@ function applyFormattersOnDataTable(options){
     jQuery.extend(settings, options);
 
     var idx = 0;
-    jQuery.each(settings.preparedColumns, function(tmp_idx, tmpcol){
+    patched_each(settings.preparedColumns, function(tmp_idx, tmpcol){
         if (tmpcol.status !== 1){
             return;
         }
@@ -429,7 +429,7 @@ function applyFormattersOnDataTable(options){
                 formatter = formatters.colorformatter;
                 if (formatter.enabled){
                     var colorformatter = new google.visualization.ColorFormat();
-                    jQuery.each(formatter.ranges, function(idx, range){
+                    patched_each(formatter.ranges, function(idx, range){
                         if (range.bgcolor === range.bgcolor2){
                             colorformatter.addRange(range.from, range.to, range.color, range.bgcolor);
                         }
@@ -509,7 +509,7 @@ function prepareForChart(options){
     if (settings.limit > 0){
         var step = Math.max(Math.round(tmpItemsToDisplay.length/settings.limit), 1);
         var count = 0;
-        jQuery.each(tmpItemsToDisplay, function(idx, item){
+        patched_each(tmpItemsToDisplay, function(idx, item){
             if (count == step){
                 count = 0;
             }
@@ -525,7 +525,7 @@ function prepareForChart(options){
     var dataForChart = new google.visualization.DataTable();
     var columnsForChart = [];
     var isFirstColumn = true;
-    jQuery.each(settings.columns, function(column_index, column){
+    patched_each(settings.columns, function(column_index, column){
         var hasTooltip = false;
         var colName = settings.originalDataTable.available_columns[column];
         var checkNextCol = false;
@@ -546,7 +546,7 @@ function prepareForChart(options){
         }
         var customtooltip;
         var isTooltip = false;
-        jQuery.each(settings.preparedColumns, function(pc_idx, pc_column){
+        patched_each(settings.preparedColumns, function(pc_idx, pc_column){
             if (pc_column.fullname === colName){
                 if (pc_column.hasOwnProperty("role")){
                     role = pc_column.role;
@@ -611,7 +611,7 @@ function prepareForChart(options){
         jQuery(columnsForChart).each(function(column_index, column_settings){
             if (column_settings.type === 'customtooltip'){
                 var tooltip_column = column_settings.template;
-                jQuery.each(row, function(key, value){
+                patched_each(row, function(key, value){
                     tooltip_column = tooltip_column.split("{"+key+"}").join(value);
                 });
                 newRow.push(tooltip_column);
@@ -685,7 +685,7 @@ function getColumnsFromSettings(columnSettings){
     settings.valueColumn = '';
     settings.columns = [];
 
-    jQuery.each(columnSettings.original, function(idx, value){
+    patched_each(columnSettings.original, function(idx, value){
         var columnName = value.name;
         var columnType = value.status;
         switch(columnType){
@@ -703,7 +703,7 @@ function getColumnsFromSettings(columnSettings){
         }
     });
 
-    jQuery.each(columnSettings.prepared, function(idx, value){
+    patched_each(columnSettings.prepared, function(idx, value){
         var columnName = value.name;
         var columnType = value.status;
         if (columnType === 1){
@@ -712,4 +712,66 @@ function getColumnsFromSettings(columnSettings){
     });
 
     return settings;
+}
+
+/* patched jQuery.each function from jQuery v 1.9.1, required for http://taskman.eionet.europa.eu/issues/20002
+   to be removed after upgrading to jQuery 1.9.1
+*/
+patched_each = function(obj, callback, args){
+    function isArraylike( obj ) {
+        var length = obj.length,
+            type = jQuery.type( obj );
+        if ( type === "function" || jQuery.isWindow( obj ) ) {
+            return false;
+        }
+        if ( obj.nodeType === 1 && length ) {
+            return true;
+        }
+
+        return type === "array" || length === 0 ||
+            typeof length === "number" && length > 0 && ( length - 1 ) in obj;
+    }
+
+    var value,
+    i = 0,
+    length = obj.length,
+    isArray = isArraylike( obj );
+    if ( args ) {
+        if ( isArray ) {
+            for ( ; i < length; i++ ) {
+                value = callback.apply( obj[ i ], args );
+                if ( value === false ) {
+                    break;
+                }
+            }
+        } else {
+            for ( i in obj ) {
+                value = callback.apply( obj[ i ], args );
+
+                if ( value === false ) {
+                    break;
+                }
+            }
+        }
+
+        // A special, fast, case for the most common use of each
+    } else {
+        if ( isArray ) {
+            for ( ; i < length; i++ ) {
+                value = callback.call( obj[ i ], i, obj[ i ] );
+                if ( value === false ) {
+                    break;
+                }
+            }
+        } else {
+            for ( i in obj ) {
+                value = callback.call( obj[ i ], i, obj[ i ] );
+
+                if ( value === false ) {
+                    break;
+                }
+            }
+        }
+    }
+        return obj;
 }

@@ -80,7 +80,7 @@ DavizEdit.GoogleDashboards.prototype = {
     try{
         self.context.sortable('destroy');
     } catch(err) {}
-    jQuery.each(self.settings.dashboards, function(index, config){
+    patched_each(self.settings.dashboards, function(index, config){
       var thumb = jQuery('<div>')
         .attr('title', 'Edit ' + config.title)
         .attr('id', config.name)
@@ -172,7 +172,7 @@ DavizEdit.GoogleDashboards.prototype = {
 
   rename: function(dashboard){
     var self = this;
-    jQuery.each(self.settings.dashboards, function(index, elem){
+    patched_each(self.settings.dashboards, function(index, elem){
       if(elem.name==dashboard.name){
         elem.title = dashboard.title;
       }

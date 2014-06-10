@@ -31,7 +31,7 @@ function drawChart(value, other_options){
     var embedchart_sortAsc = true;
 
     var query_params = getQueryParams("#googlechart_table_" + other_settings.vhash);
-    jQuery.each(embedchart_filters, function(key, value){
+    patched_each(embedchart_filters, function(key, value){
         if (query_params.rowFilters[key] !== undefined){
             value.defaults = query_params.rowFilters[key];
         }
