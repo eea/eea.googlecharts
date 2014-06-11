@@ -1,8 +1,8 @@
 Changelog
 =========
 
-10.5-dev - (unreleased)
------------------------
+10.5 - (2014-06-11)
+-------------------
 * Bugfix: Fixed intervals when columns are assigned to both left and right axes
   [szabozo0 refs #20009]
 
