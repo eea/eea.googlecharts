@@ -3,6 +3,8 @@ Changelog
 
 10.5-dev - (unreleased)
 -----------------------
+* Bugfix: Fixed intervals when columns are assigned to both left and right axes
+  [szabozo0 refs #20009]
 
 10.4 - (2014-06-10)
 -------------------
