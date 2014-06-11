@@ -266,7 +266,8 @@ function drawChart(value, other_options){
         sortAsc : chart_sortAsc,
         preparedColumns : chart_columns.prepared,
         enableEmptyRows : chart_options.enableEmptyRows,
-        chartType : chart_json.chartType
+        chartType : chart_json.chartType,
+        focusTarget : chart_json.options.focusTarget
     };
 
     var tableForChart = prepareForChart(options);

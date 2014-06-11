@@ -497,13 +497,16 @@ function prepareForChart(options){
         sortAsc : true,
         preparedColumns : '',
         enableEmptyRows : false,
-        chartType : 'barchart'
+        chartType : 'barchart',
+        focusTarget : 'datum'
     };
     jQuery.extend(settings, options);
     if (jQuery.inArray(settings.chartType, allowedChartsForTooltips) === -1){
         settings.hideTooltips = true;
     }
-
+    if (settings.focusTarget === 'category'){
+        settings.hideTooltips = true;
+    }
     var tmpItemsToDisplay = settings.originalDataTable.items;
     var itemsToDisplay = [];
     if (settings.limit > 0){

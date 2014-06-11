@@ -269,8 +269,9 @@ function drawGoogleChart(options){
     settings.chartJson.dataTable = [];
 
     settings.chartJson.containerId = settings.chartViewDiv;
-
-    settings.chartJson.options.tooltip = {isHtml : true};
+    if (settings.chartJson.options.focusTarget !== 'category'){
+        settings.chartJson.options.tooltip = {isHtml : true};
+    }
     var chartOptions = settings.chartJson.options;
     var dataTable = settings.chartDataTable;
     var trendlines = {};
@@ -789,7 +790,8 @@ function drawGoogleDashboard(options){
                 sortAsc : chart_sortAsc,
                 preparedColumns : chartConfig[2].prepared,
                 enableEmptyRows : chartConfig[7].enableEmptyRows,
-                chartType : chartConfig[1].chartType
+                chartType : chartConfig[1].chartType,
+                focusTarget : chartConfig[1].options.focusTarget
             };
 
             var tableForChart = prepareForChart(options);
