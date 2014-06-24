@@ -1402,7 +1402,10 @@ function redrawEditorChart() {
             }
         });
     });
-    chartOptions.series = series;
+    patched_each(series, function(key, value){
+        delete value.color;
+    });
+    jQuery.extend(true, chartOptions.series,  series);
     jQuery.extend(true, tmpwrapper_json.options, chartOptions);
     removeAutomaticColor(tmpwrapper_json, tmpwrapper_json, []);
     patched_each(tmpwrapper_json.options, function(key, value){

@@ -3,6 +3,8 @@ Changelog
 
 10.6-dev - (unreleased)
 -----------------------
+* Bugfix: Fixed color selection from custom color palettes for bars, columns, lines
+  [szabozo0 refs #20123]
 
 10.5 - (2014-06-11)
 -------------------

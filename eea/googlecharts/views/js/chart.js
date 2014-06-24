@@ -308,6 +308,8 @@ function drawGoogleChart(options){
             }
         }
     });
+
+    jQuery.extend(true, series, settings.chartOptions.series);
     jQuery.extend(true, settings.chartJson.options.series,series);
     /* remove duplicated suffixes */
     patched_each(settings.chartJson.options.vAxes || {}, function(axid, ax){
