@@ -292,7 +292,7 @@ function drawGoogleChart(options){
     patched_each(settings.chartOptions.series || {}, function(name, opt){
         for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
             if (settings.chartJson.options.series !== undefined) {
-                if (settings.chartJson.options.series[i] !== undefined && settings.chartJson.options.series[i] !== null) {
+                if (settings.chartJson.options.series[series_counter] !== undefined && settings.chartJson.options.series[series_counter] !== null) {
                     series[series_counter] = settings.chartJson.options.series[i];
                 }
             }
