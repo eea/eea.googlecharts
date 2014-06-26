@@ -289,28 +289,19 @@ function drawGoogleChart(options){
     settings.chartJson.options.trendlines = trendlines;
 
     var series_counter = 0;
-    patched_each(settings.chartOptions.series || {}, function(name, opt){
-        for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
-            if (settings.chartJson.options.series !== undefined) {
-                if (settings.chartJson.options.series[series_counter] !== undefined && settings.chartJson.options.series[series_counter] !== null) {
-                    series[series_counter] = settings.chartJson.options.series[i];
+    jQuery.extend(true, settings.chartJson.options.series, settings.chartOptions.series);
+    for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
+        if (dataTable.getColumnRole(i) === "" || dataTable.getColumnRole(i) === "data") {
+            patched_each(settings.chartOptions.series || {}, function(name, opt){
+                if (dataTable.getColumnId(i) === name){
+                    series[series_counter-1] = opt;
                 }
-            }
-            if (dataTable.getColumnId(i) === name){
-                if (series[series_counter - 1] !== undefined) {
-                    jQuery.extend(true, series[series_counter - 1], opt);
-                } else {
-                    series[series_counter - 1] = opt;
-                }
-            }
-            if (dataTable.getColumnRole(i) === "" || dataTable.getColumnRole(i) === "data") {
-                series_counter++;
-            }
+            });
+            series_counter++;
         }
-    });
+    }
+    jQuery.extend(true, settings.chartJson.options.series, series);
 
-    jQuery.extend(true, series, settings.chartOptions.series);
-    jQuery.extend(true, settings.chartJson.options.series,series);
     /* remove duplicated suffixes */
     patched_each(settings.chartJson.options.vAxes || {}, function(axid, ax){
         if (ax.format !== undefined){
