@@ -3,6 +3,8 @@ Changelog
 
 10.6-dev - (unreleased)
 -----------------------
+* Bugfix: Charts and dashboards embedded in an indicator are displayed only when user scrolls over them
+  [szabozo0 refs #19325]
 * Bugfix: Fixed color selection from custom color palettes for bars, columns, lines
   [szabozo0 refs #20123]
 

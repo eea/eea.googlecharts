@@ -132,7 +132,16 @@
                     isInline: isInline_$vhash
                 };
                 if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
-                    drawChart(settings_$vhash, other_options_$vhash);
+                    if (isInline_$vhash !== 'True'){
+                        drawChart(settings_$vhash, other_options_$vhash);
+                    }
+                    else{
+                        jQuery('#googlechart_dashboard_$vhash')
+                            .addClass('not_visible')
+                            .attr('google_hash', '$vhash')
+                            .data('settings', settings_$vhash)
+                            .data('other_options', other_options_$vhash);
+                    }
                 }
             });
             function hashchanged(){

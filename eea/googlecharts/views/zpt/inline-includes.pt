@@ -12,3 +12,40 @@
 <script type="text/javascript" tal:condition="python:context.portal_membership.checkPermission('Modify portal content', context)"
     tal:attributes="src string:${context/portal_url}/++resource++eea.googlecharts.inline_resize.js">
 </script>
+
+<script type="text/javascript">
+jQuery.fn.scrollStopped = function(callback) {
+    $(this).scroll(function(){
+        var self = this, $this = $(self);
+        if ($this.data('scrollTimeout')) {
+          clearTimeout($this.data('scrollTimeout'));
+        }
+        $this.data('scrollTimeout', setTimeout(callback,500,self));
+    });
+};
+
+jQuery(window).scrollStopped(function(){
+    function isScrolledIntoView(elem){
+        var docViewTop = $(window).scrollTop();
+        var docViewBottom = docViewTop + $(window).height();
+
+        var elemTop = $(elem).offset().top;
+        var elemBottom = elemTop + $(elem).height();
+
+        return ((elemTop <= docViewBottom) && (elemTop >= docViewTop)) || ((elemBottom <= docViewBottom) && (elemBottom >= docViewTop));
+    }
+    jQuery.each(jQuery('.embedded-dashboard:visible'), function(idx, elem){
+        if (isScrolledIntoView(elem)){
+            if (jQuery(elem).hasClass('not_visible')){
+                jQuery(elem).removeClass('not_visible')
+                if (jQuery(elem).hasClass('isChart')){
+                    drawChart(jQuery(elem).data('settings'), jQuery(elem).data('other_options'));
+                }
+                else{
+                    drawDashboardEmbed(jQuery(elem).data('settings'));
+                }
+            }
+        }
+    });
+});
+</script>
