@@ -1,8 +1,8 @@
 Changelog
 =========
 
-10.6-dev - (unreleased)
------------------------
+10.6 - (2014-06-30)
+-------------------
 * Bugfix: Charts and dashboards embedded in an indicator are displayed only when user scrolls over them
   [szabozo0 refs #19325]
 * Bugfix: Fixed color selection from custom color palettes for bars, columns, lines
