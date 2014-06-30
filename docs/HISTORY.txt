@@ -1,6 +1,9 @@
 Changelog
 =========
 
+10.7-dev - (unreleased)
+-----------------------
+
 10.6 - (2014-06-30)
 -------------------
 * Bugfix: Charts and dashboards embedded in an indicator are displayed only when user scrolls over them
