@@ -1403,7 +1403,9 @@ function redrawEditorChart() {
         });
     });
     patched_each(series, function(key, value){
-        delete value.color;
+        if (chartOptions.series[key] !== undefined){
+            value.color = chartOptions.series[key].color;
+        }
     });
     jQuery.extend(true, chartOptions.series,  series);
     jQuery.extend(true, tmpwrapper_json.options, chartOptions);
@@ -3514,6 +3516,7 @@ function chartEditorSave(id){
     }
     var unpivotsettings = jQuery("#googlechartid_tmp_chart").data("unpivotsettings");
     var settings_str = chartEditor.getChartWrapper().toJSON();
+    var tmp_dataTable = chartEditor.getChartWrapper().getDataTable();
     chartEditor.closeDialog();
     var columnsSettings = {};
     columnsSettings.original = [];
@@ -3584,7 +3587,40 @@ function chartEditorSave(id){
 
     var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
     var options_json = JSON.parse(options_str);
+    var tmp_series = {};
+    var series_ids = [];
+    var isFirst = true;
+    for (var i = 0; i < tmp_dataTable.getNumberOfColumns(); i++){
+        if ((tmp_dataTable.getColumnRole(i) === "") || (tmp_dataTable.getColumnRole(i) === "data")){
+            if (!isFirst){
+                series_ids.push(tmp_dataTable.getColumnId(i));
+                tmp_series[tmp_dataTable.getColumnId(i)] = {};
+            }
+            isFirst = false;
+        }
+    }
 
+    patched_each(settings_json.options.series || {}, function(key, value){
+        jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
+    });
+    patched_each(options_json.series || {}, function(key, value){
+        if (isNaN(key)){
+            jQuery.extend(true, tmp_series[key], value);
+        }
+    });
+    patched_each(options_json.series || {}, function(key, value){
+        if (!isNaN(key)){
+            jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
+        }
+    });
+
+    patched_each(tmp_series || {}, function(key, value){
+        if (jQuery.isEmptyObject(value)){
+            delete tmp_series[key];
+        }
+    });
+    options_json.series = tmp_series;
+    delete settings_json.options.series;
     var selectedPalette = chartPalettes[settings_json.paletteId].colors;
     var newColors = [];
     jQuery(selectedPalette).each(function(idx, color){
