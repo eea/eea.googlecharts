@@ -302,7 +302,7 @@ function getColNameFromFriendly(friendlyname, options){
 }
 
 function applyColumnFilters(options){
-    var skipColorReorder = false;
+/*    var skipColorReorder = false;
     patched_each(jQuery("#"+options.filtersDiv).find("div"), function(idx, div){
         if ((jQuery(div).attr("id") === undefined) || (jQuery(div).attr("id") === '')){
             return;
@@ -310,7 +310,7 @@ function applyColumnFilters(options){
         if (jQuery(div).attr("id").indexOf("pre_config_filter_") !== -1){
             skipColorReorder = true;
         }
-    });
+    });*/
     jQuery("#"+options.filtersDiv).html('');
     jQuery("#"+options.chartViewDiv).html('');
     var config = [];
@@ -460,7 +460,7 @@ function applyColumnFilters(options){
 
     var other_settings = jQuery("#" + options.dashboardDiv).data('other_settings');
 
-    if (!skipColorReorder){
+/*    if (!skipColorReorder){
         if (jQuery.inArray(config[1].chartType, chartsForPaletteReorder) !== -1){
             var original_palette = {};
             var column_nr = 0;
@@ -500,7 +500,7 @@ function applyColumnFilters(options){
             config[1].options.colors = new_palette;
             config[7].colors = new_palette;
         }
-    }
+    }*/
     drawChart(config, other_settings);
 }
 

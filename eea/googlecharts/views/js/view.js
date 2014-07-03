@@ -730,6 +730,7 @@ var googleChartTabClick = function(context){
                 GoogleChartsConfig: GoogleChartsConfig
             };
 
+            guessSeries(googlechart_config_array[chart_index_to_use]);
             drawChart(googlechart_config_array[chart_index_to_use], chart_other_options);
         }
         else {

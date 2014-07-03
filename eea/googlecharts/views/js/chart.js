@@ -289,6 +289,7 @@ function drawGoogleChart(options){
     settings.chartJson.options.trendlines = trendlines;
 
     var series_counter = 0;
+    settings.chartJson.options.series = settings.chartJson.options.series || {};
     jQuery.extend(true, settings.chartJson.options.series, settings.chartOptions.series);
     for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
         if (dataTable.getColumnRole(i) === "" || dataTable.getColumnRole(i) === "data") {

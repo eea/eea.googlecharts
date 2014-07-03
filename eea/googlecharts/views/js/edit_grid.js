@@ -1376,10 +1376,10 @@ function loadRoles(colFullName){
     jQuery(".slick-role-menu").hide();
 
     var valid_roles = {
-        "number" : ["data", "old-data", "interval", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"],
-        "text" : ["data", "annotation", "annotationText", "tooltip"],
-        "date" : ["data", "annotation", "annotationText", "tooltip"],
-        "boolean" : ["data", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"]
+        "number" : ["", "data", "old-data", "interval", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"],
+        "text" : ["", "data", "annotation", "annotationText", "tooltip"],
+        "date" : ["", "data", "annotation", "annotationText", "tooltip"],
+        "boolean" : ["", "data", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"]
     };
 
     patched_each(valid_roles[colType], function(key, role){
@@ -1389,7 +1389,7 @@ function loadRoles(colFullName){
     jQuery(".slick-role-menu-enabled").removeClass("slick-role-menu-enabled");
     patched_each(prepared, function(idx, col){
         if (colFullName === col.fullname){
-            var role = "data";
+            var role = "";
             if (col.hasOwnProperty("role")){
                 role = col.role;
             }
@@ -1412,7 +1412,7 @@ function saveRoles(colFullName){
 
 function enableGridRoles(){
     jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
-        var available_roles = ["data", "old-data", "interval", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"];
+        var available_roles = ["","data", "old-data", "interval", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"];
         var role_element = jQuery(".slick-header-menuitem").find("span:contains(-role-)");
         if (role_element.length === 0){
             return;
@@ -1426,10 +1426,14 @@ function enableGridRoles(){
         var roles = jQuery('<div>').addClass('slick-role-body').appendTo(menu);
 
         patched_each(available_roles, function(idx, role){
+            var role_name = role;
+            if (role_name === ""){
+                role_name = "auto"
+            }
             jQuery('<div>')
                 .addClass("slick-role-menu")
                 .addClass("slick-role-" + role)
-                .text(role)
+                .text(role_name)
                 .attr("role", role)
                 .appendTo(roles);
         });

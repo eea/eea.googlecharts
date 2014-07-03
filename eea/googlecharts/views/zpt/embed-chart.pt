@@ -114,6 +114,7 @@
                     }
                 }
                 settings_$vhash.push(unpivotSettings_$vhash);
+guessSeries(settings_$vhash);
                 googlechart_config_array_$vhash.push(settings_$vhash);
 
                 other_options_$vhash = {

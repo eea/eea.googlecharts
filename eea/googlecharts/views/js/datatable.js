@@ -778,3 +778,31 @@ patched_each = function(obj, callback, args){
     }
         return obj;
 };
+
+function guessSeries(chart){
+    var options = chart[7];
+    if (options.series === undefined){
+        options.series = {};
+    }
+    var dataSettings = chart[2];
+    var shouldAdd = false;
+    var col_nr = 0;
+    jQuery.each(dataSettings.prepared, function(idx, col){
+        if (shouldAdd){
+            if (col.role === 'data'){
+                if (options.series[col.name] === undefined){
+                    options.series[col.name] = {};
+                }
+                if (options.series[col.name].color === undefined){
+                    options.series[col.name].color = options.colors[col_nr];
+                    col_nr++;
+                }
+            }
+        }
+        else{
+            if (col.status === 1){
+                shouldAdd = true;
+            }
+        }
+    });
+}
