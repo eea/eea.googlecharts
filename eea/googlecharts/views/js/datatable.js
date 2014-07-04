@@ -787,6 +787,74 @@ function guessSeries(chart){
     var dataSettings = chart[2];
     var shouldAdd = false;
     var col_nr = 0;
+
+    jQuery.each(dataSettings.prepared, function(idx, col){
+        if (col.role === undefined){
+            col.role = '';
+        }
+        if ((col.status === 1) && (col.role === '')){
+            col.role = 'data';
+        }
+    });
+    //check if we can determine the roles and settings for pivoted columns
+    //first check if pivoted columns are in a row (no other columns between or after them)
+    //also check if hidden pivoted columns has any settings, if they do, guessing is not possible
+    var normalColumns = [];
+    jQuery.each(dataSettings.original, function(idx, col){
+        normalColumns.push(col.name);
+    });
+    var seriesIds = [];
+    patched_each(options.series, function(key, settings){
+        seriesIds.push(key);
+    });
+    var arePivotsOk = true;
+    var isPivotFound = false;
+    var pivotedWithSettings = [];
+    var nrPivotedWithSettings = 0;
+    var pivotedWithoutSettings = [];
+    var nrPivotedWithoutSettings = 0;
+    jQuery.each(dataSettings.prepared, function (idx, col){
+        if (jQuery.inArray(col.name, normalColumns) === -1){
+            isPivotFound = true;
+            if ((col.status === 1) || (col.role === 'data')){
+                nrPivotedWithSettings++;
+                pivotedWithSettings.push({name: col.name, role: col.role, serieSettings: options.series[col.name]});
+            }
+            else{
+                nrPivotedWithoutSettings++;
+                pivotedWithoutSettings.push(col.name);
+            }
+            if ((col.status === 0) && (jQuery.inArray(col.name, seriesIds) !== -1)){
+                arePivotsOk = false;
+            }
+        }
+        else {
+            if (isPivotFound){
+                arePivotsOk = false;
+            }
+        }
+    });
+    //check if settings of pivoted columns can be applied equally on columns without settings
+    if (nrPivotedWithoutSettings%nrPivotedWithSettings !== 0){
+        arePivotsOk = false;
+    }
+    if (arePivotsOk){
+        jQuery.each(pivotedWithoutSettings, function(idx, col){
+            var settings = pivotedWithSettings[idx%nrPivotedWithSettings];
+            if (settings.serieSettings !== undefined){
+                options.series[col] = jQuery.extend(true, {}, settings.serieSettings);
+                if (options.series[col] !== undefined){
+                    delete options.series[col].color;
+                }
+            }
+            jQuery.each(dataSettings.prepared, function(prep_idx, prep_col){
+                if (prep_col.name === col){
+                    prep_col.role = settings.role;
+                }
+            });
+        });
+    }
+    //set the colors for series
     jQuery.each(dataSettings.prepared, function(idx, col){
         if (shouldAdd){
             if (col.role === 'data'){
