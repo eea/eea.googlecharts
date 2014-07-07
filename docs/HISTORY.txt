@@ -3,7 +3,7 @@ Changelog
 
 10.7-dev - (unreleased)
 -----------------------
-* Bugfix: WIP: Fixing conflict between intervals settings and pre-pivot filters
+* Bugfix: Fixed conflict between intervals settings and pre-pivot filters
   [szabozo0 refs #20087]
 10.6 - (2014-06-30)
 -------------------

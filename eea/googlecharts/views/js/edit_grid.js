@@ -1428,7 +1428,7 @@ function enableGridRoles(){
         patched_each(available_roles, function(idx, role){
             var role_name = role;
             if (role_name === ""){
-                role_name = "auto"
+                role_name = "auto";
             }
             jQuery('<div>')
                 .addClass("slick-role-menu")
