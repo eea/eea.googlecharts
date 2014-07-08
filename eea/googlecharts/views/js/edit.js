@@ -2798,7 +2798,9 @@ function openEditor(elementId) {
         var the_object = chartEditor[google_charts_class];
         var keys = [];
         for (var key in the_object) {
-          keys.push(key);
+          if (the_object.hasOwnProperty(key)){
+            keys.push(key);
+          }
         }
         for (var i=0; i<keys.length && i<keys.length; i++) {
           if(!the_object){

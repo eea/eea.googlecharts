@@ -749,10 +749,12 @@ patched_each = function(obj, callback, args){
             }
         } else {
             for ( i in obj ) {
-                value = callback.apply( obj[ i ], args );
+                if (obj.hasOwnProperty(i)){
+                    value = callback.apply( obj[ i ], args );
 
-                if ( value === false ) {
-                    break;
+                    if ( value === false ) {
+                        break;
+                    }
                 }
             }
         }
@@ -768,10 +770,12 @@ patched_each = function(obj, callback, args){
             }
         } else {
             for ( i in obj ) {
-                value = callback.call( obj[ i ], i, obj[ i ] );
+                if (obj.hasOwnProperty(i)){
+                    value = callback.call( obj[ i ], i, obj[ i ] );
 
-                if ( value === false ) {
-                    break;
+                    if ( value === false ) {
+                        break;
+                    }
                 }
             }
         }

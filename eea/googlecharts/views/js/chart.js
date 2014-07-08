@@ -291,13 +291,20 @@ function drawGoogleChart(options){
     var series_counter = 0;
     settings.chartJson.options.series = settings.chartJson.options.series || {};
     jQuery.extend(true, settings.chartJson.options.series, settings.chartOptions.series);
+    function series_loop(i){
+        patched_each(settings.chartOptions.series || {}, function(name, opt){
+            if (dataTable.getColumnId(i) === name){
+                series[series_counter-1] = opt;
+            }
+        });
+    }
     for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
         if (dataTable.getColumnRole(i) === "" || dataTable.getColumnRole(i) === "data") {
-            patched_each(settings.chartOptions.series || {}, function(name, opt){
+/*            patched_each(settings.chartOptions.series || {}, function(name, opt){
                 if (dataTable.getColumnId(i) === name){
                     series[series_counter-1] = opt;
                 }
-            });
+            });*/
             series_counter++;
         }
     }
