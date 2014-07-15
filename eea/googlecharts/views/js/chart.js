@@ -298,13 +298,10 @@ function drawGoogleChart(options){
             }
         });
     }
+
     for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
         if (dataTable.getColumnRole(i) === "" || dataTable.getColumnRole(i) === "data") {
-            patched_each(settings.chartOptions.series || {}, function(name, opt){
-                if (dataTable.getColumnId(i) === name){
-                    series[series_counter-1] = opt;
-                }
-            });
+            series_loop(i);
             series_counter++;
         }
     }
