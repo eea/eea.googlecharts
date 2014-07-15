@@ -1289,18 +1289,23 @@ function saveEditorColors(){
 }
 
 function removeAutomaticColor(root,tree, path){
-    if ((tree instanceof Object) && !(tree instanceof Array)){
+    if ((tree instanceof Object) || (tree instanceof Array)){
         patched_each(tree, function(key, subtree){
             path.push(key);
-            removeAutomaticColor(root,subtree, path);
+            if ((key === "color") && (subtree === "eea-automatic-color")){
+                delete tree[key];
+            }
+            else{
+                removeAutomaticColor(root,subtree, path);
+            }
             path.pop();
         });
     }
-    else {
+/*    else {
         if (tree === "eea-automatic-color"){
             tree = "";
         }
-    }
+    }*/
 }
 
 function validatePointRotation(rotation){
@@ -1407,6 +1412,11 @@ function redrawEditorChart() {
             value.color = chartOptions.series[key].color;
         }
     });
+    patched_each(tmpwrapper_json.options.series || {}, function(key, value){
+        delete value.color;
+    });
+
+    jQuery.extend(true, series, tmpwrapper_json.options.series);
     jQuery.extend(true, chartOptions.series,  series);
     jQuery.extend(true, tmpwrapper_json.options, chartOptions);
     removeAutomaticColor(tmpwrapper_json, tmpwrapper_json, []);
@@ -1697,15 +1707,15 @@ function addCustomSettings() {
             } else {
                 jQuery("#point-sides-input").attr("disabled", true);
                 jQuery("#point-sides-input").attr("value", "");
-                setCustomSetting(line_caption, "pointShape", 'sides', "");                            
+                setCustomSetting(line_caption, "pointShape", 'sides', "");
             }
             setCustomSetting(line_caption, "pointShape", "type", this.value);
         });
-        
+
         var p_shape_style_gap = jQuery('<div>', {
             'class': 'google-visualization-charteditor-item-gap daviz-custom-widget-gap'
         });
-        
+
         point_gap.after(p_shape_style);
         p_shape_style.after(p_shape_style_float_end);
         p_shape_style_float_end.after(p_shape_style_gap);
@@ -1763,7 +1773,7 @@ function addCustomSettings() {
                 setCustomSetting(line_caption, "pointShape", 'rotation', rotation);
             }
         });
-        
+
         var p_shape_rotation_gap = jQuery('<div>', {
             'class': 'google-visualization-charteditor-item-gap daviz-custom-widget-gap'
         });
@@ -2661,12 +2671,13 @@ function openEditor(elementId) {
 
     var chart;
     var wrapperJSON;
+    var cleanChartOptions = {};
+    jQuery.extend(true, cleanChartOptions, JSON.parse(chartOptions));
+
     if (wrapperString.length > 0){
         wrapperJSON = JSON.parse(wrapperString);
         chart = wrapperJSON;
-        var cleanChartOptions = {};
-        jQuery.extend(true, cleanChartOptions, JSON.parse(chartOptions));
-        delete cleanChartOptions.series;
+//        delete cleanChartOptions.series;
         jQuery.extend(true, chart.options, cleanChartOptions);
     }
     else{
@@ -2761,8 +2772,10 @@ function openEditor(elementId) {
     var tableForChart = prepareForChart(options);
 
     // workaround for charteditor issue #17629
+    var cols = [];
     for (var i = 0; i < tableForChart.getNumberOfColumns(); i++){
         tableForChart.getColumnProperties(i);
+        cols.push(tableForChart.getColumnId(i));
     }
     // end of workaround
 
@@ -2770,6 +2783,19 @@ function openEditor(elementId) {
 
     chart.options.title = title;
     chart.options.allowHtml = true;
+    chart.options.series = chart.options.series || [];
+
+    patched_each(cleanChartOptions.series || {}, function(name, opt){
+        patched_each(cols, function(idx, col){
+            if (col === name){
+                if (chart.options.series[idx - 1] !== undefined) {
+                    jQuery.extend(true, chart.options.series[idx - 1], opt);
+                } else {
+                    chart.options.series[idx - 1] = opt;
+                }
+            }
+        });
+    });
     chartWrapper = new google.visualization.ChartWrapper(chart);
 
     chartEditor = new google.visualization.ChartEditor();
@@ -3602,13 +3628,13 @@ function chartEditorSave(id){
         }
     }
 
-    patched_each(settings_json.options.series || {}, function(key, value){
-        jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
-    });
     patched_each(options_json.series || {}, function(key, value){
         if (isNaN(key)){
             jQuery.extend(true, tmp_series[key], value);
         }
+    });
+    patched_each(settings_json.options.series || {}, function(key, value){
+        jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
     });
     patched_each(options_json.series || {}, function(key, value){
         if (!isNaN(key)){
