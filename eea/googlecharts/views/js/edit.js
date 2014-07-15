@@ -1416,7 +1416,7 @@ function redrawEditorChart() {
         delete value.color;
     });
 
-    jQuery.extend(true, series, tmpwrapper_json.options.series);
+//    jQuery.extend(true, series, tmpwrapper_json.options.series);
     jQuery.extend(true, chartOptions.series,  series);
     jQuery.extend(true, tmpwrapper_json.options, chartOptions);
     removeAutomaticColor(tmpwrapper_json, tmpwrapper_json, []);
