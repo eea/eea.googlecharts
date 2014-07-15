@@ -1400,6 +1400,8 @@ function redrawEditorChart() {
             }
             if (col.id === name){
                 if (series[idx - 1] !== undefined) {
+                    delete opt.lineWidth;
+                    delete opt.pointSize;
                     jQuery.extend(true, series[idx - 1], opt);
                 } else {
                     series[idx - 1] = opt;
@@ -3634,6 +3636,12 @@ function chartEditorSave(id){
         }
     });
     patched_each(settings_json.options.series || {}, function(key, value){
+        delete value.lineDashStyle;
+        if (value.pointShape !== undefined){
+            delete value.pointShape.type;
+            delete value.pointShape.rotation;
+            delete value.pointShape.sides;
+        }
         jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
     });
     patched_each(options_json.series || {}, function(key, value){

@@ -839,7 +839,7 @@ function guessSeries(chart){
         }
     });
     //check if settings of pivoted columns can be applied equally on columns without settings
-    if (nrPivotedWithoutSettings%nrPivotedWithSettings !== 0){
+    if (nrPivotedWithoutSettings % nrPivotedWithSettings !== 0){
         arePivotsOk = false;
     }
     if (arePivotsOk){
@@ -859,22 +859,36 @@ function guessSeries(chart){
         });
     }
     //set the colors for series
-    jQuery.each(dataSettings.prepared, function(idx, col){
-        if (shouldAdd){
-            if (col.role === 'data'){
-                if (options.series[col.name] === undefined){
-                    options.series[col.name] = {};
-                }
-                if (options.series[col.name].color === undefined){
-                    options.series[col.name].color = options.colors[col_nr];
-                    col_nr++;
+    if (options.colors){
+        var col_id = -1;
+        jQuery.each(dataSettings.prepared, function(idx, col){
+           if (col_id > -1) {
+               if (options.series[col_id] !== undefined){
+                   options.series[col.name] = options.series[col_id];
+               }
+           }
+            if (col.role === 'data') {
+                col_id++;
+            }
+        });
+
+        jQuery.each(dataSettings.prepared, function(idx, col){
+            if (shouldAdd){
+                if (col.role === 'data'){
+                    if (options.series[col.name] === undefined){
+                        options.series[col.name] = {};
+                    }
+                    if (options.series[col.name].color === undefined){
+                        options.series[col.name].color = options.colors[col_nr];
+                        col_nr++;
+                    }
                 }
             }
-        }
-        else{
-            if (col.status === 1){
-                shouldAdd = true;
+            else{
+                if (col.status === 1){
+                    shouldAdd = true;
+                }
             }
-        }
-    });
+        });
+    }
 }
