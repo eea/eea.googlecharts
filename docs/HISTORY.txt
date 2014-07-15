@@ -1,6 +1,9 @@
 Changelog
 =========
 
+10.8-dev - (unreleased)
+-----------------------
+
 10.7 - (2014-07-15)
 -------------------
 * Bugfix: Fixed conflict between intervals settings and pre-pivot filters
