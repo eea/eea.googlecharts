@@ -3,6 +3,8 @@ Changelog
 
 10.8-dev - (unreleased)
 -----------------------
+* Bugfix: WIP: Updated editor to allow setting colors on piecharts
+  [szabozo0 refs #20386]
 
 10.7 - (2014-07-15)
 -------------------

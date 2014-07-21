@@ -1372,6 +1372,7 @@ function redrawEditorChart() {
     delete tmpwrapper_json.options.intervals;
     delete tmpwrapper_json.options.interval;
     delete tmpwrapper_json.options.trendlines;
+    delete tmpwrapper_json.options.colors;
     tmpwrapper.setOption("intervals", {});
     tmpwrapper.setOption("interval", {});
     tmpwrapper.setOption("trendlines", {});
@@ -1787,7 +1788,7 @@ function addCustomSettings() {
 
 }
 
-function updatePalette() {
+function updatePalette(skipColorsAttr) {
     var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
 
     jQuery(".googlechart_preview_color").remove();
@@ -1809,7 +1810,9 @@ function updatePalette() {
     jQuery(selectedPalette).each(function(idx, color){
         newColors.push(color);
     });
-    options_json.colors = newColors;
+    if (!skipColorsAttr){
+        options_json.colors = newColors;
+    }
     var options_str2 = JSON.stringify(options_json);
 
     tmp_chart_options.attr("value", options_str2);
@@ -1889,7 +1892,8 @@ function addPaletteConfig(){
                 .addClass("eea-googlechart-select")
                 .change(function(){
                     jQuery("#googlechart_palettes").attr("value", jQuery(this).attr("value"));
-                    updatePalette();
+                    console.log("1");
+                    updatePalette(false);
                 })
                 .appendTo(section);
 
@@ -1907,7 +1911,13 @@ function addPaletteConfig(){
                 .attr("id", "googlechart_preview_palette_editor")
                 .appendTo(section);
             jQuery(".eea-googlechart-colorpalettes-config-value").attr("value", jQuery("#googlechart_palettes").attr("value"));
-            updatePalette();
+            console.log("2");
+            if (JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value")).chartType !== "PieChart"){
+                updatePalette(false);
+            }
+            else {
+                updatePalette(true);
+            }
     });
 }
 
@@ -3662,7 +3672,9 @@ function chartEditorSave(id){
     jQuery(selectedPalette).each(function(idx, color){
         newColors.push(color);
     });
-    options_json.colors = newColors;
+    if (settings_json.chartType !== 'PieChart'){
+        options_json.colors = newColors;
+    }
 
     delete options_json.state;
     var motion_state = chartWrapper.getState();
@@ -4259,7 +4271,12 @@ function fillEditorDialog(options){
             jQuery(option).appendTo("#googlechart_palettes");
         });
     }
-    updatePalette();
+    if (JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value")).chartType === "PieChart"){
+        updatePalette(true);
+    }
+    else {
+        updatePalette(false);
+    }
     var tmp_cols_and_rows = getAvailable_columns_and_rows(jQuery("#googlechartid_"+id).data("unpivotsettings"), available_columns, all_rows);
 
     jQuery("#originalColumns").empty();
@@ -4515,7 +4532,7 @@ function openEditChart(id){
             '</div>' +
             "<div id='googlechart_palette_select' class='googlechart_palette_loading' style='width:168px;float:left'>"+
                 "<strong style='float:left;'>Select Palette:</strong>"+
-                "<select id='googlechart_palettes' style='float:left;' onchange='updatePalette();'>"+
+                "<select id='googlechart_palettes' style='float:left;' onchange='updatePalette(false);'>"+
                 "</select>"+
                 "<div style='clear:both;'> </div>" +
                 "<div id='googlechart_preview_palette'> </div>"+
@@ -6267,7 +6284,6 @@ function overrideGooglePalette(){
 
         var currentConfig = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value"));
         var tmpwrapper = chartEditor.getChartWrapper();
-
         var extraConfig = {};
 
         function parseTree(tree, path){
@@ -6299,6 +6315,22 @@ function overrideGooglePalette(){
         var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
         removeAutomaticColor(chartOptions, chartOptions, []);
         jQuery.extend(true, chartOptions, extraConfig.options);
+        if (tmpwrapper.getChartType() === "PieChart"){
+
+            var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
+
+            var selectedPalette = chartPalettes[selectedPaletteId].colors;
+
+            chartOptions.colors = currentConfig.options.colors;
+            for (var i = 0; i < chartOptions.colors.length; i++){
+                if (chartOptions.colors[i] === old_color){
+                    chartOptions.colors[i] = new_color;
+                }
+                if (chartOptions.colors[i] === 'eea-automatic-color'){
+                    chartOptions.colors[i] = selectedPalette[i % selectedPalette.length];
+                }
+            }
+        }
         jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value", JSON.stringify(chartOptions));
         redrawEditorChart();
     });
