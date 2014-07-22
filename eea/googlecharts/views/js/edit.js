@@ -1392,6 +1392,7 @@ function redrawEditorChart() {
     });
     chartOptions.trendlines = trendlines;
     var def_opt = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
+    delete def_opt.options.colors;
     patched_each(chartOptions.series || {}, function(name, opt){
         patched_each(dataTable.cols, function(idx, col){
             if (def_opt.options.series !== undefined) {
@@ -1814,6 +1815,10 @@ function updatePalette(skipColorsAttr) {
         options_json.colors = newColors;
     }
     var options_str2 = JSON.stringify(options_json);
+
+    var tmp_chart_configjson = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value"));
+    delete tmp_chart_configjson.options.colors;
+    jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value", JSON.stringify(tmp_chart_configjson));
 
     tmp_chart_options.attr("value", options_str2);
 
@@ -3667,6 +3672,7 @@ function chartEditorSave(id){
     });
     options_json.series = tmp_series;
     delete settings_json.options.series;
+    delete settings_json.options.colors;
     var selectedPalette = chartPalettes[settings_json.paletteId].colors;
     var newColors = [];
     jQuery(selectedPalette).each(function(idx, color){
