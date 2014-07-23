@@ -3,6 +3,7 @@
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
     <head>
         <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
+        <link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
         <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -24,7 +25,7 @@
     </head>
     <body onhashchange="hashchanged();" style="margin:0">
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
-        <a tal:condition="python:not inline" style="float:right"
+        <a tal:condition="python:not inline" style="float:right" class="go-to-original-link"
            tal:attributes="href view/context/absolute_url"
            i18n:translate=""
            target="_top">Go to original visualization</a>

@@ -1,0 +1,12 @@
+/* Print
+-------- */
+
+#googlechart_dashboard, .googlechart_dashboard {
+    box-shadow: none !important;
+    border: none !important;
+    page-break-inside: avoid !important;
+}
+
+.go-to-original-link {
+  display: none;
+}

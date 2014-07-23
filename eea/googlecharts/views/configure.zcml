@@ -278,6 +278,11 @@
   />
 
   <browser:resource
+    name="eea.googlecharts.print.css"
+    file="./css/print.css"
+  />
+
+  <browser:resource
     name="mini2.png"
     file="./imgs/mini2.png"
   />
