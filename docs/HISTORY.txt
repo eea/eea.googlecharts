@@ -7,7 +7,7 @@ Changelog
   templates (media="print") in order to easily customize
   embedded charts and dashboards look & feel while printing and exporting to PDF
   [voineali refs #20459]
-* Bugfix: WIP: Updated editor to allow setting colors on piecharts
+* Bugfix: Updated editor to allow setting colors on piecharts
   [szabozo0 refs #20386]
 
 10.7 - (2014-07-15)
