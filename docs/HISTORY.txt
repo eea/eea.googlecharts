@@ -3,6 +3,8 @@ Changelog
 
 10.8-dev - (unreleased)
 -----------------------
+* Feature: Implement small multiples/trellis charts
+  [szabozo0 refs #19055]
 * Feature: Added print.css and include it to embed-chart and embed-dashboard
   templates (media="print") in order to easily customize
   embedded charts and dashboards look & feel while printing and exporting to PDF

@@ -1,0 +1,4 @@
+<div tal:attributes="
+  style python: 'width: %spx;; height: %spx' % (view.width, view.height);">
+  <iframe tal:attributes="src python:view.src" />
+</div>
