@@ -1,5 +1,6 @@
 """ Edit
 """
+from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 from zope.component import queryUtility
 from zope.formlib.form import Fields
 from zope.schema.interfaces import IVocabularyFactory
@@ -12,6 +13,8 @@ class Add(AddForm):
     """ Add widget to dashboard
     """
     form_fields = Fields(IAdd)
+
+    template = ViewPageTemplateFile('edit.pt')
 
     def prepare(self, data):
         """ Update data dict

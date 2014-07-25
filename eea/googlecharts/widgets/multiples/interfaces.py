@@ -9,7 +9,7 @@ class IAdd(Interface):
     """
     name = schema.Choice(
         title=_(u"Chart"),
-        description=_(u"Select chart"),
+        description=_(u"Select the chart for which you want the multiples"),
         required=True,
         vocabulary=u"eea.googlecharts.vocabularies.multiples.add"
     )
@@ -19,7 +19,7 @@ class IEdit(Interface):
     """
     name = schema.Choice(
         title=_(u"Chart"),
-        description=_(u"Select chart"),
+        description=_(u"Select the chart for which you want the multiples"),
         required=True,
         vocabulary=u"eea.googlecharts.vocabularies.multiples.edit"
     )

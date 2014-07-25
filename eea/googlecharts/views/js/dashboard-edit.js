@@ -1546,3 +1546,30 @@ jQuery.fn.EEAGoogleDashboard = function(options){
     context.data('EEAGoogleDashboard', dashboard);
   });
 };
+
+jQuery(document).bind("multiplesConfigEditorReady", function(){
+    jQuery(".googlechart-widget-add select").change(function(){
+        jQuery(".multiples-config").empty();
+        jQuery(".multiples-config")
+           .css("width", "100%")
+           .css("height", "100%");
+        if ((jQuery(".googlechart-widget-add select").attr("value") !== undefined) &&
+            (jQuery(".googlechart-widget-add select").attr("value") !== "")){
+            jQuery("<div>")
+                .addClass("multiples-base-preview")
+                .css("width","300px")
+                .css("height","300px")
+                .css("float", "left")
+                .appendTo(".multiples-config");
+            chart_path = jQuery(".googlechart-widget-add select").attr("value").split("/");
+            var chart_id = chart_path[chart_path.length - 1];
+            var absolute_url = jQuery(".multiples-config").attr("absolute_url");
+            jQuery("<iframe>")
+                .css("width","300px")
+                .css("height","300px")
+                .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=300&height=300")
+                .appendTo(".multiples-base-preview");
+        }
+    });
+
+});
