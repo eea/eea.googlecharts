@@ -56,9 +56,9 @@ class Add(Charts):
         for dashboard in dashboards.get('dashboards', []):
             if dashboard.get('name') == name:
                 break
-
         for widget in dashboard.get('widgets'):
-            existing.add(widget.get('name'))
+            if widget.get('wtype') == 'googlecharts.widgets.multiples':
+                existing.add(widget.get('name'))
         return existing
 
 class Edit(Charts):

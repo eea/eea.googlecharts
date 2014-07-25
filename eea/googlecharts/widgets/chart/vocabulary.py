@@ -58,7 +58,8 @@ class Add(Charts):
                 break
 
         for widget in dashboard.get('widgets'):
-            existing.add(widget.get('name'))
+            if widget.get('wtype') == 'googlecharts.widgets.chart':
+                existing.add(widget.get('name'))
         return existing
 
 class Edit(Charts):
