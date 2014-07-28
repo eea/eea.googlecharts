@@ -1569,6 +1569,27 @@ jQuery(document).bind("multiplesConfigEditorReady", function(){
                 .css("height","300px")
                 .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=300&height=300")
                 .appendTo(".multiples-base-preview");
+            jQuery.getJSON(absolute_url + "/googlechart.get_charts", function (data){
+                chart_path = jQuery(".googlechart-widget-add select").attr("value").split("/");
+                var chart_id = chart_path[chart_path.length - 1];
+                var base_chart_settings;
+                jQuery.each(data.charts, function(idx, chart){
+                    if (chart.id === chart_id){
+                        base_chart_settings = chart;
+                    }
+                });
+                var columnsFromSettings = getColumnsFromSettings(JSON.parse(base_chart_settings.columns));
+                var options = {
+                    originalTable : all_rows,
+                    normalColumns : columnsFromSettings.normalColumns,
+                    pivotingColumns : columnsFromSettings.pivotColumns,
+                    valueColumn : columnsFromSettings.valueColumn,
+                    availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
+                    unpivotSettings : base_chart_settings.unpivotSettings || {},
+                    filters : base_chart_settings.rowFilters || null,
+                }
+                var transformedTable = transformTable(options);
+            });
         }
     });
 
