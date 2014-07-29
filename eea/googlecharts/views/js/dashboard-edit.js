@@ -1547,6 +1547,7 @@ jQuery.fn.EEAGoogleDashboard = function(options){
   });
 };
 
+
 jQuery(document).bind("multiplesConfigEditorReady", function(){
     jQuery(".googlechart-widget-add select").change(function(){
         jQuery(".multiples-config").empty();
@@ -1585,10 +1586,54 @@ jQuery(document).bind("multiplesConfigEditorReady", function(){
                     pivotingColumns : columnsFromSettings.pivotColumns,
                     valueColumn : columnsFromSettings.valueColumn,
                     availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
-                    unpivotSettings : base_chart_settings.unpivotSettings || {},
+                    unpivotSettings : base_chart_settings.unpivotsettings || {},
                     filters : base_chart_settings.rowFilters || null,
                 }
                 var transformedTable = transformTable(options);
+                base_chart_config = JSON.parse(base_chart_settings.config);
+                base_chart_options = JSON.parse(base_chart_settings.options);
+                columns_config = JSON.parse(base_chart_settings.columns);
+
+                options = {
+                    originalDataTable : transformedTable,
+                    columns : columnsFromSettings.columns,
+                    sortBy : base_chart_settings.sortBy,
+                    sortAsc : base_chart_settings.sortAsc,
+
+                    preparedColumns : columns_config.prepared,
+                    enableEmptyRows : base_chart_options.enableEmptyRows,
+                    chartType : base_chart_config.chartType,
+                    focusTarget : base_chart_config.options.focusTarget
+                };
+                var originalCols = [];
+                var allCols = [];
+                for (var i = 0; i < columnsFromSettings.columns.length; i++){
+                    originalCols.push({id:columnsFromSettings.columns[i], type:transformedTable.properties[columnsFromSettings.columns[i]].columnType});
+                }
+
+                patched_each(transformedTable.properties,function(col_id, col_opt){
+                    allCols.push({id:col_id, type:col_opt.columnType});
+                });
+                var column_combinations = [];
+                function build_column_combinations(pos, orig_cols, all_cols, new_cols, column_combinations){
+                    if (pos === orig_cols.length){
+                        column_combinations.push(new_cols.slice(0));
+                        return;
+                    }
+                    for (var i = 0; i < all_cols.length; i++){
+                        if (jQuery.inArray(all_cols[i].id, new_cols) === -1){
+                            if (orig_cols[pos].type === all_cols[i].type){
+                                new_cols.push(all_cols[i].id);
+                                build_column_combinations(pos + 1, orig_cols, all_cols, new_cols, column_combinations);
+                                new_cols.pop();
+                            }
+                        }
+                    }
+                }
+                build_column_combinations(0, originalCols, allCols, [], column_combinations);
+
+                var tableForChart = prepareForChart(options);
+
             });
         }
     });
