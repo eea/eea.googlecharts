@@ -2050,3 +2050,12 @@ input[type=text].eea-googlechart-trendlines-config-value{
 .google-visualization-charteditor-item-gap {
     clear:both;
 }
+
+.multiples-matrix-item-hover{
+    background-color:rgba(255,0,0,0.5);
+}
+
+.multiples-matrix-item-hover.selected{
+    background-color:rgba(208,228,173,0.5)
+
+}

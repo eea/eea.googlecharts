@@ -21,7 +21,28 @@
         if (sortAsc_str === 'desc'){
             sortAsc = false;
         }
-
+        if (preview_columns.length > 0){
+            var new_prepared = [];
+            jQuery.each(preview_columns, function(prev_idx, col_id){
+                jQuery.each(chart_columns.prepared, function(prep_idx, col){
+                    if (col.name === col_id){
+                        var new_prepared_col = {};
+                        jQuery.extend(true, new_prepared_col, col);
+                        new_prepared_col.status = 1;
+                        new_prepared.push(new_prepared_col);
+                    }
+                })
+            });
+            jQuery.each(chart_columns.prepared, function(prep_idx, col){
+                if (jQuery.inArray(col.name, preview_columns) === -1){
+                    var new_prepared_col = {};
+                    jQuery.extend(true, new_prepared_col, col);
+                    new_prepared_col.status = 0;
+                    new_prepared.push(new_prepared_col);
+                }
+            })
+            chart_columns.prepared = new_prepared;
+        }
         var columnsFromSettings = getColumnsFromSettings(chart_columns);
         var tmp_columns_and_rows = getAvailable_columns_and_rows(chart_unpivotSettings, available_columns, merged_rows);
         var options = {
@@ -49,6 +70,16 @@
 
         var tableForChart = prepareForChart(options);
         chart_json.options.title = name;
+        if (preview_maximized){
+            chart_options.enableInteractivity = false;
+            chart_options.chartArea = {
+                'left':1,
+                'top':1,
+                'width':width - 2,
+                'height':height - 2
+            };
+            chart_options.legend = 'none';
+        }
         var googlechart_params = {
             chartDashboard : 'googlechart_dashboard_full',
             chartViewDiv : 'googlechart_full',
@@ -94,6 +125,8 @@
         var sortBy = '$sortBy';
         var sortAsc_str = '$sortAsc';
         var chart_unpivotSettings = ${unpivotsettings};
+        var preview_maximized = ${chart/preview_maximized};
+        var preview_columns = JSON.parse(decodeURIComponent('${chart/preview_columns}'));
         "></script>
 
     <div id="googlechart_dashboard">

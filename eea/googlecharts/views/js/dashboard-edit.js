@@ -426,9 +426,10 @@ DavizEdit.GoogleDashboardCharts.prototype = {
         return false;
       });
 
+    jQuery('.add-widget-dialog').remove();
     widget.dialog({
       title: 'Add Widget',
-      dialogClass: 'googlechart-dialog',
+      dialogClass: 'googlechart-dialog add-widget-dialog',
       bgiframe: true,
       modal: true,
       closeOnEscape: true,
@@ -1562,6 +1563,12 @@ jQuery(document).bind("multiplesConfigEditorReady", function(){
                 .css("height","300px")
                 .css("float", "left")
                 .appendTo(".multiples-config");
+
+            jQuery("<div>")
+                .addClass("multiples-matrix")
+                .css("float", "left")
+                .appendTo(".multiples-config");
+
             chart_path = jQuery(".googlechart-widget-add select").attr("value").split("/");
             var chart_id = chart_path[chart_path.length - 1];
             var absolute_url = jQuery(".multiples-config").attr("absolute_url");
@@ -1587,8 +1594,8 @@ jQuery(document).bind("multiplesConfigEditorReady", function(){
                     valueColumn : columnsFromSettings.valueColumn,
                     availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
                     unpivotSettings : base_chart_settings.unpivotsettings || {},
-                    filters : base_chart_settings.rowFilters || null,
-                }
+                    filters : base_chart_settings.rowFilters || null
+                };
                 var transformedTable = transformTable(options);
                 base_chart_config = JSON.parse(base_chart_settings.config);
                 base_chart_options = JSON.parse(base_chart_settings.options);
@@ -1596,15 +1603,14 @@ jQuery(document).bind("multiplesConfigEditorReady", function(){
 
                 options = {
                     originalDataTable : transformedTable,
-                    columns : columnsFromSettings.columns,
                     sortBy : base_chart_settings.sortBy,
                     sortAsc : base_chart_settings.sortAsc,
-
                     preparedColumns : columns_config.prepared,
                     enableEmptyRows : base_chart_options.enableEmptyRows,
                     chartType : base_chart_config.chartType,
                     focusTarget : base_chart_config.options.focusTarget
                 };
+
                 var originalCols = [];
                 var allCols = [];
                 for (var i = 0; i < columnsFromSettings.columns.length; i++){
@@ -1614,11 +1620,35 @@ jQuery(document).bind("multiplesConfigEditorReady", function(){
                 patched_each(transformedTable.properties,function(col_id, col_opt){
                     allCols.push({id:col_id, type:col_opt.columnType});
                 });
+                allCols.sort(function(a, b){
+                    if (a.id > b.id){
+                        return 1;
+                    }
+                    if (a.id < b.id){
+                        return -1;
+                    }
+                    if (a.id === b.id){
+                        return 0;
+                    }
+                });
                 var column_combinations = [];
                 function build_column_combinations(pos, orig_cols, all_cols, new_cols, column_combinations){
                     if (pos === orig_cols.length){
                         column_combinations.push(new_cols.slice(0));
+                        jQuery("<div>")
+                            .css("float","left")
+                            .css("width","67px")
+                            .css("height","67px")
+                            .css("border", "1px solid gray")
+                            .css("position", "relative")
+                            .data("columns", column_combinations[column_combinations.length - 1])
+                            .appendTo(".multiples-matrix");
                         return;
+                    }
+                    if( pos < orig_cols.length){
+                        jQuery("<div>")
+                            .css("clear","both")
+                            .appendTo(".multiples-matrix");
                     }
                     for (var i = 0; i < all_cols.length; i++){
                         if (jQuery.inArray(all_cols[i].id, new_cols) === -1){
@@ -1631,9 +1661,51 @@ jQuery(document).bind("multiplesConfigEditorReady", function(){
                     }
                 }
                 build_column_combinations(0, originalCols, allCols, [], column_combinations);
-
-                var tableForChart = prepareForChart(options);
-
+                jQuery.each(column_combinations, function(idx, tmp_columns){
+                    options.columns = tmp_columns;
+                    var tableForChart = prepareForChart(options);
+                    var container = jQuery(".multiples-matrix").find("div").filter(function(){return $(this).data("columns") === tmp_columns;});
+                    columns_str = encodeURIComponent(JSON.stringify(tmp_columns));
+                    var columns_title = "";
+                    for (var i = 0; i < tmp_columns.length; i++){
+                        columns_title += tmp_columns[i];
+                        if (i < tmp_columns.length - 1){
+                            columns_title += ", ";
+                        }
+                    }
+                    jQuery("<iframe>")
+                        .css("width","67px")
+                        .css("height","67px")
+                        .css("position","absolute")
+                        .css("z-index",1)
+                        .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=67&height=67&maximized=true&columns="+columns_str)
+                        .appendTo(container);
+                    jQuery("<div>")
+                        .addClass("multiples-matrix-item-hover")
+                        .css("width","67px")
+                        .css("height","67px")
+                        .css("position","absolute")
+                        .css("top",0)
+                        .css("left",0)
+                        .css("z-index",2)
+                        .css("cursor","pointer")
+                        .attr("title", columns_title)
+                        .appendTo(container)
+                        .click(function(){
+                            if (jQuery(this).hasClass("selected")){
+                                jQuery(this)
+                                    .removeClass("selected")
+                                    .removeClass("eea-icon")
+                                    .removeClass("eea-icon-check");
+                            }
+                            else{
+                                jQuery(this)
+                                    .addClass("selected")
+                                    .addClass("eea-icon")
+                                    .addClass("eea-icon-check");
+                            }
+                        });
+                });
             });
         }
     });
