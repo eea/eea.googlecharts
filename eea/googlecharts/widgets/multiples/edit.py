@@ -16,6 +16,8 @@ class Add(AddForm):
 
     template = ViewPageTemplateFile('edit.pt')
 
+    page = "add"
+
     def prepare(self, data):
         """ Update data dict
         """
@@ -33,6 +35,10 @@ class Edit(EditForm):
     """ Edit dashboard widget
     """
     form_fields = Fields(IEdit)
+
+    template = ViewPageTemplateFile('edit.pt')
+
+    page = "edit"
 
     def prepare(self, data):
         """ Update data dict

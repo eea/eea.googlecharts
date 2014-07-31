@@ -1897,7 +1897,6 @@ function addPaletteConfig(){
                 .addClass("eea-googlechart-select")
                 .change(function(){
                     jQuery("#googlechart_palettes").attr("value", jQuery(this).attr("value"));
-                    console.log("1");
                     updatePalette(false);
                 })
                 .appendTo(section);
@@ -1916,7 +1915,6 @@ function addPaletteConfig(){
                 .attr("id", "googlechart_preview_palette_editor")
                 .appendTo(section);
             jQuery(".eea-googlechart-colorpalettes-config-value").attr("value", jQuery("#googlechart_palettes").attr("value"));
-            console.log("2");
             if (JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value")).chartType !== "PieChart"){
                 updatePalette(false);
             }

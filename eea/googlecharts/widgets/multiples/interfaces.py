@@ -13,6 +13,12 @@ class IAdd(Interface):
         required=True,
         vocabulary=u"eea.googlecharts.vocabularies.multiples.add"
     )
+    charts = schema.TextLine(
+        title=_(u"Charts"),
+        description=_(u"JSON of selected charts"),
+        required=True
+    )
+
 
 class IEdit(Interface):
     """ Widget edit schema
@@ -22,4 +28,9 @@ class IEdit(Interface):
         description=_(u"Select the chart for which you want the multiples"),
         required=True,
         vocabulary=u"eea.googlecharts.vocabularies.multiples.edit"
+    )
+    charts = schema.TextLine(
+        title=_(u"Charts"),
+        description=_(u"JSON of selected charts"),
+        required=True
     )

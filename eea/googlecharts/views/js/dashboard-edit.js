@@ -426,10 +426,10 @@ DavizEdit.GoogleDashboardCharts.prototype = {
         return false;
       });
 
-    jQuery('.add-widget-dialog').remove();
+    jQuery('.add-edit-widget-dialog').remove();
     widget.dialog({
       title: 'Add Widget',
-      dialogClass: 'googlechart-dialog add-widget-dialog',
+      dialogClass: 'googlechart-dialog add-edit-widget-dialog',
       bgiframe: true,
       modal: true,
       closeOnEscape: true,
@@ -789,15 +789,18 @@ DavizEdit.GoogleDashboardWidget.prototype = {
 
       jQuery('.actionButtons', form).remove();
 
+      jQuery('.add-edit-widget-dialog').remove();
+
       form.dialog({
         title: 'Edit Widget',
-        dialogClass: 'googlechart-dialog',
+        dialogClass: 'googlechart-dialog add-edit-widget-dialog',
         bgiframe: true,
         modal: true,
         minWidth: 950,
         minHeight: 600,
         closeOnEscape: true,
         open: function(){
+          jQuery(document).trigger('multiplesConfigEditorReady', ['edit'])
           var buttons = jQuery(this).parent().find("button[title!='close']");
           buttons.attr('class', 'btn');
           jQuery(buttons[0]).addClass('btn-inverse');
@@ -1549,14 +1552,15 @@ jQuery.fn.EEAGoogleDashboard = function(options){
 };
 
 
-jQuery(document).bind("multiplesConfigEditorReady", function(){
-    jQuery(".googlechart-widget-add select").change(function(){
+jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
+    var current_widget = ".googlechart-widget-" + view;
+    jQuery(current_widget + " select").change(function(){
         jQuery(".multiples-config").empty();
         jQuery(".multiples-config")
            .css("width", "100%")
            .css("height", "100%");
-        if ((jQuery(".googlechart-widget-add select").attr("value") !== undefined) &&
-            (jQuery(".googlechart-widget-add select").attr("value") !== "")){
+        if ((jQuery(current_widget + " select").attr("value") !== undefined) &&
+            (jQuery(current_widget + " select").attr("value") !== "")){
             jQuery("<div>")
                 .addClass("multiples-base-preview")
                 .css("width","300px")
@@ -1569,7 +1573,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(){
                 .css("float", "left")
                 .appendTo(".multiples-config");
 
-            chart_path = jQuery(".googlechart-widget-add select").attr("value").split("/");
+            chart_path = jQuery(current_widget + " select").attr("value").split("/");
             var chart_id = chart_path[chart_path.length - 1];
             var absolute_url = jQuery(".multiples-config").attr("absolute_url");
             jQuery("<iframe>")
@@ -1578,7 +1582,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(){
                 .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=300&height=300")
                 .appendTo(".multiples-base-preview");
             jQuery.getJSON(absolute_url + "/googlechart.get_charts", function (data){
-                chart_path = jQuery(".googlechart-widget-add select").attr("value").split("/");
+                chart_path = jQuery(current_widget + " select").attr("value").split("/");
                 var chart_id = chart_path[chart_path.length - 1];
                 var base_chart_settings;
                 jQuery.each(data.charts, function(idx, chart){
@@ -1651,11 +1655,22 @@ jQuery(document).bind("multiplesConfigEditorReady", function(){
                             .appendTo(".multiples-matrix");
                     }
                     for (var i = 0; i < all_cols.length; i++){
-                        if (jQuery.inArray(all_cols[i].id, new_cols) === -1){
-                            if (orig_cols[pos].type === all_cols[i].type){
+                        if (orig_cols[pos].type === all_cols[i].type){
+                            if (jQuery.inArray(all_cols[i].id, new_cols) === -1){
                                 new_cols.push(all_cols[i].id);
                                 build_column_combinations(pos + 1, orig_cols, all_cols, new_cols, column_combinations);
                                 new_cols.pop();
+                            }
+                            else {
+                                if (pos === orig_cols.length - 1){
+                                    jQuery("<div>")
+                                        .css("float","left")
+                                        .css("width","67px")
+                                        .css("height","67px")
+                                        .css("border", "1px solid gray")
+                                        .css("position", "relative")
+                                        .appendTo(".multiples-matrix");
+                                }
                             }
                         }
                     }
@@ -1709,5 +1724,6 @@ jQuery(document).bind("multiplesConfigEditorReady", function(){
             });
         }
     });
+    jQuery(current_widget + " select:visible").trigger("change")
 
 });

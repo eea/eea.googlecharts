@@ -2052,7 +2052,7 @@ input[type=text].eea-googlechart-trendlines-config-value{
 }
 
 .multiples-matrix-item-hover{
-    background-color:rgba(255,0,0,0.5);
+/*    background-color:rgba(255,0,0,0.5);*/
 }
 
 .multiples-matrix-item-hover.selected{

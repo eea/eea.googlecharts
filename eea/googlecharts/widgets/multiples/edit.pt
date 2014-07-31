@@ -75,12 +75,13 @@
             tal:replace="structure context/alert.gif" />
             -->
     </div>
+  </tal:block>
     <div class="multiples-config" tal:attributes="absolute_url python:context.absolute_url()">
     </div>
-    <script>
-        jQuery(document).trigger("multiplesConfigEditorReady");
+    <div tal:content="view/page">
+    </div>
+    <script tal:content="string: jQuery(document).trigger('multiplesConfigEditorReady', ['${view/page}']);">
     </script>
-  </tal:block>
   <metal:block define-slot="above_buttons" />
   <div id="actionsView">
     <span class="actionButtons"
