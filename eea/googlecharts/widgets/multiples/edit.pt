@@ -78,8 +78,6 @@
   </tal:block>
     <div class="multiples-config" tal:attributes="absolute_url python:context.absolute_url()">
     </div>
-    <div tal:content="view/page">
-    </div>
     <script tal:content="string: jQuery(document).trigger('multiplesConfigEditorReady', ['${view/page}']);">
     </script>
   <metal:block define-slot="above_buttons" />

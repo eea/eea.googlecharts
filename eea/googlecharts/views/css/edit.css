@@ -2051,11 +2051,11 @@ input[type=text].eea-googlechart-trendlines-config-value{
     clear:both;
 }
 
-.multiples-matrix-item-hover{
+.multiples-matrix-item-overlay{
 /*    background-color:rgba(255,0,0,0.5);*/
 }
 
-.multiples-matrix-item-hover.selected{
+.multiples-matrix-item-overlay.selected{
     background-color:rgba(208,228,173,0.5)
 
 }

@@ -1555,6 +1555,9 @@ jQuery.fn.EEAGoogleDashboard = function(options){
 jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
     var current_widget = ".googlechart-widget-" + view;
     jQuery(current_widget + " select").change(function(){
+        if (view === "add"){
+            jQuery(".add-edit-widget-dialog input.textType").attr("value", "[]");
+        }
         jQuery(".multiples-config").empty();
         jQuery(".multiples-config")
            .css("width", "100%")
@@ -1605,7 +1608,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 base_chart_options = JSON.parse(base_chart_settings.options);
                 columns_config = JSON.parse(base_chart_settings.columns);
 
-                options = {
+/*                options = {
                     originalDataTable : transformedTable,
                     sortBy : base_chart_settings.sortBy,
                     sortAsc : base_chart_settings.sortAsc,
@@ -1613,7 +1616,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     enableEmptyRows : base_chart_options.enableEmptyRows,
                     chartType : base_chart_config.chartType,
                     focusTarget : base_chart_config.options.focusTarget
-                };
+                };*/
 
                 var originalCols = [];
                 var allCols = [];
@@ -1676,9 +1679,10 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     }
                 }
                 build_column_combinations(0, originalCols, allCols, [], column_combinations);
+                var loaded_settings = jQuery(".add-edit-widget-dialog input.textType").attr("value");
                 jQuery.each(column_combinations, function(idx, tmp_columns){
-                    options.columns = tmp_columns;
-                    var tableForChart = prepareForChart(options);
+/*                    options.columns = tmp_columns;
+                    var tableForChart = prepareForChart(options);*/
                     var container = jQuery(".multiples-matrix").find("div").filter(function(){return $(this).data("columns") === tmp_columns;});
                     columns_str = encodeURIComponent(JSON.stringify(tmp_columns));
                     var columns_title = "";
@@ -1693,10 +1697,10 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         .css("height","67px")
                         .css("position","absolute")
                         .css("z-index",1)
-                        .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=67&height=67&maximized=true&columns="+columns_str)
+                        .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=67&height=67&maximized=true&columns=" + columns_str)
                         .appendTo(container);
-                    jQuery("<div>")
-                        .addClass("multiples-matrix-item-hover")
+                    var overlayed = jQuery("<div>")
+                        .addClass("multiples-matrix-item-overlay")
                         .css("width","67px")
                         .css("height","67px")
                         .css("position","absolute")
@@ -1719,7 +1723,16 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                     .addClass("eea-icon")
                                     .addClass("eea-icon-check");
                             }
+                            var selected_columns = [];
+                            jQuery.each(jQuery(".multiples-matrix-item-overlay.selected"), function(idx, item){
+                                selected_columns.push(jQuery(item).parent().data("columns"));
+                            });
+                            jQuery(".add-edit-widget-dialog input.textType").attr("value", JSON.stringify(selected_columns));
                         });
+                    if (loaded_settings.indexOf(JSON.stringify(tmp_columns)) > -1){
+                        overlayed
+                            .addClass("selected eea-icon eea-icon-check");
+                    }
                 });
             });
         }
