@@ -71,7 +71,8 @@ class Edit(Charts):
         """
         request = getattr(context, 'REQUEST', None)
         form = getattr(request, 'form', {})
-        name = form.get('name', '')
+        #remove the "multiples_" prefix from name
+        name = form.get('name', '')[10:]
 
         accessor = queryAdapter(context, IVisualizationConfig)
         charts = accessor.view('googlechart.googlecharts', {})

@@ -17,7 +17,6 @@ class Add(AddForm):
         """ Update data dict
         """
         data = super(Add, self).prepare(data)
-
         voc = queryUtility(IVocabularyFactory,
                            name=u'eea.googlecharts.vocabularies.charts')
         for term in voc(self.context):

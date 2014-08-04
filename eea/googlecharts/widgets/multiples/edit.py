@@ -22,6 +22,9 @@ class Add(AddForm):
         """ Update data dict
         """
         data = super(Add, self).prepare(data)
+        #add "multiples_" prefix so we can make a difference 
+        #between charts and small multiples
+        data['name'] = 'multiples_' + data['name']
 
         voc = queryUtility(IVocabularyFactory,
                            name=u'eea.googlecharts.vocabularies.multiples')
@@ -43,7 +46,9 @@ class Edit(EditForm):
     def prepare(self, data):
         """ Update data dict
         """
+        import pdb; pdb.set_trace()
         data = super(Edit, self).prepare(data)
+        data['name'] = 'multiples_' + data['name']
 
         voc = queryUtility(IVocabularyFactory,
                            name=u'eea.googlecharts.vocabularies.multiples')

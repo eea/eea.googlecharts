@@ -20,16 +20,9 @@ class View(Widget):
         return self.widget.get('dashboard', {}).get('height', 600)
 
     @property
-    def src(self):
-        """ Src
-        """
-        query  = {
-            'chart': self.widget.get('name', ''),
-            'width': self.width,
-            'height': self.height,
-        }
+    def chart(self):
+        return self.widget.get('name', '')[10:]
 
-        return u'%s/chart-full?%s' % (
-            self.context.absolute_url(),
-            urlencode(query)
-        )
+    @property
+    def charts(self):
+        return self.widget.get('charts', [])
