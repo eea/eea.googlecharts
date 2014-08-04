@@ -844,6 +844,9 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     if(title.length){
       self.settings.title = title.val();
     }
+    if(self.settings.wtype === "googlecharts.widgets.multiples"){
+      self.settings.charts = jQuery(".add-edit-widget-dialog input.textType").attr("value");
+    }
     var action = self.settings.dashboard.name + '.actions.save';
     var query = {};
     patched_each(form.serializeArray(), function(){
