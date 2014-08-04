@@ -46,7 +46,6 @@ class Edit(EditForm):
     def prepare(self, data):
         """ Update data dict
         """
-        import pdb; pdb.set_trace()
         data = super(Edit, self).prepare(data)
         data['name'] = 'multiples_' + data['name']
 
