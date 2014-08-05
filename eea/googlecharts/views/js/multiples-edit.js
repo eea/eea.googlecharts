@@ -2,7 +2,8 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
     var current_widget = ".googlechart-widget-" + view;
     jQuery(current_widget + " select").change(function(){
         if (view === "add"){
-            jQuery(".add-edit-widget-dialog input.textType").attr("value", "[]");
+            jQuery(".add-edit-widget-dialog input.textType[name*='charts']").attr("value", "[]");
+            jQuery(".add-edit-widget-dialog input.textType[name*='settings']").attr("value", "{}");
         }
         jQuery(".multiples-config").empty();
         jQuery(".multiples-config")
@@ -115,7 +116,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     }
                 }
                 build_column_combinations(0, originalCols, allCols, [], column_combinations);
-                var loaded_settings = jQuery(".add-edit-widget-dialog input.textType").attr("value");
+                var loaded_settings = jQuery(".add-edit-widget-dialog input.textType[name*='charts']").attr("value");
                 jQuery.each(column_combinations, function(idx, tmp_columns){
                     var container = jQuery(".multiples-matrix").find("div").filter(function(){return $(this).data("columns") === tmp_columns;});
                     columns_str = encodeURIComponent(JSON.stringify(tmp_columns));
@@ -161,7 +162,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             jQuery.each(jQuery(".multiples-matrix-item-overlay.selected"), function(idx, item){
                                 selected_columns.push(jQuery(item).parent().data("columns"));
                             });
-                            jQuery(".add-edit-widget-dialog input.textType").attr("value", JSON.stringify(selected_columns));
+                            jQuery(".add-edit-widget-dialog input.textType[name*='charts']").attr("value", JSON.stringify(selected_columns));
                         });
                     if (loaded_settings.indexOf(JSON.stringify(tmp_columns)) > -1){
                         overlayed
@@ -174,8 +175,104 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
     jQuery(current_widget + " select:visible").trigger("change");
 });
 
-jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, charts){
+function redrawPreviewChart(base_chart, chartSettings){
     var container = jQuery(".multiples-preview[base_chart='" + base_chart + "']");
+    var absolute_url = container.attr("absolute_url");
+    jQuery(".chartPreview").remove();
+    jQuery("<div>")
+        .addClass("chartPreview")
+        .width(chartSettings.width)
+        .height(chartSettings.height)
+        .css("border", "2px solid green")
+        .appendTo("#multiples-resize")
+
+    jQuery("<iframe>")
+        .css("width",chartSettings.width+"px")
+        .css("height",chartSettings.height+"px")
+        .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width="+chartSettings.width+"&height="+chartSettings.height+"&maximized=true")
+        .appendTo(".chartPreview");
+
+}
+
+jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, charts, common_settings){
+    var container = jQuery(".multiples-preview[base_chart='" + base_chart + "']");
+    var header = container.closest(".dashboard-chart").find(".dashboard-header");
+    header.find(".eea-icon-gear").remove();
+    jQuery("<span>")
+      .attr('title', 'Size adjustments')
+      .addClass('eea-icon daviz-menuicon').addClass('eea-icon-gear')
+      .prependTo(header)
+      .click(function(){
+        jQuery("#multiples-resize").remove();
+        var chartSettings = {
+            width: 100,
+            height: 100,
+            chartWidth: "100%",
+            chartHeight: "100%",
+            chartLeft: "0%",
+            chartTop: "0%",
+            chartTitle: ""
+        };
+        jQuery.extend(true, chartSettings, common_settings);
+        var previewDiv = jQuery("<div>")
+                            .attr("id", "multiples-resize");
+        controlsDiv = jQuery("<div class='preview-controls'> </div>");
+        controlsDiv.append("<input class='chartsize chartWidth' type='number'/>");
+        controlsDiv.append("<span>x</span>");
+        controlsDiv.append("<input class='chartsize chartHeight' type='number'/>");
+        controlsDiv.append("<span>px</span>");
+        controlsDiv.append("<input value='Cancel' class='btn btn-inverse' type='button'/>");
+        controlsDiv.append("<input value='Save' class='btn btn-success' type='button'/>");
+        previewDiv.append(controlsDiv);
+
+        previewDiv.dialog({
+            dialogClass: "googlechart-dialog googlechart-preview-dialog",
+            modal: true,
+            width: chartSettings.width + 150,
+            height: chartSettings.height + 100,
+            title: "Size adjustments",
+            resize: function(){
+                console.log("resizeStart");
+                var elem = jQuery(this);
+                var tmp_width = elem.width();
+                var tmp_height = elem.height();
+
+                var prevWidth = jQuery(".preview-controls").attr("previousWidth");
+                var prevHeight = jQuery(".preview-controls").attr("previousHeight");
+                console.log(chartSettings.width)
+                console.log(tmp_width)
+                console.log(prevWidth)
+                console.log(chartSettings.width - prevWidth + tmp_width);
+                jQuery(".preview-controls .chartWidth").attr("value", chartSettings.width - prevWidth + tmp_width);
+                jQuery(".preview-controls .chartHeight").attr("value", chartSettings.height - prevHeight + tmp_height);
+                console.log("resize");
+            },
+            resizeStart: function(){
+                var elem = jQuery(this);
+                jQuery(".preview-controls").attr("previousWidth", elem.width());
+                jQuery(".preview-controls").attr("previousHeight", elem.height());
+            },
+            resizeStop: function(){
+                chartSettings.width = jQuery(".preview-controls .chartWidth").attr("value");
+                chartSettings.height = jQuery(".preview-controls .chartHeight").attr("value");
+
+                redrawPreviewChart(base_chart, chartSettings);
+                console.log("resizeStop");
+            },
+            create: function(){
+                console.log("create");
+            },
+            open: function(){
+                redrawPreviewChart(base_chart, chartSettings);
+
+                jQuery(".preview-controls .chartWidth").attr("value", chartSettings.width);
+                jQuery(".preview-controls .chartHeight").attr("value", chartSettings.height);
+
+                console.log("open");
+            },
+        });
+      });
+
     container.empty();
     var absolute_url = container.attr("absolute_url");
     jQuery.each(charts, function(idx, columns){

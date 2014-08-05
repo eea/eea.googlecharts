@@ -579,7 +579,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         .append(data)
         .appendTo(self.box);
       if (self.settings.wtype === "googlecharts.widgets.multiples"){
-        jQuery(document).trigger("multiplesEditPreviewReady", [self.settings.name.substr(10), JSON.parse(self.settings.charts)]);
+        jQuery(document).trigger("multiplesEditPreviewReady", [self.settings.name.substr(10), JSON.parse(self.settings.charts), JSON.parse(self.settings.settings)]);
       }
     });
 
@@ -845,7 +845,8 @@ DavizEdit.GoogleDashboardWidget.prototype = {
       self.settings.title = title.val();
     }
     if(self.settings.wtype === "googlecharts.widgets.multiples"){
-      self.settings.charts = jQuery(".add-edit-widget-dialog input.textType").attr("value");
+      self.settings.charts = jQuery(".add-edit-widget-dialog input.textType[name*='charts']").attr("value");
+      self.settings.settings = jQuery(".add-edit-widget-dialog input.textType[name*='settings']").attr("value");
     }
     var action = self.settings.dashboard.name + '.actions.save';
     var query = {};

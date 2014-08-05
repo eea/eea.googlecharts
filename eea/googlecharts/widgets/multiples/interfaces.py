@@ -18,6 +18,11 @@ class IAdd(Interface):
         description=_(u"JSON of selected charts"),
         required=True
     )
+    settings = schema.TextLine(
+        title=_(u"Settings"),
+        description=_(u"JSON of common chart settings"),
+        required=False
+    )
 
 
 class IEdit(Interface):
@@ -33,4 +38,9 @@ class IEdit(Interface):
         title=_(u"Charts"),
         description=_(u"JSON of selected charts"),
         required=True
+    )
+    settings = schema.TextLine(
+        title=_(u"Settings"),
+        description=_(u"JSON of common chart settings"),
+        required=False
     )
