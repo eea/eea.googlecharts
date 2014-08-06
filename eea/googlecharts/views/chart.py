@@ -432,8 +432,9 @@ class View(ViewForm):
         chart_id = self.request.get("chart", '')
 
         tmp_id = self.request.get("preview_id", "")
-        chart_preview_maximized = self.request.get('maximized', 'false')
+        chart_preview_interactive = self.request.get('interactive', 'true')
         chart_preview_columns = self.request.get('columns', '[]')
+        chart_preview_options = self.request.get('options', '{}')
         if tmp_id:
             mutator = queryAdapter(self.context, IVisualizationConfig)
             data = mutator.view('googlechart.googlecharts')
@@ -442,8 +443,9 @@ class View(ViewForm):
             config['available_columns'] = self.get_columns()
             config['preview_width'] = config['width']
             config['preview_height'] = config['height']
-            config['preview_maximized'] = chart_preview_maximized
+            config['preview_interactive'] = chart_preview_interactive
             config['preview_columns'] = chart_preview_columns
+            config['preview_options'] = chart_preview_options
             return config
 
         else:
@@ -472,8 +474,9 @@ class View(ViewForm):
             config['preview_height'] = chart_height
             config['data'] = self.get_rows()
             config['available_columns'] = self.get_columns()
-            config['preview_maximized'] = chart_preview_maximized
+            config['preview_interactive'] = chart_preview_interactive
             config['preview_columns'] = chart_preview_columns
+            config['preview_options'] = chart_preview_options
             return config
 
     def get_visualization_hash(self):

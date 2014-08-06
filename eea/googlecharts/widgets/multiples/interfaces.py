@@ -7,6 +7,11 @@ from eea.googlecharts.config import EEAMessageFactory as _
 class IAdd(Interface):
     """ Widget add schema
     """
+    title = schema.TextLine(
+        title=_(u"Title"),
+        description=_(u"Select the title of the small multiples"),
+        required=True,
+    )
     name = schema.Choice(
         title=_(u"Chart"),
         description=_(u"Select the chart for which you want the multiples"),
@@ -28,6 +33,11 @@ class IAdd(Interface):
 class IEdit(Interface):
     """ Widget edit schema
     """
+    title = schema.TextLine(
+        title=_(u"Title"),
+        description=_(u"Select the title of the small multiples"),
+        required=True,
+    )
     name = schema.Choice(
         title=_(u"Chart"),
         description=_(u"Select the chart for which you want the multiples"),

@@ -70,13 +70,19 @@
 
         var tableForChart = prepareForChart(options);
         chart_json.options.title = name;
-        if (preview_maximized){
+        if (!preview_interactive){
             chart_options.enableInteractivity = false;
-            chart_options.chartArea = {
+/*            chart_options.chartArea = {
                 'left':1,
                 'top':1,
                 'width':width - 2,
                 'height':height - 2
+            };*/
+            chart_options.chartArea = {
+                'left': preview_options.chartAreaLeft,
+                'top': preview_options.chartAreaTop,
+                'width': preview_options.chartAreaWidth - 2,
+                'height': preview_options.chartAreaHeight - 2
             };
             chart_options.legend = 'none';
         }
@@ -125,7 +131,8 @@
         var sortBy = '$sortBy';
         var sortAsc_str = '$sortAsc';
         var chart_unpivotSettings = ${unpivotsettings};
-        var preview_maximized = ${chart/preview_maximized};
+        var preview_interactive = ${chart/preview_interactive};
+        var preview_options = ${chart/preview_options};
         var preview_columns = JSON.parse(decodeURIComponent('${chart/preview_columns}'));
         "></script>
 
