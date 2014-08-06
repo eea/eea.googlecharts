@@ -184,7 +184,7 @@ function redrawPreviewChart(base_chart, chartSettings){
         .width(chartSettings.width)
         .height(chartSettings.height)
         .css("border", "2px solid green")
-        .appendTo("#multiples-resize")
+        .appendTo("#multiples-resize");
 
     jQuery("<iframe>")
         .css("width",chartSettings.width+"px")
@@ -224,7 +224,6 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
         controlsDiv.append("<input value='Cancel' class='btn btn-inverse' type='button'/>");
         controlsDiv.append("<input value='Save' class='btn btn-success' type='button'/>");
         previewDiv.append(controlsDiv);
-
         previewDiv.dialog({
             dialogClass: "googlechart-dialog googlechart-preview-dialog",
             modal: true,
@@ -232,20 +231,14 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
             height: chartSettings.height + 100,
             title: "Size adjustments",
             resize: function(){
-                console.log("resizeStart");
                 var elem = jQuery(this);
                 var tmp_width = elem.width();
                 var tmp_height = elem.height();
 
                 var prevWidth = jQuery(".preview-controls").attr("previousWidth");
                 var prevHeight = jQuery(".preview-controls").attr("previousHeight");
-                console.log(chartSettings.width)
-                console.log(tmp_width)
-                console.log(prevWidth)
-                console.log(chartSettings.width - prevWidth + tmp_width);
                 jQuery(".preview-controls .chartWidth").attr("value", chartSettings.width - prevWidth + tmp_width);
                 jQuery(".preview-controls .chartHeight").attr("value", chartSettings.height - prevHeight + tmp_height);
-                console.log("resize");
             },
             resizeStart: function(){
                 var elem = jQuery(this);
@@ -253,34 +246,49 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                 jQuery(".preview-controls").attr("previousHeight", elem.height());
             },
             resizeStop: function(){
-                chartSettings.width = jQuery(".preview-controls .chartWidth").attr("value");
-                chartSettings.height = jQuery(".preview-controls .chartHeight").attr("value");
+                chartSettings.width = parseInt(jQuery(".preview-controls .chartWidth").attr("value"), 10);
+                chartSettings.height = parseInt(jQuery(".preview-controls .chartHeight").attr("value"), 10);
 
                 redrawPreviewChart(base_chart, chartSettings);
-                console.log("resizeStop");
             },
             create: function(){
-                console.log("create");
             },
             open: function(){
                 redrawPreviewChart(base_chart, chartSettings);
 
                 jQuery(".preview-controls .chartWidth").attr("value", chartSettings.width);
                 jQuery(".preview-controls .chartHeight").attr("value", chartSettings.height);
-
-                console.log("open");
-            },
+                jQuery(".preview-controls .btn-success").bind("click", function(){
+                    var widget = jQuery("#multiples_"+base_chart).data("widget");
+                    widget.settings.settings = JSON.stringify(chartSettings);
+                    jQuery("#multiples-resize").dialog("close");
+                    widget.save(false, true);
+                });
+                jQuery(".preview-controls .btn-inverse").bind("click", function(){
+                    jQuery("#multiples-resize").dialog("close");
+                });
+            }
         });
       });
 
     container.empty();
+    var settings = {
+        width: 100,
+        height: 100,
+        chartWidth: "100%",
+        chartHeight: "100%",
+        chartLeft: "0%",
+        chartTop: "0%",
+        chartTitle: ""
+    };
+    jQuery.extend(settings, common_settings);
     var absolute_url = container.attr("absolute_url");
     jQuery.each(charts, function(idx, columns){
         columns_str = JSON.stringify(columns);
         jQuery("<iframe>")
-            .css("width","67px")
-            .css("height","67px")
-            .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width=67&height=67&maximized=true&columns=" + columns_str)
+            .css("width", settings.width + "px")
+            .css("height", settings.height + "px")
+            .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width=" + settings.width + "&height=" + settings.height + "&maximized=true&columns=" + columns_str)
             .appendTo(container);
     });
 

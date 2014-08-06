@@ -545,6 +545,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         .addClass('dashboard-chart')
         .width(self.settings.dashboard.width)
         .height(self.settings.dashboard.height)
+        .data("widget", self)
         .appendTo(self.context);
     }else{
       try{
