@@ -84,6 +84,7 @@
                 'width': preview_options.chartAreaWidth - 2,
                 'height': preview_options.chartAreaHeight - 2
             };
+            chart_options.title = preview_title;
             chart_options.legend = 'none';
         }
         var googlechart_params = {
@@ -132,8 +133,9 @@
         var sortAsc_str = '$sortAsc';
         var chart_unpivotSettings = ${unpivotsettings};
         var preview_interactive = ${chart/preview_interactive};
-        var preview_options = ${chart/preview_options};
+        var preview_options = JSON.parse(decodeURIComponent('${chart/preview_options}'));
         var preview_columns = JSON.parse(decodeURIComponent('${chart/preview_columns}'));
+        var preview_title = decodeURIComponent(${chart/preview_title});
         "></script>
 
     <div id="googlechart_dashboard">

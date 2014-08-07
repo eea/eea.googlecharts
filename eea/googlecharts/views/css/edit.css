@@ -2059,3 +2059,68 @@ input[type=text].eea-googlechart-trendlines-config-value{
     background-color:rgba(208,228,173,0.5)
 
 }
+
+.settingsDiv{
+    width:150px;
+    float:right;
+}
+
+.settingsDiv label{
+    font-weight: bold;
+}
+
+.multiples-config{
+    width: 100%;
+    height: 100%;
+}
+
+.multiples-config .multiples-base-preview{
+    width:300px;
+    height:300px;
+    float:left;
+}
+
+.multiples-config .multiples-matrix{
+    float:left;
+}
+
+.multiples-config .multiples-base-preview .base-chart-iframe{
+    width:300px;
+    height:300px;
+}
+
+.multiples-config .multiples-matrix .small-container{
+    float:left;
+    width:67px;
+    height:67px;
+    border:1px solid gray;
+    position:relative;
+}
+
+.multiples-config .multiples-matrix .small-chart{
+    width:67px;
+    height:67px;
+    position:absolute;
+    z-index:1;
+}
+
+.multiples-config .multiples-matrix .multiples-matrix-item-overlay{
+    width:67px;
+    height:67px;
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:2;
+    cursor:pointer;
+}
+
+#multiples-resize .chartPreview{
+    border:2px solid green;
+    position:relative;
+    float:left;
+}
+
+#multiples-resize .chartPreview .chartAreaResizable{
+    border:2px dashed green;
+    position:absolute;
+}
