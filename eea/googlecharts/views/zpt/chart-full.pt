@@ -82,7 +82,7 @@
             chart_options.title = preview_options.chartTitle;
             if (chart_options.title !== undefined){
                 jQuery.each(preview_columns, function(idx, value){
-                    chart_options.title = chart_options.title.split("{column_"+idx+"}").join(value);
+                    chart_options.title = chart_options.title.split("{column_"+idx+"}").join(transformedTable.available_columns[value]);
                 });
             }
 
