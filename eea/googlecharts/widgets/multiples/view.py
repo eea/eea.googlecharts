@@ -22,7 +22,3 @@ class View(Widget):
     @property
     def chart(self):
         return self.widget.get('name', '')[10:]
-
-    @property
-    def charts(self):
-        return self.widget.get('charts', [])

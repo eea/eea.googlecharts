@@ -2,8 +2,8 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
     var current_widget = ".googlechart-widget-" + view;
     jQuery(current_widget + " select").change(function(){
         if (view === "add"){
-            jQuery(".add-edit-widget-dialog input.textType[name*='charts']").attr("value", "[]");
-            jQuery(".add-edit-widget-dialog input.textType[name*='settings']").attr("value", "{}");
+            jQuery(".add-edit-widget-dialog input.textType[name*='multiples_charts']").attr("value", "[]");
+            jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", "{}");
         }
         jQuery(".multiples-config").empty();
         if ((jQuery(current_widget + " select").attr("value") !== undefined) &&
@@ -57,13 +57,13 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     allCols.push({id:col_id, type:col_opt.columnType});
                 });
                 allCols.sort(function(a, b){
-                    if (a.id > b.id){
+                    if (transformedTable.available_columns[a.id] > transformedTable.available_columns[b.id]){
                         return 1;
                     }
-                    if (a.id < b.id){
+                    if (transformedTable.available_columns[a.id] < transformedTable.available_columns[b.id]){
                         return -1;
                     }
-                    if (a.id === b.id){
+                    if (transformedTable.available_columns[a.id] === transformedTable.available_columns[b.id]){
                         return 0;
                     }
                 });
@@ -77,10 +77,22 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             .appendTo(".multiples-matrix");
                         return;
                     }
-                    if( pos < orig_cols.length){
+                    if (pos < orig_cols.length){
                         jQuery("<div>")
                             .css("clear","both")
                             .appendTo(".multiples-matrix");
+                        if (pos > 0){
+                            var row_label = transformedTable.available_columns[new_cols[pos - 1]];
+                            if (pos < orig_cols.length - 1){
+                                row_label = "Column: " + transformedTable.available_columns[orig_cols[pos - 1].id] + " replaced with " + row_label;
+                            }
+                            jQuery("<div>")
+                                .addClass("matrix-row-header-label")
+                                .addClass("matrix-row-header-level-" + (orig_cols.length - pos - 1))
+                                .text(row_label)
+                                .attr("title", row_label)
+                                .appendTo(".multiples-matrix");
+                        }
                     }
                     for (var i = 0; i < all_cols.length; i++){
                         if (orig_cols[pos].type === all_cols[i].type){
@@ -100,13 +112,40 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     }
                 }
                 build_column_combinations(0, originalCols, allCols, [], column_combinations);
-                var loaded_settings = jQuery(".add-edit-widget-dialog input.textType[name*='charts']").attr("value");
+                labels_for_matrix = [];
+                for (i = 0; i < column_combinations[0].length; i++){
+                    labels_for_matrix.push([]);
+                }
+                for (i = 0; i < column_combinations.length; i++){
+                    for (var j = 0; j < column_combinations[i].length; j++){
+                        if (jQuery.inArray(transformedTable.available_columns[column_combinations[i][j]], labels_for_matrix[j]) === -1){
+                            labels_for_matrix[j].push(transformedTable.available_columns[column_combinations[i][j]]);
+                        }
+                    }
+                }
+                for (i = 0; i < labels_for_matrix.length; i++){
+                    labels_for_matrix[i].sort();
+                }
+                var matrix_header = jQuery("<div>")
+                    .addClass("matrix-column-header");
+                jQuery(".multiples-matrix").prepend(matrix_header);
+                jQuery("<div>")
+                    .css("clear","both")
+                    .insertAfter(".matrix-column-header");
+                for (i = 0; i < labels_for_matrix[labels_for_matrix.length - 1].length; i++){
+                    jQuery("<div>")
+                        .addClass("matrix-column-header-label")
+                        .text(labels_for_matrix[labels_for_matrix.length - 1][i])
+                        .attr("title", labels_for_matrix[labels_for_matrix.length - 1][i])
+                        .appendTo(".matrix-column-header");
+                }
+                var loaded_settings = jQuery(".add-edit-widget-dialog input.textType[name*='multiples_charts']").attr("value");
                 jQuery.each(column_combinations, function(idx, tmp_columns){
                     var container = jQuery(".multiples-matrix").find("div").filter(function(){return $(this).data("columns") === tmp_columns;});
                     columns_str = encodeURIComponent(JSON.stringify(tmp_columns));
-                    var columns_title = "";
+                    var columns_title = "Used columns: ";
                     for (var i = 0; i < tmp_columns.length; i++){
-                        columns_title += tmp_columns[i];
+                        columns_title += transformedTable.available_columns[tmp_columns[i]];
                         if (i < tmp_columns.length - 1){
                             columns_title += ", ";
                         }
@@ -143,7 +182,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             jQuery.each(jQuery(".multiples-matrix-item-overlay.selected"), function(idx, item){
                                 selected_columns.push(jQuery(item).parent().data("columns"));
                             });
-                            jQuery(".add-edit-widget-dialog input.textType[name*='charts']").attr("value", JSON.stringify(selected_columns));
+                            jQuery(".add-edit-widget-dialog input.textType[name*='multiples_charts']").attr("value", JSON.stringify(selected_columns));
                         });
                     if (loaded_settings.indexOf(JSON.stringify(tmp_columns)) > -1){
                         overlayed
@@ -294,10 +333,15 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                 chartSettings.width = parseInt(jQuery(".settingsDiv .chartWidth").attr("value"), 10);
                 chartSettings.height = parseInt(jQuery(".settingsDiv .chartHeight").attr("value"), 10);
 
-                chartSettings.chartAreaLeft = chartSettings.chartAreaLeft / prevWidth * chartSettings.width;
-                chartSettings.chartAreaWidth = chartSettings.chartAreaWidth / prevWidth * chartSettings.width;
-                chartSettings.chartAreaTop = chartSettings.chartAreaTop / prevHeight * chartSettings.height;
-                chartSettings.chartAreaHeight = chartSettings.chartAreaHeight / prevHeight * chartSettings.height;
+                chartSettings.chartAreaLeft = parseInt(chartSettings.chartAreaLeft / prevWidth * chartSettings.width, 10);
+                chartSettings.chartAreaWidth = parseInt(chartSettings.chartAreaWidth / prevWidth * chartSettings.width, 10);
+                chartSettings.chartAreaTop = parseInt(chartSettings.chartAreaTop / prevHeight * chartSettings.height, 10);
+                chartSettings.chartAreaHeight = parseInt(chartSettings.chartAreaHeight / prevHeight * chartSettings.height, 10);
+
+                jQuery(".settingsDiv .chartAreaWidth").attr("value", chartSettings.chartAreaWidth);
+                jQuery(".settingsDiv .chartAreaHeight").attr("value", chartSettings.chartAreaHeight);
+                jQuery(".settingsDiv .chartAreaTop").attr("value", chartSettings.chartAreaTop);
+                jQuery(".settingsDiv .chartAreaLeft").attr("value", chartSettings.chartAreaLeft);
 
                 redrawPreviewChart(base_chart, chartSettings);
             },
@@ -315,7 +359,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                 jQuery(".settingsDiv .chartTitle").attr("value", chartSettings.chartTitle);
                 jQuery(".preview-controls .btn-success").bind("click", function(){
                     var widget = jQuery("#multiples_"+base_chart).data("widget");
-                    widget.settings.settings = JSON.stringify(chartSettings);
+                    widget.settings.multiples_settings = JSON.stringify(chartSettings);
                     jQuery("#multiples-resize").dialog("close");
                     widget.save(false, true);
                 });

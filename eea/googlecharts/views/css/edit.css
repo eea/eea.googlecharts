@@ -2135,3 +2135,31 @@ input[type=text].eea-googlechart-trendlines-config-value{
 .chartsettings.chartTitle {
     width:150px;
 }
+
+.matrix-column-header{
+    float:right;
+}
+.matrix-column-header-label {
+    float:left;
+    border:1px solid gray;
+    font-size:90%;
+    width:67px;
+}
+
+.matrix-row-header-label {
+    float:left;
+    font-weight:bold;
+}
+
+.matrix-row-header-level-0 {
+    font-size:90%;
+    width: 100px;
+    height:67px;
+    border:1px solid gray;
+    font-weight: normal;
+}
+
+div.field[id*='multiples_charts'],
+div.field[id*='multiples_settings'] {
+    display:none;
+}
