@@ -72,19 +72,20 @@
         chart_json.options.title = name;
         if (!preview_interactive){
             chart_options.enableInteractivity = false;
-/*            chart_options.chartArea = {
-                'left':1,
-                'top':1,
-                'width':width - 2,
-                'height':height - 2
-            };*/
             chart_options.chartArea = {
                 'left': preview_options.chartAreaLeft,
                 'top': preview_options.chartAreaTop,
                 'width': preview_options.chartAreaWidth - 2,
                 'height': preview_options.chartAreaHeight - 2
             };
-            chart_options.title = preview_title;
+
+            chart_options.title = preview_options.chartTitle;
+            if (chart_options.title !== undefined){
+                jQuery.each(preview_columns, function(idx, value){
+                    chart_options.title = chart_options.title.split("{column_"+idx+"}").join(value);
+                });
+            }
+
             chart_options.legend = 'none';
         }
         var googlechart_params = {
@@ -135,7 +136,6 @@
         var preview_interactive = ${chart/preview_interactive};
         var preview_options = JSON.parse(decodeURIComponent('${chart/preview_options}'));
         var preview_columns = JSON.parse(decodeURIComponent('${chart/preview_columns}'));
-        var preview_title = decodeURIComponent(${chart/preview_title});
         "></script>
 
     <div id="googlechart_dashboard">

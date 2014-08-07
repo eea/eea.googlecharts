@@ -120,7 +120,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     var options_str = encodeURIComponent(JSON.stringify(options));
                     jQuery("<iframe>")
                         .addClass("small-chart")
-                        .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=67&height=67&interactive=false&columns=" + columns_str + "&options=" + options_str + "&title=''")
+                        .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=67&height=67&interactive=false&columns=" + columns_str + "&options=" + options_str)
                         .appendTo(container);
                     var overlayed = jQuery("<div>")
                         .addClass("multiples-matrix-item-overlay")
@@ -170,7 +170,7 @@ function redrawPreviewChart(base_chart, chartSettings){
     jQuery("<iframe>")
         .css("width",chartSettings.width+"px")
         .css("height",chartSettings.height+"px")
-        .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width="+chartSettings.width+"&height="+chartSettings.height+"&interactive=false" + "&options=" + options_str + "&title='xxx'")
+        .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width="+chartSettings.width+"&height="+chartSettings.height+"&interactive=false" + "&options=" + options_str)
         .appendTo(".chartPreview");
     jQuery("<div>")
         .addClass("chartAreaResizable")
@@ -210,11 +210,12 @@ function redrawPreviewChart(base_chart, chartSettings){
 jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, charts, common_settings){
     var container = jQuery(".multiples-preview[base_chart='" + base_chart + "']");
     var header = container.closest(".dashboard-chart").find(".dashboard-header");
+    var removeSpan = header.find(".eea-icon-trash-o");
     header.find(".eea-icon-gear").remove();
     jQuery("<span>")
       .attr('title', 'Size adjustments')
       .addClass('eea-icon daviz-menuicon').addClass('eea-icon-gear')
-      .prependTo(header)
+      .insertAfter(removeSpan)
       .click(function(){
         jQuery("#multiples-resize").remove();
         var chartSettings = {
@@ -239,38 +240,38 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
         var settingsDiv = jQuery("<div>")
             .addClass("settingsDiv")
             .appendTo(previewDiv);
+        settingsDiv.append("<label>Title</label>");
+        settingsDiv.append("<label class='help'>ex: {column_0} - {column_1}</label>");
+        settingsDiv.append("<input class='chartsettings chartTitle' type='text'/>");
         settingsDiv.append("<label>Area size</label>");
-        settingsDiv.append("<input class='chartsize chartWidth' type='number'/>");
+        settingsDiv.append("<input class='chartsettings chartWidth' type='number'/>");
         settingsDiv.append("<span>x</span>");
-        settingsDiv.append("<input class='chartsize chartHeight' type='number'/>");
+        settingsDiv.append("<input class='chartsettings chartHeight' type='number'/>");
         settingsDiv.append("<span>px</span>");
         settingsDiv.append("<div style='clear:both'> </div>");
 
         settingsDiv.append("<label>Chart size</label>");
-        settingsDiv.append("<input class='chartsize chartAreaWidth' type='number'/>");
+        settingsDiv.append("<input class='chartsettings chartAreaWidth' type='number'/>");
         settingsDiv.append("<span>x</span>");
-        settingsDiv.append("<input class='chartsize chartAreaHeight' type='number'/>");
+        settingsDiv.append("<input class='chartsettings chartAreaHeight' type='number'/>");
         settingsDiv.append("<span>px</span>");
         settingsDiv.append("<div style='clear:both'> </div>");
 
         settingsDiv.append("<label>Chart position</label>");
         settingsDiv.append("<span>Left: </span>");
-        settingsDiv.append("<input class='chartsize chartAreaLeft' type='number'/>");
+        settingsDiv.append("<input class='chartsettings chartAreaLeft' type='number'/>");
         settingsDiv.append("<span>px</span>");
         settingsDiv.append("<div style='clear:both'> </div>");
         settingsDiv.append("<span>Top: </span>");
-        settingsDiv.append("<input class='chartsize chartAreaTop' type='number'/>");
+        settingsDiv.append("<input class='chartsettings chartAreaTop' type='number'/>");
         settingsDiv.append("<span>px</span>");
         settingsDiv.append("<div style='clear:both'> </div>");
 
-        jQuery(".chartsize").change(function(){
-            console.log("changed");
-        });
         previewDiv.dialog({
             dialogClass: "googlechart-dialog googlechart-preview-dialog",
             modal: true,
             width: chartSettings.width + 200,
-            height: chartSettings.height + 100,
+            height: chartSettings.height + 260,
             title: "Size adjustments",
             resize: function(){
                 var elem = jQuery(this);
@@ -311,6 +312,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                 jQuery(".settingsDiv .chartAreaHeight").attr("value", chartSettings.chartAreaHeight);
                 jQuery(".settingsDiv .chartAreaTop").attr("value", chartSettings.chartAreaTop);
                 jQuery(".settingsDiv .chartAreaLeft").attr("value", chartSettings.chartAreaLeft);
+                jQuery(".settingsDiv .chartTitle").attr("value", chartSettings.chartTitle);
                 jQuery(".preview-controls .btn-success").bind("click", function(){
                     var widget = jQuery("#multiples_"+base_chart).data("widget");
                     widget.settings.settings = JSON.stringify(chartSettings);
@@ -320,11 +322,12 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                 jQuery(".preview-controls .btn-inverse").bind("click", function(){
                     jQuery("#multiples-resize").dialog("close");
                 });
-                jQuery(".chartsize").change(function(){
+                jQuery(".chartsettings").change(function(){
                     var prevWidth = chartSettings.width;
                     var prevHeight = chartSettings.height;
                     chartSettings.width = parseInt(jQuery(".settingsDiv .chartWidth").attr("value"), 10);
                     chartSettings.height = parseInt(jQuery(".settingsDiv .chartHeight").attr("value"), 10);
+                    chartSettings.chartTitle = jQuery(".settingsDiv .chartTitle").attr("value");
                     if (prevWidth === chartSettings.width && prevHeight === chartSettings.height){
                         chartSettings.chartAreaWidth = parseInt(jQuery(".settingsDiv .chartAreaWidth").attr("value"), 10);
                         chartSettings.chartAreaHeight = parseInt(jQuery(".settingsDiv .chartAreaHeight").attr("value"), 10);
@@ -341,7 +344,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                         jQuery(".settingsDiv .chartAreaTop").attr("value", chartSettings.chartAreaTop);
                         jQuery(".settingsDiv .chartAreaLeft").attr("value", chartSettings.chartAreaLeft);
                         jQuery("#multiples-resize").dialog("option", "width", chartSettings.width + 200);
-                        jQuery("#multiples-resize").dialog("option", "height", chartSettings.height + 100);
+                        jQuery("#multiples-resize").dialog("option", "height", chartSettings.height + 260);
                     }
 
                     redrawPreviewChart(base_chart, chartSettings);
@@ -369,7 +372,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
         jQuery("<iframe>")
             .css("width", settings.width + "px")
             .css("height", settings.height + "px")
-            .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width=" + settings.width + "&height=" + settings.height + "&interactive=false&columns=" + columns_str + "&options=" + options_str + "&title='xxx'")
+            .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width=" + settings.width + "&height=" + settings.height + "&interactive=false&columns=" + columns_str + "&options=" + options_str)
             .appendTo(container);
     });
 
