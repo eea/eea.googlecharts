@@ -393,6 +393,7 @@
     -moz-transition: opacity .5s;
     -o-transition: opacity .5s;
     transition: opacity .5s;
+    z-index:3;
 }
 
 .dashboard-chart:hover .dashboard-header {
@@ -2162,4 +2163,11 @@ input[type=text].eea-googlechart-trendlines-config-value{
 div.field[id*='multiples_charts'],
 div.field[id*='multiples_settings'] {
     display:none;
+}
+
+.multiples-iframe-container{
+    float:left;
+    position:relative;
+    box-shadow:3px 3px 3px #ccc;
+    margin:2px;
 }

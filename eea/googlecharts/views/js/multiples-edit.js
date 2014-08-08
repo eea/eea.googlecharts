@@ -413,11 +413,43 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
     var absolute_url = container.attr("absolute_url");
     jQuery.each(charts, function(idx, columns){
         columns_str = encodeURIComponent(JSON.stringify(columns));
-        jQuery("<iframe>")
+        var iframeContainer = jQuery("<div>")
+            .addClass("multiples-iframe-container")
             .css("width", settings.width + "px")
             .css("height", settings.height + "px")
-            .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width=" + settings.width + "&height=" + settings.height + "&interactive=false&columns=" + columns_str + "&options=" + options_str)
+            .attr("used_columns", JSON.stringify(columns))
             .appendTo(container);
+        jQuery("<iframe>")
+            .css("position", "absolute")
+            .css("width", settings.width + "px")
+            .css("height", settings.height + "px")
+            .css("z-index", "1")
+            .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width=" + settings.width + "&height=" + settings.height + "&interactive=false&columns=" + columns_str + "&options=" + options_str)
+            .appendTo(iframeContainer);
+        jQuery("<div>")
+            .css("position", "absolute")
+            .css("width", settings.width + "px")
+            .css("height", settings.height + "px")
+            .css("z-index", "2")
+            .appendTo(iframeContainer);
+    });
+    container.sortable({
+      placeholder: 'ui-state-highlight',
+      forcePlaceholderSize: true,
+      opacity: 0.7,
+      delay: 300,
+      cursor: 'crosshair',
+      tolerance: 'pointer',
+      update: function(event, ui){
+        var sorted_charts_str = container.sortable('toArray',{attribute:'used_columns'});
+        var sorted_charts = [];
+        for (var i = 0; i < sorted_charts_str.length; i++){
+            sorted_charts.push(JSON.parse(sorted_charts_str[i]));
+        }
+        var widget = jQuery("#multiples_"+base_chart).data("widget");
+        widget.settings.multiples_charts = JSON.stringify(sorted_charts);
+        widget.save(false, true);
+      }
     });
 
 });
