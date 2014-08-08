@@ -2060,7 +2060,8 @@ input[type=text].eea-googlechart-trendlines-config-value{
     float:right;
 }
 
-.settingsDiv label{
+.settingsDiv label,
+#multiples-sort label{
     font-weight: bold;
 }
 
@@ -2171,3 +2172,4 @@ div.field[id*='multiples_settings'] {
     box-shadow:3px 3px 3px #ccc;
     margin:2px;
 }
+

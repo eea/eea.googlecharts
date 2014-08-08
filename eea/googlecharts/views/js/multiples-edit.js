@@ -204,7 +204,6 @@ function redrawPreviewChart(base_chart, chartSettings){
         .width(chartSettings.width)
         .height(chartSettings.height)
         .appendTo("#multiples-resize");
-
     var options_str = encodeURIComponent(JSON.stringify(chartSettings));
     jQuery("<iframe>")
         .css("width",chartSettings.width+"px")
@@ -248,8 +247,126 @@ function redrawPreviewChart(base_chart, chartSettings){
 
 jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, charts, common_settings){
     var container = jQuery(".multiples-preview[base_chart='" + base_chart + "']");
+    var absolute_url = container.attr("absolute_url");
     var header = container.closest(".dashboard-chart").find(".dashboard-header");
     var removeSpan = header.find(".eea-icon-trash-o");
+
+    header.find(".eea-icon-sort-alpha-asc").remove();
+    jQuery("<span>")
+      .attr('title', 'Sort options')
+      .addClass('eea-icon daviz-menuicon').addClass('eea-icon-sort-alpha-asc')
+      .insertAfter(removeSpan)
+      .click(function(){
+        jQuery("#multiples-sort").remove();
+        var sortDialog = jQuery("<div>")
+            .attr("id","multiples-sort");
+        var controlsDiv = jQuery("<div class='sort-controls'> </div>");
+        controlsDiv.append("<input value='Cancel' class='btn btn-inverse' type='button'/>");
+        controlsDiv.append("<input value='Apply sort' class='btn btn-success' type='button'/>");
+        controlsDiv.append("<div style='clear:both'> </div>");
+        controlsDiv.appendTo(sortDialog);
+        sortDialog.dialog({
+            dialogClass: "googlechart-dialog googlechart-preview-dialog",
+            modal: true,
+            title: "Sort options",
+            open: function(){
+
+                jQuery.getJSON(absolute_url + "/googlechart.get_charts", function (data){
+                    var sort_options = [];
+                    var base_chart_settings;
+                    jQuery.each(data.charts, function(idx, chart){
+                        if (chart.id === base_chart){
+                            base_chart_settings = chart;
+                        }
+                    });
+                    var columnsFromSettings = getColumnsFromSettings(JSON.parse(base_chart_settings.columns));
+                    var options = {
+                        originalTable : all_rows,
+                        normalColumns : columnsFromSettings.normalColumns,
+                        pivotingColumns : columnsFromSettings.pivotColumns,
+                        valueColumn : columnsFromSettings.valueColumn,
+                        availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
+                        unpivotSettings : base_chart_settings.unpivotsettings || {},
+                        filters : base_chart_settings.rowFilters || null
+                    };
+                    var transformedTable = transformTable(options);
+                    var titles = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).chartTitle;
+                    if (titles !== ""){
+                        sort_options.push({value:"asc_by_title", text:"Asc by Title"});
+                        sort_options.push({value:"desc_by_title", text:"Desc by Title"});
+                    }
+                    if (JSON.parse(base_chart_settings.config).chartType === 'PieChart'){
+                        var base_columns = JSON.parse(base_chart_settings.columns).prepared;
+                        var first_column = "";
+                        for (var i = 0; i < base_columns.length; i++){
+                            if ((base_columns[i].status === 1) && (first_column === "")){
+                                first_column = base_columns[i].name;
+                            }
+                        }
+                        for (i = 0; i < transformedTable.items.length; i++){
+                            sort_options.push({value:"asc_by_row_" + transformedTable.items[i][first_column], text:"Asc by " + transformedTable.items[i][first_column]});
+                            sort_options.push({value:"desc_by_row_" + transformedTable.items[i][first_column], text:"Desc by " + transformedTable.items[i][first_column]});
+                        }
+                    }
+                    jQuery("<label>")
+                        .text("Sort small multiple charts by:")
+                        .appendTo("#multiples-sort");
+                    jQuery("<select>")
+                        .addClass("multiples-sort-types")
+                        .appendTo("#multiples-sort");
+                    jQuery("<option>")
+                        .text("(nothing selected)")
+                        .attr("selected", "selected")
+                        .appendTo(".multiples-sort-types");
+                    for (var i = 0; i < sort_options.length; i++){
+                        jQuery("<option>")
+                            .text(sort_options[i].text)
+                            .attr("value", sort_options[i].value)
+                            .appendTo(".multiples-sort-types");
+                    }
+                    jQuery(".sort-controls .btn-success").data("transformedTable", transformedTable);
+                });
+                jQuery(".sort-controls .btn-success").bind("click", function(){
+                    var selectedSort = jQuery(".multiples-sort-types option:selected").attr("value");
+                    var charts = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_charts);
+                    var charts_for_sort = [];
+                    chart_title = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).chartTitle;
+                    var transformedTable = jQuery(".sort-controls .btn-success").data("transformedTable");
+                    jQuery.each(charts, function(idx, chart){
+                        var tmp_chart = {};
+                        tmp_chart.chart = chart;
+                        tmp_chart.title = chart_title;
+                        jQuery.each(chart, function(idx2, value){
+                            tmp_chart.title = tmp_chart.title.split("{column_"+idx2+"}").join(transformedTable.available_columns[value]);
+                        });
+                        charts_for_sort.push(tmp_chart);
+                    });
+                    charts_for_sort.sort(function(a, b){
+                        if (a.title > b.title){
+                            return 1;
+                        }
+                        if (a.title < b.title){
+                            return -1;
+                        }
+                        if (a.title === b.title){
+                            return 0;
+                        }
+                    });
+                    var sorted_charts = [];
+                    for (var i = 0; i < charts_for_sort.length; i++){
+                        sorted_charts.push(charts_for_sort[i].chart);
+                    }
+                    var widget = jQuery("#multiples_"+base_chart).data("widget");
+                    widget.settings.multiples_charts = JSON.stringify(sorted_charts);
+                    jQuery("#multiples-sort").dialog("close");
+                    widget.save(false, true);
+                });
+                jQuery(".sort-controls .btn-inverse").bind("click", function(){
+                    jQuery("#multiples-sort").dialog("close");
+                });
+            }
+         });
+      });
     header.find(".eea-icon-gear").remove();
     jQuery("<span>")
       .attr('title', 'Size adjustments')
@@ -410,7 +527,6 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
     };
     jQuery.extend(settings, common_settings);
     var options_str = encodeURIComponent(JSON.stringify(settings));
-    var absolute_url = container.attr("absolute_url");
     jQuery.each(charts, function(idx, columns){
         columns_str = encodeURIComponent(JSON.stringify(columns));
         var iframeContainer = jQuery("<div>")
@@ -440,6 +556,14 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
       delay: 300,
       cursor: 'crosshair',
       tolerance: 'pointer',
+      start: function(event, ui){
+        jQuery(".dashboard-chart:hover .dashboard-header")
+            .css("opacity", "0");
+      },
+      stop: function(event, ui){
+        jQuery(".dashboard-chart:hover .dashboard-header")
+            .css("opacity", "");
+      },
       update: function(event, ui){
         var sorted_charts_str = container.sortable('toArray',{attribute:'used_columns'});
         var sorted_charts = [];
