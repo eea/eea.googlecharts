@@ -297,15 +297,13 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                             text:"Asc by Title",
                             type:"title",
                             direction:"asc",
-                            field:"title"
-                            });
+                        });
                         sort_options.push({
                             value:"desc_by_title",
                             text:"Desc by Title",
                             type:"title",
                             direction:"desc",
-                            field:"title"
-                            });
+                        });
                     }
                     if (JSON.parse(base_chart_settings.config).chartType === 'PieChart'){
                         var base_columns = JSON.parse(base_chart_settings.columns).prepared;
@@ -318,18 +316,20 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                         for (i = 0; i < transformedTable.items.length; i++){
                             sort_options.push({
                                 value:"asc_by_row_" + transformedTable.items[i][first_column],
-                                text:"Asc by " + transformedTable.items[i][first_column],
+                                text:"Asc by row " + transformedTable.items[i][first_column],
                                 type:"row",
                                 direction:"asc",
-                                field:first_column
-                                });
+                                column:first_column,
+                                row: transformedTable.items[i][first_column]
+                            });
                             sort_options.push({
                                 value:"desc_by_row_" + transformedTable.items[i][first_column],
-                                text:"Desc by " + transformedTable.items[i][first_column],
+                                text:"Desc by row " + transformedTable.items[i][first_column],
                                 type:"row",
                                 direction:"desc",
-                                field:first_column
-                                });
+                                column:first_column,
+                                row: transformedTable.items[i][first_column]
+                            });
                         }
                     }
                     jQuery("<label>")
@@ -362,24 +362,38 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                     jQuery.each(charts, function(idx, chart){
                         var tmp_chart = {};
                         tmp_chart.chart = chart;
-                        tmp_chart.title = chart_title;
+                        tmp_chart.sort_value = chart_title;
                         jQuery.each(chart, function(idx2, value){
-                            tmp_chart.title = tmp_chart.title.split("{column_"+idx2+"}").join(transformedTable.available_columns[value]);
+                            tmp_chart.sort_value = tmp_chart.sort_value.split("{column_"+idx2+"}").join(transformedTable.available_columns[value]);
                         });
                         charts_for_sort.push(tmp_chart);
                     });
                     if (selectedSortSettings.type === "title"){
-                        charts_for_sort.sort(function(a, b){
-                            if (a.title > b.title){
-                                return 1;
+                    }
+                    if (selectedSortSettings.type === "row"){
+                        var selectedRow;
+                        for (var i = 0; i < transformedTable.items.length; i++){
+                            if ((transformedTable.items[i][selectedSortSettings.column] === selectedSortSettings.row) && (selectedRow === undefined)){
+                                selectedRow = transformedTable.items[i];
                             }
-                            if (a.title < b.title){
-                                return -1;
-                            }
-                            if (a.title === b.title){
-                                return 0;
-                            }
-                        });
+                        }
+                        for (var i = 0; i < charts_for_sort.length; i++){
+                            charts_for_sort[i].sort_value = selectedRow[charts_for_sort[i].chart[1]];
+                        }
+                    }
+                    charts_for_sort.sort(function(a, b){
+                        if (a.sort_value > b.sort_value){
+                            return 1;
+                        }
+                        if (a.sort_value < b.sort_value){
+                            return -1;
+                        }
+                        if (a.sort_value === b.sort_value){
+                            return 0;
+                        }
+                    });
+                    for (var i = 0; i < charts_for_sort.length; i++){
+                        delete charts_for_sort[i].sort_value;
                     }
                     var sorted_charts = [];
                     for (var i = 0; i < charts_for_sort.length; i++){
