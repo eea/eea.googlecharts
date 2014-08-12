@@ -1,8 +1,8 @@
 Changelog
 =========
 
-10.8-dev - (unreleased)
------------------------
+10.8 - (2014-08-12)
+-------------------
 * Feature: Added print.css and include it to embed-chart and embed-dashboard
   templates (media="print") in order to easily customize
   embedded charts and dashboards look & feel while printing and exporting to PDF
