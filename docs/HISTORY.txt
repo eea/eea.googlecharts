@@ -3,6 +3,8 @@ Changelog
 
 10.9-dev - (unreleased)
 -----------------------
+* Bug fix: Disable lazy load of embedded charts within PDF export
+  [voineali refs #20523]
 
 10.8 - (2014-08-12)
 -------------------
