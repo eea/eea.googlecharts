@@ -18,14 +18,9 @@ class IAdd(Interface):
         required=True,
         vocabulary=u"eea.googlecharts.vocabularies.multiples.add"
     )
-    multiples_charts = schema.TextLine(
-        title=_(u"Charts"),
-        description=_(u"JSON of selected charts"),
-        required=True
-    )
     multiples_settings = schema.TextLine(
         title=_(u"Settings"),
-        description=_(u"JSON of common chart settings"),
+        description=_(u"JSON of small multiple settings"),
         required=False
     )
 
@@ -44,13 +39,8 @@ class IEdit(Interface):
         required=True,
         vocabulary=u"eea.googlecharts.vocabularies.multiples.edit"
     )
-    multiples_charts = schema.TextLine(
-        title=_(u"Charts"),
-        description=_(u"JSON of selected charts"),
-        required=True
-    )
     multiples_settings = schema.TextLine(
         title=_(u"Settings"),
-        description=_(u"JSON of common chart settings"),
+        description=_(u"JSON of small multiple settings"),
         required=False
     )

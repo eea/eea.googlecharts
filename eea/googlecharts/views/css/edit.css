@@ -2161,7 +2161,6 @@ input[type=text].eea-googlechart-trendlines-config-value{
     font-weight: normal;
 }
 
-div.field[id*='multiples_charts'],
 div.field[id*='multiples_settings'] {
     display:none;
 }

@@ -2,8 +2,11 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
     var current_widget = ".googlechart-widget-" + view;
     jQuery(current_widget + " select").change(function(){
         if (view === "add"){
-            jQuery(".add-edit-widget-dialog input.textType[name*='multiples_charts']").attr("value", "[]");
-            jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", "{}");
+            var empty_settings = {
+                charts:[],
+                settings:{}
+            };
+            jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(empty_settings));
         }
         jQuery(".multiples-config").empty();
         if ((jQuery(current_widget + " select").attr("value") !== undefined) &&
@@ -139,7 +142,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         .attr("title", labels_for_matrix[labels_for_matrix.length - 1][i])
                         .appendTo(".matrix-column-header");
                 }
-                var loaded_settings = jQuery(".add-edit-widget-dialog input.textType[name*='multiples_charts']").attr("value");
+                var loaded_settings = JSON.stringify(JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value")).charts);
                 jQuery.each(column_combinations, function(idx, tmp_columns){
                     var container = jQuery(".multiples-matrix").find("div").filter(function(){return $(this).data("columns") === tmp_columns;});
                     columns_str = encodeURIComponent(JSON.stringify(tmp_columns));
@@ -182,7 +185,9 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             jQuery.each(jQuery(".multiples-matrix-item-overlay.selected"), function(idx, item){
                                 selected_columns.push(jQuery(item).parent().data("columns"));
                             });
-                            jQuery(".add-edit-widget-dialog input.textType[name*='multiples_charts']").attr("value", JSON.stringify(selected_columns));
+                            var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
+                            tmp_settings.charts = selected_columns;
+                            jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
                         });
                     if (loaded_settings.indexOf(JSON.stringify(tmp_columns)) > -1){
                         overlayed
@@ -245,7 +250,9 @@ function redrawPreviewChart(base_chart, chartSettings){
         });
 }
 
-jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, charts, common_settings){
+jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, multiples_settings){
+    var charts = multiples_settings.charts;
+    var common_settings = multiples_settings.settings;
     var container = jQuery(".multiples-preview[base_chart='" + base_chart + "']");
     var absolute_url = container.attr("absolute_url");
     var header = container.closest(".dashboard-chart").find(".dashboard-header");
@@ -290,25 +297,26 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                         filters : base_chart_settings.rowFilters || null
                     };
                     var transformedTable = transformTable(options);
-                    var titles = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).chartTitle;
+                    var titles = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).settings.chartTitle;
                     if (titles !== ""){
                         sort_options.push({
                             value:"asc_by_title",
                             text:"Asc by Title",
                             type:"title",
-                            direction:"asc",
+                            direction:"asc"
                         });
                         sort_options.push({
                             value:"desc_by_title",
                             text:"Desc by Title",
                             type:"title",
-                            direction:"desc",
+                            direction:"desc"
                         });
                     }
+                    var i;
                     if (JSON.parse(base_chart_settings.config).chartType === 'PieChart'){
                         var base_columns = JSON.parse(base_chart_settings.columns).prepared;
                         var first_column = "";
-                        for (var i = 0; i < base_columns.length; i++){
+                        for (i = 0; i < base_columns.length; i++){
                             if ((base_columns[i].status === 1) && (first_column === "")){
                                 first_column = base_columns[i].name;
                             }
@@ -353,11 +361,12 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                     jQuery(".sort-controls .btn-success").data("transformedTable", transformedTable);
                 });
                 jQuery(".sort-controls .btn-success").bind("click", function(){
+                    var i;
                     var selectedSort = jQuery(".multiples-sort-types option:selected").attr("value");
                     var selectedSortSettings = jQuery(".multiples-sort-types option:selected").data("sort_settings");
-                    var charts = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_charts);
+                    var charts = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).charts;
                     var charts_for_sort = [];
-                    chart_title = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).chartTitle;
+                    chart_title = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).settings.chartTitle;
                     var transformedTable = jQuery(".sort-controls .btn-success").data("transformedTable");
                     jQuery.each(charts, function(idx, chart){
                         var tmp_chart = {};
@@ -368,16 +377,14 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                         });
                         charts_for_sort.push(tmp_chart);
                     });
-                    if (selectedSortSettings.type === "title"){
-                    }
                     if (selectedSortSettings.type === "row"){
                         var selectedRow;
-                        for (var i = 0; i < transformedTable.items.length; i++){
+                        for (i = 0; i < transformedTable.items.length; i++){
                             if ((transformedTable.items[i][selectedSortSettings.column] === selectedSortSettings.row) && (selectedRow === undefined)){
                                 selectedRow = transformedTable.items[i];
                             }
                         }
-                        for (var i = 0; i < charts_for_sort.length; i++){
+                        for (i = 0; i < charts_for_sort.length; i++){
                             charts_for_sort[i].sort_value = selectedRow[charts_for_sort[i].chart[1]];
                         }
                     }
@@ -392,18 +399,20 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                             return 0;
                         }
                     });
-                    for (var i = 0; i < charts_for_sort.length; i++){
+                    for (i = 0; i < charts_for_sort.length; i++){
                         delete charts_for_sort[i].sort_value;
                     }
                     var sorted_charts = [];
-                    for (var i = 0; i < charts_for_sort.length; i++){
+                    for (i = 0; i < charts_for_sort.length; i++){
                         sorted_charts.push(charts_for_sort[i].chart);
                     }
                     if (selectedSortSettings.direction === "desc"){
                         sorted_charts.reverse();
                     }
                     var widget = jQuery("#multiples_"+base_chart).data("widget");
-                    widget.settings.multiples_charts = JSON.stringify(sorted_charts);
+                    var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                    tmp_settings.charts = sorted_charts;
+                    widget.settings.multiples_settings = JSON.stringify(tmp_settings);
                     jQuery("#multiples-sort").dialog("close");
                     widget.save(false, true);
                 });
@@ -522,7 +531,9 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
                 jQuery(".settingsDiv .chartTitle").attr("value", chartSettings.chartTitle);
                 jQuery(".preview-controls .btn-success").bind("click", function(){
                     var widget = jQuery("#multiples_"+base_chart).data("widget");
-                    widget.settings.multiples_settings = JSON.stringify(chartSettings);
+                    var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                    tmp_settings.settings = chartSettings;
+                    widget.settings.multiples_settings = JSON.stringify(tmp_settings);
                     jQuery("#multiples-resize").dialog("close");
                     widget.save(false, true);
                 });
@@ -617,7 +628,9 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, cha
             sorted_charts.push(JSON.parse(sorted_charts_str[i]));
         }
         var widget = jQuery("#multiples_"+base_chart).data("widget");
-        widget.settings.multiples_charts = JSON.stringify(sorted_charts);
+        var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+        tmp_settings.charts = sorted_charts;
+        widget.settings.multiples_settings = JSON.stringify(tmp_settings);
         widget.save(false, true);
       }
     });
