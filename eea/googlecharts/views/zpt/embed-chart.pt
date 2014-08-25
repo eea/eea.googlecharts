@@ -40,7 +40,16 @@
 <tal:block tal:define="enabled_chart python:False">
 <metal:chart define-macro="chart" tal:condition="enabled_chart">
     <tal:block tal:define="chart view/get_chart; vhash view/get_visualization_hash">
-    <script type="text/javascript" tal:define="sortFilter python: chart.get('sortFilter','__disabled__'); row_filters python: chart.get('row_filters','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart); GoogleChartsConfig view/get_chart_json; unpivotSettings python:view.get_unpivotSettings(chart)"
+    <script type="text/javascript"
+        tal:define="
+            sortFilter python: chart.get('sortFilter','__disabled__');
+            row_filters python: chart.get('row_filters','{}');
+            sortBy python: chart.get('sortBy','');
+            sortAsc python: chart.get('sortAsc','asc');
+            columnFilters python: view.get_columnfilters_js(chart);
+            GoogleChartsConfig view/get_chart_json;
+            unpivotSettings python:view.get_unpivotSettings(chart);
+            print python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;"
         tal:content="structure string:
             var chart_columns_$vhash = ${chart/columns};
             var merged_rows_$vhash = ${chart/data};
@@ -67,6 +76,7 @@
             var GoogleChartsConfig_$vhash = $GoogleChartsConfig;
             var isInline_$vhash = '$inline';
             var unpivotSettings_$vhash = $unpivotSettings;
+            var print = $print;
 
             var googlechart_config_array_$vhash = [];
             var settings_$vhash = [];
@@ -133,17 +143,20 @@ guessSeries(settings_$vhash);
                     name: name_$vhash,
                     isInline: isInline_$vhash
                 };
-                if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
-                    if (isInline_$vhash !== 'True'){
-                        drawChart(settings_$vhash, other_options_$vhash);
-                    }
-                    else{
-                        jQuery('#googlechart_dashboard_$vhash')
-                            .addClass('not_visible')
-                            .attr('google_hash', '$vhash')
-                            .data('settings', settings_$vhash)
-                            .data('other_options', other_options_$vhash);
-                    }
+
+                if(print){
+                    drawChart(settings_$vhash, other_options_$vhash);
+                }else if(jQuery('#googlechart_dashboard_$vhash').is(':visible')){
+                        if (isInline_$vhash !== 'True'){
+                            drawChart(settings_$vhash, other_options_$vhash);
+                        }
+                        else{
+                            jQuery('#googlechart_dashboard_$vhash')
+                                .addClass('not_visible')
+                                .attr('google_hash', '$vhash')
+                                .data('settings', settings_$vhash)
+                                .data('other_options', other_options_$vhash);
+                        }
                 }
             });
             function hashchanged(){
