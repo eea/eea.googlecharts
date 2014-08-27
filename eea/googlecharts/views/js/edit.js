@@ -1513,6 +1513,7 @@ function redrawEditorChart() {
     tmpwrapper.setDataTable(tableForChart);
 
     google.visualization.events.addListener(tmpwrapper, 'ready', function(event){
+        resizeTableConfigurator(false);
         fixSVG("#google-visualization-charteditor-preview-div-chart");
     });
 
@@ -1897,7 +1898,6 @@ function addPaletteConfig(){
                 .addClass("eea-googlechart-select")
                 .change(function(){
                     jQuery("#googlechart_palettes").attr("value", jQuery(this).attr("value"));
-                    console.log("1");
                     updatePalette(false);
                 })
                 .appendTo(section);
@@ -1916,7 +1916,6 @@ function addPaletteConfig(){
                 .attr("id", "googlechart_preview_palette_editor")
                 .appendTo(section);
             jQuery(".eea-googlechart-colorpalettes-config-value").attr("value", jQuery("#googlechart_palettes").attr("value"));
-            console.log("2");
             if (JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value")).chartType !== "PieChart"){
                 updatePalette(false);
             }
@@ -2657,16 +2656,21 @@ function resizeTableConfigurator(forced){
         var fullheight = jQuery(".googlecharts_columns_config").height();
         var chart_preview = jQuery(".google-visualization-charteditor-preview-td");
         var newTable = jQuery("#newTable");
-        var helperheight = chart_preview.offset().top;
-        var container_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
+        var offset = jQuery(".googlechart_table_config_scaleable").offset();
+        var helper = jQuery(".googlechart_chart_config_info.hint");
+        var helperheight = helper.height() + parseFloat(helper.css("margin-top")) + parseFloat(helper.css("margin-bottom")) + parseFloat(helper.css("padding-top")) + parseFloat(helper.css("padding-bottom"));
+
+        var container_heightstr = 'height:'+(fullheight - helperheight - 50)+'px;width:'+(fullwidth-340)+'px;';
+        jQuery(".googlechart_table_config_scaleable").attr("style",container_heightstr);
+        var panel = jQuery(".panel-container");
+        jQuery(".googlechart_table_config_scaleable").offset({top:panel.offset().top + 5 + panel.height(), left: offset.left});
+
         var accordion_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
         var accordion_container_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
-        var offset = jQuery(".googlechart_table_config_scaleable").offset();
-        jQuery(".googlechart_table_config_scaleable").attr("style",container_heightstr);
         jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
         jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
-        jQuery(".googlechart_table_config_scaleable").offset(offset);
-        newTable.height(fullheight - newTable.offset().top + 30);
+        newTable.height(newTable.parent().height() - (newTable.offset().top - newTable.parent().offset().top) - 100);
+        console.log(newTable.height());
         grid.resizeCanvas();
     }
 }
