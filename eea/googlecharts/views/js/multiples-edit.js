@@ -49,7 +49,15 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 base_chart_config = JSON.parse(base_chart_settings.config);
                 base_chart_options = JSON.parse(base_chart_settings.options);
                 columns_config = JSON.parse(base_chart_settings.columns);
+                jQuery("<div>")
+                    .text("Select column or row filter to be replaced on the horizontal axis")
+                    .appendTo(".multiples-matrix");
 
+                jQuery("<div>")
+                    .text("Select column or row filter to be replaced on the vertical axis")
+                    .appendTo(".multiples-matrix");
+
+                /*
                 var originalCols = [];
                 var allCols = [];
                 for (var i = 0; i < columnsFromSettings.columns.length; i++){
@@ -194,6 +202,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             .addClass("selected eea-icon eea-icon-check");
                     }
                 });
+                */
             });
         }
     });

@@ -1,12 +1,17 @@
 Changelog
 =========
 
-10.9-dev - (unreleased)
+11.0-dev - (unreleased)
 -----------------------
 * Feature: Implement small multiples/trellis charts
   [szabozo0 refs #19055]
+
+10.9 - (2014-08-27)
+-------------------
 * Bug fix: Disable lazy load of embedded charts within PDF export
   [voineali refs #20523]
+* Bug fix: Fixed layout for table for chart
+  [szabozo0 refs #20828]
 
 10.8 - (2014-08-12)
 -------------------
