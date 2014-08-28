@@ -344,6 +344,10 @@
     name="eea.googlecharts.images"
     directory="./imgs" />
 
+  <browser:resourceDirectory
+    name="eea.googlecharts.jst"
+    directory="./js/templates" />
+
   <subscriber
     for="eea.app.visualization.interfaces.IVisualizationEnabled
          eea.app.visualization.interfaces.IVisualizationFacetDeletedEvent"

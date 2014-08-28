@@ -4,6 +4,18 @@
   i18n_domain="eea">
 
 
+  <!-- 9.3 => 11.0 -->
+  <genericsetup:upgradeSteps
+    source="9.3"
+    destination="11.0"
+    profile="eea.googlecharts:default">
+
+    <genericsetup:upgradeDepends
+      title="Install collective.js.underscore"
+      import_profile="collective.js.underscore:default"
+      />
+  </genericsetup:upgradeSteps>
+
   <!-- * => 9.3 -->
   <genericsetup:upgradeSteps
     source="*"

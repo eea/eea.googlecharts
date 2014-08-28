@@ -1,0 +1,14 @@
+<script class="template" id="noteDialog" type="text/x-underscore-template">
+    <div class="googlecharts_note_config">
+        <div class="field">
+            <label>Title</label>
+            <div class="formHelp">Note title</div>
+            <input type="text" value="<%= data.note_title %>"/>
+        </div>
+        <div class="field">
+            <label>Text</label>
+            <div class="formHelp">Note body</div>
+            <textarea id="googlechart_note_add_<%= data.chart_id %>"><%= data.note_text %></textarea>
+        </div>
+    </div>
+</script>

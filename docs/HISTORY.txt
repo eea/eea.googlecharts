@@ -3,6 +3,8 @@ Changelog
 
 11.0-dev - (unreleased)
 -----------------------
+* Feature: adding Underscore.js template support
+  [batradav refs #19048]
 
 10.9 - (2014-08-27)
 -------------------

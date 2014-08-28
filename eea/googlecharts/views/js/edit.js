@@ -4,6 +4,7 @@ var chartEditor = null;
 var chartId = '';
 var drawing = false;
 var chartWrapper;
+var Templates = {};
 
 var defaultChart = {
            'chartType':'LineChart',
@@ -314,19 +315,15 @@ function reloadChartNotes(id){
             .click(function(){
                 jQuery(".googlecharts_note_config").remove();
 
-                var editDialog = jQuery('' +
-                '<div class="googlecharts_note_config">' +
-                    '<div class="field">' +
-                        '<label>Title</label>' +
-                        '<div class="formHelp">Note title</div>' +
-                        '<input type="text" value="' + note.title + '"/>' +
-                    '</div>' +
-                    '<div class="field">' +
-                        '<label>Text</label>' +
-                        '<div class="formHelp">Note body</div>' +
-                        '<textarea id="googlechart_note_add_' + id + '">' + note.text + '</textarea>' +
-                    '</div>' +
-                '</div>');
+                var template = Templates.noteDialog({
+                  data: {
+                    chart_id: id,
+                    note_title: note.title,
+                    note_text: note.text
+                  }
+                });
+
+                var editDialog = jQuery(template);
 
                 var isTinyMCE = false;
                 editDialog.dialog({
@@ -1324,7 +1321,7 @@ function validatePointRotation(rotation){
         alert(err);
         return false;
     }
-    return true;    
+    return true;
 }
 
 function validatePointSides(sides){
@@ -1340,11 +1337,11 @@ function validatePointSides(sides){
         alert(err);
         return false;
     }
-    return true;    
+    return true;
 }
 
 function getValidatedLineDashStyle(value){
-    try { 
+    try {
         var values = value.split(',');
         var int_values = [];
         patched_each(values, function(idx, val){
@@ -1701,7 +1698,7 @@ function addCustomSettings() {
         patched_each(shapes, function (i, item) {
             p_shape.append($('<option>', {
                 "value": item,
-                "text" : item 
+                "text" : item
             }));
         });
 
@@ -5389,19 +5386,13 @@ function openAddChartNoteDialog(id){
     var context = jQuery('#googlechartid_' + id);
     jQuery(".googlecharts_note_config").remove();
 
-    var adddialog = jQuery('' +
-    '<div class="googlecharts_note_config">' +
-        '<div class="field">' +
-            '<label>Title</label>' +
-            '<div class="formHelp">Note title</div>' +
-            '<input type="text" class="googlecharts_note_title" />' +
-        '</div>' +
-        '<div class="field">' +
-            '<label>Text</label>' +
-            '<div class="formHelp">Note body</div>' +
-            '<textarea class="googlecharts_note_text" id="googlechart_note_add_' + id + '"></textarea>' +
-        '</div>' +
-    '</div>');
+    var template = Templates.noteDialog({
+      data: {
+        chart_id: id
+      }
+    });
+
+    var adddialog = jQuery(template);
 
     var isTinyMCE = false;
     adddialog.dialog({
@@ -6184,7 +6175,7 @@ function init_googlecharts_edit(){
 function manageCustomSettings() {
     jQuery("body").off("click", "#google-visualization-charteditor-panel-navigate-div div:nth-child(3)")
         .on("click", "#google-visualization-charteditor-panel-navigate-div div:nth-child(3)", function(evt){
-            setTimeout(addCustomSettings, 1);    
+            setTimeout(addCustomSettings, 1);
         });
     jQuery("body").off("click", ".charts-menuitem")
         .on("click", ".charts-menuitem", function(evt){
@@ -6360,13 +6351,29 @@ function overrideSparklinesThumbnail(){
     });
 }
 
+function load_templates(){
+  jQuery.ajax({
+    url: "++resource++eea.googlecharts.jst/edit.jst",
+    cache: false,
+    type: "GET",
+    success: function(templates){
+      var body = $(templates);
+      _.each(body.filter("script.template"), function(template){
+        Templates[template.id] = _.template(template.textContent);
+      }, this);
+    }
+  });
+}
+
 jQuery(document).ready(function(){
     charteditor_css = jQuery("link[rel='stylesheet'][href*='charteditor']");
     charteditor_css.remove();
 
-    init_googlecharts_edit();
-    jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
-        init_googlecharts_edit();
+    jQuery.when(load_templates()).done(function(){
+      init_googlecharts_edit();
+      jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
+          init_googlecharts_edit();
+      });
     });
 
     overrideGooglePalette();
