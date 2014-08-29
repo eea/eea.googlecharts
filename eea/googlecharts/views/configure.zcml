@@ -180,6 +180,38 @@
     />
 
   <browser:page
+    name="googlechart.submit_notes"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Edit"
+    attribute="submit_notes"
+    permission="eea.app.visualization.configure"
+    />
+
+  <browser:page
+    name="googlechart.get_notes"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Edit"
+    attribute="get_notes"
+    permission="eea.app.visualization.configure"
+    />
+
+  <browser:page
+    name="googlechart.submit_data"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Edit"
+    attribute="submit_data"
+    permission="eea.app.visualization.configure"
+    />
+
+  <browser:page
+    name="googlechart.get_data"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Edit"
+    attribute="get_data"
+    permission="eea.app.visualization.configure"
+    />
+
+  <browser:page
     name="googlechart.set_iframe_chart"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
@@ -270,6 +302,11 @@
   <browser:resource
     name="eea.googlecharts.inline_resize.js"
     file="./js/inline_resize.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.uuid.js"
+    file="./js/uuid.js"
   />
 
   <browser:resource

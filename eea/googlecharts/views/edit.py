@@ -61,15 +61,52 @@ class Edit(BrowserView):
 
         return _('Changes saved')
 
-    def get_charts(self):
+    def submit_notes(self):
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        data = {}
+        data['notes'] = json.loads(self.request['notes'])
+        mutator.edit_view('googlechart.notes', **data)
+
+        return _('Changes saved')
+
+    def submit_data(self):
+        self.submit_charts()
+        self.submit_notes()
+        return _('Changes saved')
+
+    def get_named_data(self, name, to_json=True):
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+
+        config = {}
+
+        for view in mutator.views:
+            if view.get(name):
+                config = view.get(name)
+
+        if to_json is True:
+            return json.dumps(config)
+        else:
+            return config
+
+
+    def get_notes(self, **kw):
+        """ Retrieve all notes
+        """
+        return self.get_named_data('notes', **kw)
+
+
+    def get_charts(self, **kw):
         """ Charts
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        config = {}
-        for view in mutator.views:
-            if view.get('chartsconfig'):
-                config = view.get('chartsconfig')
-                break
+        return self.get_named_data('chartsconfig', **kw)
+
+    def get_data(self):
+        charts = self.get_charts(to_json=False)
+        notes = self.get_notes(to_json=False)
+        config = {
+            'notes': notes if notes else [],
+            'charts': charts['charts'] if charts else []
+        }
         return json.dumps(config)
 
     def get_columns(self):

@@ -5,6 +5,7 @@ var chartId = '';
 var drawing = false;
 var chartWrapper;
 var Templates = {};
+var ChartNotes = [];
 
 var defaultChart = {
            'chartType':'LineChart',
@@ -292,6 +293,13 @@ function initializeChartTinyMCE(form){
     return true;
 }
 
+function reloadAllChartNotes(){
+  jQuery("#googlecharts_list").find(".googlechart_id").each(function(idx, elem){
+    elem = jQuery(elem);
+    reloadChartNotes(elem.val());
+  });
+}
+
 function reloadChartNotes(id){
     var context = jQuery('#googlechartid_' + id);
     if(!context.length){
@@ -301,7 +309,9 @@ function reloadChartNotes(id){
     var box = jQuery('.googlechart-notes-box', context);
     var ul = jQuery('.body ul', box).empty();
 
-    var notes = context.data('notes') || [];
+    var notes = _.sortBy(get_notes_for_chart(id), function(note){
+      return note.order[id];
+    });
     patched_each(notes, function(index, note){
         var li = jQuery('<li>').text(note.title).appendTo(ul);
         li.data('note', note);
@@ -319,7 +329,8 @@ function reloadChartNotes(id){
                   data: {
                     chart_id: id,
                     note_title: note.title,
-                    note_text: note.text
+                    note_text: note.text,
+                    note_global: note.global
                   }
                 });
 
@@ -348,21 +359,21 @@ function reloadChartNotes(id){
                                 tinyMCE.triggerSave(true, true);
                             }
 
-                            var newNote = {
-                                title: jQuery('input[type="text"]', editDialog).val(),
-                                text: jQuery('textarea', editDialog).val()
-                            };
+                            newNote = _.findWhere(ChartNotes, {id: note.id});
+                            newNote.title = jQuery('input[type="text"]', editDialog).val();
+                            newNote.text = jQuery('textarea', editDialog).val();
+                            newNote.global = jQuery('input[type="checkbox"]:checked', editDialog).length > 0;
 
-                            var newNotes = jQuery.map(context.data('notes'), function(value, index){
-                                if(value.title != note.title){
-                                    return value;
-                                }else{
-                                    return newNote;
-                                }
-                            });
-                            context.data('notes', newNotes);
-                            reloadChartNotes(id);
-                            markChartAsModified(id);
+                            var global_change = newNote.global;
+
+                            if (newNote.global || newNote.global !== note.global){
+                              reloadAllChartNotes();
+                              markAllChartsAsModified();
+                            } else {
+                              reloadChartNotes(id);
+                              markChartAsModified(id);
+                            }
+
                             jQuery(this).dialog('close');
                         }
                     }
@@ -394,12 +405,16 @@ function reloadChartNotes(id){
                     buttons:{
                         Remove: function(){
                             var li = deleteButton.closest('li');
+                            if(note.global){
+                              ChartNotes = _.filter(ChartNotes, function(n){
+                                return n.id !== note.id;
+                              });
+                              markAllChartsAsModified();
+                              reloadAllChartNotes();
+                            } else {
+                              markChartAsModified(id);
+                            }
                             li.remove();
-                            context.data('notes', []);
-                            jQuery('li', ul).each(function(){
-                                context.data('notes').push(jQuery(this).data('note'));
-                            });
-                            markChartAsModified(id);
                             jQuery(this).dialog("close");
                         },
                         Cancel: function(){
@@ -423,9 +438,12 @@ function reloadChartNotes(id){
         cursor: 'crosshair',
         tolerance: 'pointer',
         update: function(){
-            context.data('notes', []);
-            jQuery('li', ul).each(function(){
-                context.data('notes').push(jQuery(this).data('note'));
+            jQuery('li', ul).each(function(idx, elem){
+              elem = jQuery(elem);
+              note_id = elem.data('note').id;
+              _.findWhere(ChartNotes, {
+                id: note_id
+              }).order[id] = idx;
             });
             markChartAsModified(id);
         }
@@ -5417,17 +5435,28 @@ function openAddChartNoteDialog(id){
                 }
 
                 var note = {
+                    id: UUID.genV4().toString(),
+                    charts: [],
+                    order: {},
                     title: jQuery('input[type="text"]', adddialog).val(),
-                    text: jQuery('textarea', adddialog).val()
+                    text: jQuery('textarea', adddialog).val(),
+                    global: function(){
+                      return jQuery('input[type="checkbox"]:checked', adddialog).length > 0;
+                    }()
                 };
 
-                if(!context.data('notes')){
-                    context.data('notes', []);
-                }
+                note.charts.push(id);
+                note.order[id] = get_notes_for_chart(id).length;
 
-                context.data('notes').push(note);
-                reloadChartNotes(id);
-                markChartAsModified(id);
+                ChartNotes.push(note);
+
+                if(note.global){
+                  reloadAllChartNotes();
+                  markAllChartsAsModified();
+                } else {
+                  reloadChartNotes(id);
+                  markChartAsModified(id);
+                }
                 jQuery(this).dialog('close');
             }
         }
@@ -5470,7 +5499,6 @@ function getChartOptions(chart_id){
         filters[jQuery("#"+filter+" .googlechart_filteritem_column").attr("value")] = filter_vals;
     });
     chart.filters = JSON.stringify(filters);
-    chart.notes = chartObj.data('notes') || [];
 
     chart.columnfilters = chartObj.data('columnfilters') || [];
     chart.unpivotsettings = chartObj.data('unpivotsettings') || {};
@@ -5524,10 +5552,11 @@ function saveCharts(){
     });
     jsonObj.charts = charts;
     var jsonStr = JSON.stringify(jsonObj);
-    var query = {'charts':jsonStr};
+    var notes = JSON.stringify(ChartNotes);
+    var query = {'charts':jsonStr, 'notes': notes};
 
     jQuery.ajax({
-      url:ajax_baseurl+"/googlechart.submit_charts",
+      url:ajax_baseurl+"/googlechart.submit_data",
       type:'post',
       data:query,
       success:function(data){
@@ -5635,11 +5664,19 @@ function saveCharts(){
     });
 }
 
+function get_notes_for_chart(chart_id){
+  var notes = _.filter(ChartNotes, function(note){
+    return note.global || note.charts.indexOf(chart_id) !== -1;
+  });
+  return notes || [];
+}
+
 function loadCharts(){
     DavizEdit.Status.start("Loading Charts");
-    jQuery.getJSON(ajax_baseurl+"/googlechart.get_charts", function(data){
+    jQuery.getJSON(ajax_baseurl+"/googlechart.get_data", function(data){
         var jsonObj = data;
         var charts = jsonObj.charts;
+        ChartNotes = jsonObj.notes;
         jQuery(charts).each(function(index, chart){
             var options = {
                 id : chart.id,
@@ -5648,7 +5685,6 @@ function loadCharts(){
                 columns : chart.columns,
                 sortFilter : chart.sortFilter,
                 filters : JSON.parse(chart.filters),
-                notes: chart.notes || [],
                 columnfilters: chart.columnfilters || [],
                 width : chart.width,
                 height : chart.height,
