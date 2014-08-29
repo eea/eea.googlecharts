@@ -5859,11 +5859,12 @@ function drawPreviewChart(chartObj, width, height){
 }
 
 function init_googlecharts_edit(){
-    if(!jQuery("#googlecharts_list").length){
+    var googlecharts_list = jQuery("#googlecharts_list");
+    if(!googlecharts_list.length){
         return;
     }
 
-    jQuery("#googlecharts_list").sortable({
+    googlecharts_list.sortable({
         handle : '.googlechart_handle',
         items: 'li.googlechart',
         opacity: 0.7,
@@ -5885,12 +5886,12 @@ function init_googlecharts_edit(){
 
     jQuery("#addgooglechart").click(addNewChart);
 
-    jQuery("#googlecharts_list").delegate(".duplicate_chart_icon", "click", function(){
+    googlecharts_list.delegate(".duplicate_chart_icon", "click", function(){
       var chartName = jQuery(this).closest('.googlechart').attr('id');
       return duplicateChart(chartName);
     });
 
-    jQuery("#googlecharts_list").delegate(".remove_chart_icon","click",function(){
+    googlecharts_list.delegate(".remove_chart_icon","click",function(){
         var chartId = jQuery(this).closest('.googlechart').attr('id');
         var chartToRemove = jQuery("#"+chartId).find(".googlechart_id").attr('value');
         var removeChartTemplate = Templates.removeDialog({data: {
@@ -5923,7 +5924,7 @@ function init_googlecharts_edit(){
                 }
         ]});
     });
-    jQuery("#googlecharts_list").delegate(".googlechart_hide_chart_icon","click",function(){
+    googlecharts_list.delegate(".googlechart_hide_chart_icon","click",function(){
         var oldClass = "eea-icon-eye";
         var newClass = "eea-icon-eye-slash";
         var elem = jQuery(this);
@@ -5937,7 +5938,7 @@ function init_googlecharts_edit(){
         changeChartHiddenState(chartId);
     });
 
-    jQuery("#googlecharts_list").delegate(".edit_filter_icon","click",function(){
+    googlecharts_list.delegate(".edit_filter_icon","click",function(){
         var elem = jQuery(this);
         var filterToEdit = elem.closest('.googlechart_filteritem');
         chartId = elem.closest('.googlechart').attr('id');
@@ -5947,7 +5948,7 @@ function init_googlecharts_edit(){
         openAddEditChartFilterDialog(id, filterToEdit.attr("id"), filter_settings);
     });
 
-    jQuery("#googlecharts_list").delegate(".remove_filter_icon","click",function(){
+    googlecharts_list.delegate(".remove_filter_icon","click",function(){
         var elem = jQuery(this);
         var filterToRemove = elem.closest('.googlechart_filteritem');
         chartId = elem.closest('.googlechart').attr('id');
@@ -5985,21 +5986,21 @@ function init_googlecharts_edit(){
         ]});
     });
 
-    jQuery("#googlecharts_list").delegate(".addgooglechartfilter","click",function(){
+    googlecharts_list.delegate(".addgooglechartfilter","click",function(){
         chartId = jQuery(this).closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
         openAddEditChartFilterDialog(id, "add", {});
     });
 
-    jQuery("#googlecharts_list").delegate(".addgooglechartcolumnfilter","click",function(){
+    googlecharts_list.delegate(".addgooglechartcolumnfilter","click",function(){
         chartId = jQuery(this).closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
         openAddChartColumnFilterDialog(id);
     });
 
-    jQuery("#googlecharts_list").delegate(".addgooglechartnote","click",function(){
+    googlecharts_list.delegate(".addgooglechartnote","click",function(){
         chartId = jQuery(this).closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
@@ -6011,7 +6012,7 @@ function init_googlecharts_edit(){
         saveCharts();
     });
 
-    jQuery("#googlecharts_list").delegate("a.preview_button", "click", function(){
+    googlecharts_list.delegate("a.preview_button", "click", function(){
         previewChartObj = jQuery(this).closest('.googlechart');
         var chartObj = previewChartObj;
         var width = parseInt(chartObj.find(".googlechart_width").val(),10);
@@ -6154,7 +6155,7 @@ function init_googlecharts_edit(){
             }
         });
     });
-    jQuery("#googlecharts_list").delegate("a.preview_button", "hover", function(){
+    googlecharts_list.delegate("a.preview_button", "hover", function(){
         previewChartObj = jQuery(this).closest('.googlechart');
         var chartObj = previewChartObj;
         var width = chartObj.find(".googlechart_width").val();
