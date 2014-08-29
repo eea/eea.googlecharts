@@ -377,12 +377,11 @@ function reloadChartNotes(id){
             .prependTo(li)
             .click(function(){
                 var deleteButton = jQuery(this);
-                var removeDialog = jQuery([
-                "<div>Are you sure you want to delete chart note: ",
-                    "<strong>", note.title, "</strong>" ,
-                "</div>"
-                ].join('\n'));
-                removeDialog.dialog({
+                var removeChartNoteTemplate = Templates.removeDialog({data: {
+                  remove_type: "chart note",
+                  remove_text: note.title
+                }});
+                jQuery(removeChartNoteTemplate).dialog({
                     title: "Remove note",
                     modal: true,
                     dialogClass: 'googlechart-dialog',
@@ -621,12 +620,11 @@ function reloadColumnFilters(id){
             .prependTo(li)
             .click(function(){
                 var deleteButton = jQuery(this);
-                var removeDialog = jQuery([
-                "<div>Are you sure you want to delete column filter: ",
-                    "<strong>", columnfilter.title, "</strong>" ,
-                "</div>"
-                ].join('\n'));
-                removeDialog.dialog({
+                var removeColumnFilterTemplate = Templates.removeDialog({data: {
+                  remove_type: "column filter",
+                  remove_text: columnfilter.title
+                }});
+                jQuery(removeColumnFilterTemplate).dialog({
                     title: "Remove column filter",
                     modal: true,
                     dialogClass: 'googlechart-dialog',
@@ -5895,11 +5893,11 @@ function init_googlecharts_edit(){
     jQuery("#googlecharts_list").delegate(".remove_chart_icon","click",function(){
         var chartId = jQuery(this).closest('.googlechart').attr('id');
         var chartToRemove = jQuery("#"+chartId).find(".googlechart_id").attr('value');
-        var removeChartDialog = ""+
-            "<div>Are you sure you want to delete chart: "+
-            "<strong>"+chartToRemove+"</strong>"+
-            "</div>";
-        jQuery(removeChartDialog).dialog({title:"Remove Chart",
+        var removeChartTemplate = Templates.removeDialog({data: {
+          remove_type: "chart",
+          remove_text: chartToRemove
+        }});
+        jQuery(removeChartTemplate).dialog({title:"Remove Chart",
             modal:true,
             dialogClass: 'googlechart-dialog',
             open: function(evt, ui){
@@ -5956,11 +5954,11 @@ function init_googlecharts_edit(){
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
         var title = filterToRemove.find('.googlechart_filteritem_id').html();
-        var removeFilterDialog = ""+
-            "<div>Are you sure you want to delete filter: "+
-            "<strong>"+title+"</strong>"+
-            "</div>";
-        jQuery(removeFilterDialog).dialog({title:"Remove filter",
+        var removeFilterTemplate = Templates.removeDialog({data: {
+          remove_type: "filter",
+          remove_text: title
+        }});
+        jQuery(removeFilterTemplate).dialog({title:"Remove filter",
             modal:true,
             dialogClass: 'googlechart-dialog',
             open: function(evt, ui){
