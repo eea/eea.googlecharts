@@ -22,3 +22,10 @@
         <strong><%= data.remove_text %></strong>
     </div>
 </script>
+<script class="template" id="noteTemplate" type="text/x-underscore-template">
+    <li>
+        <div class="note-delete-button eea-icon daviz-menuicon eea-icon-trash-o" title="Delete note"></div>
+        <div class="note-edit-button eea-icon daviz-menuicon <%= data.edit_icon %>" title="<%= data.edit_title %>"></div>
+        <%= data.note.title %>
+    </li>
+</script>

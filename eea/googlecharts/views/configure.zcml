@@ -75,6 +75,7 @@
     permission="zope2.View"
     />
 
+  <!-- it appears that this page is not used anywhere -->
   <!--browser:page
     name="chart-notes"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"

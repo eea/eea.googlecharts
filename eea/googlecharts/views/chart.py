@@ -519,6 +519,7 @@ class View(ViewForm):
             view = "embed-chart"
         return getMultiAdapter((self.context, self.request), name=view)()
 
+    # it appears that this method is not used anywhere
     #def get_notes(self, chart_id):
     #    """ get the notes for charts or dashboards
     #    """

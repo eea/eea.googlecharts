@@ -313,116 +313,115 @@ function reloadChartNotes(id){
       return note.order[id];
     });
     patched_each(notes, function(index, note){
-        var li = jQuery('<li>').text(note.title).appendTo(ul);
-        li.data('note', note);
 
-        // Note edit button
-        jQuery('<div>')
-            .addClass('eea-icon daviz-menuicon')
-            .addClass('eea-icon-pencil')
-            .attr('title', 'Edit note')
-            .prependTo(li)
-            .click(function(){
-                jQuery(".googlecharts_note_config").remove();
+      noteTemplate = Templates.noteTemplate({data: {
+        note: note,
+        edit_icon: note.global ? 'eea-icon-globe' : 'eea-icon-pencil',
+        edit_title: note.global ? 'Edit global note' : 'Edit note'
+      }});
 
-                var template = Templates.noteDialog({
-                  data: {
-                    chart_id: id,
-                    note_title: note.title,
-                    note_text: note.text,
-                    note_global: note.global
-                  }
-                });
+      noteElement = $(noteTemplate);
+      noteElement.appendTo(ul);
 
-                var editDialog = jQuery(template);
+      noteElement.data('note', note);
+      noteElement.find('.note-edit-button')
+        .on('click', function(){
+          jQuery(".googlecharts_note_config").remove();
 
-                var isTinyMCE = false;
-                editDialog.dialog({
-                    title: 'Edit note',
-                    dialogClass: 'googlechart-dialog',
-                    modal: true,
-                    minHeight: 600,
-                    minWidth: 950,
-                    open: function(evt, ui){
-                        var buttons = jQuery(this).parent().find("button[title!='close']");
-                        buttons.attr('class', 'btn');
-                        jQuery(buttons[0]).addClass('btn-inverse');
-                        jQuery(buttons[1]).addClass('btn-success');
-                        isTinyMCE = initializeChartTinyMCE(editDialog);
-                    },
-                    buttons: {
-                        Cancel: function(){
-                            jQuery(this).dialog('close');
-                        },
-                        Save: function(){
-                            if(isTinyMCE){
-                                tinyMCE.triggerSave(true, true);
-                            }
+          var template = Templates.noteDialog({
+            data: {
+              chart_id: id,
+              note_title: note.title,
+              note_text: note.text,
+              note_global: note.global
+            }
+          });
 
-                            oldNote = _.clone(note);
+          var editDialog = jQuery(template);
 
-                            note = _.findWhere(ChartNotes, {id: note.id});
-                            note.title = jQuery('input[name="title"]', editDialog).val();
-                            note.text = jQuery('textarea[name="text"]', editDialog).val();
-                            note.global = jQuery('input[name="global"]:checked', editDialog).length > 0;
+          var isTinyMCE = false;
+          editDialog.dialog({
+            title: 'Edit note',
+            dialogClass: 'googlechart-dialog',
+            modal: true,
+            minHeight: 600,
+            minWidth: 950,
+            open: function(evt, ui){
+              var buttons = jQuery(this).parent().find("button[title!='close']");
+              buttons.attr('class', 'btn');
+              jQuery(buttons[0]).addClass('btn-inverse');
+              jQuery(buttons[1]).addClass('btn-success');
+              isTinyMCE = initializeChartTinyMCE(editDialog);
+            },
+            buttons: {
+              Cancel: function(){
+                jQuery(this).dialog('close');
+              },
+              Save: function(){
+                if(isTinyMCE){
+                  tinyMCE.triggerSave(true, true);
+                }
 
-                            if (note.global || note.global !== oldNote.global){
-                              reloadAllChartNotes();
-                              markAllChartsAsModified();
-                            } else {
-                              reloadChartNotes(id);
-                              markChartAsModified(id);
-                            }
+                oldNote = _.clone(note);
 
-                            jQuery(this).dialog('close');
-                        }
-                    }
-                });
-            });
+                note = _.findWhere(ChartNotes, {id: note.id});
+                note.title = jQuery('input[name="title"]', editDialog).val();
+                note.text = jQuery('textarea[name="text"]', editDialog).val();
+                note.global = jQuery('input[name="global"]:checked', editDialog).length > 0;
 
-        // Note delete button
-        jQuery('<div>')
-            .addClass('eea-icon daviz-menuicon')
-            .addClass('eea-icon-trash-o')
-            .attr('title', 'Delete note')
-            .prependTo(li)
-            .click(function(){
-                var deleteButton = jQuery(this);
-                var removeChartNoteTemplate = Templates.removeDialog({data: {
-                  remove_type: "chart note",
-                  remove_text: note.title
-                }});
-                jQuery(removeChartNoteTemplate).dialog({
-                    title: "Remove note",
-                    modal: true,
-                    dialogClass: 'googlechart-dialog',
-                    open: function(evt, ui){
-                        var buttons = jQuery(this).parent().find("button[title!='close']");
-                        buttons.attr('class', 'btn');
-                        jQuery(buttons[0]).addClass('btn-danger');
-                        jQuery(buttons[1]).addClass('btn-inverse');
-                    },
-                    buttons:{
-                        Remove: function(){
-                            var li = deleteButton.closest('li');
-                            if(note.global){
-                              ChartNotes = _.filter(ChartNotes, function(n){
-                                return n.id !== note.id;
-                              });
-                              reloadAllChartNotes();
-                              markAllChartsAsModified();
-                            } else {
-                              markChartAsModified(id);
-                            }
-                            li.remove();
-                            jQuery(this).dialog("close");
-                        },
-                        Cancel: function(){
-                            jQuery(this).dialog("close");
-                        }
-                    }
-                });
-            });
+                if (note.global || note.global !== oldNote.global){
+                  reloadAllChartNotes();
+                  markAllChartsAsModified();
+                } else {
+                  reloadChartNotes(id);
+                  markChartAsModified(id);
+                }
+
+                jQuery(this).dialog('close');
+              }
+            }
+          });
+        });
+
+      // Note delete button
+      noteElement.find('.note-delete-button')
+        .on('click', function(){
+          var deleteButton = jQuery(this);
+          var removeChartNoteTemplate = Templates.removeDialog({data: {
+            remove_type: "chart note",
+            remove_text: note.title
+          }});
+          jQuery(removeChartNoteTemplate).dialog({
+            title: "Remove note",
+            modal: true,
+            dialogClass: 'googlechart-dialog',
+            open: function(evt, ui){
+              var buttons = jQuery(this).parent().find("button[title!='close']");
+              buttons.attr('class', 'btn');
+              jQuery(buttons[0]).addClass('btn-danger');
+              jQuery(buttons[1]).addClass('btn-inverse');
+            },
+            buttons:{
+              Remove: function(){
+                var li = deleteButton.closest('li');
+                if(note.global){
+                  ChartNotes = _.filter(ChartNotes, function(n){
+                    return n.id !== note.id;
+                  });
+                  reloadAllChartNotes();
+                  markAllChartsAsModified();
+                } else {
+                  markChartAsModified(id);
+                }
+                li.remove();
+                jQuery(this).dialog("close");
+              },
+              Cancel: function(){
+                jQuery(this).dialog("close");
+              }
+            }
+          });
+        });
     });
 
     try {
