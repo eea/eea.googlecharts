@@ -2172,3 +2172,12 @@ div.field[id*='multiples_settings'] {
     margin:2px;
 }
 
+.multiples-col-header,
+.multiples-row-header{
+    float:left;
+    width:65px;
+}
+
+.multiples-col-header{
+    margin-right:2px;
+}
