@@ -320,7 +320,7 @@ function reloadChartNotes(id){
         edit_title: note.global ? 'Edit global note' : 'Edit note'
       }});
 
-      noteElement = $(noteTemplate);
+      noteElement = jQuery(noteTemplate);
       noteElement.appendTo(ul);
 
       noteElement.data('note', note);
@@ -999,93 +999,38 @@ function addChart(options){
         chart.options.title = settings.name;
         settings.config = JSON.stringify(chart);
     }
-    var googlechart = jQuery("" +
-        "<li class='googlechart daviz-facet-edit' id='googlechartid_"+settings.id+"'>" +
-            "<input class='googlechart_id' type='hidden' value='"+settings.id+"'/>" +
-            "<input class='googlechart_configjson' type='hidden'/>" +
-            "<input class='googlechart_columns' type='hidden'/>" +
-            "<input class='googlechart_options' type='hidden'/>" +
-            "<input class='googlechart_row_filters' type='hidden' value='"+settings.row_filters+"'/>" +
-            "<input class='googlechart_sortBy' type='hidden' value='"+settings.sortBy+"'/>" +
-            "<input class='googlechart_sortAsc' type='hidden' value='"+settings.sortAsc+"'/>" +
 
-            "<h1 class='googlechart_handle'>"+
-            "<div style='float:left;width:75%;height:20px;overflow:hidden;'>"+
-                "<input style='float: left' class='googlechart_name' type='text' onchange='markChartAsModified(\""+settings.id+"\");drawChart(\""+settings.id+"\",function(){});'/>" +
-//                "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>px</span>"+
-                "<input class='googlechart_height' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
-//                "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>x</span>"+
-                "<input class='googlechart_width' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
-            "</div>"+
-            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-trash-o remove_chart_icon' title='Delete chart'></div>"+
-            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-gear' title='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'></div>"+
-            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-" + (settings.hidden?"eye-slash":"eye") + " googlechart_hide_chart_icon' title='Hide/Show chart'></div>"+
-            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-copy duplicate_chart_icon' title='Duplicate chart'></div>"+
-            "<div style='clear:both'> </div>"+
-            "</h1>" +
-            "<fieldset>" +
-                "<div style='float:left; width:110px;'>" +
-                    "<a style='float:right' class='preview_button img-polaroid'>" +
-                    "<span id='googlechart_chart_div_"+settings.id+"'></span>" +
-                    "<span>Preview and size adjustments</span></a>"+
-                "</div>" +
-                "<div class='googlechart-filtersposition-box'>" +
-                    "<span>Filters Position</span>"+
-                    "<select name='googlechart_filterposition' onchange='markChartAsModified(\"" + settings.id + "\")'>" +
-                        "<option value='0' " + ((settings.filter_pos === 0) ? "selected='selected'": "") + ">Top</option>" +
-                        "<option value='1' " + ((settings.filter_pos === 1) ? "selected='selected'": "") + ">Left</option>" +
-                        "<option value='2' " + ((settings.filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
-                        "<option value='3' " + ((settings.filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
-                    "</select>" +
-                "</div>" +
-                "<div class='googlechart-sort-box'>"+
-                    '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Sort by column<span class="items_counter"></span></span>' +
-                    '</div>' +
-                    '<div style="padding: 1em" class="body">' +
-                        '<select>'+
-                        '</select>'+
-                    '</div>' +
-                "</div>"+
-                "<div class='googlechart-filters-box'>" +
-                    '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Row filters <span class="items_counter"></span></span>' +
-                        '<span title="Add new filter" class="eea-icon daviz-menuicon eea-icon-plus ui-corner-all addgooglechartfilter"></span>' +
-                    '</div>' +
-                    '<div style="padding: 1em" class="body">' +
-                        "<ul class='googlechart_filters_list'  id='googlechart_filters_"+settings.id+"'>" +
-                        "</ul>" +
-                    '</div>' +
-                "</div>" +
-                "<div class='googlechart-columnfilters-box'>" +
-                    '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Column filters <span class="items_counter"></span></span>' +
-                        '<span title="Add column filter" class="daviz-menuicon eea-icon eea-icon-plus ui-corner-all addgooglechartcolumnfilter"></span>' +
-                        '<br/><span>Note: If row filters for pivoted columns are used, column filters using pivoted columns will be ignored</span>'+
-                    '</div>' +
-                    '<div style="padding: 1em" class="body">' +
-                        "<ul class='googlechart_columnfilters_list'  id='googlechart_columnfilter_"+settings.id+"'>" +
-                        "</ul>" +
-                    '</div>' +
-                "</div>" +
-                "<div class='googlechart-notes-box'>" +
-                    '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Chart notes <span class="items_counter"></span></span>' +
-                        '<span title="Add chart note" class="eea-icon daviz-menuicon eea-icon-plus ui-corner-all addgooglechartnote"></span>' +
-                    '</div>' +
-                    '<div style="padding: 1em" class="body">' +
-                        "<ul class='googlechart_notes_list'  id='googlechart_notes_"+settings.id+"'>" +
-                        "</ul>" +
-                    '</div>' +
-                "</div>" +
-                "<div style='clear:both'> </div>" +
-                "<input type='button' style='float:right; margin-top:0.5em;' class='context btn btn-warning' value='Edit' onclick='openEditChart(\""+settings.id+"\");'/>" +
-                "<div style='font-weight:normal;font-size:0.9em;margin-right:10px; padding-top:1em;' id='googlechart_thumb_text_"+settings.id+"'>" +
-                  "<input style='float: left; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+settings.id+"' onChange='markChartAsThumb(\""+settings.id+"\");' "+(settings.isThumb?"checked='checked'":"")+"/>"+
-                  "<label>Use this chart as thumb</label>" +
-                "</div>"+
-            "</fieldset>" +
-        "</li>");
+    var googlechartTemplate = Templates.googlechartTemplate({data: {
+      settings: settings
+    }});
+    var googlechart = jQuery(googlechartTemplate);
+
+    googlechart.find('.chart-button-settings').on('click', function(){
+      openAdvancedOptions(settings.id);
+    });
+
+    googlechart.find('.chart-button-edit').on('click', function(){
+      openEditChart(settings.id);
+    });
+
+    var to_change = [
+      '.googlechart_name',
+      '.googlechart_height',
+      '.googlechart_width',
+      '.googlechart_filterposition'
+    ].join(', ');
+
+    googlechart.find(to_change).on('change', function(){
+      markChartAsModified(settings.id);
+    });
+
+    googlechart.find('.googlechart_name').on('change', function(){
+      drawChart(settings.id, function(){});
+    });
+
+    googlechart.find('.googlechart_thumb_checkbox').on('change', function(){
+      markChartAsThumb(settings.id);
+    });
 
     // Sort
     googlechart.find('.googlechart-sort-box .body').hide();
@@ -5742,6 +5687,29 @@ function addNewChart(){
     });
 }
 
+function duplicate_notes_for_chart(source_chart_id, dst_chart_id){
+  _.chain(get_notes_for_chart(source_chart_id))
+    .filter(function(note){ return !note.global; })
+    .map(function(note){
+      var new_note = _.clone(note);
+      new_note.id = UUID.genV4().toString();
+      new_note.charts = _.map(note.charts, function(id){
+        return id === source_chart_id ? dst_chart_id : id;
+      });
+      new_note.order = _.chain(new_note.order)
+        .pairs()
+        .map(function(pair){
+          var key = pair[0];
+          var value = pair[1];
+          return key === source_chart_id ? [dst_chart_id, value] : pair;
+        })
+        .value();
+
+      ChartNotes.push(new_note);
+    })
+    .value();
+}
+
 function duplicateChart(chartName){
   var options = getChartOptions(chartName);
   var newChartId = getNextChartName(chartName);
@@ -5749,6 +5717,9 @@ function duplicateChart(chartName){
   options.id = newChartId;
   options.name = getNextChartTitle(options.name);
   options.filters = JSON.parse(options.filters);
+
+  var source_chart_id = jQuery("#" + chartName).find(".googlechart_id").val();
+  duplicate_notes_for_chart(source_chart_id, newChartId);
 
   addChart(options);
   var newChart = jQuery("#googlechartid_"+newChartId);
