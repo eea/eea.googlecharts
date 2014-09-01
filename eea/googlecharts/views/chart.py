@@ -92,17 +92,29 @@ class View(ViewForm):
         """
         return re.escape(self.context.title)
 
+
+    def get_named_data(self, name):
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+
+        for view in mutator.views:
+            if view.get(name):
+                return view.get(name)
+
+    def get_all_notes(self):
+        """ Retrieve all notes
+        """
+        return self.get_named_data('notes')
+
+    def get_all_notes_json(self):
+        """ Retrieve all notes in json format
+        """
+        return json.dumps(self.get_all_notes())
+
     def get_charts(self):
         """ Charts
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        config = ''
-        for view in mutator.views:
-            if (view.get('chartsconfig')):
-                config = view.get('chartsconfig')
-        if config == "":
-            return []
-        return config['charts']
+        charts = self.get_named_data('chartsconfig')
+        return charts['charts'] if charts else []
 
     def get_charts_json(self):
         """ Charts as JSON
@@ -507,30 +519,30 @@ class View(ViewForm):
             view = "embed-chart"
         return getMultiAdapter((self.context, self.request), name=view)()
 
-    def get_notes(self, chart_id):
-        """ get the notes for charts or dashboards
-        """
-        if 'dashboard' in chart_id:
-            dashboards = json.loads(self.get_dashboards())
-            for dashboard in dashboards:
-                if dashboard['name'] == chart_id:
-                    notes = []
-                    for widget in dashboard.get('widgets', []):
-                        if widget.get('wtype','') == \
-                            'googlecharts.widgets.textarea' and \
-                            not widget.get('dashboard',{}).get('hidden', True):
+    #def get_notes(self, chart_id):
+    #    """ get the notes for charts or dashboards
+    #    """
+    #    if 'dashboard' in chart_id:
+    #        dashboards = json.loads(self.get_dashboards())
+    #        for dashboard in dashboards:
+    #            if dashboard['name'] == chart_id:
+    #                notes = []
+    #                for widget in dashboard.get('widgets', []):
+    #                    if widget.get('wtype','') == \
+    #                        'googlecharts.widgets.textarea' and \
+    #                        not widget.get('dashboard',{}).get('hidden', True):
 
-                            note = {}
-                            note['title'] = widget.get('title', '')
-                            note['text']  = widget.get('text', '')
-                            notes.append(note)
-                    return notes
-        else:
-            charts = self.get_charts()
-            for chart in charts:
-                if chart.get('id') == chart_id:
-                    return chart.get('notes', [])
-        return []
+    #                        note = {}
+    #                        note['title'] = widget.get('title', '')
+    #                        note['text']  = widget.get('text', '')
+    #                        notes.append(note)
+    #                return notes
+    #    else:
+    #        charts = self.get_charts()
+    #        for chart in charts:
+    #            if chart.get('id') == chart_id:
+    #                return chart.get('notes', [])
+    #    return []
 
 def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
     """ Calculate position of watermark and place it over the original image

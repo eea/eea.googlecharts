@@ -40,7 +40,6 @@ def create_default_views(obj, evt):
         return
 
     mutator.add_view('googlechart.googlecharts', order=0)
-    mutator.add_view('googlechart.notes', order=0)
 
     request = getattr(obj, 'REQUEST', None)
     if not request:

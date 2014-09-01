@@ -3,17 +3,17 @@
         <div class="field">
             <label>Title</label>
             <div class="formHelp">Note title</div>
-            <input type="text" value="<%= data.note_title %>"/>
+            <input name="title" type="text" value="<%= data.note_title %>"/>
         </div>
         <div class="field">
             <label>Global</label>
             <div class="formHelp">This will make the note available for all current charts and future added charts</div>
-            <input type="checkbox" <%= data.note_global ? 'checked="checked"' : "" %> />
+            <input name="global" type="checkbox" <%= data.note_global ? 'checked="checked"' : "" %> />
         </div>
         <div class="field">
             <label>Text</label>
             <div class="formHelp">Note body</div>
-            <textarea id="googlechart_note_add_<%= data.chart_id %>"><%= data.note_text %></textarea>
+            <textarea name="text" id="googlechart_note_add_<%= data.chart_id %>"><%= data.note_text %></textarea>
         </div>
     </div>
 </script>

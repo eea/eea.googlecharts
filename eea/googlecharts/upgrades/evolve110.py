@@ -41,12 +41,7 @@ def migrate_notes(context):
                 mutator.edit_view('googlechart.googlecharts', **data)
 
 
-        notes_view = 'googlechart.notes'
-
-        if not mutator.view(notes_view):
-            mutator.add_view(notes_view)
-
-        mutator.edit_view(notes_view, notes=extracted_notes)
+        mutator.edit_view('googlechart.googlecharts', notes=extracted_notes)
 
 
     logger.info('Migrating Visualizations ... DONE')

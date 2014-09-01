@@ -45,10 +45,11 @@
 <!-- XXX Use GoogleChartsConfig instead of googlechart_config_array -->
 </tal:comment>
 
-<script type="text/javascript" tal:define="GoogleChartsConfig view/get_charts_json;" tal:content="structure string:
+<script type="text/javascript" tal:define="GoogleChartsConfig view/get_charts_json; ChartNotes view/get_all_notes_json" tal:content="structure string:
     google.load('visualization', '1.0', {packages: ['controls']});
     var googlechart_config_array = [];
     var GoogleChartsConfig = $GoogleChartsConfig;
+    var ChartNotes = $ChartNotes;
     var dashboards_config_array = [];
 "></script>
 

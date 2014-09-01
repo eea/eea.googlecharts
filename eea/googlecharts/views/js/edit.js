@@ -359,14 +359,14 @@ function reloadChartNotes(id){
                                 tinyMCE.triggerSave(true, true);
                             }
 
-                            newNote = _.findWhere(ChartNotes, {id: note.id});
-                            newNote.title = jQuery('input[type="text"]', editDialog).val();
-                            newNote.text = jQuery('textarea', editDialog).val();
-                            newNote.global = jQuery('input[type="checkbox"]:checked', editDialog).length > 0;
+                            oldNote = _.clone(note);
 
-                            var global_change = newNote.global;
+                            note = _.findWhere(ChartNotes, {id: note.id});
+                            note.title = jQuery('input[name="title"]', editDialog).val();
+                            note.text = jQuery('textarea[name="text"]', editDialog).val();
+                            note.global = jQuery('input[name="global"]:checked', editDialog).length > 0;
 
-                            if (newNote.global || newNote.global !== note.global){
+                            if (note.global || note.global !== oldNote.global){
                               reloadAllChartNotes();
                               markAllChartsAsModified();
                             } else {
@@ -409,8 +409,8 @@ function reloadChartNotes(id){
                               ChartNotes = _.filter(ChartNotes, function(n){
                                 return n.id !== note.id;
                               });
-                              markAllChartsAsModified();
                               reloadAllChartNotes();
+                              markAllChartsAsModified();
                             } else {
                               markChartAsModified(id);
                             }
@@ -950,6 +950,7 @@ function markAllChartsAsModified(){
     jQuery(".googlechart").each(function(){
         jQuery(this).addClass("googlechart_modified");
     });
+    updateCounters();
 }
 
 function markChartAsThumb(id){
@@ -974,7 +975,6 @@ function addChart(options){
         columns : "",
         sortFilter : "__disabled__",
         filters : {},
-        notes: [],
         width : 800,
         height : 600,
         filter_pos : 0,
@@ -5438,11 +5438,9 @@ function openAddChartNoteDialog(id){
                     id: UUID.genV4().toString(),
                     charts: [],
                     order: {},
-                    title: jQuery('input[type="text"]', adddialog).val(),
-                    text: jQuery('textarea', adddialog).val(),
-                    global: function(){
-                      return jQuery('input[type="checkbox"]:checked', adddialog).length > 0;
-                    }()
+                    title: jQuery('input[name="title"]', adddialog).val(),
+                    text: jQuery('textarea[name="text"]', adddialog).val(),
+                    global: jQuery('input[name="global"]:checked', adddialog).length > 0
                 };
 
                 note.charts.push(id);

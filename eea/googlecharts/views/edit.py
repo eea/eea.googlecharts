@@ -65,7 +65,7 @@ class Edit(BrowserView):
         mutator = queryAdapter(self.context, IVisualizationConfig)
         data = {}
         data['notes'] = json.loads(self.request['notes'])
-        mutator.edit_view('googlechart.notes', **data)
+        mutator.edit_view('googlechart.googlecharts', **data)
 
         return _('Changes saved')
 
