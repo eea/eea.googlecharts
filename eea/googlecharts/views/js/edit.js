@@ -362,20 +362,13 @@ function reloadChartNotes(id){
                   tinyMCE.triggerSave(true, true);
                 }
 
-                oldNote = _.clone(note);
+                var note_data = {
+                  title: jQuery('input[name="title"]', editDialog).val(),
+                  text: jQuery('textarea[name="text"]', editDialog).val(),
+                  global: jQuery('input[name="global"]:checked', editDialog).length > 0
+                };
 
-                note = _.findWhere(ChartNotes, {id: note.id});
-                note.title = jQuery('input[name="title"]', editDialog).val();
-                note.text = jQuery('textarea[name="text"]', editDialog).val();
-                note.global = jQuery('input[name="global"]:checked', editDialog).length > 0;
-
-                if (note.global || note.global !== oldNote.global){
-                  reloadAllChartNotes();
-                  markAllChartsAsModified();
-                } else {
-                  reloadChartNotes(id);
-                  markChartAsModified(id);
-                }
+                edit_note(id, note, note_data);
 
                 jQuery(this).dialog('close');
               }
@@ -404,15 +397,7 @@ function reloadChartNotes(id){
             buttons:{
               Remove: function(){
                 var li = deleteButton.closest('li');
-                if(note.global){
-                  ChartNotes = _.filter(ChartNotes, function(n){
-                    return n.id !== note.id;
-                  });
-                  reloadAllChartNotes();
-                  markAllChartsAsModified();
-                } else {
-                  markChartAsModified(id);
-                }
+                delete_note(id, note);
                 li.remove();
                 jQuery(this).dialog("close");
               },
@@ -440,9 +425,7 @@ function reloadChartNotes(id){
             jQuery('li', ul).each(function(idx, elem){
               elem = jQuery(elem);
               note_id = elem.data('note').id;
-              _.findWhere(ChartNotes, {
-                id: note_id
-              }).order[id] = idx;
+              update_note_order(id, note_id, idx);
             });
             markChartAsModified(id);
         }
@@ -5379,26 +5362,12 @@ function openAddChartNoteDialog(id){
                 }
 
                 var note = {
-                    id: UUID.genV4().toString(),
-                    charts: [],
-                    order: {},
-                    title: jQuery('input[name="title"]', adddialog).val(),
-                    text: jQuery('textarea[name="text"]', adddialog).val(),
-                    global: jQuery('input[name="global"]:checked', adddialog).length > 0
+                  title: jQuery('input[name="title"]', adddialog).val(),
+                  text: jQuery('textarea[name="text"]', adddialog).val(),
+                  global: jQuery('input[name="global"]:checked', adddialog).length > 0
                 };
+                add_note(id, note);
 
-                note.charts.push(id);
-                note.order[id] = get_notes_for_chart(id).length;
-
-                ChartNotes.push(note);
-
-                if(note.global){
-                  reloadAllChartNotes();
-                  markAllChartsAsModified();
-                } else {
-                  reloadChartNotes(id);
-                  markChartAsModified(id);
-                }
                 jQuery(this).dialog('close');
             }
         }
@@ -5611,6 +5580,87 @@ function get_notes_for_chart(chart_id){
     return note.global || note.charts.indexOf(chart_id) !== -1;
   });
   return notes || [];
+}
+
+function delete_note_with_id(note_id){
+  ChartNotes = _.filter(ChartNotes, function(n){
+    return n.id !== note_id;
+  });
+}
+
+function remove_chart_from_note(chart_id, note){
+  var new_note_charts = _.filter(note.charts, function(c_id){
+    return c_id !== chart_id;
+  });
+  if (new_note_charts.length === 0){
+    delete_note_with_id(note.id);
+  } else {
+    note.charts = new_note_charts;
+    delete note.order[chart_id];
+  }
+}
+
+function update_note_order(chart_id, note_id, position){
+  _.findWhere(ChartNotes, {
+    id: note_id
+  }).order[chart_id] = position;
+}
+
+function delete_note(chart_id, note){
+  if(note.global){
+    delete_note_with_id(note.id);
+    reloadAllChartNotes();
+    markAllChartsAsModified();
+  } else {
+    remove_chart_from_note(chart_id, note);
+    markChartAsModified(chart_id);
+  }
+}
+
+function edit_note(chart_id, note, note_data){
+  oldNote = _.clone(note);
+
+  note = _.findWhere(ChartNotes, {id: note.id});
+
+  _.extend(note, note_data);
+
+  if (oldNote.global && !note.global){
+    note.charts = [chart_id];
+  }
+
+  if (note.global || note.global !== oldNote.global){
+    reloadAllChartNotes();
+    markAllChartsAsModified();
+  } else {
+    reloadChartNotes(id);
+    markChartAsModified(id);
+  }
+}
+
+function add_note(chart_id, note_data){
+  var note = {
+    id: UUID.genV4().toString(),
+    charts: [],
+    order: {},
+    title: '',
+    text: '',
+    global: false
+  };
+
+  note.charts.push(chart_id);
+  note.order[chart_id] = get_notes_for_chart(chart_id).length;
+
+  _.extend(note, note_data);
+
+  ChartNotes.push(note);
+
+  if(note.global){
+    reloadAllChartNotes();
+    markAllChartsAsModified();
+  } else {
+    reloadChartNotes(chart_id);
+    markChartAsModified(chart_id);
+  }
 }
 
 function loadCharts(){
