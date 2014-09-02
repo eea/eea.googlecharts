@@ -6,6 +6,15 @@
             <input name="title" type="text" value="<%= data.note_title %>"/>
         </div>
         <div class="field">
+            <label>Also on charts</label>
+            <div class="formHelp">This will make the note available for the charts selected below</div>
+            <select name="other_charts" multiple="multiple">
+              <% _.each(data.other_charts, function(chart){ %>
+                <option value="<%= chart.id %>" <%= chart.selected ? selected="selected" : "" %> ><%= chart.name %></option>
+              <% }); %>
+            </select>
+        </div>
+        <div class="field">
             <label>Global</label>
             <div class="formHelp">This will make the note available for all current charts and future added charts</div>
             <input name="global" type="checkbox" <%= data.note_global ? 'checked="checked"' : "" %> />
