@@ -43,6 +43,9 @@
             })
             chart_columns.prepared = new_prepared;
         }
+        if (!jQuery.isEmptyObject(preview_filters)){
+            row_filters = preview_filters;
+        }
         var columnsFromSettings = getColumnsFromSettings(chart_columns);
         var tmp_columns_and_rows = getAvailable_columns_and_rows(chart_unpivotSettings, available_columns, merged_rows);
         var options = {
@@ -136,6 +139,7 @@
         var preview_interactive = ${chart/preview_interactive};
         var preview_options = JSON.parse(decodeURIComponent('${chart/preview_options}'));
         var preview_columns = JSON.parse(decodeURIComponent('${chart/preview_columns}'));
+        var preview_filters = JSON.parse(decodeURIComponent('${chart/preview_filters}'));
         "></script>
 
     <div id="googlechart_dashboard">

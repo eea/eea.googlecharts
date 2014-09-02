@@ -48,7 +48,8 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     valueColumn : columnsFromSettings.valueColumn,
                     availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
                     unpivotSettings : base_chart_settings.unpivotsettings || {},
-                    filters : base_chart_settings.rowFilters || null
+//                    filters : JSON.parse(base_chart_settings.row_filters)
+                    filters : {}
                 };
                 var transformedTable = transformTable(options);
                 base_chart_config = JSON.parse(base_chart_settings.config);
@@ -61,6 +62,32 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     allCols.push({id:col_id, type:col_opt.columnType});
                 });
                 allCols.sort(function(a, b){
+                    if (transformedTable.available_columns[a.id] > transformedTable.available_columns[b.id]){
+                        return 1;
+                    }
+                    if (transformedTable.available_columns[a.id] < transformedTable.available_columns[b.id]){
+                        return -1;
+                    }
+                    if (transformedTable.available_columns[a.id] === transformedTable.available_columns[b.id]){
+                        return 0;
+                    }
+                });
+                var base_filters = JSON.parse(base_chart_settings.row_filters);
+                var allFilteredCols = [];
+                patched_each(base_filters, function(col_id, filter_opt){
+                    if ((filter_opt.type === 'visible') && (filter_opt.values.length === 1)){
+                        var filter_options = [];
+
+                        for (var i = 0; i < transformedTable.items.length; i++){
+                            if (jQuery.inArray(transformedTable.items[i][col_id], filter_options) === -1){
+                                filter_options.push(transformedTable.items[i][col_id]);
+                            }
+                        }
+                        filter_options.sort();
+                        allFilteredCols.push({id:col_id, options:filter_options});
+                    }
+                });
+                allFilteredCols.sort(function(a, b){
                     if (transformedTable.available_columns[a.id] > transformedTable.available_columns[b.id]){
                         return 1;
                     }
@@ -96,26 +123,38 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     .clone()
                     .appendTo(".multiples-vertical-replaced");
                 jQuery(".multiples-matrix-config").data("original_columns", columnsFromSettings.columns);
+                jQuery(".multiples-matrix-config").data("multiples_filters", allFilteredCols);
+                jQuery(".multiples-matrix-config").data("original_filter", JSON.parse(base_chart_settings.row_filters));
+
                 for (var i = 0; i < columnsFromSettings.columns.length; i++){
                     jQuery("<option>")
+                        .addClass("multiples_option_column")
                         .attr("value", "col_" + columnsFromSettings.columns[i])
                         .text(transformedTable.properties[columnsFromSettings.columns[i]].label)
                         .appendTo(".multiples-horizontal-replaced")
                         .clone().appendTo(".multiples-vertical-replaced");
                 }
+                for (i = 0; i < allFilteredCols.length; i++){
+                    jQuery("<option>")
+                        .addClass("multiples_option_filter")
+                        .attr("value", "flt_" + allFilteredCols[i].id)
+                        .text("filter on column '" + transformedTable.properties[allFilteredCols[i].id].label + "'")
+                        .appendTo(".multiples-horizontal-replaced")
+                        .clone().appendTo(".multiples-vertical-replaced");
+                }
                 jQuery(".multiples-replaced").change(function(){
-                    jQuery(".multiples-matrix .multiples-elements").remove()
+                    jQuery(".multiples-matrix .multiples-elements").remove();
                     var horizontal_replaceable = jQuery(".multiples-horizontal-replaced").attr("value");
                     var vertical_replaceable = jQuery(".multiples-vertical-replaced").attr("value");
 
                     var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
-
+                    tmp_settings.charts = [];
                     function setReplaceableSettings(replaceable){
                         var replaceable_settings = null;
                         if (replaceable !== ""){
                             replaceable_settings = {type:"Column", column:replaceable.substr(4)};
                             if (horizontal_replaceable.substr(0,4) !== "col_"){
-                                replaceable_settings.type = "Filter"
+                                replaceable_settings.type = "Filter";
                             }
                         }
                         return replaceable_settings;
@@ -133,65 +172,114 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             filters : []
                         };
                         if (replaceable === ""){
-                            replacements.cols.push(null)
+                            replacements.cols.push(null);
                         }
+                        var i;
+                        var col_id = replaceable.substr(4);
                         if (replaceable.substr(0,4) === 'col_'){
-                            var col_id = replaceable.substr(4);
                             var col_type = transformedTable.properties[col_id].columnType;
-                            for (var i = 0; i < allCols.length; i++){
+                            for (i = 0; i < allCols.length; i++){
                                 if (allCols[i].type === col_type){
                                     replacements.cols.push(allCols[i].id);
                                 }
                             }
                         }
                         else {
+                            var filtered_cols = jQuery(".multiples-matrix-config").data("multiples_filters");
+                            for (i = 0; i < filtered_cols.length; i++){
+                                if (filtered_cols[i].id === col_id){
+                                    replacements.filters = filtered_cols[i].options;
+                                }
+                            }
                         }
                         return replacements;
                     }
                     var horizontal_replacements = findReplacements(horizontal_replaceable);
                     var vertical_replacements = findReplacements(vertical_replaceable);
-                    if ((vertical_replacements.cols[0] !== null) && (horizontal_replacements.cols[0] !== null)){
+
+                    var vertical_type = "cols";
+                    var horizontal_type = "cols";
+                    var vertical_list = vertical_replacements.cols;
+                    var horizontal_list = horizontal_replacements.cols;
+                    if (horizontal_replacements.filters.length > 0){
+                        horizontal_type = "filters";
+                        horizontal_list = horizontal_replacements.filters;
+                    }
+                    if (vertical_replacements.filters.length > 0){
+                        vertical_type = "filters";
+                        vertical_list = vertical_replacements.filters;
+                    }
+
+
+                    if (((vertical_type === 'filters') || (vertical_replacements.cols[0] !== null)) && ((horizontal_replacements.cols[0] !== null) || (horizontal_type === 'filters'))){
                         jQuery("<div>")
                             .css("height", "1px")
                             .addClass("multiples-col-header multiples-elements")
                             .appendTo(".multiples-matrix");
                     }
-                    for (var i = 0; i < horizontal_replacements.cols.length; i++){
-                        if (horizontal_replacements.cols[i] !== null){
+                    for (var i = 0; i < horizontal_list.length; i++){
+                        if (horizontal_list[i] !== null){
+                            var label = horizontal_list[i];
+                            if (horizontal_type === "cols"){
+                                label = transformedTable.available_columns[label];
+                            }
                             jQuery("<div>")
-                                .text(transformedTable.available_columns[horizontal_replacements.cols[i]])
+                                .text(label)
                                 .addClass("multiples-col-header multiples-elements")
                                 .appendTo(".multiples-matrix");
                         }
                     }
+
                     jQuery("<div>")
                         .addClass("multiples-elements")
                         .css("clear","both")
                         .appendTo(".multiples-matrix");
                     var originalColumns = jQuery(".multiples-matrix-config").data("original_columns");
 
-                    for (var i = 0; i < vertical_replacements.cols.length; i++){
-                        if (vertical_replacements.cols[i] !== null){
+                    for (i = 0; i < vertical_list.length; i++){
+                        if (vertical_list[i] !== null){
+                            var tmp_label = vertical_list[i];
+                            if (vertical_type === "cols"){
+                                tmp_label = transformedTable.available_columns[tmp_label];
+                            }
                             jQuery("<div>")
-                                .text(transformedTable.available_columns[vertical_replacements.cols[i]])
+                                .text(tmp_label)
                                 .addClass("multiples-row-header multiples-elements")
                                 .appendTo(".multiples-matrix");
                         }
-                        for (var j = 0; j < horizontal_replacements.cols.length; j++){
+                        for (var j = 0; j < horizontal_list.length; j++){
                             var columns = [];
+                            var hasColumns = false;
+                            var hasFilters = false;
                             for (var k = 0; k < originalColumns.length; k++){
                                 columns.push(originalColumns[k]);
-                                if (originalColumns[k] === vertical_replaceable.substr(4)){
+                                if ((vertical_type === 'cols') && (originalColumns[k] === vertical_replaceable.substr(4))){
+                                    hasColumns = true;
                                     columns[k] = vertical_replacements.cols[i];
                                 }
-                                if (originalColumns[k] === horizontal_replaceable.substr(4)){
+                                if ((horizontal_type === 'cols') && (originalColumns[k] === horizontal_replaceable.substr(4))){
+                                    hasColumns = true;
                                     columns[k] = horizontal_replacements.cols[j];
                                 }
                             }
-                            jQuery("<div>")
+                            var filters = jQuery.extend(true, {}, jQuery(".multiples-matrix-config").data("original_filter"));
+                            if (vertical_type === 'filters'){
+                                hasFilters = true;
+                                filters[vertical_replaceable.substr(4)].values = [vertical_list[i]];
+                            }
+                            if (horizontal_type === 'filters'){
+                                hasFilters = true;
+                                filters[horizontal_replaceable.substr(4)].values = [horizontal_list[j]];
+                            }
+                            var element = jQuery("<div>")
                                 .addClass("small-container multiples-elements")
-                                .data("columns", columns)
                                 .appendTo(".multiples-matrix");
+                            if (hasColumns){
+                                element.data("columns", columns);
+                            }
+                            if (hasFilters){
+                                element.data("filters", filters);
+                            }
                         }
                         jQuery("<div>")
                             .addClass("multiples-elements")
@@ -206,10 +294,24 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     };
                     var options_str = encodeURIComponent(JSON.stringify(options));
                     jQuery(".small-container").each(function(idx, container){
-                        var columns_str = JSON.stringify(jQuery(container).data("columns"));
+                        var columns = jQuery(container).data("columns");
+                        var filters = jQuery(container).data("filters");
+                        var params = {
+                            chart:chart_id,
+                            width:67,
+                            height:67,
+                            interactive:false,
+                            options:options_str
+                        };
+                        if (columns !== undefined){
+                            params.columns = JSON.stringify(columns);
+                        }
+                        if (filters !== undefined){
+                            params.filters = JSON.stringify(filters);
+                        }
                         jQuery("<iframe>")
                             .addClass("small-chart")
-                            .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=67&height=67&interactive=false&columns=" + columns_str + "&options=" + options_str)
+                            .attr("src", absolute_url + "/chart-full?"+jQuery.param(params))
                             .appendTo(container);
                         var overlayed = jQuery("<div>")
                             .addClass("multiples-matrix-item-overlay")
@@ -229,7 +331,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 }
                                 var selected_columns = [];
                                 jQuery.each(jQuery(".multiples-matrix-item-overlay.selected"), function(idx, item){
-                                    selected_columns.push(jQuery(item).parent().data("columns"));
+                                    selected_columns.push({columns:jQuery(item).parent().data("columns"),filters:jQuery(item).parent().data("filters")});
                                 });
                                 var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
                                 tmp_settings.charts = selected_columns;
@@ -237,7 +339,29 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             });
                     });
                 });
-
+                var loaded_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
+                if ((loaded_settings.replaceables.horizontal !== undefined) && (loaded_settings.replaceables.horizontal !== null)){
+                    var horizontal_option = loaded_settings.replaceables.horizontal.column;
+                    if (loaded_settings.replaceables.horizontal.type === 'Filter'){
+                        horizontal_option = "flt_" + horizontal_option;
+                    }
+                    else{
+                        horizontal_option = "col_" + horizontal_option;
+                    }
+                    jQuery(".multiples-horizontal-replaced").attr("value", horizontal_option);
+                }
+                if ((loaded_settings.replaceables.vertical !== undefined) && (loaded_settings.replaceables.vertical !== null)){
+                    var vertical_option = loaded_settings.replaceables.vertical.column;
+                    if (loaded_settings.replaceables.vertical.type === 'Filter'){
+                        vertical_option = "flt_" + vertical_option;
+                    }
+                    else{
+                        vertical_option = "col_" + vertical_option;
+                    }
+                    jQuery(".multiples-vertical-replaced").attr("value", vertical_option);
+                }
+                jQuery(".multiples-horizontal-replaced").trigger("change");
+                
                 /*
                 var originalCols = [];
                 var allCols = [];
@@ -477,6 +601,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         }
                     });
                     var columnsFromSettings = getColumnsFromSettings(JSON.parse(base_chart_settings.columns));
+
                     var options = {
                         originalTable : all_rows,
                         normalColumns : columnsFromSettings.normalColumns,
@@ -484,7 +609,8 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         valueColumn : columnsFromSettings.valueColumn,
                         availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
                         unpivotSettings : base_chart_settings.unpivotsettings || {},
-                        filters : base_chart_settings.rowFilters || null
+//                        filters : JSON.parse(base_chart_settings.row_filters)
+                        filters : {}
                     };
                     var transformedTable = transformTable(options);
                     var titles = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).settings.chartTitle;
@@ -774,20 +900,35 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
     };
     jQuery.extend(settings, common_settings);
     var options_str = encodeURIComponent(JSON.stringify(settings));
-    jQuery.each(charts, function(idx, columns){
-        columns_str = encodeURIComponent(JSON.stringify(columns));
+    jQuery.each(charts, function(idx, chart){
+//        columns_str = encodeURIComponent(JSON.stringify(columns));
         var iframeContainer = jQuery("<div>")
             .addClass("multiples-iframe-container")
             .css("width", settings.width + "px")
             .css("height", settings.height + "px")
-            .attr("used_columns", JSON.stringify(columns))
+//            .attr("used_columns", JSON.stringify(columns))
             .appendTo(container);
+        var params = {
+            chart: base_chart,
+            width: settings.width,
+            height: settings.height,
+            interactive: false,
+            options: options_str
+        };
+        if (chart.columns !== undefined) {
+            params.columns = JSON.stringify(chart.columns);
+            iframeContainer.attr("used_columns", params.columns);
+        }
+        if (chart.filters !== undefined) {
+            params.filters = JSON.stringify(chart.filters);
+        }
         jQuery("<iframe>")
             .css("position", "absolute")
             .css("width", settings.width + "px")
             .css("height", settings.height + "px")
             .css("z-index", "1")
-            .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width=" + settings.width + "&height=" + settings.height + "&interactive=false&columns=" + columns_str + "&options=" + options_str)
+//            .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width=" + settings.width + "&height=" + settings.height + "&interactive=false&columns=" + columns_str + "&options=" + options_str)
+            .attr("src", absolute_url + "/chart-full?" + jQuery.param(params))
             .appendTo(iframeContainer);
         jQuery("<div>")
             .css("position", "absolute")
