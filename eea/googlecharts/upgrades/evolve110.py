@@ -34,7 +34,7 @@ def migrate_notes(context):
                         note.setdefault('order', {})[chart_id] = idx
                         extracted_notes.append(note)
 
-                    del chart['notes']
+                    chart.pop('notes', None)
 
                 data = {}
                 data['chartsconfig'] = config
