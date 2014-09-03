@@ -360,154 +360,20 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     }
                     jQuery(".multiples-vertical-replaced").attr("value", vertical_option);
                 }
+                var default_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
                 jQuery(".multiples-horizontal-replaced").trigger("change");
-                
-                /*
-                var originalCols = [];
-                var allCols = [];
-                for (var i = 0; i < columnsFromSettings.columns.length; i++){
-                    originalCols.push({id:columnsFromSettings.columns[i], type:transformedTable.properties[columnsFromSettings.columns[i]].columnType});
-                }
-
-                patched_each(transformedTable.properties,function(col_id, col_opt){
-                    allCols.push({id:col_id, type:col_opt.columnType});
-                });
-                allCols.sort(function(a, b){
-                    if (transformedTable.available_columns[a.id] > transformedTable.available_columns[b.id]){
-                        return 1;
-                    }
-                    if (transformedTable.available_columns[a.id] < transformedTable.available_columns[b.id]){
-                        return -1;
-                    }
-                    if (transformedTable.available_columns[a.id] === transformedTable.available_columns[b.id]){
-                        return 0;
+                jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(default_settings));
+                jQuery(".small-container").each(function(idx, container){
+                    container = jQuery(container);
+                    var container_settings = {filters:jQuery.extend(true, {}, container.data("filters")), columns:jQuery.extend(true, {}, container.data("columns"))}
+                    for (var i = 0; i < default_settings.charts.length; i++){
+                        var chart_settings = {filters:jQuery.extend(true, {}, default_settings.charts[i].filters), columns:jQuery.extend(true, {}, default_settings.charts[i].columns)}
+                        if (_.isEqual(container_settings, chart_settings)){
+                            container.find(".multiples-matrix-item-overlay")
+                                .addClass("selected eea-icon eea-icon-check");
+                        }
                     }
                 });
-                var column_combinations = [];
-                function build_column_combinations(pos, orig_cols, all_cols, new_cols, column_combinations){
-                    if (pos === orig_cols.length){
-                        column_combinations.push(new_cols.slice(0));
-                        jQuery("<div>")
-                            .addClass("small-container")
-                            .data("columns", column_combinations[column_combinations.length - 1])
-                            .appendTo(".multiples-matrix");
-                        return;
-                    }
-                    if (pos < orig_cols.length){
-                        jQuery("<div>")
-                            .css("clear","both")
-                            .appendTo(".multiples-matrix");
-                        if (pos > 0){
-                            var row_label = transformedTable.available_columns[new_cols[pos - 1]];
-                            if (pos < orig_cols.length - 1){
-                                row_label = "Column: " + transformedTable.available_columns[orig_cols[pos - 1].id] + " replaced with " + row_label;
-                            }
-                            jQuery("<div>")
-                                .addClass("matrix-row-header-label")
-                                .addClass("matrix-row-header-level-" + (orig_cols.length - pos - 1))
-                                .text(row_label)
-                                .attr("title", row_label)
-                                .appendTo(".multiples-matrix");
-                        }
-                    }
-                    for (var i = 0; i < all_cols.length; i++){
-                        if (orig_cols[pos].type === all_cols[i].type){
-                            if (jQuery.inArray(all_cols[i].id, new_cols) === -1){
-                                new_cols.push(all_cols[i].id);
-                                build_column_combinations(pos + 1, orig_cols, all_cols, new_cols, column_combinations);
-                                new_cols.pop();
-                            }
-                            else {
-                                if (pos === orig_cols.length - 1){
-                                    jQuery("<div>")
-                                        .addClass("small-container")
-                                        .appendTo(".multiples-matrix");
-                                }
-                            }
-                        }
-                    }
-                }
-                build_column_combinations(0, originalCols, allCols, [], column_combinations);
-                labels_for_matrix = [];
-                for (i = 0; i < column_combinations[0].length; i++){
-                    labels_for_matrix.push([]);
-                }
-                for (i = 0; i < column_combinations.length; i++){
-                    for (var j = 0; j < column_combinations[i].length; j++){
-                        if (jQuery.inArray(transformedTable.available_columns[column_combinations[i][j]], labels_for_matrix[j]) === -1){
-                            labels_for_matrix[j].push(transformedTable.available_columns[column_combinations[i][j]]);
-                        }
-                    }
-                }
-                for (i = 0; i < labels_for_matrix.length; i++){
-                    labels_for_matrix[i].sort();
-                }
-                var matrix_header = jQuery("<div>")
-                    .addClass("matrix-column-header");
-                jQuery(".multiples-matrix").prepend(matrix_header);
-                jQuery("<div>")
-                    .css("clear","both")
-                    .insertAfter(".matrix-column-header");
-                for (i = 0; i < labels_for_matrix[labels_for_matrix.length - 1].length; i++){
-                    jQuery("<div>")
-                        .addClass("matrix-column-header-label")
-                        .text(labels_for_matrix[labels_for_matrix.length - 1][i])
-                        .attr("title", labels_for_matrix[labels_for_matrix.length - 1][i])
-                        .appendTo(".matrix-column-header");
-                }
-                var loaded_settings = JSON.stringify(JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value")).charts);
-                jQuery.each(column_combinations, function(idx, tmp_columns){
-                    var container = jQuery(".multiples-matrix").find("div").filter(function(){return $(this).data("columns") === tmp_columns;});
-                    columns_str = encodeURIComponent(JSON.stringify(tmp_columns));
-                    var columns_title = "Used columns: ";
-                    for (var i = 0; i < tmp_columns.length; i++){
-                        columns_title += transformedTable.available_columns[tmp_columns[i]];
-                        if (i < tmp_columns.length - 1){
-                            columns_title += ", ";
-                        }
-                    }
-                    var options = {
-                        chartAreaWidth: 65,
-                        chartAreaHeight: 65,
-                        chartAreaLeft: 1,
-                        chartAreaTop: 1
-                    };
-                    var options_str = encodeURIComponent(JSON.stringify(options));
-                    jQuery("<iframe>")
-                        .addClass("small-chart")
-                        .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=67&height=67&interactive=false&columns=" + columns_str + "&options=" + options_str)
-                        .appendTo(container);
-                    var overlayed = jQuery("<div>")
-                        .addClass("multiples-matrix-item-overlay")
-                        .attr("title", columns_title)
-                        .appendTo(container)
-                        .click(function(){
-                            if (jQuery(this).hasClass("selected")){
-                                jQuery(this)
-                                    .removeClass("selected")
-                                    .removeClass("eea-icon")
-                                    .removeClass("eea-icon-check");
-                            }
-                            else{
-                                jQuery(this)
-                                    .addClass("selected")
-                                    .addClass("eea-icon")
-                                    .addClass("eea-icon-check");
-                            }
-                            var selected_columns = [];
-                            jQuery.each(jQuery(".multiples-matrix-item-overlay.selected"), function(idx, item){
-                                selected_columns.push(jQuery(item).parent().data("columns"));
-                            });
-                            var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
-                            tmp_settings.charts = selected_columns;
-                            jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
-                        });
-                    if (loaded_settings.indexOf(JSON.stringify(tmp_columns)) > -1){
-                        overlayed
-                            .addClass("selected eea-icon eea-icon-check");
-                    }
-                });
-                */
             });
         }
     });
