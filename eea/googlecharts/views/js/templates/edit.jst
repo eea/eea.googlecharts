@@ -5,7 +5,7 @@
             <div class="formHelp">Note title</div>
             <input name="title" type="text" value="<%= data.note_title %>"/>
         </div>
-        <div class="field">
+        <div class="field" <%= data.other_charts.length <= 0 ? "hidden" : "" %> >
             <label>Also on charts</label>
             <div class="formHelp">This will make the note available for the charts selected below</div>
             <select name="other_charts" multiple="multiple">

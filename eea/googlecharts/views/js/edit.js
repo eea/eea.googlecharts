@@ -5657,22 +5657,10 @@ function edit_note(chart_id, note, note_data){
     reloadAllChartNotes();
     markAllChartsAsModified();
   } else {
-    if (oldNote.charts.length > 1 || note.charts.length > 1){
-      _.each(oldNote.charts, function(chart_old){
-        if(note.charts.indexOf(chart_old) === -1){
-          reloadChartNotes(chart_old);
-          markChartAsModified(chart_old);
-        }
-      });
-      _.each(note.charts, function(chart_new){
-        if(oldNote.charts.indexOf(chart_new) === -1){
-          reloadChartNotes(chart_new);
-          markChartAsModified(chart_new);
-        }
-      });
-    }
-    reloadChartNotes(chart_id);
-    markChartAsModified(chart_id);
+    _.each(_.union(oldNote.charts, note.charts), function(c_id){
+      reloadChartNotes(c_id);
+      markChartAsModified(c_id);
+    });
   }
 }
 
@@ -5796,6 +5784,12 @@ function duplicate_notes_for_chart(source_chart_id, dst_chart_id){
         .value();
 
       ChartNotes.push(new_note);
+
+      _.each(new_note.charts, function(c_id){
+        reloadChartNotes(c_id);
+        markChartAsModified(c_id);
+      });
+
     })
     .value();
 }
