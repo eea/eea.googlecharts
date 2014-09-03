@@ -5,6 +5,10 @@ Changelog
 -----------------------
 * Feature: adding Underscore.js template support
   [batradav refs #19048]
+* Feature: chart notes rework - now notes are stored globally and
+  assigned for charts as required, global notes and multiple
+  chart assignment for notes now available.
+  [batradav refs #19048]
 
 10.9 - (2014-08-27)
 -------------------
