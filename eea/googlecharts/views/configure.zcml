@@ -164,11 +164,12 @@
     permission="zope2.View"
     />
 
+  <!-- backwards compatibility, submit_data should be used -->
   <browser:page
     name="googlechart.submit_charts"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
-    attribute="submit_charts"
+    attribute="submit_data"
     permission="eea.app.visualization.configure"
     />
 

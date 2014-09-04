@@ -341,19 +341,7 @@ function reloadChartNotes(id){
           var editDialog = jQuery(template);
 
           editDialog.find('.note-global-field').on('change', function(evt){
-            var global = jQuery(evt.target);
-            var share_field = editDialog.find('.note-share-field');
-            var hint_on = editDialog.find('.note-global-on-hint');
-            var hint_off = editDialog.find('.note-global-off-hint');
-            if (global.is(":checked")){
-              share_field.fadeOut();
-              hint_on.show();
-              hint_off.hide();
-            } else {
-              share_field.fadeIn();
-              hint_off.show();
-              hint_on.hide();
-            }
+            note_toggle_global_field(evt, editDialog);
           });
 
           var isTinyMCE = false;
@@ -5359,10 +5347,14 @@ function openAddChartNoteDialog(id){
       }
     });
 
-    var adddialog = jQuery(template);
+    var addDialog = jQuery(template);
+
+    addDialog.find('.note-global-field').on('change', function(evt){
+      note_toggle_global_field(evt, addDialog);
+    });
 
     var isTinyMCE = false;
-    adddialog.dialog({
+    addDialog.dialog({
         title: 'Add note',
         dialogClass: 'googlechart-dialog',
         modal:true,
@@ -5373,7 +5365,7 @@ function openAddChartNoteDialog(id){
             buttons.attr('class', 'btn');
             jQuery(buttons[0]).addClass('btn-inverse');
             jQuery(buttons[1]).addClass('btn-success');
-            isTinyMCE = initializeChartTinyMCE(adddialog);
+            isTinyMCE = initializeChartTinyMCE(addDialog);
         },
         buttons: {
             Cancel: function(){
@@ -5386,10 +5378,10 @@ function openAddChartNoteDialog(id){
                 }
 
                 var note = {
-                  title: jQuery('input[name="title"]', adddialog).val(),
-                  text: jQuery('textarea[name="text"]', adddialog).val(),
-                  global: jQuery('input[name="global"]:checked', adddialog).length > 0,
-                  charts: [id].concat(jQuery('select[name="other_charts"]', adddialog).val() || [])
+                  title: jQuery('input[name="title"]', addDialog).val(),
+                  text: jQuery('textarea[name="text"]', addDialog).val(),
+                  global: jQuery('input[name="global"]:checked', addDialog).length > 0,
+                  charts: [id].concat(jQuery('select[name="other_charts"]', addDialog).val() || [])
                 };
                 add_note(id, note);
 
@@ -5487,9 +5479,11 @@ function saveCharts(){
 
     });
     jsonObj.charts = charts;
+    jsonObj.notes = ChartNotes;
     var jsonStr = JSON.stringify(jsonObj);
-    var notes = JSON.stringify(ChartNotes);
-    var query = {'charts':jsonStr, 'notes': notes};
+    var query = {
+      'chartsconfig': jsonStr
+    };
 
     jQuery.ajax({
       url:ajax_baseurl+"/googlechart.submit_data",
@@ -5687,6 +5681,22 @@ function edit_note(chart_id, note, note_data){
   }
 }
 
+function note_toggle_global_field(evt, dialog){
+  var global = jQuery(evt.target);
+  var share_field = dialog.find('.note-share-field');
+  var hint_on = dialog.find('.note-global-on-hint');
+  var hint_off = dialog.find('.note-global-off-hint');
+  if (global.is(":checked")){
+    share_field.fadeOut();
+    hint_on.show();
+    hint_off.hide();
+  } else {
+    share_field.fadeIn();
+    hint_off.show();
+    hint_on.hide();
+  }
+}
+
 function add_note(chart_id, note_data){
   var note = {
     id: UUID.genV4().toString(),
@@ -5804,6 +5814,7 @@ function duplicate_notes_for_chart(source_chart_id, dst_chart_id){
           var value = pair[1];
           return key === source_chart_id ? [dst_chart_id, value] : pair;
         })
+        .object()
         .value();
 
       ChartNotes.push(new_note);

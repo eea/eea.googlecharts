@@ -9,51 +9,55 @@ from eea.app.visualization.interfaces import IVisualizationConfig
 logger = logging.getLogger('eea.googlecharts.evolve110')
 
 
+def create_version(pr, visualization, url):
+    try:
+        logger.info('Attempting to create version for %s', url)
+        commit_msg = u'Migrating to eea.googlecharts 11.0'
+        pr.save(obj=visualization, comment=commit_msg)
+    except Exception:
+        logger.info('Cannot create version for %s', url)
+
+
 def migrate_notes(context):
     """ Migrate notes"""
     ctool = getToolByName(context, 'portal_catalog')
     pr = getToolByName(context, 'portal_repository')
     brains = ctool.unrestrictedSearchResults(portal_type='DavizVisualization')
+    view_name = 'googlechart.googlecharts'
+    config_name = 'chartsconfig'
 
     logger.info('Migrating %s Visualizations ...', len(brains))
     for brain in brains:
-
         visualization = brain.getObject()
         mutator = queryAdapter(visualization, IVisualizationConfig)
-        url = brain.getURL()
 
-        extracted_notes = []
+        view = mutator.view(view_name)
 
-        try:
-            logger.info('Attempting to create version for %s', url)
-            commit_msg = u'Migrating to eea.googlecharts 11.0'
-            pr.save(obj=visualization, comment=commit_msg)
-        except Exception:
-            logger.info('Cannot create version for %s', url)
+        if view:
+            url = brain.getURL()
+            logger.info('Migrating %s', url)
+            create_version(pr, visualization, url)
 
-        for view in mutator.views:
-            if view.get('chartsconfig'):
-                logger.info('Migrating %s', url)
-                config = view.get('chartsconfig')
-                for chart in config.get('charts', []):
-                    chart_id = chart.get('id')
-                    for idx, note in enumerate(chart.get('notes', [])):
-                        note.setdefault('charts', []).append(chart_id)
-                        note['id'] = str(uuid.uuid4())
-                        note.setdefault('order', {})[chart_id] = idx
-                        extracted_notes.append(note)
+            extracted_notes = []
 
-                    chart.pop('notes', None)
+            config = view.get(config_name)
+            for chart in config.get('charts', []):
+                chart_id = chart.get('id')
+                for idx, note in enumerate(chart.get('notes', [])):
+                    note.setdefault('charts', []).append(chart_id)
+                    note['id'] = str(uuid.uuid4())
+                    note.setdefault('order', {})[chart_id] = idx
+                    extracted_notes.append(note)
 
-                data = {}
-                data['chartsconfig'] = config
-                mutator.edit_view('googlechart.googlecharts', **data)
+                chart.pop('notes', None)
 
+            data = {}
 
-        try:
-            mutator.edit_view('googlechart.googlecharts', notes=extracted_notes)
-        except KeyError:
-            logger.info('Skipping Visualization without Google Charts')
+            if config.get('notes', None) is None:
+                config['notes'] = extracted_notes
 
+            data[config_name] = config
+
+            mutator.edit_view(view_name, **data)
 
     logger.info('Migrating Visualizations ... DONE')

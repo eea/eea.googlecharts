@@ -92,18 +92,23 @@ class View(ViewForm):
         """
         return re.escape(self.context.title)
 
-
-    def get_named_data(self, name):
+    def get_named_data(self, config_name, key='', default=[]):
         mutator = queryAdapter(self.context, IVisualizationConfig)
+        view = mutator.view('googlechart.googlecharts')
 
-        for view in mutator.views:
-            if view.get(name):
-                return view.get(name)
+        config = view.get(config_name, None)
+        if config is None:
+            return
+
+        if key:
+            return config.get(key, default)
+
+        return config
 
     def get_all_notes(self):
         """ Retrieve all notes
         """
-        return self.get_named_data('notes')
+        return self.get_named_data('chartsconfig', 'notes')
 
     def get_all_notes_json(self):
         """ Retrieve all notes in json format
@@ -113,14 +118,12 @@ class View(ViewForm):
     def get_charts(self):
         """ Charts
         """
-        charts = self.get_named_data('chartsconfig')
-        return charts['charts'] if charts else []
+        return self.get_named_data('chartsconfig', 'charts')
 
     def get_charts_json(self):
         """ Charts as JSON
         """
-        charts = self.get_charts()
-        return json.dumps(charts)
+        return json.dumps(self.get_charts())
 
     def get_visible_charts(self):
         """ Return only visible charts
