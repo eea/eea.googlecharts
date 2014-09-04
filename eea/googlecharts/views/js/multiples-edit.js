@@ -21,7 +21,8 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
 
             jQuery("<div>")
                 .addClass("multiples-matrix")
-                .appendTo(".multiples-config");
+                .appendTo(".multiples-config")
+                .disableSelection();
 
 
             chart_path = jQuery(current_widget + " select").attr("value").split("/");
@@ -146,7 +147,6 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     jQuery(".multiples-matrix .multiples-elements").remove();
                     var horizontal_replaceable = jQuery(".multiples-horizontal-replaced").attr("value");
                     var vertical_replaceable = jQuery(".multiples-vertical-replaced").attr("value");
-
                     var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
                     tmp_settings.charts = [];
                     function setReplaceableSettings(replaceable){
@@ -165,6 +165,9 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     };
 
                     jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
+                    if ((horizontal_replaceable === "") && (vertical_replaceable === "")){
+                        return;
+                    }
 
                     function findReplacements(replaceable){
                         var replacements = {
@@ -210,13 +213,10 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         vertical_list = vertical_replacements.filters;
                     }
 
-
-                    if (((vertical_type === 'filters') || (vertical_replacements.cols[0] !== null)) && ((horizontal_replacements.cols[0] !== null) || (horizontal_type === 'filters'))){
-                        jQuery("<div>")
-                            .css("height", "1px")
-                            .addClass("multiples-col-header multiples-elements")
-                            .appendTo(".multiples-matrix");
-                    }
+                    jQuery("<div>")
+                        .text("select all")
+                        .addClass("multiples-header-item multiples-elements multiples-header-all")
+                        .appendTo(".multiples-matrix");
                     for (var i = 0; i < horizontal_list.length; i++){
                         if (horizontal_list[i] !== null){
                             var label = horizontal_list[i];
@@ -225,11 +225,11 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             }
                             jQuery("<div>")
                                 .text(label)
-                                .addClass("multiples-col-header multiples-elements")
-                                .appendTo(".multiples-matrix");
+                                .addClass("multiples-header-item multiples-elements")
+                                .appendTo(".multiples-matrix")
+                                .attr("horizontal-column-id", horizontal_list[i]);
                         }
                     }
-
                     jQuery("<div>")
                         .addClass("multiples-elements")
                         .css("clear","both")
@@ -243,8 +243,17 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 tmp_label = transformedTable.available_columns[tmp_label];
                             }
                             jQuery("<div>")
+                                .attr("vertical-column-id", vertical_list[i])
                                 .text(tmp_label)
-                                .addClass("multiples-row-header multiples-elements")
+                                .addClass("multiples-header-item multiples-elements")
+                                .appendTo(".multiples-matrix");
+                        }
+                        else{
+                            jQuery("<div>")
+                                .addClass("multiples-elements")
+                                .css("width","69px")
+                                .css("height","1px")
+                                .css("float","left")
                                 .appendTo(".multiples-matrix");
                         }
                         for (var j = 0; j < horizontal_list.length; j++){
@@ -273,7 +282,9 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             }
                             var element = jQuery("<div>")
                                 .addClass("small-container multiples-elements")
-                                .appendTo(".multiples-matrix");
+                                .appendTo(".multiples-matrix")
+                                .attr("horizontal-column-id", horizontal_list[j])
+                                .attr("vertical-column-id", vertical_list[i]);
                             if (hasColumns){
                                 element.data("columns", columns);
                             }
@@ -286,6 +297,28 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             .css("clear","both")
                             .appendTo(".multiples-matrix");
                     }
+                    jQuery("<input type='checkbox'>")
+                        .appendTo(".multiples-header-item")
+                        .change(function(){
+                            var checked = jQuery(this).attr("checked");
+                            var horizontal_col_id = jQuery(this).parent().attr("horizontal-column-id");
+                            var vertical_col_id = jQuery(this).parent().attr("vertical-column-id");
+                            var selector = "";
+                            if (checked){
+                                selector = ".multiples-matrix-item-overlay:not(.selected)";
+                            }
+                            else {
+                                selector = ".multiples-matrix-item-overlay.selected";
+                            }
+                            if (horizontal_col_id !== undefined){
+                                selector += "[horizontal-column-id='" + horizontal_col_id + "']";
+                            }
+
+                            if (vertical_col_id !== undefined){
+                                selector += "[vertical-column-id='" + vertical_col_id + "']";
+                            }
+                            jQuery(selector).click();
+                        });
                     var options = {
                         chartAreaWidth: 65,
                         chartAreaHeight: 65,
@@ -315,19 +348,35 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             .appendTo(container);
                         var overlayed = jQuery("<div>")
                             .addClass("multiples-matrix-item-overlay")
+                            .attr("horizontal-column-id", jQuery(container).attr("horizontal-column-id"))
+                            .attr("vertical-column-id", jQuery(container).attr("vertical-column-id"))
                             .appendTo(container)
                             .click(function(){
+                                var horizontal_col_id = jQuery(this).attr("horizontal-column-id");
+                                var vertical_col_id = jQuery(this).attr("vertical-column-id");
                                 if (jQuery(this).hasClass("selected")){
                                     jQuery(this)
                                         .removeClass("selected")
                                         .removeClass("eea-icon")
                                         .removeClass("eea-icon-check");
+                                    jQuery(".multiples-header-all input").removeAttr("checked");
+                                    jQuery(".multiples-header-item[horizontal-column-id='" + horizontal_col_id + "'] input").removeAttr("checked");
+                                    jQuery(".multiples-header-item[vertical-column-id='" + vertical_col_id + "'] input").removeAttr("checked");
                                 }
                                 else{
                                     jQuery(this)
                                         .addClass("selected")
                                         .addClass("eea-icon")
                                         .addClass("eea-icon-check");
+                                    if (jQuery(".multiples-matrix-item-overlay:not(.selected)").length === 0){
+                                        jQuery(".multiples-header-all input").attr("checked", "checked");
+                                    }
+                                    if (jQuery(".multiples-matrix-item-overlay[horizontal-column-id='" + horizontal_col_id + "']:not(.selected)").length === 0){
+                                        jQuery(".multiples-header-item[horizontal-column-id='" + horizontal_col_id + "'] input").attr("checked", "checked");
+                                    }
+                                    if (jQuery(".multiples-matrix-item-overlay[vertical-column-id='" + vertical_col_id + "']:not(.selected)").length === 0){
+                                        jQuery(".multiples-header-item[vertical-column-id='" + vertical_col_id + "'] input").attr("checked", "checked");
+                                    }
                                 }
                                 var selected_columns = [];
                                 jQuery.each(jQuery(".multiples-matrix-item-overlay.selected"), function(idx, item){
@@ -365,12 +414,24 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(default_settings));
                 jQuery(".small-container").each(function(idx, container){
                     container = jQuery(container);
-                    var container_settings = {filters:jQuery.extend(true, {}, container.data("filters")), columns:jQuery.extend(true, {}, container.data("columns"))}
+                    var container_settings = {filters:jQuery.extend(true, {}, container.data("filters")), columns:jQuery.extend(true, {}, container.data("columns"))};
                     for (var i = 0; i < default_settings.charts.length; i++){
-                        var chart_settings = {filters:jQuery.extend(true, {}, default_settings.charts[i].filters), columns:jQuery.extend(true, {}, default_settings.charts[i].columns)}
+                        var chart_settings = {filters:jQuery.extend(true, {}, default_settings.charts[i].filters), columns:jQuery.extend(true, {}, default_settings.charts[i].columns)};
                         if (_.isEqual(container_settings, chart_settings)){
                             container.find(".multiples-matrix-item-overlay")
                                 .addClass("selected eea-icon eea-icon-check");
+                            var horizontal_col_id = jQuery(container).attr("horizontal-column-id");
+                            var vertical_col_id = jQuery(container).attr("vertical-column-id");
+
+                            if (jQuery(".multiples-matrix-item-overlay:not(.selected)").length === 0){
+                                jQuery(".multiples-header-all input").attr("checked", "checked");
+                            }
+                            if (jQuery(".multiples-matrix-item-overlay[horizontal-column-id='" + horizontal_col_id + "']:not(.selected)").length === 0){
+                                jQuery(".multiples-header-item[horizontal-column-id='" + horizontal_col_id + "'] input").attr("checked", "checked");
+                            }
+                            if (jQuery(".multiples-matrix-item-overlay[vertical-column-id='" + vertical_col_id + "']:not(.selected)").length === 0){
+                                jQuery(".multiples-header-item[vertical-column-id='" + vertical_col_id + "'] input").attr("checked", "checked");
+                            }
                         }
                     }
                 });

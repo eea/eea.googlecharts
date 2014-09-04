@@ -2172,12 +2172,15 @@ div.field[id*='multiples_settings'] {
     margin:2px;
 }
 
-.multiples-col-header,
-.multiples-row-header{
+.multiples-header-item{
     float:left;
-    width:65px;
+    width:61px;
+    padding:3px;
+    overflow:hidden;
+    border:1px solid rgb(230,230,230);
+    background-color:rgb(210,210,210);
 }
 
-.multiples-col-header{
-    margin-right:2px;
+.multiples-header-item input{
+    float:right;
 }
