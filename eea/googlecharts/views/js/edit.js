@@ -6440,7 +6440,7 @@ function overrideSparklinesThumbnail(){
     });
 }
 
-function load_templates(){
+function load_templates(callback){
   jQuery.ajax({
     url: "++resource++eea.googlecharts.jst/edit.jst",
     cache: false,
@@ -6450,6 +6450,7 @@ function load_templates(){
       _.each(body.filter("script.template"), function(template){
         Templates[template.id] = _.template(template.textContent);
       }, this);
+      callback();
     }
   });
 }
@@ -6458,7 +6459,7 @@ jQuery(document).ready(function(){
     charteditor_css = jQuery("link[rel='stylesheet'][href*='charteditor']");
     charteditor_css.remove();
 
-    jQuery.when(load_templates()).done(function(){
+    load_templates(function(){
       init_googlecharts_edit();
       jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
           init_googlecharts_edit();
