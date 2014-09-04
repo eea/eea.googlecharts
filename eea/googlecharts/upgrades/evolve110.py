@@ -11,7 +11,8 @@ logger = logging.getLogger('eea.googlecharts.evolve110')
 
 def migrate_notes(context):
     """ Migrate notes"""
-    ctool = getToolByName (context, 'portal_catalog')
+    ctool = getToolByName(context, 'portal_catalog')
+    pr = getToolByName(context, 'portal_repository')
     brains = ctool.unrestrictedSearchResults(portal_type='DavizVisualization')
 
     logger.info('Migrating %s Visualizations ...', len(brains))
@@ -19,12 +20,20 @@ def migrate_notes(context):
 
         visualization = brain.getObject()
         mutator = queryAdapter(visualization, IVisualizationConfig)
+        url = brain.getURL()
 
         extracted_notes = []
 
+        try:
+            logger.info('Attempting to create version for %s', url)
+            commit_msg = u'Migrating to eea.googlecharts 11.0'
+            pr.save(obj=visualization, comment=commit_msg)
+        except Exception:
+            logger.info('Cannot create version for %s', url)
+
         for view in mutator.views:
             if view.get('chartsconfig'):
-                logger.info('Migrating %s', brain.getURL())
+                logger.info('Migrating %s', url)
                 config = view.get('chartsconfig')
                 for chart in config.get('charts', []):
                     chart_id = chart.get('id')
