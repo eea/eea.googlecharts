@@ -31,16 +31,16 @@ def migrate_notes(context):
         visualization = brain.getObject()
         mutator = queryAdapter(visualization, IVisualizationConfig)
 
-        view = mutator.view(view_name)
+        view = mutator.view(view_name, {})
+        config = view.get(config_name, None)
 
-        if view:
+        if config:
             url = brain.getURL()
             logger.info('Migrating %s', url)
             create_version(pr, visualization, url)
 
             extracted_notes = []
 
-            config = view.get(config_name)
             for chart in config.get('charts', []):
                 chart_id = chart.get('id')
                 for idx, note in enumerate(chart.get('notes', [])):
