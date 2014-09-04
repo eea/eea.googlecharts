@@ -1,23 +1,26 @@
 <script class="template" id="noteDialog" type="text/x-underscore-template">
     <div class="googlecharts_note_config">
-        <div class="field">
+        <div class="field note-title-field">
             <label>Title</label>
             <div class="formHelp">Note title</div>
             <input name="title" type="text" value="<%= data.note_title %>"/>
         </div>
-        <div class="field" <%= data.other_charts.length <= 0 ? "hidden" : "" %> >
-            <label>Also on charts</label>
+        <div class="field note-global-field">
+            <label>Global</label>
+            <div class="formHelp">
+                <span class="note-global-off-hint" <%= data.note_global ? "hidden" : "" %> >This will make the note available for all current charts and future added charts.</span>
+                <span class="note-global-on-hint" <%= data.note_global ? "" : "hidden" %> >Unchecking this will make the note local to this chart, it will no longer display on other charts.</span>
+            </div>
+            <input name="global" type="checkbox" <%= data.note_global ? 'checked="checked"' : "" %> />
+        </div>
+        <div class="field note-share-field" <%= data.other_charts.length <= 0 || data.note_global ? "hidden" : "" %> >
+            <label>Share with charts</label>
             <div class="formHelp">This will make the note available for the charts selected below</div>
             <select name="other_charts" multiple="multiple">
               <% _.each(data.other_charts, function(chart){ %>
                 <option value="<%= chart.id %>" <%= chart.selected ? selected="selected" : "" %> ><%= chart.name %></option>
               <% }); %>
             </select>
-        </div>
-        <div class="field">
-            <label>Global</label>
-            <div class="formHelp">This will make the note available for all current charts and future added charts</div>
-            <input name="global" type="checkbox" <%= data.note_global ? 'checked="checked"' : "" %> />
         </div>
         <div class="field">
             <label>Text</label>
@@ -29,7 +32,22 @@
 <script class="template" id="removeDialog" type="text/x-underscore-template">
     <div>Are you sure you want to delete <%= data.remove_type %>:
         <strong><%= data.remove_text %></strong>
+        <div><br /><%= data.extra_body %></div>
     </div>
+</script>
+<script class="template" id="removeNoteDialogBody" type="text/x-underscore-template">
+    <% if (data.note.global) { %>
+        <strong>Please note:</strong>
+        This note is global, also shown on other charts. It will be removed from all of them.
+    <% } else if (data.other_charts.length > 0) { %>
+        <strong>Please note:</strong>
+        This note is shared with the charts listed below. It will be removed from all of them.
+        <ul class="note-shared-charts-list">
+            <% _.each(data.other_charts, function(chart) { %>
+                <li><strong><%= chart.name %></strong></li>
+            <% }) %>
+        </ul>
+    <% } %>
 </script>
 <script class="template" id="noteTemplate" type="text/x-underscore-template">
     <li>

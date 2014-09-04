@@ -340,6 +340,22 @@ function reloadChartNotes(id){
 
           var editDialog = jQuery(template);
 
+          editDialog.find('.note-global-field').on('change', function(evt){
+            var global = jQuery(evt.target);
+            var share_field = editDialog.find('.note-share-field');
+            var hint_on = editDialog.find('.note-global-on-hint');
+            var hint_off = editDialog.find('.note-global-off-hint');
+            if (global.is(":checked")){
+              share_field.fadeOut();
+              hint_on.show();
+              hint_off.hide();
+            } else {
+              share_field.fadeIn();
+              hint_off.show();
+              hint_on.hide();
+            }
+          });
+
           var isTinyMCE = false;
           editDialog.dialog({
             title: 'Edit note',
@@ -384,8 +400,13 @@ function reloadChartNotes(id){
           var deleteButton = jQuery(this);
           var removeChartNoteTemplate = Templates.removeDialog({data: {
             remove_type: "chart note",
-            remove_text: note.title
+            remove_text: note.title,
+            extra_body: Templates.removeNoteDialogBody({data: {
+              note: note,
+              other_charts: _.where(get_other_charts_for_note(note, id), {selected: true})
+            }})
           }});
+
           jQuery(removeChartNoteTemplate).dialog({
             title: "Remove note",
             modal: true,
@@ -5652,6 +5673,8 @@ function edit_note(chart_id, note, note_data){
   note = _.findWhere(ChartNotes, {id: note.id});
 
   _.extend(note, note_data);
+
+  note.charts = note.global ? [] : note.charts;
 
   if (note.global || note.global !== oldNote.global){
     reloadAllChartNotes();
