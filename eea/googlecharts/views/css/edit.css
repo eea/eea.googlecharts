@@ -2046,6 +2046,7 @@ input[type=text].eea-googlechart-trendlines-config-value{
     clear:both;
 }
 
+<<<<<<< HEAD
 .multiples-matrix-item-overlay{
 /*    background-color:rgba(255,0,0,0.5);*/
 }
@@ -2183,4 +2184,11 @@ div.field[id*='multiples_settings'] {
 
 .multiples-header-item input{
     float:right;
+}
+.note-shared-charts-list {
+    list-style-type: disc;
+}
+
+.note-shared-charts-list li {
+    display: list-item;
 }

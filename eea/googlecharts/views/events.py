@@ -92,11 +92,11 @@ def create_default_views(obj, evt):
     chart['columns'] = json.dumps(chart['columns'])
 
     # Add chart
-    query = {'charts': [chart]}
+    query = {'charts': [chart], 'notes': []}
     query = json.dumps(query)
 
-    request.form['charts'] = query
-    submit_charts = getMultiAdapter((obj, request),
-                                    name=u'googlechart.submit_charts')
-    submit_charts()
-    request.form.pop('charts')
+    request.form['chartsconfig'] = query
+    submit_data = getMultiAdapter((obj, request),
+                                    name=u'googlechart.submit_data')
+    submit_data()
+    request.form.pop('chartsconfig')

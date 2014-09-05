@@ -6,6 +6,7 @@
         <link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
         <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
+        <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript" src="++resource++json2.js"></script>
         <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
@@ -47,6 +48,7 @@
             sortBy python: chart.get('sortBy','');
             sortAsc python: chart.get('sortAsc','asc');
             columnFilters python: view.get_columnfilters_js(chart);
+            ChartNotes python: view.get_all_notes_json();
             GoogleChartsConfig view/get_chart_json;
             unpivotSettings python:view.get_unpivotSettings(chart);
             print python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;"
@@ -77,6 +79,7 @@
             var isInline_$vhash = '$inline';
             var unpivotSettings_$vhash = $unpivotSettings;
             var print = $print;
+            var ChartNotes = $ChartNotes;
 
             var googlechart_config_array_$vhash = [];
             var settings_$vhash = [];

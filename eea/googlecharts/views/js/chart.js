@@ -1,3 +1,10 @@
+function get_notes_for_chart(chart_id){
+  var notes = _.filter(ChartNotes, function(note){
+    return note.global || note.charts.indexOf(chart_id) !== -1;
+  });
+  return notes || [];
+}
+
 function fixSVG(container){
     if (jQuery.browser.mozilla || jQuery.browser.msie){
         return;
@@ -246,15 +253,10 @@ function drawGoogleChart(options){
         }
     }
     jQuery("<div class='googlechart_loading_img'></div>").appendTo("#"+settings.chartViewDiv);
-    // XXX Use GoogleChartsConfig for options instead of googlechart_config_array
-    var other_settings = jQuery("#"+settings.chartDashboard).data("other_settings");
-    if ((other_settings) && (other_settings.GoogleChartsConfig)){
-        patched_each(other_settings.GoogleChartsConfig, function(index, value){
-            if((value.id == settings.chartId) && value.notes){
-                settings.notes = value.notes;
-            }
-        });
-    }
+
+    settings.notes = _.sortBy(get_notes_for_chart(settings.chartId), function(note){
+      return note.order[settings.chartId];
+    });
 
     jQuery("#"+settings.chartViewDiv).width(settings.chartWidth).height(settings.chartHeight);
 

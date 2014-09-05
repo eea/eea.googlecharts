@@ -6,6 +6,7 @@
     <link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
     <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
     <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
+    <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="++resource++json2.js"></script>
     <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
@@ -45,6 +46,7 @@
 <metal:chart define-macro="dashboard" tal:condition="enabled_dashboard">
     <tal:block tal:define="vhash view/get_visualization_hash">
     <script type="text/javascript" tal:content="string:
+        var ChartNotes = []; // empty, notes are note displayed on dashboards
         var googlechart_config_array_$vhash = [];
         ">
     </script>

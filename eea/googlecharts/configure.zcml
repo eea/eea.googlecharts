@@ -3,6 +3,8 @@
   xmlns:zcml="http://namespaces.zope.org/zcml"
   i18n_domain="eea">
 
+  <includeDependencies package="." />
+
   <include file="documentation.zcml" />
 
   <configure zcml:condition="installed Products.CMFPlone">
