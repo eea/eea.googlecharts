@@ -75,13 +75,14 @@
     permission="zope2.View"
     />
 
-  <browser:page
+  <!-- it appears that this page is not used anywhere -->
+  <!--browser:page
     name="chart-notes"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".chart.View"
     attribute="get_notes"
     permission="zope2.View"
-    />
+    /-->
 
   <daviz:view
     name="googlechart.googlecharts"
@@ -163,11 +164,12 @@
     permission="zope2.View"
     />
 
+  <!-- backwards compatibility, submit_data should be used -->
   <browser:page
     name="googlechart.submit_charts"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
-    attribute="submit_charts"
+    attribute="submit_data"
     permission="eea.app.visualization.configure"
     />
 
@@ -176,6 +178,22 @@
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
     attribute="get_charts"
+    permission="eea.app.visualization.configure"
+    />
+
+  <browser:page
+    name="googlechart.submit_data"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Edit"
+    attribute="submit_data"
+    permission="eea.app.visualization.configure"
+    />
+
+  <browser:page
+    name="googlechart.get_data"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Edit"
+    attribute="get_data"
     permission="eea.app.visualization.configure"
     />
 
@@ -273,6 +291,11 @@
   />
 
   <browser:resource
+    name="eea.googlecharts.uuid.js"
+    file="./js/uuid.js"
+  />
+
+  <browser:resource
     name="eea.googlecharts.view.css"
     file="./css/view.css"
   />
@@ -343,6 +366,10 @@
   <browser:resourceDirectory
     name="eea.googlecharts.images"
     directory="./imgs" />
+
+  <browser:resourceDirectory
+    name="eea.googlecharts.jst"
+    directory="./js/templates" />
 
   <subscriber
     for="eea.app.visualization.interfaces.IVisualizationEnabled

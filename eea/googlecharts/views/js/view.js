@@ -484,7 +484,7 @@ function showEmbed(){
                     "&customStyle=.googlechart_view{margin-left:0px%3B}";
     }
     else{
-        iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+ 
+        iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+
                     "&customStyle=.googlechart_view{margin-left:0px%3B}";
     }
     var iframeCode = "<iframe width='" + iframeWidth + "' height='" + iframeHeight + "' src='" + iframeSrc + "'></iframe>";
@@ -510,7 +510,7 @@ function showEmbed(){
                         '<div class="chart-size-settings"><div class="chart-size">' +
                         '<p><label for="manual-chart-width">Chart width: </label><input type="text" name="manual-chart-width" id="manual-chart-width" class="manual-chart-settings" value="' + chartObj.attr('chart_width') + '"/>px</p>' +
                         '<p><label for="manual-chart-height">Chart height: </label><input type="text" name="manual-chart-height" id="manual-chart-height" class="manual-chart-settings" value="' + chartObj.attr('chart_height') + '"/>px</p></div>' +
-                        '<div class="embed-misc-settings"><p title="Keep aspect ratio"><input type="checkbox" checked="checked" name="aspect-ratio" id="aspect-ratio"/>Keep aspect ratio</p>' + 
+                        '<div class="embed-misc-settings"><p title="Keep aspect ratio"><input type="checkbox" checked="checked" name="aspect-ratio" id="aspect-ratio"/>Keep aspect ratio</p>' +
                         '<p title="Also resize the parent iframe when resizing the chart"><input type="checkbox" checked="checked" name="resize-iframe" id="resize-iframe"/>Also resize iframe</p></div>' +
                         '<div class="visualClear"><!-- &nbsp; --></div></div></div>' +
                         '<a href="#" class="discreet embed-controls" id="embed-padding-advanced">Advanced settings</a>' +
@@ -690,7 +690,7 @@ function showEmbed(){
                             "&customStyle=.googlechart_view{margin-left:0px%3B}";
                     }
                     else{
-                        iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+ 
+                        iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+
                             "&customStyle=.googlechart_view{margin-left:0px%3B}";
                     }
                     if (jQuery(".googlechart_embed_ignore_filters").attr("checked") === 'checked'){
@@ -774,7 +774,7 @@ var googleChartOnTabClick = function(settings){
 
 jQuery(document).ready(function($){
     // workaround for firefox issue: http://taskman.eionet.europa.eu/issues/9941
-    // Removed workaround as the issue has been already fixed. Details here: 
+    // Removed workaround as the issue has been already fixed. Details here:
     // https://code.google.com/p/google-visualization-api-issues/issues/detail?id=598
     // if (jQuery.browser.mozilla){
     //     var href = document.location.href;

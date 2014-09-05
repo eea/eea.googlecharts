@@ -1,0 +1,149 @@
+<script class="template" id="noteDialog" type="text/x-underscore-template">
+    <div class="googlecharts_note_config">
+        <div class="field note-title-field">
+            <label>Title</label>
+            <div class="formHelp">Note title</div>
+            <input name="title" type="text" value="<%= data.note_title %>"/>
+        </div>
+        <div class="field note-global-field">
+            <label>Global</label>
+            <div class="formHelp">
+                <span class="note-global-off-hint" <%= data.note_global ? "hidden" : "" %> >This will make the note available for all current charts and future added charts.</span>
+                <span class="note-global-on-hint" <%= data.note_global ? "" : "hidden" %> >Unchecking this will make the note local to this chart, it will no longer display on other charts.</span>
+            </div>
+            <input name="global" type="checkbox" <%= data.note_global ? 'checked="checked"' : "" %> />
+        </div>
+        <div class="field note-share-field" <%= data.other_charts.length <= 0 || data.note_global ? "hidden" : "" %> >
+            <label>Share with charts</label>
+            <div class="formHelp">This will make the note available for the charts selected below</div>
+            <select name="other_charts" multiple="multiple">
+              <% _.each(data.other_charts, function(chart){ %>
+                <option value="<%= chart.id %>" <%= chart.selected ? selected="selected" : "" %> ><%= chart.name %></option>
+              <% }); %>
+            </select>
+        </div>
+        <div class="field">
+            <label>Text</label>
+            <div class="formHelp">Note body</div>
+            <textarea name="text" id="googlechart_note_add_<%= data.chart_id %>"><%= data.note_text %></textarea>
+        </div>
+    </div>
+</script>
+<script class="template" id="removeDialog" type="text/x-underscore-template">
+    <div>Are you sure you want to delete <%= data.remove_type %>:
+        <strong><%= data.remove_text %></strong>
+        <div><br /><%= data.extra_body %></div>
+    </div>
+</script>
+<script class="template" id="removeNoteDialogBody" type="text/x-underscore-template">
+    <% if (data.note.global) { %>
+        <strong>Please note:</strong>
+        This note is global, also shown on other charts. It will be removed from all of them.
+    <% } else if (data.other_charts.length > 0) { %>
+        <strong>Please note:</strong>
+        This note is shared with the charts listed below. It will be removed from all of them.
+        <ul class="note-shared-charts-list">
+            <% _.each(data.other_charts, function(chart) { %>
+                <li><strong><%= chart.name %></strong></li>
+            <% }) %>
+        </ul>
+    <% } %>
+</script>
+<script class="template" id="noteTemplate" type="text/x-underscore-template">
+    <li>
+        <div class="note-delete-button eea-icon daviz-menuicon eea-icon-trash-o" title="Delete note"></div>
+        <div class="note-edit-button eea-icon daviz-menuicon <%= data.edit_icon %>" title="<%= data.edit_title %>"></div>
+        <%= data.note.title %>
+    </li>
+</script>
+<script class="template" id="googlechartTemplate" type="text/x-underscore-template">
+    <li class="googlechart daviz-facet-edit" id="googlechartid_<%= data.settings.id %>">
+        <input class="googlechart_id" type="hidden" value="<%= data.settings.id %>"/>
+        <input class="googlechart_configjson" type="hidden"/>
+        <input class="googlechart_columns" type="hidden"/>
+        <input class="googlechart_options" type="hidden"/>
+        <input class="googlechart_row_filters" type="hidden" value="<%= data.settings.row_filters %>"/>
+        <input class="googlechart_sortBy" type="hidden" value="<%= data.settings.sortBy %>"/>
+        <input class="googlechart_sortAsc" type="hidden" value="<%= data.settings.sortAsc %>"/>
+
+        <h1 class="googlechart_handle">
+            <div style="float:left;width:75%;height:20px;overflow:hidden;">
+               <input style="float: left" class="googlechart_name" type="text" />
+               <input class="googlechart_height" type="text" />
+               <input class="googlechart_width" type="text" />
+            </div>
+            <div class="eea-icon eea-icon-lg daviz-menuicon eea-icon-trash-o remove_chart_icon" title="Delete chart"></div>
+            <div class="eea-icon eea-icon-lg daviz-menuicon eea-icon-gear chart-button-settings" title="Advanced Options"></div>
+            <div class="eea-icon eea-icon-lg daviz-menuicon eea-icon-<%= data.settings.hidden ? 'eye-slash' : 'eye' %> googlechart_hide_chart_icon" title="Hide/Show chart"></div>
+            <div class="eea-icon eea-icon-lg daviz-menuicon eea-icon-copy duplicate_chart_icon" title="Duplicate chart"></div>
+            <div style="clear:both"> </div>
+        </h1>
+        <fieldset>
+            <div style="float:left; width:110px;">
+                <a style="float:right" class="preview_button img-polaroid">
+                <span id="googlechart_chart_div_<%= data.settings.id %>"></span>
+                <span>Preview and size adjustments</span></a>
+            </div>
+            <div class="googlechart-filtersposition-box">
+                <span>Filters Position</span>
+                <select name="googlechart_filterposition" >
+                    <option value="0" <%= data.settings.filter_pos === 0 ? "selected='selected'" : "" %> >Top</option>
+                    <option value="1" <%= data.settings.filter_pos === 1 ? "selected='selected'" : "" %> >Left</option>
+                    <option value="2" <%= data.settings.filter_pos === 2 ? "selected='selected'" : "" %> >Bottom</option>
+                    <option value="3" <%= data.settings.filter_pos === 3 ? "selected='selected'" : "" %> >Right</option>
+                </select>
+            </div>
+            <div class="googlechart-sort-box">
+                <div class="header">
+                    <span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Sort by column<span class="items_counter"></span></span>
+                </div>
+                <div style="padding: 1em" class="body">
+                    <select>
+                    </select>
+                </div>
+            </div>
+            <div class="googlechart-filters-box">
+                <div class="header">
+                    <span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Row filters <span class="items_counter"></span></span>
+                    <span title="Add new filter" class="eea-icon daviz-menuicon eea-icon-plus ui-corner-all addgooglechartfilter"></span>
+                </div>
+                <div style="padding: 1em" class="body">
+                    <ul class="googlechart_filters_list"  id="googlechart_filters_<%= data.settings.id %>">
+                    </ul>
+                </div>
+            </div>
+            <div class="googlechart-columnfilters-box">
+                <div class="header">
+                    <span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Column filters <span class="items_counter"></span></span>
+                    <span title="Add column filter" class="daviz-menuicon eea-icon eea-icon-plus ui-corner-all addgooglechartcolumnfilter"></span>
+                    <br/><span>Note: If row filters for pivoted columns are used, column filters using pivoted columns will be ignored</span>
+                </div>
+                <div style="padding: 1em" class="body">
+                    <ul class="googlechart_columnfilters_list"  id="googlechart_columnfilter_<%= data.settings.id %>">
+                    </ul>
+                </div>
+            </div>
+            <div class="googlechart-notes-box">
+                <div class="header">
+                    <span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Chart notes <span class="items_counter"></span></span>
+                    <span title="Add chart note" class="eea-icon daviz-menuicon eea-icon-plus ui-corner-all addgooglechartnote"></span>
+                </div>
+                <div style="padding: 1em" class="body">
+                    <ul class="googlechart_notes_list"  id="googlechart_notes_<%= data.settings.id %>">
+                    </ul>
+                </div>
+            </div>
+            <div style="clear:both"> </div>
+            <input type="button" style="float:right; margin-top:0.5em;" class="context btn btn-warning chart-button-edit" value="Edit" />
+            <div style="font-weight:normal;font-size:0.9em;margin-right:10px; padding-top:1em;" id="googlechart_thumb_text_<%= data.settings.id %>">
+              <label>
+                <input type="checkbox" class="googlechart_thumb_checkbox" style="float: left; margin:3px"
+                  id="googlechart_thumb_id_<%= data.settings.id %>"
+                  <%= data.settings.isThumb ? 'checked="checked"' : "" %>
+                  />
+                Use this chart as thumb
+              </label>
+            </div>
+        </fieldset>
+    </li>
+</script>

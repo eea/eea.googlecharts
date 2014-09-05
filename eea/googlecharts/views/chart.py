@@ -92,23 +92,38 @@ class View(ViewForm):
         """
         return re.escape(self.context.title)
 
+    def get_named_data(self, config_name, key='', default=[]):
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        view = mutator.view('googlechart.googlecharts')
+
+        config = view.get(config_name, None)
+        if config is None:
+            return
+
+        if key:
+            return config.get(key, default)
+
+        return config
+
+    def get_all_notes(self):
+        """ Retrieve all notes
+        """
+        return self.get_named_data('chartsconfig', 'notes')
+
+    def get_all_notes_json(self):
+        """ Retrieve all notes in json format
+        """
+        return json.dumps(self.get_all_notes())
+
     def get_charts(self):
         """ Charts
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        config = ''
-        for view in mutator.views:
-            if (view.get('chartsconfig')):
-                config = view.get('chartsconfig')
-        if config == "":
-            return []
-        return config['charts']
+        return self.get_named_data('chartsconfig', 'charts')
 
     def get_charts_json(self):
         """ Charts as JSON
         """
-        charts = self.get_charts()
-        return json.dumps(charts)
+        return json.dumps(self.get_charts())
 
     def get_visible_charts(self):
         """ Return only visible charts
@@ -507,30 +522,31 @@ class View(ViewForm):
             view = "embed-chart"
         return getMultiAdapter((self.context, self.request), name=view)()
 
-    def get_notes(self, chart_id):
-        """ get the notes for charts or dashboards
-        """
-        if 'dashboard' in chart_id:
-            dashboards = json.loads(self.get_dashboards())
-            for dashboard in dashboards:
-                if dashboard['name'] == chart_id:
-                    notes = []
-                    for widget in dashboard.get('widgets', []):
-                        if widget.get('wtype','') == \
-                            'googlecharts.widgets.textarea' and \
-                            not widget.get('dashboard',{}).get('hidden', True):
+    # it appears that this method is not used anywhere
+    #def get_notes(self, chart_id):
+    #    """ get the notes for charts or dashboards
+    #    """
+    #    if 'dashboard' in chart_id:
+    #        dashboards = json.loads(self.get_dashboards())
+    #        for dashboard in dashboards:
+    #            if dashboard['name'] == chart_id:
+    #                notes = []
+    #                for widget in dashboard.get('widgets', []):
+    #                    if widget.get('wtype','') == \
+    #                        'googlecharts.widgets.textarea' and \
+    #                        not widget.get('dashboard',{}).get('hidden', True):
 
-                            note = {}
-                            note['title'] = widget.get('title', '')
-                            note['text']  = widget.get('text', '')
-                            notes.append(note)
-                    return notes
-        else:
-            charts = self.get_charts()
-            for chart in charts:
-                if chart.get('id') == chart_id:
-                    return chart.get('notes', [])
-        return []
+    #                        note = {}
+    #                        note['title'] = widget.get('title', '')
+    #                        note['text']  = widget.get('text', '')
+    #                        notes.append(note)
+    #                return notes
+    #    else:
+    #        charts = self.get_charts()
+    #        for chart in charts:
+    #            if chart.get('id') == chart_id:
+    #                return chart.get('notes', [])
+    #    return []
 
 def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
     """ Calculate position of watermark and place it over the original image
