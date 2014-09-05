@@ -2083,6 +2083,7 @@ input[type=text].eea-googlechart-trendlines-config-value{
 }
 
 .multiples-config .multiples-matrix{
+    margin-top:10px;
     float:left;
 }
 
@@ -2183,6 +2184,24 @@ div.field[id*='multiples_settings'] {
 
 .multiples-header-item input{
     float:right;
+}
+
+.multiples-matrix-config-checkbox-label{
+    float:left;
+}
+
+.multiples-matrix-config{
+    float:left;
+}
+
+.multiples-headers-config input[type='checkbox']{
+    float:left;
+    margin-left:5px;
+    margin-right:10px;
+}
+
+.multiples-headers-config.readonly {
+    background-color: rgb(210,210,210);
 }
 .note-shared-charts-list {
     list-style-type: disc;

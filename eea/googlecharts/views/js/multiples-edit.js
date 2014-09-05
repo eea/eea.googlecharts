@@ -1,4 +1,37 @@
 jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
+    function checkIfPossibleMatrix(){
+        var possible_matrix = true;
+        if (jQuery(".multiples-matrix-item-overlay.selected").length > 0){
+            jQuery(".multiples-matrix-item-overlay:not(.selected)").each(function(idx, overlay){
+                var horizontal_col_id = jQuery(overlay).attr("horizontal-column-id");
+                var vertical_col_id = jQuery(overlay).attr("vertical-column-id");
+                if ((jQuery(".multiples-matrix-item-overlay.selected[horizontal-column-id='" + horizontal_col_id + "']").length > 0) &&
+                    (jQuery(".multiples-matrix-item-overlay.selected[vertical-column-id='" + vertical_col_id + "']").length > 0)){
+                    possible_matrix = false;
+                }
+            });
+        }
+        else {
+            possible_matrix = false;
+        }
+        if (possible_matrix){
+            jQuery(".multiples-headers-config")
+                .removeClass("readonly")
+                .find(".portalMessage")
+                    .text("The selected small multiples can be arranged in a matrix")
+                    .removeClass("noMessage")
+                    .addClass("yesMessage");
+        }
+        else{
+            jQuery(".multiples-headers-config")
+                .addClass("readonly")
+                .find(".portalMessage")
+                    .text("The selected small multiples can't be arranged in a matrix")
+                    .addClass("noMessage")
+                    .removeClass("yesMessage");
+            jQuery(".multiples-headers-config input[type='checkbox']").removeAttr("checked");
+        }
+    }
     var current_widget = ".googlechart-widget-" + view;
     jQuery(current_widget + " select").change(function(){
         if (view === "add"){
@@ -25,15 +58,15 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 .disableSelection();
 
 
-            chart_path = jQuery(current_widget + " select").attr("value").split("/");
+            var chart_path = jQuery(current_widget + " select").attr("value").split("/");
             var chart_id = chart_path[chart_path.length - 1];
             var absolute_url = jQuery(".multiples-config").attr("absolute_url");
             jQuery("<iframe>")
                 .addClass("base-chart-iframe")
                 .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=300&height=300")
                 .appendTo(".multiples-base-preview");
-            jQuery.getJSON(absolute_url + "/googlechart.get_charts", function (data){
-                chart_path = jQuery(current_widget + " select").attr("value").split("/");
+            jQuery.getJSON(absolute_url + "/googlechart.get_data", function (data){
+                var chart_path = jQuery(current_widget + " select").attr("value").split("/");
                 var chart_id = chart_path[chart_path.length - 1];
                 var base_chart_settings;
                 jQuery.each(data.charts, function(idx, chart){
@@ -49,7 +82,6 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     valueColumn : columnsFromSettings.valueColumn,
                     availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
                     unpivotSettings : base_chart_settings.unpivotsettings || {},
-//                    filters : JSON.parse(base_chart_settings.row_filters)
                     filters : {}
                 };
                 var transformedTable = transformTable(options);
@@ -116,6 +148,68 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     .addClass("multiples-vertical-replaced")
                     .addClass("multiples-replaced")
                     .appendTo(".multiples-matrix-config");
+
+                jQuery("<div>")
+                    .addClass("multiples-headers-config")
+                    .appendTo(".multiples-matrix-config");
+                jQuery("<div>")
+                    .addClass("portalMessage yesMessage")
+                    .text("The selected small multiples can be arranged in a matrix")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<div>")
+                    .text("Select if you want the small multiples arranged in a matrix")
+                    .css("margin-right","10px")
+                    .css("float", "left")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<input type='checkbox'>")
+                    .addClass(".multiples-matrix-arranged-in-matrix")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<div>")
+                    .css("clear","both")
+                    .appendTo(".multiples-headers-config");
+
+                jQuery("<div>")
+                    .text("Select where you want to display the column and row headers")
+                    .css("margin-right","10px")
+                    .css("float", "left")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<div>")
+                    .addClass("multiples-matrix-config-checkbox-label")
+                    .css("margin-left","5px")
+                    .text("left")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<input type='checkbox'>")
+                    .addClass(".multiples-matrix-column-headers-left")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<div>")
+                    .addClass("multiples-matrix-config-checkbox-label")
+                    .text("right")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<input type='checkbox'>")
+                    .addClass(".multiples-matrix-column-headers-right")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<div>")
+                    .addClass("multiples-matrix-config-checkbox-label")
+                    .text("top")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<input type='checkbox'>")
+                    .addClass(".multiples-matrix-column-headers-top")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<div>")
+                    .addClass("multiples-matrix-config-checkbox-label")
+                    .text("bottom")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<input type='checkbox'>")
+                    .addClass(".multiples-matrix-column-headers-bottom")
+                    .appendTo(".multiples-headers-config");
+                jQuery("<div>")
+                    .css("clear","both")
+                    .appendTo(".multiples-headers-config");
+                jQuery(".multiples-headers-config input[type='checkbox']").click(function(){
+                    if (jQuery(this).parent().hasClass("readonly")){
+                        return false;
+                    }
+                });
 
                 jQuery("<option>")
                     .text("(select column or row filter)")
@@ -385,6 +479,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
                                 tmp_settings.charts = selected_columns;
                                 jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
+                                checkIfPossibleMatrix();
                             });
                     });
                 });
@@ -435,6 +530,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         }
                     }
                 });
+                checkIfPossibleMatrix();
             });
         }
     });
