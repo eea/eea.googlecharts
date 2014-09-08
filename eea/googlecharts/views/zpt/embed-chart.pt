@@ -21,6 +21,10 @@
             .googlechart_full > div > div {overflow:hidden ! important;}
             .googlechart_filters {margin-top:0px !important;}
             body {margin:1px; overflow: hidden;}
+            .googlechart_dashboard .googlechart-notes {
+              font-size: 85%;
+              color: #666;
+            }
         </style>
     </head>
     <body onhashchange="hashchanged();" style="margin:0">
@@ -28,7 +32,7 @@
         <a tal:condition="python:not inline" style="float:right" class="go-to-original-link"
            tal:attributes="href view/context/absolute_url"
            i18n:translate=""
-           target="_top">Go to original visualization</a>
+           target="_top">Explore data</a>
     </body>
 </html>
 

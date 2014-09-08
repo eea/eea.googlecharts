@@ -3,6 +3,8 @@ Changelog
 
 11.0-dev - (unreleased)
 -----------------------
+* Change: made daviz notes smaller when embedded. Do not print filters.
+  [demarant]
 
 10.9 - (2014-08-27)
 -------------------
