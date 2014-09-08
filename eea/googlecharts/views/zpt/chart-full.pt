@@ -4,6 +4,7 @@
     #googlechart_full > div > div {overflow:hidden ! important;}
 </style>
 <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
+<script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
@@ -80,9 +81,16 @@
 
 </script>
 </head>
-<body tal:define="chart view/get_iframe_chart; row_filters python: chart.get('row_filters_str','{}'); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc_str','asc'); unpivotsettings python:view.get_unpivotSettings(chart);" style="margin: 0; overflow: hidden;">
+<body tal:define="chart view/get_iframe_chart;
+                  ChartNotes python: view.get_all_notes_json();
+                  row_filters python: chart.get('row_filters_str','{}');
+                  sortBy python: chart.get('sortBy','');
+                  sortAsc python: chart.get('sortAsc_str','asc');
+                  unpivotsettings python:view.get_unpivotSettings(chart);"
+      style="margin: 0; overflow: hidden;">
     <script type="text/javascript" tal:content="
         string:var chart_columns = ${chart/columns};
+        var ChartNotes = $ChartNotes;
         var merged_rows = ${chart/data};
         var available_columns = ${chart/available_columns};
         var chart_json = ${chart/json};

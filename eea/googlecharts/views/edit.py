@@ -28,12 +28,12 @@ def compare(a, b):
 class Edit(BrowserView):
     """ Edit GoogleCharts form
     """
-    def submit_charts(self):
+    def submit_data(self):
         """ Submit
         """
         mutator = queryAdapter(self.context, IVisualizationConfig)
         data = {}
-        data['chartsconfig'] = json.loads(self.request['charts'])
+        data['chartsconfig'] = json.loads(self.request['chartsconfig'])
         mutator.edit_view('googlechart.googlecharts', **data)
 
         if not IFolderish.providedBy(self.context):
@@ -61,16 +61,33 @@ class Edit(BrowserView):
 
         return _('Changes saved')
 
+    def get_named_data(self, config_name, key='', default=[]):
+        mutator = queryAdapter(self.context, IVisualizationConfig)
+        view = mutator.view('googlechart.googlecharts')
+
+        config = view.get(config_name, None)
+        if config is None:
+            return
+
+        if key:
+            return config.get(key, default)
+
+        return config
+
+    def get_notes(self):
+        """ Retrieve all notes
+        """
+        return self.get_named_data('chartsconfig', 'notes')
+
     def get_charts(self):
         """ Charts
         """
-        mutator = queryAdapter(self.context, IVisualizationConfig)
-        config = {}
-        for view in mutator.views:
-            if view.get('chartsconfig'):
-                config = view.get('chartsconfig')
-                break
-        return json.dumps(config)
+        return self.get_named_data('chartsconfig', 'charts')
+
+    def get_data(self):
+        """ Retrieve chartsconfig
+        """
+        return json.dumps(self.get_named_data('chartsconfig'))
 
     def get_columns(self):
         """ Columns

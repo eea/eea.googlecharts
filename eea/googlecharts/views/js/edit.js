@@ -4,6 +4,8 @@ var chartEditor = null;
 var chartId = '';
 var drawing = false;
 var chartWrapper;
+var Templates = {};
+var ChartNotes = [];
 
 var defaultChart = {
            'chartType':'LineChart',
@@ -291,6 +293,13 @@ function initializeChartTinyMCE(form){
     return true;
 }
 
+function reloadAllChartNotes(){
+  jQuery("#googlecharts_list").find(".googlechart_id").each(function(idx, elem){
+    elem = jQuery(elem);
+    reloadChartNotes(elem.val());
+  });
+}
+
 function reloadChartNotes(id){
     var context = jQuery('#googlechartid_' + id);
     if(!context.length){
@@ -300,118 +309,115 @@ function reloadChartNotes(id){
     var box = jQuery('.googlechart-notes-box', context);
     var ul = jQuery('.body ul', box).empty();
 
-    var notes = context.data('notes') || [];
+    var notes = _.sortBy(get_notes_for_chart(id), function(note){
+      return note.order[id];
+    });
     patched_each(notes, function(index, note){
-        var li = jQuery('<li>').text(note.title).appendTo(ul);
-        li.data('note', note);
 
-        // Note edit button
-        jQuery('<div>')
-            .addClass('eea-icon daviz-menuicon')
-            .addClass('eea-icon-pencil')
-            .attr('title', 'Edit note')
-            .prependTo(li)
-            .click(function(){
-                jQuery(".googlecharts_note_config").remove();
+      noteTemplate = Templates.noteTemplate({data: {
+        note: note,
+        edit_icon: note.global ? 'eea-icon-globe' : 'eea-icon-pencil',
+        edit_title: note.global ? 'Edit global note' : 'Edit note'
+      }});
 
-                var editDialog = jQuery('' +
-                '<div class="googlecharts_note_config">' +
-                    '<div class="field">' +
-                        '<label>Title</label>' +
-                        '<div class="formHelp">Note title</div>' +
-                        '<input type="text" value="' + note.title + '"/>' +
-                    '</div>' +
-                    '<div class="field">' +
-                        '<label>Text</label>' +
-                        '<div class="formHelp">Note body</div>' +
-                        '<textarea id="googlechart_note_add_' + id + '">' + note.text + '</textarea>' +
-                    '</div>' +
-                '</div>');
+      noteElement = jQuery(noteTemplate);
+      noteElement.appendTo(ul);
 
-                var isTinyMCE = false;
-                editDialog.dialog({
-                    title: 'Edit note',
-                    dialogClass: 'googlechart-dialog',
-                    modal: true,
-                    minHeight: 600,
-                    minWidth: 950,
-                    open: function(evt, ui){
-                        var buttons = jQuery(this).parent().find("button[title!='close']");
-                        buttons.attr('class', 'btn');
-                        jQuery(buttons[0]).addClass('btn-inverse');
-                        jQuery(buttons[1]).addClass('btn-success');
-                        isTinyMCE = initializeChartTinyMCE(editDialog);
-                    },
-                    buttons: {
-                        Cancel: function(){
-                            jQuery(this).dialog('close');
-                        },
-                        Save: function(){
-                            if(isTinyMCE){
-                                tinyMCE.triggerSave(true, true);
-                            }
+      noteElement.data('note', note);
+      noteElement.find('.note-edit-button')
+        .on('click', function(){
+          jQuery(".googlecharts_note_config").remove();
 
-                            var newNote = {
-                                title: jQuery('input[type="text"]', editDialog).val(),
-                                text: jQuery('textarea', editDialog).val()
-                            };
+          var template = Templates.noteDialog({
+            data: {
+              chart_id: id,
+              note_title: note.title,
+              note_text: note.text,
+              note_global: note.global,
+              other_charts: get_other_charts_for_note(note, id)
+            }
+          });
 
-                            var newNotes = jQuery.map(context.data('notes'), function(value, index){
-                                if(value.title != note.title){
-                                    return value;
-                                }else{
-                                    return newNote;
-                                }
-                            });
-                            context.data('notes', newNotes);
-                            reloadChartNotes(id);
-                            markChartAsModified(id);
-                            jQuery(this).dialog('close');
-                        }
-                    }
-                });
-            });
+          var editDialog = jQuery(template);
 
-        // Note delete button
-        jQuery('<div>')
-            .addClass('eea-icon daviz-menuicon')
-            .addClass('eea-icon-trash-o')
-            .attr('title', 'Delete note')
-            .prependTo(li)
-            .click(function(){
-                var deleteButton = jQuery(this);
-                var removeDialog = jQuery([
-                "<div>Are you sure you want to delete chart note: ",
-                    "<strong>", note.title, "</strong>" ,
-                "</div>"
-                ].join('\n'));
-                removeDialog.dialog({
-                    title: "Remove note",
-                    modal: true,
-                    dialogClass: 'googlechart-dialog',
-                    open: function(evt, ui){
-                        var buttons = jQuery(this).parent().find("button[title!='close']");
-                        buttons.attr('class', 'btn');
-                        jQuery(buttons[0]).addClass('btn-danger');
-                        jQuery(buttons[1]).addClass('btn-inverse');
-                    },
-                    buttons:{
-                        Remove: function(){
-                            var li = deleteButton.closest('li');
-                            li.remove();
-                            context.data('notes', []);
-                            jQuery('li', ul).each(function(){
-                                context.data('notes').push(jQuery(this).data('note'));
-                            });
-                            markChartAsModified(id);
-                            jQuery(this).dialog("close");
-                        },
-                        Cancel: function(){
-                            jQuery(this).dialog("close");
-                        }
-                    }
-                });
-            });
+          editDialog.find('.note-global-field').on('change', function(evt){
+            note_toggle_global_field(evt, editDialog);
+          });
+
+          var isTinyMCE = false;
+          editDialog.dialog({
+            title: 'Edit note',
+            dialogClass: 'googlechart-dialog',
+            modal: true,
+            minHeight: 600,
+            minWidth: 950,
+            open: function(evt, ui){
+              var buttons = jQuery(this).parent().find("button[title!='close']");
+              buttons.attr('class', 'btn');
+              jQuery(buttons[0]).addClass('btn-inverse');
+              jQuery(buttons[1]).addClass('btn-success');
+              isTinyMCE = initializeChartTinyMCE(editDialog);
+            },
+            buttons: {
+              Cancel: function(){
+                jQuery(this).dialog('close');
+              },
+              Save: function(){
+                if(isTinyMCE){
+                  tinyMCE.triggerSave(true, true);
+                }
+
+                var note_data = {
+                  title: jQuery('input[name="title"]', editDialog).val(),
+                  text: jQuery('textarea[name="text"]', editDialog).val(),
+                  global: jQuery('input[name="global"]:checked', editDialog).length > 0,
+                  charts: [id].concat(jQuery('select[name="other_charts"]', editDialog).val() || [])
+                };
+
+                edit_note(id, note, note_data);
+
+                jQuery(this).dialog('close');
+              }
+            }
+          });
+        });
+
+      // Note delete button
+      noteElement.find('.note-delete-button')
+        .on('click', function(){
+          var deleteButton = jQuery(this);
+          var removeChartNoteTemplate = Templates.removeDialog({data: {
+            remove_type: "chart note",
+            remove_text: note.title,
+            extra_body: Templates.removeNoteDialogBody({data: {
+              note: note,
+              other_charts: _.where(get_other_charts_for_note(note, id), {selected: true})
+            }})
+          }});
+
+          jQuery(removeChartNoteTemplate).dialog({
+            title: "Remove note",
+            modal: true,
+            dialogClass: 'googlechart-dialog',
+            open: function(evt, ui){
+              var buttons = jQuery(this).parent().find("button[title!='close']");
+              buttons.attr('class', 'btn');
+              jQuery(buttons[0]).addClass('btn-danger');
+              jQuery(buttons[1]).addClass('btn-inverse');
+            },
+            buttons:{
+              Remove: function(){
+                var li = deleteButton.closest('li');
+                delete_note(id, note);
+                li.remove();
+                jQuery(this).dialog("close");
+              },
+              Cancel: function(){
+                jQuery(this).dialog("close");
+              }
+            }
+          });
+        });
     });
 
     try {
@@ -427,9 +433,10 @@ function reloadChartNotes(id){
         cursor: 'crosshair',
         tolerance: 'pointer',
         update: function(){
-            context.data('notes', []);
-            jQuery('li', ul).each(function(){
-                context.data('notes').push(jQuery(this).data('note'));
+            jQuery('li', ul).each(function(idx, elem){
+              elem = jQuery(elem);
+              note_id = elem.data('note').id;
+              update_note_order(id, note_id, idx);
             });
             markChartAsModified(id);
         }
@@ -624,12 +631,11 @@ function reloadColumnFilters(id){
             .prependTo(li)
             .click(function(){
                 var deleteButton = jQuery(this);
-                var removeDialog = jQuery([
-                "<div>Are you sure you want to delete column filter: ",
-                    "<strong>", columnfilter.title, "</strong>" ,
-                "</div>"
-                ].join('\n'));
-                removeDialog.dialog({
+                var removeColumnFilterTemplate = Templates.removeDialog({data: {
+                  remove_type: "column filter",
+                  remove_text: columnfilter.title
+                }});
+                jQuery(removeColumnFilterTemplate).dialog({
                     title: "Remove column filter",
                     modal: true,
                     dialogClass: 'googlechart-dialog',
@@ -937,6 +943,7 @@ function markAllChartsAsModified(){
     jQuery(".googlechart").each(function(){
         jQuery(this).addClass("googlechart_modified");
     });
+    updateCounters();
 }
 
 function markChartAsThumb(id){
@@ -961,7 +968,6 @@ function addChart(options){
         columns : "",
         sortFilter : "__disabled__",
         filters : {},
-        notes: [],
         width : 800,
         height : 600,
         filter_pos : 0,
@@ -987,93 +993,38 @@ function addChart(options){
         chart.options.title = settings.name;
         settings.config = JSON.stringify(chart);
     }
-    var googlechart = jQuery("" +
-        "<li class='googlechart daviz-facet-edit' id='googlechartid_"+settings.id+"'>" +
-            "<input class='googlechart_id' type='hidden' value='"+settings.id+"'/>" +
-            "<input class='googlechart_configjson' type='hidden'/>" +
-            "<input class='googlechart_columns' type='hidden'/>" +
-            "<input class='googlechart_options' type='hidden'/>" +
-            "<input class='googlechart_row_filters' type='hidden' value='"+settings.row_filters+"'/>" +
-            "<input class='googlechart_sortBy' type='hidden' value='"+settings.sortBy+"'/>" +
-            "<input class='googlechart_sortAsc' type='hidden' value='"+settings.sortAsc+"'/>" +
 
-            "<h1 class='googlechart_handle'>"+
-            "<div style='float:left;width:75%;height:20px;overflow:hidden;'>"+
-                "<input style='float: left' class='googlechart_name' type='text' onchange='markChartAsModified(\""+settings.id+"\");drawChart(\""+settings.id+"\",function(){});'/>" +
-//                "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>px</span>"+
-                "<input class='googlechart_height' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
-//                "<span style='font-weight:normal;padding: 0 0.5em;float:right;'>x</span>"+
-                "<input class='googlechart_width' type='text' onchange='markChartAsModified(\""+settings.id+"\");'/>" +
-            "</div>"+
-            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-trash-o remove_chart_icon' title='Delete chart'></div>"+
-            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-gear' title='Advanced Options' onclick='openAdvancedOptions(\""+settings.id+"\");'></div>"+
-            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-" + (settings.hidden?"eye-slash":"eye") + " googlechart_hide_chart_icon' title='Hide/Show chart'></div>"+
-            "<div class='eea-icon eea-icon-lg daviz-menuicon eea-icon-copy duplicate_chart_icon' title='Duplicate chart'></div>"+
-            "<div style='clear:both'> </div>"+
-            "</h1>" +
-            "<fieldset>" +
-                "<div style='float:left; width:110px;'>" +
-                    "<a style='float:right' class='preview_button img-polaroid'>" +
-                    "<span id='googlechart_chart_div_"+settings.id+"'></span>" +
-                    "<span>Preview and size adjustments</span></a>"+
-                "</div>" +
-                "<div class='googlechart-filtersposition-box'>" +
-                    "<span>Filters Position</span>"+
-                    "<select name='googlechart_filterposition' onchange='markChartAsModified(\"" + settings.id + "\")'>" +
-                        "<option value='0' " + ((settings.filter_pos === 0) ? "selected='selected'": "") + ">Top</option>" +
-                        "<option value='1' " + ((settings.filter_pos === 1) ? "selected='selected'": "") + ">Left</option>" +
-                        "<option value='2' " + ((settings.filter_pos === 2) ? "selected='selected'": "") + ">Bottom</option>" +
-                        "<option value='3' " + ((settings.filter_pos === 3) ? "selected='selected'": "") + ">Right</option>" +
-                    "</select>" +
-                "</div>" +
-                "<div class='googlechart-sort-box'>"+
-                    '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Sort by column<span class="items_counter"></span></span>' +
-                    '</div>' +
-                    '<div style="padding: 1em" class="body">' +
-                        '<select>'+
-                        '</select>'+
-                    '</div>' +
-                "</div>"+
-                "<div class='googlechart-filters-box'>" +
-                    '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Row filters <span class="items_counter"></span></span>' +
-                        '<span title="Add new filter" class="eea-icon daviz-menuicon eea-icon-plus ui-corner-all addgooglechartfilter"></span>' +
-                    '</div>' +
-                    '<div style="padding: 1em" class="body">' +
-                        "<ul class='googlechart_filters_list'  id='googlechart_filters_"+settings.id+"'>" +
-                        "</ul>" +
-                    '</div>' +
-                "</div>" +
-                "<div class='googlechart-columnfilters-box'>" +
-                    '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Column filters <span class="items_counter"></span></span>' +
-                        '<span title="Add column filter" class="daviz-menuicon eea-icon eea-icon-plus ui-corner-all addgooglechartcolumnfilter"></span>' +
-                        '<br/><span>Note: If row filters for pivoted columns are used, column filters using pivoted columns will be ignored</span>'+
-                    '</div>' +
-                    '<div style="padding: 1em" class="body">' +
-                        "<ul class='googlechart_columnfilters_list'  id='googlechart_columnfilter_"+settings.id+"'>" +
-                        "</ul>" +
-                    '</div>' +
-                "</div>" +
-                "<div class='googlechart-notes-box'>" +
-                    '<div class="header">' +
-                        '<span class="label"><span style="float: left" class="eea-icon eea-icon-plus-square-o"></span>Chart notes <span class="items_counter"></span></span>' +
-                        '<span title="Add chart note" class="eea-icon daviz-menuicon eea-icon-plus ui-corner-all addgooglechartnote"></span>' +
-                    '</div>' +
-                    '<div style="padding: 1em" class="body">' +
-                        "<ul class='googlechart_notes_list'  id='googlechart_notes_"+settings.id+"'>" +
-                        "</ul>" +
-                    '</div>' +
-                "</div>" +
-                "<div style='clear:both'> </div>" +
-                "<input type='button' style='float:right; margin-top:0.5em;' class='context btn btn-warning' value='Edit' onclick='openEditChart(\""+settings.id+"\");'/>" +
-                "<div style='font-weight:normal;font-size:0.9em;margin-right:10px; padding-top:1em;' id='googlechart_thumb_text_"+settings.id+"'>" +
-                  "<input style='float: left; margin:3px' type='checkbox' class='googlechart_thumb_checkbox' id='googlechart_thumb_id_"+settings.id+"' onChange='markChartAsThumb(\""+settings.id+"\");' "+(settings.isThumb?"checked='checked'":"")+"/>"+
-                  "<label>Use this chart as thumb</label>" +
-                "</div>"+
-            "</fieldset>" +
-        "</li>");
+    var googlechartTemplate = Templates.googlechartTemplate({data: {
+      settings: settings
+    }});
+    var googlechart = jQuery(googlechartTemplate);
+
+    googlechart.find('.chart-button-settings').on('click', function(){
+      openAdvancedOptions(settings.id);
+    });
+
+    googlechart.find('.chart-button-edit').on('click', function(){
+      openEditChart(settings.id);
+    });
+
+    var to_change = [
+      '.googlechart_name',
+      '.googlechart_height',
+      '.googlechart_width',
+      '.googlechart_filterposition'
+    ].join(', ');
+
+    googlechart.find(to_change).on('change', function(){
+      markChartAsModified(settings.id);
+    });
+
+    googlechart.find('.googlechart_name').on('change', function(){
+      drawChart(settings.id, function(){});
+    });
+
+    googlechart.find('.googlechart_thumb_checkbox').on('change', function(){
+      markChartAsThumb(settings.id);
+    });
 
     // Sort
     googlechart.find('.googlechart-sort-box .body').hide();
@@ -1324,7 +1275,7 @@ function validatePointRotation(rotation){
         alert(err);
         return false;
     }
-    return true;    
+    return true;
 }
 
 function validatePointSides(sides){
@@ -1340,11 +1291,11 @@ function validatePointSides(sides){
         alert(err);
         return false;
     }
-    return true;    
+    return true;
 }
 
 function getValidatedLineDashStyle(value){
-    try { 
+    try {
         var values = value.split(',');
         var int_values = [];
         patched_each(values, function(idx, val){
@@ -1701,7 +1652,7 @@ function addCustomSettings() {
         patched_each(shapes, function (i, item) {
             p_shape.append($('<option>', {
                 "value": item,
-                "text" : item 
+                "text" : item
             }));
         });
 
@@ -5389,22 +5340,21 @@ function openAddChartNoteDialog(id){
     var context = jQuery('#googlechartid_' + id);
     jQuery(".googlecharts_note_config").remove();
 
-    var adddialog = jQuery('' +
-    '<div class="googlecharts_note_config">' +
-        '<div class="field">' +
-            '<label>Title</label>' +
-            '<div class="formHelp">Note title</div>' +
-            '<input type="text" class="googlecharts_note_title" />' +
-        '</div>' +
-        '<div class="field">' +
-            '<label>Text</label>' +
-            '<div class="formHelp">Note body</div>' +
-            '<textarea class="googlecharts_note_text" id="googlechart_note_add_' + id + '"></textarea>' +
-        '</div>' +
-    '</div>');
+    var template = Templates.noteDialog({
+      data: {
+        chart_id: id,
+        other_charts: get_other_charts_for_note(null, id)
+      }
+    });
+
+    var addDialog = jQuery(template);
+
+    addDialog.find('.note-global-field').on('change', function(evt){
+      note_toggle_global_field(evt, addDialog);
+    });
 
     var isTinyMCE = false;
-    adddialog.dialog({
+    addDialog.dialog({
         title: 'Add note',
         dialogClass: 'googlechart-dialog',
         modal:true,
@@ -5415,7 +5365,7 @@ function openAddChartNoteDialog(id){
             buttons.attr('class', 'btn');
             jQuery(buttons[0]).addClass('btn-inverse');
             jQuery(buttons[1]).addClass('btn-success');
-            isTinyMCE = initializeChartTinyMCE(adddialog);
+            isTinyMCE = initializeChartTinyMCE(addDialog);
         },
         buttons: {
             Cancel: function(){
@@ -5428,17 +5378,13 @@ function openAddChartNoteDialog(id){
                 }
 
                 var note = {
-                    title: jQuery('input[type="text"]', adddialog).val(),
-                    text: jQuery('textarea', adddialog).val()
+                  title: jQuery('input[name="title"]', addDialog).val(),
+                  text: jQuery('textarea[name="text"]', addDialog).val(),
+                  global: jQuery('input[name="global"]:checked', addDialog).length > 0,
+                  charts: [id].concat(jQuery('select[name="other_charts"]', addDialog).val() || [])
                 };
+                add_note(id, note);
 
-                if(!context.data('notes')){
-                    context.data('notes', []);
-                }
-
-                context.data('notes').push(note);
-                reloadChartNotes(id);
-                markChartAsModified(id);
                 jQuery(this).dialog('close');
             }
         }
@@ -5481,7 +5427,6 @@ function getChartOptions(chart_id){
         filters[jQuery("#"+filter+" .googlechart_filteritem_column").attr("value")] = filter_vals;
     });
     chart.filters = JSON.stringify(filters);
-    chart.notes = chartObj.data('notes') || [];
 
     chart.columnfilters = chartObj.data('columnfilters') || [];
     chart.unpivotsettings = chartObj.data('unpivotsettings') || {};
@@ -5534,11 +5479,14 @@ function saveCharts(){
 
     });
     jsonObj.charts = charts;
+    jsonObj.notes = ChartNotes;
     var jsonStr = JSON.stringify(jsonObj);
-    var query = {'charts':jsonStr};
+    var query = {
+      'chartsconfig': jsonStr
+    };
 
     jQuery.ajax({
-      url:ajax_baseurl+"/googlechart.submit_charts",
+      url:ajax_baseurl+"/googlechart.submit_data",
       type:'post',
       data:query,
       success:function(data){
@@ -5646,11 +5594,142 @@ function saveCharts(){
     });
 }
 
+function get_notes_for_chart(chart_id){
+  var notes = _.filter(ChartNotes, function(note){
+    return note.global || note.charts.indexOf(chart_id) !== -1;
+  });
+  return notes || [];
+}
+
+function get_other_charts_for_note(note, exclude_id){
+  return _.chain(jQuery('#googlecharts_list li.googlechart'))
+    .map(function(chart){
+      chart = jQuery(chart);
+      var chart_id = chart.find('.googlechart_id').val();
+      var chart_name = chart.find('.googlechart_name').val();
+      var selected = note ? note.charts.indexOf(chart_id) !== -1 : false;
+      return {
+        id: chart_id,
+        name: chart_name,
+        selected: selected
+      };
+    })
+    .filter(function(chart){
+      return chart.id !== exclude_id;
+    })
+    .value();
+}
+
+function delete_note_with_id(note_id){
+  ChartNotes = _.filter(ChartNotes, function(n){
+    return n.id !== note_id;
+  });
+}
+
+function remove_chart_from_note(chart_id, note){
+  var new_note_charts = _.filter(note.charts, function(c_id){
+    return c_id !== chart_id;
+  });
+  if (new_note_charts.length === 0){
+    delete_note_with_id(note.id);
+  } else {
+    note.charts = new_note_charts;
+    delete note.order[chart_id];
+  }
+  markChartAsModified(chart_id);
+}
+
+function remove_chart_update_notes(chart_id){
+  _.each(get_notes_for_chart(chart_id), function(note){
+    remove_chart_from_note(chart_id, note);
+  });
+}
+
+function update_note_order(chart_id, note_id, position){
+  _.findWhere(ChartNotes, {
+    id: note_id
+  }).order[chart_id] = position;
+}
+
+function delete_note(chart_id, note){
+  if(note.global){
+    delete_note_with_id(note.id);
+    reloadAllChartNotes();
+    markAllChartsAsModified();
+  } else {
+    remove_chart_from_note(chart_id, note);
+  }
+}
+
+function edit_note(chart_id, note, note_data){
+  oldNote = _.clone(note);
+
+  note = _.findWhere(ChartNotes, {id: note.id});
+
+  _.extend(note, note_data);
+
+  note.charts = note.global ? [] : note.charts;
+
+  if (note.global || note.global !== oldNote.global){
+    reloadAllChartNotes();
+    markAllChartsAsModified();
+  } else {
+    _.each(_.union(oldNote.charts, note.charts), function(c_id){
+      reloadChartNotes(c_id);
+      markChartAsModified(c_id);
+    });
+  }
+}
+
+function note_toggle_global_field(evt, dialog){
+  var global = jQuery(evt.target);
+  var share_field = dialog.find('.note-share-field');
+  var hint_on = dialog.find('.note-global-on-hint');
+  var hint_off = dialog.find('.note-global-off-hint');
+  if (global.is(":checked")){
+    share_field.fadeOut();
+    hint_on.show();
+    hint_off.hide();
+  } else {
+    share_field.fadeIn();
+    hint_off.show();
+    hint_on.hide();
+  }
+}
+
+function add_note(chart_id, note_data){
+  var note = {
+    id: UUID.genV4().toString(),
+    charts: [],
+    order: {},
+    title: '',
+    text: '',
+    global: false
+  };
+
+  note.order[chart_id] = get_notes_for_chart(chart_id).length;
+
+  _.extend(note, note_data);
+
+  ChartNotes.push(note);
+
+  if(note.global){
+    reloadAllChartNotes();
+    markAllChartsAsModified();
+  } else {
+    _.each(note.charts, function(c_id){
+      reloadChartNotes(c_id);
+      markChartAsModified(c_id);
+    });
+  }
+}
+
 function loadCharts(){
     DavizEdit.Status.start("Loading Charts");
-    jQuery.getJSON(ajax_baseurl+"/googlechart.get_charts", function(data){
+    jQuery.getJSON(ajax_baseurl+"/googlechart.get_data", function(data){
         var jsonObj = data;
         var charts = jsonObj.charts;
+        ChartNotes = jsonObj.notes;
         jQuery(charts).each(function(index, chart){
             var options = {
                 id : chart.id,
@@ -5659,7 +5738,6 @@ function loadCharts(){
                 columns : chart.columns,
                 sortFilter : chart.sortFilter,
                 filters : JSON.parse(chart.filters),
-                notes: chart.notes || [],
                 columnfilters: chart.columnfilters || [],
                 width : chart.width,
                 height : chart.height,
@@ -5720,6 +5798,36 @@ function addNewChart(){
     });
 }
 
+function duplicate_notes_for_chart(source_chart_id, dst_chart_id){
+  _.chain(get_notes_for_chart(source_chart_id))
+    .filter(function(note){ return !note.global; })
+    .map(function(note){
+      var new_note = _.clone(note);
+      new_note.id = UUID.genV4().toString();
+      new_note.charts = _.map(note.charts, function(id){
+        return id === source_chart_id ? dst_chart_id : id;
+      });
+      new_note.order = _.chain(new_note.order)
+        .pairs()
+        .map(function(pair){
+          var key = pair[0];
+          var value = pair[1];
+          return key === source_chart_id ? [dst_chart_id, value] : pair;
+        })
+        .object()
+        .value();
+
+      ChartNotes.push(new_note);
+
+      _.each(new_note.charts, function(c_id){
+        reloadChartNotes(c_id);
+        markChartAsModified(c_id);
+      });
+
+    })
+    .value();
+}
+
 function duplicateChart(chartName){
   var options = getChartOptions(chartName);
   var newChartId = getNextChartName(chartName);
@@ -5727,6 +5835,9 @@ function duplicateChart(chartName){
   options.id = newChartId;
   options.name = getNextChartTitle(options.name);
   options.filters = JSON.parse(options.filters);
+
+  var source_chart_id = jQuery("#" + chartName).find(".googlechart_id").val();
+  duplicate_notes_for_chart(source_chart_id, newChartId);
 
   addChart(options);
   var newChart = jQuery("#googlechartid_"+newChartId);
@@ -5870,11 +5981,12 @@ function drawPreviewChart(chartObj, width, height){
 }
 
 function init_googlecharts_edit(){
-    if(!jQuery("#googlecharts_list").length){
+    var googlecharts_list = jQuery("#googlecharts_list");
+    if(!googlecharts_list.length){
         return;
     }
 
-    jQuery("#googlecharts_list").sortable({
+    googlecharts_list.sortable({
         handle : '.googlechart_handle',
         items: 'li.googlechart',
         opacity: 0.7,
@@ -5896,19 +6008,19 @@ function init_googlecharts_edit(){
 
     jQuery("#addgooglechart").click(addNewChart);
 
-    jQuery("#googlecharts_list").delegate(".duplicate_chart_icon", "click", function(){
+    googlecharts_list.delegate(".duplicate_chart_icon", "click", function(){
       var chartName = jQuery(this).closest('.googlechart').attr('id');
       return duplicateChart(chartName);
     });
 
-    jQuery("#googlecharts_list").delegate(".remove_chart_icon","click",function(){
+    googlecharts_list.delegate(".remove_chart_icon","click",function(){
         var chartId = jQuery(this).closest('.googlechart').attr('id');
         var chartToRemove = jQuery("#"+chartId).find(".googlechart_id").attr('value');
-        var removeChartDialog = ""+
-            "<div>Are you sure you want to delete chart: "+
-            "<strong>"+chartToRemove+"</strong>"+
-            "</div>";
-        jQuery(removeChartDialog).dialog({title:"Remove Chart",
+        var removeChartTemplate = Templates.removeDialog({data: {
+          remove_type: "chart",
+          remove_text: chartToRemove
+        }});
+        jQuery(removeChartTemplate).dialog({title:"Remove Chart",
             modal:true,
             dialogClass: 'googlechart-dialog',
             open: function(evt, ui){
@@ -5921,7 +6033,9 @@ function init_googlecharts_edit(){
                 {
                     text: "Remove",
                     click: function(){
+                        var chart_id = jQuery("#"+chartId).find(".googlechart_id").attr('value');
                         jQuery("#"+chartId).remove();
+                        remove_chart_update_notes(chart_id);
                         markAllChartsAsModified();
                         jQuery(this).dialog("close");
                     }
@@ -5934,7 +6048,7 @@ function init_googlecharts_edit(){
                 }
         ]});
     });
-    jQuery("#googlecharts_list").delegate(".googlechart_hide_chart_icon","click",function(){
+    googlecharts_list.delegate(".googlechart_hide_chart_icon","click",function(){
         var oldClass = "eea-icon-eye";
         var newClass = "eea-icon-eye-slash";
         var elem = jQuery(this);
@@ -5948,7 +6062,7 @@ function init_googlecharts_edit(){
         changeChartHiddenState(chartId);
     });
 
-    jQuery("#googlecharts_list").delegate(".edit_filter_icon","click",function(){
+    googlecharts_list.delegate(".edit_filter_icon","click",function(){
         var elem = jQuery(this);
         var filterToEdit = elem.closest('.googlechart_filteritem');
         chartId = elem.closest('.googlechart').attr('id');
@@ -5958,18 +6072,18 @@ function init_googlecharts_edit(){
         openAddEditChartFilterDialog(id, filterToEdit.attr("id"), filter_settings);
     });
 
-    jQuery("#googlecharts_list").delegate(".remove_filter_icon","click",function(){
+    googlecharts_list.delegate(".remove_filter_icon","click",function(){
         var elem = jQuery(this);
         var filterToRemove = elem.closest('.googlechart_filteritem');
         chartId = elem.closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
         var title = filterToRemove.find('.googlechart_filteritem_id').html();
-        var removeFilterDialog = ""+
-            "<div>Are you sure you want to delete filter: "+
-            "<strong>"+title+"</strong>"+
-            "</div>";
-        jQuery(removeFilterDialog).dialog({title:"Remove filter",
+        var removeFilterTemplate = Templates.removeDialog({data: {
+          remove_type: "filter",
+          remove_text: title
+        }});
+        jQuery(removeFilterTemplate).dialog({title:"Remove filter",
             modal:true,
             dialogClass: 'googlechart-dialog',
             open: function(evt, ui){
@@ -5996,21 +6110,21 @@ function init_googlecharts_edit(){
         ]});
     });
 
-    jQuery("#googlecharts_list").delegate(".addgooglechartfilter","click",function(){
+    googlecharts_list.delegate(".addgooglechartfilter","click",function(){
         chartId = jQuery(this).closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
         openAddEditChartFilterDialog(id, "add", {});
     });
 
-    jQuery("#googlecharts_list").delegate(".addgooglechartcolumnfilter","click",function(){
+    googlecharts_list.delegate(".addgooglechartcolumnfilter","click",function(){
         chartId = jQuery(this).closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
         openAddChartColumnFilterDialog(id);
     });
 
-    jQuery("#googlecharts_list").delegate(".addgooglechartnote","click",function(){
+    googlecharts_list.delegate(".addgooglechartnote","click",function(){
         chartId = jQuery(this).closest('.googlechart').attr('id');
         var liName = "googlechartid";
         var id = chartId.substr(liName.length+1);
@@ -6022,7 +6136,7 @@ function init_googlecharts_edit(){
         saveCharts();
     });
 
-    jQuery("#googlecharts_list").delegate("a.preview_button", "click", function(){
+    googlecharts_list.delegate("a.preview_button", "click", function(){
         previewChartObj = jQuery(this).closest('.googlechart');
         var chartObj = previewChartObj;
         var width = parseInt(chartObj.find(".googlechart_width").val(),10);
@@ -6165,7 +6279,7 @@ function init_googlecharts_edit(){
             }
         });
     });
-    jQuery("#googlecharts_list").delegate("a.preview_button", "hover", function(){
+    googlecharts_list.delegate("a.preview_button", "hover", function(){
         previewChartObj = jQuery(this).closest('.googlechart');
         var chartObj = previewChartObj;
         var width = chartObj.find(".googlechart_width").val();
@@ -6184,7 +6298,7 @@ function init_googlecharts_edit(){
 function manageCustomSettings() {
     jQuery("body").off("click", "#google-visualization-charteditor-panel-navigate-div div:nth-child(3)")
         .on("click", "#google-visualization-charteditor-panel-navigate-div div:nth-child(3)", function(evt){
-            setTimeout(addCustomSettings, 1);    
+            setTimeout(addCustomSettings, 1);
         });
     jQuery("body").off("click", ".charts-menuitem")
         .on("click", ".charts-menuitem", function(evt){
@@ -6360,13 +6474,30 @@ function overrideSparklinesThumbnail(){
     });
 }
 
+function load_templates(callback){
+  jQuery.ajax({
+    url: "++resource++eea.googlecharts.jst/edit.jst",
+    cache: false,
+    type: "GET",
+    success: function(templates){
+      var body = $(templates);
+      _.each(body.filter("script.template"), function(template){
+        Templates[template.id] = _.template(template.textContent);
+      }, this);
+      callback();
+    }
+  });
+}
+
 jQuery(document).ready(function(){
     charteditor_css = jQuery("link[rel='stylesheet'][href*='charteditor']");
     charteditor_css.remove();
 
-    init_googlecharts_edit();
-    jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
-        init_googlecharts_edit();
+    load_templates(function(){
+      init_googlecharts_edit();
+      jQuery(document).bind(DavizEdit.Events.views.refreshed, function(evt, data){
+          init_googlecharts_edit();
+      });
     });
 
     overrideGooglePalette();

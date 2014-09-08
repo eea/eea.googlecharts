@@ -2050,3 +2050,11 @@ input[type=text].eea-googlechart-trendlines-config-value{
 .google-visualization-charteditor-item-gap {
     clear:both;
 }
+
+.note-shared-charts-list {
+    list-style-type: disc;
+}
+
+.note-shared-charts-list li {
+    display: list-item;
+}
