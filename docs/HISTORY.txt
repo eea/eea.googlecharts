@@ -3,6 +3,8 @@ Changelog
 
 11.0-dev - (unreleased)
 -----------------------
+* Bugfix: Fixed watermark/logo on embedded dashboards
+  [szabozo0 refs #21007]
 * Change: made daviz notes smaller when embedded. Do not print filters.
   [demarant]
 * Feature: adding Underscore.js template support

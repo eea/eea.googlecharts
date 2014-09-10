@@ -75,7 +75,7 @@ function drawDashboardEmbed(options){
 
         var googlechart_wm = "<img alt='Watermark' src='" + settings.wm_path + "'/>";
         if (settings.wm_pos !== "Disabled"){
-            jQuery(googlechart_wm).appendTo("#googlechart_wm");
+            jQuery(googlechart_wm).appendTo("#googlechart_wm_" + settings.vhash);
             jQuery("#googlechart_wm_" + settings.vhash).removeClass("eea-googlechart-hidden-image");
         }
     }
