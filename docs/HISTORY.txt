@@ -5,6 +5,8 @@ Changelog
 -----------------------
 * Feature: Implement small multiples/trellis charts
   [szabozo0 refs #19055]
+* Change: made daviz notes smaller when embedded. Do not print filters.
+  [demarant]
 * Feature: adding Underscore.js template support
   [batradav refs #19048]
 * Feature: chart notes rework - now notes are stored globally and

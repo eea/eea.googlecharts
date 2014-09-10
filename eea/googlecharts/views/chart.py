@@ -451,6 +451,7 @@ class View(ViewForm):
         chart_preview_columns = self.request.get('columns', '[]')
         chart_preview_options = self.request.get('options', '{}')
         chart_preview_filters = self.request.get('filters', '{}')
+        chart_preview_possibleLabels = self.request.get('possibleLabels', '{}')
         if tmp_id:
             mutator = queryAdapter(self.context, IVisualizationConfig)
             data = mutator.view('googlechart.googlecharts')
@@ -463,6 +464,7 @@ class View(ViewForm):
             config['preview_columns'] = chart_preview_columns
             config['preview_options'] = chart_preview_options
             config['preview_filters'] = chart_preview_filters
+            config['preview_possibleLabels'] = chart_preview_possibleLabels
             return config
 
         else:
@@ -495,6 +497,7 @@ class View(ViewForm):
             config['preview_columns'] = chart_preview_columns
             config['preview_options'] = chart_preview_options
             config['preview_filters'] = chart_preview_filters
+            config['preview_possibleLabels'] = chart_preview_possibleLabels
             return config
 
     def get_visualization_hash(self):

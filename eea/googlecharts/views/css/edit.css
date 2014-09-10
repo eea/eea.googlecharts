@@ -2084,7 +2084,9 @@ input[type=text].eea-googlechart-trendlines-config-value{
 
 .multiples-config .multiples-matrix{
     margin-top:10px;
+    margin-left:30px;
     float:left;
+    overflow:auto;
 }
 
 .multiples-config .multiples-base-preview .base-chart-iframe{
@@ -2092,7 +2094,7 @@ input[type=text].eea-googlechart-trendlines-config-value{
     height:300px;
 }
 
-.multiples-config .multiples-matrix .small-container{
+.multiples-config .multiples-matrix .multiples-matrix-elements .small-container{
     float:left;
     width:67px;
     height:67px;
@@ -2100,14 +2102,14 @@ input[type=text].eea-googlechart-trendlines-config-value{
     position:relative;
 }
 
-.multiples-config .multiples-matrix .small-chart{
+.multiples-config .multiples-matrix .multiples-matrix-elements .small-chart{
     width:67px;
     height:67px;
     position:absolute;
     z-index:1;
 }
 
-.multiples-config .multiples-matrix .multiples-matrix-item-overlay{
+.multiples-config .multiples-matrix .multiples-matrix-elements .multiples-matrix-item-overlay{
     width:67px;
     height:67px;
     position:absolute;
@@ -2191,22 +2193,36 @@ div.field[id*='multiples_settings'] {
 }
 
 .multiples-matrix-config{
+/*    display:none;*/
     float:left;
 }
 
-.multiples-headers-config input[type='checkbox']{
-    float:left;
-    margin-left:5px;
-    margin-right:10px;
-}
-
-.multiples-headers-config.readonly {
-    background-color: rgb(210,210,210);
-}
 .note-shared-charts-list {
     list-style-type: disc;
 }
 
 .note-shared-charts-list li {
     display: list-item;
+}
+
+.draggable-column {
+    float:left;
+    position:relative;
+    border:1px solid red;
+    z-index:9999;
+}
+.droppable-column {
+    position:relative;
+    border:1px solid green;
+    z-index:9998;
+    width:100px;
+    height:20px;
+}
+
+.multiples-matrix-config-column-vertical {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    margin-left: 290px;
+    margin-top: 100px;
 }

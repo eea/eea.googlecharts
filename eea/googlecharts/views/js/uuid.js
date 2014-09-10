@@ -1,3 +1,4 @@
+/* jslint:disable */
 /**
  * UUID.js: The RFC-compliant UUID generator for JavaScript.
  *

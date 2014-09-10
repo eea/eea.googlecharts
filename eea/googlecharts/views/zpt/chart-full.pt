@@ -84,13 +84,23 @@
             };
 
             chart_options.title = preview_options.chartTitle;
-            if (chart_options.title !== undefined){
-                jQuery.each(preview_columns, function(idx, value){
+            if ((chart_options.title !== undefined) && (!jQuery.isEmptyObject(preview_possibleLabels))){
+                var vertical_str = preview_possibleLabels.vertical.value;
+                if (preview_possibleLabels.vertical.type === "column"){
+                    vertical_str = transformedTable.available_columns[vertical_str]
+                }
+                var horizontal_str = preview_possibleLabels.horizontal.value;
+                if (preview_possibleLabels.horizontal.type === "column"){
+                    horizontal_str = transformedTable.available_columns[horizontal_str]
+                }
+                chart_options.title = chart_options.title.split("{vertical}").join(vertical_str).split("{horizontal}").join(horizontal_str);
+/*                jQuery.each(preview_columns, function(idx, value){
                     chart_options.title = chart_options.title.split("{column_"+idx+"}").join(transformedTable.available_columns[value]);
-                });
+                });*/
             }
-
-            chart_options.legend = 'none';
+            if (!preview_options.displayLegend){
+                chart_options.legend = 'none';
+            }
         }
         var googlechart_params = {
             chartDashboard : 'googlechart_dashboard_full',
@@ -148,6 +158,7 @@
         var preview_options = JSON.parse(decodeURIComponent('${chart/preview_options}'));
         var preview_columns = JSON.parse(decodeURIComponent('${chart/preview_columns}'));
         var preview_filters = JSON.parse(decodeURIComponent('${chart/preview_filters}'));
+        var preview_possibleLabels = JSON.parse(decodeURIComponent('${chart/preview_possibleLabels}'));
         "></script>
 
     <div id="googlechart_dashboard">
