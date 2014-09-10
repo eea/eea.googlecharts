@@ -82,6 +82,148 @@ var matrixChartOptions = {
             }
 };
 
+// Functions that are used before their definition
+
+var resizeTableConfigurator;
+var openEditChart;
+var markChartAsModified;
+var reloadChartNotes;
+var reloadAllChartNotes;
+var markAllChartsAsModified;
+
+//////
+
+
+function get_notes_for_chart(chart_id){
+  var notes = _.filter(ChartNotes, function(note){
+    return note.global || note.charts.indexOf(chart_id) !== -1;
+  });
+  return notes || [];
+}
+
+function get_other_charts_for_note(note, exclude_id){
+  return _.chain(jQuery('#googlecharts_list li.googlechart'))
+    .map(function(chart){
+      chart = jQuery(chart);
+      var chart_id = chart.find('.googlechart_id').val();
+      var chart_name = chart.find('.googlechart_name').val();
+      var selected = note ? note.charts.indexOf(chart_id) !== -1 : false;
+      return {
+        id: chart_id,
+        name: chart_name,
+        selected: selected
+      };
+    })
+    .filter(function(chart){
+      return chart.id !== exclude_id;
+    })
+    .value();
+}
+
+function delete_note_with_id(note_id){
+  ChartNotes = _.filter(ChartNotes, function(n){
+    return n.id !== note_id;
+  });
+}
+
+function remove_chart_from_note(chart_id, note){
+  var new_note_charts = _.filter(note.charts, function(c_id){
+    return c_id !== chart_id;
+  });
+  if (new_note_charts.length === 0){
+    delete_note_with_id(note.id);
+  } else {
+    note.charts = new_note_charts;
+    delete note.order[chart_id];
+  }
+  markChartAsModified(chart_id);
+}
+
+function remove_chart_update_notes(chart_id){
+  _.each(get_notes_for_chart(chart_id), function(note){
+    remove_chart_from_note(chart_id, note);
+  });
+}
+
+function update_note_order(chart_id, note_id, position){
+  _.findWhere(ChartNotes, {
+    id: note_id
+  }).order[chart_id] = position;
+}
+
+function delete_note(chart_id, note){
+  if(note.global){
+    delete_note_with_id(note.id);
+    reloadAllChartNotes();
+    markAllChartsAsModified();
+  } else {
+    remove_chart_from_note(chart_id, note);
+  }
+}
+
+function edit_note(chart_id, note, note_data){
+  oldNote = _.clone(note);
+
+  note = _.findWhere(ChartNotes, {id: note.id});
+
+  _.extend(note, note_data);
+
+  note.charts = note.global ? [] : note.charts;
+
+  if (note.global || note.global !== oldNote.global){
+    reloadAllChartNotes();
+    markAllChartsAsModified();
+  } else {
+    _.each(_.union(oldNote.charts, note.charts), function(c_id){
+      reloadChartNotes(c_id);
+      markChartAsModified(c_id);
+    });
+  }
+}
+
+function note_toggle_global_field(evt, dialog){
+  var global = jQuery(evt.target);
+  var share_field = dialog.find('.note-share-field');
+  var hint_on = dialog.find('.note-global-on-hint');
+  var hint_off = dialog.find('.note-global-off-hint');
+  if (global.is(":checked")){
+    share_field.fadeOut();
+    hint_on.show();
+    hint_off.hide();
+  } else {
+    share_field.fadeIn();
+    hint_off.show();
+    hint_on.hide();
+  }
+}
+
+function add_note(chart_id, note_data){
+  var note = {
+    id: UUID.genV4().toString(),
+    charts: [],
+    order: {},
+    title: '',
+    text: '',
+    global: false
+  };
+
+  note.order[chart_id] = get_notes_for_chart(chart_id).length;
+
+  _.extend(note, note_data);
+
+  ChartNotes.push(note);
+
+  if(note.global){
+    reloadAllChartNotes();
+    markAllChartsAsModified();
+  } else {
+    _.each(note.charts, function(c_id){
+      reloadChartNotes(c_id);
+      markChartAsModified(c_id);
+    });
+  }
+}
+
 function checkReadyForSparklines(skipwrapper){
     if ((!skipwrapper) && (chartEditor.getChartWrapper().getChartType() !== 'ImageSparkLine')){
         return;
@@ -216,11 +358,11 @@ function checkSVG_withThumb(id){
     }
 }
 
-function markChartAsModified(id){
+markChartAsModified = function(id){
     var chartObj = jQuery("#googlechartid_"+id);
     chartObj.addClass("googlechart_modified");
     updateCounters();
-}
+};
 
 function changeChartHiddenState(id){
     var chartObj = jQuery("#googlechartid_"+id);
@@ -293,14 +435,7 @@ function initializeChartTinyMCE(form){
     return true;
 }
 
-function reloadAllChartNotes(){
-  jQuery("#googlecharts_list").find(".googlechart_id").each(function(idx, elem){
-    elem = jQuery(elem);
-    reloadChartNotes(elem.val());
-  });
-}
-
-function reloadChartNotes(id){
+reloadChartNotes = function(id){
     var context = jQuery('#googlechartid_' + id);
     if(!context.length){
         return;
@@ -441,7 +576,14 @@ function reloadChartNotes(id){
             markChartAsModified(id);
         }
     });
-}
+};
+
+reloadAllChartNotes = function(){
+  jQuery("#googlecharts_list").find(".googlechart_id").each(function(idx, elem){
+    elem = jQuery(elem);
+    reloadChartNotes(elem.val());
+  });
+};
 
 function validateColumnFilter(columnfilter_titles, columnfilter, checktitle){
     var errorMsg = "";
@@ -939,12 +1081,12 @@ function openAdvancedOptions(id){
             ]});
 }
 
-function markAllChartsAsModified(){
+markAllChartsAsModified = function(){
     jQuery(".googlechart").each(function(){
         jQuery(this).addClass("googlechart_modified");
     });
     updateCounters();
-}
+};
 
 function markChartAsThumb(id){
     jQuery(".googlechart_thumb_checkbox").each(function(){
@@ -2601,7 +2743,7 @@ function addIntervalConfig(){
         });
 }
 
-function resizeTableConfigurator(forced){
+resizeTableConfigurator = function(forced){
     if ((jQuery(".googlechart_table_config_scaleable_maximized").length > 0) || forced){
         var fullwidth = jQuery(".googlecharts-customdialog").width();
         var fullheight = jQuery(".googlecharts_columns_config").height();
@@ -2621,10 +2763,9 @@ function resizeTableConfigurator(forced){
         jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
         jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
         newTable.height(newTable.parent().height() - (newTable.offset().top - newTable.parent().offset().top) - 100);
-        console.log(newTable.height());
         grid.resizeCanvas();
     }
-}
+};
 
 var shouldListenErrorEvent;
 
@@ -4434,7 +4575,7 @@ function fillEditorDialogWithDelay(){
     fillEditorDialog({});
 }
 
-function openEditChart(id){
+openEditChart = function(id){
     backupColors = [];
     backupOptionColors = [];
     jQuery("html").append(charteditor_css);
@@ -4792,7 +4933,7 @@ function openEditChart(id){
         updateWithStatus();
     });
     updateTutorialLinks();
-}
+};
 
 function populateDefaults(id, type, settings){
     var edit_filter_settings = {
@@ -5592,136 +5733,6 @@ function saveCharts(){
           jQuery(document).trigger('google-charts-changed');
       }
     });
-}
-
-function get_notes_for_chart(chart_id){
-  var notes = _.filter(ChartNotes, function(note){
-    return note.global || note.charts.indexOf(chart_id) !== -1;
-  });
-  return notes || [];
-}
-
-function get_other_charts_for_note(note, exclude_id){
-  return _.chain(jQuery('#googlecharts_list li.googlechart'))
-    .map(function(chart){
-      chart = jQuery(chart);
-      var chart_id = chart.find('.googlechart_id').val();
-      var chart_name = chart.find('.googlechart_name').val();
-      var selected = note ? note.charts.indexOf(chart_id) !== -1 : false;
-      return {
-        id: chart_id,
-        name: chart_name,
-        selected: selected
-      };
-    })
-    .filter(function(chart){
-      return chart.id !== exclude_id;
-    })
-    .value();
-}
-
-function delete_note_with_id(note_id){
-  ChartNotes = _.filter(ChartNotes, function(n){
-    return n.id !== note_id;
-  });
-}
-
-function remove_chart_from_note(chart_id, note){
-  var new_note_charts = _.filter(note.charts, function(c_id){
-    return c_id !== chart_id;
-  });
-  if (new_note_charts.length === 0){
-    delete_note_with_id(note.id);
-  } else {
-    note.charts = new_note_charts;
-    delete note.order[chart_id];
-  }
-  markChartAsModified(chart_id);
-}
-
-function remove_chart_update_notes(chart_id){
-  _.each(get_notes_for_chart(chart_id), function(note){
-    remove_chart_from_note(chart_id, note);
-  });
-}
-
-function update_note_order(chart_id, note_id, position){
-  _.findWhere(ChartNotes, {
-    id: note_id
-  }).order[chart_id] = position;
-}
-
-function delete_note(chart_id, note){
-  if(note.global){
-    delete_note_with_id(note.id);
-    reloadAllChartNotes();
-    markAllChartsAsModified();
-  } else {
-    remove_chart_from_note(chart_id, note);
-  }
-}
-
-function edit_note(chart_id, note, note_data){
-  oldNote = _.clone(note);
-
-  note = _.findWhere(ChartNotes, {id: note.id});
-
-  _.extend(note, note_data);
-
-  note.charts = note.global ? [] : note.charts;
-
-  if (note.global || note.global !== oldNote.global){
-    reloadAllChartNotes();
-    markAllChartsAsModified();
-  } else {
-    _.each(_.union(oldNote.charts, note.charts), function(c_id){
-      reloadChartNotes(c_id);
-      markChartAsModified(c_id);
-    });
-  }
-}
-
-function note_toggle_global_field(evt, dialog){
-  var global = jQuery(evt.target);
-  var share_field = dialog.find('.note-share-field');
-  var hint_on = dialog.find('.note-global-on-hint');
-  var hint_off = dialog.find('.note-global-off-hint');
-  if (global.is(":checked")){
-    share_field.fadeOut();
-    hint_on.show();
-    hint_off.hide();
-  } else {
-    share_field.fadeIn();
-    hint_off.show();
-    hint_on.hide();
-  }
-}
-
-function add_note(chart_id, note_data){
-  var note = {
-    id: UUID.genV4().toString(),
-    charts: [],
-    order: {},
-    title: '',
-    text: '',
-    global: false
-  };
-
-  note.order[chart_id] = get_notes_for_chart(chart_id).length;
-
-  _.extend(note, note_data);
-
-  ChartNotes.push(note);
-
-  if(note.global){
-    reloadAllChartNotes();
-    markAllChartsAsModified();
-  } else {
-    _.each(note.charts, function(c_id){
-      reloadChartNotes(c_id);
-      markChartAsModified(c_id);
-    });
-  }
 }
 
 function loadCharts(){
