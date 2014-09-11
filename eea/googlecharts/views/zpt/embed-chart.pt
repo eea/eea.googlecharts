@@ -73,6 +73,8 @@
             var qr_size_$vhash = '${view/qr_size}';
             var wm_pos_$vhash = '${view/wm_position}';
             var wm_path_$vhash = '${view/wm_path}';
+            var iframe_qr_settings_$vhash = ${view/qr_iframe_settings};
+            var iframe_wm_settings_$vhash = ${view/wm_iframe_settings};
             var main_title_$vhash = '${view/get_maintitle}';
             var sortFilter_$vhash = '${sortFilter}';
             var row_filters_str_$vhash = '$row_filters';
@@ -146,6 +148,8 @@ guessSeries(settings_$vhash);
                     qr_size: qr_size_$vhash,
                     wm_pos: wm_pos_$vhash,
                     wm_path: wm_path_$vhash,
+                    iframe_qr_settings: iframe_qr_settings_$vhash,
+                    iframe_wm_settings: iframe_wm_settings_$vhash,
                     vhash: '$vhash',
                     name: name_$vhash,
                     isInline: isInline_$vhash

@@ -87,6 +87,22 @@ class View(ViewForm):
         sp = self.siteProperties
         return sp.get('googlechart.watermark_image', '')
 
+    def qr_iframe_settings(self):
+        """ iframe settings of qrcode
+        """
+        sp = self.siteProperties
+        return json.dumps({'hide':sp.get('googlechart.qrcode_hide_on_iframe', False),
+             'resize':sp.get('googlechart.qrcode_resize_on_iframe', False),
+             'size':sp.get('googlechart.qrcode_size_on_iframe', '0')})
+
+    def wm_iframe_settings(self):
+        """ watermark settings of qrcode
+        """
+        sp = self.siteProperties
+        return json.dumps({'hide':sp.get('googlechart.watermark_hide_on_iframe', False),
+             'resize':sp.get('googlechart.watermark_resize_on_iframe', False),
+             'size':sp.get('googlechart.watermark_size_on_iframe', '0')})
+
     def get_maintitle(self):
         """ Main title of visualization
         """

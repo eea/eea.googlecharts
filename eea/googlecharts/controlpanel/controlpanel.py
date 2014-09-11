@@ -71,7 +71,54 @@ class GooglechartsSection(object):
                             of the container (for PNG Export)"""),
             required=False,
             default=0),
-
+        schema.Bool(
+            __name__='googlechart.watermark_hide_on_iframe',
+            title=_(u'Hide watermark on iframe'),
+            description=_(u"""Hide watermark when chart is embedded on same
+                            site"""),
+            required=False,
+            default=False,
+            ),
+        schema.Bool(
+            __name__='googlechart.watermark_resize_on_iframe',
+            title=_(u'Resize watermark on iframe'),
+            description=_(u"""Resize watermark when chart is embedded on same
+                            site"""),
+            required=False,
+            default=False,
+            ),
+        schema.Int(
+            __name__='googlechart.watermark_size_on_iframe',
+            title=_(u'Size of watermark on iframe'),
+            description=_(u"""Size of watermark when chart is embedded on same
+                            site"""),
+            required=False,
+            default=0,
+            ),
+        schema.Bool(
+            __name__='googlechart.qrcode_hide_on_iframe',
+            title=_(u'Hide QR Code on iframe'),
+            description=_(u"""Hide QR Code when chart is embedded on same
+                            site"""),
+            required=False,
+            default=False,
+            ),
+        schema.Bool(
+            __name__='googlechart.qrcode_resize_on_iframe',
+            title=_(u'Resize QR Code on iframe'),
+            description=_(u"""Resize QR Code when chart is embedded on same
+                            site"""),
+            required=False,
+            default=False,
+            ),
+        schema.Int(
+            __name__='googlechart.qrcode_size_on_iframe',
+            title=_(u'Size of QR Code on iframe'),
+            description=_(u"""Size of QR Code when chart is embedded on same
+                            site"""),
+            required=False,
+            default=0,
+            ),
     )
 
 GooglechartsSectionFactory = GooglechartsSection()

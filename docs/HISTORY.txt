@@ -3,6 +3,9 @@ Changelog
 
 11.0-dev - (unreleased)
 -----------------------
+* Feature: Added possibility to set globally the qr_code and watermark/logo 
+  size on iframes embedded on same site
+  [szabozo0 refs #21007]
 * Bugfix: Fixed watermark/logo on embedded dashboards
   [szabozo0 refs #21007]
 * Change: made daviz notes smaller when embedded. Do not print filters.
