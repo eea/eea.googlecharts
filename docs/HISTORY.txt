@@ -1,6 +1,9 @@
 Changelog
 =========
 
+11.1-dev - (unreleased)
+-----------------------
+
 11.0 - (2014-09-15)
 -------------------
 * Feature: Added possibility to set globally the qr_code and watermark/logo 
