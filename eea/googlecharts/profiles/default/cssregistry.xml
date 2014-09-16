@@ -6,4 +6,5 @@
  <!-- Cleanup -->
  <stylesheet id="++resource++eea.googlecharts.view.css" remove="True" />
  <stylesheet id="++resource++eea.googlecharts.edit.css" remove="True" />
+ <stylesheet id="++resource++eea.googlecharts.iframe_resize.css"/>
 </object>

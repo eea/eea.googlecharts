@@ -13,4 +13,6 @@
  <javascript id="++resource++eea.googlecharts.datatable.js" remove="True" />
  <javascript id="++resource++eea.googlecharts.palettes.js" remove="True"/>
  <javascript id="++resource++eea.googlecharts.configurator_messages.js" remove="True" />
+ <javascript id="++resource++eea.googlecharts.iframe_resize.js"/>
+
 </object>

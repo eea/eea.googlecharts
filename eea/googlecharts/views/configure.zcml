@@ -383,4 +383,15 @@
     handler=".events.create_default_views"
     />
 
+  <browser:resource
+    name="eea.googlecharts.iframe_resize.js"
+    file="./js/iframe_resize.js"
+  />
+
+  <browser:resource
+    name="eea.googlecharts.iframe_resize.css"
+    file="./css/iframe_resize.css"
+  />
+
+
 </configure>

@@ -193,7 +193,7 @@ class View(ViewForm):
 
         if options:
             options = json.loads(options)
-            ca_options = options.get('chartArea')
+            ca_options = options.get('chartArea', {})
             if ca_options:
 
                 if padding == 'fixed':
@@ -214,36 +214,37 @@ class View(ViewForm):
                     bottom_p = c_height - ca_height - top_p
                     ca_width = req_width - right_p - left_p
                     ca_height = req_height - bottom_p - top_p
-                else:
-                    try:
-                        top_p, right_p, bottom_p, left_p = padding.split(',')
-                    except ValueError:
-                        top_p, right_p, bottom_p, left_p = [0, 0, 0, 0]
-                    ca_height = req_height - int(top_p) - int(bottom_p)
-                    ca_width = req_width - int(right_p) - int(left_p)
-                    left_p = int(left_p)
-                    top_p = int(top_p)
 
-                if ca_height < 100:
-                    ca_height = 100
-                if ca_width < 100:
-                    ca_width = 100
+            if padding != 'fixed':
+                try:
+                    top_p, right_p, bottom_p, left_p = padding.split(',')
+                except ValueError:
+                    top_p, right_p, bottom_p, left_p = [0, 0, 0, 0]
+                ca_height = req_height - float(top_p) - float(bottom_p)
+                ca_width = req_width - float(right_p) - float(left_p)
+                left_p = float(left_p)
+                top_p = float(top_p)
 
-                # convert new dimensions in % for the required width/height
-                width = (100 * ca_width) / req_width
-                height = (100 * ca_height) / req_height
-                left = (100 * left_p) / req_width
-                top = (100 * top_p) / req_height
+            if ca_height < 100:
+                ca_height = 100
+            if ca_width < 100:
+                ca_width = 100
 
-                ca_options['width'] = unicode(width) + u'%'
-                ca_options['height'] = unicode(height) + u'%'
-                ca_options['top'] = unicode(top) + u'%'
-                ca_options['left'] = unicode(left) + u'%'
+            # convert new dimensions in % for the required width/height
+            width = (100 * ca_width) / req_width
+            height = (100 * ca_height) / req_height
+            left = (100 * left_p) / req_width
+            top = (100 * top_p) / req_height
 
-                options['chartArea'] = ca_options
-                new_settings['options'] = json.dumps(options)
+            ca_options['width'] = unicode(width) + u'%'
+            ca_options['height'] = unicode(height) + u'%'
+            ca_options['top'] = unicode(top) + u'%'
+            ca_options['left'] = unicode(left) + u'%'
 
-                return new_settings
+            options['chartArea'] = ca_options
+            new_settings['options'] = json.dumps(options)
+
+            return new_settings
 
         return chart_settings
 
@@ -269,7 +270,6 @@ class View(ViewForm):
         chart_settings['chartHeight'] = chartHeight
 
         padding = self.request.get("padding", "fixed")
-
         if not self.isInline():
             return self.get_chart_settings(chart_settings, padding)
         else:
