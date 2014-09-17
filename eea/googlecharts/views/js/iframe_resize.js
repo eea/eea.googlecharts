@@ -140,10 +140,10 @@ DavizIframeResizer.ChartResizer.prototype = {
                 self.iframeNewSettings.height = settings.height;
             }
             catch (e){
-                setTimeout(loopForSet, 500);
+                setTimeout(loopForSet, 1000);
             }
         };
-        setTimeout(loopForSet, 500);
+        setTimeout(loopForSet, 1000);
     },
 
     disableResize: function(){
@@ -153,8 +153,30 @@ DavizIframeResizer.ChartResizer.prototype = {
 
     applyResize: function(){
         var self = this;
-        self.disableResize();
-        //TODO: do the ajax call
+        var data = {
+                old_src : self.iframeDefaultSettings.src,
+                old_width : self.iframeDefaultSettings.width,
+                old_height : self.iframeDefaultSettings.height,
+                new_src : self.iframeNewSettings.src,
+                new_width : self.iframeNewSettings.width,
+                new_height : self.iframeNewSettings.height
+            };
+
+        var action = jQuery("base").attr("href") + "/@@googlechart.resize_iframe";
+        jQuery.ajax({
+            type: 'POST',
+            url: action,
+            data: data,
+            async: true,
+            success: function(data){
+                if (data === "ok"){
+                    self.disableResize();
+                }
+                else {
+                    alert("Couldn't save changes!");
+                }
+            }
+        });
     },
 
     cancelResize: function(){
@@ -361,7 +383,7 @@ DavizIframeResizer.ChartResizer.prototype = {
             })
             .appendTo("body");
         jQuery("<div>")
-            .addClass("googlechart-chartiframe-header")
+             .addClass("googlechart-chartiframe-header")
             .appendTo(".googlechart-chartiframe-resizable");
         jQuery("<input>")
             .attr("type", "button")
@@ -609,7 +631,6 @@ DavizIframeResizer.ChartResizer.prototype = {
                     options.hideLink = true;
                 }
             }
-
             self.resizeIframe(options);
             sizes.iframeWidth = width;
             sizes.iframeHeight = height;
@@ -620,8 +641,10 @@ DavizIframeResizer.ChartResizer.prototype = {
             jQuery(".googlechart-chart-resizable")
                 .width(chartWidth)
                 .height(chartHeight);
-
-            self.updateMasks(sizes);
+            var new_sizes = self.getSizes();
+            self.updateMasks(new_sizes);
+            jQuery(".googlechart-chartiframe-resizable")
+                .offset({left:new_sizes.iframeLeft, top:new_sizes.iframeTop});
         });
 
     },

@@ -393,5 +393,13 @@
     file="./css/iframe_resize.css"
   />
 
+  <browser:page
+    name="googlechart.resize_iframe"
+    for="*"
+    class=".iframe_resize.Resizer"
+    permission="zope2.View"
+    attribute="update_iframe"
+    />
+
 
 </configure>
