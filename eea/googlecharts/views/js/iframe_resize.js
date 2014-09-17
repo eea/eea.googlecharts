@@ -75,11 +75,11 @@ DavizIframeResizer.ChartResizer.prototype = {
             areaTop: 0,
             areaWidth: 0,
             areaHeight: 0,
-            hideFilters: true,
-            hideNotes: true,
-            hideQRCode: true,
-            hideWatermark: true,
-            hideLink: true
+            hideFilters: false,
+            hideNotes: false,
+            hideQRCode: false,
+            hideWatermark: false,
+            hideLink: false
         };
         jQuery.extend(settings, options);
         self.context.width(settings.width);
@@ -99,27 +99,34 @@ DavizIframeResizer.ChartResizer.prototype = {
             params.chartWidth = settings.chartWidth;
             params.chartHeight = settings.chartHeight;
         }
+
+        if (params.customStyle !== undefined){
+            params.customStyle = params.customStyle
+                                .split(".googlechart_filters{display:none}").join("")
+                                .split(".googlechart-notes{display:none}").join("")
+                                .split('div[id*="googlechart_qr_"]{display:none}').join("")
+                                .split('div[id*="googlechart_wm_"]{display:none}').join("")
+                                .split(".go-to-original-link{display:none}").join("");
+        }
         if (settings.hideFilters || settings.hideNotes || settings.hideQRCode || settings.hideWatermark || settings.hideLink){
-            var customStyle = jQuery.deparam(self.iframeDefaultSettings.src.split("?")[1]).customStyle;
-            if (customStyle === undefined){
-                customStyle = "";
+            if (params.customStyle === undefined){
+                params.customStyle = "";
             }
             if (settings.hideFilters){
-                customStyle += ".googlechart_filters{display:none}";
+                params.customStyle += ".googlechart_filters{display:none}";
             }
             if (settings.hideNotes){
-                customStyle += ".googlechart-notes{display:none}";
+                params.customStyle += ".googlechart-notes{display:none}";
             }
             if (settings.hideQRCode){
-                customStyle += 'div[id*="googlechart_qr_"]{display:none}';
+                params.customStyle += 'div[id*="googlechart_qr_"]{display:none}';
             }
             if (settings.hideWatermark){
-                customStyle += 'div[id*="googlechart_wm_"]{display:none}';
+                params.customStyle += 'div[id*="googlechart_wm_"]{display:none}';
             }
             if (settings.hideLink){
-                customStyle += ".go-to-original-link{display:none}";
+                params.customStyle += ".go-to-original-link{display:none}";
             }
-            params.customStyle = customStyle;
         }
         var new_src = self.iframeNewSettings.src.split("?")[0] + "?" + jQuery.param(params);
         self.context.attr("src", new_src);
@@ -133,10 +140,10 @@ DavizIframeResizer.ChartResizer.prototype = {
                 self.iframeNewSettings.height = settings.height;
             }
             catch (e){
-                setTimeout(loopForSet, 100);
+                setTimeout(loopForSet, 500);
             }
         };
-        setTimeout(loopForSet, 100);
+        setTimeout(loopForSet, 500);
     },
 
     disableResize: function(){
@@ -160,9 +167,10 @@ DavizIframeResizer.ChartResizer.prototype = {
 
     hideDialog: function(){
         var self = this;
-
+        jQuery(".googlechart-iframe-hidedialog").remove();
         var hideDialogForm = jQuery("<div>")
-                                .addClass('googlechart-iframe-hideform');
+                                .addClass('googlechart-iframe-hideform')
+                                .data("resizer", self);
         hideDialogForm.dialog({
             dialogClass: 'googlechart-iframe-hidedialog',
             title: 'Select elements to hide',
@@ -223,18 +231,53 @@ DavizIframeResizer.ChartResizer.prototype = {
                     .addClass("googlechart-iframe-hide-link")
                     .addClass("googlechart-iframe-hide-element")
                     .appendTo('.googlechart-iframe-hideform');
-
+                var resizer= jQuery('.googlechart-iframe-hideform').data("resizer");
+                var customStyle = jQuery.deparam(resizer.iframeNewSettings.src).customStyle;
+                if (customStyle !== undefined){
+                    if (customStyle.indexOf(".googlechart_filters{display:none}") >= 0){
+                        jQuery(".googlechart-iframe-hide-filters").attr("checked", "checked");
+                    }
+                    if (customStyle.indexOf(".googlechart-notes{display:none}") >= 0){
+                        jQuery(".googlechart-iframe-hide-notes").attr("checked", "checked");
+                    }
+                    if (customStyle.indexOf('div[id*="googlechart_qr_"]{display:none}') >= 0){
+                        jQuery(".googlechart-iframe-hide-qrcode").attr("checked", "checked");
+                    }
+                    if (customStyle.indexOf('div[id*="googlechart_wm_"]{display:none}') >= 0){
+                        jQuery(".googlechart-iframe-hide-watermark").attr("checked", "checked");
+                    }
+                    if (customStyle.indexOf(".go-to-original-link{display:none}") >= 0){
+                        jQuery(".googlechart-iframe-hide-link").attr("checked", "checked");
+                    }
+                }
             },
             buttons: {
                 Cancel: function(){
                     jQuery(this).dialog('close');
                 },
                 Save: function(){
+                    var resizer= jQuery('.googlechart-iframe-hideform').data("resizer");
+                    var iframeSizes = self.context[0].contentWindow.getIframeSizes();
+                    var options = {
+                                    width: resizer.iframeNewSettings.width,
+                                    height: resizer.iframeNewSettings.height,
+                                    chartWidth: iframeSizes.chart.width,
+                                    chartHeight: iframeSizes.chart.height,
+                                    areaLeft: chartAreaAttribute2px(iframeSizes.chartArea.left, iframeSizes.chart.width),
+                                    areaTop: chartAreaAttribute2px(iframeSizes.chartArea.top, iframeSizes.chart.height),
+                                    areaWidth: chartAreaAttribute2px(iframeSizes.chartArea.width, iframeSizes.chart.width),
+                                    areaHeight: chartAreaAttribute2px(iframeSizes.chartArea.height, iframeSizes.chart.height),
+                                    hideFilters: (jQuery(".googlechart-iframe-hide-filters").attr("checked") === "checked" ? true : false),
+                                    hideNotes: (jQuery(".googlechart-iframe-hide-notes").attr("checked") === "checked" ? true : false),
+                                    hideQRCode: (jQuery(".googlechart-iframe-hide-qrcode").attr("checked") === "checked" ? true : false),
+                                    hideWatermark: (jQuery(".googlechart-iframe-hide-watermark").attr("checked") === "checked" ? true : false),
+                                    hideLink: (jQuery(".googlechart-iframe-hide-link").attr("checked") === "checked" ? true : false)
+                                };
+                    resizer.resizeIframe(options);
                     jQuery(this).dialog('close');
                 }
             }
-            });
-
+        });
     },
 
     getSizes: function() {
@@ -545,7 +588,27 @@ DavizIframeResizer.ChartResizer.prototype = {
                 areaHeight: areaHeight,
                 areaLeft: areaLeft,
                 areaTop: areaTop
+
             };
+            var customStyle = jQuery.deparam(self.iframeNewSettings.src).customStyle;
+
+            if (customStyle !== undefined){
+                if (customStyle.indexOf(".googlechart_filters{display:none}") >= 0){
+                    options.hideFilters = true;
+                }
+                if (customStyle.indexOf(".googlechart-notes{display:none}") >= 0){
+                    options.hideNotes = true;
+                }
+                if (customStyle.indexOf('div[id*="googlechart_qr_"]{display:none}') >= 0){
+                    options.hideQRCode = true;
+                }
+                if (customStyle.indexOf('div[id*="googlechart_wm_"]{display:none}') >= 0){
+                    options.hideWatermark = true;
+                }
+                if (customStyle.indexOf(".go-to-original-link{display:none}") >= 0){
+                    options.hideLink = true;
+                }
+            }
 
             self.resizeIframe(options);
             sizes.iframeWidth = width;
