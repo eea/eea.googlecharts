@@ -102,7 +102,7 @@ DavizIframeResizer.ChartResizer.prototype = {
         if (settings.hideFilters || settings.hideNotes || settings.hideQRCode || settings.hideWatermark || settings.hideLink){
             var customStyle = jQuery.deparam(self.iframeDefaultSettings.src.split("?")[1]).customStyle;
             if (customStyle === undefined){
-                customStyle = ""
+                customStyle = "";
             }
             if (settings.hideFilters){
                 customStyle += ".googlechart_filters{display:none}";
@@ -135,7 +135,7 @@ DavizIframeResizer.ChartResizer.prototype = {
             catch (e){
                 setTimeout(loopForSet, 100);
             }
-        }
+        };
         setTimeout(loopForSet, 100);
     },
 
@@ -230,10 +230,9 @@ DavizIframeResizer.ChartResizer.prototype = {
                     jQuery(this).dialog('close');
                 },
                 Save: function(){
-                    debugger;
                     jQuery(this).dialog('close');
                 }
-            },
+            }
             });
 
     },
@@ -394,7 +393,7 @@ DavizIframeResizer.ChartResizer.prototype = {
                         .attr("value", jQuery(this).height());
                 }
             })
-            .appendTo(".googlechart-chartiframe-resizable")
+            .appendTo(".googlechart-chartiframe-resizable");
 
         jQuery("<div>")
             .addClass("googlechart-chart-header")
@@ -592,7 +591,7 @@ jQuery(document).ready(function($){
     }
     var resizeButton = "<input type='button' class='context btn btn-primary googlechart-iframe-resize' value='Resize chart'/>";
     jQuery.each(jQuery("iframe[src*='embed-chart?chart=']"), function(){
-        var btn = jQuery(resizeButton).data("chart_iframe", this)
+        var btn = jQuery(resizeButton).data("chart_iframe", this);
         jQuery(this).after(jQuery(resizeButton).data("chart_iframe", this));
         jQuery(this).after("<div style='clear:both'></div>");
     });
