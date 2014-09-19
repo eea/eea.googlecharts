@@ -397,8 +397,16 @@
     name="googlechart.resize_iframe"
     for="*"
     class=".iframe_resize.Resizer"
-    permission="zope2.View"
+    permission="cmf.ModifyPortalContent"
     attribute="update_iframe"
+    />
+
+  <browser:page
+    name="googlechart.check_permission"
+    for="*"
+    class=".iframe_resize.Resizer"
+    permission="zope2.View"
+    attribute="check_permission"
     />
 
 

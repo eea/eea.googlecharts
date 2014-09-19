@@ -6,6 +6,13 @@ import lxml
 class Resizer(BrowserView):
     """ iframe resizer
     """
+    def check_permission(self):
+        """ check permission for resize
+        """
+        if (self.context.portal_membership.checkPermission("Modify portal content", self.context)):
+            return True
+        return False
+
     def update_iframe(self):
         """ update the source code for the iframe
         """

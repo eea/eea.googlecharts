@@ -675,16 +675,27 @@ jQuery(document).ready(function($){
             return;
         }
     }
-    var resizeButton = "<input type='button' class='context btn btn-primary googlechart-iframe-resize' value='Resize chart'/>";
-    jQuery.each(jQuery("iframe[src*='embed-chart?chart=']"), function(){
-        var btn = jQuery(resizeButton).data("chart_iframe", this);
-        jQuery(this).after(jQuery(resizeButton).data("chart_iframe", this));
-        jQuery(this).after("<div style='clear:both'></div>");
-    });
+    var action = jQuery("base").attr("href") + "/@@googlechart.check_permission";
+    jQuery.ajax({
+        type: 'GET',
+        url: action,
+        async: true,
+        success: function(data){
+            if (data === "True"){
+                var resizeButton = "<input type='button' class='context btn btn-primary googlechart-iframe-resize' value='Resize chart'/>";
+                jQuery.each(jQuery("iframe[src*='embed-chart?chart=']"), function(){
+                    var btn = jQuery(resizeButton).data("chart_iframe", this);
+                    jQuery(this).after(jQuery(resizeButton).data("chart_iframe", this));
+                    jQuery(this).after("<div style='clear:both'></div>");
+                });
 
-    jQuery("input.googlechart-iframe-resize").click(function(){
-        jQuery(jQuery(this).data("chart_iframe")).EEAChartIframeResizer();
+                jQuery("input.googlechart-iframe-resize").click(function(){
+                    jQuery(jQuery(this).data("chart_iframe")).EEAChartIframeResizer();
+                });
+            }
+        }
     });
+    
 });
 
 
