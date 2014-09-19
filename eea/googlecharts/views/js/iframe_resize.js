@@ -201,10 +201,6 @@ DavizIframeResizer.ChartResizer.prototype = {
             width: 240,
             resizable:false,
             open: function(evt, ui){
-                var buttons = jQuery(this).parent().find("button[title!='close']");
-                buttons.attr('class', 'btn');
-                jQuery(buttons[0]).addClass('btn-inverse');
-                jQuery(buttons[1]).addClass('btn-success');
                 jQuery("<span>")
                     .text("Filters")
                     .appendTo('.googlechart-iframe-hideform');
@@ -385,27 +381,24 @@ DavizIframeResizer.ChartResizer.prototype = {
         jQuery("<div>")
              .addClass("googlechart-chartiframe-header")
             .appendTo(".googlechart-chartiframe-resizable");
-        jQuery("<input>")
-            .attr("type", "button")
-            .addClass("btn btn-success googlechart-iframe-apply")
-            .attr("value", "Apply")
+        jQuery("<a>")
+            .addClass("standardButton googlechart-iframe-apply")
+            .text("Apply")
             .click(function(){
                 self.applyResize();
             })
             .appendTo(".googlechart-chartiframe-header");
-        jQuery("<input>")
-            .attr("type", "button")
-            .addClass("btn btn-inverse googlechart-iframe-cancel")
-            .attr("value", "Cancel")
+        jQuery("<a>")
+            .addClass("standardButton googlechart-iframe-cancel")
+            .text("Cancel")
             .click(function(){
                 self.cancelResize();
             })
             .appendTo(".googlechart-chartiframe-header");
 
-        jQuery("<input>")
-            .attr("type", "button")
-            .addClass("btn btn-success googlechart-iframe-apply")
-            .attr("value", "Hide elements")
+        jQuery("<a>")
+            .addClass("standardButton googlechart-iframe-apply")
+            .text("Hide elements")
             .click(function(){
                 self.hideDialog();
             })
@@ -682,14 +675,14 @@ jQuery(document).ready(function($){
         async: true,
         success: function(data){
             if (data === "True"){
-                var resizeButton = "<input type='button' class='context btn btn-primary googlechart-iframe-resize' value='Resize chart'/>";
+                var resizeButton = "<a class='standardButton googlechart-iframe-resize'>Resize chart</a>";
                 jQuery.each(jQuery("iframe[src*='embed-chart?chart=']"), function(){
                     var btn = jQuery(resizeButton).data("chart_iframe", this);
                     jQuery(this).after(jQuery(resizeButton).data("chart_iframe", this));
                     jQuery(this).after("<div style='clear:both'></div>");
                 });
 
-                jQuery("input.googlechart-iframe-resize").click(function(){
+                jQuery("a.googlechart-iframe-resize").click(function(){
                     jQuery(jQuery(this).data("chart_iframe")).EEAChartIframeResizer();
                 });
             }
