@@ -4,6 +4,19 @@
   i18n_domain="eea">
 
 
+  <!-- 11.0 => 11.1 -->
+  <genericsetup:upgradeSteps
+    source="11.9"
+    destination="11.1"
+    profile="eea.googlecharts:default">
+
+    <genericsetup:upgradeDepends
+      title="Import css, js from eea.googlecharts profile"
+      import_steps="cssregistry jsregistry"
+      />
+
+  </genericsetup:upgradeSteps>
+
   <!-- 9.3 => 11.0 -->
   <genericsetup:upgradeSteps
     source="9.3"
