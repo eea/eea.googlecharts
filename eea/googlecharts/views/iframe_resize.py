@@ -47,5 +47,5 @@ class Resizer(BrowserView):
                     else:
                         new_value += element
                 if has_changes:
-                    field.getMutator(self.context)(new_value)
+                    self.context.processForm(data=1, metadata=0, values={field.getName():new_value})
         return "ok"

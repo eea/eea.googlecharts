@@ -3,6 +3,8 @@ Changelog
 
 11.1-dev - (unreleased)
 -----------------------
+* Feature: Allow resize of embedded charts
+  [szabozo0 refs #21007]
 
 11.0 - (2014-09-15)
 -------------------
