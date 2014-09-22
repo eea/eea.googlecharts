@@ -39,6 +39,7 @@ DavizIframeResizer.ChartResizer.prototype = {
                                     height:self.context.height()};
         self.startResize();
         self.setChartAreaSizes();
+        self.resizing = false;
     },
 
     updateMasks: function(sizes){
@@ -132,18 +133,19 @@ DavizIframeResizer.ChartResizer.prototype = {
         self.context.attr("src", new_src);
 
         var loopForSet = function(){
-            try{
-                self.setChartAreaSizes();
-
-                self.iframeNewSettings.src = new_src;
-                self.iframeNewSettings.width = settings.width;
-                self.iframeNewSettings.height = settings.height;
+            if (!self.resizing){
+                try{
+                    self.setChartAreaSizes();
+                    self.iframeNewSettings.src = new_src;
+                    self.iframeNewSettings.width = settings.width;
+                    self.iframeNewSettings.height = settings.height;
+                }
+                catch (e){
+                }
             }
-            catch (e){
-                setTimeout(loopForSet, 1000);
-            }
+            setTimeout(loopForSet, 500);
         };
-        setTimeout(loopForSet, 1000);
+        setTimeout(loopForSet, 500);
     },
 
     disableResize: function(){
@@ -367,10 +369,12 @@ DavizIframeResizer.ChartResizer.prototype = {
             .offset({left:sizes.iframeLeft, top:sizes.iframeTop})
             .resizable({
                 stop: function(){
+                    self.resizing = false;
                     jQuery(".googlechart-chartiframe-width")
                         .trigger("change");
                 },
                 resize: function(){
+                    self.resizing = true;
                     jQuery(".googlechart-chartiframe-width")
                         .attr("value", jQuery(this).width());
                     jQuery(".googlechart-chartiframe-height")
@@ -441,10 +445,12 @@ DavizIframeResizer.ChartResizer.prototype = {
             .offset({left:sizes.chart.left, top:sizes.chart.top})
             .resizable({
                 stop: function(){
+                    self.resizing = false;
                     jQuery(".googlechart-chartiframe-width")
                         .trigger("change");
                 },
                 resize: function(){
+                    self.resizing = true;
                     jQuery(".googlechart-chart-width")
                         .attr("value", jQuery(this).width());
                     jQuery(".googlechart-chart-height")
@@ -490,12 +496,14 @@ DavizIframeResizer.ChartResizer.prototype = {
                 .resizable({
                     containment:".googlechart-chart-resizable",
                     resize: function(){
+                        self.resizing = true;
                         jQuery(".googlechart-chartarea-width")
                             .attr("value", jQuery(this).width());
                         jQuery(".googlechart-chartarea-height")
                             .attr("value", jQuery(this).height());
                     },
                     stop: function(){
+                        self.resizing = false;
                         jQuery(".googlechart-chartarea-width")
                             .trigger("change");
                     }
@@ -503,6 +511,7 @@ DavizIframeResizer.ChartResizer.prototype = {
                 .draggable({
                     containment:".googlechart-chart-resizable",
                     drag: function(){
+                        self.resizing = true;
                         parentOffset = jQuery(".googlechart-chartarea-resizable")
                                 .parent()
                                 .offset();
@@ -512,6 +521,7 @@ DavizIframeResizer.ChartResizer.prototype = {
                             .attr("value", jQuery(this).offset().top - parentOffset.top);
                     },
                     stop: function(){
+                        self.resizing = false;
                         jQuery(".googlechart-chartarea-left")
                             .trigger("change");
                     }
