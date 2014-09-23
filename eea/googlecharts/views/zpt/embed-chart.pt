@@ -91,6 +91,16 @@
             var settings_$vhash = [];
             var other_options_$vhash = {};
             function getIframeSizes(){
+                var resizableCharts = ['LineChart',
+                        'ComboChart',
+                        'AreaChart',
+                        'SteppedAreaChart',
+                        'ColumnChart',
+                        'BarChart',
+                        'ScatterChart',
+                        'BubbleChart',
+                        'PieChart'];
+
                 var settings = {
                     chart:{
                         top:0,
@@ -112,6 +122,10 @@
                 settings.chart.height = iframe_chart.height();
                 if (settings_$vhash[7].chartArea !== undefined){
                     settings.chartArea = settings_$vhash[7].chartArea;
+                }
+                if (resizableCharts.indexOf(settings_$vhash[1].chartType) === -1){
+                    settings.chartArea.width = 0;
+                    settings.chartArea.height = 0;
                 }
                 return settings;
             }

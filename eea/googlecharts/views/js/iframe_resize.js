@@ -357,30 +357,34 @@ DavizIframeResizer.ChartResizer.prototype = {
         var parentOffset = jQuery(".googlechart-chartarea-resizable")
                             .parent()
                             .offset();
+        if ((size.chartArea.width !== 0) && (size.chartArea.height !== 0)){
+            chartAreaWidth = chartAreaAttribute2px(size.chartArea.width, size.chart.width);
+            chartAreaHeight = chartAreaAttribute2px(size.chartArea.height, size.chart.height);
+            chartAreaLeft = chartAreaAttribute2px(size.chartArea.left, size.chart.width);
+            chartAreaTop = chartAreaAttribute2px(size.chartArea.top, size.chart.height);
 
-        chartAreaWidth = chartAreaAttribute2px(size.chartArea.width, size.chart.width);
-        chartAreaHeight = chartAreaAttribute2px(size.chartArea.height, size.chart.height);
-        chartAreaLeft = chartAreaAttribute2px(size.chartArea.left, size.chart.width);
-        chartAreaTop = chartAreaAttribute2px(size.chartArea.top, size.chart.height);
+            jQuery(".googlechart-chartarea-width")
+                .attr("value", chartAreaWidth);
 
-        jQuery(".googlechart-chartarea-width")
-            .attr("value", chartAreaWidth);
+            jQuery(".googlechart-chartarea-height")
+                .attr("value", chartAreaHeight);
 
-        jQuery(".googlechart-chartarea-height")
-            .attr("value", chartAreaHeight);
+            jQuery(".googlechart-chartarea-left")
+                .attr("value", chartAreaLeft);
 
-        jQuery(".googlechart-chartarea-left")
-            .attr("value", chartAreaLeft);
-
-        jQuery(".googlechart-chartarea-top")
-            .attr("value", chartAreaTop);
-        jQuery(".googlechart-chartarea-resizable")
-            .width(chartAreaWidth)
-            .height(chartAreaHeight)
-            .offset({left:parentOffset.left + chartAreaLeft + 4, top:parentOffset.top + chartAreaTop});
+            jQuery(".googlechart-chartarea-top")
+                .attr("value", chartAreaTop);
+            jQuery(".googlechart-chartarea-resizable")
+                .width(chartAreaWidth)
+                .height(chartAreaHeight)
+                .offset({left:parentOffset.left + chartAreaLeft + 4, top:parentOffset.top + chartAreaTop});
+        }
+        else{
+            jQuery(".googlechart-chartarea-resizable").hide();
+        }
         parentOffset = jQuery(".googlechart-chart-resizable")
-                            .parent()
-                            .offset();
+                        .parent()
+                        .offset();
         jQuery(".googlechart-chart-resizable")
             .width(size.chart.width)
             .height(size.chart.height)
