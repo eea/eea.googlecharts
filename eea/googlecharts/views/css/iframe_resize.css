@@ -111,3 +111,35 @@ input.googlechart-iframe-size {
 .googlechart-iframe-hide-element {
     float:right;
 }
+
+.googlechart-resize-cleanup {
+  clear: both;
+}
+
+.googlechart-resize-status-lock {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 80px;
+  -webkit-box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
+  -moz-box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
+  -o-box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
+  z-index: 999999999;
+  background: rgb(239,239,239);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(239,239,239,0.98)), color-stop(100%,rgba(253,253,253,0.98)));
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efefef', endColorstr='#fdfdfd',GradientType=0 );
+  border-bottom: 1px solid white;
+  font-size: 20px !important;
+  font-family: HelveticaNeue,Helvetica,Arial !important;
+  line-height: 80px !important;
+  text-align: left;
+  color: #4b4b4b !important;
+  -webkit-transform: translate3d(0px,0px,0px);
+}
+
+.googlechart-resize-ajax-loader {
+  text-align: center;
+  font-weight: bold;
+}

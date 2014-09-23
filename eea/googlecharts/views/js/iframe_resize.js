@@ -39,7 +39,26 @@ DavizIframeResizer.ChartResizer.prototype = {
                                     height:self.context.height()};
         self.startResize();
         self.setChartAreaSizes();
-        self.resizing = false;
+        self.shouldUpdate = true;
+
+        self.area = jQuery('.googlechart-chartiframe-resizable');
+        self.area.append(jQuery('<div>').addClass('googlechart-resize-cleanup'));
+
+        self.lock = jQuery('<div>').addClass('googlechart-resize-status-lock');
+        self.message = jQuery('<div>').addClass('googlechart-resize-ajax-loader');
+        self.lock.prepend(this.message);
+        self.area.prepend(this.lock);
+        self.lock.slideUp();
+    },
+
+    startMessage: function(msg){
+        this.message.html(msg);
+        this.lock.slideDown();
+    },
+
+    stopMessage: function(msg){
+        this.message.html(msg);
+        this.lock.delay(1500).slideUp();
     },
 
     updateMasks: function(sizes){
@@ -133,7 +152,7 @@ DavizIframeResizer.ChartResizer.prototype = {
         self.context.attr("src", new_src);
 
         var loopForSet = function(){
-            if (!self.resizing){
+            if (self.shouldUpdate){
                 try{
                     self.setChartAreaSizes();
                     self.iframeNewSettings.src = new_src;
@@ -142,8 +161,8 @@ DavizIframeResizer.ChartResizer.prototype = {
                 }
                 catch (e){
                 }
+                setTimeout(loopForSet, 500);
             }
-            setTimeout(loopForSet, 500);
         };
         setTimeout(loopForSet, 500);
     },
@@ -155,6 +174,7 @@ DavizIframeResizer.ChartResizer.prototype = {
 
     applyResize: function(){
         var self = this;
+        self.shouldUpdate = false;
         var data = {
                 old_src : self.iframeDefaultSettings.src,
                 old_width : self.iframeDefaultSettings.width,
@@ -165,6 +185,7 @@ DavizIframeResizer.ChartResizer.prototype = {
             };
 
         var action = jQuery("base").attr("href") + "/@@googlechart.resize_iframe";
+        self.startMessage("Saving updated charts");
         jQuery.ajax({
             type: 'POST',
             url: action,
@@ -172,17 +193,24 @@ DavizIframeResizer.ChartResizer.prototype = {
             async: true,
             success: function(data){
                 if (data === "ok"){
+                    self.startMessage("Done");
                     self.disableResize();
                 }
                 else {
+                    self.startMessage("Couldn't save changes!");
                     alert("Couldn't save changes!");
                 }
+            },
+            error: function(data){
+                self.startMessage("Couldn't save changes!");
+                alert("Couldn't save changes!");
             }
         });
     },
 
     cancelResize: function(){
         var self = this;
+        self.shouldUpdate = false;
         self.context.width(self.iframeDefaultSettings.width);
         self.context.height(self.iframeDefaultSettings.height);
         self.context.attr("src", self.iframeDefaultSettings.src);
@@ -191,6 +219,7 @@ DavizIframeResizer.ChartResizer.prototype = {
 
     hideDialog: function(){
         var self = this;
+        self.shouldUpdate = false;
         jQuery(".googlechart-iframe-hidedialog").remove();
         var hideDialogForm = jQuery("<div>")
                                 .addClass('googlechart-iframe-hideform')
@@ -277,6 +306,7 @@ DavizIframeResizer.ChartResizer.prototype = {
                 },
                 Save: function(){
                     var resizer= jQuery('.googlechart-iframe-hideform').data("resizer");
+                    resizer.shouldUpdate = true;
                     var iframeSizes = self.context[0].contentWindow.getIframeSizes();
                     var options = {
                                     width: resizer.iframeNewSettings.width,
@@ -369,12 +399,12 @@ DavizIframeResizer.ChartResizer.prototype = {
             .offset({left:sizes.iframeLeft, top:sizes.iframeTop})
             .resizable({
                 stop: function(){
-                    self.resizing = false;
+                    self.shouldUpdate = true;
                     jQuery(".googlechart-chartiframe-width")
                         .trigger("change");
                 },
                 resize: function(){
-                    self.resizing = true;
+                    self.shouldUpdate = false;
                     jQuery(".googlechart-chartiframe-width")
                         .attr("value", jQuery(this).width());
                     jQuery(".googlechart-chartiframe-height")
@@ -445,12 +475,12 @@ DavizIframeResizer.ChartResizer.prototype = {
             .offset({left:sizes.chart.left, top:sizes.chart.top})
             .resizable({
                 stop: function(){
-                    self.resizing = false;
+                    self.shouldUpdate = true;
                     jQuery(".googlechart-chartiframe-width")
                         .trigger("change");
                 },
                 resize: function(){
-                    self.resizing = true;
+                    self.shouldUpdate = false;
                     jQuery(".googlechart-chart-width")
                         .attr("value", jQuery(this).width());
                     jQuery(".googlechart-chart-height")
@@ -496,14 +526,14 @@ DavizIframeResizer.ChartResizer.prototype = {
                 .resizable({
                     containment:".googlechart-chart-resizable",
                     resize: function(){
-                        self.resizing = true;
+                        self.shouldUpdate = false;
                         jQuery(".googlechart-chartarea-width")
                             .attr("value", jQuery(this).width());
                         jQuery(".googlechart-chartarea-height")
                             .attr("value", jQuery(this).height());
                     },
                     stop: function(){
-                        self.resizing = false;
+                        self.shouldUpdate = true;
                         jQuery(".googlechart-chartarea-width")
                             .trigger("change");
                     }
@@ -511,7 +541,7 @@ DavizIframeResizer.ChartResizer.prototype = {
                 .draggable({
                     containment:".googlechart-chart-resizable",
                     drag: function(){
-                        self.resizing = true;
+                        self.shouldUpdate = false;
                         parentOffset = jQuery(".googlechart-chartarea-resizable")
                                 .parent()
                                 .offset();
@@ -521,7 +551,7 @@ DavizIframeResizer.ChartResizer.prototype = {
                             .attr("value", jQuery(this).offset().top - parentOffset.top);
                     },
                     stop: function(){
-                        self.resizing = false;
+                        self.shouldUpdate = true;
                         jQuery(".googlechart-chartarea-left")
                             .trigger("change");
                     }
