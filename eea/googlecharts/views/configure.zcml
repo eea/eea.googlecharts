@@ -3,8 +3,6 @@
   xmlns:daviz="http://namespaces.zope.org/daviz"
   xmlns:browser="http://namespaces.zope.org/browser">
 
-  <include package="Products.CMFCore" />
-
   <browser:page
     name="chart-full"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
@@ -12,7 +10,6 @@
     class=".chart.View"
     permission="zope2.View"
     />
-
 
   <browser:page
     name="embed-chart"
