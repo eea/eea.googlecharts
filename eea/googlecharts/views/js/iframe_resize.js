@@ -447,7 +447,8 @@ DavizIframeResizer.ChartResizer.prototype = {
                 self.hideDialog();
             })
             .appendTo(".googlechart-chartiframe-header");
-
+        jQuery("<span>iframe size: </span>")
+            .appendTo(".googlechart-chartiframe-header");
         jQuery("<input>")
             .addClass("googlechart-chartiframe-width googlechart-iframe-size")
             .attr("type", "number")
@@ -471,16 +472,6 @@ DavizIframeResizer.ChartResizer.prototype = {
         if (!self.context.data().isDashboard){
             jQuery("<div>")
                 .addClass("googlechart-chart-resizable")
-                .hover(
-                    function(){
-                        jQuery(".googlechart-chartiframe-header")
-                            .addClass("googlechart-chartiframe-header-hidden");
-                    },
-                    function(){
-                        jQuery(".googlechart-chartiframe-header")
-                            .removeClass("googlechart-chartiframe-header-hidden");
-                    }
-                )
                 .width(sizes.chart.width)
                 .height(sizes.chart.height)
                 .offset({left:sizes.chart.left, top:sizes.chart.top})
@@ -500,24 +491,25 @@ DavizIframeResizer.ChartResizer.prototype = {
                 })
                 .appendTo(".googlechart-chartiframe-resizable");
 
-            jQuery("<div>")
-                .addClass("googlechart-chart-header")
-                .appendTo(".googlechart-chart-resizable");
 
+            jQuery("<span>chart size: </span>")
+                .appendTo(".googlechart-chartiframe-header");
             jQuery("<input>")
                 .addClass("googlechart-chart-width googlechart-iframe-size")
                 .attr("type", "number")
                 .attr("value", sizes.chart.width)
-                .appendTo(".googlechart-chart-header");
+                .appendTo(".googlechart-chartiframe-header");
 
             jQuery("<span>x</span>")
-                .appendTo(".googlechart-chart-header");
+                .appendTo(".googlechart-chartiframe-header");
 
             jQuery("<input>")
                 .addClass("googlechart-chart-height googlechart-iframe-size")
                 .attr("type", "number")
                 .attr("value", sizes.chart.height)
-                .appendTo(".googlechart-chart-header");
+                .appendTo(".googlechart-chartiframe-header");
+            jQuery("<span>px</span>")
+                .appendTo(".googlechart-chartiframe-header");
 
             self.chartAreaConfigurable = true;
             if (self.chartAreaConfigurable){
@@ -525,12 +517,12 @@ DavizIframeResizer.ChartResizer.prototype = {
                     .addClass("googlechart-chartarea-resizable")
                     .hover(
                         function(){
-                            jQuery(".googlechart-chart-header")
-                                .addClass("googlechart-chart-header-hidden");
+                            jQuery(".googlechart-chartiframe-header")
+                                .addClass("googlechart-chartiframe-header-hidden");
                         },
                         function(){
-                            jQuery(".googlechart-chart-header")
-                                .removeClass("googlechart-chart-header-hidden");
+                            jQuery(".googlechart-chartiframe-header")
+                                .removeClass("googlechart-chartiframe-header-hidden");
                         }
                     )
                     .resizable({
@@ -581,16 +573,16 @@ DavizIframeResizer.ChartResizer.prototype = {
                     .addClass("googlechart-chartarea-size-input-fields")
                     .appendTo(".googlechart-chartarea-size-input");
 
+                jQuery("<span>")
+                    .text("And the position: ")
+                    .appendTo(".googlechart-chartarea-size-input");
                 jQuery("<div>")
                     .addClass("googlechart-chartarea-input googlechart-chartarea-top-input")
-                    .appendTo(".googlechart-chartarea-resizable");
-
-                jQuery("<div style='clear:both'></div>")
-                    .appendTo(".googlechart-chartarea-resizable");
+                    .appendTo(".googlechart-chartarea-size-input");
 
                 jQuery("<div>")
                     .addClass("googlechart-chartarea-input googlechart-chartarea-left-input")
-                    .appendTo(".googlechart-chartarea-resizable");
+                    .appendTo(".googlechart-chartarea-size-input");
 
                 jQuery("<input>")
                     .addClass("googlechart-chartarea-width googlechart-iframe-size")

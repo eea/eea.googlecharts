@@ -30,7 +30,6 @@
     -moz-transition: opacity .5s;
     -o-transition: opacity .5s;
     transition: opacity .5s;
-    text-align: center;
     z-index: 94;
     position: relative;
 }
@@ -96,8 +95,8 @@ input.googlechart-iframe-size {
     position:absolute;
     overflow:auto;
     margin:auto;
-    height:40px;
-    width:250px;
+    height:80px;
+    width:340px;
     top:0;
     left:0;
     right:0;
