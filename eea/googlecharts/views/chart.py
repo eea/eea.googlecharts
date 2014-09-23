@@ -190,12 +190,12 @@ class View(ViewForm):
         c_width = int(new_settings.get('width'))
         req_width = int(new_settings.get('chartWidth'))
         req_height = int(new_settings.get('chartHeight'))
-
         if options:
             options = json.loads(options)
             ca_options = options.get('chartArea', {})
+            ca_width = 0
+            ca_height = 0
             if ca_options:
-
                 if padding == 'fixed':
                     # get original dimensions of the chartArea and padding in %
                     ca_height = float(ca_options.get('height').split('%')[0])
@@ -225,23 +225,24 @@ class View(ViewForm):
                 left_p = float(left_p)
                 top_p = float(top_p)
 
-            if ca_height < 100:
-                ca_height = 100
-            if ca_width < 100:
-                ca_width = 100
+            if ca_width + ca_height > 0:
+                if ca_height < 100:
+                    ca_height = 100
+                if ca_width < 100:
+                    ca_width = 100
 
-            # convert new dimensions in % for the required width/height
-            width = (100 * ca_width) / req_width
-            height = (100 * ca_height) / req_height
-            left = (100 * left_p) / req_width
-            top = (100 * top_p) / req_height
+                # convert new dimensions in % for the required width/height
+                width = (100 * ca_width) / req_width
+                height = (100 * ca_height) / req_height
+                left = (100 * left_p) / req_width
+                top = (100 * top_p) / req_height
 
-            ca_options['width'] = unicode(width) + u'%'
-            ca_options['height'] = unicode(height) + u'%'
-            ca_options['top'] = unicode(top) + u'%'
-            ca_options['left'] = unicode(left) + u'%'
+                ca_options['width'] = unicode(width) + u'%'
+                ca_options['height'] = unicode(height) + u'%'
+                ca_options['top'] = unicode(top) + u'%'
+                ca_options['left'] = unicode(left) + u'%'
 
-            options['chartArea'] = ca_options
+                options['chartArea'] = ca_options
             new_settings['options'] = json.dumps(options)
 
             return new_settings

@@ -99,10 +99,10 @@
                         height:0
                     },
                     chartArea:{
-                        top:19.1,
-                        left:19.1,
-                        width:61.8,
-                        height:61.8
+                        top:'19.1%',
+                        left:'19.1%',
+                        width:'61.8%',
+                        height:'61.8%'
                     },
                 }
                 var iframe_chart = jQuery('.googlechart_view');
