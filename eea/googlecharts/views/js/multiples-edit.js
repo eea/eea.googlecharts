@@ -98,6 +98,9 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         return 0;
                     }
                 });
+                if (base_chart_settings.row_filters.length === 0){
+                    base_chart_settings.row_filters = "[]";
+                }
                 var base_filters = JSON.parse(base_chart_settings.row_filters);
                 var allFilteredCols = [];
                 patched_each(base_filters, function(col_id, filter_opt){
