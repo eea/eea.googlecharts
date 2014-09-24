@@ -58,7 +58,8 @@ class Add(Charts):
                 break
         for widget in dashboard.get('widgets'):
             if widget.get('wtype') == 'googlecharts.widgets.multiples':
-                existing.add(widget.get('name'))
+                #remove the "multiples_" prefix from name
+                existing.add(widget.get('name')[10:])
         return existing
 
 class Edit(Charts):
