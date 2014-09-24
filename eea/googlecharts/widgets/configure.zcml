@@ -7,6 +7,7 @@
   <include package=".chart" />
   <include package=".textarea" />
   <include package=".portlet" />
+  <include package=".multiples" />
 
   <utility provides=".interfaces.IWidgetsInfo"
     factory=".meta.WidgetsInfo" />

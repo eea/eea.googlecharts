@@ -210,6 +210,11 @@
   />
 
   <browser:resource
+    name="eea.googlecharts.multiples-edit.js"
+    file="./js/multiples-edit.js"
+  />
+
+  <browser:resource
     name="eea.googlecharts.dashboards-edit.js"
     file="./js/dashboards-edit.js"
   />

@@ -1,0 +1,6 @@
+<div tal:attributes="
+  style python: 'width: %spx;; height: %spx' % (view.width, view.height);">
+    <div class="multiples-preview" tal:attributes="base_chart python: view.chart; absolute_url python:context.absolute_url()">
+    </div>
+</div>
+

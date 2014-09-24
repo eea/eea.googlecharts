@@ -56,9 +56,8 @@ class Add(Charts):
         for dashboard in dashboards.get('dashboards', []):
             if dashboard.get('name') == name:
                 break
-
         for widget in dashboard.get('widgets'):
-            if widget.get('wtype') == 'googlecharts.widgets.chart':
+            if widget.get('wtype') == 'googlecharts.widgets.multiples':
                 existing.add(widget.get('name'))
         return existing
 
@@ -72,7 +71,8 @@ class Edit(Charts):
         """
         request = getattr(context, 'REQUEST', None)
         form = getattr(request, 'form', {})
-        name = form.get('name', '')
+        #remove the "multiples_" prefix from name
+        name = form.get('name', '')[10:]
 
         accessor = queryAdapter(context, IVisualizationConfig)
         charts = accessor.view('googlechart.googlecharts', {})

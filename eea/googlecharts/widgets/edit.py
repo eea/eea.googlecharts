@@ -96,9 +96,9 @@ class AddForm(SubPageForm):
         self.dashboard.setdefault('widgets', [])
 
         data = self.prepare(data)
-
         for widget in self.dashboard.get('widgets', []):
-            if data.get('name', '') == widget.get('name', ''):
+            if data.get('name', '') == widget.get('name', '') and \
+                data.get('wtype', '') == widget.get('wtype', ''):
                 return u'Invalid name. Widget not added'
 
         self.dashboard['widgets'].append(data)

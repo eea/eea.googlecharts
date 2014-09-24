@@ -1,0 +1,44 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:googlecharts="http://namespaces.zope.org/googlecharts"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:i18n="http://namespaces.zope.org/i18n"
+  i18n_domain="eea">
+
+  <!-- View -->
+  <googlecharts:widget
+    name="googlecharts.widgets.multiples"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".view.View"
+    template="view.pt"
+    permission="zope2.View"
+    title="Small multiples"
+    i18n:attributes="title"/>
+
+  <!-- Edit -->
+  <browser:page
+    name="googlecharts.widgets.multiples.edit"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Edit"
+    permission="eea.app.visualization.configure"
+    />
+
+  <!-- Add -->
+  <browser:page
+    name="googlecharts.widgets.multiples.add"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Add"
+    template="edit.pt"
+    permission="eea.app.visualization.configure"
+    />
+
+  <utility name="eea.googlecharts.vocabularies.multiples"
+    factory=".vocabulary.Charts"/>
+
+  <utility name="eea.googlecharts.vocabularies.multiples.add"
+    factory=".vocabulary.Add"/>
+
+  <utility name="eea.googlecharts.vocabularies.multiples.edit"
+    factory=".vocabulary.Edit"/>
+
+</configure>

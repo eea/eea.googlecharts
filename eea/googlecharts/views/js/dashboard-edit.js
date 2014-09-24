@@ -426,9 +426,10 @@ DavizEdit.GoogleDashboardCharts.prototype = {
         return false;
       });
 
+    jQuery('.add-edit-widget-dialog').remove();
     widget.dialog({
       title: 'Add Widget',
-      dialogClass: 'googlechart-dialog',
+      dialogClass: 'googlechart-dialog add-edit-widget-dialog',
       bgiframe: true,
       modal: true,
       closeOnEscape: true,
@@ -544,6 +545,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         .addClass('dashboard-chart')
         .width(self.settings.dashboard.width)
         .height(self.settings.dashboard.height)
+        .data("widget", self)
         .appendTo(self.context);
     }else{
       try{
@@ -577,6 +579,9 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         .addClass('dashboard-widget')
         .append(data)
         .appendTo(self.box);
+      if (self.settings.wtype === "googlecharts.widgets.multiples"){
+        jQuery(document).trigger("multiplesEditPreviewReady", [self.settings.name.substr(10), JSON.parse(self.settings.multiples_settings)]);
+      }
     });
 
     self.handle_header(self.settings.dashboard.width, self.settings.dashboard.height);
@@ -788,15 +793,18 @@ DavizEdit.GoogleDashboardWidget.prototype = {
 
       jQuery('.actionButtons', form).remove();
 
+      jQuery('.add-edit-widget-dialog').remove();
+
       form.dialog({
         title: 'Edit Widget',
-        dialogClass: 'googlechart-dialog',
+        dialogClass: 'googlechart-dialog add-edit-widget-dialog',
         bgiframe: true,
         modal: true,
         minWidth: 950,
         minHeight: 600,
         closeOnEscape: true,
         open: function(){
+          jQuery(document).trigger('multiplesConfigEditorReady', ['edit']);
           var buttons = jQuery(this).parent().find("button[title!='close']");
           buttons.attr('class', 'btn');
           jQuery(buttons[0]).addClass('btn-inverse');
@@ -836,6 +844,9 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     var title = jQuery("input[name*='.title']", form);
     if(title.length){
       self.settings.title = title.val();
+    }
+    if(self.settings.wtype === "googlecharts.widgets.multiples"){
+      self.settings.multiples_settings = jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value");
     }
     var action = self.settings.dashboard.name + '.actions.save';
     var query = {};

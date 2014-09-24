@@ -393,6 +393,7 @@
     -moz-transition: opacity .5s;
     -o-transition: opacity .5s;
     transition: opacity .5s;
+    z-index:3;
 }
 
 .dashboard-chart:hover .dashboard-header {
@@ -1517,12 +1518,6 @@ li.googlechart > fieldset > div > a > span {
     right:0;
     bottom:0;
 }
-.chartsize {
-    width:50px;
-    height:20px !important;
-    font-size:14px !important;
-    padding:0 !important;
-}
 
 .preview-controls {
     text-align:center;
@@ -2051,10 +2046,183 @@ input[type=text].eea-googlechart-trendlines-config-value{
     clear:both;
 }
 
+.multiples-matrix-item-overlay{
+/*    background-color:rgba(255,0,0,0.5);*/
+}
+
+.multiples-matrix-item-overlay.selected{
+    background-color:rgba(208,228,173,0.5)
+
+}
+
+.settingsDiv{
+    width:150px;
+    float:right;
+}
+
+.settingsDiv label,
+#multiples-sort label{
+    font-weight: bold;
+}
+
+.settingsDiv label.help{
+    font-weight: normal;
+    color:gray;
+    font-size:90%;
+}
+
+.multiples-config{
+    width: 100%;
+    height: 100%;
+}
+
+.multiples-config .multiples-base-preview{
+    width:300px;
+    height:300px;
+    float:left;
+}
+
+.multiples-config .multiples-matrix{
+    margin-top:10px;
+    margin-left:30px;
+    float:left;
+    overflow:auto;
+}
+
+.multiples-config .multiples-base-preview .base-chart-iframe{
+    width:300px;
+    height:300px;
+}
+
+.multiples-config .multiples-matrix .multiples-matrix-elements .small-container{
+    float:left;
+    width:67px;
+    height:67px;
+    border:1px solid gray;
+    position:relative;
+}
+
+.multiples-config .multiples-matrix .multiples-matrix-elements .small-chart{
+    width:67px;
+    height:67px;
+    position:absolute;
+    z-index:1;
+}
+
+.multiples-config .multiples-matrix .multiples-matrix-elements .multiples-matrix-item-overlay{
+    width:67px;
+    height:67px;
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:2;
+    cursor:pointer;
+}
+
+#multiples-resize .chartPreview{
+    border:2px solid green;
+    position:relative;
+    float:left;
+}
+
+#multiples-resize .chartPreview .chartAreaResizable{
+    border:2px dashed green;
+    position:absolute;
+}
+
+.chartsettings {
+    width:50px;
+    height:20px !important;
+    font-size:14px !important;
+    padding:0 !important;
+}
+
+.chartsettings.chartTitle {
+    width:150px;
+}
+
+.matrix-column-header{
+    float:right;
+}
+.matrix-column-header-label {
+    float:left;
+    border:1px solid gray;
+    font-size:90%;
+    width:67px;
+}
+
+.matrix-row-header-label {
+    float:left;
+    font-weight:bold;
+}
+
+.matrix-row-header-level-0 {
+    font-size:90%;
+    width: 100px;
+    height:67px;
+    border:1px solid gray;
+    font-weight: normal;
+}
+
+div.field[id*='multiples_settings'] {
+    display:none;
+}
+
+.multiples-iframe-container{
+    float:left;
+    position:relative;
+    box-shadow:3px 3px 3px #ccc;
+    margin:2px;
+}
+
+.multiples-header-item{
+    float:left;
+    width:61px;
+    padding:3px;
+    overflow:hidden;
+    border:1px solid rgb(230,230,230);
+    background-color:rgb(210,210,210);
+}
+
+.multiples-header-item input{
+    float:right;
+}
+
+.multiples-matrix-config-checkbox-label{
+    float:left;
+}
+
+.multiples-matrix-config{
+/*    display:none;*/
+    float:left;
+}
+
 .note-shared-charts-list {
     list-style-type: disc;
 }
 
 .note-shared-charts-list li {
     display: list-item;
+}
+
+.draggable-column {
+    float:left;
+    position:relative;
+    border:1px solid red;
+    z-index:9999;
+}
+.droppable-column {
+    position:relative;
+    border:1px solid green;
+    z-index:9998;
+    width:100px;
+    height:20px;
+}
+
+.multiples-matrix-config-column-vertical {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    margin-left: 290px;
+    margin-top: 100px;
 }
