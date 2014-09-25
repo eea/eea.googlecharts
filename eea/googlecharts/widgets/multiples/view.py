@@ -20,4 +20,6 @@ class View(Widget):
 
     @property
     def chart(self):
+        """ get name of chart
+        """
         return self.widget.get('name', '')[10:]
