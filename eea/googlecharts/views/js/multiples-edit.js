@@ -14,7 +14,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
         else {
             possible_matrix = false;
         }
-        var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"))
+        var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
         tmp_settings.possibleMatrix = possible_matrix;
         jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
     }
