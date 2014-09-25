@@ -684,3 +684,11 @@ input.googlechart-chart-size {
     background: url(../../++resource++eea.jquery.images/ajax-loader.gif) center center no-repeat;
     display:block !important;
 }
+
+.sm-charts {
+    border: 1px solid transparent;
+}
+
+.sm-charts:hover {
+    border: 1px solid #ccc;
+}

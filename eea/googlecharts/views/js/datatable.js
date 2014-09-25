@@ -319,10 +319,17 @@ function transformTable(options){
     filteredPivotTable.properties = pivotTable.properties;
     filteredPivotTable.items = [];
 
-    jQuery(pivotTable.items).each(function(row_index, row){
+    filteredPivotTable.items = filter_table(pivotTable.items, settings.filters);
+    filteredPivotTable.pivotLevels = pivotTable.pivotLevels;
+    return filteredPivotTable;
+}
+
+function filter_table(items, filters){
+    var filtered_items = [];
+    jQuery(items).each(function(row_index, row){
         var shouldDisplay = true;
-        if (settings.filters){
-            patched_each(settings.filters, function(column, column_filter){
+        if (filters){
+            patched_each(filters, function(column, column_filter){
                 var val = "";
                 try{
                     val = decodeStr(row[column].toString());
@@ -348,10 +355,9 @@ function transformTable(options){
         if (!shouldDisplay){
             return;
         }
-        filteredPivotTable.items.push(row);
+        filtered_items.push(row);
     });
-    filteredPivotTable.pivotLevels = pivotTable.pivotLevels;
-    return filteredPivotTable;
+    return filtered_items;
 }
 
 function tableToArray(options){
