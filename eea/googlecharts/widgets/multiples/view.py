@@ -1,6 +1,5 @@
 """ View
 """
-from urllib import urlencode
 from eea.googlecharts.widgets.view import View as Widget
 
 class View(Widget):
@@ -21,4 +20,6 @@ class View(Widget):
 
     @property
     def chart(self):
+        """ get name of chart
+        """
         return self.widget.get('name', '')[10:]

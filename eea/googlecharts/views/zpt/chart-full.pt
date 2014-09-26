@@ -83,7 +83,6 @@
                 'height': preview_options.chartAreaHeight - 2
             };
 
-            chart_options.title = preview_options.chartTitle;
             chart_options.title = getChartTitle(preview_options.chartTitle,
                                                 preview_possibleLabels,
                                                 transformedTable)

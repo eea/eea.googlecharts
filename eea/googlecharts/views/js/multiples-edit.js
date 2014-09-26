@@ -14,11 +14,121 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
         else {
             possible_matrix = false;
         }
-        var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"))
+        var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
         tmp_settings.possibleMatrix = possible_matrix;
         jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
     }
+
     var current_widget = ".googlechart-widget-" + view;
+    function updateDragAndDrops(){
+        jQuery(".multiples-matrix-config-column-horizontal")
+            .remove();
+        jQuery(".multiples-matrix-config-column-vertical")
+            .remove();
+        jQuery("<div>")
+            .addClass("multiples-matrix-config-column-horizontal droppable-column")
+            .text("drop here column for X")
+            .appendTo(".multiples-matrix-config-column-horizontal-droppable-container");
+        jQuery("<div>")
+            .addClass("multiples-matrix-config-column-vertical droppable-column")
+            .text("drop here column for Y")
+            .css("float", "left")
+            .width(100)
+            .css("height", "auto")
+            .appendTo(".multiples-matrix-config-column-vertical-droppable-container");
+
+        jQuery(".multiples-original-columns")
+            .empty();
+        var selectedHorizontal = jQuery(".multiples-horizontal-replaced").attr("value");
+        var selectedVertical = jQuery(".multiples-vertical-replaced").attr("value");
+        jQuery(".multiples-horizontal-replaced option").each(function(idx, option){
+            if (jQuery(option).attr("value") !== ""){
+                if ((jQuery(option).attr("value") !== selectedHorizontal) && (jQuery(option).attr("value") !== selectedVertical)){
+                    jQuery("<div>")
+                        .addClass("draggable-column")
+                        .text(jQuery(option).text())
+                        .attr("value", jQuery(option).attr("value"))
+                        .appendTo(".multiples-original-columns");
+                }
+                if (jQuery(option).attr("value") === selectedHorizontal){
+                    jQuery(".multiples-matrix-config-column-horizontal").empty();
+                    jQuery("<div>")
+                        .addClass("removable-title")
+                        .text("Column on X:")
+                        .appendTo(".multiples-matrix-config-column-horizontal");
+                    jQuery("<div>")
+                        .text(jQuery(option).text())
+                        .addClass("removable-column removable-column-x")
+                        .appendTo(".multiples-matrix-config-column-horizontal");
+                    jQuery("<span>")
+                        .attr("title", "Remove column")
+                        .addClass("eea-icon eea-icon-trash-o removable-column-remove remove-column-x")
+                        .appendTo(".removable-column-x");
+                    jQuery("<div>")
+                        .css("clear","both")
+                        .appendTo(".multiples-matrix-config-column-horizontal");
+                    jQuery(".multiples-matrix-config-column-horizontal")
+                        .removeClass("droppable-column");
+                }
+                if (jQuery(option).attr("value") === selectedVertical){
+                    jQuery(".multiples-matrix-config-column-vertical").empty();
+                    jQuery("<div>")
+                        .addClass("removable-title")
+                        .text("Column on Y:")
+                        .appendTo(".multiples-matrix-config-column-vertical");
+                    jQuery("<div>")
+                        .text(jQuery(option).text())
+                        .addClass("removable-column removable-column-y")
+                        .appendTo(".multiples-matrix-config-column-vertical");
+                    jQuery("<span>")
+                        .attr("title", "Remove column")
+                        .addClass("eea-icon eea-icon-trash-o removable-column-remove remove-column-y")
+                        .appendTo(".removable-column-y");
+                    jQuery("<div>")
+                        .css("clear","both")
+                        .appendTo(".multiples-matrix-config-column-vertical");
+                    jQuery(".multiples-matrix-config-column-vertical")
+                        .removeClass("droppable-column");
+                }
+            }
+        });
+        jQuery(".draggable-column").draggable({
+            revert:"invalid",
+            start: function(event, ui){
+                jQuery(this)
+                    .addClass("optionDragging");
+            },
+            stop: function(event, ui){
+                jQuery(this)
+                    .removeClass("optionDragging");
+            }
+        });
+        jQuery(".droppable-column").droppable({
+            hoverClass:"hoveredDrop",
+            drop: function(event, ui){
+                var value = jQuery(".optionDragging").attr("value");
+                if (jQuery(this).hasClass("multiples-matrix-config-column-horizontal")){
+                    jQuery(".multiples-horizontal-replaced").attr("value", value);
+                    jQuery(".multiples-horizontal-replaced").trigger("change");
+                }
+                if (jQuery(this).hasClass("multiples-matrix-config-column-vertical")){
+                    jQuery(".multiples-vertical-replaced").attr("value", value);
+                    jQuery(".multiples-vertical-replaced").trigger("change");
+                }
+            }
+        });
+        jQuery(".removable-column-remove").click(function(){
+            if (jQuery(this).hasClass("remove-column-x")){
+                jQuery(".multiples-horizontal-replaced").attr("value", "");
+                jQuery(".multiples-horizontal-replaced").trigger("change");
+            }
+            if (jQuery(this).hasClass("remove-column-y")){
+                jQuery(".multiples-vertical-replaced").attr("value", "");
+                jQuery(".multiples-vertical-replaced").trigger("change");
+            }
+        });
+
+    }
     jQuery(current_widget + " select").change(function(){
         if (view === "add"){
             var empty_settings = {
@@ -39,17 +149,18 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 .addClass("multiples-base-preview")
                 .appendTo(".multiples-config");
 
+            jQuery(".multiples-matrix-config").remove();
             jQuery("<div>")
                 .addClass("multiples-matrix-config")
+                .css("display","none")
                 .appendTo(".multiples-config");
-
             jQuery("<div>")
                 .addClass("multiples-matrix")
+                .height(jQuery(".multiples-config").closest(".googlechart-widget-edit").height()-120)
+                .width(jQuery(".multiples-config").width() - jQuery(".multiples-base-preview").width() - 10)
+                .css("overflow", "scroll")
                 .appendTo(".multiples-config")
                 .disableSelection();
-            jQuery("<div>")
-                .addClass("multiples-matrix-elements")
-                .appendTo(".multiples-matrix");
 
             var chart_path = jQuery(current_widget + " select").attr("value").split("/");
             var chart_id = chart_path[chart_path.length - 1];
@@ -127,7 +238,15 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         return 0;
                     }
                 });
+                jQuery("<div>")
+                    .text("Configure the small multiples charts by selecting with drag and drop which columns to be used for the X and Y axis")
+                    .addClass("multiples-config-title portalMessage ideaMessage")
+                    .appendTo(".multiples-matrix");
 
+                jQuery("<div>")
+                    .text("Columns used by the chart:")
+                    .addClass("multiples-columns-title")
+                    .appendTo(".multiples-matrix");
                 jQuery("<div>")
                     .text("Select column or row filter to be replaced on the horizontal axis")
                     .appendTo(".multiples-matrix-config");
@@ -145,9 +264,9 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     .addClass("multiples-replaced")
                     .appendTo(".multiples-matrix-config");
 
-/*                jQuery("<div>")
+                jQuery("<div>")
                     .addClass("multiples-original-columns")
-                    .appendTo(".multiples-matrix");*/
+                    .appendTo(".multiples-matrix");
 
                 jQuery("<option>")
                     .text("(select column or row filter)")
@@ -159,46 +278,48 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 jQuery(".multiples-matrix-config").data("multiples_filters", allFilteredCols);
                 jQuery(".multiples-matrix-config").data("original_filter", JSON.parse(base_chart_settings.row_filters));
 
-                for (var i = 0; i < columnsFromSettings.columns.length; i++){
-/*                    jQuery("<div>")
-                        .addClass("draggable-column")
-                        .text(transformedTable.properties[columnsFromSettings.columns[i]].label)
-                        .attr("value", "col_" + columnsFromSettings.columns[i])
-                        .appendTo(".multiples-original-columns");*/
-                    jQuery("<option>")
-                        .addClass("multiples_option_column")
-                        .attr("value", "col_" + columnsFromSettings.columns[i])
-                        .text(transformedTable.properties[columnsFromSettings.columns[i]].label)
-                        .appendTo(".multiples-horizontal-replaced")
-                        .clone().appendTo(".multiples-vertical-replaced");
-                }
-                for (i = 0; i < allFilteredCols.length; i++){
-/*                    jQuery("<div>")
-                        .addClass("draggable-column")
-                        .text("filter on column '" + transformedTable.properties[allFilteredCols[i].id].label + "'")
-                        .attr("value", "flt_" + allFilteredCols[i].id)
-                        .appendTo(".multiples-original-columns");*/
+                for (var i = 0; i < allFilteredCols.length; i++){
                     jQuery("<option>")
                         .addClass("multiples_option_filter")
                         .attr("value", "flt_" + allFilteredCols[i].id)
-                        .text("filter on column '" + transformedTable.properties[allFilteredCols[i].id].label + "'")
+                        .text(transformedTable.properties[allFilteredCols[i].id].label)
                         .appendTo(".multiples-horizontal-replaced")
                         .clone().appendTo(".multiples-vertical-replaced");
                 }
-/*                jQuery("<div>")
-                    .addClass("multiples-horizontal-column-droppable droppable-column")
-                    .appendTo(".multiples-matrix");*/
-                jQuery(".draggable-column").draggable();
-                jQuery(".droppable-column").droppable({
-                    hoverClass:"hoveredDrop",
-                    drop: function(event, ui){
-                        console.log("dropped");
-                    },
-                    over: function(event, ui){
-                        console.log("over");
+                for (i = 0; i < columnsFromSettings.columns.length; i++){
+                    if (jQuery(".multiples_option_filter[value='flt_"+ columnsFromSettings.columns[i] +"']").length === 0){
+                        jQuery("<option>")
+                            .addClass("multiples_option_column")
+                            .attr("value", "col_" + columnsFromSettings.columns[i])
+                            .text(transformedTable.properties[columnsFromSettings.columns[i]].label)
+                            .appendTo(".multiples-horizontal-replaced")
+                            .clone().appendTo(".multiples-vertical-replaced");
                     }
-                });
+                }
+
+                jQuery("<div>")
+                    .css("clear", "both")
+                    .appendTo(".multiples-matrix");
+
+                jQuery("<div>")
+                    .addClass("multiples-matrix-config-column-horizontal-droppable-container")
+                    .appendTo(".multiples-matrix");
+                jQuery("<div>")
+                    .css("clear", "both")
+                    .appendTo(".multiples-matrix");
+                jQuery("<div>")
+                    .addClass("multiples-matrix-container")
+                    .width(10000)
+                    .appendTo(".multiples-matrix");
+                jQuery("<div>")
+                    .addClass("multiples-matrix-config-column-vertical-droppable-container")
+                    .appendTo(".multiples-matrix-container");
+            jQuery("<div>")
+                .addClass("multiples-matrix-elements")
+                .css("float", "left")
+                .appendTo(".multiples-matrix-container");
                 jQuery(".multiples-replaced").change(function(){
+                    updateDragAndDrops();
                     jQuery(".multiples-matrix .multiples-elements").remove();
                     var horizontal_replaceable = jQuery(".multiples-horizontal-replaced").attr("value");
                     var vertical_replaceable = jQuery(".multiples-vertical-replaced").attr("value");
@@ -536,7 +657,36 @@ function redrawPreviewChart(base_chart, chartSettings){
         .addClass("chartPreview")
         .width(chartSettings.width)
         .height(chartSettings.height)
-        .appendTo("#multiples-resize");
+        .appendTo("#multiples-resize")
+        .resizable({
+            containement: "#multiples-resize",
+            resize: function(){
+                jQuery(".settingsDiv .chartWidth").attr("value", jQuery(this).width());
+                jQuery(".settingsDiv .chartHeight").attr("value", jQuery(this).height());
+                jQuery("#multiples-resize").dialog("option", "minWidth", jQuery(this).width() + 200);
+                jQuery("#multiples-resize").dialog("option", "minHeight", jQuery(this).height() + 340);
+            },
+            stop: function(){
+                var prevWidth = chartSettings.width;
+                var prevHeight = chartSettings.height;
+                chartSettings.width = parseInt(jQuery(".settingsDiv .chartWidth").attr("value"), 10);
+                chartSettings.height = parseInt(jQuery(".settingsDiv .chartHeight").attr("value"), 10);
+
+                chartSettings.chartAreaLeft = parseInt(chartSettings.chartAreaLeft / prevWidth * chartSettings.width, 10);
+                chartSettings.chartAreaWidth = parseInt(chartSettings.chartAreaWidth / prevWidth * chartSettings.width, 10);
+                chartSettings.chartAreaTop = parseInt(chartSettings.chartAreaTop / prevHeight * chartSettings.height, 10);
+                chartSettings.chartAreaHeight = parseInt(chartSettings.chartAreaHeight / prevHeight * chartSettings.height, 10);
+
+                jQuery(".settingsDiv .chartAreaWidth").attr("value", chartSettings.chartAreaWidth);
+                jQuery(".settingsDiv .chartAreaHeight").attr("value", chartSettings.chartAreaHeight);
+                jQuery(".settingsDiv .chartAreaTop").attr("value", chartSettings.chartAreaTop);
+                jQuery(".settingsDiv .chartAreaLeft").attr("value", chartSettings.chartAreaLeft);
+
+                redrawPreviewChart(base_chart, chartSettings);
+                jQuery("#multiples-resize").dialog("option", "minWidth", chartSettings.width + 200);
+                jQuery("#multiples-resize").dialog("option", "minHeight", chartSettings.height + 340);
+            }
+        });
     var options_str = encodeURIComponent(JSON.stringify(chartSettings));
     jQuery("<iframe>")
         .css("width",chartSettings.width+"px")
@@ -826,25 +976,27 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             dialogClass: "googlechart-dialog googlechart-preview-dialog",
             modal: true,
             width: chartSettings.width + 200,
-            height: chartSettings.height + 260,
+            height: chartSettings.height + 340,
+            minWidth: chartSettings.width + 200,
+            minHeight: chartSettings.height + 340,
             title: "Size adjustments",
             resize: function(){
-                var elem = jQuery(this);
+/*                var elem = jQuery(this);
                 var tmp_width = elem.width();
                 var tmp_height = elem.height();
 
                 var prevWidth = parseInt(jQuery(".settingsDiv").attr("previousWidth"), 10);
                 var prevHeight = parseInt(jQuery(".settingsDiv").attr("previousHeight"), 10);
                 jQuery(".settingsDiv .chartWidth").attr("value", parseInt(chartSettings.width - prevWidth + tmp_width, 10));
-                jQuery(".settingsDiv .chartHeight").attr("value", parseInt(chartSettings.height - prevHeight + tmp_height, 10));
+                jQuery(".settingsDiv .chartHeight").attr("value", parseInt(chartSettings.height - prevHeight + tmp_height, 10));*/
             },
             resizeStart: function(){
-                var elem = jQuery(this);
+/*                var elem = jQuery(this);
                 jQuery(".settingsDiv").attr("previousWidth", elem.width());
-                jQuery(".settingsDiv").attr("previousHeight", elem.height());
+                jQuery(".settingsDiv").attr("previousHeight", elem.height());*/
             },
             resizeStop: function(){
-                var prevWidth = chartSettings.width;
+/*                var prevWidth = chartSettings.width;
                 var prevHeight = chartSettings.height;
                 chartSettings.width = parseInt(jQuery(".settingsDiv .chartWidth").attr("value"), 10);
                 chartSettings.height = parseInt(jQuery(".settingsDiv .chartHeight").attr("value"), 10);
@@ -859,7 +1011,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 jQuery(".settingsDiv .chartAreaTop").attr("value", chartSettings.chartAreaTop);
                 jQuery(".settingsDiv .chartAreaLeft").attr("value", chartSettings.chartAreaLeft);
 
-                redrawPreviewChart(base_chart, chartSettings);
+                redrawPreviewChart(base_chart, chartSettings);*/
             },
             create: function(){
             },
@@ -954,6 +1106,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         if (chart.columns !== undefined) {
             params.columns = JSON.stringify(chart.columns);
             iframeContainer.attr("used_columns", params.columns);
+            iframeContainer.attr("possible_labels", params.possibleLabels);
         }
         if (chart.filters !== undefined) {
             params.filters = JSON.stringify(chart.filters);
@@ -989,10 +1142,11 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             .css("opacity", "");
       },
       update: function(event, ui){
-        var sorted_charts_str = container.sortable('toArray',{attribute:'used_columns'});
+        var sorted_charts_columns_str = container.sortable('toArray',{attribute:'used_columns'});
+        var sorted_charts_possible_labels_str = container.sortable('toArray',{attribute:'possible_labels'});
         var sorted_charts = [];
-        for (var i = 0; i < sorted_charts_str.length; i++){
-            sorted_charts.push(JSON.parse(sorted_charts_str[i]));
+        for (var i = 0; i < sorted_charts_columns_str.length; i++){
+            sorted_charts.push({columns:JSON.parse(sorted_charts_columns_str[i]), possibleLabels:JSON.parse(sorted_charts_possible_labels_str[i])});
         }
         var widget = jQuery("#multiples_"+base_chart).data("widget");
         var tmp_settings = JSON.parse(widget.settings.multiples_settings);

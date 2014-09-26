@@ -767,9 +767,6 @@ function drawSMCharts(smc_settings) {
 
         var current_table_items = filter_table(transformedTable.items, c_settings.filters);
         smc_container.appendTo(smc_settings.container);
-        if (smc_settings.click_event) {
-            $(smc_container).on('click', smc_settings.click_event);
-        }
         var current_table = jQuery.extend(true, {}, transformedTable);
         current_table.items = current_table_items;
         var smc_options = {
@@ -827,7 +824,21 @@ function drawSMCharts(smc_settings) {
             misc: {
                 legend: chartConfig[1].options.legend
             }
-        })
+        });
+        if (smc_settings.controls) {
+            $.each(smc_settings.controls, function(idx, val) {
+                var control = $('<span>', {
+                    'class': 'smc-control eea-icon ' + val.icon + ' ' + val.position,
+                    'text': 'OMFGOMFG'
+                });
+                control.appendTo(smc_container);
+                $.each(val.events, function(evt, callback){
+                    control.on(evt, callback);
+                });
+            });
+            $(smc_container).on('click', smc_settings.click_event);
+        }
+
     });
 }
 
@@ -1044,7 +1055,15 @@ function drawGoogleDashboard(options){
                 chartFiltersId: chartFiltersId,
                 dashboard_filters: dashboard_filters,
                 interactive: false,
-                click_event: openChartDialog
+                controls: {
+                    enlarge_btn: {
+                        position: 'top-right',
+                        icon: 'eea-plus-square-o',
+                        events: {
+                            'click': openChartDialog
+                        }
+                    }
+                }
             }
             drawSMCharts(smcharts_settings);
         }

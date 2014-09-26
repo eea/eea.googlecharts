@@ -427,14 +427,19 @@ DavizEdit.GoogleDashboardCharts.prototype = {
       });
 
     jQuery('.add-edit-widget-dialog').remove();
+
+    var width = jQuery(window).width() * 0.95;
+    var height = jQuery(window).height() * 0.95;
+
     widget.dialog({
       title: 'Add Widget',
       dialogClass: 'googlechart-dialog add-edit-widget-dialog',
       bgiframe: true,
       modal: true,
       closeOnEscape: true,
-      minHeight: 600,
-      minWidth: 950,
+      minHeight: height,
+      minWidth: width,
+      resizable: false,
       open: function(evt, ui){
         var buttons = jQuery(this).parent().find("button[title!='close']");
         buttons.attr('class', 'btn');
@@ -795,13 +800,17 @@ DavizEdit.GoogleDashboardWidget.prototype = {
 
       jQuery('.add-edit-widget-dialog').remove();
 
+      var width = jQuery(window).width() * 0.95;
+      var height = jQuery(window).height() * 0.95;
+
       form.dialog({
         title: 'Edit Widget',
         dialogClass: 'googlechart-dialog add-edit-widget-dialog',
         bgiframe: true,
         modal: true,
-        minWidth: 950,
-        minHeight: 600,
+        minWidth: width,
+        minHeight: height,
+        resizable: false,
         closeOnEscape: true,
         open: function(){
           jQuery(document).trigger('multiplesConfigEditorReady', ['edit']);
