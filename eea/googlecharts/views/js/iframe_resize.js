@@ -710,7 +710,11 @@ jQuery(document).ready(function($){
             return;
         }
     }
-    var action = jQuery("base").attr("href") + "/@@googlechart.check_permission";
+    var iframe_embedded_charts = jQuery("iframe[src*='embed-chart?chart=']");
+    if (iframe_embedded_charts.length === 0){
+        return;
+    }
+    var action = jQuery("base").attr("href").split("@@")[0] + "/@@googlechart.check_permission";
     jQuery.ajax({
         type: 'GET',
         url: action,
@@ -718,7 +722,7 @@ jQuery(document).ready(function($){
         success: function(data){
             if (data === "True"){
                 var resizeButton = "<a class='standardButton googlechart-iframe-resize'>Resize chart</a>";
-                jQuery.each(jQuery("iframe[src*='embed-chart?chart=']"), function(){
+                jQuery.each(iframe_embedded_charts, function(){
                     var btn = jQuery(resizeButton).data("chart_iframe", this);
                     jQuery(this).data("isDashboard", false);
                     jQuery(this).after(jQuery(resizeButton).data("chart_iframe", this));
