@@ -94,9 +94,6 @@
                     horizontal_str = transformedTable.available_columns[horizontal_str]
                 }
                 chart_options.title = chart_options.title.split("{vertical}").join(vertical_str).split("{horizontal}").join(horizontal_str);
-/*                jQuery.each(preview_columns, function(idx, value){
-                    chart_options.title = chart_options.title.split("{column_"+idx+"}").join(transformedTable.available_columns[value]);
-                });*/
             }
             if (!preview_options.displayLegend){
                 chart_options.legend = 'none';

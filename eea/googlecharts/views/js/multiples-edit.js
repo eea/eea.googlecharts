@@ -22,9 +22,9 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
     var current_widget = ".googlechart-widget-" + view;
     function updateDragAndDrops(){
         jQuery(".multiples-matrix-config-column-horizontal")
-            .remove()
+            .remove();
         jQuery(".multiples-matrix-config-column-vertical")
-            .remove()
+            .remove();
         jQuery("<div>")
             .addClass("multiples-matrix-config-column-horizontal droppable-column")
             .text("drop here column for X")
@@ -278,7 +278,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 jQuery(".multiples-matrix-config").data("multiples_filters", allFilteredCols);
                 jQuery(".multiples-matrix-config").data("original_filter", JSON.parse(base_chart_settings.row_filters));
 
-                for (i = 0; i < allFilteredCols.length; i++){
+                for (var i = 0; i < allFilteredCols.length; i++){
                     jQuery("<option>")
                         .addClass("multiples_option_filter")
                         .attr("value", "flt_" + allFilteredCols[i].id)
@@ -286,7 +286,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         .appendTo(".multiples-horizontal-replaced")
                         .clone().appendTo(".multiples-vertical-replaced");
                 }
-                for (var i = 0; i < columnsFromSettings.columns.length; i++){
+                for (i = 0; i < columnsFromSettings.columns.length; i++){
                     if (jQuery(".multiples_option_filter[value='flt_"+ columnsFromSettings.columns[i] +"']").length === 0){
                         jQuery("<option>")
                             .addClass("multiples_option_column")
@@ -657,7 +657,36 @@ function redrawPreviewChart(base_chart, chartSettings){
         .addClass("chartPreview")
         .width(chartSettings.width)
         .height(chartSettings.height)
-        .appendTo("#multiples-resize");
+        .appendTo("#multiples-resize")
+        .resizable({
+            containement: "#multiples-resize",
+            resize: function(){
+                jQuery(".settingsDiv .chartWidth").attr("value", jQuery(this).width());
+                jQuery(".settingsDiv .chartHeight").attr("value", jQuery(this).height());
+                jQuery("#multiples-resize").dialog("option", "minWidth", jQuery(this).width() + 200);
+                jQuery("#multiples-resize").dialog("option", "minHeight", jQuery(this).height() + 340);
+            },
+            stop: function(){
+                var prevWidth = chartSettings.width;
+                var prevHeight = chartSettings.height;
+                chartSettings.width = parseInt(jQuery(".settingsDiv .chartWidth").attr("value"), 10);
+                chartSettings.height = parseInt(jQuery(".settingsDiv .chartHeight").attr("value"), 10);
+
+                chartSettings.chartAreaLeft = parseInt(chartSettings.chartAreaLeft / prevWidth * chartSettings.width, 10);
+                chartSettings.chartAreaWidth = parseInt(chartSettings.chartAreaWidth / prevWidth * chartSettings.width, 10);
+                chartSettings.chartAreaTop = parseInt(chartSettings.chartAreaTop / prevHeight * chartSettings.height, 10);
+                chartSettings.chartAreaHeight = parseInt(chartSettings.chartAreaHeight / prevHeight * chartSettings.height, 10);
+
+                jQuery(".settingsDiv .chartAreaWidth").attr("value", chartSettings.chartAreaWidth);
+                jQuery(".settingsDiv .chartAreaHeight").attr("value", chartSettings.chartAreaHeight);
+                jQuery(".settingsDiv .chartAreaTop").attr("value", chartSettings.chartAreaTop);
+                jQuery(".settingsDiv .chartAreaLeft").attr("value", chartSettings.chartAreaLeft);
+
+                redrawPreviewChart(base_chart, chartSettings);
+                jQuery("#multiples-resize").dialog("option", "minWidth", chartSettings.width + 200);
+                jQuery("#multiples-resize").dialog("option", "minHeight", chartSettings.height + 340);
+            }
+        });
     var options_str = encodeURIComponent(JSON.stringify(chartSettings));
     jQuery("<iframe>")
         .css("width",chartSettings.width+"px")
@@ -947,25 +976,27 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             dialogClass: "googlechart-dialog googlechart-preview-dialog",
             modal: true,
             width: chartSettings.width + 200,
-            height: chartSettings.height + 260,
+            height: chartSettings.height + 340,
+            minWidth: chartSettings.width + 200,
+            minHeight: chartSettings.height + 340,
             title: "Size adjustments",
             resize: function(){
-                var elem = jQuery(this);
+/*                var elem = jQuery(this);
                 var tmp_width = elem.width();
                 var tmp_height = elem.height();
 
                 var prevWidth = parseInt(jQuery(".settingsDiv").attr("previousWidth"), 10);
                 var prevHeight = parseInt(jQuery(".settingsDiv").attr("previousHeight"), 10);
                 jQuery(".settingsDiv .chartWidth").attr("value", parseInt(chartSettings.width - prevWidth + tmp_width, 10));
-                jQuery(".settingsDiv .chartHeight").attr("value", parseInt(chartSettings.height - prevHeight + tmp_height, 10));
+                jQuery(".settingsDiv .chartHeight").attr("value", parseInt(chartSettings.height - prevHeight + tmp_height, 10));*/
             },
             resizeStart: function(){
-                var elem = jQuery(this);
+/*                var elem = jQuery(this);
                 jQuery(".settingsDiv").attr("previousWidth", elem.width());
-                jQuery(".settingsDiv").attr("previousHeight", elem.height());
+                jQuery(".settingsDiv").attr("previousHeight", elem.height());*/
             },
             resizeStop: function(){
-                var prevWidth = chartSettings.width;
+/*                var prevWidth = chartSettings.width;
                 var prevHeight = chartSettings.height;
                 chartSettings.width = parseInt(jQuery(".settingsDiv .chartWidth").attr("value"), 10);
                 chartSettings.height = parseInt(jQuery(".settingsDiv .chartHeight").attr("value"), 10);
@@ -980,7 +1011,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 jQuery(".settingsDiv .chartAreaTop").attr("value", chartSettings.chartAreaTop);
                 jQuery(".settingsDiv .chartAreaLeft").attr("value", chartSettings.chartAreaLeft);
 
-                redrawPreviewChart(base_chart, chartSettings);
+                redrawPreviewChart(base_chart, chartSettings);*/
             },
             create: function(){
             },
@@ -1075,6 +1106,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         if (chart.columns !== undefined) {
             params.columns = JSON.stringify(chart.columns);
             iframeContainer.attr("used_columns", params.columns);
+            iframeContainer.attr("possible_labels", params.possibleLabels);
         }
         if (chart.filters !== undefined) {
             params.filters = JSON.stringify(chart.filters);
@@ -1110,10 +1142,11 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             .css("opacity", "");
       },
       update: function(event, ui){
-        var sorted_charts_str = container.sortable('toArray',{attribute:'used_columns'});
+        var sorted_charts_columns_str = container.sortable('toArray',{attribute:'used_columns'});
+        var sorted_charts_possible_labels_str = container.sortable('toArray',{attribute:'possible_labels'});
         var sorted_charts = [];
-        for (var i = 0; i < sorted_charts_str.length; i++){
-            sorted_charts.push(JSON.parse(sorted_charts_str[i]));
+        for (var i = 0; i < sorted_charts_columns_str.length; i++){
+            sorted_charts.push({columns:JSON.parse(sorted_charts_columns_str[i]), possibleLabels:JSON.parse(sorted_charts_possible_labels_str[i])});
         }
         var widget = jQuery("#multiples_"+base_chart).data("widget");
         var tmp_settings = JSON.parse(widget.settings.multiples_settings);
