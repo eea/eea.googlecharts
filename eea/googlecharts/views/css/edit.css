@@ -2208,18 +2208,45 @@ div.field[id*='multiples_settings'] {
 .draggable-column {
     float:left;
     position:relative;
-    border:1px solid red;
+    border:1px dashed gray;
+    background-color:#f3f3f3;
+    margin:2px;
     z-index:9999;
 }
 
 .droppable-column {
     position:relative;
-    border:1px solid green;
     z-index:9998;
     width:300px;
     height:20px;
+    text-align:center;
 }
 
 .multiples-matrix-config-column-horizontal{
     margin-left:101px;
+    width: auto;
+}
+
+.multiples-columns-title{
+    margin:4px;
+    font-weight:bold;
+    float:left;
+}
+
+.multiples-matrix-config-column-horizontal,
+.multiples-matrix-config-column-vertical{
+    border:1px dashed gray;
+    min-height:20px;
+    text-align:center;
+
+}
+
+.removable-title,
+.removable-column{
+    margin:2px;
+    float:left;
+}
+.removable-column{
+    background-color:#f3f3f3;
+    border:1px dashed gray;
 }

@@ -21,18 +21,24 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
 
     var current_widget = ".googlechart-widget-" + view;
     function updateDragAndDrops(){
+        jQuery(".multiples-matrix-config-column-horizontal")
+            .remove()
+        jQuery(".multiples-matrix-config-column-vertical")
+            .remove()
+        jQuery("<div>")
+            .addClass("multiples-matrix-config-column-horizontal droppable-column")
+            .text("drop here column for X")
+            .appendTo(".multiples-matrix-config-column-horizontal-droppable-container");
+        jQuery("<div>")
+            .addClass("multiples-matrix-config-column-vertical droppable-column")
+            .text("drop here column for Y")
+            .css("float", "left")
+            .width(100)
+            .css("height", "auto")
+            .appendTo(".multiples-matrix-config-column-vertical-droppable-container");
+
         jQuery(".multiples-original-columns")
             .empty();
-        jQuery(".multiples-matrix-config-column-horizontal")
-            .empty();
-        jQuery(".multiples-matrix-config-column-horizontal")
-            .text("drop here column for X axis");
-        jQuery(".multiples-matrix-config-column-horizontal")
-            .addClass("droppable-column");
-        jQuery(".multiples-matrix-config-column-vertical")
-            .text("drop here column for Y axis");
-        jQuery(".multiples-matrix-config-column-vertical")
-            .addClass("droppable-column");
         var selectedHorizontal = jQuery(".multiples-horizontal-replaced").attr("value");
         var selectedVertical = jQuery(".multiples-vertical-replaced").attr("value");
         jQuery(".multiples-horizontal-replaced option").each(function(idx, option){
@@ -45,14 +51,42 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         .appendTo(".multiples-original-columns");
                 }
                 if (jQuery(option).attr("value") === selectedHorizontal){
-                    jQuery(".multiples-matrix-config-column-horizontal")
-                        .text(jQuery(option).text());
+                    jQuery(".multiples-matrix-config-column-horizontal").empty();
+                    jQuery("<div>")
+                        .addClass("removable-title")
+                        .text("Column on X:")
+                        .appendTo(".multiples-matrix-config-column-horizontal");
+                    jQuery("<div>")
+                        .text(jQuery(option).text())
+                        .addClass("removable-column removable-column-x")
+                        .appendTo(".multiples-matrix-config-column-horizontal");
+                    jQuery("<span>")
+                        .attr("title", "Remove column")
+                        .addClass("eea-icon eea-icon-trash-o removable-column-remove remove-column-x")
+                        .appendTo(".removable-column-x");
+                    jQuery("<div>")
+                        .css("clear","both")
+                        .appendTo(".multiples-matrix-config-column-horizontal");
                     jQuery(".multiples-matrix-config-column-horizontal")
                         .removeClass("droppable-column");
                 }
                 if (jQuery(option).attr("value") === selectedVertical){
-                    jQuery(".multiples-matrix-config-column-vertical")
-                        .text(jQuery(option).text());
+                    jQuery(".multiples-matrix-config-column-vertical").empty();
+                    jQuery("<div>")
+                        .addClass("removable-title")
+                        .text("Column on Y:")
+                        .appendTo(".multiples-matrix-config-column-vertical");
+                    jQuery("<div>")
+                        .text(jQuery(option).text())
+                        .addClass("removable-column removable-column-y")
+                        .appendTo(".multiples-matrix-config-column-vertical");
+                    jQuery("<span>")
+                        .attr("title", "Remove column")
+                        .addClass("eea-icon eea-icon-trash-o removable-column-remove remove-column-y")
+                        .appendTo(".removable-column-y");
+                    jQuery("<div>")
+                        .css("clear","both")
+                        .appendTo(".multiples-matrix-config-column-vertical");
                     jQuery(".multiples-matrix-config-column-vertical")
                         .removeClass("droppable-column");
                 }
@@ -81,6 +115,16 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     jQuery(".multiples-vertical-replaced").attr("value", value);
                     jQuery(".multiples-vertical-replaced").trigger("change");
                 }
+            }
+        });
+        jQuery(".removable-column-remove").click(function(){
+            if (jQuery(this).hasClass("remove-column-x")){
+                jQuery(".multiples-horizontal-replaced").attr("value", "");
+                jQuery(".multiples-horizontal-replaced").trigger("change");
+            }
+            if (jQuery(this).hasClass("remove-column-y")){
+                jQuery(".multiples-vertical-replaced").attr("value", "");
+                jQuery(".multiples-vertical-replaced").trigger("change");
             }
         });
 
@@ -115,7 +159,6 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 .height(jQuery(".multiples-config").closest(".googlechart-widget-edit").height()-120)
                 .width(jQuery(".multiples-config").width() - jQuery(".multiples-base-preview").width() - 10)
                 .css("overflow", "scroll")
-                .css("border", "1px solid red")
                 .appendTo(".multiples-config")
                 .disableSelection();
 
@@ -195,7 +238,15 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         return 0;
                     }
                 });
+                jQuery("<div>")
+                    .text("Configure the small multiples charts by selecting with drag and drop which columns to be used for the X and Y axis")
+                    .addClass("multiples-config-title portalMessage ideaMessage")
+                    .appendTo(".multiples-matrix");
 
+                jQuery("<div>")
+                    .text("Columns used by the chart:")
+                    .addClass("multiples-columns-title")
+                    .appendTo(".multiples-matrix");
                 jQuery("<div>")
                     .text("Select column or row filter to be replaced on the horizontal axis")
                     .appendTo(".multiples-matrix-config");
@@ -227,21 +278,23 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 jQuery(".multiples-matrix-config").data("multiples_filters", allFilteredCols);
                 jQuery(".multiples-matrix-config").data("original_filter", JSON.parse(base_chart_settings.row_filters));
 
-                for (var i = 0; i < columnsFromSettings.columns.length; i++){
-                    jQuery("<option>")
-                        .addClass("multiples_option_column")
-                        .attr("value", "col_" + columnsFromSettings.columns[i])
-                        .text(transformedTable.properties[columnsFromSettings.columns[i]].label)
-                        .appendTo(".multiples-horizontal-replaced")
-                        .clone().appendTo(".multiples-vertical-replaced");
-                }
                 for (i = 0; i < allFilteredCols.length; i++){
                     jQuery("<option>")
                         .addClass("multiples_option_filter")
                         .attr("value", "flt_" + allFilteredCols[i].id)
-                        .text("filter on column '" + transformedTable.properties[allFilteredCols[i].id].label + "'")
+                        .text(transformedTable.properties[allFilteredCols[i].id].label)
                         .appendTo(".multiples-horizontal-replaced")
                         .clone().appendTo(".multiples-vertical-replaced");
+                }
+                for (var i = 0; i < columnsFromSettings.columns.length; i++){
+                    if (jQuery(".multiples_option_filter[value='flt_"+ columnsFromSettings.columns[i] +"']").length === 0){
+                        jQuery("<option>")
+                            .addClass("multiples_option_column")
+                            .attr("value", "col_" + columnsFromSettings.columns[i])
+                            .text(transformedTable.properties[columnsFromSettings.columns[i]].label)
+                            .appendTo(".multiples-horizontal-replaced")
+                            .clone().appendTo(".multiples-vertical-replaced");
+                    }
                 }
 
                 jQuery("<div>")
@@ -249,8 +302,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     .appendTo(".multiples-matrix");
 
                 jQuery("<div>")
-                    .addClass("multiples-matrix-config-column-horizontal droppable-column")
-                    .text("drop here column for X axis")
+                    .addClass("multiples-matrix-config-column-horizontal-droppable-container")
                     .appendTo(".multiples-matrix");
                 jQuery("<div>")
                     .css("clear", "both")
@@ -260,13 +312,8 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     .width(10000)
                     .appendTo(".multiples-matrix");
                 jQuery("<div>")
-                    .addClass("multiples-matrix-config-column-vertical droppable-column")
-                    .text("drop here column for Y axis")
-                    .css("float", "left")
-                    .width(100)
-                    .css("height", "auto")
+                    .addClass("multiples-matrix-config-column-vertical-droppable-container")
                     .appendTo(".multiples-matrix-container");
-//                updateDragAndDrops();
             jQuery("<div>")
                 .addClass("multiples-matrix-elements")
                 .css("float", "left")
