@@ -702,14 +702,15 @@ function getChartTitle(title_placeholder, possibleLabels, transformedTable) {
 }
 
 function openChartDialog(evt) {
-    var smc_chart = $(this).data('chart');
-    var original_settings = $(this).data('original_settings');
-    var parent = $(this).parent();
+    var ctl_parent = $(this).parent().parent();
+    var chart_div = ctl_parent.find('.sm-charts');
+    var smc_chart = chart_div.data('chart');
+    var original_settings = chart_div.data('original_settings');
+    var parent = ctl_parent.parent();
     var original_chart_div = parent.find('#original_chart_div');
     if (original_chart_div.length === 0) {
         original_chart_div = $('<div>', {
             id: 'original_chart_div',
-            text: 'blabla'
         });
     original_chart_div.appendTo(parent);
     }
@@ -759,14 +760,18 @@ function drawSMCharts(smc_settings) {
     jQuery.each(multiples_settings.charts, function(c_id, c_settings){
         var delimiters = JSON.stringify(c_settings.possibleLabels);
         var smc_container_id = settings.chartViewsDiv + '_' + getHashCode(delimiters);
+        var smc_widget = jQuery('<div>', {
+            'class': 'smc-widget',
+            'style': 'float:left;'
+
+        });
         var smc_container = jQuery('<div>', {
             'id': smc_container_id,
-            'class': 'sm-charts',
-            'style': 'float:left;',
+            'class': 'sm-charts'
         });
-
+        smc_container.appendTo(smc_widget);
         var current_table_items = filter_table(transformedTable.items, c_settings.filters);
-        smc_container.appendTo(smc_settings.container);
+        smc_widget.appendTo(smc_settings.container);
         var current_table = jQuery.extend(true, {}, transformedTable);
         current_table.items = current_table_items;
         var smc_options = {
@@ -825,13 +830,26 @@ function drawSMCharts(smc_settings) {
                 legend: chartConfig[1].options.legend
             }
         });
+
+        // Make controls areas
+        var control_top = $('<div>', {
+            'class': 'smc-controls smc-controls-top'
+        }).appendTo(smc_widget);
+        var control_bottom = $('<div>', {
+            'class': 'smc-controls smc-controls-bottom'
+        }).appendTo(smc_widget);
+
         if (smc_settings.controls) {
             $.each(smc_settings.controls, function(idx, val) {
                 var control = $('<span>', {
-                    'class': 'smc-control eea-icon ' + val.icon + ' ' + val.position,
-                    'text': 'OMFGOMFG'
+                    'class': 'smc-control eea-icon ' + val.icon + ' ' + val.position_x,
                 });
-                control.appendTo(smc_container);
+                if (val.position_y === 'top') {
+                    control.appendTo(control_top);
+                } else {
+                    control.appendTo(control_bottom);
+                }
+                // control.appendTo(smc_widget);
                 $.each(val.events, function(evt, callback){
                     control.on(evt, callback);
                 });
@@ -1057,8 +1075,9 @@ function drawGoogleDashboard(options){
                 interactive: false,
                 controls: {
                     enlarge_btn: {
-                        position: 'top-right',
-                        icon: 'eea-plus-square-o',
+                        position_x: 'right',
+                        position_y: 'top',
+                        icon: 'eea-icon-expand',
                         events: {
                             'click': openChartDialog
                         }

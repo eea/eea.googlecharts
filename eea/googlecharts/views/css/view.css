@@ -685,10 +685,46 @@ input.googlechart-chart-size {
     display:block !important;
 }
 
-.sm-charts {
-    border: 1px solid transparent;
+.smc-widget {
+    position: relative;
 }
 
-.sm-charts:hover {
-    border: 1px solid #ccc;
+.smc-widget:hover {
+    /*border: 1px solid #ccc;*/
+}
+
+.smc-widget .smc-control {
+    display:none;
+    border:1px solid #eee;
+}
+
+.smc-widget:hover .smc-control {
+    display:block;
+    color: #bbb;
+}
+
+.smc-widget .smc-control:hover {
+    cursor: pointer;
+    color: black;
+}
+
+.smc-widget .smc-controls {
+    position: absolute;
+    width: 100%;
+}
+
+.smc-widget .smc-controls-top {
+    top: 0;
+}
+
+.smc-widget .smc-controls-bottom {
+    bottom: 0;
+}
+
+.smc-controls .left {
+    float: left;
+}
+
+.smc-controls .right {
+    float: right;
 }
