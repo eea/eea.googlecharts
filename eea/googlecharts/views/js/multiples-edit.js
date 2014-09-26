@@ -239,7 +239,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     }
                 });
                 jQuery("<div>")
-                    .text("Configure the small multiples charts by selecting with drag and drop which columns to be used for the X and Y axis")
+                    .text("Configure the small multiples charts by selecting with drag and drop which columns to be used for the X and Y axis. Than you can select the charts to be displayed.")
                     .addClass("multiples-config-title portalMessage ideaMessage")
                     .appendTo(".multiples-matrix");
 
@@ -755,11 +755,10 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             modal: true,
             title: "Sort options",
             open: function(){
-
-                jQuery.getJSON(absolute_url + "/googlechart.get_charts", function (data){
+                jQuery.getJSON(absolute_url + "/googlechart.get_charts_json", function(data){
                     var sort_options = [];
                     var base_chart_settings;
-                    jQuery.each(data.charts, function(idx, chart){
+                    jQuery.each(data, function(idx, chart){
                         if (chart.id === base_chart){
                             base_chart_settings = chart;
                         }
@@ -852,18 +851,16 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         var tmp_chart = {};
                         tmp_chart.chart = chart;
                         tmp_chart.sort_value = chart_title;
-                        jQuery.each(chart, function(idx2, value){
-                            var vertical_str = tmp_chart.possibleLabels.vertical.value;
-                            if (tmp_chart.possibleLabels.vertical.type === "column"){
-                                vertical_str = transformedTable.available_columns[vertical_str];
-                            }
-                            var horizontal_str = tmp_chart.possibleLabels.horizontal.value;
-                            if (tmp_chart.possibleLabels.horizontal.type === "column"){
-                                horizontal_str = transformedTable.available_columns[horizontal_str];
-                            }
+                        var vertical_str = tmp_chart.chart.possibleLabels.vertical.value;
+                        if (tmp_chart.chart.possibleLabels.vertical.type === "column"){
+                            vertical_str = transformedTable.available_columns[vertical_str];
+                        }
+                        var horizontal_str = tmp_chart.chart.possibleLabels.horizontal.value;
+                        if (tmp_chart.chart.possibleLabels.horizontal.type === "column"){
+                            horizontal_str = transformedTable.available_columns[horizontal_str];
+                        }
 
-                            tmp_chart.sort_value = tmp_chart.sort_value.split("{vertical}").join(vertical_str).split("{horizontal}").join(horizontal_str);
-                        });
+                        tmp_chart.sort_value = tmp_chart.sort_value.split("{vertical}").join(vertical_str).split("{horizontal}").join(horizontal_str);
                         charts_for_sort.push(tmp_chart);
                     });
                     if (selectedSortSettings.type === "row"){

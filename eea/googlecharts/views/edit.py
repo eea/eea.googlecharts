@@ -84,6 +84,11 @@ class Edit(BrowserView):
         """
         return self.get_named_data('chartsconfig', 'charts')
 
+    def get_charts_json(self):
+        """ Charts json
+        """
+        return json.dumps(self.get_charts())
+
     def get_data(self):
         """ Retrieve chartsconfig
         """

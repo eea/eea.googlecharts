@@ -181,6 +181,14 @@
     />
 
   <browser:page
+    name="googlechart.get_charts_json"
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    class=".edit.Edit"
+    attribute="get_charts_json"
+    permission="eea.app.visualization.configure"
+    />
+
+  <browser:page
     name="googlechart.submit_data"
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     class=".edit.Edit"
