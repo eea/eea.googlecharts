@@ -701,6 +701,7 @@ function getChartTitle(title_placeholder, possibleLabels, transformedTable) {
         return title_placeholder.split("{vertical}").join(vertical_str)
                 .split("{horizontal}").join(horizontal_str);
     }
+    return title_placeholder;
 }
 
 function openChartDialog(evt) {
