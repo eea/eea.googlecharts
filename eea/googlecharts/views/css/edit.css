@@ -2253,5 +2253,20 @@ div.field[id*='multiples_settings'] {
 
 .smc-widget {
     position: relative;
+}
+
+.multiples-matrix-elements .smc-widget {
     border:1px solid gray;
+}
+
+#grid-adjustments .btn{
+    float:right;
+}
+
+#grid-adjustments label{
+    float:left;
+}
+
+#grid-adjustments input{
+    float:right;
 }

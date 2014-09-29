@@ -952,7 +952,44 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             }
          });
       });
-    header.find(".eea-icon-gear").remove();
+    header.find(".eea-icon-table").remove();
+    jQuery("<span>")
+      .attr("title", "Grid adjustments")
+      .addClass('eea-icon daviz-menuicon').addClass('eea-icon-table')
+      .insertAfter(removeSpan)
+      .click(function(){
+        jQuery("#grid-adjustments").remove();
+        var adjustmentsDiv = jQuery("<div>")
+                                .attr("id", "grid-adjustments");
+        var controlsDiv = jQuery("<div class='grid-adjustments-controls'> </div>");
+        controlsDiv.append("<input value='Cancel' class='btn btn-inverse' type='button'/>");
+        controlsDiv.append("<input value='Save' class='btn btn-success' type='button'/>");
+        controlsDiv.append("<div style='clear:both'> </div>");
+        adjustmentsDiv.append(controlsDiv);
+        settingsDiv = jQuery("<div class='grid-adjustments-settings'> </div>");
+        settingsDiv.append("<label>Display small multiples in a matrix</label>");
+        settingsDiv.append("<input class='gridsettings matrix-enabled' type='checkbox'/>");
+        settingsDiv.append("<div style='clear:both'> </div>");
+        settingsDiv.append("<label>Display headers in top</label>");
+        settingsDiv.append("<input class='gridsettings matrix-headers-top' type='checkbox'/>");
+        settingsDiv.append("<div style='clear:both'> </div>");
+        settingsDiv.append("<label>Display headers in bottom</label>");
+        settingsDiv.append("<input class='gridsettings matrix-headers-bottom' type='checkbox'/>");
+        settingsDiv.append("<div style='clear:both'> </div>");
+        settingsDiv.append("<label>Display headers in left</label>");
+        settingsDiv.append("<input class='gridsettings matrix-headers-left' type='checkbox'/>");
+        settingsDiv.append("<div style='clear:both'> </div>");
+        settingsDiv.append("<label>Display headers in right</label>");
+        settingsDiv.append("<input class='gridsettings matrix-headers-right' type='checkbox'/>");
+        settingsDiv.append("<div style='clear:both'> </div>");
+        adjustmentsDiv.append(settingsDiv);
+        adjustmentsDiv.dialog({
+            dialogClass: "googlechart-dialog",
+            modal: true,
+            title: "Grid adjustments"
+        });
+      });
+   header.find(".eea-icon-gear").remove();
     jQuery("<span>")
       .attr('title', 'Size adjustments')
       .addClass('eea-icon daviz-menuicon').addClass('eea-icon-gear')
