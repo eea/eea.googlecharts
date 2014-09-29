@@ -671,6 +671,216 @@ function drawGoogleChart(options){
 
 }
 
+function getHashCode(val) {
+    if (Array.prototype.reduce){
+        return val.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a;},0);
+    }
+    var hash = 0;
+    if (val.length === 0) {
+        return hash;
+    }
+    for (var i = 0; i < val.length; i++) {
+        var character  = val.charCodeAt(i);
+        hash  = ((hash<<5)-hash)+character;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+}
+
+function getChartTitle(title_placeholder, possibleLabels, transformedTable) {
+    // Returns the title replacing the placeholders with the required values
+    if ((title_placeholder !== undefined) && (!jQuery.isEmptyObject(possibleLabels))){
+        var vertical_str = possibleLabels.vertical.value;
+        if (possibleLabels.vertical.type === "column"){
+            vertical_str = transformedTable.available_columns[vertical_str];
+        }
+        var horizontal_str = possibleLabels.horizontal.value;
+        if (possibleLabels.horizontal.type === "column"){
+            horizontal_str = transformedTable.available_columns[horizontal_str];
+        }
+        return title_placeholder.split("{vertical}").join(vertical_str)
+                .split("{horizontal}").join(horizontal_str);
+    }
+}
+
+function openChartDialog(evt) {
+    var ctl_parent = jQuery(this).parent().parent();
+    var chart_div = ctl_parent.find('.sm-charts');
+    var smc_chart = chart_div.data('chart');
+    var original_settings = chart_div.data('original_settings');
+    var parent = ctl_parent.parent();
+    var original_chart_div = parent.find('#original_chart_div');
+    if (original_chart_div.length === 0) {
+        original_chart_div = jQuery('<div>', {
+            id: 'original_chart_div'
+        });
+    original_chart_div.appendTo(parent);
+    }
+    original_chart_div.empty();
+    original_chart_div.dialog({
+        width: original_settings.width + 50,
+        height: original_settings.height + 50,
+        close: function( event, ui ) {
+            jQuery(this).dialog( "destroy" );
+            jQuery(this).remove();
+        }
+    });
+    var new_chart = new google.visualization.ChartWrapper(smc_chart.chart.toJSON());
+    new_chart.setContainerId('original_chart_div');
+
+    new_chart.setOption('height', original_settings.height);
+    new_chart.setOption('width', original_settings.width);
+
+    var chartArea = {
+        top: chartAreaAttribute2px(original_settings.chartArea.top, original_settings.height),
+        left: chartAreaAttribute2px(original_settings.chartArea.left, original_settings.width),
+        height: chartAreaAttribute2px(original_settings.chartArea.height, original_settings.height),
+        width: chartAreaAttribute2px(original_settings.chartArea.width, original_settings.width)
+    };
+    new_chart.setOption('chartArea', chartArea);
+    new_chart.setOption('legend', original_settings.misc.legend);
+    new_chart.draw();
+}
+
+function drawSMCharts(smc_settings) {
+    var chartConfig = smc_settings.chartConfig;
+    var multiples_settings = smc_settings.multiples_settings;
+    var settings = smc_settings.settings;
+    var transformedTable = smc_settings.transformedTable;
+    var columnsFromSettings = getColumnsFromSettings(chartConfig[2]);
+    var adv_options = smc_settings.adv_options;
+    var chart_height = smc_settings.chart_height;
+    var chart_width = smc_settings.chart_width;
+    var smc_item_settings = smc_settings.smc_item_settings;
+    var container_class = 'smc-widget';
+    if (smc_item_settings) {
+        container_class += ' ' + smc_item_settings.css_class;
+    }
+    var chart_sortBy = chartConfig[12];
+    var chart_sortAsc = true;
+    var chart_row_filters = chartConfig[11];
+
+    var sortAsc_str = chartConfig[13];
+    if (sortAsc_str === 'desc'){
+        chart_sortAsc = false;
+    }
+    jQuery.each(multiples_settings.charts, function(c_id, c_settings){
+        var delimiters = JSON.stringify(c_settings.possibleLabels);
+        var smc_container_id = settings.chartViewsDiv + '_' + getHashCode(delimiters);
+        var smc_widget = jQuery('<div>', {
+            'class': container_class,
+            'style': 'float:left;'
+
+        });
+        smc_widget.attr('horizontal-column-id', c_settings.possibleLabels.horizontal.value);
+        smc_widget.attr('vertical-column-id', c_settings.possibleLabels.vertical.value);
+
+        if (!c_settings.columns) {
+            c_settings.columns = columnsFromSettings.columns;
+        }
+        if (!c_settings.filters) {
+            c_settings.filters = chart_row_filters;
+        }
+        smc_widget.attr('used_columns', JSON.stringify(c_settings.columns));
+        smc_widget.attr('filters', JSON.stringify(c_settings.filters));
+        smc_widget.attr('possible_labels', JSON.stringify(c_settings.possibleLabels));
+
+        var smc_container = jQuery('<div>', {
+            'id': smc_container_id,
+            'class': 'sm-charts'
+        });
+        smc_container.appendTo(smc_widget);
+
+        var current_table_items = filter_table(transformedTable.items, c_settings.filters);
+        smc_widget.appendTo(smc_settings.container);
+        var current_table = jQuery.extend(true, {}, transformedTable);
+        current_table.items = current_table_items;
+        var smc_options = {
+            originalDataTable : current_table,
+            columns : c_settings.columns,
+            sortBy : chart_sortBy,
+            sortAsc : chart_sortAsc,
+            preparedColumns : chartConfig[2].prepared,
+            enableEmptyRows : chartConfig[7].enableEmptyRows,
+            chartType : chartConfig[1].chartType,
+            focusTarget : chartConfig[1].options.focusTarget
+        };
+
+        var tableForChart = prepareForChart(smc_options);
+
+        if (!chart_width) {
+            chart_width = chartConfig[4];
+        }
+        if (!chart_height) {
+            chart_height = chartConfig[5];
+        }
+        var smc_chartJson = jQuery.extend(true, {}, chartConfig[1]);
+        smc_chartJson.options.title = getChartTitle(multiples_settings.settings.chartTitle,
+                                                    c_settings.possibleLabels,
+                                                    current_table);
+        smc_chartJson.options.enableInteractivity = smc_settings.interactive;
+        if (!multiples_settings.settings.displayLegend){
+            smc_chartJson.options.legend = 'none';
+        }
+
+        chart_options = {
+            chartDashboard : settings.chartsDashboard,
+            chartViewDiv : smc_container_id,
+            chartFiltersDiv : smc_settings.chartFiltersId,
+            chartId : chartConfig[0],
+            chartJson: smc_chartJson,
+            chartDataTable : tableForChart,
+            chartFilters : smc_settings.dashboard_filters,
+            chartWidth: multiples_settings.settings.width,
+            chartHeight: multiples_settings.settings.height,
+            chartFilterPosition : '',
+            chartOptions : adv_options,
+            availableColumns : current_table_items.available_columns,
+            chartReadyEvent : function(){},
+            sortFilter:'__disabled__',
+            hideNotes:true,
+            originalTable:settings.rows
+        };
+        var smc_chart = drawGoogleChart(chart_options);
+        jQuery(smc_container).data('chart', smc_chart);
+        jQuery(smc_container).data('original_settings', {
+            width: chartConfig[4],
+            height: chartConfig[5],
+            chartArea: chartConfig[7].chartArea,
+            misc: {
+                legend: chartConfig[1].options.legend
+            }
+        });
+
+        // Make controls areas
+        var control_top = jQuery('<div>', {
+            'class': 'smc-controls smc-controls-top'
+        }).appendTo(smc_widget);
+        var control_bottom = jQuery('<div>', {
+            'class': 'smc-controls smc-controls-bottom'
+        }).appendTo(smc_widget);
+
+        if (smc_settings.controls) {
+            jQuery.each(smc_settings.controls, function(idx, val) {
+                var control = jQuery('<span>', {
+                    'class': 'smc-control eea-icon ' + val.icon + ' ' + val.position_x,
+                    'title': val.title
+                });
+                if (val.position_y === 'top') {
+                    control.appendTo(control_top);
+                } else {
+                    control.appendTo(control_bottom);
+                }
+                jQuery.each(val.events, function(evt, callback){
+                    control.on(evt, callback);
+                });
+            });
+            jQuery(smc_container).on('click', smc_settings.click_event);
+        }
+
+    });
+}
+
 function dashboardFilterChanged(options){
     var filtersStates = {};
     jQuery(options.dashboardFilters).each(function(idx, filter){
@@ -732,20 +942,28 @@ function drawGoogleDashboard(options){
     });
     // Dashboard charts
     patched_each(settings.chartsSettings, function(key, value){
+        var chartConfig;
+        var chart_unpivotsettings;
+        var chartContainerId;
+        var chartContainer;
+        var columnsFromSettings;
+        var tmp_columns_and_rows;
+        var options;
+        var transformedTable;
+        var chart_width;
+        var chart_height;
         if(value.dashboard.hidden){
             return;
         }
         if (value.wtype === 'googlecharts.widgets.chart'){
-            var chartConfig;
-            var chart_unpivotsettings;
             jQuery(settings.charts).each(function(idx, config){
                 if (config[0] === value.name){
                     chartConfig = config;
                     chart_unpivotSettings = config[15];
                 }
             });
-            var chartContainerId = settings.chartViewsDiv+"_" + value.name;
-            var chartContainer = jQuery('<div>')
+            chartContainerId = settings.chartViewsDiv+"_" + value.name;
+            chartContainer = jQuery('<div>')
                 .attr('id', chartContainerId)
                 .css('float', 'left')
                 .addClass('googledashboard-chart')
@@ -759,19 +977,19 @@ function drawGoogleDashboard(options){
                 .css('float', 'left')
                 .appendTo('#'+settings.chartFiltersDiv);
 
-            var columnsFromSettings = getColumnsFromSettings(chartConfig[2]);
+            columnsFromSettings = getColumnsFromSettings(chartConfig[2]);
 
             var chart_sortBy = chartConfig[12];
             var chart_sortAsc = true;
-            var chart_row_filters = chartConfig[11];
+            chart_row_filters = chartConfig[11];
 
             var sortAsc_str = chartConfig[13];
             if (sortAsc_str === 'desc'){
                 chart_sortAsc = false;
             }
 
-            var tmp_columns_and_rows = getAvailable_columns_and_rows(chart_unpivotSettings, settings.columns, settings.rows);
-            var options = {
+            tmp_columns_and_rows = getAvailable_columns_and_rows(chart_unpivotSettings, settings.columns, settings.rows);
+            options = {
                 originalTable : settings.rows,
                 normalColumns : columnsFromSettings.normalColumns,
                 pivotingColumns : columnsFromSettings.pivotColumns,
@@ -781,7 +999,7 @@ function drawGoogleDashboard(options){
                 filters : chart_row_filters
             };
 
-            var transformedTable = transformTable(options);
+            transformedTable = transformTable(options);
 
             options = {
                 originalDataTable : transformedTable,
@@ -796,8 +1014,8 @@ function drawGoogleDashboard(options){
 
             var tableForChart = prepareForChart(options);
 
-            var chart_width = chartConfig[4];
-            var chart_height = chartConfig[5];
+            chart_width = chartConfig[4];
+            chart_height = chartConfig[5];
             if (value.dashboard.width){
                 chart_width = value.dashboard.width;
             }
@@ -824,6 +1042,77 @@ function drawGoogleDashboard(options){
             };
             var tmp_chart = drawGoogleChart(chart_options);
             hiddenDashboardFilters = hiddenDashboardFilters.concat(tmp_chart.filters);
+        } else if (value.wtype === 'googlecharts.widgets.multiples') {
+            if (settings.charts.length >=1) {
+                chartConfig = settings.charts[0];
+                chart_unpivotSettings = chartConfig[15];
+            }
+
+            var multiples_settings = JSON.parse(value.multiples_settings);
+            chartContainerId = settings.chartViewsDiv+"_" + value.name;
+            chartContainer = jQuery('<div>')
+                .attr('id', chartContainerId)
+                .css('float', 'left')
+                .addClass('googledashboard-chart')
+                .appendTo('#'+settings.chartViewsDiv);
+
+            columnsFromSettings = getColumnsFromSettings(chartConfig[2]);
+
+
+            tmp_columns_and_rows = getAvailable_columns_and_rows(chart_unpivotSettings,
+                                                                     settings.columns,
+                                                                     settings.rows);
+            options = {
+                originalTable : settings.rows,
+                normalColumns : columnsFromSettings.normalColumns,
+                pivotingColumns : columnsFromSettings.pivotColumns,
+                valueColumn : columnsFromSettings.valueColumn,
+                availableColumns : tmp_columns_and_rows.available_columns,
+                unpivotSettings : chart_unpivotSettings,
+                filters :{}
+            };
+
+            transformedTable = transformTable(options);
+            var adv_options = jQuery.extend(true, {}, chartConfig[7]);
+
+            adv_options.chartArea = {
+                width: multiples_settings.settings.chartAreaWidth,
+                height: multiples_settings.settings.chartAreaHeight,
+                top: multiples_settings.settings.chartAreaTop,
+                left: multiples_settings.settings.chartAreaLeft
+            };
+            if (value.dashboard.width){
+                chart_width = value.dashboard.width;
+            }
+            if (value.dashboard.height){
+                chart_height = value.dashboard.height;
+            }
+            var smcharts_settings = {
+                container: chartContainer,
+                smc_item_settings: null,
+                sm_chart_width: chart_width,
+                sm_chart_height: chart_height,
+                multiples_settings: multiples_settings,
+                settings: settings,
+                transformedTable: transformedTable,
+                chartConfig: chartConfig,
+                adv_options: adv_options,
+                chartFiltersId: null,
+                dashboard_filters: dashboard_filters,
+                interactive: false,
+                controls: {
+                    enlarge_btn: {
+                        position_x: 'right',
+                        position_y: 'top',
+                        icon: 'eea-icon-expand',
+                        title: 'Expand chart',
+                        events: {
+                            'click': openChartDialog
+                        }
+                    }
+                }
+            };
+            drawSMCharts(smcharts_settings);
         }
         else{
             var widgetDiv = jQuery('<div>')

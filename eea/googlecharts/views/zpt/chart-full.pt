@@ -83,18 +83,9 @@
                 'height': preview_options.chartAreaHeight - 2
             };
 
-            chart_options.title = preview_options.chartTitle;
-            if ((chart_options.title !== undefined) && (!jQuery.isEmptyObject(preview_possibleLabels))){
-                var vertical_str = preview_possibleLabels.vertical.value;
-                if (preview_possibleLabels.vertical.type === "column"){
-                    vertical_str = transformedTable.available_columns[vertical_str]
-                }
-                var horizontal_str = preview_possibleLabels.horizontal.value;
-                if (preview_possibleLabels.horizontal.type === "column"){
-                    horizontal_str = transformedTable.available_columns[horizontal_str]
-                }
-                chart_options.title = chart_options.title.split("{vertical}").join(vertical_str).split("{horizontal}").join(horizontal_str);
-            }
+            chart_options.title = getChartTitle(preview_options.chartTitle,
+                                                preview_possibleLabels,
+                                                transformedTable)
             if (!preview_options.displayLegend){
                 chart_options.legend = 'none';
             }
