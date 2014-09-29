@@ -1,6 +1,7 @@
 """ update the source code for the iframe
 """
 from Products.Five import BrowserView
+from zope.security import checkPermission
 import lxml
 
 class Resizer(BrowserView):
@@ -9,7 +10,7 @@ class Resizer(BrowserView):
     def check_permission(self):
         """ check permission for resize
         """
-        if (self.context.portal_membership.checkPermission("Modify portal content", self.context)):
+        if checkPermission("cmf.ModifyPortalContent", self.context):
             return True
         return False
 
