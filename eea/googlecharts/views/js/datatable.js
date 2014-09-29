@@ -202,6 +202,41 @@ function addEmptyRows(dataview){
     return modifiedTmpDataView;
 }
 
+function filter_table(items, filters){
+    var filtered_items = [];
+    jQuery(items).each(function(row_index, row){
+        var shouldDisplay = true;
+        if (filters){
+            patched_each(filters, function(column, column_filter){
+                var val = "";
+                try{
+                    val = decodeStr(row[column].toString());
+                }
+                catch(err){}
+                var filtertype = (column_filter.type?column_filter.type:'hidden');
+                var foundVal = false;
+                patched_each(column_filter.values, function(idx, col_val){
+                    if (val === decodeStr(col_val)){
+                        foundVal = true;
+                    }
+                });
+
+                if ((filtertype === 'hidden') && (foundVal)){
+                    shouldDisplay = false;
+                }
+
+                if ((filtertype === 'visible') && (!foundVal)){
+                    shouldDisplay = false;
+                }
+            });
+        }
+        if (!shouldDisplay){
+            return;
+        }
+        filtered_items.push(row);
+    });
+    return filtered_items;
+}
 
 function transformTable(options){
     var settings = {
@@ -322,42 +357,6 @@ function transformTable(options){
     filteredPivotTable.items = filter_table(pivotTable.items, settings.filters);
     filteredPivotTable.pivotLevels = pivotTable.pivotLevels;
     return filteredPivotTable;
-}
-
-function filter_table(items, filters){
-    var filtered_items = [];
-    jQuery(items).each(function(row_index, row){
-        var shouldDisplay = true;
-        if (filters){
-            patched_each(filters, function(column, column_filter){
-                var val = "";
-                try{
-                    val = decodeStr(row[column].toString());
-                }
-                catch(err){}
-                var filtertype = (column_filter.type?column_filter.type:'hidden');
-                var foundVal = false;
-                patched_each(column_filter.values, function(idx, col_val){
-                    if (val === decodeStr(col_val)){
-                        foundVal = true;
-                    }
-                });
-
-                if ((filtertype === 'hidden') && (foundVal)){
-                    shouldDisplay = false;
-                }
-
-                if ((filtertype === 'visible') && (!foundVal)){
-                    shouldDisplay = false;
-                }
-            });
-        }
-        if (!shouldDisplay){
-            return;
-        }
-        filtered_items.push(row);
-    });
-    return filtered_items;
 }
 
 function tableToArray(options){

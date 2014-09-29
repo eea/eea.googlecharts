@@ -3,6 +3,8 @@ Changelog
 
 11.1-dev - (unreleased)
 -----------------------
+* Feature: Updated dashboard view and edit for small multiples
+  [olimpiurob refs #20499]
 * Feature: Allow resize of embedded charts
   [szabozo0 refs #21007]
 

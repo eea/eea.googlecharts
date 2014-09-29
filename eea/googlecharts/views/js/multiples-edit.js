@@ -321,6 +321,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 jQuery(".multiples-replaced").change(function(){
                     updateDragAndDrops();
                     jQuery(".multiples-matrix .multiples-elements").remove();
+                    jQuery(".multiples-matrix-elements .smc-widget").remove();
                     var horizontal_replaceable = jQuery(".multiples-horizontal-replaced").attr("value");
                     var vertical_replaceable = jQuery(".multiples-vertical-replaced").attr("value");
                     var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
@@ -394,6 +395,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         .text("select all")
                         .addClass("multiples-header-item multiples-elements multiples-header-all")
                         .appendTo(".multiples-matrix-elements");
+
                     for (var i = 0; i < horizontal_list.length; i++){
                         jQuery(".multiples-matrix-elements").width(jQuery(".multiples-matrix-elements").width() + 69);
                         if (horizontal_list[i] !== null){
@@ -424,6 +426,13 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 value : null
                         }
                     };
+                    var multiples_settings;
+                    var smc_charts = [];
+                    var left_labels = jQuery("<div>")
+                        .addClass("left-labels")
+                        .css("width","69px")
+                        .css("float","left")
+                        .appendTo(".multiples-matrix-elements");
                     for (i = 0; i < vertical_list.length; i++){
                         var vertical_possibleLabels = {};
                         jQuery.extend(true, vertical_possibleLabels, default_possibleLabels);
@@ -439,7 +448,8 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 .attr("vertical-column-id", vertical_list[i])
                                 .text(tmp_label)
                                 .addClass("multiples-header-item multiples-elements")
-                                .appendTo(".multiples-matrix-elements");
+                                .css("height","61px")
+                                .appendTo(left_labels);
                         }
                         else{
                             jQuery("<div>")
@@ -447,7 +457,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 .css("width","69px")
                                 .css("height","1px")
                                 .css("float","left")
-                                .appendTo(".multiples-matrix-elements");
+                                .appendTo(left_labels);
                         }
                         for (var j = 0; j < horizontal_list.length; j++){
                             var final_possibleLabels = {};
@@ -481,75 +491,79 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 hasFilters = true;
                                 filters[horizontal_replaceable.substr(4)].values = [horizontal_list[j]];
                             }
-                            var element = jQuery("<div>")
-                                .addClass("small-container multiples-elements")
-                                .appendTo(".multiples-matrix-elements")
-                                .attr("horizontal-column-id", horizontal_list[j])
-                                .attr("vertical-column-id", vertical_list[i])
-                                .data("possibleLabels", final_possibleLabels);
+                            var smc_chart = {
+                                possibleLabels: final_possibleLabels
+                            };
                             if (hasColumns){
-                                element.data("columns", columns);
+                                smc_chart.columns = columns;
                             }
                             if (hasFilters){
-                                element.data("filters", filters);
+                                smc_chart.filters = filters;
                             }
+                            smc_charts.push(smc_chart);
                         }
-                        jQuery("<div>")
-                            .addClass("multiples-elements")
-                            .css("clear","both")
-                            .appendTo(".multiples-matrix-elements");
                     }
-                    jQuery("<input type='checkbox'>")
-                        .appendTo(".multiples-header-item")
-                        .change(function(){
-                            var checked = jQuery(this).attr("checked");
-                            var horizontal_col_id = jQuery(this).parent().attr("horizontal-column-id");
-                            var vertical_col_id = jQuery(this).parent().attr("vertical-column-id");
-                            var selector = "";
-                            if (checked){
-                                selector = ".multiples-matrix-item-overlay:not(.selected)";
-                            }
-                            else {
-                                selector = ".multiples-matrix-item-overlay.selected";
-                            }
-                            if (horizontal_col_id !== undefined){
-                                selector += "[horizontal-column-id='" + horizontal_col_id + "']";
-                            }
-
-                            if (vertical_col_id !== undefined){
-                                selector += "[vertical-column-id='" + vertical_col_id + "']";
-                            }
-                            jQuery(selector).click();
-                        });
-                    var options = {
-                        chartAreaWidth: 65,
-                        chartAreaHeight: 65,
-                        chartAreaLeft: 1,
-                        chartAreaTop: 1
+                    multiples_settings = {
+                        charts: smc_charts,
+                        settings: {
+                            chartAreaHeight: 65,
+                            chartAreaLeft: 1,
+                            chartAreaTop: 1,
+                            chartAreaWidth: 65,
+                            displayLegend: false,
+                            height: 67,
+                            width: 67
+                        }
                     };
-                    var options_str = encodeURIComponent(JSON.stringify(options));
-                    jQuery(".small-container").each(function(idx, container){
-                        var columns = jQuery(container).data("columns");
-                        var filters = jQuery(container).data("filters");
-                        var possibleLabels = jQuery(container).data("possibleLabels");
-                        var params = {
-                            chart:chart_id,
-                            width:67,
-                            height:67,
-                            interactive:false,
-                            possibleLabels:JSON.stringify(possibleLabels),
-                            options:options_str
-                        };
-                        if (columns !== undefined){
-                            params.columns = JSON.stringify(columns);
-                        }
-                        if (filters !== undefined){
-                            params.filters = JSON.stringify(filters);
-                        }
-                        jQuery("<iframe>")
-                            .addClass("small-chart")
-                            .attr("src", absolute_url + "/chart-full?"+jQuery.param(params))
-                            .appendTo(container);
+                    var adv_options = jQuery.extend(true, {}, JSON.parse(base_chart_settings.options));
+                    adv_options.chartArea = {
+                        width: multiples_settings.settings.chartAreaWidth,
+                        height: multiples_settings.settings.chartAreaHeight,
+                        top: multiples_settings.settings.chartAreaTop,
+                        left: multiples_settings.settings.chartAreaLeft
+                    };
+                    var chartConfig = [
+                        base_chart_settings.id,
+                        JSON.parse(base_chart_settings.config),
+                        JSON.parse(base_chart_settings.columns),
+                        JSON.parse(base_chart_settings.filters),
+                        JSON.parse(base_chart_settings.width),
+                        JSON.parse(base_chart_settings.height),
+                        JSON.parse(base_chart_settings.filterposition),
+                        JSON.parse(base_chart_settings.options),
+                        {},
+                        "__disabled__",
+                        "False",
+                        JSON.parse(base_chart_settings.row_filters),
+                        "",
+                        "",
+                        [],
+                        {}
+                    ];
+                    var settings = {
+                        chartFiltersDiv: '',
+                        chartViewsDiv: '',
+                        chartsDashboard: '',
+                        charts: [chartConfig],
+                        rows: all_rows
+                    };
+                    var smcharts_settings = {
+                        container: jQuery('.multiples-matrix-elements'),
+                        smc_item_settings: null,
+                        sm_chart_width: multiples_settings.settings.chartAreaWidth,
+                        sm_chart_height: multiples_settings.settings.chartAreaWidth,
+                        multiples_settings: multiples_settings,
+                        settings: settings,
+                        transformedTable: transformedTable,
+                        chartConfig: chartConfig,
+                        adv_options: adv_options,
+                        chartFiltersId: null,
+                        dashboard_filters: null,
+                        interactive: false
+                    };
+                    drawSMCharts(smcharts_settings);
+
+                    jQuery(".multiples-matrix-elements .smc-widget").each(function(idx, container){
                         var overlayed = jQuery("<div>")
                             .addClass("multiples-matrix-item-overlay")
                             .attr("horizontal-column-id", jQuery(container).attr("horizontal-column-id"))
@@ -584,7 +598,11 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 }
                                 var selected_columns = [];
                                 jQuery.each(jQuery(".multiples-matrix-item-overlay.selected"), function(idx, item){
-                                    selected_columns.push({columns:jQuery(item).parent().data("columns"),filters:jQuery(item).parent().data("filters"),possibleLabels:jQuery(item).parent().data("possibleLabels")});
+                                    selected_columns.push({
+                                        columns: JSON.parse(jQuery(item).parent().attr("used_columns")),
+                                        filters: JSON.parse(jQuery(item).parent().attr("filters")),
+                                        possibleLabels: JSON.parse(jQuery(item).parent().attr("possible_labels"))
+                                    });
                                 });
                                 var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
                                 tmp_settings.charts = selected_columns;
@@ -592,6 +610,29 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 checkIfPossibleMatrix();
                             });
                     });
+
+                    jQuery("<input type='checkbox'>")
+                        .appendTo(".multiples-header-item")
+                        .change(function(){
+                            var checked = jQuery(this).attr("checked");
+                            var horizontal_col_id = jQuery(this).parent().attr("horizontal-column-id");
+                            var vertical_col_id = jQuery(this).parent().attr("vertical-column-id");
+                            var selector = "";
+                            if (checked){
+                                selector = ".multiples-matrix-item-overlay:not(.selected)";
+                            }
+                            else {
+                                selector = ".multiples-matrix-item-overlay.selected";
+                            }
+                            if (horizontal_col_id !== undefined){
+                                selector += "[horizontal-column-id='" + horizontal_col_id + "']";
+                            }
+
+                            if (vertical_col_id !== undefined){
+                                selector += "[vertical-column-id='" + vertical_col_id + "']";
+                            }
+                            jQuery(selector).click();
+                        });
                 });
                 var loaded_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
                 if (loaded_settings.replaceables !== undefined){
@@ -619,9 +660,12 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 var default_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
                 jQuery(".multiples-horizontal-replaced").trigger("change");
                 jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(default_settings));
-                jQuery(".small-container").each(function(idx, container){
+                jQuery(".multiples-matrix-elements .smc-widget").each(function(idx, container){
                     container = jQuery(container);
-                    var container_settings = {filters:jQuery.extend(true, {}, container.data("filters")), columns:jQuery.extend(true, {}, container.data("columns"))};
+                    var container_settings = {
+                        filters:jQuery.extend(true, {}, JSON.parse(container.attr("filters"))),
+                        columns:jQuery.extend(true, {}, JSON.parse(container.attr("used_columns")))
+                    };
                     for (var i = 0; i < default_settings.charts.length; i++){
                         var chart_settings = {filters:jQuery.extend(true, {}, default_settings.charts[i].filters), columns:jQuery.extend(true, {}, default_settings.charts[i].columns)};
                         if (_.isEqual(container_settings, chart_settings)){
@@ -1084,44 +1128,67 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
     };
     jQuery.extend(settings, common_settings);
     var options_str = encodeURIComponent(JSON.stringify(settings));
-    jQuery.each(charts, function(idx, chart){
-//        columns_str = encodeURIComponent(JSON.stringify(columns));
-        var iframeContainer = jQuery("<div>")
-            .addClass("multiples-iframe-container")
-            .css("width", settings.width + "px")
-            .css("height", settings.height + "px")
-//            .attr("used_columns", JSON.stringify(columns))
-            .appendTo(container);
-        var params = {
-            chart: base_chart,
-            width: settings.width,
-            height: settings.height,
-            interactive: false,
-            options: options_str,
-            possibleLabels: JSON.stringify(chart.possibleLabels)
+    jQuery.getJSON(absolute_url + "/googlechart.get_data", function (data){
+        var chart_id = base_chart;
+        var base_chart_settings;
+        jQuery.each(data.charts, function(idx, chart){
+            if (chart.id === chart_id){
+                base_chart_settings = chart;
+            }
+        });
+        var columnsFromSettings = getColumnsFromSettings(JSON.parse(base_chart_settings.columns));
+        var options = {
+            originalTable : all_rows,
+            normalColumns : columnsFromSettings.normalColumns,
+            pivotingColumns : columnsFromSettings.pivotColumns,
+            valueColumn : columnsFromSettings.valueColumn,
+            availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
+            unpivotSettings : base_chart_settings.unpivotsettings || {},
+            filters : {}
         };
-        if (chart.columns !== undefined) {
-            params.columns = JSON.stringify(chart.columns);
-            iframeContainer.attr("used_columns", params.columns);
-            iframeContainer.attr("possible_labels", params.possibleLabels);
-        }
-        if (chart.filters !== undefined) {
-            params.filters = JSON.stringify(chart.filters);
-        }
-        jQuery("<iframe>")
-            .css("position", "absolute")
-            .css("width", settings.width + "px")
-            .css("height", settings.height + "px")
-            .css("z-index", "1")
-//            .attr("src", absolute_url + "/chart-full?chart=" + base_chart + "&width=" + settings.width + "&height=" + settings.height + "&interactive=false&columns=" + columns_str + "&options=" + options_str)
-            .attr("src", absolute_url + "/chart-full?" + jQuery.param(params))
-            .appendTo(iframeContainer);
-        jQuery("<div>")
-            .css("position", "absolute")
-            .css("width", settings.width + "px")
-            .css("height", settings.height + "px")
-            .css("z-index", "2")
-            .appendTo(iframeContainer);
+        var transformedTable = transformTable(options);
+        var adv_options = jQuery.extend(true, {}, JSON.parse(base_chart_settings.options));
+        adv_options.chartArea = {
+            width: multiples_settings.settings.chartAreaWidth,
+            height: multiples_settings.settings.chartAreaHeight,
+            top: multiples_settings.settings.chartAreaTop,
+            left: multiples_settings.settings.chartAreaLeft
+        };
+        var chartConfig = [
+            base_chart_settings.id,
+            JSON.parse(base_chart_settings.config),
+            JSON.parse(base_chart_settings.columns),
+            JSON.parse(base_chart_settings.filters),
+            JSON.parse(base_chart_settings.width),
+            JSON.parse(base_chart_settings.height),
+            JSON.parse(base_chart_settings.filterposition),
+            JSON.parse(base_chart_settings.options),
+            {},
+            "__disabled__",
+            "False",
+            JSON.parse(base_chart_settings.row_filters),
+            "",
+            "",
+            [],
+            {}
+        ];
+        var smcharts_settings = {
+            container: jQuery('.multiples-preview'),
+            smc_item_settings: {
+                'css_class': 'multiples-iframe-container'
+            },
+            sm_chart_width: multiples_settings.settings.chartAreaWidth,
+            sm_chart_height: multiples_settings.settings.chartAreaWidth,
+            multiples_settings: multiples_settings,
+            settings: settings,
+            transformedTable: transformedTable,
+            chartConfig: chartConfig,
+            adv_options: adv_options,
+            chartFiltersId: null,
+            dashboard_filters: null,
+            interactive: false
+        };
+        drawSMCharts(smcharts_settings);
     });
     container.sortable({
       placeholder: 'ui-state-highlight',
@@ -1141,9 +1208,13 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
       update: function(event, ui){
         var sorted_charts_columns_str = container.sortable('toArray',{attribute:'used_columns'});
         var sorted_charts_possible_labels_str = container.sortable('toArray',{attribute:'possible_labels'});
+        var sorted_charts_filters_str = container.sortable('toArray',{attribute:'filters'});
         var sorted_charts = [];
         for (var i = 0; i < sorted_charts_columns_str.length; i++){
-            sorted_charts.push({columns:JSON.parse(sorted_charts_columns_str[i]), possibleLabels:JSON.parse(sorted_charts_possible_labels_str[i])});
+            sorted_charts.push({columns:JSON.parse(sorted_charts_columns_str[i]),
+                                filters: JSON.parse(sorted_charts_filters_str[i]),
+                                possibleLabels:JSON.parse(sorted_charts_possible_labels_str[i])
+                                });
         }
         var widget = jQuery("#multiples_"+base_chart).data("widget");
         var tmp_settings = JSON.parse(widget.settings.multiples_settings);
