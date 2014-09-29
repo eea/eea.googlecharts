@@ -355,9 +355,11 @@ function enableGridFilters(){
                 colId = this.id;
             }
         });
+        var switchToVisible = false;
         if (grid_filters[colId] === undefined){
             filter_grid_filters = [];
             filter_type = "hidden";
+            switchToVisible = true;
         }
         else {
             filter_type = grid_filters[colId].type?grid_filters[colId].type:"hidden";
@@ -393,6 +395,9 @@ function enableGridFilters(){
         jQuery("<input id='slick-menu-ok' type='button' value='ok' class='btn'/>").appendTo(filters);
         jQuery("<input id='slick-menu-cancel' type='button' value='cancel' class='btn'/>").appendTo(filters);
 
+        if (switchToVisible){
+            jQuery(".slick-filter-type [value='visible']").attr("checked", "checked");
+        }
         filters.hide();
         filters_title.click(function(){
             filters.toggle('blind');
