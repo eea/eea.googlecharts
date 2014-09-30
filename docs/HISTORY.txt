@@ -3,6 +3,9 @@ Changelog
 
 11.1-dev - (unreleased)
 -----------------------
+* Bug fix: Fixed problematic sizing of the chart dialog on dashboard
+  multiples view
+  [olimpiurob refs #20499]
 * Feature: Updated dashboard view and edit for small multiples
   [olimpiurob refs #20499]
 * Feature: Allow resize of embedded charts
