@@ -29,7 +29,7 @@ function drawChart(value, other_options){
     var embedchart_row_filters_str = value[11];
     var embedchart_sortBy = value[12];
     var embedchart_sortAsc = true;
-
+    var embedchart_ChartNotes = value[16];
     var query_params = getQueryParams("#googlechart_table_" + other_settings.vhash);
     patched_each(embedchart_filters, function(key, value){
         if (query_params.rowFilters[key] !== undefined){
@@ -227,7 +227,8 @@ function drawChart(value, other_options){
         columnFilters : embedchart_columnFilters,
         columnTypes: transformedTable.properties,
         originalTable : other_settings.merged_rows,
-        visibleColumns : columnsFromSettings.columns
+        visibleColumns : columnsFromSettings.columns,
+        ChartNotes: embedchart_ChartNotes
     };
     drawGoogleChart(googlechart_params);
 

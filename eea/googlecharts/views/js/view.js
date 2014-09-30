@@ -153,6 +153,7 @@ function drawChart(value, other_options){
     var chart_columnFilters = value[14];
 
     var chart_unpivotSettings = value[15];
+    var chart_ChartNotes = value[16];
 
     jQuery("#filename").attr("value",chart_json.options.title);
     jQuery("#type").attr("value","image/png");
@@ -291,7 +292,8 @@ function drawChart(value, other_options){
         columnTypes : transformedTable.properties,
         originalTable : other_settings.merged_rows,
         visibleColumns : columnsFromSettings.columns,
-        updateHash : true
+        updateHash : true,
+        ChartNotes : chart_ChartNotes
     };
     drawGoogleChart(googlechart_params);
 }

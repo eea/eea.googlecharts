@@ -1,5 +1,6 @@
-function get_notes_for_chart(chart_id){
-  var notes = _.filter(ChartNotes, function(note){
+function get_notes_for_chart(ChartNotesList, chart_id){
+debugger;
+  var notes = _.filter(ChartNotesList, function(note){
     return note.global || note.charts.indexOf(chart_id) !== -1;
   });
   return notes || [];
@@ -230,7 +231,8 @@ function drawGoogleChart(options){
         columnTypes: {},
         originalTable : '',
         visibleColumns : '',
-        updateHash : false
+        updateHash : false,
+        ChartNotes : []
     };
     jQuery.extend(settings, options);
     if (settings.chartJson.chartType === "ImageChart"){
@@ -254,7 +256,7 @@ function drawGoogleChart(options){
     }
     jQuery("<div class='googlechart_loading_img'></div>").appendTo("#"+settings.chartViewDiv);
 
-    settings.notes = _.sortBy(get_notes_for_chart(settings.chartId), function(note){
+    settings.notes = _.sortBy(get_notes_for_chart(settings.ChartNotes, settings.chartId), function(note){
       return note.order[settings.chartId];
     });
 

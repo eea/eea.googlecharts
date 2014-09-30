@@ -46,7 +46,6 @@
 <metal:chart define-macro="dashboard" tal:condition="enabled_dashboard">
     <tal:block tal:define="vhash view/get_visualization_hash">
     <script type="text/javascript" tal:content="string:
-        var ChartNotes = []; // empty, notes are note displayed on dashboards
         var googlechart_config_array_$vhash = [];
         ">
     </script>
