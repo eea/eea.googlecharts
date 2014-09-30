@@ -85,7 +85,7 @@
             var isInline_$vhash = '$inline';
             var unpivotSettings_$vhash = $unpivotSettings;
             var print = $print;
-            var ChartNotes = $ChartNotes;
+            var ChartNotes_$vhash = $ChartNotes;
 
             var googlechart_config_array_$vhash = [];
             var settings_$vhash = [];
@@ -173,6 +173,7 @@
                     }
                 }
                 settings_$vhash.push(unpivotSettings_$vhash);
+                settings_$vhash.push(ChartNotes_$vhash);
                 guessSeries(settings_$vhash);
                 googlechart_config_array_$vhash.push(settings_$vhash);
 

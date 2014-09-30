@@ -122,7 +122,6 @@
 </script>
 </head>
 <body tal:define="chart view/get_iframe_chart;
-                  ChartNotes python: view.get_all_notes_json();
                   row_filters python: chart.get('row_filters_str','{}');
                   sortBy python: chart.get('sortBy','');
                   sortAsc python: chart.get('sortAsc_str','asc');
@@ -130,7 +129,6 @@
       style="margin: 0; overflow: hidden;">
     <script type="text/javascript" tal:content="
         string:var chart_columns = ${chart/columns};
-        var ChartNotes = $ChartNotes;
         var merged_rows = ${chart/data};
         var available_columns = ${chart/available_columns};
         var chart_json = ${chart/json};

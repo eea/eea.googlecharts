@@ -3,6 +3,8 @@ Changelog
 
 11.1-dev - (unreleased)
 -----------------------
+* Bugfix: Fixed notes for charts embedded in an assessment
+  [szabozo0 refs #21219]
 * Feature: Updated dashboard view and edit for small multiples
   [olimpiurob refs #20499]
 * Feature: Allow resize of embedded charts
