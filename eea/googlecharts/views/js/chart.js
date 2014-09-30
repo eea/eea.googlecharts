@@ -1,5 +1,4 @@
 function get_notes_for_chart(ChartNotesList, chart_id){
-debugger;
   var notes = _.filter(ChartNotesList, function(note){
     return note.global || note.charts.indexOf(chart_id) !== -1;
   });
