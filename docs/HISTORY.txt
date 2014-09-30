@@ -3,6 +3,9 @@ Changelog
 
 11.1-dev - (unreleased)
 -----------------------
+* Bug fix: Fixed problematic sizing of the chart dialog on dashboard
+  multiples view
+  [olimpiurob refs #20499]
 * Bugfix: Fixed notes for charts embedded in an assessment
   [szabozo0 refs #21219]
 * Feature: Updated dashboard view and edit for small multiples

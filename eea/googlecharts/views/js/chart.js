@@ -709,6 +709,7 @@ function openChartDialog(evt) {
     var ctl_parent = jQuery(this).parent().parent();
     var chart_div = ctl_parent.find('.sm-charts');
     var smc_chart = chart_div.data('chart');
+    var smc_title = smc_chart.chart.getOption('title');
     var original_settings = chart_div.data('original_settings');
     var parent = ctl_parent.parent();
     var original_chart_div = parent.find('#original_chart_div');
@@ -716,32 +717,38 @@ function openChartDialog(evt) {
         original_chart_div = jQuery('<div>', {
             id: 'original_chart_div'
         });
+    original_chart_div.css('height', original_settings.height);
+    original_chart_div.css('width', original_settings.width);
     original_chart_div.appendTo(parent);
     }
     original_chart_div.empty();
     original_chart_div.dialog({
-        width: original_settings.width + 50,
-        height: original_settings.height + 50,
+        width: 'auto',
+        height: 'auto',
+        title: smc_title,
+        open: function ( event, ui ) {
+            var new_chart = new google.visualization.ChartWrapper(smc_chart.chart.toJSON());
+            new_chart.setContainerId('original_chart_div');
+
+            new_chart.setOption('height', original_settings.height);
+            new_chart.setOption('width', original_settings.width);
+
+            var chartArea = {
+                top: chartAreaAttribute2px(original_settings.chartArea.top, original_settings.height),
+                left: chartAreaAttribute2px(original_settings.chartArea.left, original_settings.width),
+                height: chartAreaAttribute2px(original_settings.chartArea.height, original_settings.height),
+                width: chartAreaAttribute2px(original_settings.chartArea.width, original_settings.width)
+            };
+            new_chart.setOption('chartArea', chartArea);
+            new_chart.setOption('legend', original_settings.misc.legend);
+            new_chart.draw();
+            $(this).dialog( "option", "position", { my: "center", at: "center", of: window });
+        },
         close: function( event, ui ) {
             jQuery(this).dialog( "destroy" );
             jQuery(this).remove();
         }
     });
-    var new_chart = new google.visualization.ChartWrapper(smc_chart.chart.toJSON());
-    new_chart.setContainerId('original_chart_div');
-
-    new_chart.setOption('height', original_settings.height);
-    new_chart.setOption('width', original_settings.width);
-
-    var chartArea = {
-        top: chartAreaAttribute2px(original_settings.chartArea.top, original_settings.height),
-        left: chartAreaAttribute2px(original_settings.chartArea.left, original_settings.width),
-        height: chartAreaAttribute2px(original_settings.chartArea.height, original_settings.height),
-        width: chartAreaAttribute2px(original_settings.chartArea.width, original_settings.width)
-    };
-    new_chart.setOption('chartArea', chartArea);
-    new_chart.setOption('legend', original_settings.misc.legend);
-    new_chart.draw();
 }
 
 function drawSMCharts(smc_settings) {
@@ -1076,7 +1083,6 @@ function drawGoogleDashboard(options){
 
             transformedTable = transformTable(options);
             var adv_options = jQuery.extend(true, {}, chartConfig[7]);
-
             adv_options.chartArea = {
                 width: multiples_settings.settings.chartAreaWidth,
                 height: multiples_settings.settings.chartAreaHeight,
