@@ -751,6 +751,29 @@ function openChartDialog(evt) {
     });
 }
 
+function getSMMatrixHeaders(charts){
+    var verticals = [];
+    var horizontals = [];
+    var verticaltype = "column";
+    var horizontaltype = "column";
+    for (var i = 0; i < charts.length; i++) {
+        var chart = charts[i];
+        if (chart.possibleLabels.horizontal !== undefined) {
+            horizontaltype = chart.possibleLabels.horizontal.type;
+            if (jQuery.inArray(chart.possibleLabels.horizontal.value, horizontals) === -1){
+                horizontals.push(chart.possibleLabels.horizontal.value); 
+            }
+        }
+        if (chart.possibleLabels.vertical !== undefined) {
+            verticaltype = chart.possibleLabels.vertical.type;
+            if (jQuery.inArray(chart.possibleLabels.vertical.value, verticals) === -1){
+                verticals.push(chart.possibleLabels.vertical.value); 
+            }
+        }
+    }
+    return {verticals : {type:verticaltype, values:verticals}, horizontals : {type:horizontaltype, values:horizontals}};
+}
+
 function drawSMCharts(smc_settings) {
     var chartConfig = smc_settings.chartConfig;
     var multiples_settings = smc_settings.multiples_settings;

@@ -2168,7 +2168,8 @@ div.field[id*='multiples_settings'] {
     display:none;
 }
 
-.multiples-iframe-container{
+.multiples-smchart-container,
+.multiples-preview-sm-header-item{
     float:left;
     position:relative;
     box-shadow:3px 3px 3px #ccc;
@@ -2269,4 +2270,8 @@ div.field[id*='multiples_settings'] {
 
 #grid-adjustments input{
     float:right;
+}
+
+.multiples-preview-sm-area {
+    float:left;
 }
