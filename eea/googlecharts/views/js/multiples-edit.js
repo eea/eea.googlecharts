@@ -1307,9 +1307,10 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                     .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
                 horizontalHeaders.push(".multiples-preview-sm-header-bottom");
             }
-            for (var i = 0; i < verticalHeaders.length; i++){
-                for (var j = 0; j < smmatrixheaders.verticals.values.length; j++){
-                    var label = smmatrixheaders.verticals.values[j];
+            var i, j, label;
+            for (i = 0; i < verticalHeaders.length; i++){
+                for (j = 0; j < smmatrixheaders.verticals.values.length; j++){
+                    label = smmatrixheaders.verticals.values[j];
                     if (smmatrixheaders.verticals.type === "column"){
                         label = transformedTable.available_columns[label];
                     }
