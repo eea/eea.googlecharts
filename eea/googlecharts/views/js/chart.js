@@ -1086,6 +1086,8 @@ function drawGoogleDashboard(options){
                 .attr('id', chartContainerId)
                 .css('float', 'left')
                 .addClass('googledashboard-chart')
+                .width(value.dashboard.width)
+                .height(value.dashboard.height)
                 .appendTo('#'+settings.chartViewsDiv);
 
             columnsFromSettings = getColumnsFromSettings(chartConfig[2]);
@@ -1118,8 +1120,108 @@ function drawGoogleDashboard(options){
             if (value.dashboard.height){
                 chart_height = value.dashboard.height;
             }
+            if (multiples_settings.matrix.enabled){
+                var smmatrixheaders = getSMMatrixHeaders(multiples_settings.charts);
+
+                var horizontalHeaders = [];
+                var verticalHeaders = [];
+
+                if (multiples_settings.matrix.headers.top.enabled){
+                    jQuery("<div>")
+                        .addClass("multiples-sm-header-top")
+                        .css("float", "left")
+                        .appendTo(chartContainer);
+                    horizontalHeaders.push(".multiples-sm-header-top");
+                }
+
+                if (multiples_settings.matrix.headers.left.enabled){
+                    jQuery("<div>")
+                        .addClass("multiples-sm-header-left")
+                        .width(multiples_settings.matrix.headers.left.width + 3)
+                        .css("float", "left")
+                        .appendTo(chartContainer);
+                    verticalHeaders.push(".multiples-sm-header-left");
+                }
+
+                jQuery("<div>")
+                    .addClass("multiples-sm-area")
+                    .appendTo(chartContainer);
+
+                var horizontalitems = smmatrixheaders.horizontals.values.length;
+                if (horizontalitems === 0){
+                    horizontalitems = 1;
+                }
+                jQuery("#" + chartContainerId + " .multiples-sm-area")
+                    .width(horizontalitems * (multiples_settings.settings.width + 4));
+
+                if (multiples_settings.matrix.headers.right.enabled){
+                    jQuery("<div>")
+                        .addClass("multiples-sm-header-right")
+                        .width(multiples_settings.matrix.headers.left.width + 3)
+                        .css("float", "left")
+                        .appendTo(chartContainer);
+                    verticalHeaders.push(".multiples-sm-header-right");
+                }
+
+                if (multiples_settings.matrix.headers.bottom.enabled){
+                    jQuery("<div>")
+                        .addClass("multiples-sm-header-bottom")
+                        .css("float", "left")
+                        .appendTo(chartContainer);
+                    horizontalHeaders.push(".multiples-sm-header-bottom");
+                }
+                var i, j, label;
+                for (i = 0; i < verticalHeaders.length; i++){
+                    for (j = 0; j < smmatrixheaders.verticals.values.length; j++){
+                        label = smmatrixheaders.verticals.values[j];
+                        if (smmatrixheaders.verticals.type === "column"){
+                            label = transformedTable.available_columns[label];
+                        }
+                        jQuery("<div>")
+                            .addClass("multiples-sm-header-item")
+                            .attr("original-value", smmatrixheaders.verticals.values[j])
+                            .text(label)
+                            .width(multiples_settings.matrix.headers.left.width)
+                            .height(multiples_settings.settings.height)
+                            .appendTo(verticalHeaders[i]);
+                    }
+                }
+                for (i = 0; i < horizontalHeaders.length; i++){
+                    if (multiples_settings.matrix.headers.left.enabled) {
+                        jQuery("<div>")
+                            .addClass("multiples-sm-header-item")
+                            .width(multiples_settings.matrix.headers.left.width)
+                            .appendTo(horizontalHeaders[i]);
+                    }
+
+                    for (j = 0; j < smmatrixheaders.horizontals.values.length; j++){
+                        label = smmatrixheaders.horizontals.values[j];
+                        if (smmatrixheaders.horizontals.type === "column"){
+                            label = transformedTable.available_columns[label];
+                        }
+                        jQuery("<div>")
+                            .addClass("multiples-sm-header-item")
+                            .attr("original-value", smmatrixheaders.horizontals.values[j])
+                            .text(label)
+                            .width(multiples_settings.settings.width)
+                            .appendTo(horizontalHeaders[i]);
+                    }
+                    if (multiples_settings.matrix.headers.right.enabled) {
+                        jQuery("<div>")
+                            .addClass("multiples-sm-header-item")
+                            .width(multiples_settings.matrix.headers.right.width)
+                            .appendTo(horizontalHeaders[i]);
+                    }
+                }
+            }
+            else {
+                jQuery("<div>")
+                    .addClass("multiples-sm-area")
+                    .appendTo(chartContainer);
+            }
+
             var smcharts_settings = {
-                container: chartContainer,
+                container: jQuery("#" + chartContainerId + " .multiples-sm-area"),
                 smc_item_settings: null,
                 sm_chart_width: chart_width,
                 sm_chart_height: chart_height,

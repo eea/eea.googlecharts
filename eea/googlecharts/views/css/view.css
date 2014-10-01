@@ -728,3 +728,16 @@ input.googlechart-chart-size {
 .smc-controls .right {
     float: right;
 }
+
+.multiples-sm-area {
+    float:left;
+}
+
+.multiples-sm-area .smc-widget{
+    margin:2px;
+}
+.multiples-sm-header-item{
+    float:left;
+    position:relative;
+    margin:2px;
+}

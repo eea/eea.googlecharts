@@ -18,6 +18,7 @@ DavizEdit.Events.charts = {
     reordered: 'google-charts-position-changed',
     resized: 'google-chart-resized',
     resizeFinished: 'google-chart-resize-finished',
+    notifyResizeFinished: 'google-chart-notify-resize-finished',
     updated: 'google-chart-updated'
 };
 
@@ -606,6 +607,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
 
     // After resize
     self.box.bind(DavizEdit.Events.charts.resizeFinished + '.dashboard', function(evt, data){
+      jQuery(self.box).trigger(DavizEdit.Events.charts.notifyResizeFinished, data);
       self.handle_afterResize(data);
     });
 

@@ -808,6 +808,50 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
     var header = container.closest(".dashboard-chart").find(".dashboard-header");
     var removeSpan = header.find(".eea-icon-trash-o");
 
+    var widget = jQuery("#multiples_"+base_chart).data("widget");
+    widget.box.bind(DavizEdit.Events.charts.notifyResizeFinished + '.dashboard', function(evt, data){
+        var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+        if (!tmp_settings.matrix.enabled){
+            return;
+        }
+        function recalculateSize(oldSize, oldFullSize, oldChartsAreaSize, newFullSize){
+            oldFullSize = oldFullSize - 20;
+            newFullSize = newFullSize - 20;
+            return (newFullSize - (oldFullSize - oldChartsAreaSize)) / (oldChartsAreaSize / oldSize);
+        }
+
+        tmp_settings.settings.width = recalculateSize(tmp_settings.settings.width,
+                                    widget.settings.dashboard.width,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").width(),
+                                    parseInt(data.width || widget.settings.dashboard.width, 10));
+        tmp_settings.settings.height = recalculateSize(tmp_settings.settings.height,
+                                    widget.settings.dashboard.height,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").height(),
+                                    parseInt(data.height || widget.settings.dashboard.height, 10));
+
+        tmp_settings.settings.chartAreaWidth = recalculateSize(tmp_settings.settings.chartAreaWidth,
+                                    widget.settings.dashboard.width,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").width(),
+                                    parseInt(data.width || widget.settings.dashboard.width, 10));
+        tmp_settings.settings.chartAreaHeight = recalculateSize(tmp_settings.settings.chartAreaHeight,
+                                    widget.settings.dashboard.height,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").height(),
+                                    parseInt(data.height || widget.settings.dashboard.height, 10));
+
+        tmp_settings.settings.chartAreaLeft = recalculateSize(tmp_settings.settings.chartAreaLeft,
+                                    widget.settings.dashboard.width,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").width(),
+                                    parseInt(data.width || widget.settings.dashboard.width, 10));
+        tmp_settings.settings.chartAreaTop = recalculateSize(tmp_settings.settings.chartAreaTop,
+                                    widget.settings.dashboard.height,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").height(),
+                                    parseInt(data.height || widget.settings.dashboard.height, 10));
+
+        widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+
+        console.log("notify");
+    });
+
     if (!multiples_settings.matrix.enabled){
         header.find(".eea-icon-sort-alpha-asc").remove();
         jQuery("<span>")
@@ -1060,7 +1104,6 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         if (jQuery(".grid-adjustments-settings .matrix-headers-right").attr("checked") === "checked"){
                             tmp_settings.matrix.headers.right.enabled = true;
                         }
-
                         widget.settings.multiples_settings = JSON.stringify(tmp_settings);
                         jQuery("#grid-adjustments").dialog("close");
                         widget.save(false, true);
@@ -1350,18 +1393,6 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         .appendTo(horizontalHeaders[i]);
                 }
             }
-            var headerwidthinput = jQuery(".multiples-preview[base_chart='"+base_chart+"']")
-                                        .closest(".dashboard-chart")
-                                        .find(".dashboard-header")
-                                        .find("input[name='width']");
-            var correctwidth = jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").width() +
-                                jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-left").width() +
-                                jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-right").width() + 40;
-            if (parseInt(headerwidthinput.attr("value"), 10) !== correctwidth){
-                headerwidthinput.attr("value", correctwidth);
-                headerwidthinput.trigger("change");
-                return;
-            }
         }
         else {
             jQuery("<div>")
@@ -1421,6 +1452,31 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
               }
             });
         }
-    });
+        if (multiples_settings.matrix.enabled){
+            var headerWidthInput = jQuery(".multiples-preview[base_chart='"+base_chart+"']")
+                                        .closest(".dashboard-chart")
+                                        .find(".dashboard-header")
+                                        .find("input[name='width']");
+            var newWidth = jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").width() +
+                                jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-left").width() +
+                                jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-right").width() + 20;
 
+            var headerHeightInput = jQuery(".multiples-preview[base_chart='"+base_chart+"']")
+                                        .closest(".dashboard-chart")
+                                        .find(".dashboard-header")
+                                        .find("input[name='height']");
+            var newHeight = jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").height() +
+                                jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-top").height() +
+                                jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-bottom").height() + 20;
+            if ((parseInt(headerWidthInput.attr("value"), 10) !== newWidth) || 
+                (parseInt(headerHeightInput.attr("value"), 10) !== newHeight)){
+                var widget = jQuery("#multiples_"+base_chart).data("widget");
+                widget.box.width(newWidth);
+                widget.box.height(newHeight);
+                widget.settings.dashboard.width = newWidth;
+                widget.settings.dashboard.height = newHeight;
+                widget.save(false, true);
+            }
+        }
+    });
 });
