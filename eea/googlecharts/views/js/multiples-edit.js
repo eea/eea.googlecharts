@@ -849,7 +849,6 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
 
         widget.settings.multiples_settings = JSON.stringify(tmp_settings);
 
-        console.log("notify");
     });
 
     if (!multiples_settings.matrix.enabled){
