@@ -731,8 +731,8 @@ function openChartDialog(evt) {
             new_chart.setContainerId('original_chart_div');
             new_chart.setOption('height', original_settings.height);
             new_chart.setOption('width', original_settings.width);
+            var chartArea = {};
             if (original_settings.chartArea !== undefined){
-                var chartArea = {};
                 if (original_settings.chartArea.top !== undefined){
                     chartArea.top = chartAreaAttribute2px(original_settings.chartArea.top, original_settings.height);
                 }
@@ -745,8 +745,8 @@ function openChartDialog(evt) {
                 if (original_settings.chartArea.width !== undefined){
                     chartArea.width = chartAreaAttribute2px(original_settings.chartArea.width, original_settings.width);
                 }
-                new_chart.setOption('chartArea', chartArea);
             }
+            new_chart.setOption('chartArea', chartArea);
             new_chart.setOption('legend', original_settings.misc.legend);
             new_chart.draw();
             $(this).dialog( "option", "position", { my: "center", at: "center", of: window });
@@ -901,17 +901,31 @@ function drawSMCharts(smc_settings) {
 
         if (smc_settings.controls) {
             jQuery.each(smc_settings.controls, function(idx, val) {
+                var btn = jQuery('<div>')
+                    .attr('title', val.title);
                 var control = jQuery('<span>', {
-                    'class': 'smc-control eea-icon ' + val.icon + ' ' + val.position_x,
-                    'title': val.title
+                    'class': 'smc-control eea-icon ' + val.icon + ' ' + val.position_x
                 });
+                control.appendTo(btn);
+                if (val.btn_class !== undefined){
+                    btn.addClass(val.btn_class);
+                }
+                if (val.control_class !== undefined){
+                    control.addClass(val.control_class);
+                }
+                if (val.btn_width !== undefined){
+                    btn.width(val.btn_width);
+                }
+                if (val.btn_height !== undefined){
+                    btn.height(val.btn_height);
+                }
                 if (val.position_y === 'top') {
-                    control.appendTo(control_top);
+                    btn.appendTo(control_top);
                 } else {
-                    control.appendTo(control_bottom);
+                    btn.appendTo(control_bottom);
                 }
                 jQuery.each(val.events, function(evt, callback){
-                    control.on(evt, callback);
+                    btn.on(evt, callback);
                 });
             });
             jQuery(smc_container).on('click', smc_settings.click_event);
@@ -1083,8 +1097,12 @@ function drawGoogleDashboard(options){
             hiddenDashboardFilters = hiddenDashboardFilters.concat(tmp_chart.filters);
         } else if (value.wtype === 'googlecharts.widgets.multiples') {
             if (settings.charts.length >=1) {
-                chartConfig = settings.charts[0];
-                chart_unpivotSettings = chartConfig[15];
+                jQuery(settings.charts).each(function(idx, config){
+                    if (config[0] === value.name.substr(10)){
+                        chartConfig = config;
+                        chart_unpivotSettings = config[15];
+                    }
+                });
             }
 
             var multiples_settings = JSON.parse(value.multiples_settings);
@@ -1244,7 +1262,11 @@ function drawGoogleDashboard(options){
                     enlarge_btn: {
                         position_x: 'right',
                         position_y: 'top',
-                        icon: 'eea-icon-expand',
+                        icon: 'eea-icon-search-plus',
+                        control_class: 'control-multiples-sm-enlarge',
+                        btn_class: 'btn-multiples-sm-enlarge',
+                        btn_width: multiples_settings.settings.width,
+                        btn_height: multiples_settings.settings.height,
                         title: 'Expand chart',
                         events: {
                             'click': openChartDialog
