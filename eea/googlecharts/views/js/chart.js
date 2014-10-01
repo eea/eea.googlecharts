@@ -699,8 +699,8 @@ function getChartTitle(title_placeholder, possibleLabels, transformedTable) {
         if (possibleLabels.horizontal.type === "column"){
             horizontal_str = transformedTable.available_columns[horizontal_str];
         }
-        return title_placeholder.split("{vertical}").join(vertical_str)
-                .split("{horizontal}").join(horizontal_str);
+        return title_placeholder.split("{Y}").join(vertical_str)
+                .split("{X}").join(horizontal_str);
     }
     return title_placeholder;
 }
@@ -729,17 +729,24 @@ function openChartDialog(evt) {
         open: function ( event, ui ) {
             var new_chart = new google.visualization.ChartWrapper(smc_chart.chart.toJSON());
             new_chart.setContainerId('original_chart_div');
-
             new_chart.setOption('height', original_settings.height);
             new_chart.setOption('width', original_settings.width);
-
-            var chartArea = {
-                top: chartAreaAttribute2px(original_settings.chartArea.top, original_settings.height),
-                left: chartAreaAttribute2px(original_settings.chartArea.left, original_settings.width),
-                height: chartAreaAttribute2px(original_settings.chartArea.height, original_settings.height),
-                width: chartAreaAttribute2px(original_settings.chartArea.width, original_settings.width)
-            };
-            new_chart.setOption('chartArea', chartArea);
+            if (original_settings.chartArea !== undefined){
+                var chartArea = {};
+                if (original_settings.chartArea.top !== undefined){
+                    chartArea.top = chartAreaAttribute2px(original_settings.chartArea.top, original_settings.height);
+                }
+                if (original_settings.chartArea.left !== undefined){
+                    chartArea.left = chartAreaAttribute2px(original_settings.chartArea.left, original_settings.width);
+                }
+                if (original_settings.chartArea.height !== undefined){
+                    chartArea.height = chartAreaAttribute2px(original_settings.chartArea.height, original_settings.height);
+                }
+                if (original_settings.chartArea.width !== undefined){
+                    chartArea.width = chartAreaAttribute2px(original_settings.chartArea.width, original_settings.width);
+                }
+                new_chart.setOption('chartArea', chartArea);
+            }
             new_chart.setOption('legend', original_settings.misc.legend);
             new_chart.draw();
             $(this).dialog( "option", "position", { my: "center", at: "center", of: window });

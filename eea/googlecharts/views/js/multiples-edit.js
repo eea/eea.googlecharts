@@ -34,10 +34,10 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 headers : {
                     left : {enabled : true,
                             width : 100},
-                    right : {enabled : true,
+                    right : {enabled : false,
                             width : 100},
                     top : {enabled : true},
-                    bottom : {enabled : true}
+                    bottom : {enabled : false}
                 }
             };
         }
@@ -975,7 +975,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                                 horizontal_str = transformedTable.available_columns[horizontal_str];
                             }
 
-                            tmp_chart.sort_value = tmp_chart.sort_value.split("{vertical}").join(vertical_str).split("{horizontal}").join(horizontal_str);
+                            tmp_chart.sort_value = tmp_chart.sort_value.split("{Y}").join(vertical_str).split("{X}").join(horizontal_str);
                             charts_for_sort.push(tmp_chart);
                         });
                         if (selectedSortSettings.type === "row"){
@@ -1045,12 +1045,12 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             settingsDiv.append("<div style='clear:both'> </div>");
             settingsDiv.append("<label>Display headers in top</label>");
             settingsDiv.append("<input class='gridsettings matrix-headers-top' type='checkbox'/>");
+            settingsDiv.append("<label>Display headers in left</label>");
+            settingsDiv.append("<input class='gridsettings matrix-headers-left' type='checkbox'/>");
+            settingsDiv.append("<div style='clear:both'> </div>");
             settingsDiv.append("<div style='clear:both'> </div>");
             settingsDiv.append("<label>Display headers in bottom</label>");
             settingsDiv.append("<input class='gridsettings matrix-headers-bottom' type='checkbox'/>");
-            settingsDiv.append("<div style='clear:both'> </div>");
-            settingsDiv.append("<label>Display headers in left</label>");
-            settingsDiv.append("<input class='gridsettings matrix-headers-left' type='checkbox'/>");
             settingsDiv.append("<div style='clear:both'> </div>");
             settingsDiv.append("<label>Display headers in right</label>");
             settingsDiv.append("<input class='gridsettings matrix-headers-right' type='checkbox'/>");
@@ -1083,6 +1083,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                     jQuery("#grid-adjustments .btn-success").bind("click", function(){
                         var widget = jQuery("#multiples_"+base_chart).data("widget");
                         var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                        var prev_matrix_enabled = tmp_settings.matrix.enabled;
                         tmp_settings.matrix.enabled = false;
                         tmp_settings.matrix.headers.top.enabled = false;
                         tmp_settings.matrix.headers.bottom.enabled = false;
@@ -1103,9 +1104,77 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         if (jQuery(".grid-adjustments-settings .matrix-headers-right").attr("checked") === "checked"){
                             tmp_settings.matrix.headers.right.enabled = true;
                         }
-                        widget.settings.multiples_settings = JSON.stringify(tmp_settings);
-                        jQuery("#grid-adjustments").dialog("close");
-                        widget.save(false, true);
+                        if ((tmp_settings.matrix.enabled) && (!prev_matrix_enabled)){
+
+
+                            jQuery.getJSON(absolute_url + "/googlechart.get_charts_json", function(data){
+                                var sort_options = [];
+                                var base_chart_settings;
+                                jQuery.each(data, function(idx, chart){
+                                    if (chart.id === base_chart){
+                                        base_chart_settings = chart;
+                                    }
+                                });
+                                var columnsFromSettings = getColumnsFromSettings(JSON.parse(base_chart_settings.columns));
+
+                                var options = {
+                                    originalTable : all_rows,
+                                    normalColumns : columnsFromSettings.normalColumns,
+                                    pivotingColumns : columnsFromSettings.pivotColumns,
+                                    valueColumn : columnsFromSettings.valueColumn,
+                                    availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
+                                    unpivotSettings : base_chart_settings.unpivotsettings || {},
+                                    filters : {}
+                                };
+                                var transformedTable = transformTable(options);
+
+                                var charts = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).charts;
+                                var charts_for_sort = [];
+                                jQuery.each(charts, function(idx, chart){
+                                    var tmp_chart = {};
+                                    tmp_chart.chart = chart;
+                                    tmp_chart.sort_value = "{Y} - {X}";
+                                    var vertical_str = tmp_chart.chart.possibleLabels.vertical.value;
+                                    if (tmp_chart.chart.possibleLabels.vertical.type === "column"){
+                                        vertical_str = transformedTable.available_columns[vertical_str];
+                                    }
+                                    var horizontal_str = tmp_chart.chart.possibleLabels.horizontal.value;
+                                    if (tmp_chart.chart.possibleLabels.horizontal.type === "column"){
+                                        horizontal_str = transformedTable.available_columns[horizontal_str];
+                                    }
+
+                                    tmp_chart.sort_value = tmp_chart.sort_value.split("{Y}").join(vertical_str).split("{X}").join(horizontal_str);
+                                    charts_for_sort.push(tmp_chart);
+                                });
+                                charts_for_sort.sort(function(a, b){
+                                    if (a.sort_value > b.sort_value){
+                                        return 1;
+                                    }
+                                    if (a.sort_value < b.sort_value){
+                                        return -1;
+                                    }
+                                    if (a.sort_value === b.sort_value){
+                                        return 0;
+                                    }
+                                });
+                                for (i = 0; i < charts_for_sort.length; i++){
+                                    delete charts_for_sort[i].sort_value;
+                                }
+                                var sorted_charts = [];
+                                for (i = 0; i < charts_for_sort.length; i++){
+                                    sorted_charts.push(charts_for_sort[i].chart);
+                                }
+                                tmp_settings.charts = sorted_charts;
+                                widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+                                jQuery("#grid-adjustments").dialog("close");
+                                widget.save(false, true);
+                            });
+                        }
+                        else {
+                            widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+                            jQuery("#grid-adjustments").dialog("close");
+                            widget.save(false, true);
+                        }
                     });
                     jQuery("#grid-adjustments .btn-inverse").bind("click", function(){
                         jQuery("#grid-adjustments").dialog("close");
@@ -1145,7 +1214,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             .addClass("settingsDiv")
             .appendTo(previewDiv);
         settingsDiv.append("<label>Title</label>");
-        settingsDiv.append("<label class='help'>ex: {vertical} - {horizontal}</label>");
+        settingsDiv.append("<label class='help'>ex: {Y} - {X}</label>");
         settingsDiv.append("<input class='chartsettings chartTitle' type='text'/>");
         settingsDiv.append("<label>Area size</label>");
         settingsDiv.append("<input class='chartsettings chartWidth' type='number'/>");
