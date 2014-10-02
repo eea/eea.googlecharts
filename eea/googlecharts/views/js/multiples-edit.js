@@ -1502,6 +1502,8 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                     .css("opacity", "");
               },
               update: function(event, ui){
+                var base_chart = jQuery(this).parent().attr("base_chart");
+                var sortableArea = jQuery(this).parent().find(".multiples-preview-sm-area");
                 var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'used_columns'});
                 var sorted_charts_possible_labels_str = sortableArea.sortable('toArray',{attribute:'possible_labels'});
                 var sorted_charts_filters_str = sortableArea.sortable('toArray',{attribute:'filters'});
