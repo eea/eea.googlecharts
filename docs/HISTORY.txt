@@ -3,6 +3,8 @@ Changelog
 
 11.2-dev - (unreleased)
 -----------------------
+* Bug fix: Fixed characters encoding when resizing with inlline daviz
+  [szabozo0 refs #21257]
 
 11.1 - (2014-10-01)
 -------------------

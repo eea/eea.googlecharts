@@ -30,7 +30,7 @@ class Resizer(BrowserView):
         for field in self.context.schema.fields():
             value = field.getAccessor(self.context)()
             if isinstance(value, str):
-                html = lxml.html.fragments_fromstring(value)
+                html = lxml.html.fragments_fromstring(value.decode('utf-8'))
                 has_changes = False
                 new_value = ""
                 for element in html:
@@ -44,7 +44,7 @@ class Resizer(BrowserView):
                                 iframe.set("width", new_width)
                                 iframe.set("height", new_height)
                                 iframe.set("src", new_src)
-                        new_value += lxml.html.tostring(element)
+                        new_value += lxml.html.tostring(element, encoding='utf-8')
                     else:
                         new_value += element
                 if has_changes:
