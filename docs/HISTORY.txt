@@ -3,6 +3,8 @@ Changelog
 
 11.3-dev - (unreleased)
 -----------------------
+* Bug fix: Don't throw errors when base href is missing
+  [szabozo0]
 
 11.2 - (2014-10-03)
 -------------------

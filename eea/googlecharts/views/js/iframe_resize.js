@@ -704,6 +704,9 @@ jQuery.fn.EEAChartIframeResizer = function(){
 
 
 jQuery(document).ready(function($){
+    if (jQuery("base").attr("href") === undefined) {
+        return;
+    }
     if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)){
         var ieversion=RegExp.$1;
         if (ieversion<9){
@@ -742,7 +745,6 @@ jQuery(document).ready(function($){
             }
         }
     });
-    
 });
 
 
