@@ -1,8 +1,8 @@
 Changelog
 =========
 
-11.3-dev - (unreleased)
------------------------
+11.3 - (2014-10-03)
+-------------------
 * Bug fix: Don't throw errors when base href is missing
   [szabozo0]
 
