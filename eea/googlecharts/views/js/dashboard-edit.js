@@ -736,6 +736,36 @@ DavizEdit.GoogleDashboardWidget.prototype = {
       .click(function(){
         self.handle_delete();
       });
+
+    jQuery('<span>')
+      .attr('title', 'Hide header')
+      .addClass('eea-icon daviz-menuicon dashboard-widget-header-toggle').addClass('eea-icon-angle-left')
+      .prependTo(header)
+      .click(function(){
+        self.handle_header_toggle();
+      });
+  },
+
+  handle_header_toggle: function(data){
+    var self = this;
+    var header = self.box.find(".dashboard-header");
+    var toggle = header.find(".dashboard-widget-header-toggle");
+    if (toggle.hasClass("eea-icon-angle-left")){
+        header.data("visible-elements", header.find("*:visible"));
+        header.data("visible-elements").hide();
+        header.find(".dashboard-widget-header-toggle").show();
+        toggle.removeClass("eea-icon-angle-left");
+        toggle.addClass("eea-icon-angle-right");
+        toggle.attr('title', 'Show header');
+        header.css("width", "10px");
+    }
+    else {
+        header.data("visible-elements").show();
+        toggle.attr('title', 'Hide header');
+        toggle.removeClass("eea-icon-angle-right");
+        toggle.addClass("eea-icon-angle-left");
+        header.css("width", "99%");
+    }
   },
 
   handle_resize: function(data){
