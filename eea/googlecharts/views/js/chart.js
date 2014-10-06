@@ -1150,22 +1150,33 @@ function drawGoogleDashboard(options){
 
                 var horizontalHeaders = [];
                 var verticalHeaders = [];
-
-                if (multiples_settings.matrix.headers.top.enabled){
+                var top_enabled = multiples_settings.matrix.headers.top.enabled;
+                var bottom_enabled = multiples_settings.matrix.headers.bottom.enabled;
+                var left_enabled = multiples_settings.matrix.headers.left.enabled;
+                var right_enabled = multiples_settings.matrix.headers.right.enabled;
+                if ((smmatrixheaders.horizontals.values.length === 1) && (smmatrixheaders.horizontals.values[0] === null)) {
+                    top_enabled = false;
+                    bottom_enabled = false;
+                }
+                if ((smmatrixheaders.verticals.values.length === 1) && (smmatrixheaders.verticals.values[0] === null)) {
+                    left_enabled = false;
+                    right_enabled = false;
+                }
+                if (top_enabled){
                     jQuery("<div>")
                         .addClass("multiples-sm-header-top")
                         .css("float", "left")
                         .appendTo(chartContainer);
-                    horizontalHeaders.push(".multiples-sm-header-top");
+                    horizontalHeaders.push("#" + chartContainerId + " .multiples-sm-header-top");
                 }
 
-                if (multiples_settings.matrix.headers.left.enabled){
+                if (left_enabled){
                     jQuery("<div>")
                         .addClass("multiples-sm-header-left")
                         .width(multiples_settings.matrix.headers.left.width + 3)
                         .css("float", "left")
                         .appendTo(chartContainer);
-                    verticalHeaders.push(".multiples-sm-header-left");
+                    verticalHeaders.push("#" + chartContainerId + " .multiples-sm-header-left");
                 }
 
                 jQuery("<div>")
@@ -1179,21 +1190,21 @@ function drawGoogleDashboard(options){
                 jQuery("#" + chartContainerId + " .multiples-sm-area")
                     .width(horizontalitems * (multiples_settings.settings.width + 4));
 
-                if (multiples_settings.matrix.headers.right.enabled){
+                if (right_enabled){
                     jQuery("<div>")
                         .addClass("multiples-sm-header-right")
                         .width(multiples_settings.matrix.headers.left.width + 3)
                         .css("float", "left")
                         .appendTo(chartContainer);
-                    verticalHeaders.push(".multiples-sm-header-right");
+                    verticalHeaders.push("#" + chartContainerId + " .multiples-sm-header-right");
                 }
 
-                if (multiples_settings.matrix.headers.bottom.enabled){
+                if (bottom_enabled){
                     jQuery("<div>")
                         .addClass("multiples-sm-header-bottom")
                         .css("float", "left")
                         .appendTo(chartContainer);
-                    horizontalHeaders.push(".multiples-sm-header-bottom");
+                    horizontalHeaders.push("#" + chartContainerId + " .multiples-sm-header-bottom");
                 }
                 var i, j, label;
                 for (i = 0; i < verticalHeaders.length; i++){
@@ -1212,7 +1223,7 @@ function drawGoogleDashboard(options){
                     }
                 }
                 for (i = 0; i < horizontalHeaders.length; i++){
-                    if (multiples_settings.matrix.headers.left.enabled) {
+                    if (left_enabled) {
                         jQuery("<div>")
                             .addClass("multiples-sm-header-item")
                             .width(multiples_settings.matrix.headers.left.width)
@@ -1231,7 +1242,7 @@ function drawGoogleDashboard(options){
                             .width(multiples_settings.settings.width)
                             .appendTo(horizontalHeaders[i]);
                     }
-                    if (multiples_settings.matrix.headers.right.enabled) {
+                    if (right_enabled) {
                         jQuery("<div>")
                             .addClass("multiples-sm-header-item")
                             .width(multiples_settings.matrix.headers.right.width)

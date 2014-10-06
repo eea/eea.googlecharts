@@ -1373,22 +1373,33 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
 
             var horizontalHeaders = [];
             var verticalHeaders = [];
-
-            if (multiples_settings.matrix.headers.top.enabled){
+            var top_enabled = multiples_settings.matrix.headers.top.enabled;
+            var bottom_enabled = multiples_settings.matrix.headers.bottom.enabled;
+            var left_enabled = multiples_settings.matrix.headers.left.enabled;
+            var right_enabled = multiples_settings.matrix.headers.right.enabled;
+            if ((smmatrixheaders.horizontals.values.length === 1) && (smmatrixheaders.horizontals.values[0] === null)) {
+                top_enabled = false;
+                bottom_enabled = false;
+            }
+            if ((smmatrixheaders.verticals.values.length === 1) && (smmatrixheaders.verticals.values[0] === null)) {
+                left_enabled = false;
+                right_enabled = false;
+            }
+            if (top_enabled){
                 jQuery("<div>")
                     .addClass("multiples-preview-sm-header-top")
                     .css("float", "left")
                     .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
-                horizontalHeaders.push(".multiples-preview-sm-header-top");
+                horizontalHeaders.push(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-top");
             }
 
-            if (multiples_settings.matrix.headers.left.enabled){
+            if (left_enabled){
                 jQuery("<div>")
                     .addClass("multiples-preview-sm-header-left")
                     .width(multiples_settings.matrix.headers.left.width + 3)
                     .css("float", "left")
                     .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
-                verticalHeaders.push(".multiples-preview-sm-header-left");
+                verticalHeaders.push(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-left");
             }
 
             jQuery("<div>")
@@ -1402,21 +1413,21 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area")
                 .width(horizontalitems * (multiples_settings.settings.width + 4));
 
-            if (multiples_settings.matrix.headers.right.enabled){
+            if (right_enabled){
                 jQuery("<div>")
                     .addClass("multiples-preview-sm-header-right")
                     .width(multiples_settings.matrix.headers.left.width + 3)
                     .css("float", "left")
                     .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
-                verticalHeaders.push(".multiples-preview-sm-header-right");
+                verticalHeaders.push(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-right");
             }
 
-            if (multiples_settings.matrix.headers.bottom.enabled){
+            if (bottom_enabled){
                 jQuery("<div>")
                     .addClass("multiples-preview-sm-header-bottom")
                     .css("float", "left")
                     .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
-                horizontalHeaders.push(".multiples-preview-sm-header-bottom");
+                horizontalHeaders.push(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-bottom");
             }
             var i, j, label;
             for (i = 0; i < verticalHeaders.length; i++){
@@ -1435,7 +1446,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 }
             }
             for (i = 0; i < horizontalHeaders.length; i++){
-                if (multiples_settings.matrix.headers.left.enabled) {
+                if (left_enabled) {
                     jQuery("<div>")
                         .addClass("multiples-preview-sm-header-item")
                         .width(multiples_settings.matrix.headers.left.width)
@@ -1454,7 +1465,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         .width(multiples_settings.settings.width)
                         .appendTo(horizontalHeaders[i]);
                 }
-                if (multiples_settings.matrix.headers.right.enabled) {
+                if (right_enabled) {
                     jQuery("<div>")
                         .addClass("multiples-preview-sm-header-item")
                         .width(multiples_settings.matrix.headers.right.width)
