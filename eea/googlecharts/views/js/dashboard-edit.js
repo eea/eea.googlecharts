@@ -754,17 +754,19 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         header.data("visible-elements", header.find("*:visible"));
         header.data("visible-elements").hide();
         header.find(".dashboard-widget-header-toggle").show();
-        toggle.removeClass("eea-icon-angle-left");
-        toggle.addClass("eea-icon-angle-right");
-        toggle.attr('title', 'Show header');
-        header.css("width", "10px");
+        header.animate({width: "10px"}, 200, function(){
+            toggle.removeClass("eea-icon-angle-left");
+            toggle.addClass("eea-icon-angle-right");
+            toggle.attr('title', 'Show header');
+        });
     }
     else {
-        header.data("visible-elements").show();
-        toggle.attr('title', 'Hide header');
-        toggle.removeClass("eea-icon-angle-right");
-        toggle.addClass("eea-icon-angle-left");
-        header.css("width", "99%");
+        header.animate({width: "99%"}, 200, function(){
+            header.data("visible-elements").show();
+            toggle.attr('title', 'Hide header');
+            toggle.removeClass("eea-icon-angle-right");
+            toggle.addClass("eea-icon-angle-left");
+        });
     }
   },
 
