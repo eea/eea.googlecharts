@@ -1388,6 +1388,8 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             if (top_enabled){
                 jQuery("<div>")
                     .addClass("multiples-preview-sm-header-top")
+                    .addClass("multiples-preview-sm-header")
+                    .addClass("multiples-preview-sm-header-horizontal")
                     .css("float", "left")
                     .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
                 horizontalHeaders.push(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-top");
@@ -1396,6 +1398,8 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             if (left_enabled){
                 jQuery("<div>")
                     .addClass("multiples-preview-sm-header-left")
+                    .addClass("multiples-preview-sm-header")
+                    .addClass("multiples-preview-sm-header-vertical")
                     .width(multiples_settings.matrix.headers.left.width + 3)
                     .css("float", "left")
                     .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
@@ -1416,6 +1420,8 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             if (right_enabled){
                 jQuery("<div>")
                     .addClass("multiples-preview-sm-header-right")
+                    .addClass("multiples-preview-sm-header")
+                    .addClass("multiples-preview-sm-header-vertical")
                     .width(multiples_settings.matrix.headers.left.width + 3)
                     .css("float", "left")
                     .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
@@ -1425,6 +1431,8 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             if (bottom_enabled){
                 jQuery("<div>")
                     .addClass("multiples-preview-sm-header-bottom")
+                    .addClass("multiples-preview-sm-header")
+                    .addClass("multiples-preview-sm-header-horizontal")
                     .css("float", "left")
                     .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
                 horizontalHeaders.push(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-bottom");
@@ -1472,6 +1480,66 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         .appendTo(horizontalHeaders[i]);
                 }
             }
+                jQuery(".multiples-preview-sm-header").sortable({
+                    placeholder: 'ui-state-highlight',
+                    forcePlaceholderSize: true,
+                    opacity: 0.7,
+                    delay: 300,
+                    cursor: 'crosshair',
+                    tolerance: 'pointer',
+                    start: function(event, ui){
+                        var sortableArea = jQuery(this);
+                        var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
+                        var clean_charts_columns = [];
+                        for (var i = 0; i < sorted_charts_columns_str.length; i++){
+                            if (sorted_charts_columns_str[i] !== ""){
+                                clean_charts_columns.push(sorted_charts_columns_str[i]);
+                            }
+                        }
+                        jQuery(this).data("original-order", clean_charts_columns);
+                    },
+                    update: function(event, ui){
+                        var base_chart = jQuery(this).parent().attr("base_chart");
+                        var sortableArea = jQuery(this);
+                        var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
+                        var clean_charts_columns = [];
+                        var i;
+                        for (i = 0; i < sorted_charts_columns_str.length; i++){
+                            if (sorted_charts_columns_str[i] !== ""){
+                                clean_charts_columns.push(sorted_charts_columns_str[i]);
+                            }
+                        }
+                        var moved_element = jQuery(event.toElement).attr("original-value");
+                        var originalPosition = jQuery.inArray(moved_element, jQuery(this).data("original-order"));
+                        var newPosition = jQuery.inArray(moved_element, clean_charts_columns);
+                        var widget = jQuery("#multiples_"+base_chart).data("widget");
+                        var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                        var direction = "horizontal";
+                        if (jQuery(this).hasClass("multiples-preview-sm-header-vertical")){
+                            direction = "vertical";
+                        }
+                        var positions_to_move = [];
+                        for (i = 0; i < tmp_settings.charts.length; i++){
+                            if (tmp_settings.charts[i].possibleLabels[direction].value === moved_element){
+                                positions_to_move.push(i);
+                            }
+                        }
+                        var move_to = newPosition - originalPosition;
+                        if (direction !== "horizontal"){
+                            var row_length = tmp_settings.charts.length / clean_charts_columns.length;
+                            move_to = move_to * row_length;
+                        }
+                        for (i = 0; i < positions_to_move.length; i++){
+                            var item_nr = i;
+                            if (move_to > 0){
+                                item_nr = (positions_to_move.length - 1) - i;
+                            }
+                            tmp_settings.charts.splice(positions_to_move[item_nr] + move_to, 0, tmp_settings.charts.splice(positions_to_move[item_nr],1)[0]);
+                        }
+                        widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+                        widget.save(false, true);
+                    }
+                });
         }
         else {
             jQuery("<div>")
