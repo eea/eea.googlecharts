@@ -545,6 +545,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
 
   reload: function(){
     var self = this;
+    var header_minimized = false;
     if(self.box === undefined){
       self.box = jQuery('<div>')
         .attr('id', self.settings.name)
@@ -554,6 +555,9 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         .data("widget", self)
         .appendTo(self.context);
     }else{
+      if (self.box.find(".dashboard-header").data("header-minimized")){
+        header_minimized = true;
+      }
       try{
           self.box.resizable("destroy");
       } catch(err){}
@@ -591,6 +595,14 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     });
 
     self.handle_header(self.settings.dashboard.width, self.settings.dashboard.height);
+    if (header_minimized){
+        var header = self.box.find(".dashboard-header");
+        var toggle = header.find(".dashboard-widget-header-toggle");
+        header.width(10);
+        self.handle_header_toggle();
+        toggle.removeClass("eea-icon-angle-left");
+        toggle.addClass("eea-icon-angle-right");
+    }
 
     // Events
     self.box.unbind('.dashboard');
@@ -754,6 +766,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         header.data("visible-elements", header.find("*:visible"));
         header.data("visible-elements").hide();
         header.find(".dashboard-widget-header-toggle").show();
+        header.data("header-minimized", true);
         header.animate({width: "10px"}, 200, function(){
             toggle.removeClass("eea-icon-angle-left");
             toggle.addClass("eea-icon-angle-right");
@@ -761,6 +774,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
         });
     }
     else {
+        header.data("header-minimized", false);
         header.animate({width: "99%"}, 200, function(){
             header.data("visible-elements").show();
             toggle.attr('title', 'Hide header');

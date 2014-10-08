@@ -809,6 +809,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
     var removeSpan = header.find(".eea-icon-trash-o");
 
     var widget = jQuery("#multiples_"+base_chart).data("widget");
+    var extra_btns = [];
     widget.box.bind(DavizEdit.Events.charts.notifyResizeFinished + '.dashboard', function(evt, data){
         var tmp_settings = JSON.parse(widget.settings.multiples_settings);
         if (!tmp_settings.matrix.enabled){
@@ -853,7 +854,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
 
     if (!multiples_settings.matrix.enabled){
         header.find(".eea-icon-sort-alpha-asc").remove();
-        jQuery("<span>")
+        var sort_btn = jQuery("<span>")
           .attr('title', 'Sort options')
           .addClass('eea-icon daviz-menuicon').addClass('eea-icon-sort-alpha-asc')
           .insertAfter(removeSpan)
@@ -1023,10 +1024,11 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 }
              });
           });
+        extra_btns.push(sort_btn);
     }
     header.find(".eea-icon-table").remove();
     if (multiples_settings.possibleMatrix){
-        jQuery("<span>")
+        var matrix_btn = jQuery("<span>")
           .attr("title", "Grid adjustments")
           .addClass('eea-icon daviz-menuicon').addClass('eea-icon-table')
           .insertAfter(removeSpan)
@@ -1182,9 +1184,10 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 }
             });
           });
+        extra_btns.push(matrix_btn);
     }
     header.find(".eea-icon-gear").remove();
-    jQuery("<span>")
+    var settings_btn = jQuery("<span>")
       .attr('title', 'Size adjustments')
       .addClass('eea-icon daviz-menuicon').addClass('eea-icon-gear')
       .insertAfter(removeSpan)
@@ -1311,6 +1314,15 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             }
         });
       });
+    extra_btns.push(settings_btn);
+    if (header.data("header-minimized")){
+        var visible_elements = header.data("visible-elements");
+        for (i = 0; i < extra_btns.length; i++){
+            extra_btns[i].hide();
+            visible_elements.push(extra_btns[i]);
+        }
+        header.data("visible-elements", visible_elements);
+    }
 
     container.empty();
     var settings = {
@@ -1480,66 +1492,66 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         .appendTo(horizontalHeaders[i]);
                 }
             }
-                jQuery(".multiples-preview-sm-header").sortable({
-                    placeholder: 'ui-state-highlight',
-                    forcePlaceholderSize: true,
-                    opacity: 0.7,
-                    delay: 300,
-                    cursor: 'crosshair',
-                    tolerance: 'pointer',
-                    start: function(event, ui){
-                        var sortableArea = jQuery(this);
-                        var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
-                        var clean_charts_columns = [];
-                        for (var i = 0; i < sorted_charts_columns_str.length; i++){
-                            if (sorted_charts_columns_str[i] !== ""){
-                                clean_charts_columns.push(sorted_charts_columns_str[i]);
-                            }
+            jQuery(".multiples-preview-sm-header").sortable({
+                placeholder: 'ui-state-highlight',
+                forcePlaceholderSize: true,
+                opacity: 0.7,
+                delay: 300,
+                cursor: 'crosshair',
+                tolerance: 'pointer',
+                start: function(event, ui){
+                    var sortableArea = jQuery(this);
+                    var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
+                    var clean_charts_columns = [];
+                    for (var i = 0; i < sorted_charts_columns_str.length; i++){
+                        if (sorted_charts_columns_str[i] !== ""){
+                            clean_charts_columns.push(sorted_charts_columns_str[i]);
                         }
-                        jQuery(this).data("original-order", clean_charts_columns);
-                    },
-                    update: function(event, ui){
-                        var base_chart = jQuery(this).parent().attr("base_chart");
-                        var sortableArea = jQuery(this);
-                        var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
-                        var clean_charts_columns = [];
-                        var i;
-                        for (i = 0; i < sorted_charts_columns_str.length; i++){
-                            if (sorted_charts_columns_str[i] !== ""){
-                                clean_charts_columns.push(sorted_charts_columns_str[i]);
-                            }
-                        }
-                        var moved_element = jQuery(event.toElement).attr("original-value");
-                        var originalPosition = jQuery.inArray(moved_element, jQuery(this).data("original-order"));
-                        var newPosition = jQuery.inArray(moved_element, clean_charts_columns);
-                        var widget = jQuery("#multiples_"+base_chart).data("widget");
-                        var tmp_settings = JSON.parse(widget.settings.multiples_settings);
-                        var direction = "horizontal";
-                        if (jQuery(this).hasClass("multiples-preview-sm-header-vertical")){
-                            direction = "vertical";
-                        }
-                        var positions_to_move = [];
-                        for (i = 0; i < tmp_settings.charts.length; i++){
-                            if (tmp_settings.charts[i].possibleLabels[direction].value === moved_element){
-                                positions_to_move.push(i);
-                            }
-                        }
-                        var move_to = newPosition - originalPosition;
-                        if (direction !== "horizontal"){
-                            var row_length = tmp_settings.charts.length / clean_charts_columns.length;
-                            move_to = move_to * row_length;
-                        }
-                        for (i = 0; i < positions_to_move.length; i++){
-                            var item_nr = i;
-                            if (move_to > 0){
-                                item_nr = (positions_to_move.length - 1) - i;
-                            }
-                            tmp_settings.charts.splice(positions_to_move[item_nr] + move_to, 0, tmp_settings.charts.splice(positions_to_move[item_nr],1)[0]);
-                        }
-                        widget.settings.multiples_settings = JSON.stringify(tmp_settings);
-                        widget.save(false, true);
                     }
-                });
+                    jQuery(this).data("original-order", clean_charts_columns);
+                },
+                update: function(event, ui){
+                    var base_chart = jQuery(this).parent().attr("base_chart");
+                    var sortableArea = jQuery(this);
+                    var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
+                    var clean_charts_columns = [];
+                    var i;
+                    for (i = 0; i < sorted_charts_columns_str.length; i++){
+                        if (sorted_charts_columns_str[i] !== ""){
+                            clean_charts_columns.push(sorted_charts_columns_str[i]);
+                        }
+                    }
+                    var moved_element = jQuery(event.toElement).attr("original-value");
+                    var originalPosition = jQuery.inArray(moved_element, jQuery(this).data("original-order"));
+                    var newPosition = jQuery.inArray(moved_element, clean_charts_columns);
+                    var widget = jQuery("#multiples_"+base_chart).data("widget");
+                    var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                    var direction = "horizontal";
+                    if (jQuery(this).hasClass("multiples-preview-sm-header-vertical")){
+                        direction = "vertical";
+                    }
+                    var positions_to_move = [];
+                    for (i = 0; i < tmp_settings.charts.length; i++){
+                        if (tmp_settings.charts[i].possibleLabels[direction].value === moved_element){
+                            positions_to_move.push(i);
+                        }
+                    }
+                    var move_to = newPosition - originalPosition;
+                    if (direction !== "horizontal"){
+                        var row_length = tmp_settings.charts.length / clean_charts_columns.length;
+                        move_to = move_to * row_length;
+                    }
+                    for (i = 0; i < positions_to_move.length; i++){
+                        var item_nr = i;
+                        if (move_to > 0){
+                            item_nr = (positions_to_move.length - 1) - i;
+                        }
+                        tmp_settings.charts.splice(positions_to_move[item_nr] + move_to, 0, tmp_settings.charts.splice(positions_to_move[item_nr],1)[0]);
+                    }
+                    widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+                    widget.save(false, true);
+                }
+            });
         }
         else {
             jQuery("<div>")
