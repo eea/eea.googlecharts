@@ -1319,7 +1319,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         var visible_elements = header.data("visible-elements");
         for (i = 0; i < extra_btns.length; i++){
             extra_btns[i].hide();
-            visible_elements.push(extra_btns[i]);
+            visible_elements.push(extra_btns[i][0]);
         }
         header.data("visible-elements", visible_elements);
     }
