@@ -33,7 +33,12 @@ DavizEdit.GoogleDashboards.prototype = {
     // Events
     jQuery(document).unbind('.dashboards');
     jQuery(document).bind(DavizEdit.Events.charts.changed + ".dashboards", function(evt, data){
-      self.reload(true);
+      if (self.context.is(":visible")){
+        self.reload(true);
+      }
+      else {
+        self.close();
+      }
     });
 
     jQuery(document).bind(DavizEdit.Events.dashboard.removed + ".dashboards", function(evt, data){
@@ -57,6 +62,12 @@ DavizEdit.GoogleDashboards.prototype = {
       self.settings = data;
       return self.onReload();
     });
+  },
+
+  close: function(){
+    var self = this;
+    self.active = null;
+    return self.reload(false);
   },
 
   onReload: function(){
@@ -140,8 +151,7 @@ DavizEdit.GoogleDashboards.prototype = {
 
     // Close tab
     if(options.name == self.active){
-      self.active = null;
-      return self.reload(false);
+      return self.close();
     }
 
     self.active = options.name;
