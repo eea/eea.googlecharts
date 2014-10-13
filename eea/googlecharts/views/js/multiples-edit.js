@@ -809,7 +809,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
     var removeSpan = header.find(".eea-icon-trash-o");
 
     var widget = jQuery("#multiples_"+base_chart).data("widget");
-    var extra_btns = [];
+    var extra_controls = [];
     widget.box.bind(DavizEdit.Events.charts.notifyResizeFinished + '.dashboard', function(evt, data){
         var tmp_settings = JSON.parse(widget.settings.multiples_settings);
         if (!tmp_settings.matrix.enabled){
@@ -881,7 +881,6 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                             }
                         });
                         var columnsFromSettings = getColumnsFromSettings(JSON.parse(base_chart_settings.columns));
-
                         var options = {
                             originalTable : all_rows,
                             normalColumns : columnsFromSettings.normalColumns,
@@ -889,7 +888,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                             valueColumn : columnsFromSettings.valueColumn,
                             availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
                             unpivotSettings : base_chart_settings.unpivotsettings || {},
-                            filters : {}
+                            filters : JSON.parse(base_chart_settings.row_filters)
                         };
                         var transformedTable = transformTable(options);
                         var titles = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).settings.chartTitle;
@@ -1024,7 +1023,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 }
              });
           });
-        extra_btns.push(sort_btn);
+        extra_controls.push(sort_btn);
     }
     header.find(".eea-icon-table").remove();
     if (multiples_settings.possibleMatrix){
@@ -1184,7 +1183,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 }
             });
           });
-        extra_btns.push(matrix_btn);
+        extra_controls.push(matrix_btn);
     }
     header.find(".eea-icon-gear").remove();
     var settings_btn = jQuery("<span>")
@@ -1314,12 +1313,38 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             }
         });
       });
-    extra_btns.push(settings_btn);
+    extra_controls.push(settings_btn);
+    if (multiples_settings.possibleMatrix && multiples_settings.matrix.enabled && (multiples_settings.matrix.headers.left.enabled || multiples_settings.matrix.headers.right.enabled)){
+        var vwlabel = jQuery("<span>")
+            .css("margin-left", "20px")
+            .text("Headers width on Y:")
+            .appendTo(header);
+        var vwinput = jQuery("<input>")
+            .attr("type", "number")
+            .attr("name", "y-headers-width")
+            .attr("value", multiples_settings.matrix.headers.left.width)
+            .appendTo(header)
+            .change(function(){
+                var base_chart = jQuery(this).closest(".dashboard-chart").find(".multiples-preview").attr("base_chart");
+                var widget = jQuery("#multiples_"+base_chart).data("widget");
+                var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                tmp_settings.matrix.headers.left.width = parseInt(jQuery(this).attr("value"), 10);
+                tmp_settings.matrix.headers.right.width = parseInt(jQuery(this).attr("value"), 10);
+                widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+                widget.save(false, true);
+            });
+        var vwpx = jQuery("<span>")
+            .text("px")
+            .appendTo(header);
+        extra_controls.push(vwlabel);
+        extra_controls.push(vwinput);
+        extra_controls.push(vwpx);
+    }
     if (header.data("header-minimized")){
         var visible_elements = header.data("visible-elements");
-        for (i = 0; i < extra_btns.length; i++){
-            extra_btns[i].hide();
-            visible_elements.push(extra_btns[i][0]);
+        for (i = 0; i < extra_controls.length; i++){
+            extra_controls[i].hide();
+            visible_elements.push(extra_controls[i][0]);
         }
         header.data("visible-elements", visible_elements);
     }
@@ -1417,7 +1442,6 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                     .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
                 verticalHeaders.push(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-left");
             }
-
             jQuery("<div>")
                 .addClass("multiples-preview-sm-area")
                 .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
@@ -1449,6 +1473,41 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                     .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
                 horizontalHeaders.push(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-bottom");
             }
+            jQuery(".multiples-preview-sm-header-vertical").resizable({
+                handles:"e",
+                resize: function(){
+                    var preview = jQuery(this).closest(".multiples-preview");
+                    var multiplier = 0;
+                    if (preview.find(".multiples-preview-sm-header-left").length === 1){
+                        multiplier++;
+                    }
+                    if (preview.find(".multiples-preview-sm-header-right").length === 1){
+                        multiplier++;
+                    }
+                    preview.find(".multiples-preview-sm-header-left").eq(0).width(jQuery(this).width());
+                    preview.find(".multiples-preview-sm-header-right").eq(0).width(jQuery(this).width());
+                    preview.find(".multiples-preview-sm-header-vertical").find(".multiples-preview-sm-header-item").width(jQuery(this).width() - 3);
+                    preview.find(".multiples-preview-sm-header-item-left-placeholder").width(jQuery(this).width() - 3);
+                    preview.find(".multiples-preview-sm-header-item-right-placeholder").width(jQuery(this).width() - 3);
+                    var areaWidth = preview.find(".multiples-preview-sm-area").width();
+                    preview.closest(".dashboard-chart").find("input[name='width']").attr("value", jQuery(this).width() * multiplier + areaWidth + 20);
+                    preview.closest(".dashboard-chart").find("input[name='y-headers-width']").attr("value", jQuery(this).width() - 3);
+                    preview.closest(".dashboard-chart").width(jQuery(this).width() * multiplier + areaWidth + 20);
+                    preview.parent().width(jQuery(this).width() * multiplier + areaWidth + 20);
+                },
+                stop: function(){
+                    var base_chart = jQuery(this).parent().attr("base_chart");
+                    var widget = jQuery("#multiples_"+base_chart).data("widget");
+                    var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                    var preview = jQuery(this).closest(".multiples-preview");
+                    tmp_settings.matrix.headers.left.width = jQuery(this).width() - 3;
+                    tmp_settings.matrix.headers.right.width = jQuery(this).width() - 3;
+                    widget.settings.dashboard.width = preview.closest(".dashboard-chart").find("input[name='width']").attr("value");
+                    widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+                    widget.save(false, false);
+                }
+            });
+
             var i, j, label;
             for (i = 0; i < verticalHeaders.length; i++){
                 for (j = 0; j < smmatrixheaders.verticals.values.length; j++){
@@ -1469,6 +1528,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 if (left_enabled) {
                     jQuery("<div>")
                         .addClass("multiples-preview-sm-header-item")
+                        .addClass("multiples-preview-sm-header-item-left-placeholder")
                         .width(multiples_settings.matrix.headers.left.width)
                         .appendTo(horizontalHeaders[i]);
                 }
@@ -1488,6 +1548,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 if (right_enabled) {
                     jQuery("<div>")
                         .addClass("multiples-preview-sm-header-item")
+                        .addClass("multiples-preview-sm-header-item-right-placeholder")
                         .width(multiples_settings.matrix.headers.right.width)
                         .appendTo(horizontalHeaders[i]);
                 }

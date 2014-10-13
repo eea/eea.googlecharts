@@ -608,10 +608,6 @@ DavizEdit.GoogleDashboardWidget.prototype = {
     self.box.unbind('.dashboard');
     self.box.unbind('dblclick');
 
-    self.box.bind('dblclick', function(){
-      self.handle_edit();
-    });
-
     // Resize
     self.box.bind(DavizEdit.Events.charts.resized + '.dashboard', function(evt, data){
       self.handle_resize(data);
