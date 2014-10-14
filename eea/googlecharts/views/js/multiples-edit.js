@@ -799,78 +799,39 @@ function redrawPreviewChart(base_chart, chartSettings){
             }
         });
 }
+function showSortDialog(options){
+    jQuery("#multiples-sort").remove();
+    var sortDialog = jQuery("<div>")
+        .attr("id","multiples-sort");
+    var controlsDiv = jQuery("<div class='sort-controls'> </div>");
+    controlsDiv.append("<input value='Cancel' class='btn btn-inverse' type='button'/>");
+    controlsDiv.append("<input value='Apply sort' class='btn btn-success' type='button'/>");
+    controlsDiv.append("<div style='clear:both'> </div>");
+    controlsDiv.appendTo(sortDialog);
+    sortDialog.dialog({
+        dialogClass: "googlechart-dialog googlechart-preview-dialog",
+        modal: true,
+        title: "Sort options",
+        open: function(){
+            jQuery(".sort-controls .btn-success").bind("click", function(){
+                jQuery("#multiples-sort").dialog("close");
+            });
+            jQuery(".sort-controls .btn-inverse").bind("click", function(){
+                jQuery("#multiples-sort").dialog("close");
+            });
 
-jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, multiples_settings){
-    var charts = multiples_settings.charts;
-    var common_settings = multiples_settings.settings;
-    var container = jQuery(".multiples-preview[base_chart='" + base_chart + "']");
-    var absolute_url = container.attr("absolute_url");
-    var header = container.closest(".dashboard-chart").find(".dashboard-header");
-    var removeSpan = header.find(".eea-icon-trash-o");
-
-    var widget = jQuery("#multiples_"+base_chart).data("widget");
-    var extra_controls = [];
-    widget.box.bind(DavizEdit.Events.charts.notifyResizeFinished + '.dashboard', function(evt, data){
-        var tmp_settings = JSON.parse(widget.settings.multiples_settings);
-        if (!tmp_settings.matrix.enabled){
-            return;
+            jQuery.getJSON(options.absolute_url + "/googlechart.get_charts_json", function(data){
+                var base_chart_settings;
+                jQuery.each(data, function(idx, chart){
+                    if (chart.id === options.base_chart){
+                        base_chart_settings = chart;
+                    }
+                });
+            });
         }
-        function recalculateSize(oldSize, oldFullSize, oldChartsAreaSize, newFullSize){
-            oldFullSize = oldFullSize - 20;
-            newFullSize = newFullSize - 20;
-            return (newFullSize - (oldFullSize - oldChartsAreaSize)) / (oldChartsAreaSize / oldSize);
-        }
-
-        tmp_settings.settings.width = recalculateSize(tmp_settings.settings.width,
-                                    widget.settings.dashboard.width,
-                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").width(),
-                                    parseInt(data.width || widget.settings.dashboard.width, 10));
-        tmp_settings.settings.height = recalculateSize(tmp_settings.settings.height,
-                                    widget.settings.dashboard.height,
-                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").height(),
-                                    parseInt(data.height || widget.settings.dashboard.height, 10));
-
-        tmp_settings.settings.chartAreaWidth = recalculateSize(tmp_settings.settings.chartAreaWidth,
-                                    widget.settings.dashboard.width,
-                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").width(),
-                                    parseInt(data.width || widget.settings.dashboard.width, 10));
-        tmp_settings.settings.chartAreaHeight = recalculateSize(tmp_settings.settings.chartAreaHeight,
-                                    widget.settings.dashboard.height,
-                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").height(),
-                                    parseInt(data.height || widget.settings.dashboard.height, 10));
-
-        tmp_settings.settings.chartAreaLeft = recalculateSize(tmp_settings.settings.chartAreaLeft,
-                                    widget.settings.dashboard.width,
-                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").width(),
-                                    parseInt(data.width || widget.settings.dashboard.width, 10));
-        tmp_settings.settings.chartAreaTop = recalculateSize(tmp_settings.settings.chartAreaTop,
-                                    widget.settings.dashboard.height,
-                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").height(),
-                                    parseInt(data.height || widget.settings.dashboard.height, 10));
-
-        widget.settings.multiples_settings = JSON.stringify(tmp_settings);
-
     });
 
-    if (!multiples_settings.matrix.enabled){
-        header.find(".eea-icon-sort-alpha-asc").remove();
-        var sort_btn = jQuery("<span>")
-          .attr('title', 'Sort options')
-          .addClass('eea-icon daviz-menuicon').addClass('eea-icon-sort-alpha-asc')
-          .insertAfter(removeSpan)
-          .click(function(){
-            jQuery("#multiples-sort").remove();
-            var sortDialog = jQuery("<div>")
-                .attr("id","multiples-sort");
-            var controlsDiv = jQuery("<div class='sort-controls'> </div>");
-            controlsDiv.append("<input value='Cancel' class='btn btn-inverse' type='button'/>");
-            controlsDiv.append("<input value='Apply sort' class='btn btn-success' type='button'/>");
-            controlsDiv.append("<div style='clear:both'> </div>");
-            controlsDiv.appendTo(sortDialog);
-            sortDialog.dialog({
-                dialogClass: "googlechart-dialog googlechart-preview-dialog",
-                modal: true,
-                title: "Sort options",
+/*                
                 open: function(){
                     jQuery.getJSON(absolute_url + "/googlechart.get_charts_json", function(data){
                         var sort_options = [];
@@ -1021,7 +982,75 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         jQuery("#multiples-sort").dialog("close");
                     });
                 }
-             });
+             });*/
+}
+jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, multiples_settings){
+    var charts = multiples_settings.charts;
+    var common_settings = multiples_settings.settings;
+    var container = jQuery(".multiples-preview[base_chart='" + base_chart + "']");
+    var absolute_url = container.attr("absolute_url");
+    var header = container.closest(".dashboard-chart").find(".dashboard-header");
+    var removeSpan = header.find(".eea-icon-trash-o");
+
+    var widget = jQuery("#multiples_"+base_chart).data("widget");
+    var extra_controls = [];
+    widget.box.bind(DavizEdit.Events.charts.notifyResizeFinished + '.dashboard', function(evt, data){
+        var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+        if (!tmp_settings.matrix.enabled){
+            return;
+        }
+        function recalculateSize(oldSize, oldFullSize, oldChartsAreaSize, newFullSize){
+            oldFullSize = oldFullSize - 20;
+            newFullSize = newFullSize - 20;
+            return (newFullSize - (oldFullSize - oldChartsAreaSize)) / (oldChartsAreaSize / oldSize);
+        }
+
+        tmp_settings.settings.width = recalculateSize(tmp_settings.settings.width,
+                                    widget.settings.dashboard.width,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").width(),
+                                    parseInt(data.width || widget.settings.dashboard.width, 10));
+        tmp_settings.settings.height = recalculateSize(tmp_settings.settings.height,
+                                    widget.settings.dashboard.height,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").height(),
+                                    parseInt(data.height || widget.settings.dashboard.height, 10));
+
+        tmp_settings.settings.chartAreaWidth = recalculateSize(tmp_settings.settings.chartAreaWidth,
+                                    widget.settings.dashboard.width,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").width(),
+                                    parseInt(data.width || widget.settings.dashboard.width, 10));
+        tmp_settings.settings.chartAreaHeight = recalculateSize(tmp_settings.settings.chartAreaHeight,
+                                    widget.settings.dashboard.height,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").height(),
+                                    parseInt(data.height || widget.settings.dashboard.height, 10));
+
+        tmp_settings.settings.chartAreaLeft = recalculateSize(tmp_settings.settings.chartAreaLeft,
+                                    widget.settings.dashboard.width,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").width(),
+                                    parseInt(data.width || widget.settings.dashboard.width, 10));
+        tmp_settings.settings.chartAreaTop = recalculateSize(tmp_settings.settings.chartAreaTop,
+                                    widget.settings.dashboard.height,
+                                    jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area").height(),
+                                    parseInt(data.height || widget.settings.dashboard.height, 10));
+
+        widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+
+    });
+
+    if (!multiples_settings.matrix.enabled){
+        header.find(".eea-icon-sort-alpha-asc").remove();
+        var sort_btn = jQuery("<span>")
+          .attr('title', 'Sort options')
+          .addClass('eea-icon daviz-menuicon').addClass('eea-icon-sort-alpha-asc')
+          .insertAfter(removeSpan)
+          .click(function(){
+            var base_chart = jQuery(this).closest(".dashboard-chart").find(".multiples-preview").attr("base_chart");
+            var absolute_url = jQuery(".multiples-preview[base_chart='" + base_chart + "']").attr("absolute_url");
+            var options = {
+                type : 'all',
+                base_chart : base_chart,
+                absolute_url : absolute_url
+            };
+            showSortDialog(options);
           });
         extra_controls.push(sort_btn);
     }
@@ -1619,6 +1648,24 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 .addClass("multiples-preview-sm-area")
                 .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
         }
+        jQuery("<span>")
+            .addClass("eea-icon daviz-menuicon eea-icon-sort-alpha-asc")
+            .css("float", "right")
+            .appendTo(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-item:not(.multiples-preview-sm-header-item-left-placeholder)")
+            .click(function(){
+                var base_chart = jQuery(this).closest(".dashboard-chart").find(".multiples-preview").attr("base_chart");
+                var absolute_url = jQuery(".multiples-preview[base_chart='" + base_chart + "']").attr("absolute_url");
+                var options = {
+                    type : 'column',
+                    direction : 'horizontal',
+                    base_chart : base_chart,
+                    absolute_url : absolute_url
+                };
+                if (jQuery(this).parent().parent().hasClass("multiples-preview-sm-header-vertical")){
+                    options.direction = 'vertical';
+                }
+                showSortDialog(options);
+            });
         var smcharts_settings = {
             container: jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area"),
             smc_item_settings: {
