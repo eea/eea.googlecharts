@@ -3,6 +3,8 @@ Changelog
 
 11.4-dev - (unreleased)
 -----------------------
+* Feature: Added manual sort for small multiples
+  [szabozo0 refs #20948]
 
 11.3 - (2014-10-03)
 -------------------

@@ -955,7 +955,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
 
     });
 
-    if (!multiples_settings.matrix.enabled){
+/*temporary disable wip   if (!multiples_settings.matrix.enabled){
         header.find(".eea-icon-sort-alpha-asc").remove();
         var sort_btn = jQuery("<span>")
           .attr('title', 'Sort options')
@@ -972,7 +972,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             showSortDialog(options);
           });
         extra_controls.push(sort_btn);
-    }
+    }*/
     header.find(".eea-icon-table").remove();
     if (multiples_settings.possibleMatrix){
         var matrix_btn = jQuery("<span>")
@@ -1567,7 +1567,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 .addClass("multiples-preview-sm-area")
                 .appendTo(".multiples-preview[base_chart='" + base_chart + "']");
         }
-        jQuery("<span>")
+/*temporary disable wip        jQuery("<span>")
             .addClass("eea-icon daviz-menuicon eea-icon-sort-alpha-asc")
             .css("float", "right")
             .appendTo(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-header-item:not(.multiples-preview-sm-header-item-left-placeholder)")
@@ -1584,7 +1584,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                     options.direction = 'vertical';
                 }
                 showSortDialog(options);
-            });
+            }); */
         var smcharts_settings = {
             container: jQuery(".multiples-preview[base_chart='" + base_chart + "'] .multiples-preview-sm-area"),
             smc_item_settings: {
