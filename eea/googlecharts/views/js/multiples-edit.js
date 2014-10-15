@@ -802,7 +802,8 @@ function redrawPreviewChart(base_chart, chartSettings){
 function showSortDialog(options){
     jQuery("#multiples-sort").remove();
     var sortDialog = jQuery("<div>")
-        .attr("id","multiples-sort");
+        .attr("id","multiples-sort")
+        .data("options", options);
     var controlsDiv = jQuery("<div class='sort-controls'> </div>");
     controlsDiv.append("<input value='Cancel' class='btn btn-inverse' type='button'/>");
     controlsDiv.append("<input value='Apply sort' class='btn btn-success' type='button'/>");
@@ -821,169 +822,87 @@ function showSortDialog(options){
             });
 
             jQuery.getJSON(options.absolute_url + "/googlechart.get_charts_json", function(data){
+                var i,j;
                 var base_chart_settings;
                 jQuery.each(data, function(idx, chart){
+                    var options = jQuery("#multiples-sort").data("options");
                     if (chart.id === options.base_chart){
                         base_chart_settings = chart;
                     }
                 });
+                var columnsFromSettings = getColumnsFromSettings(JSON.parse(base_chart_settings.columns));
+                var options = {
+                    originalTable : all_rows,
+                    normalColumns : columnsFromSettings.normalColumns,
+                    pivotingColumns : columnsFromSettings.pivotColumns,
+                    valueColumn : columnsFromSettings.valueColumn,
+                    availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
+                    unpivotSettings : base_chart_settings.unpivotsettings || {},
+                    filters : JSON.parse(base_chart_settings.row_filters)
+                };
+                transformedTable = transformTable(options);
+                options = {
+                    originalDataTable : transformedTable,
+                    columns : columnsFromSettings.columns,
+                    sortBy : base_chart_settings.sortBy,
+                    sortAsc : base_chart_settings.sortAsc,
+                    preparedColumns : JSON.parse(base_chart_settings.columns).prepared
+                };
+
+                var tableForChart = prepareForChart(options);
+
+                var headers = [];
+                var values = [];
+                for (i = 0; i < tableForChart.getNumberOfColumns(); i++){
+                    var header = {};
+                    header.id = tableForChart.getColumnId(i);
+                    header.label = tableForChart.getColumnLabel(i);
+                    headers.push(header);
+                }
+                for (i = 0; i < tableForChart.getNumberOfRows(); i++){
+                    var row = [];
+                    for (j = 0; j < tableForChart.getNumberOfColumns(); j++){
+                        row.push(tableForChart.getValue(i, j));
+                    }
+                    values.push(row);
+                }
+                jQuery("<table>")
+                    .disableSelection()
+                    .appendTo("#multiples-sort");
+                jQuery("<tr>")
+                    .addClass("table-head")
+                    .appendTo("#multiples-sort table");
+                for (i = 0; i < headers.length; i++){
+                    jQuery("<th>")
+                        .text(headers[i].label)
+                        .attr("col-id", headers[i].id)
+                        .attr("col-nr", i)
+                        .appendTo("#multiples-sort table tr.table-head");
+                }
+                for (i = 0; i < values.length; i++){
+                    jQuery("<tr>")
+                        .attr("row-nr", i)
+                        .appendTo("#multiples-sort table");
+                    for (j = 0; j < values[i].length; j++){
+                        jQuery("<td>")
+                            .addClass("selectable-element")
+                            .attr("row-nr", i)
+                            .attr("col-nr", j)
+                            .text(values[i][j])
+                            .appendTo("#multiples-sort table tr[row-nr='"+i+"']");
+                    }
+                }
+                jQuery(".selectable-element").click(function(){
+                    jQuery(".selected-element")
+                        .removeClass("selected-element");
+                    jQuery(this)
+                        .addClass("selected-element");
+                });
             });
         }
     });
-
-/*                
-                open: function(){
-                    jQuery.getJSON(absolute_url + "/googlechart.get_charts_json", function(data){
-                        var sort_options = [];
-                        var base_chart_settings;
-                        jQuery.each(data, function(idx, chart){
-                            if (chart.id === base_chart){
-                                base_chart_settings = chart;
-                            }
-                        });
-                        var columnsFromSettings = getColumnsFromSettings(JSON.parse(base_chart_settings.columns));
-                        var options = {
-                            originalTable : all_rows,
-                            normalColumns : columnsFromSettings.normalColumns,
-                            pivotingColumns : columnsFromSettings.pivotColumns,
-                            valueColumn : columnsFromSettings.valueColumn,
-                            availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
-                            unpivotSettings : base_chart_settings.unpivotsettings || {},
-                            filters : JSON.parse(base_chart_settings.row_filters)
-                        };
-                        var transformedTable = transformTable(options);
-                        var titles = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).settings.chartTitle;
-                        if (titles !== ""){
-                            sort_options.push({
-                                value:"asc_by_title",
-                                text:"Asc by Title",
-                                type:"title",
-                                direction:"asc"
-                            });
-                            sort_options.push({
-                                value:"desc_by_title",
-                                text:"Desc by Title",
-                                type:"title",
-                                direction:"desc"
-                            });
-                        }
-                        var i;
-                        if (JSON.parse(base_chart_settings.config).chartType === 'PieChart'){
-                            var base_columns = JSON.parse(base_chart_settings.columns).prepared;
-                            var first_column = "";
-                            for (i = 0; i < base_columns.length; i++){
-                                if ((base_columns[i].status === 1) && (first_column === "")){
-                                    first_column = base_columns[i].name;
-                                }
-                            }
-                            for (i = 0; i < transformedTable.items.length; i++){
-                                sort_options.push({
-                                    value:"asc_by_row_" + transformedTable.items[i][first_column],
-                                    text:"Asc by row " + transformedTable.items[i][first_column],
-                                    type:"row",
-                                    direction:"asc",
-                                    column:first_column,
-                                    row: transformedTable.items[i][first_column]
-                                });
-                                sort_options.push({
-                                    value:"desc_by_row_" + transformedTable.items[i][first_column],
-                                    text:"Desc by row " + transformedTable.items[i][first_column],
-                                    type:"row",
-                                    direction:"desc",
-                                    column:first_column,
-                                    row: transformedTable.items[i][first_column]
-                                });
-                            }
-                        }
-                        jQuery("<label>")
-                            .text("Sort small multiple charts by:")
-                            .appendTo("#multiples-sort");
-                        jQuery("<select>")
-                            .addClass("multiples-sort-types")
-                            .appendTo("#multiples-sort");
-                        jQuery("<option>")
-                            .text("(nothing selected)")
-                            .data("sort_settings", {type:"nothing"})
-                            .attr("selected", "selected")
-                            .appendTo(".multiples-sort-types");
-                        for (i = 0; i < sort_options.length; i++){
-                            jQuery("<option>")
-                                .text(sort_options[i].text)
-                                .attr("value", sort_options[i].value)
-                                .data("sort_settings", sort_options[i])
-                                .appendTo(".multiples-sort-types");
-                        }
-                        jQuery(".sort-controls .btn-success").data("transformedTable", transformedTable);
-                    });
-                    jQuery(".sort-controls .btn-success").bind("click", function(){
-                        var i;
-                        var selectedSort = jQuery(".multiples-sort-types option:selected").attr("value");
-                        var selectedSortSettings = jQuery(".multiples-sort-types option:selected").data("sort_settings");
-                        var charts = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).charts;
-                        var charts_for_sort = [];
-                        chart_title = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).settings.chartTitle;
-                        var transformedTable = jQuery(".sort-controls .btn-success").data("transformedTable");
-                        jQuery.each(charts, function(idx, chart){
-                            var tmp_chart = {};
-                            tmp_chart.chart = chart;
-                            tmp_chart.sort_value = chart_title;
-                            var vertical_str = tmp_chart.chart.possibleLabels.vertical.value;
-                            if (tmp_chart.chart.possibleLabels.vertical.type === "column"){
-                                vertical_str = transformedTable.available_columns[vertical_str];
-                            }
-                            var horizontal_str = tmp_chart.chart.possibleLabels.horizontal.value;
-                            if (tmp_chart.chart.possibleLabels.horizontal.type === "column"){
-                                horizontal_str = transformedTable.available_columns[horizontal_str];
-                            }
-
-                            tmp_chart.sort_value = tmp_chart.sort_value.split("{Y}").join(vertical_str).split("{X}").join(horizontal_str);
-                            charts_for_sort.push(tmp_chart);
-                        });
-                        if (selectedSortSettings.type === "row"){
-                            var selectedRow;
-                            for (i = 0; i < transformedTable.items.length; i++){
-                                if ((transformedTable.items[i][selectedSortSettings.column] === selectedSortSettings.row) && (selectedRow === undefined)){
-                                    selectedRow = transformedTable.items[i];
-                                }
-                            }
-                            for (i = 0; i < charts_for_sort.length; i++){
-                                charts_for_sort[i].sort_value = selectedRow[charts_for_sort[i].chart[1]];
-                            }
-                        }
-                        charts_for_sort.sort(function(a, b){
-                            if (a.sort_value > b.sort_value){
-                                return 1;
-                            }
-                            if (a.sort_value < b.sort_value){
-                                return -1;
-                            }
-                            if (a.sort_value === b.sort_value){
-                                return 0;
-                            }
-                        });
-                        for (i = 0; i < charts_for_sort.length; i++){
-                            delete charts_for_sort[i].sort_value;
-                        }
-                        var sorted_charts = [];
-                        for (i = 0; i < charts_for_sort.length; i++){
-                            sorted_charts.push(charts_for_sort[i].chart);
-                        }
-                        if (selectedSortSettings.direction === "desc"){
-                            sorted_charts.reverse();
-                        }
-                        var widget = jQuery("#multiples_"+base_chart).data("widget");
-                        var tmp_settings = JSON.parse(widget.settings.multiples_settings);
-                        tmp_settings.charts = sorted_charts;
-                        widget.settings.multiples_settings = JSON.stringify(tmp_settings);
-                        jQuery("#multiples-sort").dialog("close");
-                        widget.save(false, true);
-                    });
-                    jQuery(".sort-controls .btn-inverse").bind("click", function(){
-                        jQuery("#multiples-sort").dialog("close");
-                    });
-                }
-             });*/
 }
+
 jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, multiples_settings){
     var charts = multiples_settings.charts;
     var common_settings = multiples_settings.settings;

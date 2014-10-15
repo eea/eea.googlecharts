@@ -2275,3 +2275,18 @@ div.field[id*='multiples_settings'] {
 .multiples-preview-sm-area {
     float:left;
 }
+
+#multiples-sort table th,
+#multiples-sort table td{
+    text-align:left;
+    border:1px solid gray;
+}
+
+#multiples-sort .selectable-element{
+    cursor:pointer;
+    background-color:rgba(208,228,173,0.5);
+}
+
+#multiples-sort .selected-element{
+    background-color:rgba(208,228,173,1);
+}
