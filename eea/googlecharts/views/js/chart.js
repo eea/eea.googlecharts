@@ -748,6 +748,7 @@ function openChartDialog(evt) {
             }
             new_chart.setOption('chartArea', chartArea);
             new_chart.setOption('legend', original_settings.misc.legend);
+            new_chart.setOption('enableInteractivity', true);
             new_chart.draw();
             $(this).dialog( "option", "position", { my: "center", at: "center", of: window });
         },
