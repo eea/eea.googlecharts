@@ -1,8 +1,11 @@
 Changelog
 =========
 
-11.4-dev - (unreleased)
+11.5-dev - (unreleased)
 -----------------------
+
+11.4 - (2014-10-15)
+-------------------
 * Feature: Added manual sort for small multiples
   [szabozo0 refs #20948]
 
