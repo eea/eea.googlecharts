@@ -30,10 +30,18 @@
     </head>
     <body onhashchange="hashchanged();" style="margin:0">
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
-        <a tal:condition="python:not inline" style="float:right" class="go-to-original-link"
-           tal:attributes="href view/context/absolute_url"
-           i18n:translate=""
-           target="_top">Explore data</a>
+        <div class="googlechart-notes"
+                tal:define="chart view/get_chart">
+            <a tal:condition="python:not inline" style="float:right" class="go-to-original-link"
+                   tal:attributes="href view/context/absolute_url"
+                   i18n:translate=""
+                   target="_top">Explore data</a>
+            <a tal:attributes="href string:${view/context/absolute_url}/download.csv">CSV</a>
+            <a tal:attributes="href string:${view/context/absolute_url}/download.tsv">TSV</a>
+            <a tal:attributes="href string:${chart/id}.png/download">PNG</a>
+            <a tal:attributes="href string:${chart/id}.svg/download">SVG</a>
+
+        </div>
     </body>
 </html>
 

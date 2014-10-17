@@ -18,8 +18,6 @@
     <style type="text/css">
         #googlechart_full > div > div {overflow:hidden ! important;}
         #googlechart_filters {margin-top:0px !important;}
-        .googlechart_full > div > div {overflow:hidden ! important;}
-        .googlechart_filters {margin-top:0px !important;}
         body {margin:1px; overflow: hidden;}
     </style>
 
