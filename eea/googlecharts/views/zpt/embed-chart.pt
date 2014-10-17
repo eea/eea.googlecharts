@@ -36,10 +36,27 @@
                    tal:attributes="href view/context/absolute_url"
                    i18n:translate=""
                    target="_top">Explore data</a>
-            <a tal:attributes="href string:${view/context/absolute_url}/download.csv">CSV</a>
-            <a tal:attributes="href string:${view/context/absolute_url}/download.tsv">TSV</a>
-            <a tal:attributes="href string:${chart/id}.png/download">PNG</a>
-            <a tal:attributes="href string:${chart/id}.svg/download">SVG</a>
+
+            <div class="googlechart-downloads">
+                <a tal:attributes="href string:${view/context/absolute_url}/download.csv">CSV</a>
+                <a tal:attributes="href string:${view/context/absolute_url}/download.tsv">TSV</a>
+                <a tal:attributes="href string:${chart/id}.png/download">PNG</a>
+                <a tal:attributes="href string:${chart/id}.svg/download">SVG</a>
+            </div>
+            <div tal:define="info view/context/@@data.info | python:{}" tal:condition="info" class="visualization-info">
+                <tal:provenances
+                        define="provenances info/provenances | python:[]">
+                    <tal:provenance repeat="provenance provenances">
+                        <tal:owner
+                                define="owner provenance/owner | python:{}"
+                                condition="owner/url | nothing" >
+                            provided by <a tal:attributes="href owner/url"
+                                tal:content="owner/title | owner/url" />
+                        </tal:owner>
+                        <br/>
+                    </tal:provenance>
+                </tal:provenances>
+            </div>
 
         </div>
     </body>
