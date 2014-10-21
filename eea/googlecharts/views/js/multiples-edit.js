@@ -921,7 +921,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         function recalculateSize(oldSize, oldFullSize, oldChartsAreaSize, newFullSize){
             oldFullSize = oldFullSize - 20;
             newFullSize = newFullSize - 20;
-            return parseInt((newFullSize - (oldFullSize - oldChartsAreaSize)) / (oldChartsAreaSize / oldSize));
+            return parseInt((newFullSize - (oldFullSize - oldChartsAreaSize)) / (oldChartsAreaSize / oldSize), 10);
         }
 
         tmp_settings.settings.width = recalculateSize(tmp_settings.settings.width,
