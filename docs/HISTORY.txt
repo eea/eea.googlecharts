@@ -3,6 +3,8 @@ Changelog
 
 11.6-dev - (unreleased)
 -----------------------
+* Bugfix: Fixed small multiples for firefox
+  [szabozo0 refs #21482]
 
 11.5 - (2014-10-16)
 -------------------

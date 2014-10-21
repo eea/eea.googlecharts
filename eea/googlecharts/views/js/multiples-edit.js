@@ -921,7 +921,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         function recalculateSize(oldSize, oldFullSize, oldChartsAreaSize, newFullSize){
             oldFullSize = oldFullSize - 20;
             newFullSize = newFullSize - 20;
-            return (newFullSize - (oldFullSize - oldChartsAreaSize)) / (oldChartsAreaSize / oldSize);
+            return parseInt((newFullSize - (oldFullSize - oldChartsAreaSize)) / (oldChartsAreaSize / oldSize));
         }
 
         tmp_settings.settings.width = recalculateSize(tmp_settings.settings.width,
@@ -1530,7 +1530,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                             clean_charts_columns.push(sorted_charts_columns_str[i]);
                         }
                     }
-                    var moved_element = jQuery(event.toElement).attr("original-value");
+                    var moved_element = jQuery(ui.item).attr("original-value");
                     var originalPosition = jQuery.inArray(moved_element, jQuery(this).data("original-order"));
                     var newPosition = jQuery.inArray(moved_element, clean_charts_columns);
                     var widget = jQuery("#multiples_"+base_chart).data("widget");
