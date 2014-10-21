@@ -1054,8 +1054,6 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                             tmp_settings.matrix.headers.right.enabled = true;
                         }
                         if ((tmp_settings.matrix.enabled) && (!prev_matrix_enabled)){
-
-
                             jQuery.getJSON(absolute_url + "/googlechart.get_charts_json", function(data){
                                 var sort_options = [];
                                 var base_chart_settings;
@@ -1132,6 +1130,24 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             });
           });
         extra_controls.push(matrix_btn);
+        var rotateTable = jQuery("<img>")
+            .attr("src", "../../++resource++eea.googlecharts.images/unpivot-icon.png")
+            .attr("title", "Swap X and Y axis")
+            .width(14)
+            .height(14)
+            .css("float", "right")
+            .css("margin-top", "2px")
+            .css("cursor", "pointer")
+            .insertBefore(matrix_btn)
+            .click(function(){
+                    var widget = jQuery("#multiples_"+base_chart).data("widget");
+                    var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                    tmp_settings.matrix.rotated = !tmp_settings.matrix.rotated;
+                    widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+                    jQuery("#multiples-resize").dialog("close");
+                    widget.save(false, true);
+            });
+        extra_controls.push(rotateTable);
     }
     header.find(".eea-icon-gear").remove();
     var settings_btn = jQuery("<span>")
@@ -1288,6 +1304,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         extra_controls.push(vwinput);
         extra_controls.push(vwpx);
     }
+
     if (header.data("header-minimized")){
         var visible_elements = header.data("visible-elements");
         for (i = 0; i < extra_controls.length; i++){
@@ -1296,6 +1313,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         }
         header.data("visible-elements", visible_elements);
     }
+
 
     container.empty();
     var settings = {
@@ -1355,7 +1373,9 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
 
         if (multiples_settings.matrix.enabled){
             var smmatrixheaders = getSMMatrixHeaders(multiples_settings.charts);
-
+            if (multiples_settings.matrix.rotated){
+                smmatrixheaders = rotateHeaders(smmatrixheaders);
+            }
             var horizontalHeaders = [];
             var verticalHeaders = [];
             var top_enabled = multiples_settings.matrix.headers.top.enabled;
