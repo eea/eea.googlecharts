@@ -761,32 +761,56 @@ function openChartDialog(evt) {
 
 function getSMMatrixHeaders(charts){
     var verticals = [];
+    var allVerticals = [];
     var horizontals = [];
+    var allHorizontals = [];
     var verticaltype = "column";
     var horizontaltype = "column";
     for (var i = 0; i < charts.length; i++) {
         var chart = charts[i];
         if (chart.possibleLabels.horizontal !== undefined) {
             horizontaltype = chart.possibleLabels.horizontal.type;
+            if (jQuery.inArray(chart.possibleLabels.horizontal.value, allHorizontals) === -1){
+                allHorizontals.push(chart.possibleLabels.horizontal.value); 
+            }
             if (jQuery.inArray(chart.possibleLabels.horizontal.value, horizontals) === -1){
-                horizontals.push(chart.possibleLabels.horizontal.value); 
+                var hasVisible = false;
+                for (var j = 0; j < charts.length; j++){
+                    if ((charts[j].possibleLabels.horizontal.value === chart.possibleLabels.horizontal.value) && (charts[j].enabled)){
+                        hasVisible = true;
+                    }
+                }
+                if (hasVisible){
+                    horizontals.push(chart.possibleLabels.horizontal.value); 
+                }
             }
         }
         if (chart.possibleLabels.vertical !== undefined) {
             verticaltype = chart.possibleLabels.vertical.type;
+            if (jQuery.inArray(chart.possibleLabels.vertical.value, allVerticals) === -1){
+                allVerticals.push(chart.possibleLabels.vertical.value);
+            }
             if (jQuery.inArray(chart.possibleLabels.vertical.value, verticals) === -1){
-                verticals.push(chart.possibleLabels.vertical.value); 
+                var hasVisible = false;
+                for (var j = 0; j < charts.length; j++){
+                    if ((charts[j].possibleLabels.vertical.value === chart.possibleLabels.vertical.value) && (charts[j].enabled)){
+                        hasVisible = true
+                    }
+                }
+                if (hasVisible){
+                    verticals.push(chart.possibleLabels.vertical.value);
+                }
             }
         }
     }
-    return {verticals : {type:verticaltype, values:verticals}, horizontals : {type:horizontaltype, values:horizontals}};
+    return {verticals : {type:verticaltype, values:verticals, allValues:allVerticals}, horizontals : {type:horizontaltype, values:horizontals, allValues:allHorizontals}};
 }
 
 function rotateMultiples(charts){
     var rotatedCharts = new Array(charts.length);
     var headers = getSMMatrixHeaders(charts);
-    var rowLength = headers.horizontals.values.length;
-    var colLength = headers.verticals.values.length;
+    var rowLength = headers.horizontals.allValues.length;
+    var colLength = headers.verticals.allValues.length;
     if (rowLength === 0){
         rowLength = 1;
     }
@@ -828,10 +852,23 @@ function drawSMCharts(smc_settings) {
         chart_sortAsc = false;
     }
     var charts = multiples_settings.charts;
-    if (multiples_settings.matrix.rotated){
+    var headers = getSMMatrixHeaders(charts);
+    var enabled_charts = [];
+    for (var i = 0; i < charts.length; i++){
+        if ((jQuery.inArray(charts[i].possibleLabels.horizontal.value, headers.horizontals.values) !== -1) &&
+            (jQuery.inArray(charts[i].possibleLabels.vertical.value, headers.verticals.values) !== -1)){
+            enabled_charts.push(charts[i]);
+        }
+    }
+    debugger;
+    charts = enabled_charts;
+    if ((multiples_settings.matrix !== undefined) && (multiples_settings.matrix.rotated)){
         charts = rotateMultiples(charts);
     }
     jQuery.each(charts, function(c_id, c_settings){
+        if ((!multiples_settings.matrix.enabled) && (!c_settings.enabled)){
+            return;
+        }
         var delimiters = JSON.stringify(c_settings.possibleLabels);
         var smc_container_id = settings.chartViewsDiv + '_' + getHashCode(delimiters);
         var smc_widget = jQuery('<div>', {
@@ -857,9 +894,13 @@ function drawSMCharts(smc_settings) {
             'class': 'sm-charts'
         });
         smc_container.appendTo(smc_widget);
-
         var current_table_items = filter_table(transformedTable.items, c_settings.filters);
         smc_widget.appendTo(smc_settings.container);
+        if (!c_settings.enabled){
+            smc_widget.width(multiples_settings.settings.width)
+            smc_widget.height(multiples_settings.settings.height)
+            return;
+        }
         var current_table = jQuery.extend(true, {}, transformedTable);
         current_table.items = current_table_items;
         var smc_options = {
