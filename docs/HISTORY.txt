@@ -3,6 +3,10 @@ Changelog
 
 11.6-dev - (unreleased)
 -----------------------
+* Bugfix: Fixed small multiples for firefox
+  [szabozo0 refs #21482]
+* Feature: Added quick rotate to small multiples
+  [szabozo0 refs #21483]
 
 11.5 - (2014-10-16)
 -------------------

@@ -782,6 +782,29 @@ function getSMMatrixHeaders(charts){
     return {verticals : {type:verticaltype, values:verticals}, horizontals : {type:horizontaltype, values:horizontals}};
 }
 
+function rotateMultiples(charts){
+    var rotatedCharts = new Array(charts.length);
+    var headers = getSMMatrixHeaders(charts);
+    var rowLength = headers.horizontals.values.length;
+    var colLength = headers.verticals.values.length;
+    if (rowLength === 0){
+        rowLength = 1;
+    }
+    if (colLength === 0){
+        colLength = 1;
+    }
+    for (var i = 0; i < colLength; i++){
+        for (var j = 0; j < rowLength; j++){
+            rotatedCharts[j*colLength + i] = charts[i*rowLength + j];
+        }
+    }
+    return rotatedCharts;
+}
+
+function rotateHeaders(headers){
+    return {horizontals : headers.verticals, verticals : headers.horizontals};
+}
+
 function drawSMCharts(smc_settings) {
     var chartConfig = smc_settings.chartConfig;
     var multiples_settings = smc_settings.multiples_settings;
@@ -804,7 +827,11 @@ function drawSMCharts(smc_settings) {
     if (sortAsc_str === 'desc'){
         chart_sortAsc = false;
     }
-    jQuery.each(multiples_settings.charts, function(c_id, c_settings){
+    var charts = multiples_settings.charts;
+    if (multiples_settings.matrix.rotated){
+        charts = rotateMultiples(charts);
+    }
+    jQuery.each(charts, function(c_id, c_settings){
         var delimiters = JSON.stringify(c_settings.possibleLabels);
         var smc_container_id = settings.chartViewsDiv + '_' + getHashCode(delimiters);
         var smc_widget = jQuery('<div>', {
@@ -1148,7 +1175,9 @@ function drawGoogleDashboard(options){
             }
             if (multiples_settings.matrix.enabled){
                 var smmatrixheaders = getSMMatrixHeaders(multiples_settings.charts);
-
+                if (multiples_settings.matrix.rotated){
+                    smmatrixheaders = rotateHeaders(smmatrixheaders);
+                }
                 var horizontalHeaders = [];
                 var verticalHeaders = [];
                 var top_enabled = multiples_settings.matrix.headers.top.enabled;
