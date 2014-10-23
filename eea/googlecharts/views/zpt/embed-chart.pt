@@ -49,18 +49,19 @@
                     </tal:provenance>
                 </tal:provenances>
             </div>
-            <div tal:replace="nothing">
-                <div class="dialog" title="Basic dialog">
-                    <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+            <a href="#" class="share-dialog-link">Share</a>
+                <div class="share-dialog" title="Basic dialog">
+                    <p><strong>Embed code:</strong></p>
+                    <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
+                    <p><strong>Share:</strong></p>
+                    <div class="googlechart googlechart-social">
+                        <div class="pluginButtonContainer"><div class="pluginButtonImage"><button type="submit"><i class="pluginButtonIcon img sp_plugin-button-1_5x sx_plugin-button-1_5x_favblue"></i></button></div><span class="pluginButtonLabel">Like</span></div>
+                    </div>
                 </div>
                 // todo and observations
                 // the iframe can be referenced with document.location.href
                 // the width and height of the iframe get be retrived from the body width with or without jquery
                 // need to figure out how to display the embed code with  jquery ui
-                <div class="googlechart googlechart-social">
-                    <div class="pluginButtonContainer"><div class="pluginButtonImage"><button type="submit"><i class="pluginButtonIcon img sp_plugin-button-1_5x sx_plugin-button-1_5x_favblue"></i></button></div><span class="pluginButtonLabel">Like</span></div>
-                </div>
-            </div>
         </div>
 
         <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
@@ -247,7 +248,14 @@
                                 .data('other_options', other_options_$vhash);
                         }
                 }
-            $('.dialog').dialog();
+            var dialog = $('.share-dialog').dialog({ autoOpen: false, width: 500, title: 'Share & Embed' });
+            $('.share-dialog-text').html(document.location.href);
+
+            $('.share-dialog-link').click(function(ev) {
+                dialog.dialog('open');
+                ev.preventDefault();
+            });
+
             });
             function hashchanged(){
                 if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
