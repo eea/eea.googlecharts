@@ -2,37 +2,29 @@
                         enabled_chart python: True">
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
     <head>
+        <link href="collective.js.jqueryui.custom.min.css" rel="stylesheet" type="text/css"/>
         <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
         <link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
-        <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
-        <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
-        <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-        <script type="text/javascript" src="++resource++json2.js"></script>
-        <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
-        <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
-        <script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
-        <script type="text/javascript" src="++resource++eea.googlecharts.embed_chart.js"></script>
-        <script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
         <style type="text/css" tal:content="view/get_customstyle">
         </style>
         <style type="text/css">
             #googlechart_full > div > div {overflow:hidden ! important;}
-            #googlechart_filters {margin-top:0px !important;}
             .googlechart_full > div > div {overflow:hidden ! important;}
-            .googlechart_filters {margin-top:0px !important;}
+            .googlechart_filters {margin-top:0 !important;}
+            .go-to-original-link { float: right;}
             body {margin:1px; overflow: hidden;}
             .googlechart_dashboard .googlechart-notes {
               font-size: 85%;
               color: #666;
             }
         </style>
+        <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
     </head>
-    <body onhashchange="hashchanged();" style="margin:0">
+    <body onhashchange="hashchanged();">
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
         <div class="googlechart-notes"
                 tal:define="chart view/get_chart">
-            <a tal:condition="python:not inline" style="float:right" class="go-to-original-link"
+            <a tal:condition="python:not inline" class="go-to-original-link"
                    tal:attributes="href view/context/absolute_url"
                    i18n:translate=""
                    target="_top">Explore data</a>
@@ -57,8 +49,29 @@
                     </tal:provenance>
                 </tal:provenances>
             </div>
-
+            <div tal:replace="nothing">
+                <div class="dialog" title="Basic dialog">
+                    <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+                </div>
+                // todo and observations
+                // the iframe can be referenced with document.location.href
+                // the width and height of the iframe get be retrived from the body width with or without jquery
+                // need to figure out how to display the embed code with  jquery ui
+                <div class="googlechart googlechart-social">
+                    <div class="pluginButtonContainer"><div class="pluginButtonImage"><button type="submit"><i class="pluginButtonIcon img sp_plugin-button-1_5x sx_plugin-button-1_5x_favblue"></i></button></div><span class="pluginButtonLabel">Like</span></div>
+                </div>
+            </div>
         </div>
+
+        <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
+        <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="++resource++json2.js"></script>
+        <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
+        <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
+        <script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
+        <script type="text/javascript" src="++resource++eea.googlecharts.embed_chart.js"></script>
+        <script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
     </body>
 </html>
 
@@ -234,6 +247,7 @@
                                 .data('other_options', other_options_$vhash);
                         }
                 }
+            $('.dialog').dialog();
             });
             function hashchanged(){
                 if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
