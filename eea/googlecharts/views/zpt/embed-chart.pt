@@ -11,12 +11,12 @@
             #googlechart_full > div > div {overflow:hidden ! important;}
             .googlechart_full > div > div {overflow:hidden ! important;}
             .googlechart_filters {margin-top:0 !important;}
-            .go-to-original-link { float: right;}
             body {margin:1px; overflow: hidden;}
             .googlechart_dashboard .googlechart-notes {
               font-size: 85%;
               color: #666;
             }
+            .pull-left { float: left; margin-right: 1em;}
         </style>
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
     </head>
@@ -24,33 +24,19 @@
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
         <div class="googlechart-notes"
                 tal:define="chart view/get_chart">
-            <a tal:condition="python:not inline" class="go-to-original-link"
-                   tal:attributes="href view/context/absolute_url"
-                   i18n:translate=""
-                   target="_top">Explore data</a>
 
-            <div class="googlechart-downloads">
+            <div class="pull-left googlechart-downloads">
+                <span><strong>Download:</strong></span>
                 <a tal:attributes="href string:${view/context/absolute_url}/download.csv">CSV</a>
                 <a tal:attributes="href string:${view/context/absolute_url}/download.tsv">TSV</a>
                 <a tal:attributes="href string:${chart/id}.png/download">PNG</a>
                 <a tal:attributes="href string:${chart/id}.svg/download">SVG</a>
             </div>
-            <div tal:define="info view/context/@@data.info | python:{}" tal:condition="info" class="visualization-info">
-                <tal:provenances
-                        define="provenances info/provenances | python:[]">
-                    <tal:provenance repeat="provenance provenances">
-                        <tal:owner
-                                define="owner provenance/owner | python:{}"
-                                condition="owner/url | nothing" >
-                            provided by <a tal:attributes="href owner/url"
-                                tal:content="owner/title | owner/url" />
-                        </tal:owner>
-                        <br/>
-                    </tal:provenance>
-                </tal:provenances>
-            </div>
-            <a href="#" class="share-dialog-link">Share</a>
-                <div class="share-dialog" title="Basic dialog">
+
+            <div class="pull-left">
+                <span><strong>Share:</strong></span>
+                <a href="#" class="open-dialog" data-dialog="#share-dialog">Share & Embed</a>
+                <div class="googlecharts-embed-dialog" id="share-dialog" title="Share & Embed">
                     <p><strong>Embed code:</strong></p>
                     <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
                     <p><strong>Share:</strong></p>
@@ -58,10 +44,39 @@
                         <div class="pluginButtonContainer"><div class="pluginButtonImage"><button type="submit"><i class="pluginButtonIcon img sp_plugin-button-1_5x sx_plugin-button-1_5x_favblue"></i></button></div><span class="pluginButtonLabel">Like</span></div>
                     </div>
                 </div>
-                // todo and observations
-                // the iframe can be referenced with document.location.href
-                // the width and height of the iframe get be retrived from the body width with or without jquery
-                // need to figure out how to display the embed code with  jquery ui
+            </div>
+
+            <div class="pull-left">
+                <span><strong>Data sources:</strong></span>
+                <a href="#" class="open-dialog" data-dialog="#sources-dialog">Sources</a>
+                <div class="googlecharts-embed-dialog" id="sources-dialog" title="Data Sources">
+                    <div tal:define="info view/context/@@data.info | python:{}" tal:condition="info" class="visualization-info">
+                        <tal:provenances
+                                define="provenances info/provenances | python:[]">
+                            <tal:provenance repeat="provenance provenances">
+                                <tal:owner
+                                        define="owner provenance/owner | python:{}"
+                                        condition="owner/url | nothing" >
+                                    provided by <a tal:attributes="href owner/url"
+                                        tal:content="owner/title | owner/url" />
+                                </tal:owner>
+                                <br/>
+                            </tal:provenance>
+                        </tal:provenances>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pull-left">
+            <span><strong>Indicator:</strong></span>
+            <a href="#" title="TODO">CLIM 043</a>
+        </div>
+
+        <div class="pull-left">
+            <span><strong>Original:</strong></span>
+            <a tal:condition="python:not inline" class="go-to-original-link"
+                    tal:attributes="href view/context/absolute_url"
+                    i18n:translate="" target="_top">Explore data</a>
         </div>
 
         <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
@@ -248,11 +263,11 @@
                                 .data('other_options', other_options_$vhash);
                         }
                 }
-            var dialog = $('.share-dialog').dialog({ autoOpen: false, width: 500, title: 'Share & Embed' });
-            $('.share-dialog-text').html(document.location.href);
-
-            $('.share-dialog-link').click(function(ev) {
-                dialog.dialog('open');
+            var embed_dialogs = $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: 500});
+            var share_dialog = $('#share-dialog');
+            share_dialog.find('.share-dialog-text').html(document.location.href);
+            $('.open-dialog').click(function(ev) {
+                $($(this).attr('data-dialog')).dialog('open');
                 ev.preventDefault();
             });
 
