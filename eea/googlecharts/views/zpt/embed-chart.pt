@@ -16,6 +16,9 @@
               font-size: 85%;
               color: #666;
             }
+            .googlecharts-embed-dialog textarea {
+                width: 100%;
+            }
             .pull-left { float: left; margin-right: 1em;}
         </style>
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
@@ -274,7 +277,7 @@
                                 .data('other_options', other_options_$vhash);
                         }
                 }
-            var embed_dialogs = $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: 500});
+            var embed_dialogs = $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: '80%'});
             var share_dialog = $('#share-dialog');
             share_dialog.find('.share-dialog-text').html(document.location.href);
             $('.open-dialog').click(function(ev) {
