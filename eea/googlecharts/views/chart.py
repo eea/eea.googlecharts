@@ -553,6 +553,25 @@ class View(ViewForm):
             view = "embed-chart"
         return getMultiAdapter((self.context, self.request), name=view)()
 
+    def get_backward_relation(self, ptype):
+        """
+        :param ptype: Name of Portal Type to search for backward relations
+        :type ptype:  string
+        :return: First found relation that matched the Portal Type
+        :rtype: object
+        """
+        relation_view = self.context.unrestrictedTraverse(
+            '@@eea.relations.macro', None)
+        if not relation_view:
+            return None
+        backword_relations = relation_view.backward()
+        for relation in backword_relations:
+            obj = relation[1][0]
+            if obj.portal_type == ptype:
+                return obj
+        return None
+
+
     # it appears that this method is not used anywhere
     #def get_notes(self, chart_id):
     #    """ get the notes for charts or dashboards

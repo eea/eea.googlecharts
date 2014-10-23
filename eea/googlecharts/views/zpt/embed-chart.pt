@@ -24,7 +24,7 @@
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
         <div class="googlechart-notes"
                 tal:define="chart view/get_chart">
-
+            <h3 tal:content="view/context/absolute_url"></h3>
             <div class="pull-left googlechart-downloads">
                 <span><strong>Download:</strong></span>
                 <a tal:attributes="href string:${view/context/absolute_url}/download.csv">CSV</a>
@@ -67,9 +67,10 @@
                 </div>
             </div>
         </div>
-        <div class="pull-left">
+        <div class="pull-left" tal:define="obj python:view.get_backward_relation('AssessmentPart')"
+                tal:condition="obj">
             <span><strong>Indicator:</strong></span>
-            <a href="#" title="TODO">CLIM 043</a>
+            <a tal:attributes="href obj/absolute_url; title obj/Title" tal:content="python: obj.get_codes()[-1]">content</a>
         </div>
 
         <div class="pull-left">
