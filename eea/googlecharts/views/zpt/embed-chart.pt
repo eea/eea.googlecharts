@@ -43,7 +43,10 @@
                     <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
                     <p><strong>Share:</strong></p>
                     <div class="googlechart googlechart-social">
-                        <div class="pluginButtonContainer"><div class="pluginButtonImage"><button type="submit"><i class="pluginButtonIcon img sp_plugin-button-1_5x sx_plugin-button-1_5x_favblue"></i></button></div><span class="pluginButtonLabel">Like</span></div>
+                        <a href="https://twitter.com/intent/tweet?url=" class="share-button share-button-twitter">Twitter</a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=" class="share-button share-button-facebook">Facebook</a>
+                        <a href="https://plus.google.com/share?url=" class="share-button share-button-gplus">Google Plus</a>
+
                     </div>
                 </div>
             </div>
@@ -279,13 +282,19 @@
                                 .data('other_options', other_options_$vhash);
                         }
                 }
-            var embed_dialogs = $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: '80%'});
-            var share_dialog = $('#share-dialog');
-            share_dialog.find('.share-dialog-text').html(document.location.href);
-            $('.open-dialog').click(function(ev) {
-                $($(this).attr('data-dialog')).dialog('open');
-                ev.preventDefault();
-            });
+
+                var embed_dialogs = $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: '80%'});
+                var share_dialog = $('#share-dialog');
+                share_dialog.find('.share-dialog-text').html(document.location.href);
+                $('.open-dialog').click(function(ev) {
+                    $($(this).attr('data-dialog')).dialog('open');
+                    ev.preventDefault();
+                });
+
+                var baseurl_uri = window.encodeURIComponent(baseurl_$vhash);
+                $('.share-button').each(function(){
+                    this.href = this.href + baseurl_uri;
+                });
 
             });
             function hashchanged(){
