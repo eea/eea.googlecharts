@@ -16,6 +16,9 @@
               font-size: 85%;
               color: #666;
             }
+            .googlechart-notes {
+                margin-top: 0.5em;
+            }
             .googlecharts-embed-dialog textarea {
                 width: 100%;
             }
@@ -283,18 +286,18 @@
                         }
                 }
 
-                var embed_dialogs = $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: '80%'});
-                var share_dialog = $('#share-dialog');
-                share_dialog.find('.share-dialog-text').html(document.location.href);
-                $('.open-dialog').click(function(ev) {
-                    $($(this).attr('data-dialog')).dialog('open');
-                    ev.preventDefault();
-                });
+               var embed_dialogs = $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: '80%'});
+               var share_dialog = $('#share-dialog');
+               share_dialog.find('.share-dialog-text').html(document.location.href);
+               $('.open-dialog').click(function(ev) {
+                   $($(this).attr('data-dialog')).dialog('open');
+                   ev.preventDefault();
+               });
 
-                var baseurl_uri = window.encodeURIComponent(baseurl_$vhash);
-                $('.share-button').each(function(){
-                    this.href = this.href + baseurl_uri;
-                });
+               var baseurl_uri = window.encodeURIComponent(baseurl_$vhash);
+               $('.share-button').each(function(){
+                   this.href = this.href + baseurl_uri;
+               });
 
             });
             function hashchanged(){
