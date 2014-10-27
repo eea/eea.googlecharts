@@ -828,7 +828,7 @@ function drawSMCharts(smc_settings) {
         chart_sortAsc = false;
     }
     var charts = multiples_settings.charts;
-    if (multiples_settings.matrix.rotated){
+    if ((multiples_settings.matrix !== undefined) && (multiples_settings.matrix.rotated)){
         charts = rotateMultiples(charts);
     }
     jQuery.each(charts, function(c_id, c_settings){
