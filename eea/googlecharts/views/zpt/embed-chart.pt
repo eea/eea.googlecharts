@@ -22,6 +22,9 @@
             .googlecharts-embed-dialog textarea {
                 width: 100%;
             }
+           .googlechart-notes .ui-icon {
+                display: inline-block;
+            }
             .pull-left { float: left; margin-right: 1em;}
         </style>
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
@@ -30,18 +33,60 @@
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
         <div class="googlechart-notes"
                 tal:define="chart view/get_chart">
-            <div class="pull-left googlechart-downloads">
-                <span><strong>Download:</strong></span>
-                <a tal:attributes="href string:${view/context/absolute_url}/download.csv">CSV</a>
-                <a tal:attributes="href string:${view/context/absolute_url}/download.tsv">TSV</a>
-                <a tal:attributes="href string:${chart/id}.png/download" target="_top">PNG</a>
-                <a tal:attributes="href string:${chart/id}.svg/download" target="_top">SVG</a>
-            </div>
 
+            <!--? Explore Data -->
             <div class="pull-left">
-                <span><strong>Share:</strong></span>
-                <a href="#" class="open-dialog" data-dialog="#share-dialog">Share & Embed</a>
-                <div class="googlecharts-embed-dialog" id="share-dialog" title="Share & Embed">
+                <a tal:condition="python:not inline" class="go-to-original-link"
+                        tal:attributes="href view/context/absolute_url"
+                        i18n:translate="" target="_top">Explore data</a>
+            </div>
+            <!--? /Explore Data -->
+
+            <!--? Data Sources -->
+            <div class="pull-left" tal:define="info view/context/@@data.info | python:{}" tal:condition="info">
+                <a href="#" class="open-dialog" data-dialog="#sources-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Data sources</a>
+                <div class="googlecharts-embed-dialog" id="sources-dialog">
+                    <div class="visualization-info">
+                        <tal:provenances
+                                define="provenances info/provenances | python:[]">
+                            <h3 i18n:translate="">Data sources</h3>
+                            <ul>
+                                <tal:provenance repeat="provenance provenances">
+                                    <li>
+                                        <tal:source
+                                                define="source provenance/source | python:{}"
+                                                condition="source/url | nothing">
+                                            <a tal:attributes="href source/url"
+                                                    tal:content="source/title | source/url" />
+                                        </tal:source>
+
+                                        <tal:owner
+                                                define="owner provenance/owner | python:{}"
+                                                condition="owner/url | nothing" >
+                                            provided by <a tal:attributes="href owner/url"
+                                                tal:content="owner/title | owner/url" />
+                                        </tal:owner>
+                                        </li>
+                                    </tal:provenance>
+                                </ul>
+                            </tal:provenances>
+                        </div>
+                    </div>
+                </div>
+            <!--? /Data Sources -->
+
+            <!--? Indicator -->
+            <div class="pull-left" tal:define="obj python:view.get_backward_relation('AssessmentPart')"
+                    tal:condition="obj">
+                <a tal:attributes="href obj/absolute_url; title obj/Title"
+                        tal:content="python:'Indicator ' + obj.get_codes()[-1]" target="_top">content</a>
+            </div>
+            <!--? /Indicator -->
+
+            <!--? Share -->
+            <div class="pull-left">
+                <a href="#" class="open-dialog" data-dialog="#share-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Share</a>
+                <div class="googlecharts-embed-dialog" id="share-dialog">
                     <p><strong>Embed code:</strong></p>
                     <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
                     <p><strong>Share:</strong></p>
@@ -53,53 +98,24 @@
                     </div>
                 </div>
             </div>
+            <!--? /Share -->
 
-            <div class="pull-left" tal:define="info view/context/@@data.info | python:{}" tal:condition="info">
-                <span><strong>Data sources:</strong></span>
-                <a href="#" class="open-dialog" data-dialog="#sources-dialog">Sources</a>
-                <div class="googlecharts-embed-dialog" id="sources-dialog" title="Data Sources">
-                    <div class="visualization-info">
-                            <tal:provenances
-                                    define="provenances info/provenances | python:[]">
-                                <h3 i18n:translate="">Data sources</h3>
-                                <ul>
-                                    <tal:provenance repeat="provenance provenances">
-                                        <li>
-                                            <tal:source
-                                                    define="source provenance/source | python:{}"
-                                                    condition="source/url | nothing">
-                                                <a tal:attributes="href source/url"
-                                                        tal:content="source/title | source/url" />
-                                            </tal:source>
-
-                                            <tal:owner
-                                                    define="owner provenance/owner | python:{}"
-                                                    condition="owner/url | nothing" >
-                                                provided by <a tal:attributes="href owner/url"
-                                                    tal:content="owner/title | owner/url" />
-                                            </tal:owner>
-                                        </li>
-                                    </tal:provenance>
-                                </ul>
-                            </tal:provenances>
-                    </div>
+            <!--? Download -->
+            <div class="pull-left googlechart-downloads">
+                <a href="#" class="open-dialog" data-dialog="#download-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Download</a>
+                <div class="googlecharts-embed-dialog" id="download-dialog">
+                    <h3>Original Data</h3>
+                    <a tal:attributes="href string:${view/context/absolute_url}/download.csv">CSV</a>
+                    <a tal:attributes="href string:${view/context/absolute_url}/download.tsv">TSV</a>
+                    <h3>Image formats</h3>
+                    <a tal:attributes="href string:${chart/id}.png/download" target="_top">PNG</a>
+                    <a tal:attributes="href string:${chart/id}.svg/download" target="_top">SVG</a>
                 </div>
             </div>
+            <!--? /Download -->
+
         </div>
 
-        <div class="pull-left" tal:define="obj python:view.get_backward_relation('AssessmentPart')"
-                tal:condition="obj">
-            <span><strong>Indicator:</strong></span>
-            <a tal:attributes="href obj/absolute_url; title obj/Title"
-               tal:content="python: obj.get_codes()[-1]" target="_top">content</a>
-        </div>
-
-        <div class="pull-left">
-            <span><strong>Original:</strong></span>
-            <a tal:condition="python:not inline" class="go-to-original-link"
-                    tal:attributes="href view/context/absolute_url"
-                    i18n:translate="" target="_top">Explore data</a>
-        </div>
 
         <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
         <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
