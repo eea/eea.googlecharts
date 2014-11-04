@@ -1,6 +1,7 @@
 <tal:block tal:define="inline view/isInline;
                         enabled_chart python: True;
                         chart view/get_chart;
+                        title view/context/Title;
                         url view/context/absolute_url">
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
     <head>
@@ -32,8 +33,9 @@
         <meta property="og:type"   content="article" />
         <meta property="og:image" tal:attributes="content string:${url}/${chart/id}.png/download" />
         <meta property="og:url" tal:attributes="content string:${url}/embed-chart?chart=${chart/id}" />
-        <meta property="og:title" tal:attributes="content string:${view/context/Title}" />
+        <meta property="og:title" tal:attributes="content string:${title}" />
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
+        <title tal:content="title"></title>
     </head>
     <body onhashchange="hashchanged();">
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
