@@ -1,5 +1,6 @@
 <tal:block tal:define="inline view/isInline;
-                        enabled_chart python: True">
+                        enabled_chart python: True;
+                        chart view/get_chart">
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
     <head>
         <link href="collective.js.jqueryui.custom.min.css" rel="stylesheet" type="text/css"/>
@@ -27,12 +28,12 @@
             }
             .pull-left { float: left; margin-right: 1em;}
         </style>
+        <meta property="og:image" tal:attributes="content string:${chart/id}.png/download" />
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
     </head>
     <body onhashchange="hashchanged();">
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
-        <div class="googlechart-notes"
-                tal:define="chart view/get_chart">
+        <div class="googlechart-notes">
 
             <!--? Explore Data -->
             <div class="pull-left">
