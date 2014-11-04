@@ -31,6 +31,7 @@
         </style>
         <meta property="og:type"   content="article" />
         <meta property="og:image" tal:attributes="content string:${url}/${chart/id}.png/download" />
+        <meta property="og:url" tal:attributes="content string:${url}/embed-chart?chart=${chart/id}" />
         <meta property="og:title" tal:attributes="content string:${view/context/Title}" />
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
     </head>
