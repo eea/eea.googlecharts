@@ -1,6 +1,7 @@
 <tal:block tal:define="inline view/isInline;
                         enabled_chart python: True;
-                        chart view/get_chart">
+                        chart view/get_chart;
+                        url view/context/absolute_url">
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
     <head>
         <link href="collective.js.jqueryui.custom.min.css" rel="stylesheet" type="text/css"/>
@@ -28,7 +29,7 @@
             }
             .pull-left { float: left; margin-right: 1em;}
         </style>
-        <meta property="og:image" tal:attributes="content string:${chart/id}.png/download" />
+        <meta property="og:image" tal:attributes="content string:${url}/${chart/id}.png/download" />
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
     </head>
     <body onhashchange="hashchanged();">
@@ -38,7 +39,7 @@
             <!--? Explore Data -->
             <div class="pull-left">
                 <a tal:condition="python:not inline" class="go-to-original-link"
-                        tal:attributes="href view/context/absolute_url"
+                        tal:attributes="href url"
                         i18n:translate="" target="_top">Explore data</a>
             </div>
             <!--? /Explore Data -->
@@ -106,17 +107,17 @@
                 <a href="#" class="open-dialog" data-dialog="#download-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Download</a>
                 <div class="googlecharts-embed-dialog" id="download-dialog">
                     <p><strong>Original Data</strong></p>
-                    <a tal:attributes="href string:${view/context/absolute_url}/download.csv">CSV</a>
-                    <a tal:attributes="href string:${view/context/absolute_url}/download.tsv">TSV</a>
+                    <a tal:attributes="href string:${url}/download.csv">CSV</a>
+                    <a tal:attributes="href string:${url}/download.tsv">TSV</a>
                     <p><strong>Image formats</strong></p>
                     <a tal:attributes="href string:${chart/id}.png/download" target="_top">PNG</a>
                     <a tal:attributes="href string:${chart/id}.svg/download" target="_top">SVG</a>
 
                     <p><strong>Formats suitable for machine-to-machine communication</strong></p>
-                    <a tal:attributes="href string:${view/context/absolute_url}/download.json" target="_top">JSON</a>
-                    <a tal:attributes="href string:${view/context/absolute_url}/download.exhibit" target="_top">Exhibit JSON</a>
-                    <a tal:attributes="href string:${view/context/absolute_url}/download.xml" target="_top">XML</a>
-                    <a tal:attributes="href string:${view/context/absolute_url}/download.schema.xml" target="_top">
+                    <a tal:attributes="href string:${url}/download.json" target="_top">JSON</a>
+                    <a tal:attributes="href string:${url}/download.exhibit" target="_top">Exhibit JSON</a>
+                    <a tal:attributes="href string:${url}/download.xml" target="_top">XML</a>
+                    <a tal:attributes="href string:${url}/download.schema.xml" target="_top">
                         XML with Schema
                     </a>
                 </div>
@@ -168,7 +169,7 @@
             var chart_options_$vhash = ${chart/options};
             var chart_filterposition_$vhash = ${chart/filterposition}
             var chart_filters_$vhash = ${chart/filters};
-            var baseurl_$vhash = '${view/context/absolute_url}';
+            var baseurl_$vhash = '${url}';
             var chart_id_$vhash = '${chart/chart_id}';
             var qr_pos_$vhash = '${view/qr_position}';
             var qr_size_$vhash = '${view/qr_size}';
