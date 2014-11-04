@@ -49,7 +49,7 @@
                     <div class="visualization-info">
                         <tal:provenances
                                 define="provenances info/provenances | python:[]">
-                            <h3 i18n:translate="">Data sources</h3>
+                            <p><strong>Data sources</strong></p>
                             <ul>
                                 <tal:provenance repeat="provenance provenances">
                                     <li>
@@ -104,12 +104,20 @@
             <div class="pull-left googlechart-downloads">
                 <a href="#" class="open-dialog" data-dialog="#download-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Download</a>
                 <div class="googlecharts-embed-dialog" id="download-dialog">
-                    <h3>Original Data</h3>
+                    <p><strong>Original Data</strong></p>
                     <a tal:attributes="href string:${view/context/absolute_url}/download.csv">CSV</a>
                     <a tal:attributes="href string:${view/context/absolute_url}/download.tsv">TSV</a>
-                    <h3>Image formats</h3>
+                    <p><strong>Image formats</strong></p>
                     <a tal:attributes="href string:${chart/id}.png/download" target="_top">PNG</a>
                     <a tal:attributes="href string:${chart/id}.svg/download" target="_top">SVG</a>
+
+                    <p><strong>Formats suitable for machine-to-machine communication</strong></p>
+                    <a tal:attributes="href string:${view/context/absolute_url}/download.json" target="_top">JSON</a>
+                    <a tal:attributes="href string:${view/context/absolute_url}/download.exhibit" target="_top">Exhibit JSON</a>
+                    <a tal:attributes="href string:${view/context/absolute_url}/download.xml" target="_top">XML</a>
+                    <a tal:attributes="href string:${view/context/absolute_url}/download.schema.xml" target="_top">
+                        XML with Schema
+                    </a>
                 </div>
             </div>
             <!--? /Download -->
