@@ -1,6 +1,7 @@
 <tal:block tal:define="inline view/isInline;
                         enabled_chart python: True;
                         chart view/get_chart;
+                        chart_id chart/id;
                         title view/context/Title;
                         url view/context/absolute_url">
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
@@ -31,8 +32,8 @@
             .pull-left { float: left; margin-right: 1em;}
         </style>
         <meta property="og:type"   content="article" />
-        <meta property="og:image" tal:attributes="content string:${url}/${chart/id}.png/download" />
-        <meta property="og:url" tal:attributes="content string:${url}/embed-chart?chart=${chart/id}" />
+        <meta property="og:image" tal:attributes="content string:${url}/${chart_id}.png/download" />
+        <meta property="og:url" tal:attributes="content string:${url}/embed-chart?chart=${chart_id}" />
         <meta property="og:title" tal:attributes="content string:${title}" />
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
         <title tal:content="title"></title>
@@ -115,8 +116,8 @@
                     <a tal:attributes="href string:${url}/download.csv">CSV</a>
                     <a tal:attributes="href string:${url}/download.tsv">TSV</a>
                     <p><strong>Image formats</strong></p>
-                    <a tal:attributes="href string:${chart/id}.png/download" target="_top">PNG</a>
-                    <a tal:attributes="href string:${chart/id}.svg/download" target="_top">SVG</a>
+                    <a tal:attributes="href string:${chart_id}.png/download" target="_top">PNG</a>
+                    <a tal:attributes="href string:${chart_id}.svg/download" target="_top">SVG</a>
 
                     <p><strong>Formats suitable for machine-to-machine communication</strong></p>
                     <a tal:attributes="href string:${url}/download.json" target="_top">JSON</a>
@@ -175,7 +176,7 @@
             var chart_filterposition_$vhash = ${chart/filterposition}
             var chart_filters_$vhash = ${chart/filters};
             var baseurl_$vhash = '${url}';
-            var chart_id_$vhash = '${chart/chart_id}';
+            var chart_id_$vhash = '${chart_id}';
             var qr_pos_$vhash = '${view/qr_position}';
             var qr_size_$vhash = '${view/qr_size}';
             var wm_pos_$vhash = '${view/wm_position}';
@@ -325,7 +326,7 @@
                    ev.preventDefault();
                });
 
-               var baseurl_uri = window.encodeURIComponent(baseurl_$vhash);
+               var baseurl_uri = window.encodeURIComponent(baseurl_$vhash + '/embed-chart?chart=' + chart_id_$vhash);
                $('.share-button').each(function(){
                    this.href = this.href + baseurl_uri;
                });
