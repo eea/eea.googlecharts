@@ -3,10 +3,23 @@
   xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
   i18n_domain="eea">
 
+  <!-- 11.1 => 11.2 -->
+  <genericsetup:upgradeSteps
+    source="11.1"
+    destination="11.2"
+    profile="eea.googlecharts:default">
+
+    <genericsetup:upgradeDepends
+      title="Install eea.jquery bbq plugin"
+      import_profile="eea.jquery:04-bbq"
+      />
+
+  </genericsetup:upgradeSteps>
+
 
   <!-- 11.0 => 11.1 -->
   <genericsetup:upgradeSteps
-    source="11.9"
+    source="11.0"
     destination="11.1"
     profile="eea.googlecharts:default">
 
