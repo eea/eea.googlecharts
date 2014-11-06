@@ -806,6 +806,20 @@ function getSMMatrixHeaders(charts){
     return {verticals : {type:verticaltype, values:verticals, allValues:allVerticals}, horizontals : {type:horizontaltype, values:horizontals, allValues:allHorizontals}};
 }
 
+function getSortedChartsForMultiples(charts){
+    return charts.sort(function(a,b){
+                    if (a.order > b.order){
+                        return 1;
+                    }
+                    else if (a.order < b.order){
+                        return -1;
+                    }
+                    else {
+                        return 0;
+                    }
+                });
+}
+
 function rotateMultiples(charts){
     var rotatedCharts = new Array(charts.length);
     var headers = getSMMatrixHeaders(charts);
