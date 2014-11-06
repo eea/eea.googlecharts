@@ -3,10 +3,10 @@
   xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
   i18n_domain="eea">
 
-  <!-- 11.1 => 11.2 -->
+  <!-- 11.1 => 11.6 -->
   <genericsetup:upgradeSteps
     source="11.1"
-    destination="11.2"
+    destination="11.6"
     profile="eea.googlecharts:default">
 
     <genericsetup:upgradeDepends
