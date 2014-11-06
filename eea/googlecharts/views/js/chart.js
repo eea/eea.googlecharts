@@ -852,6 +852,7 @@ function drawSMCharts(smc_settings) {
         chart_sortAsc = false;
     }
     var charts = multiples_settings.charts;
+
     var headers = getSMMatrixHeaders(charts);
     var enabled_charts = [];
     for (var i = 0; i < charts.length; i++){
@@ -862,6 +863,7 @@ function drawSMCharts(smc_settings) {
     }
     debugger;
     charts = enabled_charts;
+
     if ((multiples_settings.matrix !== undefined) && (multiples_settings.matrix.rotated)){
         charts = rotateMultiples(charts);
     }

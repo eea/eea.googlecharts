@@ -1159,24 +1159,26 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             });
           });
         extra_controls.push(matrix_btn);
-        var rotateTable = jQuery("<img>")
-            .attr("src", "../../++resource++eea.googlecharts.images/unpivot-icon.png")
-            .attr("title", "Swap X and Y axis")
-            .width(14)
-            .height(14)
-            .css("float", "right")
-            .css("margin-top", "2px")
-            .css("cursor", "pointer")
-            .insertBefore(matrix_btn)
-            .click(function(){
-                    var widget = jQuery("#multiples_"+base_chart).data("widget");
-                    var tmp_settings = JSON.parse(widget.settings.multiples_settings);
-                    tmp_settings.matrix.rotated = !tmp_settings.matrix.rotated;
-                    widget.settings.multiples_settings = JSON.stringify(tmp_settings);
-                    jQuery("#multiples-resize").dialog("close");
-                    widget.save(false, true);
-            });
-        extra_controls.push(rotateTable);
+        if (multiples_settings.matrix.enabled){
+            var rotateTable = jQuery("<img>")
+                .attr("src", "../../++resource++eea.googlecharts.images/unpivot-icon.png")
+                .attr("title", "Swap X and Y axis")
+                .width(14)
+                .height(14)
+                .css("float", "right")
+                .css("margin-top", "2px")
+                .css("cursor", "pointer")
+                .insertBefore(matrix_btn)
+                .click(function(){
+                        var widget = jQuery("#multiples_"+base_chart).data("widget");
+                        var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                        tmp_settings.matrix.rotated = !tmp_settings.matrix.rotated;
+                        widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+                        jQuery("#multiples-resize").dialog("close");
+                        widget.save(false, true);
+                });
+            extra_controls.push(rotateTable);
+        }
     }
     header.find(".eea-icon-gear").remove();
     var settings_btn = jQuery("<span>")
