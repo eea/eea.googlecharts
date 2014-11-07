@@ -591,7 +591,8 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         adv_options: adv_options,
                         chartFiltersId: null,
                         dashboard_filters: null,
-                        interactive: false
+                        interactive: false,
+                        disableSort: true
                     };
                     drawSMCharts(smcharts_settings);
                     jQuery(".multiples-matrix-elements .smc-widget").each(function(idx, container){
