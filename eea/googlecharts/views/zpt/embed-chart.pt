@@ -2,6 +2,7 @@
                         enabled_chart python: True;
                         chart view/get_chart;
                         chart_id chart/id;
+                        chart_name chart/name;
                         title view/context/Title;
                         url view/context/absolute_url">
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
@@ -30,6 +31,7 @@
                 display: inline-block;
             }
             .pull-left { float: left; margin-right: 1em;}
+            .pull-right { float: right;}
         </style>
         <meta property="og:type"   content="article" />
         <meta property="og:image" tal:attributes="content string:${url}/${chart_id}.png/download" />
@@ -39,78 +41,16 @@
         <title tal:content="title"></title>
     </head>
     <body onhashchange="hashchanged();">
-        <metal:chart use-macro="here/embed-chart/macros/chart"/>
-        <div class="googlechart-notes">
 
-            <!--? Explore Data -->
-            <div class="pull-left">
-                <a tal:condition="python:not inline" class="go-to-original-link"
-                        tal:attributes="href url"
-                        i18n:translate="" target="_top">Explore data</a>
-            </div>
-            <!--? /Explore Data -->
+    <div class="googlechart-notes">
+        <div class="pull-left">
+            <h3 tal:content="string:${chart_name} - ${title}"></h3>
+        </div>
 
-            <!--? Data Sources -->
-            <div class="pull-left" tal:define="info view/context/@@data.info | python:{}" tal:condition="info">
-                <a href="#" class="open-dialog" data-dialog="#sources-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Data sources</a>
-                <div class="googlecharts-embed-dialog" id="sources-dialog">
-                    <div class="visualization-info">
-                        <tal:provenances
-                                define="provenances info/provenances | python:[]">
-                            <p><strong>Data sources</strong></p>
-                            <ul>
-                                <tal:provenance repeat="provenance provenances">
-                                    <li>
-                                        <tal:source
-                                                define="source provenance/source | python:{}"
-                                                condition="source/url | nothing">
-                                            <a tal:attributes="href source/url"
-                                                    tal:content="source/title | source/url" />
-                                        </tal:source>
-
-                                        <tal:owner
-                                                define="owner provenance/owner | python:{}"
-                                                condition="owner/url | nothing" >
-                                            provided by <a tal:attributes="href owner/url"
-                                                tal:content="owner/title | owner/url" />
-                                        </tal:owner>
-                                        </li>
-                                    </tal:provenance>
-                                </ul>
-                            </tal:provenances>
-                        </div>
-                    </div>
-                </div>
-            <!--? /Data Sources -->
-
-            <!--? Indicator -->
-            <div class="pull-left" tal:define="obj python:view.get_backward_relation('AssessmentPart')"
-                    tal:condition="obj">
-                <a tal:attributes="href obj/absolute_url; title obj/Title"
-                        tal:content="python:'Indicator ' + obj.get_codes()[-1]" target="_top">content</a>
-            </div>
-            <!--? /Indicator -->
-
-            <!--? Share -->
-            <div class="pull-left">
-                <a href="#" class="open-dialog" data-dialog="#share-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Share</a>
-                <div class="googlecharts-embed-dialog" id="share-dialog">
-                    <p><strong>Embed code:</strong></p>
-                    <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
-                    <p><strong>Share:</strong></p>
-                    <div class="googlechart googlechart-social">
-                        <a href="https://twitter.com/intent/tweet?url=" class="share-button share-button-twitter">Twitter</a>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=" class="share-button share-button-facebook">Facebook</a>
-                        <a href="https://plus.google.com/share?url=" class="share-button share-button-gplus">Google Plus</a>
-
-                    </div>
-                </div>
-            </div>
-            <!--? /Share -->
-
-            <!--? Download -->
+        <div class="pull-right">
+            <!--? Save -->
             <div class="pull-left googlechart-downloads">
-                <a href="#" class="open-dialog" data-dialog="#download-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Download</a>
+                <a href="#" class="open-dialog" data-dialog="#download-dialog"><span  class="ui-icon ui-icon-arrowthickstop-1-s"></span>Save</a>
                 <div class="googlecharts-embed-dialog" id="download-dialog">
                     <p><strong>Original Data</strong></p>
                     <a tal:attributes="href string:${url}/download.csv">CSV</a>
@@ -128,11 +68,86 @@
                     </a>
                 </div>
             </div>
-            <!--? /Download -->
+            <!--? /Save -->
+
+            <!--? Explore Data -->
+            <div class="pull-left">
+                <a tal:condition="python:not inline" class="go-to-original-link"
+                        tal:attributes="href url"
+                        i18n:translate="" target="_top"><span class="ui-icon ui-icon-extlink"></span>Explore</a>
+            </div>
+            <!--? /Explore Data -->
+
+            <!--? Share -->
+            <div class="pull-left">
+                <a href="#" class="open-dialog" data-dialog="#share-dialog"><span  class="ui-icon  ui-icon-arrowreturnthick-1-e"></span>Share</a>
+                <div class="googlecharts-embed-dialog" id="share-dialog">
+                    <p><strong>Embed code:</strong></p>
+                    <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
+                    <p><strong>Share:</strong></p>
+                    <div class="googlechart googlechart-social">
+                        <a href="https://twitter.com/intent/tweet?url=" class="share-button share-button-twitter">Twitter</a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=" class="share-button share-button-facebook">Facebook</a>
+                        <a href="https://plus.google.com/share?url=" class="share-button share-button-gplus">Google Plus</a>
+
+                    </div>
+                </div>
+            </div>
+            <!--? /Share -->
+
+            <!--? Enlarge -->
+            <div class="pull-left">
+                <a href="#" class="open-dialog" data-dialog="#share-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Enlarge</a>
+            </div>
+            <!--? Enlarge -->
 
         </div>
 
+    </div>
 
+        <metal:chart use-macro="here/embed-chart/macros/chart"/>
+    <div class="googlechart-notes">
+        <!--? Indicator -->
+        <div class="pull-left" tal:define="obj python:view.get_backward_relation('AssessmentPart')"
+                tal:condition="obj">
+            <a tal:attributes="href obj/absolute_url; title obj/Title"
+                    tal:content="python:'Indicator ' + obj.get_codes()[-1]" target="_top">content</a>
+        </div>
+        <!--? /Indicator -->
+
+        <!--? Data Sources -->
+        <div class="pull-left" tal:define="info view/context/@@data.info | python:{}" tal:condition="info">
+            <a href="#" class="open-dialog" data-dialog="#sources-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Data sources</a>
+            <div class="googlecharts-embed-dialog" id="sources-dialog">
+                <div class="visualization-info">
+                    <tal:provenances
+                            define="provenances info/provenances | python:[]">
+                        <p><strong>Data sources</strong></p>
+                        <ul>
+                            <tal:provenance repeat="provenance provenances">
+                                <li>
+                                    <tal:source
+                                            define="source provenance/source | python:{}"
+                                            condition="source/url | nothing">
+                                        <a tal:attributes="href source/url"
+                                                tal:content="source/title | source/url" />
+                                    </tal:source>
+
+                                    <tal:owner
+                                            define="owner provenance/owner | python:{}"
+                                            condition="owner/url | nothing" >
+                                        provided by <a tal:attributes="href owner/url"
+                                            tal:content="owner/title | owner/url" />
+                                    </tal:owner>
+                                </li>
+                            </tal:provenance>
+                        </ul>
+                    </tal:provenances>
+                </div>
+            </div>
+        </div>
+        <!--? /Data Sources -->
+    </div>
         <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
         <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -171,7 +186,7 @@
             var chart_json_$vhash = ${chart/config};
             var width_$vhash = ${chart/chartWidth};
             var height_$vhash = ${chart/chartHeight};
-            var name_$vhash = '${chart/name}';
+            var name_$vhash = '${chart_name}';
             var chart_options_$vhash = ${chart/options};
             var chart_filterposition_$vhash = ${chart/filterposition}
             var chart_filters_$vhash = ${chart/filters};
