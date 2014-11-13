@@ -1,6 +1,9 @@
 Changelog
 =========
 
+11.7-dev - (unreleased)
+-----------------------
+
 11.6 - (2014-11-13)
 -------------------
 * Bugfix: Fixed svg export for charts
