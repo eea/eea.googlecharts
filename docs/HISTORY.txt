@@ -1,8 +1,8 @@
 Changelog
 =========
 
-11.6-dev - (unreleased)
------------------------
+11.6 - (2014-11-13)
+-------------------
 * Bugfix: Fixed svg export for charts
 * Bugfix: Fixed small multiples for firefox
   [szabozo0 refs #21482]
