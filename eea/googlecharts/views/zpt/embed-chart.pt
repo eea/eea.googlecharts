@@ -29,9 +29,22 @@
             }
            .googlechart-notes .ui-icon {
                 display: inline-block;
+                vertical-align: bottom;
+            }
+           .googlechart-datasource {
+               width: 100px;
+           }
+           #googlechart-provenance-definitions {
+               list-style: none;
+               padding: 0 0 0 0.5em;
+           }
+            #googlechart-provenance-definitions li {
+                display: inline-block;
             }
             .pull-left { float: left; margin-right: 1em;}
             .pull-right { float: right;}
+            .table-cel { display: table-cell;}
+            .googlechart-title { margin: 0;}
         </style>
         <meta property="og:type"   content="article" />
         <meta property="og:image" tal:attributes="content string:${url}/${chart_id}.png/download" />
@@ -44,7 +57,7 @@
 
     <div class="googlechart-notes">
         <div class="pull-left">
-            <h3 tal:content="string:${chart_name} - ${title}"></h3>
+            <h3 tal:content="string:${chart_name} - ${title}" class="googlechart-title"></h3>
         </div>
 
         <div class="pull-right">
@@ -97,7 +110,7 @@
 
             <!--? Enlarge -->
             <div class="pull-left">
-                <a href="#" class="open-dialog" data-dialog="#share-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Enlarge</a>
+                <a href="#" class="googlechart-enlarge"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Enlarge</a>
             </div>
             <!--? Enlarge -->
 
@@ -107,43 +120,43 @@
 
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
     <div class="googlechart-notes">
-        <!--? Indicator -->
-        <div class="pull-left" tal:define="obj python:view.get_backward_relation('AssessmentPart')"
-                tal:condition="obj">
-            <a tal:attributes="href obj/absolute_url; title obj/Title"
-                    tal:content="python:'Indicator ' + obj.get_codes()[-1]" target="_top">content</a>
-        </div>
-        <!--? /Indicator -->
 
         <!--? Data Sources -->
         <div class="pull-left" tal:define="info view/context/@@data.info | python:{}" tal:condition="info">
-            <a href="#" class="open-dialog" data-dialog="#sources-dialog"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Data sources</a>
-            <div class="googlecharts-embed-dialog" id="sources-dialog">
-                <div class="visualization-info">
-                    <tal:provenances
-                            define="provenances info/provenances | python:[]">
-                        <p><strong>Data sources</strong></p>
-                        <ul>
-                            <tal:provenance repeat="provenance provenances">
-                                <li>
-                                    <tal:source
-                                            define="source provenance/source | python:{}"
-                                            condition="source/url | nothing">
-                                        <a tal:attributes="href source/url"
-                                                tal:content="source/title | source/url" />
-                                    </tal:source>
+            <div class="visualization-info">
+                <tal:provenances
+                        define="provenances info/provenances | python:[]">
+                    <p class="googlechart-datasource table-cel"><strong>Data sources:</strong></p>
+                    <ul id="googlechart-provenance-definitions" class="table-cel">
+                        <tal:provenance repeat="provenance provenances">
+                            <li>
+                                <tal:owner
+                                        define="owner provenance/owner | python:{}; owner_url owner/url | nothing"
+                                        condition="owner_url" >
+                                    <span
+                                            tal:content="python:owner.get('acronym') or owner.get('title')  or owner_url" />
+                                    <span>&ndash; </span>
+                                </tal:owner>
 
-                                    <tal:owner
-                                            define="owner provenance/owner | python:{}"
-                                            condition="owner/url | nothing" >
-                                        provided by <a tal:attributes="href owner/url"
-                                            tal:content="owner/title | owner/url" />
-                                    </tal:owner>
-                                </li>
-                            </tal:provenance>
-                        </ul>
-                    </tal:provenances>
-                </div>
+                                <tal:source
+                                        define="source provenance/source | python:{}; source_url source/url | nothing"
+                                        condition="source_url">
+                                    <a tal:attributes="href source/url"
+                                            tal:content="python:source.get('title') or source_url" />;
+                                </tal:source>
+
+                            </li>
+                        </tal:provenance>
+                        <!--? Indicator -->
+                        <li tal:define="obj python:view.get_backward_relation('AssessmentPart')"
+                                tal:condition="obj">
+                            <span>EEA &ndash; </span>
+                            <a tal:attributes="href obj/absolute_url; title obj/Title"
+                                    tal:content="python:'Indicator ' + obj.get_codes()[-1]" target="_top">content</a>
+                        </li>
+                        <!--? /Indicator -->
+                    </ul>
+                </tal:provenances>
             </div>
         </div>
         <!--? /Data Sources -->
@@ -338,6 +351,12 @@
                share_dialog.find('.share-dialog-text').html(document.location.href);
                $('.open-dialog').click(function(ev) {
                    $($(this).attr('data-dialog')).dialog('open');
+                   ev.preventDefault();
+               });
+                var doc = jQuery(document);
+                var doc_width = doc.width();
+                var doc_height = doc.height();
+                $('.googlechart-enlarge').click(function(ev) {
                    ev.preventDefault();
                });
 
