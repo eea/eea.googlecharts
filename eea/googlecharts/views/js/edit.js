@@ -902,7 +902,7 @@ function saveThumb(value, useName){
                             var img_url;
                             img_url = jQuery(thumb_id).find("img").attr("src");
                             if (img_url === undefined){
-                                svg = jQuery(thumb_id).find("svg").parent().html();
+                                svg = jQuery('<div>').append(jQuery(thumb_id).find("svg").clone()).html();
                                 svg = svgCleanup(svg);
                             }
                             else {

@@ -43,7 +43,7 @@ function exportToPng(){
     var form = jQuery("#export");
 
     if (jQuery("#googlechart_view img").attr("src") === undefined){
-        var svg = jQuery("#googlechart_view").find("svg").parent().html();
+        var svg = jQuery('<div>').append(jQuery("#googlechart_view").find("svg").clone()).html();
         var clean_svg = svgCleanup(svg);
 
         jQuery("#svg").attr("value",clean_svg);
@@ -62,9 +62,7 @@ function exportToPng(){
 function exportToSVG(){
     var form = jQuery("#export");
     if (jQuery("#googlechart_view img").attr("src") === undefined){
-        var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");
-        jQuery(svgobj).attr("xmlns","http://www.w3.org/2000/svg");
-        var svg = jQuery("#googlechart_view").find("svg").parent().html();
+        var svg = jQuery('<div>').append(jQuery("#googlechart_view").find("svg").clone()).html();
         var clean_svg = svgCleanup(svg);
         jQuery("#svg").attr("value",clean_svg);
         jQuery("#export_fmt").attr("value", "svg");
