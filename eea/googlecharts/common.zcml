@@ -8,6 +8,7 @@
   <include file="documentation.zcml" />
 
   <include package=".browser" />
+  <include package=".cache" />
   <include package=".events" />
   <include package=".views" />
   <include package=".widgets" />

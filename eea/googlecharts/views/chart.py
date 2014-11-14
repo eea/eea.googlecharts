@@ -21,7 +21,7 @@ from eea.googlecharts.config import EEAMessageFactory as _
 from eea.app.visualization.controlpanel.interfaces import IDavizSettings
 from copy import deepcopy
 from zope.component import queryUtility
-from zope.lifecycleevent import ObjectModifiedEvent
+from eea.googlecharts.cache import InvalidateCacheEvent
 from zope.event import notify
 
 logger = logging.getLogger('eea.googlecharts')
@@ -737,7 +737,7 @@ class Export(BrowserView):
                 thumbs_to_delete.append(obj_id)
 
         self.context.manage_delObjects(thumbs_to_delete)
-        notify(ObjectModifiedEvent(self.context))
+        notify(InvalidateCacheEvent(self.context))
 
 
 class SavePNGChart(Export):
@@ -813,7 +813,7 @@ class SavePNGChart(Export):
                         break
 
                 svg_obj.reindexObject()
-                notify(ObjectModifiedEvent(svg_obj))
+                notify(InvalidateCacheEvent(svg_obj))
 
         return _("Success")
 
@@ -852,7 +852,7 @@ class SetThumb(BrowserView):
         obj.setExcludeFromNav(True)
         obj.getField('image').getMutator(obj)(img)
         self.context.getOrdering().moveObjectsToTop(ids=[obj.getId()])
-        notify(ObjectModifiedEvent(obj))
+        notify(InvalidateCacheEvent(obj))
         return _("Success")
 
 class DashboardView(ViewForm):
