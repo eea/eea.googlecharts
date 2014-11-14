@@ -25,4 +25,5 @@ __all__ = [
     flush.__name__,
     flushBackRefs.__name__,
     flushRelatedItems.__name__,
+    InvalidateCacheEvent.__name__,
 ]

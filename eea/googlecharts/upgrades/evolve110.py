@@ -10,6 +10,8 @@ logger = logging.getLogger('eea.googlecharts.evolve110')
 
 
 def create_version(pr, visualization, url):
+    """ New version
+    """
     try:
         logger.info('Attempting to create version for %s', url)
         commit_msg = u'Migrating to eea.googlecharts 11.0'
