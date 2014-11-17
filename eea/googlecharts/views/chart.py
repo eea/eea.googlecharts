@@ -806,6 +806,7 @@ class SavePNGChart(Export):
                     to_do = [k for k in available_transitions
                              if k.new_state_id == 'published']
 
+                    self.request.form['_no_emails_'] = True
                     for item in to_do:
                         workflow.doActionFor(svg_obj, item.id)
                         break
