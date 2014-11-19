@@ -3,6 +3,10 @@ Changelog
 
 11.7-dev - (unreleased)
 -----------------------
+* Bug fix: Suppress sending useless emails while generating charts SVG/PNG previews
+  [voineali refs #21851]
+* Bug fix: Speedup savepngchart, setthumb and cleanup_thumbs methods
+  [voineali refs #21852, #21850, #21851]
 
 11.6 - (2014-11-13)
 -------------------

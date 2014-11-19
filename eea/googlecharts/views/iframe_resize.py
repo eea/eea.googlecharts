@@ -44,9 +44,11 @@ class Resizer(BrowserView):
                                 iframe.set("width", new_width)
                                 iframe.set("height", new_height)
                                 iframe.set("src", new_src)
-                        new_value += lxml.html.tostring(element, encoding='utf-8')
+                        new_value += lxml.html.tostring(
+                            element, encoding='utf-8')
                     else:
                         new_value += element
                 if has_changes:
-                    self.context.processForm(data=1, metadata=0, values={field.getName():new_value})
+                    self.context.processForm(
+                        data=1, metadata=0, values={field.getName():new_value})
         return "ok"

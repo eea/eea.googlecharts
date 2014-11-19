@@ -61,7 +61,12 @@ class Edit(BrowserView):
 
         return _('Changes saved')
 
-    def get_named_data(self, config_name, key='', default=[]):
+    def get_named_data(self, config_name, key='', default=None):
+        """ Named data
+        """
+        if default is None:
+            default = []
+
         mutator = queryAdapter(self.context, IVisualizationConfig)
         view = mutator.view('googlechart.googlecharts')
 
