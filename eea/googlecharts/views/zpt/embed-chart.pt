@@ -5,6 +5,7 @@
                         chart_name chart/name;
                         title view/context/Title;
                         url view/context/absolute_url">
+<!DOCTYPE html>
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
     <head>
         <link href="collective.js.jqueryui.custom.min.css" rel="stylesheet" type="text/css"/>
@@ -17,7 +18,14 @@
             .googlechart_full > div > div {overflow:hidden ! important;}
             .googlechart_filters {margin-top:0 !important;}
             body {margin:1px; overflow: hidden; font-family: Verdana, "Lucida Grande", Helvetica, Arial, sans-serif;}
-            .googlechart_dashboard .googlechart-notes {
+            a {
+                color: #205c90;
+                text-decoration: none;
+            }
+             a:visited, a:hover {
+                 color: #8e004d;
+             }
+            .googlechart-notes {
               font-size: 85%;
               color: #666;
             }
@@ -37,14 +45,17 @@
                 vertical-align: bottom;
             }
            .googlechart-datasource {
-               width: 100px;
+               width: 105px;
+               vertical-align: top;
            }
            #googlechart-provenance-definitions {
-               list-style: none;
+               list-style: lower-alpha inside;
                padding: 0 0 0 0.5em;
+               overflow: auto;
            }
             #googlechart-provenance-definitions li {
-                display: inline-block;
+                float: left;
+                margin: 0 0.5em;
             }
             .pull-left { float: left; margin-right: 1em;}
             .pull-right { float: right;}
@@ -135,7 +146,7 @@
                                         define="owner provenance/owner | python:{}; owner_url owner/url | nothing"
                                         condition="owner_url" >
                                     <span
-                                            tal:content="python:owner.get('acronym') or owner.get('title')  or owner_url" />
+                                            tal:content="python:owner.get('acronym') or owner.get('title') or owner_url" />
                                     <span>&ndash; </span>
                                 </tal:owner>
 
@@ -143,7 +154,7 @@
                                         define="source provenance/source | python:{}; source_url source/url | nothing"
                                         condition="source_url">
                                     <a tal:attributes="href source/url"
-                                            tal:content="python:source.get('title') or source_url" />;
+                                            tal:content="python:source.get('title') or source_url" />
                                 </tal:source>
 
                             </li>
