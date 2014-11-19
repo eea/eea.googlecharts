@@ -22,7 +22,8 @@
               color: #666;
             }
             .googlechart-notes {
-                margin-top: 0.5em;
+                margin: 0.5em 0;
+                overflow: hidden;
             }
             .googlecharts-embed-dialog textarea {
                 width: 100%;
@@ -56,10 +57,6 @@
     <body onhashchange="hashchanged();">
 
     <div class="googlechart-notes">
-        <div class="pull-left">
-            <h3 tal:content="string:${chart_name} - ${title}" class="googlechart-title"></h3>
-        </div>
-
         <div class="pull-right">
             <!--? Save -->
             <div class="pull-left googlechart-downloads">
@@ -110,7 +107,7 @@
 
             <!--? Enlarge -->
             <div class="pull-left">
-                <a href="#" class="googlechart-enlarge"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Enlarge</a>
+                <a href="#" class="googlechart-enlarge" target="_top"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Enlarge</a>
             </div>
             <!--? Enlarge -->
 
@@ -348,19 +345,24 @@
 
                var embed_dialogs = $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: '80%'});
                var share_dialog = $('#share-dialog');
-               share_dialog.find('.share-dialog-text').html(document.location.href);
+               var embed_url = document.location.href;
+               var doc = $(document);
+               var doc_height = doc.height();
+               var doc_width = doc.width();
+               var iframeCode = '<iframe width=\'' + doc_width  + '\' height=\'' + doc_height + '\' src=\'' + embed_url + '\'></iframe>';
+               share_dialog.find('.share-dialog-text').text(iframeCode);
                $('.open-dialog').click(function(ev) {
                    $($(this).attr('data-dialog')).dialog('open');
                    ev.preventDefault();
                });
+                var baseurl_uri = window.encodeURIComponent(baseurl_$vhash + '/#tab-' + chart_id_$vhash);
                 var doc = jQuery(document);
                 var doc_width = doc.width();
                 var doc_height = doc.height();
-                $('.googlechart-enlarge').click(function(ev) {
-                   ev.preventDefault();
-               });
+                $('.googlechart-enlarge').attr('href', embed_url).click(function(ev) {
+                    ev.preventDefault();
+                });
 
-               var baseurl_uri = window.encodeURIComponent(baseurl_$vhash + '/embed-chart?chart=' + chart_id_$vhash);
                $('.share-button').each(function(){
                    this.href = this.href + baseurl_uri;
                });
