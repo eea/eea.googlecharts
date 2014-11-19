@@ -21,7 +21,7 @@ from eea.googlecharts.config import EEAMessageFactory as _
 from eea.app.visualization.controlpanel.interfaces import IDavizSettings
 from copy import deepcopy
 from zope.component import queryUtility
-from zope.lifecycleevent import ObjectModifiedEvent
+from eea.googlecharts.cache import InvalidateCacheEvent
 from zope.event import notify
 
 logger = logging.getLogger('eea.googlecharts')
@@ -91,24 +91,33 @@ class View(ViewForm):
         """ iframe settings of qrcode
         """
         sp = self.siteProperties
-        return json.dumps({'hide':sp.get('googlechart.qrcode_hide_on_iframe', False),
-             'resize':sp.get('googlechart.qrcode_resize_on_iframe', False),
-             'size':sp.get('googlechart.qrcode_size_on_iframe', '0')})
+        return json.dumps({
+            'hide':sp.get('googlechart.qrcode_hide_on_iframe', False),
+            'resize':sp.get('googlechart.qrcode_resize_on_iframe', False),
+            'size':sp.get('googlechart.qrcode_size_on_iframe', '0')
+        })
 
     def wm_iframe_settings(self):
         """ watermark settings of qrcode
         """
         sp = self.siteProperties
-        return json.dumps({'hide':sp.get('googlechart.watermark_hide_on_iframe', False),
-             'resize':sp.get('googlechart.watermark_resize_on_iframe', False),
-             'size':sp.get('googlechart.watermark_size_on_iframe', '0')})
+        return json.dumps({
+            'hide':sp.get('googlechart.watermark_hide_on_iframe', False),
+            'resize':sp.get('googlechart.watermark_resize_on_iframe', False),
+            'size':sp.get('googlechart.watermark_size_on_iframe', '0')
+        })
 
     def get_maintitle(self):
         """ Main title of visualization
         """
         return re.escape(self.context.title)
 
-    def get_named_data(self, config_name, key='', default=[]):
+    def get_named_data(self, config_name, key='', default=None):
+        """ Named data
+        """
+        if default is None:
+            default = []
+
         mutator = queryAdapter(self.context, IVisualizationConfig)
         view = mutator.view('googlechart.googlecharts')
 
@@ -756,7 +765,7 @@ class Export(BrowserView):
                 thumbs_to_delete.append(obj_id)
 
         self.context.manage_delObjects(thumbs_to_delete)
-        notify(ObjectModifiedEvent(self.context))
+        notify(InvalidateCacheEvent(self.context))
 
 
 class SavePNGChart(Export):
@@ -816,6 +825,7 @@ class SavePNGChart(Export):
                     to_do = [k for k in available_transitions
                              if k.new_state_id == 'published']
 
+                    self.request.form['_no_emails_'] = True
                     for item in to_do:
                         workflow.doActionFor(svg_obj, item.id)
                         break
@@ -832,7 +842,7 @@ class SavePNGChart(Export):
                         break
 
                 svg_obj.reindexObject()
-                notify(ObjectModifiedEvent(svg_obj))
+                notify(InvalidateCacheEvent(svg_obj))
 
         return _("Success")
 
@@ -871,7 +881,7 @@ class SetThumb(BrowserView):
         obj.setExcludeFromNav(True)
         obj.getField('image').getMutator(obj)(img)
         self.context.getOrdering().moveObjectsToTop(ids=[obj.getId()])
-        notify(ObjectModifiedEvent(obj))
+        notify(InvalidateCacheEvent(obj))
         return _("Success")
 
 class DashboardView(ViewForm):

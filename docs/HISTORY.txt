@@ -3,6 +3,10 @@ Changelog
 
 11.7-dev - (unreleased)
 -----------------------
+* Bug fix: Suppress sending useless emails while generating charts SVG/PNG previews
+  [voineali refs #21851]
+* Bug fix: Speedup savepngchart, setthumb and cleanup_thumbs methods
+  [voineali refs #21852, #21850, #21851]
 
 11.6 - (2014-11-13)
 -------------------
@@ -44,7 +48,7 @@ Changelog
 
 11.0 - (2014-09-15)
 -------------------
-* Feature: Added possibility to set globally the qr_code and watermark/logo 
+* Feature: Added possibility to set globally the qr_code and watermark/logo
   size on iframes embedded on same site
   [szabozo0 refs #21007]
 * Bugfix: Fixed watermark/logo on embedded dashboards
