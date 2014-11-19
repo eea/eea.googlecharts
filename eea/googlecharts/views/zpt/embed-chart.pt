@@ -16,7 +16,7 @@
             #googlechart_full > div > div {overflow:hidden ! important;}
             .googlechart_full > div > div {overflow:hidden ! important;}
             .googlechart_filters {margin-top:0 !important;}
-            body {margin:1px; overflow: hidden;}
+            body {margin:1px; overflow: hidden; font-family: Verdana, "Lucida Grande", Helvetica, Arial, sans-serif;}
             .googlechart_dashboard .googlechart-notes {
               font-size: 85%;
               color: #666;
@@ -28,7 +28,11 @@
             .googlecharts-embed-dialog textarea {
                 width: 100%;
             }
-           .googlechart-notes .ui-icon {
+            .googlechart-share {
+                position: absolute;
+                right: 0;
+            }
+           .googlechart-share ui-icon {
                 display: inline-block;
                 vertical-align: bottom;
             }
@@ -56,7 +60,7 @@
     </head>
     <body onhashchange="hashchanged();">
 
-    <div class="googlechart-notes">
+    <div class="googlechart-share" style="display:none;">
         <div class="pull-right">
             <!--? Save -->
             <div class="pull-left googlechart-downloads">
@@ -357,6 +361,12 @@
                });
                 var baseurl_uri = window.encodeURIComponent(baseurl_$vhash + '/#tab-' + chart_id_$vhash);
                 var doc = jQuery(document);
+                var chart_share = $('.googlechart-share');
+                doc.hover(function(ev) {
+                    chart_share.fadeIn();
+                }, function(ev) {
+                    chart_share.fadeOut();
+                });
                 var doc_width = doc.width();
                 var doc_height = doc.height();
                 $('.googlechart-enlarge').attr('href', embed_url).click(function(ev) {
