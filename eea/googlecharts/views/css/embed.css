@@ -30,6 +30,7 @@
 }
 
 #googlechart_full > div > div {overflow:hidden ! important;}
+#googlechart_filters {margin-top:0 !important;}
 .googlechart_full > div > div {overflow:hidden ! important;}
 .googlechart_filters {margin-top:0 !important;}
 body {margin:1px; overflow: hidden; font-family: Verdana, "Lucida Grande", Helvetica, Arial, sans-serif;}

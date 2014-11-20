@@ -23,7 +23,7 @@
     </head>
     <body onhashchange="hashchanged();">
 
-    <div class="googlechart-share" style="display:none;">
+    <div class="googlechart-share" style="display:none;" metal:define-macro="share">
         <div class="pull-right">
             <!--? Save -->
             <div class="pull-left googlechart-downloads">

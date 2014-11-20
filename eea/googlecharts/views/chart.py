@@ -388,6 +388,13 @@ class View(ViewForm):
             if dashboard.get('name') == dashboard_id:
                 return json.dumps(dashboard)
 
+    def get_dashboard_embed(self):
+        """
+        :return: dashboard settings as python dict
+        :rtype:  dict
+        """
+        return json.loads(self.get_dashboard())
+
     def get_dashboard_js(self, chart):
         """ Dashboard
         """
