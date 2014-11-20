@@ -3,6 +3,9 @@ Changelog
 
 11.7-dev - (unreleased)
 -----------------------
+* Feature: Embed chart now has the ability to share the chart to social media,
+  download the original data in multiple formats and display data source information
+  [ichim-david refs #21467]
 * Bug fix: Suppress sending useless emails while generating charts SVG/PNG previews
   [voineali refs #21851]
 * Bug fix: Speedup savepngchart, setthumb and cleanup_thumbs methods
