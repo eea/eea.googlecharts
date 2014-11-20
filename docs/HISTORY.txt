@@ -1,6 +1,9 @@
 Changelog
 =========
 
+11.8-dev - (unreleased)
+-----------------------
+
 11.7 - (2014-11-20)
 -------------------
 * Feature: Embed chart now has the ability to share the chart to social media,
