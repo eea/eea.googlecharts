@@ -332,13 +332,10 @@
                 });
                 var doc_width = doc.width();
                 var doc_height = doc.height();
-                $('.googlechart-enlarge').attr('href', embed_url).click(function(ev) {
-                    ev.preventDefault();
+                $('.googlechart-enlarge').attr('href', embed_url);
+                $('.share-button').each(function(){
+                    this.href = this.href + baseurl_uri;
                 });
-
-               $('.share-button').each(function(){
-                   this.href = this.href + baseurl_uri;
-               });
 
             });
             function hashchanged(){
