@@ -1,0 +1,80 @@
+/* Icons  taken from the free Gemicon icon set designed by Turqois */
+.sprite {
+    background: url(++resource++eea.googlecharts.images/share-spritesheets.png) no-repeat;
+    display: block;
+    margin: 0 auto;
+}
+
+.sprite-explore {
+    width: 32px;
+    height: 32px;
+    background-position: -5px -5px;
+}
+
+.sprite-share {
+    width: 32px;
+    height: 32px;
+    background-position: -47px -5px;
+}
+
+.sprite-save {
+    width: 32px;
+    height: 32px;
+    background-position: -5px -47px;
+}
+
+.sprite-enlarge {
+    width: 32px;
+    height: 32px;
+    background-position: -47px -47px;
+}
+
+#googlechart_full > div > div {overflow:hidden ! important;}
+.googlechart_full > div > div {overflow:hidden ! important;}
+.googlechart_filters {margin-top:0 !important;}
+body {margin:1px; overflow: hidden; font-family: Verdana, "Lucida Grande", Helvetica, Arial, sans-serif;}
+a {
+    color: #205c90;
+    text-decoration: none;
+}
+a:visited, a:hover {
+    color: #8e004d;
+}
+.googlechart-notes {
+    font-size: 85%;
+    color: #666;
+}
+.googlechart-notes {
+    margin: 0.5em 0;
+    overflow: hidden;
+}
+.googlecharts-embed-dialog textarea {
+    width: 100%;
+}
+.googlechart-share {
+    position: absolute;
+    z-index: 100;
+    right: 0;
+    margin-top: 0.5em;
+}
+.googlechart-share ui-icon {
+    display: inline-block;
+    vertical-align: bottom;
+}
+.googlechart-datasource {
+    width: 105px;
+    vertical-align: top;
+}
+#googlechart-provenance-definitions {
+    list-style: lower-alpha inside;
+    padding: 0 0 0 0.5em;
+    overflow: auto;
+}
+#googlechart-provenance-definitions li {
+    float: left;
+    margin: 0 0.5em;
+}
+.pull-left { float: left; margin-right: 1em;}
+.pull-right { float: right;}
+.table-cel { display: table-cell;}
+.googlechart-title { margin: 0;}

@@ -1,10 +1,130 @@
 <tal:block tal:define="inline view/isInline;
-                        enabled_chart python: True">
+                        enabled_chart python: True;
+                        chart view/get_chart;
+                        chart_id chart/id;
+                        chart_name chart/name;
+                        title view/context/Title;
+                        url view/context/absolute_url">
+<!DOCTYPE html>
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
     <head>
+        <link href="collective.js.jqueryui.custom.min.css" rel="stylesheet" type="text/css"/>
         <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
         <link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
+        <link href="++resource++eea.googlecharts.embed.css" rel="stylesheet" type="text/css"/>
+        <style type="text/css" tal:content="view/get_customstyle">
+        </style>
+        <meta property="og:type"   content="article" />
+        <meta property="og:image" tal:attributes="content string:${url}/${chart_id}.png/download" />
+        <meta property="og:url" tal:attributes="content string:${url}/embed-chart?chart=${chart_id}" />
+        <meta property="og:title" tal:attributes="content string:${title}" />
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
+        <title tal:content="title"></title>
+    </head>
+    <body onhashchange="hashchanged();">
+
+    <div class="googlechart-share" style="display:none;">
+        <div class="pull-right">
+            <!--? Save -->
+            <div class="pull-left googlechart-downloads">
+                <a href="#" class="open-dialog" data-dialog="#download-dialog"><span  class="sprite sprite-save"></span>Save</a>
+                <div class="googlecharts-embed-dialog" id="download-dialog">
+                    <p><strong>Original Data</strong></p>
+                    <a tal:attributes="href string:${url}/download.csv">CSV</a>
+                    <a tal:attributes="href string:${url}/download.tsv">TSV</a>
+                    <p><strong>Image formats</strong></p>
+                    <a tal:attributes="href string:${chart_id}.png/download" target="_top">PNG</a>
+                    <a tal:attributes="href string:${chart_id}.svg/download" target="_top">SVG</a>
+
+                    <p><strong>Formats suitable for machine-to-machine communication</strong></p>
+                    <a tal:attributes="href string:${url}/download.json" target="_top">JSON</a>
+                    <a tal:attributes="href string:${url}/download.exhibit" target="_top">Exhibit JSON</a>
+                    <a tal:attributes="href string:${url}/download.xml" target="_top">XML</a>
+                    <a tal:attributes="href string:${url}/download.schema.xml" target="_top">
+                        XML with Schema
+                    </a>
+                </div>
+            </div>
+            <!--? /Save -->
+
+            <!--? Explore Data -->
+            <div class="pull-left">
+                <a tal:condition="python:not inline" class="go-to-original-link"
+                        tal:attributes="href url"
+                        i18n:translate="" target="_top"><span class="sprite sprite-explore"></span>Explore</a>
+            </div>
+            <!--? /Explore Data -->
+
+            <!--? Share -->
+            <div class="pull-left">
+                <a href="#" class="open-dialog" data-dialog="#share-dialog"><span  class="sprite sprite-share"></span>Share</a>
+                <div class="googlecharts-embed-dialog" id="share-dialog">
+                    <p><strong>Embed code:</strong></p>
+                    <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
+                    <p><strong>Share:</strong></p>
+                    <div class="googlechart googlechart-social">
+                        <a href="https://twitter.com/intent/tweet?url=" class="share-button share-button-twitter">Twitter</a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=" class="share-button share-button-facebook">Facebook</a>
+                        <a href="https://plus.google.com/share?url=" class="share-button share-button-gplus">Google Plus</a>
+
+                    </div>
+                </div>
+            </div>
+            <!--? /Share -->
+
+            <!--? Enlarge -->
+            <div class="pull-left">
+                <a href="#" class="googlechart-enlarge" target="_top"><span  class="sprite sprite-enlarge"></span>Enlarge</a>
+            </div>
+            <!--? Enlarge -->
+
+        </div>
+
+    </div>
+
+        <metal:chart use-macro="here/embed-chart/macros/chart"/>
+    <div class="googlechart-notes">
+
+        <!--? Data Sources -->
+        <div class="pull-left" tal:define="info view/context/@@data.info | python:{}" tal:condition="info">
+            <div class="visualization-info">
+                <tal:provenances
+                        define="provenances info/provenances | python:[]">
+                    <p class="googlechart-datasource table-cel"><strong>Data sources:</strong></p>
+                    <ul id="googlechart-provenance-definitions" class="table-cel">
+                        <tal:provenance repeat="provenance provenances">
+                            <li>
+                                <tal:owner
+                                        define="owner provenance/owner | python:{}; owner_url owner/url | nothing"
+                                        condition="owner_url" >
+                                    <span
+                                            tal:content="python:owner.get('acronym') or owner.get('title') or owner_url" />
+                                    <span>&ndash; </span>
+                                </tal:owner>
+
+                                <tal:source
+                                        define="source provenance/source | python:{}; source_url source/url | nothing"
+                                        condition="source_url">
+                                    <a tal:attributes="href source/url"
+                                            tal:content="python:source.get('title') or source_url" />
+                                </tal:source>
+
+                            </li>
+                        </tal:provenance>
+                        <!--? Indicator -->
+                        <li tal:define="obj python:view.get_backward_relation('AssessmentPart')"
+                                tal:condition="obj">
+                            <span>EEA &ndash; </span>
+                            <a tal:attributes="href obj/absolute_url; title obj/Title"
+                                    tal:content="python:'Indicator ' + obj.get_codes()[-1]" target="_top">content</a>
+                        </li>
+                        <!--? /Indicator -->
+                    </ul>
+                </tal:provenances>
+            </div>
+        </div>
+        <!--? /Data Sources -->
+    </div>
         <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
         <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -14,26 +134,6 @@
         <script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
         <script type="text/javascript" src="++resource++eea.googlecharts.embed_chart.js"></script>
         <script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
-        <style type="text/css" tal:content="view/get_customstyle">
-        </style>
-        <style type="text/css">
-            #googlechart_full > div > div {overflow:hidden ! important;}
-            #googlechart_filters {margin-top:0px !important;}
-            .googlechart_full > div > div {overflow:hidden ! important;}
-            .googlechart_filters {margin-top:0px !important;}
-            body {margin:1px; overflow: hidden;}
-            .googlechart_dashboard .googlechart-notes {
-              font-size: 85%;
-              color: #666;
-            }
-        </style>
-    </head>
-    <body onhashchange="hashchanged();" style="margin:0">
-        <metal:chart use-macro="here/embed-chart/macros/chart"/>
-        <a tal:condition="python:not inline" style="float:right" class="go-to-original-link"
-           tal:attributes="href view/context/absolute_url"
-           i18n:translate=""
-           target="_top">Explore data</a>
     </body>
 </html>
 
@@ -63,12 +163,12 @@
             var chart_json_$vhash = ${chart/config};
             var width_$vhash = ${chart/chartWidth};
             var height_$vhash = ${chart/chartHeight};
-            var name_$vhash = '${chart/name}';
+            var name_$vhash = '${chart_name}';
             var chart_options_$vhash = ${chart/options};
             var chart_filterposition_$vhash = ${chart/filterposition}
             var chart_filters_$vhash = ${chart/filters};
-            var baseurl_$vhash = '${view/context/absolute_url}';
-            var chart_id_$vhash = '${chart/chart_id}';
+            var baseurl_$vhash = '${url}';
+            var chart_id_$vhash = '${chart_id}';
             var qr_pos_$vhash = '${view/qr_position}';
             var qr_size_$vhash = '${view/qr_size}';
             var wm_pos_$vhash = '${view/wm_position}';
@@ -209,6 +309,39 @@
                                 .data('other_options', other_options_$vhash);
                         }
                 }
+
+               var embed_dialogs = $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: '80%'});
+               var share_dialog = $('#share-dialog');
+               var embed_url = document.location.href;
+               var doc = $(document);
+               var doc_height = doc.height();
+               var doc_width = doc.width();
+               var iframeCode = '<iframe width=\'' + doc_width  + '\' height=\'' + doc_height + '\' src=\'' + embed_url + '\'></iframe>';
+               share_dialog.find('.share-dialog-text').text(iframeCode);
+               $('.open-dialog').click(function(ev) {
+                   $($(this).attr('data-dialog')).dialog('open');
+                   ev.preventDefault();
+               });
+                var baseurl_uri = window.encodeURIComponent(baseurl_$vhash + '/#tab-' + chart_id_$vhash);
+                var doc = jQuery(document);
+                var chart_share = $('.googlechart-share');
+                doc.hover(function(ev) {
+                    chart_share.fadeIn();
+                }, function(ev) {
+                    chart_share.fadeOut();
+                });
+                var doc_width = doc.width();
+                var doc_height = doc.height();
+                var enlarge_button = $('.googlechart-enlarge');
+                enlarge_button.attr('href', embed_url);
+                // show the enlarge button only if we are inside of the iframe
+                if(window == window.top) {
+                    enlarge_button.hide();
+                }
+                $('.share-button').each(function(){
+                    this.href = this.href + baseurl_uri;
+                });
+
             });
             function hashchanged(){
                 if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
