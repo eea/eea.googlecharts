@@ -237,10 +237,6 @@
     file="./js/json2.js"
   />
 
-  <browser:resource
-    name="eea.googlecharts.edit.css"
-    file="./css/edit.css"
-  />
 
   <browser:resource
     name="eea.googlecharts.dashboard.js"
@@ -306,6 +302,16 @@
     name="eea.googlecharts.uuid.js"
     file="./js/uuid.js"
   />
+
+  <browser:resource
+    name="eea.googlecharts.edit.css"
+    file="./css/edit.css"
+   />
+
+  <browser:resource
+    name="eea.googlecharts.embed.css"
+    file="./css/embed.css"
+   />
 
   <browser:resource
     name="eea.googlecharts.view.css"

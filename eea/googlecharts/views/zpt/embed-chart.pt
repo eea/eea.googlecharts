@@ -11,56 +11,8 @@
         <link href="collective.js.jqueryui.custom.min.css" rel="stylesheet" type="text/css"/>
         <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
         <link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
+        <link href="++resource++eea.googlecharts.embed.css" rel="stylesheet" type="text/css"/>
         <style type="text/css" tal:content="view/get_customstyle">
-        </style>
-        <style type="text/css">
-            #googlechart_full > div > div {overflow:hidden ! important;}
-            .googlechart_full > div > div {overflow:hidden ! important;}
-            .googlechart_filters {margin-top:0 !important;}
-            body {margin:1px; overflow: hidden; font-family: Verdana, "Lucida Grande", Helvetica, Arial, sans-serif;}
-            a {
-                color: #205c90;
-                text-decoration: none;
-            }
-             a:visited, a:hover {
-                 color: #8e004d;
-             }
-            .googlechart-notes {
-              font-size: 85%;
-              color: #666;
-            }
-            .googlechart-notes {
-                margin: 0.5em 0;
-                overflow: hidden;
-            }
-            .googlecharts-embed-dialog textarea {
-                width: 100%;
-            }
-            .googlechart-share {
-                position: absolute;
-                right: 0;
-            }
-           .googlechart-share ui-icon {
-                display: inline-block;
-                vertical-align: bottom;
-            }
-           .googlechart-datasource {
-               width: 105px;
-               vertical-align: top;
-           }
-           #googlechart-provenance-definitions {
-               list-style: lower-alpha inside;
-               padding: 0 0 0 0.5em;
-               overflow: auto;
-           }
-            #googlechart-provenance-definitions li {
-                float: left;
-                margin: 0 0.5em;
-            }
-            .pull-left { float: left; margin-right: 1em;}
-            .pull-right { float: right;}
-            .table-cel { display: table-cell;}
-            .googlechart-title { margin: 0;}
         </style>
         <meta property="og:type"   content="article" />
         <meta property="og:image" tal:attributes="content string:${url}/${chart_id}.png/download" />
@@ -75,7 +27,7 @@
         <div class="pull-right">
             <!--? Save -->
             <div class="pull-left googlechart-downloads">
-                <a href="#" class="open-dialog" data-dialog="#download-dialog"><span  class="ui-icon ui-icon-arrowthickstop-1-s"></span>Save</a>
+                <a href="#" class="open-dialog" data-dialog="#download-dialog"><span  class="sprite sprite-save"></span>Save</a>
                 <div class="googlecharts-embed-dialog" id="download-dialog">
                     <p><strong>Original Data</strong></p>
                     <a tal:attributes="href string:${url}/download.csv">CSV</a>
@@ -99,13 +51,13 @@
             <div class="pull-left">
                 <a tal:condition="python:not inline" class="go-to-original-link"
                         tal:attributes="href url"
-                        i18n:translate="" target="_top"><span class="ui-icon ui-icon-extlink"></span>Explore</a>
+                        i18n:translate="" target="_top"><span class="sprite sprite-explore"></span>Explore</a>
             </div>
             <!--? /Explore Data -->
 
             <!--? Share -->
             <div class="pull-left">
-                <a href="#" class="open-dialog" data-dialog="#share-dialog"><span  class="ui-icon  ui-icon-arrowreturnthick-1-e"></span>Share</a>
+                <a href="#" class="open-dialog" data-dialog="#share-dialog"><span  class="sprite sprite-share"></span>Share</a>
                 <div class="googlecharts-embed-dialog" id="share-dialog">
                     <p><strong>Embed code:</strong></p>
                     <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
@@ -122,7 +74,7 @@
 
             <!--? Enlarge -->
             <div class="pull-left">
-                <a href="#" class="googlechart-enlarge" target="_top"><span  class="ui-icon ui-icon-arrow-4-diag"></span>Enlarge</a>
+                <a href="#" class="googlechart-enlarge" target="_top"><span  class="sprite sprite-enlarge"></span>Enlarge</a>
             </div>
             <!--? Enlarge -->
 
