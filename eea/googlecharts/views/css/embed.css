@@ -1,4 +1,4 @@
-/* Icons */
+/* Icons  taken from the free Gemicon icon set designed by Turqois */
 .sprite {
     background: url(++resource++eea.googlecharts.images/share-spritesheets.png) no-repeat;
     display: block;
@@ -55,6 +55,7 @@ a:visited, a:hover {
     position: absolute;
     z-index: 100;
     right: 0;
+    margin-top: 0.5em;
 }
 .googlechart-share ui-icon {
     display: inline-block;
