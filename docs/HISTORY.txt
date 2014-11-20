@@ -1,8 +1,8 @@
 Changelog
 =========
 
-11.7-dev - (unreleased)
------------------------
+11.7 - (2014-11-20)
+-------------------
 * Feature: Embed chart now has the ability to share the chart to social media,
   download the original data in multiple formats and display data source information
   [ichim-david refs #21467]
