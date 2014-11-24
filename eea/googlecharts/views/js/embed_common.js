@@ -29,7 +29,6 @@ jQuery(function($){
     $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: '80%'});
     var share_dialog = $('#share-dialog');
     var embed_url = document.location.href;
-    debugger;
     var doc = $(document);
     var doc_height = doc.height();
     var doc_width = doc.width();

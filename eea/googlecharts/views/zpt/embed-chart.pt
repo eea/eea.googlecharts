@@ -159,8 +159,8 @@
             unpivotSettings python:view.get_unpivotSettings(chart);
             print python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;"
         tal:content="structure string:
-                EEAGoogleCharts = {};
-                EEAGoogleCharts.embed = {};
+            EEAGoogleCharts = {};
+            EEAGoogleCharts.embed = {};
             var chart_columns_$vhash = ${chart/columns};
             var merged_rows_$vhash = ${chart/data};
             var available_columns_$vhash = ${chart/available_columns};
