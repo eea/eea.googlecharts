@@ -92,15 +92,19 @@
             <div class="visualization-info">
                 <tal:provenances
                         define="provenances info/provenances | python:[]">
-                    <p class="googlechart-datasource table-cel"><strong>Data sources:</strong></p>
-                    <ul id="googlechart-provenance-definitions" class="table-cel">
+                    <tal:length define="indicator python:view.get_backward_relation('AssessmentPart');
+                                        has_provenances python:len(provenances);
+                                        has_many python: has_provenances > 1 or has_provenances >= 1 and indicator;
+                                        outerhtmltag python:'ul' if has_many else 'div';
+                                        htmltag python: 'li' if has_many else 'span'">
+                    <p class="googlechart-datasource table-cel" tal:condition="python: has_provenances or indicator"><strong>Data sources:</strong></p>
+                    <p tal:replace="structure string:<$outerhtmltag id='googlechart-provenance-definitions' class='table-cel'>"></p>
                         <tal:provenance repeat="provenance provenances">
-                            <li>
+                            <li tal:replace="structure string:<$htmltag>"></li>
                                 <tal:owner
                                         define="owner provenance/owner | python:{}; owner_url owner/url | nothing"
                                         condition="owner_url" >
-                                    <span
-                                            tal:content="python:owner.get('acronym') or owner.get('title') or owner_url" />
+                                    <span tal:content="python:owner.get('acronym') or owner.get('title') or owner_url" />
                                     <span>&ndash; </span>
                                 </tal:owner>
 
@@ -111,17 +115,17 @@
                                             tal:content="python:source.get('title') or source_url" />
                                 </tal:source>
 
-                            </li>
+                            <li tal:replace="structure string:</$htmltag>"></li>
                         </tal:provenance>
                         <!--? Indicator -->
-                        <li tal:define="obj python:view.get_backward_relation('AssessmentPart')"
-                                tal:condition="obj">
+                        <li tal:condition="indicator">
                             <span>EEA &ndash; </span>
-                            <a tal:attributes="href obj/absolute_url; title obj/Title"
-                                    tal:content="python:'Indicator ' + obj.get_codes()[-1]" target="_top">content</a>
+                            <a tal:attributes="href indicator/absolute_url; title indicator/Title"
+                                    tal:content="python:'Indicator ' + indicator.get_codes()[-1]" target="_top">content</a>
                         </li>
                         <!--? /Indicator -->
-                    </ul>
+                    <p tal:replace="structure string:</${outerhtmltag}>"></p>
+                    </tal:length>
                 </tal:provenances>
             </div>
         </div>
