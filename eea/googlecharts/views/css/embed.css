@@ -3,31 +3,44 @@
     background: url(++resource++eea.googlecharts.images/share-spritesheets.png) no-repeat;
     display: block;
     margin: 0 auto;
+    transform: scale(0.7);
 }
-
 .sprite-explore {
     width: 32px;
     height: 32px;
     background-position: -5px -5px;
 }
 
-.sprite-share {
+.sprite-hide {
     width: 32px;
     height: 32px;
     background-position: -47px -5px;
 }
 
-.sprite-save {
+.sprite-show {
     width: 32px;
     height: 32px;
     background-position: -5px -47px;
 }
 
-.sprite-enlarge {
+.sprite-share {
     width: 32px;
     height: 32px;
     background-position: -47px -47px;
 }
+
+.sprite-save {
+    width: 32px;
+    height: 32px;
+    background-position: -89px -5px;
+}
+
+.sprite-enlarge {
+    width: 32px;
+    height: 32px;
+    background-position: -89px -47px;
+}
+
 
 #googlechart_full > div > div {overflow:hidden ! important;}
 #googlechart_filters {margin-top:0 !important;}
@@ -55,12 +68,31 @@ a:visited, a:hover {
 .googlecharts-embed-dialog textarea {
     width: 100%;
 }
-.googlechart-share {
+.googlechart-share-box {
     position: absolute;
-    z-index: 100;
     right: 0;
-    margin-top: 0.5em;
+    height: 75px;
+    background: white;
+    z-index: 1;
+    vertical-align: baseline;
+    text-align: center;
 }
+
+.googlechart-share {
+    margin-top: 0.5em;
+    padding: 1em;
+    display: block;
+    float:right;
+}
+
+.googlechart-share-btn {
+    display: block;
+    width: 30px;
+    position: absolute;
+    top: 28%;
+    right: 0;
+}
+
 .googlechart-share ui-icon {
     display: inline-block;
     vertical-align: bottom;

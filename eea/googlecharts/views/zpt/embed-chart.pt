@@ -23,6 +23,8 @@
     </head>
     <body onhashchange="hashchanged();">
 
+    <div class="googlechart-share-box">
+    <a href="#" class="googlechart-share-btn" style="display: none;"><span class="sprite sprite-show"></span></a>
     <div class="googlechart-share" style="display:none;" metal:define-macro="share">
         <div class="pull-right">
             <!--? Save -->
@@ -81,7 +83,7 @@
         </div>
 
     </div>
-
+    </div>
         <metal:chart use-macro="here/embed-chart/macros/chart"/>
     <div class="googlechart-notes">
 
@@ -157,6 +159,8 @@
             unpivotSettings python:view.get_unpivotSettings(chart);
             print python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;"
         tal:content="structure string:
+                EEAGoogleCharts = {};
+                EEAGoogleCharts.embed = {};
             var chart_columns_$vhash = ${chart/columns};
             var merged_rows_$vhash = ${chart/data};
             var available_columns_$vhash = ${chart/available_columns};
@@ -167,8 +171,10 @@
             var chart_options_$vhash = ${chart/options};
             var chart_filterposition_$vhash = ${chart/filterposition}
             var chart_filters_$vhash = ${chart/filters};
-            var baseurl_$vhash = '${url}';
-            var chart_id_$vhash = '${chart_id}';
+            window.EEAGoogleCharts.embed.hash = '$vhash';
+            window.EEAGoogleCharts.embed.baseurl_$vhash = '${url}';
+            window.EEAGoogleCharts.embed.chart_id_$vhash = '${chart_id}';
+            jQuery(document).trigger('googlecharts.embed');
             var qr_pos_$vhash = '${view/qr_position}';
             var qr_size_$vhash = '${view/qr_size}';
             var wm_pos_$vhash = '${view/wm_position}';
@@ -283,7 +289,7 @@
                     googlechart_config_array: googlechart_config_array_$vhash,
                     GoogleChartsConfig: GoogleChartsConfig_$vhash,
                     main_title: main_title_$vhash,
-                    baseurl: baseurl_$vhash,
+                    baseurl: window.EEAGoogleCharts.embed.baseurl_$vhash,
                     qr_pos: qr_pos_$vhash,
                     qr_size: qr_size_$vhash,
                     wm_pos: wm_pos_$vhash,
@@ -310,37 +316,6 @@
                         }
                 }
 
-               var embed_dialogs = $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: '80%'});
-               var share_dialog = $('#share-dialog');
-               var embed_url = document.location.href;
-               var doc = $(document);
-               var doc_height = doc.height();
-               var doc_width = doc.width();
-               var iframeCode = '<iframe width=\'' + doc_width  + '\' height=\'' + doc_height + '\' src=\'' + embed_url + '\'></iframe>';
-               share_dialog.find('.share-dialog-text').text(iframeCode);
-               $('.open-dialog').click(function(ev) {
-                   $($(this).attr('data-dialog')).dialog('open');
-                   ev.preventDefault();
-               });
-                var baseurl_uri = window.encodeURIComponent(baseurl_$vhash + '/#tab-' + chart_id_$vhash);
-                var doc = jQuery(document);
-                var chart_share = $('.googlechart-share');
-                doc.hover(function(ev) {
-                    chart_share.fadeIn();
-                }, function(ev) {
-                    chart_share.fadeOut();
-                });
-                var doc_width = doc.width();
-                var doc_height = doc.height();
-                var enlarge_button = $('.googlechart-enlarge');
-                enlarge_button.attr('href', embed_url);
-                // show the enlarge button only if we are inside of the iframe
-                if(window == window.top) {
-                    enlarge_button.hide();
-                }
-                $('.share-button').each(function(){
-                    this.href = this.href + baseurl_uri;
-                });
 
             });
             function hashchanged(){
