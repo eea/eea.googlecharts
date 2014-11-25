@@ -24,11 +24,10 @@
     <body onhashchange="hashchanged();">
 
       <metal:chart use-macro="here/embed-chart/macros/chart"/>
-    <div class="googlechart-notes">
-
+    <div>
         <!--? Data Sources -->
-        <div class="pull-left" tal:define="info view/context/@@data.info | python:{}" tal:condition="info">
-            <div class="visualization-info">
+        <tal:data tal:define="info view/context/@@data.info | python:{}" tal:condition="info">
+            <div class="googlechart-datasources-info">
                 <tal:provenances
                         define="provenances info/provenances | python:[]">
                     <tal:length define="indicator python:view.get_backward_relation('AssessmentPart');
@@ -67,7 +66,7 @@
                     </tal:length>
                 </tal:provenances>
             </div>
-        </div>
+        </tal:data>
         <!--? /Data Sources -->
     </div>
         <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>

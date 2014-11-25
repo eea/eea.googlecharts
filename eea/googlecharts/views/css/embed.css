@@ -39,6 +39,10 @@ body {margin:1px; overflow: hidden;
     font-family: Verdana, "Lucida Grande", Helvetica, Arial, sans-serif;
     font-size: 75%;
 }
+
+p {
+    margin: 0.5em 0;
+}
 a {
     color: #205c90;
     text-decoration: none;
