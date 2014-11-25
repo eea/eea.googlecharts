@@ -62,7 +62,6 @@ a:visited, a:hover {
 }
 .googlechart-notes {
     margin: 0.5em 0;
-    overflow: hidden;
 }
 .googlecharts-embed-dialog textarea {
     width: 100%;
@@ -103,7 +102,6 @@ a:visited, a:hover {
 #googlechart-provenance-definitions {
     list-style: lower-alpha inside;
     padding: 0 0 0 0.5em;
-    overflow: auto;
 }
 #googlechart-provenance-definitions li {
     float: left;
