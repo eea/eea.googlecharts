@@ -90,6 +90,7 @@ a:visited, a:hover {
 #googlechart-provenance-definitions {
     list-style: lower-alpha inside;
     padding: 0 0 0 0.5em;
+    width: 100%;
 }
 #googlechart-provenance-definitions li {
     float: left;
