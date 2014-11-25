@@ -3,42 +3,31 @@
     background: url(++resource++eea.googlecharts.images/share-spritesheets.png) no-repeat;
     display: block;
     margin: 0 auto;
-    transform: scale(0.7);
-}
-.sprite-explore {
-    width: 32px;
-    height: 32px;
-    background-position: -5px -5px;
-}
-
-.sprite-hide {
-    width: 32px;
-    height: 32px;
-    background-position: -47px -5px;
-}
-
-.sprite-show {
-    width: 32px;
-    height: 32px;
-    background-position: -5px -47px;
-}
-
-.sprite-share {
-    width: 32px;
-    height: 32px;
-    background-position: -47px -47px;
-}
-
-.sprite-save {
-    width: 32px;
-    height: 32px;
-    background-position: -89px -5px;
+    opacity: 0.5;
 }
 
 .sprite-enlarge {
-    width: 32px;
-    height: 32px;
-    background-position: -89px -47px;
+    width: 16px;
+    height: 16px;
+    background-position: -5px -5px;
+}
+
+.sprite-explore {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -5px;
+}
+
+.sprite-save {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -31px;
+}
+
+.sprite-share {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -31px;
 }
 
 
@@ -67,18 +56,14 @@ a:visited, a:hover {
     width: 100%;
 }
 .googlechart-share-box {
-    position: absolute;
-    right: 0;
-    height: 75px;
-    background: white;
     z-index: 1;
     vertical-align: baseline;
     text-align: center;
+    float: left;
 }
 
 .googlechart-share {
-    margin-top: 0.5em;
-    padding: 1em;
+    padding: 0.7em;
     display: block;
     float:right;
 }
@@ -96,7 +81,6 @@ a:visited, a:hover {
     vertical-align: bottom;
 }
 .googlechart-datasource {
-    width: 105px;
     vertical-align: top;
 }
 #googlechart-provenance-definitions {

@@ -42,18 +42,11 @@ jQuery(function($){
     var hash = embed_obj.hash;
     var baseurl_uri = window.encodeURIComponent(embed_obj['baseurl_' + hash] + '/#tab-' + embed_obj['chart_id_' + hash]);
     var chart_share = $('.googlechart-share');
-    var chart_share_btn = $('.googlechart-share-btn');
+    chart_share.parent().appendTo("#googlechart_bottom_images_" + hash);
     doc.hover(function() {
-        chart_share_btn.fadeIn();
+        chart_share.fadeIn();
     }, function() {
-        chart_share_btn.fadeOut();
-    });
-    chart_share_btn.click(function(ev){
-        ev.preventDefault();
-        var self = $(this).find('span');
-        chart_share.toggle("slide", { direction: "toggle" }, 500, function(){
-            self.toggleClass('sprite-show').toggleClass('sprite-hide');
-        });
+        chart_share.fadeOut();
     });
 
     var enlarge_button = $('.googlechart-enlarge');

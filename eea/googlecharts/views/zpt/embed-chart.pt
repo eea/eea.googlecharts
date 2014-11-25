@@ -23,68 +23,7 @@
     </head>
     <body onhashchange="hashchanged();">
 
-    <div class="googlechart-share-box">
-    <a href="#" class="googlechart-share-btn" style="display: none;"><span class="sprite sprite-show"></span></a>
-    <div class="googlechart-share" style="display:none;" metal:define-macro="share">
-        <div class="pull-right">
-            <!--? Save -->
-            <div class="pull-left googlechart-downloads">
-                <a href="#" class="open-dialog" data-dialog="#download-dialog"><span  class="sprite sprite-save"></span>Save</a>
-                <div class="googlecharts-embed-dialog" id="download-dialog">
-                    <p><strong>Original Data</strong></p>
-                    <a tal:attributes="href string:${url}/download.csv">CSV</a>
-                    <a tal:attributes="href string:${url}/download.tsv">TSV</a>
-                    <p><strong>Image formats</strong></p>
-                    <a tal:attributes="href string:${chart_id}.png/download" target="_top">PNG</a>
-                    <a tal:attributes="href string:${chart_id}.svg/download" target="_top">SVG</a>
-
-                    <p><strong>Formats suitable for machine-to-machine communication</strong></p>
-                    <a tal:attributes="href string:${url}/download.json" target="_top">JSON</a>
-                    <a tal:attributes="href string:${url}/download.exhibit" target="_top">Exhibit JSON</a>
-                    <a tal:attributes="href string:${url}/download.xml" target="_top">XML</a>
-                    <a tal:attributes="href string:${url}/download.schema.xml" target="_top">
-                        XML with Schema
-                    </a>
-                </div>
-            </div>
-            <!--? /Save -->
-
-            <!--? Explore Data -->
-            <div class="pull-left">
-                <a tal:condition="python:not inline" class="go-to-original-link"
-                        tal:attributes="href url"
-                        i18n:translate="" target="_top"><span class="sprite sprite-explore"></span>Explore</a>
-            </div>
-            <!--? /Explore Data -->
-
-            <!--? Share -->
-            <div class="pull-left">
-                <a href="#" class="open-dialog" data-dialog="#share-dialog"><span  class="sprite sprite-share"></span>Share</a>
-                <div class="googlecharts-embed-dialog" id="share-dialog">
-                    <p><strong>Embed code:</strong></p>
-                    <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
-                    <p><strong>Share:</strong></p>
-                    <div class="googlechart googlechart-social">
-                        <a href="https://twitter.com/intent/tweet?url=" class="share-button share-button-twitter">Twitter</a>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=" class="share-button share-button-facebook">Facebook</a>
-                        <a href="https://plus.google.com/share?url=" class="share-button share-button-gplus">Google Plus</a>
-
-                    </div>
-                </div>
-            </div>
-            <!--? /Share -->
-
-            <!--? Enlarge -->
-            <div class="pull-left">
-                <a href="#" class="googlechart-enlarge" target="_top"><span  class="sprite sprite-enlarge"></span>Enlarge</a>
-            </div>
-            <!--? Enlarge -->
-
-        </div>
-
-    </div>
-    </div>
-        <metal:chart use-macro="here/embed-chart/macros/chart"/>
+      <metal:chart use-macro="here/embed-chart/macros/chart"/>
     <div class="googlechart-notes">
 
         <!--? Data Sources -->
@@ -333,6 +272,69 @@
 
     <div tal:attributes="id string:googlechart_dashboard_$vhash" class="embedded-dashboard googlechart_dashboard isChart">
     </div>
+        <!--? Share box -->
+    <div class="googlechart-share-box">
+        <div class="googlechart-share" style="display:none;" metal:define-macro="share">
+            <div class="pull-right">
+                <!--? Save -->
+                <div class="pull-left googlechart-downloads">
+                    <a href="#" class="open-dialog" data-dialog="#download-dialog"><span  class="sprite sprite-save"></span>Save</a>
+                    <div class="googlecharts-embed-dialog" id="download-dialog">
+                        <p><strong>Original Data</strong></p>
+                        <a tal:attributes="href string:${url}/download.csv">CSV</a>
+                        <a tal:attributes="href string:${url}/download.tsv">TSV</a>
+                        <p><strong>Image formats</strong></p>
+                        <a tal:attributes="href string:${chart_id}.png/download" target="_top">PNG</a>
+                        <a tal:attributes="href string:${chart_id}.svg/download" target="_top">SVG</a>
+
+                        <p><strong>Formats suitable for machine-to-machine communication</strong></p>
+                        <a tal:attributes="href string:${url}/download.json" target="_top">JSON</a>
+                        <a tal:attributes="href string:${url}/download.exhibit" target="_top">Exhibit JSON</a>
+                        <a tal:attributes="href string:${url}/download.xml" target="_top">XML</a>
+                        <a tal:attributes="href string:${url}/download.schema.xml" target="_top">
+                            XML with Schema
+                        </a>
+                    </div>
+                </div>
+                <!--? /Save -->
+
+                <!--? Explore Data -->
+                <div class="pull-left">
+                    <a tal:condition="python:not inline" class="go-to-original-link"
+                            tal:attributes="href url"
+                            i18n:translate="" target="_top"><span class="sprite sprite-explore"></span>Explore</a>
+                </div>
+                <!--? /Explore Data -->
+
+                <!--? Share -->
+                <div class="pull-left">
+                    <a href="#" class="open-dialog" data-dialog="#share-dialog"><span  class="sprite sprite-share"></span>Share</a>
+                    <div class="googlecharts-embed-dialog" id="share-dialog">
+                        <p><strong>Embed code:</strong></p>
+                        <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
+                        <p><strong>Share:</strong></p>
+                        <div class="googlechart googlechart-social">
+                            <a href="https://twitter.com/intent/tweet?url=" class="share-button share-button-twitter">Twitter</a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=" class="share-button share-button-facebook">Facebook</a>
+                            <a href="https://plus.google.com/share?url=" class="share-button share-button-gplus">Google Plus</a>
+
+                        </div>
+                    </div>
+                </div>
+                <!--? /Share -->
+
+                <!--? Enlarge -->
+                <div class="pull-left">
+                    <a href="#" class="googlechart-enlarge" target="_top"><span  class="sprite sprite-enlarge"></span>Enlarge</a>
+                </div>
+                <!--? Enlarge -->
+
+            </div>
+
+        </div>
+    </div>
+        <!--? /Share box -->
+
     </tal:block>
 
 </metal:chart>
