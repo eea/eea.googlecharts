@@ -34,9 +34,9 @@
                                         has_provenances python:len(provenances);
                                         has_many python: has_provenances > 1 or has_provenances >= 1 and indicator;
                                         outerhtmltag python:'ul' if has_many else 'div';
-                                        htmltag python: 'li' if has_many else 'span'">
-                    <p class="googlechart-datasource table-cel" tal:condition="python: has_provenances or indicator"><strong>Data sources:</strong></p>
-                    <p tal:replace="structure string:<$outerhtmltag id='googlechart-provenance-definitions' class='table-cel'>"></p>
+                                        htmltag python: 'li' if has_many else 'span class=googlechart-provenance-definition'">
+                    <p class="googlechart-datasource" tal:condition="python: has_provenances or indicator"><strong>Data sources:</strong></p>
+                    <p tal:replace="structure string:<$outerhtmltag id='googlechart-provenance-definitions' class='table-cell'>"></p>
                         <tal:provenance repeat="provenance provenances">
                             <li tal:replace="structure string:<$htmltag>"></li>
                                 <tal:owner
