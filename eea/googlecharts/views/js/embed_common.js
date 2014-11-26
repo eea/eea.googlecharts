@@ -43,6 +43,7 @@ jQuery(function($){
     var baseurl_uri = window.encodeURIComponent(embed_obj['baseurl_' + hash] + '/#tab-' + embed_obj['chart_id_' + hash]);
     var chart_share = $('.googlechart-share');
     chart_share.parent().appendTo("#googlechart_bottom_images_" + hash);
+    $(".googlechart_left_image").find('img').appendTo("#share-dialog");
     $(".googlechart-datasources-info").appendTo('.googlechart-notes');
     doc.hover(function() {
         chart_share.fadeIn();
