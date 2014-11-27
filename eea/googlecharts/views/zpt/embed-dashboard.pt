@@ -1,28 +1,21 @@
 <tal:block tal:define="inline view/isInline;
                         enabled_dashboard python: True;
                         title view/context/Title;
+                        embed_dashboard python:view.get_dashboard_embed();
+                        chart_id embed_dashboard/name;
                         url view/context/absolute_url">
 
 <!DOCTYPE html>
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
 <head>
+    <link href="collective.js.jqueryui.custom.min.css" rel="stylesheet" type="text/css"/>
     <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
     <link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
     <link href="++resource++eea.googlecharts.embed.css" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
-    <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
-    <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript" src="++resource++json2.js"></script>
-    <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
-    <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
-    <script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
-    <script type="text/javascript" src="++resource++eea.googlecharts.embed_dashboard.js"></script>
-    <script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
 
     <meta property="og:type"   content="article" />
     <meta property="og:image" tal:attributes="content string:${url}/${chart_id}.png/download" />
-    <meta property="og:url" tal:attributes="content string:${url}/embed-chart?chart=${chart_id}" />
+    <meta property="og:url" tal:attributes="content string:${url}/embed-dashboard?dashboard=${chart_id}" />
     <meta property="og:title" tal:attributes="content string:${title}" />
     <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
     <title tal:content="title"></title>
@@ -33,17 +26,17 @@
 </head>
 <body onhashchange="hashchanged();">
     <metal:chart use-macro="here/embed-dashboard/macros/dashboard"/>
+    <metal:share metal:use-macro="context/@@embed-chart/share"></metal:share>
 
-    <a tal:condition="python:not inline" style="float:right" class="go-to-original-link"
-       tal:attributes="href view/context/absolute_url"
-       i18n:translate=""
-       target="_top">Go to original visualization</a>
-
-    <tal:defines tal:define="
-            embed_dashboard python:view.get_dashboard_embed();
-            chart_id embed_dashboard/name">
-        <metal:share metal:use-macro="context/@@embed-chart/share"></metal:share>
-    </tal:defines>
+    <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
+    <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="++resource++json2.js"></script>
+    <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
+    <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
+    <script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
+    <script type="text/javascript" src="++resource++eea.googlecharts.embed_dashboard.js"></script>
+    <script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
 </body>
 </html>
 
@@ -56,8 +49,7 @@
 <metal:chart define-macro="dashboard" tal:condition="enabled_dashboard">
     <tal:block tal:define="vhash view/get_visualization_hash">
     <script type="text/javascript" tal:content="string:
-        var googlechart_config_array_$vhash = [];
-        ">
+        var googlechart_config_array_$vhash = [];">
     </script>
 
     <script type="text/javascript" tal:content="string:
@@ -71,66 +63,71 @@
         var iframe_qr_settings_$vhash = ${view/qr_iframe_settings};
         var iframe_wm_settings_$vhash = ${view/wm_iframe_settings};
         var main_title_$vhash = '${view/get_maintitle}';
-        var isInline_$vhash = '$inline';">
+        var isInline_$vhash = '$inline';
+        EEAGoogleCharts =  window.EEAGoogleCharts || {};
+        EEAGoogleCharts.embed = EEAGoogleCharts.embed || {};
+
+        window.EEAGoogleCharts.embed.hash = '$vhash';
+        window.EEAGoogleCharts.embed.baseurl_$vhash = baseurl_$vhash;
+        window.EEAGoogleCharts.embed.chart_id_$vhash = '${chart_id}';
+            ">
     </script>
     <tal:block tal:define="charts view/get_charts;">
         <tal:block tal:repeat="chart charts">
             <script type="text/javascript"
-                tal:define="dashboard python:view.get_dashboard_js(chart); row_filters python: chart.get('row_filters',{}); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc');
-                        unpivotSettings python:view.get_unpivotSettings(chart);
-                        "
+                tal:define="dashboard python:view.get_dashboard_js(chart); row_filters python: chart.get('row_filters',{});
+                            sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc');
+                            unpivotSettings python:view.get_unpivotSettings(chart);"
                 tal:content="string: googlechart_config_array_$vhash.push(['${chart/id}', ${chart/config}, ${chart/columns}, ${chart/filters}, ${chart/width}, ${chart/height}, ${chart/filterposition}, ${chart/options}, $dashboard, 'false',     'false',   $row_filters, '$sortBy', '$sortAsc', [], $unpivotSettings]);"></script>
-
         </tal:block>
 
     </tal:block>
-        <tal:defines tal:define="dashboard view/get_dashboard;
-                                print python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;">
-            <script type="text/javascript"
-                    tal:content="structure string:
-                            var dashboard_config_$vhash = ${dashboard};
-                    var settings_$vhash = {}
-                    jQuery(document).ready(function($){
-                    var print = $print;
-                    settings_$vhash = {
-                    googlechart_config_array : googlechart_config_array_$vhash,
-                    main_title : main_title_$vhash,
-                    dashboard_config : dashboard_config_$vhash,
-                    baseurl : baseurl_$vhash,
-                    qr_pos : qr_pos_$vhash,
-                    qr_size : qr_size_$vhash,
-                    wm_pos : wm_pos_$vhash,
-                    wm_path : wm_path_$vhash,
-                    iframe_qr_settings: iframe_qr_settings_$vhash,
-                    iframe_wm_settings: iframe_wm_settings_$vhash,
-                    merged_rows : merged_rows_$vhash,
-                    available_columns : available_columns_$vhash,
-                    vhash : '$vhash',
-                    isInline : isInline_$vhash
-                    };
-                    if (print || isInline_$vhash !== 'True'){
-                    drawDashboardEmbed(settings_$vhash);
-                    }
-                    else{
-                    jQuery('#googlechart_dashboard_$vhash')
+    <script type="text/javascript"
+        tal:define="
+            dashboard view/get_dashboard;
+            print python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;"
+        tal:content="structure string:
+        var dashboard_config_$vhash = ${dashboard};
+        var settings_$vhash = {}
+        jQuery(document).ready(function($){
+            var print = $print;
+            settings_$vhash = {
+                googlechart_config_array : googlechart_config_array_$vhash,
+                main_title : main_title_$vhash,
+                dashboard_config : dashboard_config_$vhash,
+                baseurl : baseurl_$vhash,
+                qr_pos : qr_pos_$vhash,
+                qr_size : qr_size_$vhash,
+                wm_pos : wm_pos_$vhash,
+                wm_path : wm_path_$vhash,
+                iframe_qr_settings: iframe_qr_settings_$vhash,
+                iframe_wm_settings: iframe_wm_settings_$vhash,
+                merged_rows : merged_rows_$vhash,
+                available_columns : available_columns_$vhash,
+                vhash : '$vhash',
+                isInline : isInline_$vhash
+            };
+            if (print || isInline_$vhash !== 'True'){
+                drawDashboardEmbed(settings_$vhash);
+            }
+            else{
+                jQuery('#googlechart_dashboard_$vhash')
                     .addClass('not_visible')
                     .attr('google_hash', '$vhash')
                     .data('settings', settings_$vhash)
-                    }
-                    if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
-                    }
-                    });
-                    function hashchanged(){
-                    if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
-                    drawDashboardEmbed(settings_$vhash);
-                    }
-                    };
-
-                    ">
-            </script>
-            <div tal:attributes="id string:googlechart_dashboard_$vhash; data-link context/absolute_url" class="embedded-dashboard googlechart_dashboard isDashboard">
-            </div>
-        </tal:defines>
+            }
+            if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
+            }
+        });
+        function hashchanged(){
+            if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
+                drawDashboardEmbed(settings_$vhash);
+            }
+        };
+        ">
+    </script>
+    <div tal:attributes="id string:googlechart_dashboard_$vhash; data-link context/absolute_url" class="embedded-dashboard googlechart_dashboard isDashboard">
+    </div>
     </tal:block>
 </metal:chart>
 </tal:block>
