@@ -3,6 +3,9 @@ Changelog
 
 11.9-dev - (unreleased)
 -----------------------
+* Change: lowered top padding for googlechart-share div in order to avoid
+  bottom border movement on action icons display
+  [ichim-david refs #21467]
 
 11.8 - (2014-12-02)
 -------------------
