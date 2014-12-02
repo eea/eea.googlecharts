@@ -1,8 +1,8 @@
 Changelog
 =========
 
-11.8-dev - (unreleased)
------------------------
+11.8 - (2014-12-02)
+-------------------
 * Feature: Embed dashboard now has the same abilities like the embed charts
   introduced in previous egg release
   [ichim-david refs #21467]
