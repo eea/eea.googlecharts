@@ -3,6 +3,14 @@ Changelog
 
 11.8-dev - (unreleased)
 -----------------------
+* Feature: Embed dashboard now has the same abilities like the embed charts
+  introduced in previous egg release
+  [ichim-david refs #21467]
+* Change: share actions are now positioned to the bottom left corner with
+  smaller icons
+  [ichim-david refs #21467]
+* Change: qr code is now moved to the share action dialog
+  [ichim-david refs #21467]
 
 11.7 - (2014-11-20)
 -------------------

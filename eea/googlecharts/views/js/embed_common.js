@@ -38,6 +38,9 @@ jQuery(function($){
         $($(this).attr('data-dialog')).dialog('open');
         ev.preventDefault();
     });
+    if (!window.EEAGoogleCharts) {
+        return;
+    }
     var embed_obj = window.EEAGoogleCharts.embed;
     var hash = embed_obj.hash;
     var baseurl_uri = window.encodeURIComponent(embed_obj['baseurl_' + hash] + '/#tab-' + embed_obj['chart_id_' + hash]);
