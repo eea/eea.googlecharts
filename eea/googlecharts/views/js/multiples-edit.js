@@ -1,7 +1,7 @@
 jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
     function checkIfPossibleMatrix(){
         var possible_matrix = true;
-        if (jQuery(".multiples-matrix-item-overlay.selected").length > 0){
+/*        if (jQuery(".multiples-matrix-item-overlay.selected").length > 0){
             jQuery(".multiples-matrix-item-overlay:not(.selected)").each(function(idx, overlay){
                 var horizontal_col_id = jQuery(overlay).attr("horizontal-column-id");
                 var vertical_col_id = jQuery(overlay).attr("vertical-column-id");
@@ -13,7 +13,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
         }
         else {
             possible_matrix = false;
-        }
+        }*/
         var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
         tmp_settings.possibleMatrix = possible_matrix;
         if ((tmp_settings.settings === undefined) || jQuery.isEmptyObject(tmp_settings.settings)){
@@ -528,6 +528,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             if (hasFilters){
                                 smc_chart.filters = filters;
                             }
+                            smc_chart.enabled = true;
                             smc_charts.push(smc_chart);
                         }
                     }
@@ -541,6 +542,9 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             displayLegend: false,
                             height: 67,
                             width: 67
+                        },
+                        matrix: {
+                            enabled: true,
                         }
                     };
                     var adv_options = jQuery.extend(true, {}, JSON.parse(base_chart_settings.options));
@@ -587,10 +591,10 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         adv_options: adv_options,
                         chartFiltersId: null,
                         dashboard_filters: null,
-                        interactive: false
+                        interactive: false,
+                        disableSort: true
                     };
                     drawSMCharts(smcharts_settings);
-
                     jQuery(".multiples-matrix-elements .smc-widget").each(function(idx, container){
                         var overlayed = jQuery("<div>")
                             .addClass("multiples-matrix-item-overlay")
@@ -625,19 +629,42 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                     }
                                 }
                                 var selected_columns = [];
-                                jQuery.each(jQuery(".multiples-matrix-item-overlay.selected"), function(idx, item){
-                                    selected_columns.push({
+                                var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
+                                jQuery.each(jQuery(".multiples-matrix-item-overlay"), function(idx, item){
+                                    var isVisible = false;
+                                    if (jQuery(item).hasClass("selected")){
+                                        isVisible = true;
+                                    }
+                                    jQuery.each(tmp_settings.charts, function(idx, chart){
+                                        if (_.isEqual(chart.possibleLabels, JSON.parse(jQuery(item).parent().attr("possible_labels")))){
+                                            chart.enabled = isVisible;
+                                        }
+                                    });
+/*                                    selected_columns.push({
                                         columns: JSON.parse(jQuery(item).parent().attr("used_columns")),
                                         filters: JSON.parse(jQuery(item).parent().attr("filters")),
                                         possibleLabels: JSON.parse(jQuery(item).parent().attr("possible_labels"))
-                                    });
+                                    });*/
                                 });
-                                var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
-                                tmp_settings.charts = selected_columns;
+//                                tmp_settings.charts = selected_columns;
                                 jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
                                 checkIfPossibleMatrix();
                             });
                     });
+
+                    var all_multiples = [];
+                    jQuery.each(jQuery(".multiples-matrix-item-overlay"), function(idx, item){
+                        all_multiples.push({
+                            columns: JSON.parse(jQuery(item).parent().attr("used_columns")),
+                            filters: JSON.parse(jQuery(item).parent().attr("filters")),
+                            possibleLabels: JSON.parse(jQuery(item).parent().attr("possible_labels"))
+                        });
+                    });
+
+                    var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
+                    tmp_settings.charts = all_multiples;
+                    jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
+//                    checkIfPossibleMatrix();
 
                     jQuery("<input type='checkbox'>")
                         .appendTo(".multiples-header-item")
@@ -695,7 +722,10 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         columns:jQuery.extend(true, {}, JSON.parse(container.attr("used_columns")))
                     };
                     for (var i = 0; i < default_settings.charts.length; i++){
-                        var chart_settings = {filters:jQuery.extend(true, {}, default_settings.charts[i].filters), columns:jQuery.extend(true, {}, default_settings.charts[i].columns)};
+                        var chart_settings = {}
+                        if (default_settings.charts[i].enabled){
+                            chart_settings = {filters:jQuery.extend(true, {}, default_settings.charts[i].filters), columns:jQuery.extend(true, {}, default_settings.charts[i].columns)};
+                        }
                         if (_.isEqual(container_settings, chart_settings)){
                             container.find(".multiples-matrix-item-overlay")
                                 .addClass("selected eea-icon eea-icon-check");
