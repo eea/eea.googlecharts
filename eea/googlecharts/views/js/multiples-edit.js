@@ -1,21 +1,6 @@
 jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
-    function checkIfPossibleMatrix(){
-        var possible_matrix = true;
-/*        if (jQuery(".multiples-matrix-item-overlay.selected").length > 0){
-            jQuery(".multiples-matrix-item-overlay:not(.selected)").each(function(idx, overlay){
-                var horizontal_col_id = jQuery(overlay).attr("horizontal-column-id");
-                var vertical_col_id = jQuery(overlay).attr("vertical-column-id");
-                if ((jQuery(".multiples-matrix-item-overlay.selected[horizontal-column-id='" + horizontal_col_id + "']").length > 0) &&
-                    (jQuery(".multiples-matrix-item-overlay.selected[vertical-column-id='" + vertical_col_id + "']").length > 0)){
-                    possible_matrix = false;
-                }
-            });
-        }
-        else {
-            possible_matrix = false;
-        }*/
+    function setDefaultsIfMissing(){
         var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
-        tmp_settings.possibleMatrix = possible_matrix;
         if ((tmp_settings.settings === undefined) || jQuery.isEmptyObject(tmp_settings.settings)){
             tmp_settings.settings = {
                 chartAreaHeight : 98,
@@ -30,7 +15,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
         }
         if (tmp_settings.matrix === undefined){
             tmp_settings.matrix = {
-                enabled : false,
+                enabled : true,
                 headers : {
                     left : {enabled : true,
                             width : 100},
@@ -40,9 +25,6 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     bottom : {enabled : false}
                 }
             };
-        }
-        if (!possible_matrix){
-            tmp_settings.matrix.enabled = false;
         }
         jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
     }
@@ -354,7 +336,6 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     var vertical_replaceable = jQuery(".multiples-vertical-replaced").attr("value");
                     var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
                     tmp_settings.charts = [];
-                    tmp_settings.possibleMatrix = false;
                     function setReplaceableSettings(replaceable){
                         var replaceable_settings = null;
                         if (replaceable !== ""){
@@ -648,7 +629,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 });
 //                                tmp_settings.charts = selected_columns;
                                 jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
-                                checkIfPossibleMatrix();
+                                
                             });
                     });
 
@@ -664,7 +645,6 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                     var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
                     tmp_settings.charts = all_multiples;
                     jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
-//                    checkIfPossibleMatrix();
 
                     jQuery("<input type='checkbox'>")
                         .appendTo(".multiples-header-item")
@@ -744,7 +724,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         }
                     }
                 });
-                checkIfPossibleMatrix();
+                setDefaultsIfMissing();
             });
         }
     });
@@ -1004,183 +984,178 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         extra_controls.push(sort_btn);
     }*/
     header.find(".eea-icon-table").remove();
-    if (multiples_settings.possibleMatrix){
-        var matrix_btn = jQuery("<span>")
-          .attr("title", "Grid adjustments")
-          .addClass('eea-icon daviz-menuicon').addClass('eea-icon-table')
-          .insertAfter(removeSpan)
-          .click(function(){
-            jQuery("#grid-adjustments").remove();
-            var adjustmentsDiv = jQuery("<div>")
-                                    .attr("id", "grid-adjustments");
-            var controlsDiv = jQuery("<div class='grid-adjustments-controls'> </div>");
-            controlsDiv.append("<input value='Cancel' class='btn btn-inverse' type='button'/>");
-            controlsDiv.append("<input value='Save' class='btn btn-success' type='button'/>");
-            controlsDiv.append("<div style='clear:both'> </div>");
-            adjustmentsDiv.append(controlsDiv);
-            settingsDiv = jQuery("<div class='grid-adjustments-settings'> </div>");
-            settingsDiv.append("<label>Display small multiples in a matrix</label>");
-            settingsDiv.append("<input class='gridsettings matrix-enabled' type='checkbox'/>");
-            settingsDiv.append("<div style='clear:both'> </div>");
-            settingsDiv.append("<label>Display headers in top</label>");
-            settingsDiv.append("<input class='gridsettings matrix-headers-top' type='checkbox'/>");
-            settingsDiv.append("<label>Display headers in left</label>");
-            settingsDiv.append("<input class='gridsettings matrix-headers-left' type='checkbox'/>");
-            settingsDiv.append("<div style='clear:both'> </div>");
-            settingsDiv.append("<div style='clear:both'> </div>");
-            settingsDiv.append("<label>Display headers in bottom</label>");
-            settingsDiv.append("<input class='gridsettings matrix-headers-bottom' type='checkbox'/>");
-            settingsDiv.append("<div style='clear:both'> </div>");
-            settingsDiv.append("<label>Display headers in right</label>");
-            settingsDiv.append("<input class='gridsettings matrix-headers-right' type='checkbox'/>");
-            settingsDiv.append("<div style='clear:both'> </div>");
-            adjustmentsDiv.append(settingsDiv);
-            jQuery(".grid-adjustments-settings").remove();
-            adjustmentsDiv.dialog({
-                dialogClass: "googlechart-dialog",
-                modal: true,
-                title: "Grid adjustments",
-                open: function() {
+    var matrix_btn = jQuery("<span>")
+      .attr("title", "Grid adjustments")
+      .addClass('eea-icon daviz-menuicon').addClass('eea-icon-table')
+      .insertAfter(removeSpan)
+      .click(function(){
+        jQuery("#grid-adjustments").remove();
+        var adjustmentsDiv = jQuery("<div>")
+                                .attr("id", "grid-adjustments");
+        var controlsDiv = jQuery("<div class='grid-adjustments-controls'> </div>");
+        controlsDiv.append("<input value='Cancel' class='btn btn-inverse' type='button'/>");
+        controlsDiv.append("<input value='Save' class='btn btn-success' type='button'/>");
+        controlsDiv.append("<div style='clear:both'> </div>");
+        adjustmentsDiv.append(controlsDiv);
+        settingsDiv = jQuery("<div class='grid-adjustments-settings'> </div>");
+        settingsDiv.append("<label>Display small multiples in a matrix</label>");
+        settingsDiv.append("<input class='gridsettings matrix-enabled' type='checkbox'/>");
+        settingsDiv.append("<div style='clear:both'> </div>");
+        settingsDiv.append("<label>Display headers in top</label>");
+        settingsDiv.append("<input class='gridsettings matrix-headers-top' type='checkbox'/>");
+        settingsDiv.append("<label>Display headers in left</label>");
+        settingsDiv.append("<input class='gridsettings matrix-headers-left' type='checkbox'/>");
+        settingsDiv.append("<div style='clear:both'> </div>");
+        settingsDiv.append("<div style='clear:both'> </div>");
+        settingsDiv.append("<label>Display headers in bottom</label>");
+        settingsDiv.append("<input class='gridsettings matrix-headers-bottom' type='checkbox'/>");
+        settingsDiv.append("<div style='clear:both'> </div>");
+        settingsDiv.append("<label>Display headers in right</label>");
+        settingsDiv.append("<input class='gridsettings matrix-headers-right' type='checkbox'/>");
+        settingsDiv.append("<div style='clear:both'> </div>");
+        adjustmentsDiv.append(settingsDiv);
+        jQuery(".grid-adjustments-settings").remove();
+        adjustmentsDiv.dialog({
+            dialogClass: "googlechart-dialog",
+            modal: true,
+            title: "Grid adjustments",
+            open: function() {
+                var widget = jQuery("#multiples_"+base_chart).data("widget");
+                var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                if (tmp_settings.matrix.enabled){
+                    jQuery(".grid-adjustments-settings .matrix-enabled").attr("checked", "checked");
+                }
+                if (tmp_settings.matrix.headers.top.enabled){
+                    jQuery(".grid-adjustments-settings .matrix-headers-top").attr("checked", "checked");
+                }
+                if (tmp_settings.matrix.headers.bottom.enabled){
+                    jQuery(".grid-adjustments-settings .matrix-headers-bottom").attr("checked", "checked");
+                }
+                if (tmp_settings.matrix.headers.left.enabled){
+                    jQuery(".grid-adjustments-settings .matrix-headers-left").attr("checked", "checked");
+                }
+                if (tmp_settings.matrix.headers.right.enabled){
+                    jQuery(".grid-adjustments-settings .matrix-headers-right").attr("checked", "checked");
+                }
+                jQuery("#grid-adjustments .btn-success").bind("click", function(){
                     var widget = jQuery("#multiples_"+base_chart).data("widget");
                     var tmp_settings = JSON.parse(widget.settings.multiples_settings);
-                    if (tmp_settings.matrix.enabled){
-                        jQuery(".grid-adjustments-settings .matrix-enabled").attr("checked", "checked");
+                    var prev_matrix_enabled = tmp_settings.matrix.enabled;
+                    tmp_settings.matrix.enabled = false;
+                    tmp_settings.matrix.headers.top.enabled = false;
+                    tmp_settings.matrix.headers.bottom.enabled = false;
+                    tmp_settings.matrix.headers.left.enabled = false;
+                    tmp_settings.matrix.headers.right.enabled = false;
+                    if (jQuery(".grid-adjustments-settings .matrix-enabled").attr("checked") === "checked"){
+                        tmp_settings.matrix.enabled = true;
                     }
-                    if (tmp_settings.matrix.headers.top.enabled){
-                        jQuery(".grid-adjustments-settings .matrix-headers-top").attr("checked", "checked");
+                    if (jQuery(".grid-adjustments-settings .matrix-headers-top").attr("checked") === "checked"){
+                        tmp_settings.matrix.headers.top.enabled = true;
                     }
-                    if (tmp_settings.matrix.headers.bottom.enabled){
-                        jQuery(".grid-adjustments-settings .matrix-headers-bottom").attr("checked", "checked");
+                    if (jQuery(".grid-adjustments-settings .matrix-headers-bottom").attr("checked") === "checked"){
+                        tmp_settings.matrix.headers.bottom.enabled = true;
                     }
-                    if (tmp_settings.matrix.headers.left.enabled){
-                        jQuery(".grid-adjustments-settings .matrix-headers-left").attr("checked", "checked");
+                    if (jQuery(".grid-adjustments-settings .matrix-headers-left").attr("checked") === "checked"){
+                        tmp_settings.matrix.headers.left.enabled = true;
                     }
-                    if (tmp_settings.matrix.headers.right.enabled){
-                        jQuery(".grid-adjustments-settings .matrix-headers-right").attr("checked", "checked");
+                    if (jQuery(".grid-adjustments-settings .matrix-headers-right").attr("checked") === "checked"){
+                        tmp_settings.matrix.headers.right.enabled = true;
                     }
-
-                    jQuery("#grid-adjustments .btn-success").bind("click", function(){
-                        var widget = jQuery("#multiples_"+base_chart).data("widget");
-                        var tmp_settings = JSON.parse(widget.settings.multiples_settings);
-                        var prev_matrix_enabled = tmp_settings.matrix.enabled;
-                        tmp_settings.matrix.enabled = false;
-                        tmp_settings.matrix.headers.top.enabled = false;
-                        tmp_settings.matrix.headers.bottom.enabled = false;
-                        tmp_settings.matrix.headers.left.enabled = false;
-                        tmp_settings.matrix.headers.right.enabled = false;
-                        if (jQuery(".grid-adjustments-settings .matrix-enabled").attr("checked") === "checked"){
-                            tmp_settings.matrix.enabled = true;
-                        }
-                        if (jQuery(".grid-adjustments-settings .matrix-headers-top").attr("checked") === "checked"){
-                            tmp_settings.matrix.headers.top.enabled = true;
-                        }
-                        if (jQuery(".grid-adjustments-settings .matrix-headers-bottom").attr("checked") === "checked"){
-                            tmp_settings.matrix.headers.bottom.enabled = true;
-                        }
-                        if (jQuery(".grid-adjustments-settings .matrix-headers-left").attr("checked") === "checked"){
-                            tmp_settings.matrix.headers.left.enabled = true;
-                        }
-                        if (jQuery(".grid-adjustments-settings .matrix-headers-right").attr("checked") === "checked"){
-                            tmp_settings.matrix.headers.right.enabled = true;
-                        }
-                        if ((tmp_settings.matrix.enabled) && (!prev_matrix_enabled)){
-                            jQuery.getJSON(absolute_url + "/googlechart.get_charts_json", function(data){
-                                var sort_options = [];
-                                var base_chart_settings;
-                                jQuery.each(data, function(idx, chart){
-                                    if (chart.id === base_chart){
-                                        base_chart_settings = chart;
-                                    }
-                                });
-                                var columnsFromSettings = getColumnsFromSettings(JSON.parse(base_chart_settings.columns));
-
-                                var options = {
-                                    originalTable : all_rows,
-                                    normalColumns : columnsFromSettings.normalColumns,
-                                    pivotingColumns : columnsFromSettings.pivotColumns,
-                                    valueColumn : columnsFromSettings.valueColumn,
-                                    availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
-                                    unpivotSettings : base_chart_settings.unpivotsettings || {},
-                                    filters : {}
-                                };
-                                var transformedTable = transformTable(options);
-
-                                var charts = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).charts;
-                                var charts_for_sort = [];
-                                jQuery.each(charts, function(idx, chart){
-                                    var tmp_chart = {};
-                                    tmp_chart.chart = chart;
-                                    tmp_chart.sort_value = "{Y} - {X}";
-                                    var vertical_str = tmp_chart.chart.possibleLabels.vertical.value;
-                                    if (tmp_chart.chart.possibleLabels.vertical.type === "column"){
-                                        vertical_str = transformedTable.available_columns[vertical_str];
-                                    }
-                                    var horizontal_str = tmp_chart.chart.possibleLabels.horizontal.value;
-                                    if (tmp_chart.chart.possibleLabels.horizontal.type === "column"){
-                                        horizontal_str = transformedTable.available_columns[horizontal_str];
-                                    }
-
-                                    tmp_chart.sort_value = tmp_chart.sort_value.split("{Y}").join(vertical_str).split("{X}").join(horizontal_str);
-                                    charts_for_sort.push(tmp_chart);
-                                });
-                                charts_for_sort.sort(function(a, b){
-                                    if (a.sort_value > b.sort_value){
-                                        return 1;
-                                    }
-                                    if (a.sort_value < b.sort_value){
-                                        return -1;
-                                    }
-                                    if (a.sort_value === b.sort_value){
-                                        return 0;
-                                    }
-                                });
-                                for (i = 0; i < charts_for_sort.length; i++){
-                                    delete charts_for_sort[i].sort_value;
+                    if ((tmp_settings.matrix.enabled) && (!prev_matrix_enabled)){
+                        jQuery.getJSON(absolute_url + "/googlechart.get_charts_json", function(data){
+                            var sort_options = [];
+                            var base_chart_settings;
+                            jQuery.each(data, function(idx, chart){
+                                if (chart.id === base_chart){
+                                    base_chart_settings = chart;
                                 }
-                                var sorted_charts = [];
-                                for (i = 0; i < charts_for_sort.length; i++){
-                                    sorted_charts.push(charts_for_sort[i].chart);
-                                }
-                                tmp_settings.charts = sorted_charts;
-                                widget.settings.multiples_settings = JSON.stringify(tmp_settings);
-                                jQuery("#grid-adjustments").dialog("close");
-                                widget.save(false, true);
                             });
-                        }
-                        else {
+                            var columnsFromSettings = getColumnsFromSettings(JSON.parse(base_chart_settings.columns));
+                            var options = {
+                                originalTable : all_rows,
+                                normalColumns : columnsFromSettings.normalColumns,
+                                pivotingColumns : columnsFromSettings.pivotColumns,
+                                valueColumn : columnsFromSettings.valueColumn,
+                                availableColumns : getAvailable_columns_and_rows(base_chart_settings.unpivotsettings, available_columns, all_rows).available_columns,
+                                unpivotSettings : base_chart_settings.unpivotsettings || {},
+                                filters : {}
+                            };
+                            var transformedTable = transformTable(options);
+                            var charts = JSON.parse(jQuery("#multiples_"+base_chart).data("widget").settings.multiples_settings).charts;
+                            var charts_for_sort = [];
+                            jQuery.each(charts, function(idx, chart){
+                                var tmp_chart = {};
+                                tmp_chart.chart = chart;
+                                tmp_chart.sort_value = "{Y} - {X}";
+                                var vertical_str = tmp_chart.chart.possibleLabels.vertical.value;
+                                if (tmp_chart.chart.possibleLabels.vertical.type === "column"){
+                                    vertical_str = transformedTable.available_columns[vertical_str];
+                                }
+                                var horizontal_str = tmp_chart.chart.possibleLabels.horizontal.value;
+                                if (tmp_chart.chart.possibleLabels.horizontal.type === "column"){
+                                    horizontal_str = transformedTable.available_columns[horizontal_str];
+                                }
+                                tmp_chart.sort_value = tmp_chart.sort_value.split("{Y}").join(vertical_str).split("{X}").join(horizontal_str);
+                                charts_for_sort.push(tmp_chart);
+                            });
+                            charts_for_sort.sort(function(a, b){
+                                if (a.sort_value > b.sort_value){
+                                    return 1;
+                                }
+                                if (a.sort_value < b.sort_value){
+                                    return -1;
+                                }
+                                if (a.sort_value === b.sort_value){
+                                    return 0;
+                                }
+                            });
+                            for (i = 0; i < charts_for_sort.length; i++){
+                                delete charts_for_sort[i].sort_value;
+                            }
+                            var sorted_charts = [];
+                            for (i = 0; i < charts_for_sort.length; i++){
+                                sorted_charts.push(charts_for_sort[i].chart);
+                            }
+                            tmp_settings.charts = sorted_charts;
                             widget.settings.multiples_settings = JSON.stringify(tmp_settings);
                             jQuery("#grid-adjustments").dialog("close");
                             widget.save(false, true);
-                        }
-                    });
-                    jQuery("#grid-adjustments .btn-inverse").bind("click", function(){
-                        jQuery("#grid-adjustments").dialog("close");
-                    });
-                }
-            });
-          });
-        extra_controls.push(matrix_btn);
-        if (multiples_settings.matrix.enabled){
-            var rotateTable = jQuery("<img>")
-                .attr("src", "../../++resource++eea.googlecharts.images/unpivot-icon.png")
-                .attr("title", "Swap X and Y axis")
-                .width(14)
-                .height(14)
-                .css("float", "right")
-                .css("margin-top", "2px")
-                .css("cursor", "pointer")
-                .insertBefore(matrix_btn)
-                .click(function(){
-                        var widget = jQuery("#multiples_"+base_chart).data("widget");
-                        var tmp_settings = JSON.parse(widget.settings.multiples_settings);
-                        tmp_settings.matrix.rotated = !tmp_settings.matrix.rotated;
+                        });
+                    }
+                    else {
                         widget.settings.multiples_settings = JSON.stringify(tmp_settings);
-                        jQuery("#multiples-resize").dialog("close");
+                        jQuery("#grid-adjustments").dialog("close");
                         widget.save(false, true);
+                    }
                 });
-            extra_controls.push(rotateTable);
-        }
+                jQuery("#grid-adjustments .btn-inverse").bind("click", function(){
+                    jQuery("#grid-adjustments").dialog("close");
+                });
+            }
+        });
+      });
+    extra_controls.push(matrix_btn);
+    if (multiples_settings.matrix.enabled){
+        var rotateTable = jQuery("<img>")
+            .attr("src", "../../++resource++eea.googlecharts.images/unpivot-icon.png")
+            .attr("title", "Swap X and Y axis")
+            .width(14)
+            .height(14)
+            .css("float", "right")
+            .css("margin-top", "2px")
+            .css("cursor", "pointer")
+            .insertBefore(matrix_btn)
+            .click(function(){
+                    var widget = jQuery("#multiples_"+base_chart).data("widget");
+                    var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                    tmp_settings.matrix.rotated = !tmp_settings.matrix.rotated;
+                    widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+                    jQuery("#multiples-resize").dialog("close");
+                    widget.save(false, true);
+            });
+        extra_controls.push(rotateTable);
     }
+
     header.find(".eea-icon-gear").remove();
     var settings_btn = jQuery("<span>")
       .attr('title', 'Size adjustments')
@@ -1310,7 +1285,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         });
       });
     extra_controls.push(settings_btn);
-    if (multiples_settings.possibleMatrix && multiples_settings.matrix.enabled && (multiples_settings.matrix.headers.left.enabled || multiples_settings.matrix.headers.right.enabled)){
+    if (multiples_settings.matrix.enabled && (multiples_settings.matrix.headers.left.enabled || multiples_settings.matrix.headers.right.enabled)){
         var vwlabel = jQuery("<span>")
             .css("margin-left", "20px")
             .text("Headers width on Y:")
