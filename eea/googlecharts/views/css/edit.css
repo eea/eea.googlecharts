@@ -2290,3 +2290,7 @@ _div.field[id*='multiples_settings'] {
 #multiples-sort .selected-element{
     background-color:rgba(208,228,173,1);
 }
+
+.headers-settings.hidden{
+    display:none;
+}

@@ -1001,18 +1001,21 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         settingsDiv.append("<label>Display small multiples in a matrix</label>");
         settingsDiv.append("<input class='gridsettings matrix-enabled' type='checkbox'/>");
         settingsDiv.append("<div style='clear:both'> </div>");
-        settingsDiv.append("<label>Display headers in top</label>");
-        settingsDiv.append("<input class='gridsettings matrix-headers-top' type='checkbox'/>");
-        settingsDiv.append("<label>Display headers in left</label>");
-        settingsDiv.append("<input class='gridsettings matrix-headers-left' type='checkbox'/>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-        settingsDiv.append("<label>Display headers in bottom</label>");
-        settingsDiv.append("<input class='gridsettings matrix-headers-bottom' type='checkbox'/>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-        settingsDiv.append("<label>Display headers in right</label>");
-        settingsDiv.append("<input class='gridsettings matrix-headers-right' type='checkbox'/>");
-        settingsDiv.append("<div style='clear:both'> </div>");
+        var headersDiv = jQuery("<div>")
+                            .addClass("headers-settings hidden");
+        headersDiv.append("<label>Display headers in top</label>");
+        headersDiv.append("<input class='gridsettings matrix-headers-top' type='checkbox'/>");
+        headersDiv.append("<label>Display headers in left</label>");
+        headersDiv.append("<input class='gridsettings matrix-headers-left' type='checkbox'/>");
+        headersDiv.append("<div style='clear:both'> </div>");
+        headersDiv.append("<div style='clear:both'> </div>");
+        headersDiv.append("<label>Display headers in bottom</label>");
+        headersDiv.append("<input class='gridsettings matrix-headers-bottom' type='checkbox'/>");
+        headersDiv.append("<div style='clear:both'> </div>");
+        headersDiv.append("<label>Display headers in right</label>");
+        headersDiv.append("<input class='gridsettings matrix-headers-right' type='checkbox'/>");
+        headersDiv.append("<div style='clear:both'> </div>");
+        settingsDiv.append(headersDiv);
         adjustmentsDiv.append(settingsDiv);
         jQuery(".grid-adjustments-settings").remove();
         adjustmentsDiv.dialog({
@@ -1024,6 +1027,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 var tmp_settings = JSON.parse(widget.settings.multiples_settings);
                 if (tmp_settings.matrix.enabled){
                     jQuery(".grid-adjustments-settings .matrix-enabled").attr("checked", "checked");
+                    jQuery(".headers-settings").removeClass("hidden");
                 }
                 if (tmp_settings.matrix.headers.top.enabled){
                     jQuery(".grid-adjustments-settings .matrix-headers-top").attr("checked", "checked");
@@ -1037,6 +1041,14 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 if (tmp_settings.matrix.headers.right.enabled){
                     jQuery(".grid-adjustments-settings .matrix-headers-right").attr("checked", "checked");
                 }
+                jQuery(".gridsettings.matrix-enabled").bind("click", function(){
+                    if (jQuery(".grid-adjustments-settings .matrix-enabled").attr("checked") === 'checked'){
+                        jQuery(".headers-settings").removeClass("hidden");
+                    }
+                    else {
+                        jQuery(".headers-settings").addClass("hidden");
+                    }
+                });
                 jQuery("#grid-adjustments .btn-success").bind("click", function(){
                     var widget = jQuery("#multiples_"+base_chart).data("widget");
                     var tmp_settings = JSON.parse(widget.settings.multiples_settings);
