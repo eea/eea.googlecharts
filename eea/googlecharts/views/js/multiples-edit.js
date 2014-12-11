@@ -1,5 +1,16 @@
 jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
     function setDefaultsIfMissing(){
+        var possible_matrix = true;
+        if (jQuery(".multiples-matrix-item-overlay.selected").length > 0){
+            jQuery(".multiples-matrix-item-overlay:not(.selected)").each(function(idx, overlay){
+                var horizontal_col_id = jQuery(overlay).attr("horizontal-column-id");
+                var vertical_col_id = jQuery(overlay).attr("vertical-column-id");
+                if ((horizontal_col_id === undefined) || (vertical_col_id === undefined)){
+                    possible_matrix = false;
+                }
+            });
+        }
+
         var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
         if ((tmp_settings.settings === undefined) || jQuery.isEmptyObject(tmp_settings.settings)){
             tmp_settings.settings = {
@@ -15,7 +26,6 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
         }
         if (tmp_settings.matrix === undefined){
             tmp_settings.matrix = {
-                enabled : true,
                 headers : {
                     left : {enabled : true,
                             width : 100},
@@ -26,6 +36,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 }
             };
         }
+        tmp_settings.matrix.enabled = possible_matrix;
         jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
     }
 
@@ -629,7 +640,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 });
 //                                tmp_settings.charts = selected_columns;
                                 jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
-                                
+                                setDefaultsIfMissing();
                             });
                     });
 
