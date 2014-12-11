@@ -766,6 +766,8 @@ function getSMMatrixHeaders(charts){
     var allHorizontals = [];
     var verticaltype = "column";
     var horizontaltype = "column";
+    var hasVisible;
+    var j;
     for (var i = 0; i < charts.length; i++) {
         var chart = charts[i];
         if (chart.possibleLabels.horizontal !== undefined) {
@@ -774,8 +776,8 @@ function getSMMatrixHeaders(charts){
                 allHorizontals.push(chart.possibleLabels.horizontal.value); 
             }
             if (jQuery.inArray(chart.possibleLabels.horizontal.value, horizontals) === -1){
-                var hasVisible = false;
-                for (var j = 0; j < charts.length; j++){
+                hasVisible = false;
+                for (j = 0; j < charts.length; j++){
                     if ((charts[j].possibleLabels.horizontal.value === chart.possibleLabels.horizontal.value) && (charts[j].enabled)){
                         hasVisible = true;
                     }
@@ -791,10 +793,10 @@ function getSMMatrixHeaders(charts){
                 allVerticals.push(chart.possibleLabels.vertical.value);
             }
             if (jQuery.inArray(chart.possibleLabels.vertical.value, verticals) === -1){
-                var hasVisible = false;
-                for (var j = 0; j < charts.length; j++){
+                hasVisible = false;
+                for (j = 0; j < charts.length; j++){
                     if ((charts[j].possibleLabels.vertical.value === chart.possibleLabels.vertical.value) && (charts[j].enabled)){
-                        hasVisible = true
+                        hasVisible = true;
                     }
                 }
                 if (hasVisible){
@@ -876,9 +878,9 @@ function drawSMCharts(smc_settings) {
         }
     }
     charts = enabled_charts;
-    if (!smc_settings.disableSort){
+//    if (!smc_settings.disableSort){
 //        charts = getSortedChartsForMultiples(charts);
-    }
+//    }
     if ((multiples_settings.matrix !== undefined) && (multiples_settings.matrix.rotated)){
         charts = rotateMultiples(charts);
     }
@@ -914,8 +916,8 @@ function drawSMCharts(smc_settings) {
         var current_table_items = filter_table(transformedTable.items, c_settings.filters);
         smc_widget.appendTo(smc_settings.container);
         if (!c_settings.enabled){
-            smc_widget.width(multiples_settings.settings.width)
-            smc_widget.height(multiples_settings.settings.height)
+            smc_widget.width(multiples_settings.settings.width);
+            smc_widget.height(multiples_settings.settings.height);
             return;
         }
         var current_table = jQuery.extend(true, {}, transformedTable);

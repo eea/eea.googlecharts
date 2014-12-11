@@ -525,7 +525,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             width: 67
                         },
                         matrix: {
-                            enabled: true,
+                            enabled: true
                         }
                     };
                     var adv_options = jQuery.extend(true, {}, JSON.parse(base_chart_settings.options));
@@ -642,7 +642,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         });
                     });
 
-                    var tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
+                    tmp_settings = JSON.parse(jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value"));
                     tmp_settings.charts = all_multiples;
                     jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
 
@@ -702,7 +702,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         columns:jQuery.extend(true, {}, JSON.parse(container.attr("used_columns")))
                     };
                     for (var i = 0; i < default_settings.charts.length; i++){
-                        var chart_settings = {}
+                        var chart_settings = {};
                         if (default_settings.charts[i].enabled){
                             chart_settings = {filters:jQuery.extend(true, {}, default_settings.charts[i].filters), columns:jQuery.extend(true, {}, default_settings.charts[i].columns)};
                         }
