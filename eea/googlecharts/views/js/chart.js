@@ -808,18 +808,32 @@ function getSMMatrixHeaders(charts){
     return {verticals : {type:verticaltype, values:verticals, allValues:allVerticals}, horizontals : {type:horizontaltype, values:horizontals, allValues:allHorizontals}};
 }
 
-function getSortedChartsForMultiples(charts){
-    return charts.sort(function(a,b){
-                    if (a.order > b.order){
-                        return 1;
+function getSortedChartsForMultiples(charts, sort){
+    var sortedCharts = [];
+    if (sort.type === 'manual'){
+        if (!sort.matrix){
+            var i, j, found;
+            for (i = 0; i < sort.order.length; i++){
+                for (j = 0; j < charts.length; j++){
+                    if (_.isEqual(charts[j].possibleLabels, sort.order[i].chart)){
+                        sortedCharts.push(charts[j]);
                     }
-                    else if (a.order < b.order){
-                        return -1;
+                }
+            }
+            for (i = 0; i < charts.length; i++){
+                found = false;
+                for (j = 0; j < sortedCharts.length; j++){
+                    if (_.isEqual(charts[i], sortedCharts[j])){
+                        found = true;
                     }
-                    else {
-                        return 0;
-                    }
-                });
+                }
+                if (!found){
+                    sortedCharts.push(charts[i]);
+                }
+            }
+        }
+    }
+    return sortedCharts;
 }
 
 function rotateMultiples(charts){
@@ -868,7 +882,8 @@ function drawSMCharts(smc_settings) {
         chart_sortAsc = false;
     }
     var charts = multiples_settings.charts;
-//    charts = getSortedChartsForMultiples(charts);
+    var sort = multiples_settings.sort || {};
+    charts = getSortedChartsForMultiples(charts, sort);
     var headers = getSMMatrixHeaders(charts);
     var enabled_charts = [];
     for (var i = 0; i < charts.length; i++){

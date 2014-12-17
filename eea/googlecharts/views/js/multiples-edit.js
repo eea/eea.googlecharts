@@ -1559,19 +1559,19 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 cursor: 'crosshair',
                 tolerance: 'pointer',
                 start: function(event, ui){
-                    var sortableArea = jQuery(this);
-                    var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
-                    var clean_charts_columns = [];
-                    for (var i = 0; i < sorted_charts_columns_str.length; i++){
-                        if (sorted_charts_columns_str[i] !== ""){
-                            clean_charts_columns.push(sorted_charts_columns_str[i]);
-                        }
-                    }
-                    jQuery(this).data("original-order", clean_charts_columns);
+//                    var sortableArea = jQuery(this);
+//                    var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
+//                    var clean_charts_columns = [];
+//                    for (var i = 0; i < sorted_charts_columns_str.length; i++){
+//                        if (sorted_charts_columns_str[i] !== ""){
+//                            clean_charts_columns.push(sorted_charts_columns_str[i]);
+//                        }
+//                    }
+//                    jQuery(this).data("original-order", clean_charts_columns);
                 },
                 update: function(event, ui){
                     var base_chart = jQuery(this).parent().attr("base_chart");
-                    var sortableArea = jQuery(this);
+/*                    var sortableArea = jQuery(this);
                     var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
                     var clean_charts_columns = [];
                     var i;
@@ -1582,10 +1582,10 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                     }
                     var moved_element = jQuery(ui.item).attr("original-value");
                     var originalPosition = jQuery.inArray(moved_element, jQuery(this).data("original-order"));
-                    var newPosition = jQuery.inArray(moved_element, clean_charts_columns);
+                    var newPosition = jQuery.inArray(moved_element, clean_charts_columns);*/
                     var widget = jQuery("#multiples_"+base_chart).data("widget");
                     var tmp_settings = JSON.parse(widget.settings.multiples_settings);
-                    var direction = "horizontal";
+/*                    var direction = "horizontal";
                     if (jQuery(this).hasClass("multiples-preview-sm-header-vertical")){
                         direction = "vertical";
                     }
@@ -1606,7 +1606,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                             item_nr = (positions_to_move.length - 1) - i;
                         }
                         tmp_settings.charts.splice(positions_to_move[item_nr] + move_to, 0, tmp_settings.charts.splice(positions_to_move[item_nr],1)[0]);
-                    }
+                    }*/
                     widget.settings.multiples_settings = JSON.stringify(tmp_settings);
                     widget.save(false, true);
                 }
@@ -1677,14 +1677,13 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 var sorted_charts_filters_str = sortableArea.sortable('toArray',{attribute:'filters'});
                 var sorted_charts = [];
                 for (var i = 0; i < sorted_charts_columns_str.length; i++){
-                    sorted_charts.push({columns:JSON.parse(sorted_charts_columns_str[i]),
-                                        filters: JSON.parse(sorted_charts_filters_str[i]),
-                                        possibleLabels:JSON.parse(sorted_charts_possible_labels_str[i])
+                    sorted_charts.push({
+                                        chart:JSON.parse(sorted_charts_possible_labels_str[i])
                                         });
                 }
                 var widget = jQuery("#multiples_"+base_chart).data("widget");
                 var tmp_settings = JSON.parse(widget.settings.multiples_settings);
-                tmp_settings.charts = sorted_charts;
+                tmp_settings.sort = {type:'manual', matrix:false, order:sorted_charts};
                 widget.settings.multiples_settings = JSON.stringify(tmp_settings);
                 widget.save(false, true);
               }
