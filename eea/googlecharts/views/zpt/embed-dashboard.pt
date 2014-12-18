@@ -85,12 +85,12 @@
     <script type="text/javascript"
         tal:define="
             dashboard view/get_dashboard;
-            print python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;"
+            isPrint python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;"
         tal:content="structure string:
         var dashboard_config_$vhash = ${dashboard};
         var settings_$vhash = {}
         jQuery(document).ready(function($){
-            var print = $print;
+            var isPrint = $isPrint;
             settings_$vhash = {
                 googlechart_config_array : googlechart_config_array_$vhash,
                 main_title : main_title_$vhash,
@@ -107,7 +107,7 @@
                 vhash : '$vhash',
                 isInline : isInline_$vhash
             };
-            if (print || isInline_$vhash !== 'True'){
+            if (isPrint || isInline_$vhash !== 'True'){
                 drawDashboardEmbed(settings_$vhash);
             }
             else{

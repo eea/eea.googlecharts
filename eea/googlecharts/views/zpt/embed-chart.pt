@@ -99,7 +99,7 @@
             ChartNotes python: view.get_all_notes_json();
             GoogleChartsConfig view/get_chart_json;
             unpivotSettings python:view.get_unpivotSettings(chart);
-            print python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;"
+            isPrint python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;"
         tal:content="structure string:
             EEAGoogleCharts = {};
             EEAGoogleCharts.embed = {};
@@ -132,7 +132,7 @@
             var GoogleChartsConfig_$vhash = $GoogleChartsConfig;
             var isInline_$vhash = '$inline';
             var unpivotSettings_$vhash = $unpivotSettings;
-            var print = $print;
+            var isPrint = $isPrint;
             var ChartNotes_$vhash = $ChartNotes;
 
             var googlechart_config_array_$vhash = [];
@@ -243,7 +243,7 @@
                     isInline: isInline_$vhash
                 };
 
-                if(print){
+                if(isPrint){
                     drawChart(settings_$vhash, other_options_$vhash);
                 }else if(jQuery('#googlechart_dashboard_$vhash').is(':visible')){
                         if (isInline_$vhash !== 'True'){

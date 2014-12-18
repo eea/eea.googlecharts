@@ -3,6 +3,8 @@ Changelog
 
 12.0-dev - (unreleased)
 -----------------------
+* Bug fix: Fixed embeded-chart and embeded-dashboard to work with Chameleon
+  [voineali refs #22228]
 
 11.9 - (2014-12-02)
 -------------------
