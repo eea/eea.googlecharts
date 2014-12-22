@@ -1567,29 +1567,27 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         }
                     }
                     if (clean_charts_columns.length === 0) {
-                        clean_charts_columns.push(null)
+                        clean_charts_columns.push(null);
                     }
                     var verticals = clean_charts_columns;
                     sortableArea = jQuery(".multiples-preview-sm-header-horizontal");
                     sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
                     clean_charts_columns = [];
-                    i;
                     for (i = 0; i < sorted_charts_columns_str.length; i++){
                         if (sorted_charts_columns_str[i] !== ""){
                             clean_charts_columns.push(sorted_charts_columns_str[i]);
                         }
                     }
                     if (clean_charts_columns.length === 0) {
-                        clean_charts_columns.push(null)
+                        clean_charts_columns.push(null);
                     }
                     var horizontals = clean_charts_columns;
-                    debugger;
                     var widget = jQuery("#multiples_"+base_chart).data("widget");
                     var tmp_settings = JSON.parse(widget.settings.multiples_settings);
                     if ((tmp_settings.sort) === undefined){
                         tmp_settings.sort = {};
                     }
-                    tmp_settings.sort.type = "manual"
+                    tmp_settings.sort.type = "manual";
                     tmp_settings.sort.matrix = true;
                     tmp_settings.sort.vertical = verticals;
                     tmp_settings.sort.horizontal = horizontals;
