@@ -632,13 +632,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                             chart.enabled = isVisible;
                                         }
                                     });
-/*                                    selected_columns.push({
-                                        columns: JSON.parse(jQuery(item).parent().attr("used_columns")),
-                                        filters: JSON.parse(jQuery(item).parent().attr("filters")),
-                                        possibleLabels: JSON.parse(jQuery(item).parent().attr("possible_labels"))
-                                    });*/
                                 });
-//                                tmp_settings.charts = selected_columns;
                                 jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
                                 setDefaultsIfMissing();
                             });
@@ -1084,6 +1078,9 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                     if (jQuery(".grid-adjustments-settings .matrix-headers-right").attr("checked") === "checked"){
                         tmp_settings.matrix.headers.right.enabled = true;
                     }
+                    if (prev_matrix_enabled !== tmp_settings.matrix.enabled){
+                        tmp_settings.sort = {};
+                    }
                     if ((tmp_settings.matrix.enabled) && (!prev_matrix_enabled)){
                         jQuery.getJSON(absolute_url + "/googlechart.get_charts_json", function(data){
                             var sort_options = [];
@@ -1402,7 +1399,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         ];
 
         if (multiples_settings.matrix.enabled){
-            var smmatrixheaders = getSMMatrixHeaders(multiples_settings.charts);
+            var smmatrixheaders = getSMMatrixHeaders(getSortedChartsForMultiples(multiples_settings.charts, multiples_settings.sort));
             if (multiples_settings.matrix.rotated){
                 smmatrixheaders = rotateHeaders(smmatrixheaders);
             }
@@ -1558,20 +1555,9 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 delay: 300,
                 cursor: 'crosshair',
                 tolerance: 'pointer',
-                start: function(event, ui){
-//                    var sortableArea = jQuery(this);
-//                    var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
-//                    var clean_charts_columns = [];
-//                    for (var i = 0; i < sorted_charts_columns_str.length; i++){
-//                        if (sorted_charts_columns_str[i] !== ""){
-//                            clean_charts_columns.push(sorted_charts_columns_str[i]);
-//                        }
-//                    }
-//                    jQuery(this).data("original-order", clean_charts_columns);
-                },
                 update: function(event, ui){
                     var base_chart = jQuery(this).parent().attr("base_chart");
-/*                    var sortableArea = jQuery(this);
+                    var sortableArea = jQuery(".multiples-preview-sm-header-vertical");
                     var sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
                     var clean_charts_columns = [];
                     var i;
@@ -1580,33 +1566,33 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                             clean_charts_columns.push(sorted_charts_columns_str[i]);
                         }
                     }
-                    var moved_element = jQuery(ui.item).attr("original-value");
-                    var originalPosition = jQuery.inArray(moved_element, jQuery(this).data("original-order"));
-                    var newPosition = jQuery.inArray(moved_element, clean_charts_columns);*/
+                    if (clean_charts_columns.length === 0) {
+                        clean_charts_columns.push(null)
+                    }
+                    var verticals = clean_charts_columns;
+                    sortableArea = jQuery(".multiples-preview-sm-header-horizontal");
+                    sorted_charts_columns_str = sortableArea.sortable('toArray',{attribute:'original-value'});
+                    clean_charts_columns = [];
+                    i;
+                    for (i = 0; i < sorted_charts_columns_str.length; i++){
+                        if (sorted_charts_columns_str[i] !== ""){
+                            clean_charts_columns.push(sorted_charts_columns_str[i]);
+                        }
+                    }
+                    if (clean_charts_columns.length === 0) {
+                        clean_charts_columns.push(null)
+                    }
+                    var horizontals = clean_charts_columns;
+                    debugger;
                     var widget = jQuery("#multiples_"+base_chart).data("widget");
                     var tmp_settings = JSON.parse(widget.settings.multiples_settings);
-/*                    var direction = "horizontal";
-                    if (jQuery(this).hasClass("multiples-preview-sm-header-vertical")){
-                        direction = "vertical";
+                    if ((tmp_settings.sort) === undefined){
+                        tmp_settings.sort = {};
                     }
-                    var positions_to_move = [];
-                    for (i = 0; i < tmp_settings.charts.length; i++){
-                        if (tmp_settings.charts[i].possibleLabels[direction].value === moved_element){
-                            positions_to_move.push(i);
-                        }
-                    }
-                    var move_to = newPosition - originalPosition;
-                    if (direction !== "horizontal"){
-                        var row_length = tmp_settings.charts.length / clean_charts_columns.length;
-                        move_to = move_to * row_length;
-                    }
-                    for (i = 0; i < positions_to_move.length; i++){
-                        var item_nr = i;
-                        if (move_to > 0){
-                            item_nr = (positions_to_move.length - 1) - i;
-                        }
-                        tmp_settings.charts.splice(positions_to_move[item_nr] + move_to, 0, tmp_settings.charts.splice(positions_to_move[item_nr],1)[0]);
-                    }*/
+                    tmp_settings.sort.type = "manual"
+                    tmp_settings.sort.matrix = true;
+                    tmp_settings.sort.vertical = verticals;
+                    tmp_settings.sort.horizontal = horizontals;
                     widget.settings.multiples_settings = JSON.stringify(tmp_settings);
                     widget.save(false, true);
                 }

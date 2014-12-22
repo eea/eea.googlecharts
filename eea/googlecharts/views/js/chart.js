@@ -810,27 +810,40 @@ function getSMMatrixHeaders(charts){
 
 function getSortedChartsForMultiples(charts, sort){
     var sortedCharts = [];
-    if (sort.type === 'manual'){
-        if (!sort.matrix){
-            var i, j, found;
-            for (i = 0; i < sort.order.length; i++){
-                for (j = 0; j < charts.length; j++){
-                    if (_.isEqual(charts[j].possibleLabels, sort.order[i].chart)){
-                        sortedCharts.push(charts[j]);
+    var i, j, k, found;
+    if (sort !== undefined){
+        if (sort.type === 'manual'){
+            if (!sort.matrix){
+                for (i = 0; i < sort.order.length; i++){
+                    for (j = 0; j < charts.length; j++){
+                        if (_.isEqual(charts[j].possibleLabels, sort.order[i].chart)){
+                            sortedCharts.push(charts[j]);
+                        }
                     }
                 }
             }
-            for (i = 0; i < charts.length; i++){
-                found = false;
-                for (j = 0; j < sortedCharts.length; j++){
-                    if (_.isEqual(charts[i], sortedCharts[j])){
-                        found = true;
+            else {
+                for (i = 0; i < sort.vertical.length; i++){
+                    for (j = 0; j < sort.horizontal.length; j++){
+                        for (k = 0; k < charts.length; k++){
+                            if ((charts[k].possibleLabels.vertical.value === sort.vertical[i]) && (charts[k].possibleLabels.horizontal.value === sort.horizontal[j])){
+                                sortedCharts.push(charts[k]);
+                            }
+                        }
                     }
                 }
-                if (!found){
-                    sortedCharts.push(charts[i]);
-                }
             }
+        }
+    }
+    for (i = 0; i < charts.length; i++){
+        found = false;
+        for (j = 0; j < sortedCharts.length; j++){
+            if (_.isEqual(charts[i], sortedCharts[j])){
+                found = true;
+            }
+        }
+        if (!found){
+            sortedCharts.push(charts[i]);
         }
     }
     return sortedCharts;
@@ -1249,7 +1262,7 @@ function drawGoogleDashboard(options){
                 chart_height = value.dashboard.height;
             }
             if (multiples_settings.matrix.enabled){
-                var smmatrixheaders = getSMMatrixHeaders(multiples_settings.charts);
+                var smmatrixheaders = getSMMatrixHeaders(getSortedChartsForMultiples(multiples_settings.charts, multiples_settings.sort));
                 if (multiples_settings.matrix.rotated){
                     smmatrixheaders = rotateHeaders(smmatrixheaders);
                 }

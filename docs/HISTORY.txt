@@ -3,6 +3,8 @@ Changelog
 
 12.0-dev - (unreleased)
 -----------------------
+* Feature: Updated default settings and behavior of small multiples
+  [szabozo0 refs #21484]
 * Bug fix: Fixed embeded-chart and embeded-dashboard to work with Chameleon
   [voineali refs #22228]
 
