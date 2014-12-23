@@ -688,16 +688,26 @@ function getHashCode(val) {
     return hash;
 }
 
-function getChartTitle(title_placeholder, possibleLabels, transformedTable) {
+function getChartTitle(title_placeholder, possibleLabels, transformedTable, customlabels) {
     // Returns the title replacing the placeholders with the required values
     if ((title_placeholder !== undefined) && (!jQuery.isEmptyObject(possibleLabels))){
         var vertical_str = possibleLabels.vertical.value;
-        if (possibleLabels.vertical.type === "column"){
-            vertical_str = transformedTable.available_columns[vertical_str];
+        if (customlabels.vertical[vertical_str] !== undefined){
+            vertical_str = customlabels.vertical[vertical_str];
+        }
+        else {
+            if (possibleLabels.vertical.type === "column"){
+                vertical_str = transformedTable.available_columns[vertical_str];
+            }
         }
         var horizontal_str = possibleLabels.horizontal.value;
-        if (possibleLabels.horizontal.type === "column"){
-            horizontal_str = transformedTable.available_columns[horizontal_str];
+        if (customlabels.horizontal[horizontal_str] !== undefined){
+            horizontal_str = customlabels.horizontal[horizontal_str];
+        }
+        else {
+            if (possibleLabels.horizontal.type === "column"){
+                horizontal_str = transformedTable.available_columns[horizontal_str];
+            }
         }
         return title_placeholder.split("{Y}").join(vertical_str)
                 .split("{X}").join(horizontal_str);
@@ -913,8 +923,10 @@ function drawSMCharts(smc_settings) {
 //    if (!smc_settings.disableSort){
 //        charts = getSortedChartsForMultiples(charts);
 //    }
+    var smcustomlabels = multiples_settings.customLabels || {vertical:{}, horizontal:{}}
     if ((multiples_settings.matrix !== undefined) && (multiples_settings.matrix.rotated)){
         charts = rotateMultiples(charts);
+//        smcustomlabels = rotateLabels(smcustomlabels);
     }
     jQuery.each(charts, function(c_id, c_settings){
         if ((!multiples_settings.matrix.enabled) && (!c_settings.enabled)){
@@ -976,7 +988,8 @@ function drawSMCharts(smc_settings) {
         var smc_chartJson = jQuery.extend(true, {}, chartConfig[1]);
         smc_chartJson.options.title = getChartTitle(multiples_settings.settings.chartTitle,
                                                     c_settings.possibleLabels,
-                                                    current_table);
+                                                    current_table,
+                                                    smcustomlabels);
         smc_chartJson.options.enableInteractivity = smc_settings.interactive;
         if (!multiples_settings.settings.displayLegend){
             smc_chartJson.options.legend = 'none';
@@ -1267,7 +1280,7 @@ function drawGoogleDashboard(options){
             }
             if (multiples_settings.matrix.enabled){
                 var smmatrixheaders = getSMMatrixHeaders(getSortedChartsForMultiples(multiples_settings.charts, multiples_settings.sort));
-                var smmatrixlabels = multiples_settings.customLabels;
+                var smmatrixlabels = multiples_settings.customLabels || {vertical:{}, horizontal:{}};
                 if (multiples_settings.matrix.rotated){
                     smmatrixheaders = rotateHeaders(smmatrixheaders);
                     smmatrixlabels = rotateLabels(smmatrixlabels);

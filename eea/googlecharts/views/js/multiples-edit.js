@@ -1400,7 +1400,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
 
         if (multiples_settings.matrix.enabled){
             var smmatrixheaders = getSMMatrixHeaders(getSortedChartsForMultiples(multiples_settings.charts, multiples_settings.sort));
-            var smmatrixlabels = multiples_settings.customLabels;
+            var smmatrixlabels = multiples_settings.customLabels || {vertical:{}, horizontal:{}};
             if (multiples_settings.matrix.rotated){
                 smmatrixheaders = rotateHeaders(smmatrixheaders);
                 smmatrixlabels = rotateLabels(smmatrixlabels);
@@ -1603,7 +1603,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                                 var widget = jQuery("#multiples_"+base_chart).data("widget");
                                 var tmp_settings = JSON.parse(widget.settings.multiples_settings);
                                 if (tmp_settings.customLabels === undefined){
-                                    tmp_settings.customLabels = {};
+                                    tmp_settings.customLabels = {vertical:{}, horizontal:{}};
                                 }
                                 if (tmp_settings.customLabels[direction] === undefined){
                                     tmp_settings.customLabels[direction] = {};
