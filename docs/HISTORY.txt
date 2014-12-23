@@ -1,6 +1,9 @@
 Changelog
 =========
 
+12.1-dev - (unreleased)
+-----------------------
+
 12.0 - (2014-12-23)
 -------------------
 * Feature: Allow renaming of multiples columns & rows
