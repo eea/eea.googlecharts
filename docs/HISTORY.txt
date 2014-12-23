@@ -1,8 +1,8 @@
 Changelog
 =========
 
-12.0-dev - (unreleased)
------------------------
+12.0 - (2014-12-23)
+-------------------
 * Feature: Allow renaming of multiples columns & rows
   [szabozo0 refs #21485]
 * Feature: Updated default settings and behavior of small multiples
