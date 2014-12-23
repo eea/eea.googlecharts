@@ -923,10 +923,9 @@ function drawSMCharts(smc_settings) {
 //    if (!smc_settings.disableSort){
 //        charts = getSortedChartsForMultiples(charts);
 //    }
-    var smcustomlabels = multiples_settings.customLabels || {vertical:{}, horizontal:{}}
+    var smcustomlabels = multiples_settings.customLabels || {vertical:{}, horizontal:{}};
     if ((multiples_settings.matrix !== undefined) && (multiples_settings.matrix.rotated)){
         charts = rotateMultiples(charts);
-//        smcustomlabels = rotateLabels(smcustomlabels);
     }
     jQuery.each(charts, function(c_id, c_settings){
         if ((!multiples_settings.matrix.enabled) && (!c_settings.enabled)){
