@@ -1510,7 +1510,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 for (j = 0; j < smmatrixheaders.verticals.values.length; j++){
                     label = smmatrixheaders.verticals.values[j];
                     if (smmatrixlabels.vertical[label] !== undefined){
-                        label = smmatrixlabels.vertical[label]
+                        label = smmatrixlabels.vertical[label];
                     }
                     else {
                         if (smmatrixheaders.verticals.type === "column"){
@@ -1538,7 +1538,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 for (j = 0; j < smmatrixheaders.horizontals.values.length; j++){
                     label = smmatrixheaders.horizontals.values[j];
                     if (smmatrixlabels.horizontal[label] !== undefined){
-                        label = smmatrixlabels.horizontal[label]
+                        label = smmatrixlabels.horizontal[label];
                     }
                     else {
                         if (smmatrixheaders.horizontals.type === "column"){
@@ -1567,7 +1567,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 .click(function(){
                     var direction = "horizontal";
                     if (jQuery(this).closest(".multiples-preview-sm-header").hasClass("multiples-preview-sm-header-vertical")){
-                        direction = "vertical"
+                        direction = "vertical";
                     }
 
                     var header_item = jQuery(this).closest(".multiples-preview-sm-header-item").attr("original-value");
@@ -1606,7 +1606,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                                     tmp_settings.customLabels = {};
                                 }
                                 if (tmp_settings.customLabels[direction] === undefined){
-                                    tmp_settings.customLabels[direction] = {}
+                                    tmp_settings.customLabels[direction] = {};
                                 }
 
                                 delete (tmp_settings.customLabels[direction][header_item]);

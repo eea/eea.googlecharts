@@ -1335,7 +1335,7 @@ function drawGoogleDashboard(options){
                     for (j = 0; j < smmatrixheaders.verticals.values.length; j++){
                         label = smmatrixheaders.verticals.values[j];
                         if (smmatrixlabels.vertical[label] !== undefined){
-                            label = smmatrixlabels.vertical[label]
+                            label = smmatrixlabels.vertical[label];
                         }
                         else {
                             if (smmatrixheaders.verticals.type === "column"){
@@ -1362,7 +1362,7 @@ function drawGoogleDashboard(options){
                     for (j = 0; j < smmatrixheaders.horizontals.values.length; j++){
                         label = smmatrixheaders.horizontals.values[j];
                         if (smmatrixlabels.horizontal[label] !== undefined){
-                            label = smmatrixlabels.horizontal[label]
+                            label = smmatrixlabels.horizontal[label];
                         }
                         else {
                             if (smmatrixheaders.horizontals.type === "column"){
