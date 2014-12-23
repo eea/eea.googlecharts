@@ -2294,3 +2294,7 @@ _div.field[id*='multiples_settings'] {
 .headers-settings.hidden{
     display:none;
 }
+
+.multiples-preview-sm-header-item-rename{
+    float:right;
+}

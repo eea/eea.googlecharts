@@ -1400,8 +1400,10 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
 
         if (multiples_settings.matrix.enabled){
             var smmatrixheaders = getSMMatrixHeaders(getSortedChartsForMultiples(multiples_settings.charts, multiples_settings.sort));
+            var smmatrixlabels = multiples_settings.customLabels;
             if (multiples_settings.matrix.rotated){
                 smmatrixheaders = rotateHeaders(smmatrixheaders);
+                smmatrixlabels = rotateLabels(smmatrixlabels);
             }
             var horizontalHeaders = [];
             var verticalHeaders = [];
@@ -1507,8 +1509,13 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             for (i = 0; i < verticalHeaders.length; i++){
                 for (j = 0; j < smmatrixheaders.verticals.values.length; j++){
                     label = smmatrixheaders.verticals.values[j];
-                    if (smmatrixheaders.verticals.type === "column"){
-                        label = transformedTable.available_columns[label];
+                    if (smmatrixlabels.vertical[label] !== undefined){
+                        label = smmatrixlabels.vertical[label]
+                    }
+                    else {
+                        if (smmatrixheaders.verticals.type === "column"){
+                            label = transformedTable.available_columns[label];
+                        }
                     }
                     jQuery("<div>")
                         .addClass("multiples-preview-sm-header-item")
@@ -1530,8 +1537,13 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
 
                 for (j = 0; j < smmatrixheaders.horizontals.values.length; j++){
                     label = smmatrixheaders.horizontals.values[j];
-                    if (smmatrixheaders.horizontals.type === "column"){
-                        label = transformedTable.available_columns[label];
+                    if (smmatrixlabels.horizontal[label] !== undefined){
+                        label = smmatrixlabels.horizontal[label]
+                    }
+                    else {
+                        if (smmatrixheaders.horizontals.type === "column"){
+                            label = transformedTable.available_columns[label];
+                        }
                     }
                     jQuery("<div>")
                         .addClass("multiples-preview-sm-header-item")
@@ -1548,6 +1560,67 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                         .appendTo(horizontalHeaders[i]);
                 }
             }
+
+            jQuery("<span>")
+                .addClass("eea-icon daviz-menuicon eea-icon-pencil multiples-preview-sm-header-item-rename")
+                .appendTo(".multiples-preview-sm-header-item:not(.multiples-preview-sm-header-item-left-placeholder)")
+                .click(function(){
+                    var direction = "horizontal";
+                    if (jQuery(this).closest(".multiples-preview-sm-header").hasClass("multiples-preview-sm-header-vertical")){
+                        direction = "vertical"
+                    }
+
+                    var header_item = jQuery(this).closest(".multiples-preview-sm-header-item").attr("original-value");
+
+                    jQuery(".rename-header-dialog").remove();
+                    var title = jQuery(this).parent().text();
+                    var renameDialog = jQuery("<div>")
+                                            .addClass("rename-header-dialog")
+                                            .attr("base_chart", jQuery(this).closest(".multiples-preview").attr("base_chart"))
+                                            .attr("direction", direction)
+                                            .attr("header-item", header_item)
+                                            .append(jQuery('<input>').attr('type', 'text').val(title));
+                    renameDialog.dialog({
+                        dialogClass: "googlechart-dialog googlechart-preview-dialog",
+                        modal: true,
+                        title: "Rename header: " + title,
+                        open: function(evt, ui){
+                            var buttons = jQuery(this).parent().find("button[title!='close']");
+                            buttons.attr('class', 'btn');
+                            jQuery(buttons[0]).addClass('btn-inverse');
+                            jQuery(buttons[1]).addClass('btn-success');
+                        },
+                        buttons: {
+                            Cancel: function(){
+                                jQuery(this).dialog('close');
+                            },
+                            Rename: function(){
+                                var value = jQuery('.rename-header-dialog input').val();
+
+                                var base_chart = jQuery(this).attr("base_chart");
+                                var direction = jQuery(this).attr("direction");
+                                var header_item = jQuery(this).attr("header-item");
+                                var widget = jQuery("#multiples_"+base_chart).data("widget");
+                                var tmp_settings = JSON.parse(widget.settings.multiples_settings);
+                                if (tmp_settings.customLabels === undefined){
+                                    tmp_settings.customLabels = {};
+                                }
+                                if (tmp_settings.customLabels[direction] === undefined){
+                                    tmp_settings.customLabels[direction] = {}
+                                }
+
+                                delete (tmp_settings.customLabels[direction][header_item]);
+                                if (value.length > 0) {
+                                    tmp_settings.customLabels[direction][header_item] = value;
+                                }
+                                widget.settings.multiples_settings = JSON.stringify(tmp_settings);
+                                jQuery(this).dialog('close');
+                                widget.save(false, true);
+
+                            }
+                        }
+                    });
+                });
             jQuery(".multiples-preview-sm-header").sortable({
                 placeholder: 'ui-state-highlight',
                 forcePlaceholderSize: true,

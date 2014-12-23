@@ -872,6 +872,10 @@ function rotateHeaders(headers){
     return {horizontals : headers.verticals, verticals : headers.horizontals};
 }
 
+function rotateLabels(labels){
+    return {horizontal : labels.vertical, vertical : labels.horizontal};
+
+}
 function drawSMCharts(smc_settings) {
     var chartConfig = smc_settings.chartConfig;
     var multiples_settings = smc_settings.multiples_settings;
@@ -1263,8 +1267,10 @@ function drawGoogleDashboard(options){
             }
             if (multiples_settings.matrix.enabled){
                 var smmatrixheaders = getSMMatrixHeaders(getSortedChartsForMultiples(multiples_settings.charts, multiples_settings.sort));
+                var smmatrixlabels = multiples_settings.customLabels;
                 if (multiples_settings.matrix.rotated){
                     smmatrixheaders = rotateHeaders(smmatrixheaders);
+                    smmatrixlabels = rotateLabels(smmatrixlabels);
                 }
                 var horizontalHeaders = [];
                 var verticalHeaders = [];
@@ -1328,8 +1334,13 @@ function drawGoogleDashboard(options){
                 for (i = 0; i < verticalHeaders.length; i++){
                     for (j = 0; j < smmatrixheaders.verticals.values.length; j++){
                         label = smmatrixheaders.verticals.values[j];
-                        if (smmatrixheaders.verticals.type === "column"){
-                            label = transformedTable.available_columns[label];
+                        if (smmatrixlabels.vertical[label] !== undefined){
+                            label = smmatrixlabels.vertical[label]
+                        }
+                        else {
+                            if (smmatrixheaders.verticals.type === "column"){
+                                label = transformedTable.available_columns[label];
+                            }
                         }
                         jQuery("<div>")
                             .addClass("multiples-sm-header-item")
@@ -1350,8 +1361,13 @@ function drawGoogleDashboard(options){
 
                     for (j = 0; j < smmatrixheaders.horizontals.values.length; j++){
                         label = smmatrixheaders.horizontals.values[j];
-                        if (smmatrixheaders.horizontals.type === "column"){
-                            label = transformedTable.available_columns[label];
+                        if (smmatrixlabels.horizontal[label] !== undefined){
+                            label = smmatrixlabels.horizontal[label]
+                        }
+                        else {
+                            if (smmatrixheaders.horizontals.type === "column"){
+                                label = transformedTable.available_columns[label];
+                            }
                         }
                         jQuery("<div>")
                             .addClass("multiples-sm-header-item")
