@@ -19,6 +19,7 @@
         <meta property="og:url" tal:attributes="content string:${url}/embed-chart?chart=${chart_id}" />
         <meta property="og:title" tal:attributes="content string:${title}" />
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <title tal:content="title"></title>
     </head>
     <body onhashchange="hashchanged();">
@@ -71,7 +72,6 @@
     </div>
         <script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
         <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript" src="++resource++json2.js"></script>
         <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
         <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
@@ -177,7 +177,7 @@
                 }
                 return settings;
             }
-            jQuery(document).ready(function($){
+            google.setOnLoadCallback(function(){
                 settings_$vhash.push(GoogleChartsConfig_$vhash[0].id);
                 settings_$vhash.push(chart_json_$vhash);
                 settings_$vhash.push(chart_columns_$vhash);
