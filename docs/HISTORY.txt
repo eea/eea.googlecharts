@@ -1,6 +1,9 @@
 Changelog
 =========
 
+12.2-dev - (unreleased)
+-----------------------
+
 12.1 - (2015-01-06)
 -------------------
 * Bugfix: Fixed missing visualization in indicators exported to pdf
