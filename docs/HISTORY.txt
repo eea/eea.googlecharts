@@ -3,6 +3,8 @@ Changelog
 
 12.2-dev - (unreleased)
 -----------------------
+* Bugfix: fix share and embed actions after fixes done for 22290
+  [ichimdav refs 22337]
 
 12.1 - (2015-01-06)
 -------------------

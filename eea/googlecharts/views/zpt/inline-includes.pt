@@ -37,7 +37,7 @@ jQuery(window).scrollStopped(function(){
     jQuery.each(jQuery('.embedded-dashboard:visible'), function(idx, elem){
         if (isScrolledIntoView(elem)){
             if (jQuery(elem).hasClass('not_visible')){
-                jQuery(elem).removeClass('not_visible')
+                jQuery(elem).removeClass('not_visible');
                 if (jQuery(elem).hasClass('isChart')){
                     drawChart(jQuery(elem).data('settings'), jQuery(elem).data('other_options'));
                 }

@@ -248,6 +248,7 @@
                 }else if(jQuery('#googlechart_dashboard_$vhash').is(':visible')){
                         if (isInline_$vhash !== 'True'){
                             drawChart(settings_$vhash, other_options_$vhash);
+                            jQuery(document).trigger('googlecharts.embed.ready');
                         }
                         else{
                             jQuery('#googlechart_dashboard_$vhash')
@@ -257,8 +258,6 @@
                                 .data('other_options', other_options_$vhash);
                         }
                 }
-
-
             });
             function hashchanged(){
                 if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
@@ -272,7 +271,7 @@
     <div tal:attributes="id string:googlechart_dashboard_$vhash" class="embedded-dashboard googlechart_dashboard isChart">
     </div>
         <!--? Share box -->
-    <div class="googlechart-share-box" metal:define-macro="share">
+    <div class="googlechart-share-box" metal:define-macro="share" tal:condition="python:not inline">
         <div class="googlechart-share" style="display:none;">
             <div class="pull-right">
                 <!--? Save -->
@@ -299,7 +298,7 @@
 
                 <!--? Explore Data -->
                 <div class="pull-left">
-                    <a tal:condition="python:not inline" class="go-to-original-link"
+                    <a class="go-to-original-link"
                             tal:attributes="href url"
                             i18n:translate="" target="_top"><span class="sprite sprite-explore"></span>Explore</a>
                 </div>
@@ -313,9 +312,9 @@
                         <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
                         <p><strong>Share:</strong></p>
                         <div class="googlechart googlechart-social">
-                            <a href="https://twitter.com/intent/tweet?url=" class="share-button share-button-twitter">Twitter</a>
-                            <a href="https://www.facebook.com/sharer/sharer.php?u=" class="share-button share-button-facebook">Facebook</a>
-                            <a href="https://plus.google.com/share?url=" class="share-button share-button-gplus">Google Plus</a>
+                            <a href="https://twitter.com/intent/tweet?url=" class="share-button share-button-twitter" target="_blank">Twitter</a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=" class="share-button share-button-facebook" target="_blank">Facebook</a>
+                            <a href="https://plus.google.com/share?url=" class="share-button share-button-gplus" target="_blank">Google Plus</a>
 
                         </div>
                     </div>
