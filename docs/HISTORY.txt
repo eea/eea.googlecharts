@@ -1,6 +1,9 @@
 Changelog
 =========
 
+12.3-dev - (unreleased)
+-----------------------
+
 12.2 - (2015-01-07)
 -------------------
 * Bugfix: fix share and embed actions after fixes done for 22290
