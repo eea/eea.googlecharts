@@ -12,6 +12,7 @@
         <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
         <link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
         <link href="++resource++eea.googlecharts.embed.css" rel="stylesheet" type="text/css"/>
+        <link tal:attributes="href string:${context/portal_url}/embed_custom.css" rel="stylesheet" type="text/css" tal:condition="exists:context/embed_custom.css"/>
         <style type="text/css" tal:content="view/get_customstyle">
         </style>
         <meta property="og:type"   content="article" />
@@ -44,7 +45,7 @@
                                         define="owner provenance/owner | python:{}; owner_url owner/url | nothing"
                                         condition="owner_url" >
                                     <span tal:content="python:owner.get('acronym') or owner.get('title') or owner_url" />
-                                    <span>&ndash; </span>
+                                    <span>. </span>
                                 </tal:owner>
 
                                 <tal:source
