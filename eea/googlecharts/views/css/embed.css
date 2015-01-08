@@ -56,10 +56,19 @@ a:visited, a:hover {
 .googlechart-notes {
     margin: 0.5em 0;
 }
-.googlechart_dashboard .googlechart-notes {
+.googlechart_dashboard .googlechart-notes, .googlechart-datasources-info {
     line-height: 1.25em;
+    background: #eee;
+    padding: 0.5em 1em 1em 1em;
+    border-left: 1em solid #ccc;
+    clear: both;
+    font-size: x-small;
+    margin: 0 0 1em 0;
 }
-
+.notesMeld {
+    padding-top: 0;
+    margin-top: -1.5em;
+}
 .googlecharts-embed-dialog textarea {
     width: 100%;
 }

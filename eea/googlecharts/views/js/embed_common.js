@@ -48,7 +48,12 @@ jQuery(function($){
         var chart_share = $('.googlechart-share');
         chart_share.parent().appendTo("#googlechart_bottom_images_" + hash);
         $(".googlechart_left_image").find('img').appendTo("#share-dialog");
-        $(".googlechart-datasources-info").appendTo('.googlechart-notes');
+        var notes = $('.googlechart-notes');
+        var datasource_info = $(".googlechart-datasources-info");
+        if (notes.is(":visible")) {
+            datasource_info.addClass('notesMeld');
+        }
+        datasource_info.insertAfter(notes);
         doc.hover(function() {
             chart_share.fadeIn();
         }, function() {
