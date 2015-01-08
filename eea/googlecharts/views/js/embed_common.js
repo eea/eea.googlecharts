@@ -55,9 +55,9 @@ jQuery(function($){
         }
         datasource_info.insertAfter(notes);
         doc.hover(function() {
-            chart_share.fadeIn();
+            chart_share.fadeTo(400, 1);
         }, function() {
-            chart_share.fadeOut();
+            chart_share.fadeTo(400, 0);
         });
 
         var enlarge_button = $('.googlechart-enlarge');

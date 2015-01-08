@@ -273,7 +273,7 @@
     </div>
         <!--? Share box -->
     <div class="googlechart-share-box" metal:define-macro="share" tal:condition="python:not inline">
-        <div class="googlechart-share" style="display:none;">
+        <div class="googlechart-share" style="opacity:0;">
             <div class="pull-right">
                 <!--? Save -->
                 <div class="pull-left googlechart-downloads">
