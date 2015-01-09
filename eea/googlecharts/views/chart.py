@@ -819,34 +819,33 @@ class SavePNGChart(Export):
             svg_obj.getField('file').getMutator(svg_obj)(kwargs.get('svg', ''))
 
             wftool = getToolByName(svg_obj, "portal_workflow")
-            workflows = wftool.getWorkflowsFor(svg_obj)
-            if len(workflows) > 0:
-                workflow = workflows[0]
-                transitions = workflow.transitions
-                state = wftool.getInfoFor(svg_obj, 'review_state')
-
+            # workflows = wftool.getWorkflowsFor(svg_obj)
+            state = wftool.getInfoFor(svg_obj, 'review_state', None)
+            if state:
+                # workflow = workflows[0]
+                # transitions = workflow.transitions
                 if state != 'visible':
-                    available_transitions = [transitions[i['id']] for i in
-                                            wftool.getTransitionsFor(svg_obj)]
-
-                    to_do = [k for k in available_transitions
-                             if k.new_state_id == 'published']
+                    # available_transitions = [transitions[i['id']] for i in
+                    #                         wftool.getTransitionsFor(svg_obj)]
+                    #
+                    # to_do = [k for k in available_transitions
+                    #          if k.new_state_id == 'published']
 
                     self.request.form['_no_emails_'] = True
-                    for item in to_do:
-                        workflow.doActionFor(svg_obj, item.id)
-                        break
-
+                    # for item in to_do:
+                    #     workflow.doActionFor(svg_obj, item.id)
+                        # break
+                    wftool.doActionFor(svg_obj, 'showPublicDraft')
                     # then make it public draft
-                    available_transitions = [transitions[i['id']] for i in
-                                            wftool.getTransitionsFor(svg_obj)]
-
-                    to_do = [k for k in available_transitions
-                             if k.new_state_id == 'visible']
-
-                    for item in to_do:
-                        workflow.doActionFor(svg_obj, item.id)
-                        break
+                    # available_transitions = [transitions[i['id']] for i in
+                    #                         wftool.getTransitionsFor(svg_obj)]
+                    #
+                    # to_do = [k for k in available_transitions
+                    #          if k.new_state_id == 'visible']
+                    #
+                    # for item in to_do:
+                    #     workflow.doActionFor(svg_obj, item.id)
+                    #     break
 
                 svg_obj.reindexObject()
                 notify(InvalidateCacheEvent(svg_obj))
