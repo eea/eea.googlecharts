@@ -770,15 +770,18 @@ class Export(BrowserView):
         for obj_id in self.context.objectIds():
             if obj_id not in thumbs_to_not_delete:
                 thumbs_to_delete.append(obj_id)
-
-        self.context.manage_delObjects(thumbs_to_delete)
-        notify(InvalidateCacheEvent(self.context))
+        if thumbs_to_delete:
+            self.context.manage_delObjects(thumbs_to_delete)
+            notify(InvalidateCacheEvent(self.context))
 
 
 class SavePNGChart(Export):
     """ Save png version of chart, including qr code and watermark
     """
-    def __call__(self, **kwargs):
+
+    def save_svg_and_png(self, kwargs):
+        """ Save png out of the svg version of the chart
+        """
         if not IFolderish.providedBy(self.context):
             return _("Can't save png chart on a non-folderish object !")
         form = getattr(self.request, 'form', {})
@@ -786,9 +789,10 @@ class SavePNGChart(Export):
         filename = kwargs.get('filename', 'img')
         chart_url = self.context.absolute_url() + "#" + "tab-" + filename
         svg_filename = filename + ".svg"
-        filename = filename + ".png"
+        filename += ".png"
         sp = self.siteProperties
         qr_size = sp.get('googlechart.qrcode_size', '70')
+        object_ids = self.context.objectIds()
         if qr_size == '0':
             qr_size = '70'
         qr_url = (
@@ -796,62 +800,81 @@ class SavePNGChart(Export):
             "/chart?cht=qr&chld=H|0&chs=%sx%s&chl=%s" % (
                 qr_size, qr_size, urllib2.quote(chart_url)))
         self.request.form['qr_url'] = qr_url
+        svg_data = kwargs.get('svg', '')
+        if not svg_data:
+            return _("Success")
+        new_svg = False
+        if svg_filename not in object_ids:
+            new_svg = True
+            svg_filename = self.context.invokeFactory('File', id=svg_filename)
+        svg_obj = self.context._getOb(svg_filename)
+        svg_file_field = svg_obj.getField('file')
+        svg_field_data = svg_file_field.getRaw(svg_obj).getIterator().read()
+        if svg_data == svg_field_data:
+            return _("Success")
+        else:
+            # 21894 svg_data from the form and the data saved within the current
+            # svg files sometimes has the clipPath id number changed, otherwise
+            # the files are identical in which case we no longer need to perform
+            # any svg and image generation
+            pattern = re.compile(r'_ABSTRACT_RENDERER_ID_\d+')
+            svg_data_match = pattern.search(svg_data).group()
+            svg_field_data_matched = pattern.sub(svg_data_match, svg_field_data)
+            if svg_data == svg_field_data_matched:
+                return _("Success")
+        # create image from the current svg
         img = super(SavePNGChart, self).__call__()
-
         if not img:
             return _("ERROR: An error occured while exporting your image. "
                      "Please try again later.")
-
-        if filename not in self.context.objectIds():
+        new_file = False
+        if filename not in object_ids:
+            new_file = True
             filename = self.context.invokeFactory('Image', id=filename)
-
-        obj = self.context._getOb(filename)
-        obj.setExcludeFromNav(True)
-        obj.getField('image').getMutator(obj)(img)
-
-        svg_data = kwargs.get('svg', '')
-        if svg_data:
-            if svg_filename not in self.context.objectIds():
-                svg_filename = self.context.invokeFactory('File',
-                                                          id=svg_filename)
-            svg_obj = self.context._getOb(svg_filename)
+        img_obj = self.context._getOb(filename)
+        if new_file:
+            img_obj.setExcludeFromNav(True)
+        image_field = img_obj.getField('image')
+        image_field.getMutator(img_obj)(img)
+        if new_svg:
             svg_obj.setExcludeFromNav(True)
-            svg_obj.getField('file').getMutator(svg_obj)(kwargs.get('svg', ''))
+        svg_file_field.getMutator(svg_obj)(svg_data)
 
-            wftool = getToolByName(svg_obj, "portal_workflow")
-            workflows = wftool.getWorkflowsFor(svg_obj)
-            if len(workflows) > 0:
+        wftool = getToolByName(svg_obj, "portal_workflow")
+        state = wftool.getInfoFor(svg_obj, 'review_state', None)
+        if state:
+            if state != 'visible':
+                workflows = wftool.getWorkflowsFor(svg_obj)
                 workflow = workflows[0]
                 transitions = workflow.transitions
-                state = wftool.getInfoFor(svg_obj, 'review_state')
+                available_transitions = [transitions[i['id']] for i in
+                                    wftool.getTransitionsFor(svg_obj)]
 
-                if state != 'visible':
-                    available_transitions = [transitions[i['id']] for i in
-                                            wftool.getTransitionsFor(svg_obj)]
+                to_do = [k for k in available_transitions
+                         if k.new_state_id == 'published']
 
-                    to_do = [k for k in available_transitions
-                             if k.new_state_id == 'published']
+                self.request.form['_no_emails_'] = True
+                for item in to_do:
+                    workflow.doActionFor(svg_obj, item.id)
+                    break
+                # then make it public draft
+                available_transitions = [transitions[i['id']] for i in
+                                        wftool.getTransitionsFor(svg_obj)]
 
-                    self.request.form['_no_emails_'] = True
-                    for item in to_do:
-                        workflow.doActionFor(svg_obj, item.id)
-                        break
+                to_do = [k for k in available_transitions
+                         if k.new_state_id == 'visible']
 
-                    # then make it public draft
-                    available_transitions = [transitions[i['id']] for i in
-                                            wftool.getTransitionsFor(svg_obj)]
-
-                    to_do = [k for k in available_transitions
-                             if k.new_state_id == 'visible']
-
-                    for item in to_do:
-                        workflow.doActionFor(svg_obj, item.id)
-                        break
-
+                for item in to_do:
+                    workflow.doActionFor(svg_obj, item.id)
+                    break
                 svg_obj.reindexObject()
-                notify(InvalidateCacheEvent(svg_obj))
-
+        if not new_svg:
+            notify(InvalidateCacheEvent(svg_obj))
         return _("Success")
+
+    def __call__(self, **kwargs):
+        return self.save_svg_and_png(kwargs)
+
 
 class SetThumb(BrowserView):
     """ Set thumbnail

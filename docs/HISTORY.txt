@@ -3,6 +3,10 @@ Changelog
 
 12.4-dev - (unreleased)
 -----------------------
+* Change: optimized saving of svg and png images from the charts
+  that are within a DavizVisualization upon chart editing. Now
+  only the chart that is changes re-renders it's images
+  [ichim-david refs #21894]
 
 12.3 - (2015-01-08)
 -------------------
