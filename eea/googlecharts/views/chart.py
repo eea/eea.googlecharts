@@ -807,8 +807,8 @@ class SavePNGChart(Export):
             new_svg = True
             svg_filename = self.context.invokeFactory('File', id=svg_filename)
         svg_obj = self.context._getOb(svg_filename)
-        svg_field = svg_obj.getField('file')
-        svg_field_data = svg_field.getRaw(svg_obj).getIterator().read()
+        svg_file_field = svg_obj.getField('file')
+        svg_field_data = svg_file_field.getRaw(svg_obj).getIterator().read()
         if svg_data == svg_field_data:
             return _("Success")
         else:
@@ -821,6 +821,7 @@ class SavePNGChart(Export):
             svg_field_data_matched = pattern.sub(svg_data_match, svg_field_data)
             if svg_data == svg_field_data_matched:
                 return _("Success")
+        # create image from the current svg
         img = super(SavePNGChart, self).__call__()
         if not img:
             return _("ERROR: An error occured while exporting your image. "
@@ -829,53 +830,45 @@ class SavePNGChart(Export):
         if filename not in object_ids:
             new_file = True
             filename = self.context.invokeFactory('Image', id=filename)
-        obj = self.context._getOb(filename)
+        img_obj = self.context._getOb(filename)
         if new_file:
-            obj.setExcludeFromNav(True)
-        image_field = obj.getField('image')
-        img_size = len(img)
-        if img_size != image_field.get_size(obj):
-            image_field.getMutator(obj)(img)
-        if svg_data:
-            if new_svg:
-                svg_obj.setExcludeFromNav(True)
-            svg_field.getMutator(svg_obj)(svg_data)
+            img_obj.setExcludeFromNav(True)
+        image_field = img_obj.getField('image')
+        image_field.getMutator(img_obj)(img)
+        if new_svg:
+            svg_obj.setExcludeFromNav(True)
+        svg_file_field.getMutator(svg_obj)(svg_data)
 
-            wftool = getToolByName(svg_obj, "portal_workflow")
-            # workflows = wftool.getWorkflowsFor(svg_obj)
-            state = wftool.getInfoFor(svg_obj, 'review_state', None)
-            if state:
-                # workflow = workflows[0]
-                # transitions = workflow.transitions
-                if state != 'visible':
-                    # available_transitions = [transitions[i['id']] for i in
-                    # wftool.getTransitionsFor(svg_obj)]
-                    #
-                    # to_do = [k for k in available_transitions
-                    #          if k.new_state_id == 'published']
+        wftool = getToolByName(svg_obj, "portal_workflow")
+        state = wftool.getInfoFor(svg_obj, 'review_state', None)
+        if state:
+            if state != 'visible':
+                workflows = wftool.getWorkflowsFor(svg_obj)
+                workflow = workflows[0]
+                transitions = workflow.transitions
+                available_transitions = [transitions[i['id']] for i in
+                                    wftool.getTransitionsFor(svg_obj)]
 
-                    self.request.form['_no_emails_'] = True
-                    # for item in to_do:
-                    #     workflow.doActionFor(svg_obj, item.id)
-                    # break
-                    # try:
-                    #     wftool.doActionFor(svg_obj, 'showPublicDraft')
-                    # except WorkflowException:
-                    #     import pdb; pdb.set_trace()
-                    # then make it public draft
-                    # available_transitions = [transitions[i['id']] for i in
-                    #                         wftool.getTransitionsFor(svg_obj)]
-                    #
-                    # to_do = [k for k in available_transitions
-                    #          if k.new_state_id == 'visible']
-                    #
-                    # for item in to_do:
-                    #     workflow.doActionFor(svg_obj, item.id)
-                    #     break
+                to_do = [k for k in available_transitions
+                         if k.new_state_id == 'published']
 
-                #svg_obj.reindexObject(idxs=['review_state'])
-                if not new_svg:
-                    notify(InvalidateCacheEvent(svg_obj))
+                self.request.form['_no_emails_'] = True
+                for item in to_do:
+                    workflow.doActionFor(svg_obj, item.id)
+                    break
+                # then make it public draft
+                available_transitions = [transitions[i['id']] for i in
+                                        wftool.getTransitionsFor(svg_obj)]
+
+                to_do = [k for k in available_transitions
+                         if k.new_state_id == 'visible']
+
+                for item in to_do:
+                    workflow.doActionFor(svg_obj, item.id)
+                    break
+                svg_obj.reindexObject()
+        if not new_svg:
+            notify(InvalidateCacheEvent(svg_obj))
         return _("Success")
 
     def __call__(self, **kwargs):
