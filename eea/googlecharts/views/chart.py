@@ -4,7 +4,6 @@ import json
 import logging
 import urllib2
 import hashlib
-from Products.CMFCore.WorkflowCore import WorkflowException
 import lxml.etree
 import re
 from PIL import Image
@@ -780,7 +779,9 @@ class SavePNGChart(Export):
     """ Save png version of chart, including qr code and watermark
     """
 
-    def save_png(self, kwargs):
+    def save_svg_and_png(self, kwargs):
+        """ Save png out of the svg version of the chart
+        """
         if not IFolderish.providedBy(self.context):
             return _("Can't save png chart on a non-folderish object !")
         form = getattr(self.request, 'form', {})
@@ -816,7 +817,7 @@ class SavePNGChart(Export):
             # svg files sometimes has the clipPath id number changed, otherwise
             # the files are identical in which case we no longer need to perform
             # any svg and image generation
-            pattern = re.compile('_ABSTRACT_RENDERER_ID_\d+')
+            pattern = re.compile(r'_ABSTRACT_RENDERER_ID_\d+')
             svg_data_match = pattern.search(svg_data).group()
             svg_field_data_matched = pattern.sub(svg_data_match, svg_field_data)
             if svg_data == svg_field_data_matched:
@@ -872,7 +873,7 @@ class SavePNGChart(Export):
         return _("Success")
 
     def __call__(self, **kwargs):
-        return self.save_png(kwargs)
+        return self.save_svg_and_png(kwargs)
 
 
 class SetThumb(BrowserView):
