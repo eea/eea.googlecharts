@@ -811,6 +811,16 @@ class SavePNGChart(Export):
         svg_field_data = svg_field.getRaw(svg_obj).getIterator().read()
         if svg_data == svg_field_data:
             return _("Success")
+        else:
+            # 21894 svg_data from the form and the data saved within the current
+            # svg files sometimes has the clipPath id number changed, otherwise
+            # the files are identical in which case we no longer need to perform
+            # any svg and image generation
+            pattern = re.compile('_ABSTRACT_RENDERER_ID_\d+')
+            svg_data_match = pattern.search(svg_data).group()
+            svg_field_data_matched = pattern.sub(svg_data_match, svg_field_data)
+            if svg_data == svg_field_data_matched:
+                return _("Success")
         img = super(SavePNGChart, self).__call__()
         if not img:
             return _("ERROR: An error occured while exporting your image. "
