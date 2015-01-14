@@ -810,9 +810,9 @@ class SavePNGChart(Export):
         svg_obj = self.context._getOb(svg_filename)
         svg_file_field = svg_obj.getField('file')
         svg_field_data = svg_file_field.getRaw(svg_obj).getIterator().read()
-        if svg_data == svg_field_data:
+        if svg_field_data and svg_data == svg_field_data:
             return _("Success")
-        else:
+        elif svg_field_data:
             # 21894 svg_data from the form and the data saved within the current
             # svg files sometimes has the clipPath id number changed, otherwise
             # the files are identical in which case we no longer need to perform
