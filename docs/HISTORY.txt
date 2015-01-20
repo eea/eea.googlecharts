@@ -3,6 +3,8 @@ Changelog
 
 12.4-dev - (unreleased)
 -----------------------
+* Change: owner acryonym now contains the period within the same span
+  [ichimdav refs #22337]
 * Change: optimized saving of svg and png images from the charts
   that are within a DavizVisualization upon chart editing. Now
   only the chart that is changes re-renders it's images

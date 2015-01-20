@@ -44,8 +44,8 @@
                                 <tal:owner
                                         define="owner provenance/owner | python:{}; owner_url owner/url | nothing"
                                         condition="owner_url" >
-                                    <span tal:content="python:owner.get('acronym') or owner.get('title') or owner_url" />
-                                    <span>. </span>
+                                    <span tal:define="acronym python:owner.get('acronym') or owner.get('title') or owner_url"
+                                          tal:content="python:acronym + '.'" />
                                 </tal:owner>
 
                                 <tal:source
