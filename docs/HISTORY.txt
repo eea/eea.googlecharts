@@ -3,6 +3,8 @@ Changelog
 
 12.4-dev - (unreleased)
 -----------------------
+* Change: optimized pdf output of embeded charts
+  [ichimdav refs #22591]
 * Change: owner acryonym now contains the period within the same span
   [ichimdav refs #22337]
 * Change: optimized saving of svg and png images from the charts
