@@ -1,8 +1,8 @@
 Changelog
 =========
 
-12.4-dev - (unreleased)
------------------------
+12.4 - (2015-01-22)
+-------------------
 * Change: optimized pdf output of embeded charts
   [ichimdav refs #22591]
 * Change: owner acryonym now contains the period within the same span
