@@ -122,14 +122,16 @@ a:visited, a:hover {
 .table-cell { display: table-cell;}
 .googlechart-title { margin: 0;}
 
-/* made table font size smaller in order to fit 4pages
-   for Briefings #22591 */
-@media print {
-    .google-visualization-table-table {
-        font:7pt verdana,sans-serif !important;
+/* made table font size smaller by default and better layout #22591 */
+
+.google-visualization-table-table {
+        font-size:7pt !important;
+        font-family: verdana,sans-serif !important;
         height: 100%;
         width: 100% !important;
-    }
+}
+
+@media print {
 
     .googlechart_view,
     .googlechart_view > div > div {
