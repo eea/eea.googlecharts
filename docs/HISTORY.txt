@@ -1,6 +1,9 @@
 Changelog
 =========
 
+12.6.dev0 - (unreleased)
+------------------------
+
 12.5 - (2015-02-03)
 -------------------
 * Change: optimized web and pdf output of embeded charts
