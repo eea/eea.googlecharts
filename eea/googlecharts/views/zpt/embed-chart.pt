@@ -38,7 +38,7 @@
                                         outerhtmltag python:'ul' if has_many else 'div';
                                         htmltag python: 'li' if has_many else 'span class=googlechart-provenance-definition'">
                     <p class="googlechart-datasource" tal:condition="python: has_provenances or indicator"><strong>Data sources:</strong></p>
-                    <p tal:replace="structure string:<$outerhtmltag id='googlechart-provenance-definitions' class='table-cell'>"></p>
+                    <p tal:replace="structure string:<$outerhtmltag id='googlechart-provenance-definitions'>"></p>
                         <tal:provenance repeat="provenance provenances">
                             <li tal:replace="structure string:<$htmltag>"></li>
                                 <tal:owner
