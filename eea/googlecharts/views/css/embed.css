@@ -67,11 +67,11 @@ a:visited, a:hover {
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
     width: 100% !important;
+    overflow: hidden;
 }
 .notesMeld {
     padding-top: 0;
     margin-top: -1.5em;
-    overflow: hidden;
 }
 .googlecharts-embed-dialog textarea {
     width: 100%;
