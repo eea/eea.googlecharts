@@ -1,8 +1,8 @@
 Changelog
 =========
 
-12.6.dev0 - (unreleased)
-------------------------
+12.6 - (2015-02-16)
+-------------------
 * Change: Data source info are now floated in order to better fit
   on all major browsers as table cell display has issues with Firefox
   [ichimdav refs #22887]
