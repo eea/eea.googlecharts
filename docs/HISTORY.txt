@@ -1,6 +1,9 @@
 Changelog
 =========
 
+12.7.dev0 - (unreleased)
+------------------------
+
 12.6 - (2015-02-16)
 -------------------
 * Change: Data source info are now floated in order to better fit
