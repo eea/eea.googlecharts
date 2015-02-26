@@ -1,6 +1,9 @@
 Changelog
 =========
 
+12.8.dev0 - (unreleased)
+------------------------
+
 12.7 - (2015-02-26)
 -------------------
 * Bugfix: Updated chart editor to latest changes of google
