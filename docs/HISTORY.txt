@@ -3,6 +3,8 @@ Changelog
 
 12.7.dev0 - (unreleased)
 ------------------------
+* Bugfix: Updated chart editor to latest changes of google
+  [szabozo0 refs #23454]
 
 12.6 - (2015-02-16)
 -------------------

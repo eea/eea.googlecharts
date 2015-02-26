@@ -6376,12 +6376,12 @@ function overrideGooglePalette(){
         jQuery(".jfk-colormenu:visible .jfk-palette-cell").show();
         jQuery(".jfk-colormenu:visible .charts-menuitem").hide();
         patched_each(jQuery(".jfk-colormenu:visible .jfk-palette"), function(idx, palette){
-            if (jQuery(palette).find("td").eq(0).attr("aria-label") === "RGB (0, 0, 0)"){
+            if (jQuery(palette).find("td").eq(0).attr("aria-label") === "black"){
                 grayscale = palette;
                 jQuery(palette).show();
             }
             else {
-                if (jQuery(palette).find("td").eq(0).attr("aria-label") === "RGB (230, 184, 175)"){
+                if (jQuery(palette).find("td").eq(0).attr("aria-label") === "light red berry 3"){
                     custompalette = palette;
                     jQuery(palette).show();
                 }
