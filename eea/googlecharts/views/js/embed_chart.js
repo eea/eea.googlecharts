@@ -108,69 +108,69 @@ function drawChart(value, other_options){
 
     jQuery("#googlechart_view_"+other_settings.vhash).attr("chart_id", embedchart_id);
     jQuery("#googlechart_view_"+other_settings.vhash).addClass("googlechart_view");
-    if (other_settings.isInline !== 'True'){
-        var chart_url = other_settings.baseurl + "#tab-" + embedchart_id;
-        // check if cross-domain or not
-        var is_cross_domain = false;
-        try{
-            if (jQuery.isEmptyObject(window.parent.location)){
-                is_cross_domain = true;
-            }
-        }
-        catch(e){
+
+    var chart_url = other_settings.baseurl + "#tab-" + embedchart_id;
+    // check if cross-domain or not
+    var is_cross_domain = false;
+    try{
+        if (jQuery.isEmptyObject(window.parent.location)){
             is_cross_domain = true;
         }
-        var wm_resize = false;
-        var qr_resize = false;
-        // if not cross-domain, use the iframe settings for wm & qrcode
-        if (!is_cross_domain){
-            if (other_settings.iframe_qr_settings.hide){
-                other_settings.qr_pos = "Disabled";
-            }
-            else{
-                if (other_settings.iframe_qr_settings.resize){
-                    if (other_settings.iframe_qr_settings.size < 70){
-                        qr_resize = true;
-                    }
-                    else{
-                        other_settings.qr_size = other_settings.iframe_qr_settings.size;
-                    }
+    }
+    catch(e){
+        is_cross_domain = true;
+    }
+    var wm_resize = false;
+    var qr_resize = false;
+    // if not cross-domain, use the iframe settings for wm & qrcode
+    if (!is_cross_domain){
+        if (other_settings.iframe_qr_settings.hide){
+            other_settings.qr_pos = "Disabled";
+        }
+        else{
+            if (other_settings.iframe_qr_settings.resize){
+                if (other_settings.iframe_qr_settings.size < 70){
+                    qr_resize = true;
                 }
-            }
-
-            if (other_settings.iframe_wm_settings.hide){
-                other_settings.wm_pos = "Disabled";
-            }
-            else{
-                if (other_settings.iframe_wm_settings.resize){
-                    wm_resize = true;
+                else{
+                    other_settings.qr_size = other_settings.iframe_qr_settings.size;
                 }
             }
         }
-        putImageDivInPosition("googlechart_qr_"+other_settings.vhash, other_settings.qr_pos, other_settings.vhash);
 
-        var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs="+other_settings.qr_size+"x"+other_settings.qr_size+"&chl=" + encodeURIComponent(chart_url);
-        var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
-
-        if (other_settings.qr_pos !== "Disabled"){
-            jQuery(googlechart_qr).appendTo("#googlechart_qr_"+other_settings.vhash);
-            jQuery("#googlechart_qr_"+other_settings.vhash).removeClass("eea-googlechart-hidden-image");
+        if (other_settings.iframe_wm_settings.hide){
+            other_settings.wm_pos = "Disabled";
         }
-
-        putImageDivInPosition("googlechart_wm_"+other_settings.vhash, other_settings.wm_pos, other_settings.vhash);
-
-        var googlechart_wm = "<img alt='Watermark' src='" + other_settings.wm_path + "'/>";
-        if (other_settings.wm_pos !== "Disabled"){
-            jQuery(googlechart_wm).appendTo("#googlechart_wm_"+other_settings.vhash);
-            jQuery("#googlechart_wm_"+other_settings.vhash).removeClass("eea-googlechart-hidden-image");
-        }
-        if (qr_resize){
-            jQuery("#googlechart_qr_"+other_settings.vhash + " img").css("height", other_settings.iframe_qr_settings.size + "px");
-        }
-        if (wm_resize){
-            jQuery("#googlechart_wm_"+other_settings.vhash + " img").css("height", other_settings.iframe_wm_settings.size + "px");
+        else{
+            if (other_settings.iframe_wm_settings.resize){
+                wm_resize = true;
+            }
         }
     }
+    putImageDivInPosition("googlechart_qr_"+other_settings.vhash, other_settings.qr_pos, other_settings.vhash);
+
+    var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs="+other_settings.qr_size+"x"+other_settings.qr_size+"&chl=" + encodeURIComponent(chart_url);
+    var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
+
+    if (other_settings.qr_pos !== "Disabled"){
+        jQuery(googlechart_qr).appendTo("#googlechart_qr_"+other_settings.vhash);
+        jQuery("#googlechart_qr_"+other_settings.vhash).removeClass("eea-googlechart-hidden-image");
+    }
+
+    putImageDivInPosition("googlechart_wm_"+other_settings.vhash, other_settings.wm_pos, other_settings.vhash);
+
+    var googlechart_wm = "<img alt='Watermark' src='" + other_settings.wm_path + "'/>";
+    if (other_settings.wm_pos !== "Disabled"){
+        jQuery(googlechart_wm).appendTo("#googlechart_wm_"+other_settings.vhash);
+        jQuery("#googlechart_wm_"+other_settings.vhash).removeClass("eea-googlechart-hidden-image");
+    }
+    if (qr_resize){
+        jQuery("#googlechart_qr_"+other_settings.vhash + " img").css("height", other_settings.iframe_qr_settings.size + "px");
+    }
+    if (wm_resize){
+        jQuery("#googlechart_wm_"+other_settings.vhash + " img").css("height", other_settings.iframe_wm_settings.size + "px");
+    }
+
     var row_filters = {};
     if (embedchart_row_filters_str.length > 0){
         row_filters = JSON.parse(embedchart_row_filters_str);
