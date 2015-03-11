@@ -1,3 +1,19 @@
+/* global drawGoogleChart, getColumnsFromSettings, getQueryParams, patched_each, getAvailable_columns_and_rows, prepareForChart, transformTable  */
+
+/* GLOBALS come from:
+
+ view.js:
+ drawGoogleChart
+ drawGoogleDashboard
+ getQueryParams
+
+ datatable.js
+ patched_each
+ getAvailable_columns_and_rows
+ getColumnsFromSettings
+ prepareForChart
+ transformTable
+ */
 var commonModule = window.EEAGoogleCharts.common;
 
 function drawChart(value, options){
@@ -28,7 +44,6 @@ function drawChart(value, options){
     var embedchart_filterposition = value[6];
     var embedchart_options = value[7];
     var embedchart_sortFilter = value[9];
-    var embedchart_hasPNG = (value[10]==='True'?true:false);
     var embedchart_row_filters_str = value[11];
     var embedchart_sortBy = value[12];
     var embedchart_sortAsc = true;
@@ -55,8 +70,7 @@ function drawChart(value, options){
     jQuery("#googlechart_filters_"+settings.vhash).remove();
     jQuery("#googlechart_view_"+settings.vhash).remove();
     jQuery("#googlechart_table_"+settings.vhash).remove();
-    var filters = '<div id="googlechart_filters_'+settings.vhash+'" class="googlechart_filters"></div>';
-    var view = '<div id="googlechart_view_'+settings.vhash+'" class="googlechart embedded-chart"></div>';
+
     var googlechart_table;
     if (embedchart_filterposition === 0){
         googlechart_table = ""+
@@ -125,7 +139,7 @@ function drawChart(value, options){
 
     var tmp_columns_and_rows = getAvailable_columns_and_rows(embedchart_unpivotSettings, settings.available_columns, settings.merged_rows);
 
-    var options = {
+    var settings_options = {
         originalTable : settings.merged_rows,
         normalColumns : columnsFromSettings.normalColumns,
         pivotingColumns : columnsFromSettings.pivotColumns,
@@ -135,12 +149,12 @@ function drawChart(value, options){
         filters : row_filters
     };
 
-    var transformedTable = transformTable(options);
+    var transformedTable = transformTable(settings_options);
 
     settings.merged_rows = tmp_columns_and_rows.all_rows;
     settings.available_columns = tmp_columns_and_rows.available_columns;
 
-    options = {
+    settings_options = {
         originalDataTable : transformedTable,
         columns : columnsFromSettings.columns,
         sortBy : embedchart_sortBy,
@@ -151,7 +165,7 @@ function drawChart(value, options){
         focusTarget : embedchart_json.options.focusTarget
     };
 
-    var tableForChart = prepareForChart(options);
+    var tableForChart = prepareForChart(settings_options);
 
     embedchart_json.options.title = settings.name + " — " + settings.main_title;
 

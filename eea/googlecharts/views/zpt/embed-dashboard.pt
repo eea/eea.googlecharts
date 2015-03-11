@@ -3,6 +3,7 @@
                         title view/context/Title;
                         embed_dashboard python:view.get_dashboard_embed();
                         chart_id embed_dashboard/name;
+                        isPrint python:1 if ('pdf.' in request['URL0']) else 0;
                         url view/context/absolute_url">
 
 <!DOCTYPE html>
@@ -33,9 +34,9 @@
     <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
     <script type="text/javascript" src="++resource++json2.js"></script>
     <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
-    <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
     <script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
     <script type="text/javascript" src="++resource++eea.googlecharts.embed_dashboard.js"></script>
+    <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
     <script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
 </body>
 </html>
@@ -64,9 +65,10 @@
         var iframe_wm_settings_$vhash = ${view/wm_iframe_settings};
         var main_title_$vhash = '${view/get_maintitle}';
         var isInline_$vhash = '$inline';
+        debugger;
         EEAGoogleCharts =  window.EEAGoogleCharts || {};
         EEAGoogleCharts.embed = EEAGoogleCharts.embed || {};
-
+        window.EEAGoogleCharts.embed.isPrint = $isPrint;
         window.EEAGoogleCharts.embed.hash = '$vhash';
         window.EEAGoogleCharts.embed.baseurl_$vhash = baseurl_$vhash;
         window.EEAGoogleCharts.embed.chart_id_$vhash = '${chart_id}';
@@ -84,8 +86,7 @@
     </tal:block>
     <script type="text/javascript"
         tal:define="
-            dashboard view/get_dashboard;
-            isPrint python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;"
+            dashboard view/get_dashboard;"
         tal:content="structure string:
         var dashboard_config_$vhash = ${dashboard};
         var settings_$vhash = {}

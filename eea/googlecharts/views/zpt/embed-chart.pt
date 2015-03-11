@@ -100,10 +100,12 @@
             ChartNotes python: view.get_all_notes_json();
             GoogleChartsConfig view/get_chart_json;
             unpivotSettings python:view.get_unpivotSettings(chart);
-            isPrint python:1 if ('pdf.' in request['URL0'] or '.pdf' in request['URL0']) else 0;"
+            isPrint python:1 if ('pdf.' in request['URL0']) else 0;"
         tal:content="structure string:
-            EEAGoogleCharts = {};
-            EEAGoogleCharts.embed = {};
+            var EEAGoogleCharts = window.EEAGoogleCharts || {};
+            if (!EEAGoogleCharts.embed){
+                window.EEAGoogleCharts.embed = {};
+            }
             var chart_columns_$vhash = ${chart/columns};
             var merged_rows_$vhash = ${chart/data};
             var available_columns_$vhash = ${chart/available_columns};

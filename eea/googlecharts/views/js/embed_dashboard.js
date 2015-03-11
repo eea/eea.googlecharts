@@ -1,6 +1,13 @@
-/* global drawGoogleDashboard */
-/* GLOBAL come from
-drawGoogleDashboard from view.js
+/* global drawGoogleDashboard, getQueryParams, patched_each */
+
+/* GLOBALS come from:
+
+    view.js:
+    drawGoogleDashboard
+    getQueryParams
+
+    datatable.js
+    patched_each
 */
 
 /* module requirements */
@@ -33,9 +40,6 @@ function drawDashboardEmbed(options){
     jQuery("#googlechart_filters_" + settings.vhash).remove();
     jQuery("#googlechart_view_" + settings.vhash).remove();
     jQuery("#googlechart_table_" + settings.vhash).remove();
-
-    var filters = '<div id="googlechart_filters_' + settings.vhash + '"></div>';
-    var view = '<div id="googlechart_view_' + settings.vhash + '" class="googlechart"></div>';
 
     var googlechart_table;
 
@@ -116,6 +120,3 @@ function drawDashboardEmbed(options){
     drawGoogleDashboard(googledashboard_params);
 
 }
-jQuery(document).ready(function($){
-
-});
