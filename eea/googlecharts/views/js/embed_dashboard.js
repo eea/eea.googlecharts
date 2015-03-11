@@ -1,16 +1,16 @@
 function drawDashboardEmbed(options){
-    settings = {
+   var settings = {
+        merged_rows : '',
+        available_columns : '',
         googlechart_config_array : [],
         main_title : '',
-        vhash : '',
         dashboard_config : null,
         baseurl : '',
         qr_pos : '',
         qr_size : '',
         wm_pos : '',
         wm_path : '',
-        merged_rows : '',
-        available_columns : '',
+        vhash : '',
         isInline : 'False'
     };
 
@@ -103,6 +103,7 @@ function drawDashboardEmbed(options){
 
     var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs="+settings.qr_size+"x"+settings.qr_size+"&chl=" + encodeURIComponent(chart_url);
     var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
+
     if (settings.qr_pos !== "Disabled"){
         jQuery(googlechart_qr).appendTo("#googlechart_qr_" + settings.vhash);
         jQuery("#googlechart_qr_" + settings.vhash).removeClass("eea-googlechart-hidden-image");
@@ -121,7 +122,11 @@ function drawDashboardEmbed(options){
     if (wm_resize){
         jQuery("#googlechart_wm_"+settings.vhash + " img").css("height", settings.iframe_wm_settings.size + "px");
     }
-
+    var embed = window.EEAGoogleCharts;
+    debugger;
+    if (embed && embed.isPrint) {
+        debugger;
+    }
     jQuery('#googlechart_dashboard_' + settings.vhash).removeAttr("chart_id");
 
     // Set width, height
