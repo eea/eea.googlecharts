@@ -115,7 +115,7 @@ function drawDashboardEmbed(options){
         available_columns: settings.available_columns,
         googlechart_config_array: settings.googlechart_config_array
     };
-    jQuery('#googlechart_dashboard_' + settings.vhash).data('settings', other_settings);
+    jQuery('#googlechart_dashboard_' + settings.vhash).data('other_settings', other_settings);
 
     drawGoogleDashboard(googledashboard_params);
 

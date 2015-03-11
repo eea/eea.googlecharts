@@ -121,7 +121,7 @@ function drawChart(value, options){
             "</div>";
     }
     jQuery(googlechart_table).appendTo('#googlechart_dashboard_'+settings.vhash);
-    jQuery('#googlechart_dashboard_'+settings.vhash).data('settings', settings);
+    jQuery('#googlechart_dashboard_'+settings.vhash).data('other_settings', settings);
 
     jQuery("#googlechart_view_"+settings.vhash).attr("chart_id", embedchart_id);
     jQuery("#googlechart_view_"+settings.vhash).addClass("googlechart_view");

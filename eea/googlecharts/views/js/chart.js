@@ -565,7 +565,7 @@ function drawGoogleChart(options){
     if (jQuery("#" + settings.chartDashboard).data() === null){
         return;
     }
-    var conf_array = jQuery("#" + settings.chartDashboard).data('settings').googlechart_config_array;
+    var conf_array = jQuery("#" + settings.chartDashboard).data('other_settings').googlechart_config_array;
     patched_each(conf_array, function(idx, conf){
         if (conf[0] === jQuery("#"+settings.chartViewDiv).attr("chart_id")){
             var chart_columnFilters_old = conf[14];
