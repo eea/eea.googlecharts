@@ -35,6 +35,7 @@ function putImageDivInPosition(div_id, position, vhash){
 
 common.insertBottomImages = function(settings, chart_url) {
     // check if cross-domain or not
+    var chart_hash = settings.vhash;
     var is_cross_domain = false;
     try{
         if (jQuery.isEmptyObject(window.parent.location)){
@@ -72,34 +73,43 @@ common.insertBottomImages = function(settings, chart_url) {
         }
     }
 
-    putImageDivInPosition("googlechart_qr_"+settings.vhash, settings.qr_pos, settings.vhash);
+    putImageDivInPosition("googlechart_qr_" + chart_hash, settings.qr_pos, chart_hash);
 
     var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs="+settings.qr_size+"x"+settings.qr_size+"&chl=" + encodeURIComponent(chart_url);
     var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
 
     if (settings.qr_pos !== "Disabled"){
-        jQuery(googlechart_qr).appendTo("#googlechart_qr_"+settings.vhash);
-        jQuery("#googlechart_qr_"+settings.vhash).removeClass("eea-googlechart-hidden-image");
+        jQuery(googlechart_qr).appendTo("#googlechart_qr_" + chart_hash);
+        jQuery("#googlechart_qr_" + chart_hash).removeClass("eea-googlechart-hidden-image");
     }
 
-    putImageDivInPosition("googlechart_wm_"+settings.vhash, settings.wm_pos, settings.vhash);
+    putImageDivInPosition("googlechart_wm_" + chart_hash, settings.wm_pos, settings.vhash);
 
     var googlechart_wm = "<img alt='Watermark' src='" + settings.wm_path + "'/>";
     if (settings.wm_pos !== "Disabled"){
-        jQuery(googlechart_wm).appendTo("#googlechart_wm_"+settings.vhash);
-        jQuery("#googlechart_wm_"+settings.vhash).removeClass("eea-googlechart-hidden-image");
+        jQuery(googlechart_wm).appendTo("#googlechart_wm_" + chart_hash);
+        jQuery("#googlechart_wm_" + chart_hash).removeClass("eea-googlechart-hidden-image");
     }
     if (qr_resize){
-        jQuery("#googlechart_qr_"+settings.vhash + " img").css("height", settings.iframe_qr_settings.size + "px");
+        jQuery("#googlechart_qr_" + chart_hash + " img").css("height", settings.iframe_qr_settings.size + "px");
     }
     if (wm_resize){
-        jQuery("#googlechart_wm_"+settings.vhash + " img").css("height", settings.iframe_wm_settings.size + "px");
+        jQuery("#googlechart_wm_" + chart_hash + " img").css("height", settings.iframe_wm_settings.size + "px");
+    }
+
+    // add Explore chart link when printing
+    var explore_link, left_images;
+    if (window.EEAGoogleCharts.embed && window.EEAGoogleCharts.embed.isPrint) {
+        explore_link = $("<a class='googlecharts-explore-link' />", { href: settings.baseurl, text:'Explore chart interactively'});
+        left_images = $("<div class='googlechart_left_image' />");
+        explore_link.appendTo(left_images);
+        left_images.prependTo($("#googlechart_bottom_images_" + chart_hash));
     }
 };
 
 jQuery(function($){
     var doc = $(document);
-    doc.bind('googlecharts.embed.ready', function() {
+    doc.bind('googlecharts.embed.ready', function(ev, data) {
         $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: '80%'});
         var share_dialog = $('#share-dialog');
         var embed_url = this.location.href;

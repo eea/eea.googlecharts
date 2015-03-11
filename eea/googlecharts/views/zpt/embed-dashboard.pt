@@ -110,7 +110,7 @@
             };
             if (isPrint || isInline_$vhash !== 'True'){
                 drawDashboardEmbed(settings_$vhash);
-                jQuery(document).trigger('googlecharts.embed.ready');
+                jQuery(document).trigger('googlecharts.embed.ready', ['$vhash']);
             }
             else{
                 jQuery('#googlechart_dashboard_$vhash')
