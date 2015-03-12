@@ -97,10 +97,15 @@ common.insertBottomImages = function(settings, chart_url) {
         jQuery("#googlechart_wm_" + chart_hash + " img").css("height", settings.iframe_wm_settings.size + "px");
     }
 
-    // add Explore chart link when printing
+    // #22489 add Explore chart link when printing
     var explore_link, left_images;
     if (window.EEAGoogleCharts.embed && window.EEAGoogleCharts.embed.isPrint) {
-        explore_link = $("<a class='googlecharts-explore-link' />", { href: settings.baseurl, text:'Explore chart interactively'});
+        explore_link = $("<a />", {
+            href: settings.baseurl,
+            text:'Explore chart interactively',
+            target: '_blank',
+            class:'googlecharts-explore-link'
+        });
         left_images = $("<div class='googlechart_left_image' />");
         explore_link.appendTo(left_images);
         left_images.prependTo($("#googlechart_bottom_images_" + chart_hash));

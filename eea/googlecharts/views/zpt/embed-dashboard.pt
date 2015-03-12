@@ -65,7 +65,6 @@
         var iframe_wm_settings_$vhash = ${view/wm_iframe_settings};
         var main_title_$vhash = '${view/get_maintitle}';
         var isInline_$vhash = '$inline';
-        debugger;
         EEAGoogleCharts =  window.EEAGoogleCharts || {};
         EEAGoogleCharts.embed = EEAGoogleCharts.embed || {};
         window.EEAGoogleCharts.embed.isPrint = $isPrint;

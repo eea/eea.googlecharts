@@ -121,7 +121,6 @@ ul.googlechart_tabs li:first-of-type a:hover {
     border-top: 1px solid #eee;
 }
 
-
 #googlechart_dashboard .google-visualization-controls-slider-horizontal,
 .googlechart_dashboard .google-visualization-controls-slider-horizontal {
     width: 130px;
@@ -595,6 +594,7 @@ input.googlechart-chart-size {
 .googlechart_dashboard .googlechart-notes { 
     font: 12px Verdana, Arial, Helvetica, sans-serif;
     line-height: 1.5em;
+    width: 100% !important; /* notes shouldn't span beyond chart border */
 }
 
 /* #18491 normalize font size of googlechart-notes when it contains a paragraph */
@@ -753,5 +753,29 @@ input.googlechart-chart-size {
 
 .btn-multiples-sm-enlarge:hover{
     cursor: pointer;
+}
+
+/* #22489 pdf print customization of  googlecharts image divs */
+@media print {
+    /* TODO: disabled until feedback is given */
+    /*.googledashboard-chart {*/
+        /*float: none !important;*/
+    /*}*/
+    .googlechart_left_image {
+        padding-left: 1.5em;
+    }
+    .googlechart_bottom_images {
+        overflow: hidden;
+        padding-bottom: .5em;
+    }
+    .googlechart_bottom_images a {
+        padding-top: 1.5em;
+        display: block;
+    }
+
+    .googlechart_bottom_images img {
+        float: none;
+        width: inherit;
+    }
 }
 
