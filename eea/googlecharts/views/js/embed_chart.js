@@ -67,9 +67,10 @@ function drawChart(value, options){
     var embedchart_columnFilters = value[14];
     var embedchart_unpivotSettings = value[15];
 
-    jQuery("#googlechart_filters_"+settings.vhash).remove();
-    jQuery("#googlechart_view_"+settings.vhash).remove();
-    jQuery("#googlechart_table_"+settings.vhash).remove();
+    /* #22591 commented code which I've never manage to reach */
+    //jQuery("#googlechart_filters_"+settings.vhash).remove();
+    //jQuery("#googlechart_view_"+settings.vhash).remove();
+    //jQuery("#googlechart_table_"+settings.vhash).remove();
 
     var googlechart_table;
     if (embedchart_filterposition === 0){
@@ -99,7 +100,7 @@ function drawChart(value, options){
     if (embedchart_filterposition === 2){
         googlechart_table = ""+
             "<div id='googlechart_table_"+settings.vhash+"' class='googlechart_table googlechart_table_bottom'>"+
-                "<div class='googlechart_top_images' class='googlechart_top_images' id='googlechart_top_images_"+settings.vhash+"'></div>"+
+                "<div class='googlechart_top_images' id='googlechart_top_images_"+settings.vhash+"'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_view_"+settings.vhash+"' class='googlechart embedded-chart'></div>"+
                 "<div id='googlechart_filters_"+settings.vhash+"' class='googlechart_filters'></div>"+
@@ -123,8 +124,8 @@ function drawChart(value, options){
     jQuery(googlechart_table).appendTo('#googlechart_dashboard_'+settings.vhash);
     jQuery('#googlechart_dashboard_'+settings.vhash).data('other_settings', settings);
 
-    jQuery("#googlechart_view_"+settings.vhash).attr("chart_id", embedchart_id);
-    jQuery("#googlechart_view_"+settings.vhash).addClass("googlechart_view");
+    jQuery("#googlechart_view_"+settings.vhash).attr("chart_id", embedchart_id)
+                                               .addClass("googlechart_view");
 
     var chart_url = settings.baseurl + "#tab-" + embedchart_id;
 
