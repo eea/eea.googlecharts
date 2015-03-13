@@ -3,6 +3,9 @@ Changelog
 
 12.8.dev0 - (unreleased)
 ------------------------
+* Change: data sources of embedded charts now open in a new blank page instead of
+  opening within the iframe
+  [ichimdav refs #23944]
 * Change: Switched to curl in the jenkins builds install script
   [olimpiurob refs #22402]
 * Change: Changed fetch url for jenkins builds install script to the install 
