@@ -1,8 +1,8 @@
 Changelog
 =========
 
-12.8.dev0 - (unreleased)
-------------------------
+12.8 - (2015-03-17)
+-------------------
 * Change: data sources of embedded charts now open in a new blank page instead of
   opening within the iframe
   [ichimdav refs #23944]
