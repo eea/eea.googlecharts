@@ -1382,7 +1382,7 @@ function loadRoles(colFullName){
 
     var valid_roles = {
         "number" : ["", "data", "old-data", "interval", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"],
-        "text" : ["", "data", "annotation", "annotationText", "tooltip"],
+        "text" : ["", "data", "annotation", "annotationText", "tooltip", "style"],
         "date" : ["", "data", "annotation", "annotationText", "tooltip"],
         "boolean" : ["", "data", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"]
     };
@@ -1417,7 +1417,7 @@ function saveRoles(colFullName){
 
 function enableGridRoles(){
     jQuery("#newTable").delegate(".slick-header-menubutton","click", function(e, args){
-        var available_roles = ["","data", "old-data", "interval", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope"];
+        var available_roles = ["","data", "old-data", "interval", "annotation", "annotationText", "tooltip", "certainty", "emphasis", "scope", "style"];
         var role_element = jQuery(".slick-header-menuitem").find("span:contains(-role-)");
         if (role_element.length === 0){
             return;

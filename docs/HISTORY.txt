@@ -3,6 +3,8 @@ Changelog
 
 12.9.dev0 - (unreleased)
 ------------------------
+* Feature: Added style role for charts
+  [szabozo0]
 * Bugfix: Fixed daviz when using sparql and a numeric field is missing
   [szabozo0 refs #24172]
 
