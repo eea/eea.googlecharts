@@ -3330,17 +3330,7 @@ function populatePivotPreviewTable(columns){
                         .appendTo(table_obj);
         var head_col = jQuery("<td>").appendTo(row_obj);
         jQuery("#pivots").find(".pivotedColumn").first().appendTo(head_col);
-        patched_each(row.sort(function(a,b){
-                    if (a.node > b.node){
-                        return 1;
-                    }
-                    else if (a.node < b.node){
-                        return -1;
-                    }
-                    else {
-                        return 0;
-                    }
-                }), function(col_nr, col){
+        patched_each(row,function(col_nr, col){
             jQuery("<td>")
                 .attr("colspan", col.nodesCount)
                 .text(col.node)
