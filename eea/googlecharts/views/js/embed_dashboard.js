@@ -37,12 +37,14 @@ function drawDashboardEmbed(options){
         config[1].options.title = config[1].options.title + " — " + settings.main_title;
     });
 
-    jQuery("#googlechart_filters_" + chart_hash).remove();
-    jQuery("#googlechart_view_" + chart_hash).remove();
-    jQuery("#googlechart_table_" + chart_hash).remove();
+
 
     var googlechart_table;
     var chart_hash = settings.vhash;
+    // 22489; disabled as I've never managed to get the selectors to find a match
+    //jQuery("#googlechart_filters_" + chart_hash).remove();
+    //jQuery("#googlechart_view_" + chart_hash).remove();
+    //jQuery("#googlechart_table_" + chart_hash).remove();
 
     if ((settings.dashboard_config.chartsBox !== undefined) && (settings.dashboard_config.chartsBox.order === 0)){
         googlechart_table = ""+

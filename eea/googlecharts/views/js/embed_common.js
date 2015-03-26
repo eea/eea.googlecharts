@@ -104,7 +104,7 @@ common.insertBottomImages = function(settings, chart_url) {
             href: settings.baseurl,
             text:'Explore chart interactively',
             target: '_blank',
-            class:'googlecharts-explore-link'
+            'class':'googlecharts-explore-link'
         });
         left_images = $("<div class='googlechart_left_image' />");
         explore_link.appendTo(left_images);
