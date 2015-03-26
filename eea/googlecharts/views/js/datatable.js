@@ -653,7 +653,12 @@ function prepareForChart(options){
                 newRow.push(decodeStr(newColumn));
             }
             else{
-                newRow.push(newColumn);
+                if ((typeof newColumn === 'string') && (colType === 'number')){
+                    newRow.push(undefined);
+                }
+                else {
+                    newRow.push(newColumn);
+                }
             }
         });
         dataForChart.addRow(newRow);

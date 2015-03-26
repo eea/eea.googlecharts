@@ -2851,6 +2851,11 @@ function openEditor(elementId) {
         if (prepared_column.role === 'old-data'){
             prepared_column.status = 0;
         }
+
+        if (prepared_column.role === 'style'){
+            prepared_column.status = 0;
+        }
+
         if ((prepared_column.role === 'interval') && (prepared_column.status === 1)){
             shouldAddIntervalsToEditor = true;
             prepared_column.status = 0;
@@ -3325,17 +3330,7 @@ function populatePivotPreviewTable(columns){
                         .appendTo(table_obj);
         var head_col = jQuery("<td>").appendTo(row_obj);
         jQuery("#pivots").find(".pivotedColumn").first().appendTo(head_col);
-        patched_each(row.sort(function(a,b){
-                    if (a.node > b.node){
-                        return 1;
-                    }
-                    else if (a.node < b.node){
-                        return -1;
-                    }
-                    else {
-                        return 0;
-                    }
-                }), function(col_nr, col){
+        patched_each(row,function(col_nr, col){
             jQuery("<td>")
                 .attr("colspan", col.nodesCount)
                 .text(col.node)
@@ -6376,12 +6371,12 @@ function overrideGooglePalette(){
         jQuery(".jfk-colormenu:visible .jfk-palette-cell").show();
         jQuery(".jfk-colormenu:visible .charts-menuitem").hide();
         patched_each(jQuery(".jfk-colormenu:visible .jfk-palette"), function(idx, palette){
-            if (jQuery(palette).find("td").eq(0).attr("aria-label") === "RGB (0, 0, 0)"){
+            if (jQuery(palette).find("td").eq(0).attr("aria-label") === "black"){
                 grayscale = palette;
                 jQuery(palette).show();
             }
             else {
-                if (jQuery(palette).find("td").eq(0).attr("aria-label") === "RGB (230, 184, 175)"){
+                if (jQuery(palette).find("td").eq(0).attr("aria-label") === "light red berry 3"){
                     custompalette = palette;
                     jQuery(palette).show();
                 }

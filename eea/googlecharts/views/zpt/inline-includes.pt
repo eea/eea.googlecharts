@@ -1,4 +1,5 @@
 <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
+<link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css"/>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="++resource++json2.js"></script>

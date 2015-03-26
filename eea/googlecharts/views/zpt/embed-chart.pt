@@ -52,7 +52,7 @@
                                         define="source provenance/source | python:{}; source_url source/url | nothing"
                                         condition="source_url">
                                     <a tal:attributes="href source/url"
-                                            tal:content="python:source.get('title') or source_url" />
+                                            tal:content="python:source.get('title') or source_url" target="_blank" />
                                 </tal:source>
 
                             <li tal:replace="structure string:</$htmltag>"></li>
@@ -61,7 +61,7 @@
                         <li tal:condition="indicator">
                             <span>EEA &ndash; </span>
                             <a tal:attributes="href indicator/absolute_url; title indicator/Title"
-                                    tal:content="python:'Indicator ' + indicator.get_codes()[-1]" target="_top">content</a>
+                                    tal:content="python:'Indicator ' + indicator.get_codes()[-1]" target="_blank">content</a>
                         </li>
                         <!--? /Indicator -->
                     <p tal:replace="structure string:</${outerhtmltag}>"></p>
