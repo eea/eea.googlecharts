@@ -3,6 +3,8 @@ Changelog
 
 12.9.dev0 - (unreleased)
 ------------------------
+* Change: resized the dashboard charts when printing as part of the pdf output
+  [ichimdav refs #22489]
 * Feature: Added style role for charts
   [szabozo0]
 * Bugfix: Fixed daviz when using sparql and a numeric field is missing

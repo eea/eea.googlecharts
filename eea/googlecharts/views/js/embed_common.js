@@ -1,6 +1,14 @@
 /* @flow */
 google.load('visualization', '1.0', {packages: ['controls']});
 
+if (!window.EEAGoogleCharts) {
+    window.EEAGoogleCharts = {};
+}
+if (!window.EEAGoogleCharts.common) {
+    window.EEAGoogleCharts.common = {};
+}
+var common = window.EEAGoogleCharts.common;
+
 function putImageDivInPosition(div_id, position, vhash){
     if (position === "Disabled"){
         return;
@@ -25,9 +33,88 @@ function putImageDivInPosition(div_id, position, vhash){
     }
 }
 
+common.insertBottomImages = function(settings, chart_url) {
+    // check if cross-domain or not
+    var chart_hash = settings.vhash;
+    var is_cross_domain = false;
+    try{
+        if (jQuery.isEmptyObject(window.parent.location)){
+            is_cross_domain = true;
+        }
+    }
+    catch(e){
+        is_cross_domain = true;
+    }
+    var wm_resize = false;
+    var qr_resize = false;
+    // if not cross-domain, use the iframe settings for wm & qrcode
+    if (!is_cross_domain){
+        if (settings.iframe_qr_settings.hide){
+            settings.qr_pos = "Disabled";
+        }
+        else{
+            if (settings.iframe_qr_settings.resize){
+                if (settings.iframe_qr_settings.size < 70){
+                    qr_resize = true;
+                }
+                else{
+                    settings.qr_size = settings.iframe_qr_settings.size;
+                }
+            }
+        }
+
+        if (settings.iframe_wm_settings.hide){
+            settings.wm_pos = "Disabled";
+        }
+        else{
+            if (settings.iframe_wm_settings.resize){
+                wm_resize = true;
+            }
+        }
+    }
+
+    putImageDivInPosition("googlechart_qr_" + chart_hash, settings.qr_pos, chart_hash);
+
+    var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs="+settings.qr_size+"x"+settings.qr_size+"&chl=" + encodeURIComponent(chart_url);
+    var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
+
+    if (settings.qr_pos !== "Disabled"){
+        jQuery(googlechart_qr).appendTo("#googlechart_qr_" + chart_hash);
+        jQuery("#googlechart_qr_" + chart_hash).removeClass("eea-googlechart-hidden-image");
+    }
+
+    putImageDivInPosition("googlechart_wm_" + chart_hash, settings.wm_pos, settings.vhash);
+
+    var googlechart_wm = "<img alt='Watermark' src='" + settings.wm_path + "'/>";
+    if (settings.wm_pos !== "Disabled"){
+        jQuery(googlechart_wm).appendTo("#googlechart_wm_" + chart_hash);
+        jQuery("#googlechart_wm_" + chart_hash).removeClass("eea-googlechart-hidden-image");
+    }
+    if (qr_resize){
+        jQuery("#googlechart_qr_" + chart_hash + " img").css("height", settings.iframe_qr_settings.size + "px");
+    }
+    if (wm_resize){
+        jQuery("#googlechart_wm_" + chart_hash + " img").css("height", settings.iframe_wm_settings.size + "px");
+    }
+
+    // #22489 add Explore chart link when printing
+    var explore_link, left_images;
+    if (window.EEAGoogleCharts.embed && window.EEAGoogleCharts.embed.isPrint) {
+        explore_link = $("<a />", {
+            href: settings.baseurl,
+            text:'Explore chart interactively',
+            target: '_blank',
+            'class':'googlecharts-explore-link'
+        });
+        left_images = $("<div class='googlechart_left_image' />");
+        explore_link.appendTo(left_images);
+        left_images.prependTo($("#googlechart_bottom_images_" + chart_hash));
+    }
+};
+
 jQuery(function($){
     var doc = $(document);
-    doc.bind('googlecharts.embed.ready', function() {
+    doc.bind('googlecharts.embed.ready', function(ev, data) {
         $('.googlecharts-embed-dialog').dialog({ autoOpen: false, width: '80%'});
         var share_dialog = $('#share-dialog');
         var embed_url = this.location.href;
