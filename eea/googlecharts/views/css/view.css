@@ -755,27 +755,3 @@ input.googlechart-chart-size {
     cursor: pointer;
 }
 
-/* #22489 pdf print customization of  googlecharts image divs */
-@media print {
-    /* TODO: disabled until feedback is given */
-    /*.googledashboard-chart {*/
-        /*float: none !important;*/
-    /*}*/
-    .googlechart_left_image {
-        padding-left: 1.5em;
-    }
-    .googlechart_bottom_images {
-        overflow: hidden;
-        padding-bottom: .5em;
-    }
-    .googlechart_bottom_images a {
-        padding-top: 1.5em;
-        display: block;
-    }
-
-    .googlechart_bottom_images img {
-        float: none;
-        width: inherit;
-    }
-}
-

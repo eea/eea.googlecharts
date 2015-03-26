@@ -102,20 +102,13 @@ function drawDashboardEmbed(options){
     }
 
     /* #22489 reduce size of dashboards when pdf printing in order to avoid text shrinking */
-    var dashboard_width = window.parseInt(settings.dashboard_config.chartsBox.width, 10);
-    var PRINT_BODY_WIDTH = 590;
-    var width_reduction = PRINT_BODY_WIDTH / dashboard_width;
     if (window.EEAGoogleCharts.embed && window.EEAGoogleCharts.embed.isPrint) {
         $.each(settings.dashboard_config.widgets, function(idx, el) {
             var dashboard = el.dashboard;
-            if (width_reduction > 1) {
-                dashboard.height =  dashboard.height / width_reduction;
-                dashboard.width =  dashboard.width / width_reduction;
-            }
-            else {
-                dashboard.height =  dashboard.height * width_reduction;
-                dashboard.width =  dashboard.width * width_reduction;
-            }
+            // magic numbers found after playing with an assessment where the larger charts
+            // are set to the maximum 650
+            dashboard.width =  dashboard.width > 600 ? "650px" : "790px";
+            dashboard.height = "295px";
         });
 
     }

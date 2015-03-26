@@ -14,6 +14,27 @@
 .googlechart_filters {
   display: none;
 }
+
+/* #22489 remove float from dashboard charts when printing */
+.googlechart_view {
+    overflow: hidden;
+}
 .googledashboard-chart {
     float: none !important;
 }
+.googlechart_left_image {
+    padding-left: 1.5em;
+}
+.googlechart_bottom_images {
+    overflow: hidden;
+    padding-bottom: .5em;
+}
+.googlechart_bottom_images a {
+    padding-top: 1.5em;
+    display: block;
+}
+.googlechart_bottom_images img {
+    float: none;
+    width: inherit;
+}
+
