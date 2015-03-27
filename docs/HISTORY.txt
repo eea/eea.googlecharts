@@ -3,6 +3,9 @@ Changelog
 
 12.9.dev0 - (unreleased)
 ------------------------
+* Feature: When a simple category filter is used on a pre pivot column, use the
+  same colors from the palette as on the original chart
+  [szabozo0 refs #24170]
 * Bugfix: Fixed annotation role in chart editor
   [szabozo0]
 * Change: resized the dashboard charts when printing as part of the pdf output

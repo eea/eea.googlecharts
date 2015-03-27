@@ -869,6 +869,17 @@ function guessSeries(chart){
         });
     }
     //set the colors for series
+    //leave the colors untuched if simlpe category filters is used
+    var hasPrePivotSimpleCategoryFilter = false;
+    var filters = chart[3];
+    jQuery.each(filters, function(key, settings){
+        if ((key.startsWith("pre_config")) && (settings.type === "2")){
+            hasPrePivotSimpleCategoryFilter = true;
+        }
+    });
+    if (hasPrePivotSimpleCategoryFilter){
+        return;
+    }
     if (options.colors){
         var col_id = -1;
         jQuery.each(dataSettings.prepared, function(idx, col){
