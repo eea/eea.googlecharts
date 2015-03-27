@@ -2856,6 +2856,14 @@ function openEditor(elementId) {
             prepared_column.status = 0;
         }
 
+        if (prepared_column.role === 'annotation'){
+            prepared_column.status = 0;
+        }
+
+        if (prepared_column.role === 'annotationText'){
+            prepared_column.status = 0;
+        }
+
         if ((prepared_column.role === 'interval') && (prepared_column.status === 1)){
             shouldAddIntervalsToEditor = true;
             prepared_column.status = 0;

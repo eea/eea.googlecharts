@@ -3,6 +3,8 @@ Changelog
 
 12.9.dev0 - (unreleased)
 ------------------------
+* Bugfix: Fixed annotation role in chart editor
+  [szabozo0]
 * Change: resized the dashboard charts when printing as part of the pdf output
   [ichimdav refs #22489]
 * Feature: Added style role for charts
