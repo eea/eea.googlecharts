@@ -168,7 +168,7 @@ function updateFilterDivs(){
             jQuery(filterValue).find(".charts-inline-block").appendTo(jQuery(filterValue).find(".eea-filter-value-container"));
         }
     });
-    patched_each(jQuery("ul.google-visualization-controls-categoryfilter-selected"), function(idx, filterUl){
+    patched_each(jQuery("ul.google-visualization-controls-categoryfilter-selected:visible"), function(idx, filterUl){
         if (jQuery(filterUl).closest(".googlechart_filters").length === 0){
             return;
         }

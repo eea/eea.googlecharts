@@ -3,6 +3,8 @@ Changelog
 
 12.9.dev0 - (unreleased)
 ------------------------
+* Bugfix: Fixed filter div size for charts embedded in indicator assessment
+  [szabozo0 refs #24353]
 * Feature: When a simple category filter is used on a pre pivot column, use the
   same colors from the palette as on the original chart
   [szabozo0 refs #24170]
