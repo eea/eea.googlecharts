@@ -1,8 +1,8 @@
 Changelog
 =========
 
-12.9.dev0 - (unreleased)
-------------------------
+12.9 - (2015-04-02)
+-------------------
 * Bugfix: Fixed filter div size for charts embedded in indicator assessment
   [szabozo0 refs #24353]
 * Feature: When a simple category filter is used on a pre pivot column, use the
