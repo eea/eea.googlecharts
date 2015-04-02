@@ -1,6 +1,9 @@
 Changelog
 =========
 
+13.0.dev0 - (unreleased)
+------------------------
+
 12.9 - (2015-04-02)
 -------------------
 * Bugfix: Fixed filter div size for charts embedded in indicator assessment
