@@ -3,6 +3,9 @@ Changelog
 
 13.0.dev0 - (unreleased)
 ------------------------
+* Change: reference png and svg file download from at_download location
+  in order to make them more easily trackable
+  [ichimdav refs #18753]
 
 12.9 - (2015-04-02)
 -------------------

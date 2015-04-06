@@ -285,8 +285,8 @@
                         <a tal:attributes="href string:${url}/download.csv">CSV</a>
                         <a tal:attributes="href string:${url}/download.tsv">TSV</a>
                         <p><strong>Image formats</strong></p>
-                        <a tal:attributes="href string:${chart_id}.png/download" target="_top">PNG</a>
-                        <a tal:attributes="href string:${chart_id}.svg/download" target="_top">SVG</a>
+                        <a tal:attributes="href string:${chart_id}.png/at_download/file" target="_top">PNG</a>
+                        <a tal:attributes="href string:${chart_id}.svg/at_download/file" target="_top">SVG</a>
 
                         <p><strong>Formats suitable for machine-to-machine communication</strong></p>
                         <a tal:attributes="href string:${url}/download.json" target="_top">JSON</a>
