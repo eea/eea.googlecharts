@@ -1,6 +1,9 @@
 Changelog
 =========
 
+13.1.dev0 - (unreleased)
+------------------------
+
 13.0 - (2015-04-15)
 -------------------
 * Bugfix: fixed charts for IE when pre_pivot filters are used
