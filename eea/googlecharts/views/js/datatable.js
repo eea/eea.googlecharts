@@ -873,7 +873,7 @@ function guessSeries(chart){
     var hasPrePivotSimpleCategoryFilter = false;
     var filters = chart[3];
     jQuery.each(filters, function(key, settings){
-        if ((key.startsWith("pre_config")) && (settings.type === "2")){
+        if ((key.indexOf("pre_config") === 0) && (settings.type === "2")){
             hasPrePivotSimpleCategoryFilter = true;
         }
     });

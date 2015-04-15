@@ -3,6 +3,8 @@ Changelog
 
 13.0.dev0 - (unreleased)
 ------------------------
+* Bugfix: fixed charts for IE when pre_pivot filters are used
+  [szabozo0 refs #24830]
 * Change: reference png and svg file download from at_download location
   in order to make them more easily trackable
   [ichimdav refs #18753]
