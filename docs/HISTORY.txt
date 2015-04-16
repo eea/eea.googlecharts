@@ -1,8 +1,8 @@
 Changelog
 =========
 
-13.2.dev0 - (unreleased)
-------------------------
+13.2 - (2015-04-16)
+-------------------
 * Bugfix: fixed embedded charts when chart has no relation with an Assessment
   [szabozo0 refs #24624]
 
