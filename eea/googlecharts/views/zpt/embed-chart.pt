@@ -61,7 +61,7 @@
                         <li tal:condition="indicator" tal:define="codes python:indicator.get_codes()">
                             <span>EEA &ndash; </span>
                             <a tal:attributes="href indicator/absolute_url; title indicator/Title"
-                                    tal:content="python:'Indicator ' + codes[-1] if codes else ''" target="_blank">content</a>
+                                    tal:content="python:'Indicator ' + codes[-1] if codes else 'Indicator'" target="_blank">content</a>
                         </li>
                         <!--? /Indicator -->
                     <p tal:replace="structure string:</${outerhtmltag}>"></p>
