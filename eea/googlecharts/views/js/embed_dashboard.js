@@ -41,10 +41,14 @@ function drawDashboardEmbed(options){
 
     var googlechart_table;
     var chart_hash = settings.vhash;
-    // 22489; disabled as I've never managed to get the selectors to find a match
-    //jQuery("#googlechart_filters_" + chart_hash).remove();
-    //jQuery("#googlechart_view_" + chart_hash).remove();
-    //jQuery("#googlechart_table_" + chart_hash).remove();
+
+
+    /* Reset the chart when pre-pivot filters are used */
+    $(".googlechart-datasources-info").appendTo("body");
+    $(".googlechart-share-box").appendTo("body");
+    jQuery("#googlechart_filters_" + chart_hash).remove();
+    jQuery("#googlechart_view_" + chart_hash).remove();
+    jQuery("#googlechart_table_" + chart_hash).remove();
 
     if ((settings.dashboard_config.chartsBox !== undefined) && (settings.dashboard_config.chartsBox.order === 0)){
         googlechart_table = ""+
@@ -134,5 +138,6 @@ function drawDashboardEmbed(options){
     };
     jQuery('#googlechart_dashboard_' + chart_hash).data('other_settings', other_settings);
     drawGoogleDashboard(googledashboard_params);
+    jQuery(document).trigger('googlecharts.embed.ready', [settings.vhash]);
 
 }

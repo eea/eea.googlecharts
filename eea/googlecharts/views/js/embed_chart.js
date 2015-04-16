@@ -67,10 +67,12 @@ function drawChart(value, options){
     var embedchart_columnFilters = value[14];
     var embedchart_unpivotSettings = value[15];
 
-    /* #22591 commented code which I've never manage to reach */
-    //jQuery("#googlechart_filters_"+settings.vhash).remove();
-    //jQuery("#googlechart_view_"+settings.vhash).remove();
-    //jQuery("#googlechart_table_"+settings.vhash).remove();
+    /* Reset the chart when pre-pivot filters are used */
+    $(".googlechart-datasources-info").appendTo("body");
+    $(".googlechart-share-box").appendTo("body");
+    jQuery("#googlechart_filters_"+settings.vhash).remove();
+    jQuery("#googlechart_view_"+settings.vhash).remove();
+    jQuery("#googlechart_table_"+settings.vhash).remove();
 
     var googlechart_table;
     if (embedchart_filterposition === 0){
@@ -191,5 +193,6 @@ function drawChart(value, options){
         ChartNotes: embedchart_ChartNotes
     };
     drawGoogleChart(googlechart_params);
+    jQuery(document).trigger('googlecharts.embed.ready', [settings.vhash]);
 
 }

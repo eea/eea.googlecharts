@@ -58,10 +58,10 @@
                             <li tal:replace="structure string:</$htmltag>"></li>
                         </tal:provenance>
                         <!--? Indicator -->
-                        <li tal:condition="indicator">
+                        <li tal:condition="indicator" tal:define="codes python:indicator.get_codes()">
                             <span>EEA &ndash; </span>
                             <a tal:attributes="href indicator/absolute_url; title indicator/Title"
-                                    tal:content="python:'Indicator ' + indicator.get_codes()[-1]" target="_blank">content</a>
+                                    tal:content="python:'Indicator ' + codes[-1] if codes else ''" target="_blank">content</a>
                         </li>
                         <!--? /Indicator -->
                     <p tal:replace="structure string:</${outerhtmltag}>"></p>
@@ -251,7 +251,6 @@
                 }else if(jQuery('#googlechart_dashboard_$vhash').is(':visible')){
                         if (isInline_$vhash !== 'True'){
                             drawChart(settings_$vhash, other_options_$vhash);
-                            jQuery(document).trigger('googlecharts.embed.ready', ['$vhash']);
                         }
                         else{
                             jQuery('#googlechart_dashboard_$vhash')
