@@ -338,44 +338,114 @@
     file="./imgs/close_overlay.png"
   />
 
+  <browser:page
+    name="googlechart.googlecharts.preview.png"
+    for="zope.interface.Interface"
+    class="eea.app.visualization.views.preview.PreviewImage"
+    permission="zope2.View"
+    />
+
   <browser:resource
     name="googlechart.googlecharts.preview.png"
     file="./imgs/preview.png"
   />
+
+  <browser:page
+    name="googlechart.googledashboard.preview.png"
+    for="zope.interface.Interface"
+    class="eea.app.visualization.views.preview.PreviewImage"
+    permission="zope2.View"
+    />
 
   <browser:resource
     name="googlechart.googledashboard.preview.png"
     file="./imgs/dashboard.preview.png"
   />
 
+  <browser:page
+    name="googlechart.googledashboards.preview.png"
+    for="zope.interface.Interface"
+    class="eea.app.visualization.views.preview.PreviewImage"
+    permission="zope2.View"
+    />
+
   <browser:resource
     name="googlechart.googledashboards.preview.png"
     file="./imgs/dashboard.preview.png"
   />
 
+  <browser:page
+    name="googlechart.motionchart.preview.png"
+    for="zope.interface.Interface"
+    class="eea.app.visualization.views.preview.PreviewImage"
+    permission="zope2.View"
+    />
+
   <browser:resource
     name="googlechart.motionchart.preview.png"
     file="./imgs/motion.preview.png" />
+
+  <browser:page
+    name="googlechart.organizational.preview.png"
+    for="zope.interface.Interface"
+    class="eea.app.visualization.views.preview.PreviewImage"
+    permission="zope2.View"
+    />
 
   <browser:resource
     name="googlechart.organizational.preview.png"
     file="./imgs/organizational.preview.png" />
 
+  <browser:page
+    name="googlechart.imagechart.preview.png"
+    for="zope.interface.Interface"
+    class="eea.app.visualization.views.preview.PreviewImage"
+    permission="zope2.View"
+    />
+
   <browser:resource
     name="googlechart.imagechart.preview.png"
     file="./imgs/radar.preview.png" />
+
+  <browser:page
+    name="googlechart.sparkline.preview.png"
+    for="zope.interface.Interface"
+    class="eea.app.visualization.views.preview.PreviewImage"
+    permission="zope2.View"
+    />
 
   <browser:resource
     name="googlechart.sparkline.preview.png"
     file="./imgs/sparkline.preview.png" />
 
+  <browser:page
+    name="googlechart.table.preview.png"
+    for="zope.interface.Interface"
+    class="eea.app.visualization.views.preview.PreviewImage"
+    permission="zope2.View"
+    />
+
   <browser:resource
     name="googlechart.table.preview.png"
     file="./imgs/table.preview.png" />
 
+  <browser:page
+    name="googlechart.annotatedtimeline.preview.png"
+    for="zope.interface.Interface"
+    class="eea.app.visualization.views.preview.PreviewImage"
+    permission="zope2.View"
+    />
+
   <browser:resource
     name="googlechart.annotatedtimeline.preview.png"
     file="./imgs/timeline.preview.png" />
+
+  <browser:page
+    name="googlechart.treemap.preview.png"
+    for="zope.interface.Interface"
+    class="eea.app.visualization.views.preview.PreviewImage"
+    permission="zope2.View"
+    />
 
   <browser:resource
     name="googlechart.treemap.preview.png"

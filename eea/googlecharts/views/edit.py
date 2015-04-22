@@ -36,29 +36,7 @@ class Edit(BrowserView):
         data['chartsconfig'] = json.loads(self.request['chartsconfig'])
         mutator.edit_view('googlechart.googlecharts', **data)
 
-        if not IFolderish.providedBy(self.context):
-            return "Changes saved, but can't save png" + \
-                    "chart on a non-folderish object!"
-
-        previews = ["googlechart.googledashboard.preview.png",
-                    "googlechart.motionchart.preview.png",
-                    "googlechart.organizational.preview.png",
-                    "googlechart.imagechart.preview.png",
-                    "googlechart.sparkline.preview.png",
-                    "googlechart.table.preview.png",
-                    "googlechart.annotatedtimeline.preview.png",
-                    "googlechart.treemap.preview.png"]
-        for previewname in previews:
-            if not self.context.get(previewname, None):
-                img = self.context.restrictedTraverse(
-                    "++resource++" + previewname)
-                self.context.invokeFactory('Image',
-                    id=previewname,
-                    title=previewname,
-                    image=img.GET())
-
         notify(ChartsChanged(self.context, config=data))
-
         return _('Changes saved')
 
     def get_named_data(self, config_name, key='', default=None):

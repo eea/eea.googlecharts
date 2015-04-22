@@ -756,20 +756,7 @@ class Export(BrowserView):
         if charts:
             charts = charts.split(",")
 
-        thumbs_to_not_delete = charts + [
-            "googlechart.googledashboard.preview.png",
-            "googlechart.motionchart.preview.png",
-            "googlechart.organizational.preview.png",
-            "googlechart.imagechart.preview.png",
-            "googlechart.sparkline.preview.png",
-            "googlechart.table.preview.png",
-            "googlechart.annotatedtimeline.preview.png",
-            "googlechart.treemap.preview.png"
-        ]
-        thumbs_to_delete = []
-        for obj_id in self.context.objectIds():
-            if obj_id not in thumbs_to_not_delete:
-                thumbs_to_delete.append(obj_id)
+        thumbs_to_delete = self.context.objectIds()
         if thumbs_to_delete:
             self.context.manage_delObjects(thumbs_to_delete)
             notify(InvalidateCacheEvent(self.context))
