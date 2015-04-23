@@ -3,6 +3,20 @@
   xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
   i18n_domain="eea">
 
+  <!-- 11.6 => 13.3 -->
+  <genericsetup:upgradeSteps
+    source="11.6"
+    destination="13.3"
+    profile="eea.googlecharts:default">
+
+    <genericsetup:upgradeStep
+      title="Cleanup fallback images"
+      handler="eea.googlecharts.upgrades.evolve133.cleanup_fallback_images"
+      />
+
+  </genericsetup:upgradeSteps>
+
+
   <!-- 11.1 => 11.6 -->
   <genericsetup:upgradeSteps
     source="11.1"

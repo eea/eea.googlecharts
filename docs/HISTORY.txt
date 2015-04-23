@@ -3,6 +3,11 @@ Changelog
 
 13.3.dev0 - (unreleased)
 ------------------------
+* Upgrade step: Within "Plone > Site setup > Add-ons" click on
+  upgrade button available for eea.googlecharts.
+  Be aware that this step may take a while depending on how many Daviz
+  instances do you have within your portal.
+  [voineali refs #24901]
 * Cleanup: Removed fallback images from ZODB
   [voineali refs #24901]
 
