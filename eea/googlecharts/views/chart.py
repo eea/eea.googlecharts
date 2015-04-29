@@ -300,6 +300,12 @@ class View(ViewForm):
         tag = self.request.get('tag', False)
         safe = self.request.get('safe', True)
         chart_id = self.request.get('chart', '')
+
+        scale = None
+        if '/image_' in chart_id:
+            chart_id, scale = chart_id.split('/')
+            chart_type = '.png'
+
         charts = self.get_charts()
 
         for chart in charts:
@@ -312,6 +318,14 @@ class View(ViewForm):
                 if not img:
                     chart_type = '.png'
                     img = self.context.get(name + chart_type, None)
+
+                if scale is not None:
+                    scale = img.restrictedTraverse(scale, None)
+                    if scale:
+                        return scale.index_html(
+                            self.request, self.request.response)
+
+
                 if chart_type == '.svg':
                     svg_str = img.get_data()
                     svg_obj = lxml.etree.fromstring(svg_str)
@@ -327,7 +341,13 @@ class View(ViewForm):
                 config = json.loads(chart.get('config', '{}'))
                 chartType = config.get('chartType', '')
                 img = "googlechart." + chartType.lower() + ".preview.png"
-                img = self.context[img]
+                img = self.context.restrictedTraverse(img)
+
+                if scale is not None:
+                    scale = img.restrictedTraverse(scale, None)
+                    if scale:
+                        return scale.index_html(
+                            self.request, self.request.response)
 
             if tag:
                 return img.tag(width='100%', height="auto")
