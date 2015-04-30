@@ -802,6 +802,9 @@ jQuery(document).ready(function($){
 
     // First tab is a google charts tab
     var api = jQuery("ul.chart-tabs").data('tabs');
+    if (!api) {
+        return;
+    }
     var hash = document.location.hash;
     if (hash === ""){
         hash = jQuery(api.getTabs()[0]).attr("href");

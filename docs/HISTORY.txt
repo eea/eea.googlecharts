@@ -3,6 +3,9 @@ Changelog
 
 13.3.dev0 - (unreleased)
 ------------------------
+* Bug fix: check if api is available before attempting to click on first
+  chart tab. This way we avoid a js error when no charts are added
+  [ichimdav refs #22901]
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
   upgrade button available for eea.googlecharts.
   Be aware that this step may take a while depending on how many Daviz
