@@ -12,7 +12,6 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.container.interfaces import INameChooser
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.edit import EditForm
-from eea.app.visualization.zopera import IFolderish
 from eea.googlecharts.views.interfaces import IGoogleChartsEdit
 from eea.googlecharts.events import ChartsChanged
 from eea.googlecharts.config import EEAMessageFactory as _

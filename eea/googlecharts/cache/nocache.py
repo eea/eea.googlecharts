@@ -1,5 +1,7 @@
 """ No cache
 """
+
+
 def ramcache(*ar, **kw):
     """ RAM cache
     """
@@ -13,6 +15,7 @@ def ramcache(*ar, **kw):
         return replacement
     return decorator
 
+
 def flush(*args, **kwargs):
     """ Flush cache
     """
@@ -21,8 +24,9 @@ def flush(*args, **kwargs):
 flushRelatedItems = flush
 flushBackRefs = flush
 
+
 class InvalidateCacheEvent(object):
     """ Fallback
     """
-    def __init__(self, object):
-        self.object = object
+    def __init__(self, obj):
+        self.object = obj
