@@ -73,7 +73,13 @@ function exportToSVG(){
 
 function checkSVG(){
     var svg = jQuery("#googlechart_view").find("svg");
-    if ((svg[0]) || (jQuery("#googlechart_view img").attr("src") !== undefined)){
+    var chart_image = jQuery("#googlechart_view img"),
+        chart_image_src = chart_image.attr("src");
+    // 25835 data-and-maps/daviz/cars-co2-emissions-trends-by-manufacturer-1
+    // table charts can have images for pagination as such we need to check
+    // if image is referenced from chart.googleapis.com
+    if ((svg[0]) || ( chart_image_src !== undefined &&
+                     chart_image_src.indexOf('chart.googleapis.com') !== -1)){
         jQuery("#googlechart_export_button").show();
         if(svg[0]) {
             jQuery("#googlechart_export_svg_button").show();

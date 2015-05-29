@@ -3,6 +3,9 @@ Changelog
 
 13.4.dev0 - (unreleased)
 ------------------------
+* Bug fix: fixed a case where export to png appeared for tables which
+  should appear only for charts
+  [ichimdav refs #25835]
 * Change: fixed pylint warnings
   [ichimdav refs #25339]
 
