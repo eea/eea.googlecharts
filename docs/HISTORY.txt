@@ -1,8 +1,8 @@
 Changelog
 =========
 
-13.4.dev0 - (unreleased)
-------------------------
+13.4 - (2015-06-02)
+-------------------
 * Bug fix: fixed a case where export to png appeared for tables which
   should appear only for charts
   [ichimdav refs #25835]
