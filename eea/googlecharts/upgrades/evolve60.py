@@ -11,7 +11,7 @@ def migrate_settings(context):
     new_settings = context.portal_daviz.settings
 
     migration_mapping = (
-            ('QRCode_Position', 
+            ('QRCode_Position',
             'googlechart.qrcode_position',
             'Top Left'),
             ('QRCode_Vertical_Space_For_PNG_Export',

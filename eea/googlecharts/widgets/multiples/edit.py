@@ -22,7 +22,7 @@ class Add(AddForm):
         """ Update data dict
         """
         data = super(Add, self).prepare(data)
-        #add "multiples_" prefix so we can make a difference 
+        #add "multiples_" prefix so we can make a difference
         #between charts and small multiples
         data['name'] = 'multiples_' + data['name']
 

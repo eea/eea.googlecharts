@@ -7,7 +7,7 @@ logger = logging.getLogger('eea.googlecharts.evolve64')
 
 def migrate_imagecharts(context):
     """ Migrate dashboard image charts"""
-    ctool = getToolByName (context, 'portal_catalog')
+    ctool = getToolByName(context, 'portal_catalog')
     brains = ctool.unrestrictedSearchResults(portal_type='DavizVisualization')
     previews = [
         "googlechart.motionchart.preview.png",

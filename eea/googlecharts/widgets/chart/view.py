@@ -23,7 +23,7 @@ class View(Widget):
     def src(self):
         """ Src
         """
-        query  = {
+        query = {
             'chart': self.widget.get('name', ''),
             'width': self.width,
             'height': self.height,
