@@ -10,7 +10,7 @@ logger = logging.getLogger('eea.googlecharts.evolve64')
 
 def migrate_rowfilters(context):
     """ Migrate dashboard image charts"""
-    ctool = getToolByName (context, 'portal_catalog')
+    ctool = getToolByName(context, 'portal_catalog')
     brains = ctool.unrestrictedSearchResults(portal_type='DavizVisualization')
 
     logger.info('Migrating %s Visualizations ...', len(brains))
@@ -31,7 +31,7 @@ def migrate_rowfilters(context):
                         migrated_rf = {}
                         for row in row_filters.keys():
                             filters = row_filters.get(row)
-                            if type(filters) == list:
+                            if isinstance(filters, list):
                                 migrated_rf[row] = {}
                                 migrated_rf[row]['values'] = filters
                                 migrated_rf[row]['type'] = 'hidden'

@@ -8,7 +8,7 @@ logger = logging.getLogger('eea.googlecharts.evolve63')
 
 def migrate_imagecharts(context):
     """ Migrate dashboard image charts"""
-    ctool = getToolByName (context, 'portal_catalog')
+    ctool = getToolByName(context, 'portal_catalog')
     brains = ctool.unrestrictedSearchResults(portal_type='DavizVisualization')
     for brain in brains:
         visualization = brain.getObject()

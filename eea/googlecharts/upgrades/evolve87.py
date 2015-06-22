@@ -10,7 +10,7 @@ logger = logging.getLogger('eea.googlecharts.evolve87')
 
 def migrate_filters(context):
     """ Migrate sort filters"""
-    ctool = getToolByName (context, 'portal_catalog')
+    ctool = getToolByName(context, 'portal_catalog')
     brains = ctool.unrestrictedSearchResults(portal_type='DavizVisualization')
 
     logger.info('Migrating %s Visualizations ...', len(brains))
@@ -28,7 +28,7 @@ def migrate_filters(context):
                     filters = json.loads(filters_str)
                     migrated_filters = {}
                     for filter_key in filters.keys():
-                        if (type(filters[filter_key]) != type({})):
+                        if not isinstance(filters[filter_key], dict):
                             migrated_filters[filter_key] = {}
                             migrated_filters[filter_key]['type'] = \
                                 filters[filter_key]

@@ -20,7 +20,7 @@ CLEANUP = [
 
 def cleanup_fallback_images(context):
     """ Migrate exhibit image charts"""
-    ctool = getToolByName (context, 'portal_catalog')
+    ctool = getToolByName(context, 'portal_catalog')
     iface = interfaceToName(context, IVisualizationEnabled)
     brains = ctool(
         object_provides=iface,

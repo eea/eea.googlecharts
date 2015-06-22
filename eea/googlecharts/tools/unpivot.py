@@ -58,7 +58,7 @@ if __name__ == '__main__':
                 unpivoted.append(unpivoted_row)
 
         datafile = open(output, 'w')
-        datawriter = csv.writer(datafile, delimiter = ',')
+        datawriter = csv.writer(datafile, delimiter=',')
         datawriter.writerows(unpivoted)
         datafile.close()
 

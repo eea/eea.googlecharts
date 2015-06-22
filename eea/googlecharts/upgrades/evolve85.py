@@ -9,7 +9,7 @@ logger = logging.getLogger('eea.googlecharts.evolve85')
 
 def migrate_sortfilter(context):
     """ Migrate sort filters"""
-    ctool = getToolByName (context, 'portal_catalog')
+    ctool = getToolByName(context, 'portal_catalog')
     brains = ctool.unrestrictedSearchResults(portal_type='DavizVisualization')
 
     logger.info('Migrating %s Visualizations ...', len(brains))

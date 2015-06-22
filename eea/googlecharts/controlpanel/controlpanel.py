@@ -33,7 +33,7 @@ class GooglechartsSection(object):
         schema.Int(
             __name__='googlechart.qrcode_vertical_space_for_png_export',
             title=_(u'QRCode Vertical Space For PNG Export'),
-            description=_(u"""Vertical space of QR Code from margin of the 
+            description=_(u"""Vertical space of QR Code from margin of the
                             container (for PNG Export)"""),
             required=False,
             default=0),

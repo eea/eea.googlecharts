@@ -464,16 +464,16 @@ class View(ViewForm):
             wm_img = {"position": self.wm_position(),
                     "img" : self.wm_path()}
             tab['extra_images'] = []
-            if (qr_img['position'] != 'Disabled'):
+            if qr_img['position'] != 'Disabled':
                 tab['extra_images'].append(qr_img)
-            if (wm_img['position'] != 'Disabled'):
+            if wm_img['position'] != 'Disabled':
                 tab['extra_images'].append(wm_img)
             for img in tab['extra_images']:
-                if (img['position'].find("Right") != -1):
+                if img['position'].find("Right") != -1:
                     img['alignment'] = 'Right'
                 else:
                     img['alignment'] = 'Left'
-                if (img['position'].find("Bottom") != -1):
+                if img['position'].find("Bottom") != -1:
                     img['position'] = 'Bottom'
                 else:
                     img['position'] = 'Top'
@@ -700,7 +700,7 @@ class Export(BrowserView):
                      "Please try again later.")
 
         sp = self.siteProperties
-        qrPosition =  sp.get(
+        qrPosition = sp.get(
                     'googlechart.qrcode_position', 'Disabled')
         qrVertical = int(sp.get(
                     'googlechart.qrcode_vertical_space_for_png_export', 0))
