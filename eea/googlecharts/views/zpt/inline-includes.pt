@@ -57,8 +57,8 @@ jQuery(document).ready(function(){
         jQuery.each(charts, function(idx, elem){
             var $elem = jQuery(elem);
             var vhash = elem.id.split('_')[2];
-            var myFunc = window['resize_chart_' + vhash];
-            myFunc($elem);
+            var resize_chart_func = window['resize_chart_' + vhash];
+            resize_chart_func($elem);
         });
     }));
     charts.bind('eea.embed.loaded', function(){
