@@ -5,6 +5,8 @@ Changelog
 ------------------------
 * Feature: added responsive feature to embedded charts 
   [lucas refs #27216]
+* Feature: added responsive feature to charts
+  [lucas refs #27216]
 
 13.4 - (2015-06-02)
 -------------------

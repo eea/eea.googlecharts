@@ -715,57 +715,67 @@ function showEmbed(){
     );
 }
 
-var googleChartTabClick = function(context){
-    if (jQuery(context).attr("chart_id") !== current_chart_id){
-        current_chart_id = jQuery(context).attr("chart_id");
+var eea_draw = function(context){
+    current_chart_id = jQuery(context).attr("chart_id");
 
-        var chart_index_to_use = -1;
-        jQuery(googlechart_config_array).each(function(index, value){
-            if (value[0] == current_chart_id){
-                chart_index_to_use = index;
+    var chart_index_to_use = -1;
+    jQuery(googlechart_config_array).each(function(index, value){
+        if (value[0] == current_chart_id){
+            chart_index_to_use = index;
+        }
+        value[4] = jQuery('#googlechart_table').width() - 20;
+        if( jQuery(document).width() < 600 ){
+            value[1].options.legend = 'top';
+        }else{
+            value[1].options.legend = 'right';
+        }
+    });
+    if (chart_index_to_use != -1){
+        jQuery("#googlechart_filters").html('');
+        jQuery("#googlechart_view").html('');
+
+        var chart_other_options = {
+            merged_rows: merged_rows,
+            available_columns: available_columns,
+            googlechart_config_array: googlechart_config_array,
+            GoogleChartsConfig: GoogleChartsConfig
+        };
+
+        guessSeries(googlechart_config_array[chart_index_to_use]);
+        drawChart(googlechart_config_array[chart_index_to_use], chart_other_options);
+    }
+    else {
+        var config;
+        jQuery(dashboards_config_array).each(function(index, value){
+            if (value.name === current_chart_id){
+                config = value;
+            }
+            else if (value.name == current_chart_id.replace("-", ".")){
+                config = value;
             }
         });
-        if (chart_index_to_use != -1){
-            jQuery("#googlechart_filters").html('');
-            jQuery("#googlechart_view").html('');
+        var dashboard_other_options = {
+            merged_rows: merged_rows,
+            available_columns: available_columns,
+            googlechart_config_array: googlechart_config_array,
+            GoogleChartsConfig: GoogleChartsConfig
+        };
+        drawDashboard(config, dashboard_other_options);
+    }
+};
 
-            var chart_other_options = {
-                merged_rows: merged_rows,
-                available_columns: available_columns,
-                googlechart_config_array: googlechart_config_array,
-                GoogleChartsConfig: GoogleChartsConfig
-            };
-
-            guessSeries(googlechart_config_array[chart_index_to_use]);
-            drawChart(googlechart_config_array[chart_index_to_use], chart_other_options);
-        }
-        else {
-            var config;
-            jQuery(dashboards_config_array).each(function(index, value){
-                if (value.name === current_chart_id){
-                    config = value;
-                }
-                else if (value.name == current_chart_id.replace("-", ".")){
-                    config = value;
-                }
-            });
-            var dashboard_other_options = {
-                merged_rows: merged_rows,
-                available_columns: available_columns,
-                googlechart_config_array: googlechart_config_array,
-                GoogleChartsConfig: GoogleChartsConfig
-            };
-            drawDashboard(config, dashboard_other_options);
-        }
+var googleChartTabClick = function(context){
+    if (jQuery(context).attr("chart_id") !== current_chart_id){
+        eea_draw(context);
     }
     return false;
 };
 
 var googleChartOnTabClick = function(settings){
-    googlechart_config_array = JSON.parse(jQuery("#daviz-view").attr("original_configs"));
-
     var tab = jQuery(settings.tab);
     var css = tab.attr('class');
+    var googlechart_config_array = JSON.parse(jQuery("#daviz-view").attr("original_configs"));
+
     if(css.indexOf('googlechart_class') === -1){
         jQuery('.googlecharts_container').hide();
         return;
@@ -833,5 +843,10 @@ jQuery(document).ready(function($){
         index: index
     });
 
+    jQuery(window).resize(_.debounce(function() {
+        var tab = jQuery('#daviz-view ul.chart-tabs a.current');
+        eea_draw(tab);
+    }));
+    jQuery(window).trigger('resize');
     jQuery(window).trigger("hashchange");
 });
