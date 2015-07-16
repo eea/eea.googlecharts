@@ -269,6 +269,27 @@
                 }
             };
 
+            jQuery(document).ready(function(){
+                var chart = jQuery('#googlechart_dashboard_$vhash');
+                jQuery(window).resize(_.debounce(function() {
+                    if (chart.length && chart.is(':visible')){
+                        if (settings_$vhash && other_options_$vhash){
+                            if ($(window).width() <= width_$vhash){
+                                chart_json_$vhash.options.legend = 'bottom';
+                                settings_$vhash[4] = '98%';
+                            } else {
+                                chart_json_$vhash.options.legend = 'right';
+                                settings_$vhash[4] = width_$vhash;
+                            }
+                            drawChart(settings_$vhash, other_options_$vhash);
+                        }
+                    }
+                }));
+                chart.bind('eea.embed.loaded', function(){
+                    $(window).trigger('resize');
+                });
+            });
+
             ">
     </script>
 
