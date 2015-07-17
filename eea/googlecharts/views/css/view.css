@@ -156,11 +156,10 @@ ul.googlechart_tabs li:first-of-type a:hover {
 }
 
 #googlechart_filters > div,
-.googlechart_filters > div,
- {
+.googlechart_filters > div{
     background: #F3F3F3;
     margin-bottom:1em;
-    border-radius: 5px
+    border-radius: 5px;
     padding-bottom: 1em;
     min-height: 80px;
     text-align: center;
@@ -183,8 +182,10 @@ ul.googlechart_tabs li:first-of-type a:hover {
 
 #googlechart_view,
 .googlechart_view {
-    min-width: 800px;
     background: #FFFFFF;
+}
+.googlechart_view {
+    min-width: 800px;
 }
 
 #googlechart_view:after,
@@ -591,14 +592,14 @@ input.googlechart-chart-size {
 }
 
 /* #18491 embeded charts notes should have the same font size as original charts */
-.googlechart_dashboard .googlechart-notes { 
+.googlechart_dashboard .googlechart-notes {
     font: 12px Verdana, Arial, Helvetica, sans-serif;
     line-height: 1.5em;
     width: 100% !important; /* notes shouldn't span beyond chart border */
 }
 
 /* #18491 normalize font size of googlechart-notes when it contains a paragraph */
-#content .googlechart-notes p { 
+#content .googlechart-notes p {
     font-size: 100%;
 }
 
