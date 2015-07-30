@@ -183,6 +183,9 @@
                 return settings;
             }
             google.setOnLoadCallback(function(){
+                if(isPrint && resizableCharts.indexOf(chart_json_$vhash.chartType)){
+                    chart_json_$vhash.options.legend = 'right';
+                }
                 settings_$vhash.push(GoogleChartsConfig_$vhash[0].id);
                 settings_$vhash.push(chart_json_$vhash);
                 settings_$vhash.push(chart_columns_$vhash);
