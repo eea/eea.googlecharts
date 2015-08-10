@@ -3,10 +3,13 @@ Changelog
 
 13.6.dev0 - (unreleased)
 ------------------------
+* Change: Auto-include zcml within plone context in order to make this package
+  work without having to add it within buildout zcml directive.
+  [avoinea]
 
 13.5 - (2015-07-28)
 -------------------
-* Feature: added responsive feature to embedded charts 
+* Feature: added responsive feature to embedded charts
   [lucas refs #27216]
 * Feature: added responsive feature to charts
   [lucas refs #27216]
