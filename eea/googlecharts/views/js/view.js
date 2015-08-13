@@ -774,7 +774,7 @@ var googleChartTabClick = function(context){
 var googleChartOnTabClick = function(settings){
     var tab = jQuery(settings.tab);
     var css = tab.attr('class');
-    var googlechart_config_array = JSON.parse(jQuery("#daviz-view").attr("original_configs"));
+    googlechart_config_array = JSON.parse(jQuery("#daviz-view").attr("original_configs"));
 
     if(css.indexOf('googlechart_class') === -1){
         jQuery('.googlecharts_container').hide();
