@@ -1,8 +1,8 @@
 Changelog
 =========
 
-13.7.dev0 - (unreleased)
-------------------------
+13.7 - (2015-08-24)
+-------------------
 * Bugfix: Updated for jquery 1.11.3
   [szabozo0 refs #28244]
 
