@@ -1,8 +1,8 @@
 Changelog
 =========
 
-13.8.dev0 - (unreleased)
-------------------------
+13.8 - (2015-08-25)
+-------------------
 * Bugfix: fixed prepivot filters on chart view
   [szabozo0 refs #28284]
 * Bug fix: chartArea z-index now is important in order to avoid
