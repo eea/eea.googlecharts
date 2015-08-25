@@ -1501,7 +1501,7 @@ li.googlechart > fieldset > div > a > span {
 }
 
 .chartArea{
-    z-index: 9999;
+    z-index: 9999 !important;
     border: 2px dotted green;
     position:relative;
     font-size: 20px;
