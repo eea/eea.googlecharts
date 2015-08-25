@@ -143,16 +143,18 @@
             var googlechart_config_array_$vhash = [];
             var settings_$vhash = [];
             var other_options_$vhash = {};
+
+            var resizableCharts = ['LineChart',
+                'ComboChart',
+                'AreaChart',
+                'SteppedAreaChart',
+                'ColumnChart',
+                'BarChart',
+                'ScatterChart',
+                'BubbleChart',
+                'PieChart'];
+
             function getIframeSizes(){
-                var resizableCharts = ['LineChart',
-                        'ComboChart',
-                        'AreaChart',
-                        'SteppedAreaChart',
-                        'ColumnChart',
-                        'BarChart',
-                        'ScatterChart',
-                        'BubbleChart',
-                        'PieChart'];
 
                 var settings = {
                     chart:{

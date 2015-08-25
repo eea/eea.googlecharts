@@ -3,9 +3,16 @@ Changelog
 
 13.8.dev0 - (unreleased)
 ------------------------
+* Bug fix: embed-chart.pt no longer requires resizableCharts from
+  inline-resize which isn't available within pdf printing
+  [ichimdav refs #28278]
 
 13.7 - (2015-08-24)
 -------------------
+* Change: daviz-edit.css uses content-box box-sizing property since
+  Google charts styles doesn't cope with border-box. This allows us
+  to use newer versions of Bootstrap which contains box-sizing
+  [ichimdav refs #25986]
 * Bugfix: Updated for jquery 1.11.3
   [szabozo0 refs #28244]
 

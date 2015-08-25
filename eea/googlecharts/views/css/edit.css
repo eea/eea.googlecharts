@@ -1032,6 +1032,10 @@ div[title='Format'].slick-header-menuitem {
     display:none;
 }
 
+#filter_grid div.even {
+    padding: 0px;
+}
+
 .filtered-column{
     background-repeat: no-repeat;
     padding-left:15px;
