@@ -3,6 +3,9 @@ Changelog
 
 13.8.dev0 - (unreleased)
 ------------------------
+* Bug fix: chartArea z-index now is important in order to avoid
+  the resizing chart box from being hidden by the preview mask
+  [ichimdav refs #28231]
 * Bug fix: embed-chart.pt no longer requires resizableCharts from
   inline-resize which isn't available within pdf printing
   [ichimdav refs #28278]
