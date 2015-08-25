@@ -3,6 +3,8 @@ Changelog
 
 13.8.dev0 - (unreleased)
 ------------------------
+* Bugfix: fixed prepivot filters on chart view
+  [szabozo0 refs #28284]
 * Bug fix: chartArea z-index now is important in order to avoid
   the resizing chart box from being hidden by the preview mask
   [ichimdav refs #28231]

@@ -562,7 +562,7 @@ function drawGoogleChart(options){
         customFilterParams = addSortFilter(options2);
     }
 
-    if (!(jQuery("#" + settings.chartDashboard).data() === null)){
+    if (!jQuery("#" + settings.chartDashboard).data()){
         return;
     }
     var conf_array = jQuery("#" + settings.chartDashboard).data('other_settings').googlechart_config_array;
