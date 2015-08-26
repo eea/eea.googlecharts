@@ -21,6 +21,8 @@
 }
 .googledashboard-chart {
     float: none !important;
+    page-break-inside: avoid;
+    height: inherit !important;
 }
 .googlechart_left_image {
     padding-left: 1.5em;
@@ -33,6 +35,7 @@
     padding-top: 1.5em;
     display: block;
 }
+
 .googlechart_bottom_images img {
     float: none;
     width: inherit;

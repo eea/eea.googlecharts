@@ -471,8 +471,8 @@ function showEmbed(){
     jQuery(".googlechart_hide_filters").remove();
     jQuery(".googlechart_embed_form").remove();
     var chartObj = jQuery("#googlechart_dashboard");
-    var chartWidth  = parseInt(chartObj.attr('chart_width'), 10);
-    var chartHeight = parseInt(chartObj.attr('chart_height'), 10);
+    var chartWidth  = chartObj.attr('chart_width');
+    var chartHeight = chartObj.attr('chart_height');
     var iframeWidth = chartObj.width();
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
     var widthDiff = iframeWidth - chartWidth;

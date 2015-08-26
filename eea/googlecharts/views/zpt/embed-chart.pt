@@ -185,8 +185,9 @@
                 return settings;
             }
             google.setOnLoadCallback(function(){
-                if(isPrint && resizableCharts.indexOf(chart_json_$vhash.chartType)){
-                    chart_json_$vhash.options.legend = 'right';
+                var chart_type = chart_json_$vhash.chartType;
+                if(isPrint && resizableCharts.indexOf(chart_type) !== -1){
+                    chart_json_$vhash.options.legend = 'bottom';
                 }
                 settings_$vhash.push(GoogleChartsConfig_$vhash[0].id);
                 settings_$vhash.push(chart_json_$vhash);
@@ -203,6 +204,7 @@
                 settings_$vhash.push(sortBy_$vhash);
                 settings_$vhash.push(sortAsc_str_$vhash);
                 settings_$vhash.push(chart_columnFilters_$vhash);
+                var PDF_BODY_WIDTH = 645;
                 if (isInline_$vhash === 'True'){
                     var tmp_view_id = '#googlechart_dashboard_$vhash';
                     var tmp_chart_id = GoogleChartsConfig_$vhash[0].id;
@@ -213,14 +215,18 @@
                     custom_chartAreaHeight = custom_settings.attr('chart_chartAreaHeight');
                     custom_chartAreaTop = custom_settings.attr('chart_chartAreaTop');
                     custom_chartAreaLeft = custom_settings.attr('chart_chartAreaLeft');
-                    if (custom_width !== ''){
-                        settings_$vhash[4] = parseInt(custom_width, 0);
+                    var initial_width = settings_$vhash[4];
+                    var initial_height = settings_$vhash[5];
+                    var initial_width_ratio;
+                    if (custom_width){
+                        initial_width_ratio = initial_width / PDF_BODY_WIDTH;
+                        settings_$vhash[4] = isPrint ? parseInt(initial_width / initial_width_ratio, 10) : custom_width;
                     }
-                    if (custom_height !== ''){
-                        settings_$vhash[5] = parseInt(custom_height, 0);
+                    if (custom_height){
+                        settings_$vhash[5] = chart_type !== 'Table' && isPrint ? parseInt(initial_height / initial_width_ratio, 10) : custom_height;
                     }
-                    if (custom_chartAreaWidth !== ''){
-                        var tmp_chartArea = {}
+                    if (custom_chartAreaWidth){
+                        var tmp_chartArea = {};
                         tmp_chartArea = {
                             width: custom_chartAreaWidth,
                             height: custom_chartAreaHeight,
