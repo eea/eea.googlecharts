@@ -113,8 +113,8 @@ function drawDashboardEmbed(options){
             var dashboard = el.dashboard;
             // magic numbers found after playing with an assessment where the larger charts
             // are set to the maximum 650
-            dashboard.width =  dashboard.width > 600 ? "650px" : "790px";
-            dashboard.height = "295px";
+            dashboard.width =  dashboard.width > 600 ? 650 : 790;
+            dashboard.height = 295;
         });
 
     }
