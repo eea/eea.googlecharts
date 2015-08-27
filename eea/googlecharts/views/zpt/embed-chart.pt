@@ -186,9 +186,6 @@
             }
             google.setOnLoadCallback(function(){
                 var chart_type = chart_json_$vhash.chartType;
-                if(isPrint && resizableCharts.indexOf(chart_type) !== -1){
-                    chart_json_$vhash.options.legend = 'bottom';
-                }
                 settings_$vhash.push(GoogleChartsConfig_$vhash[0].id);
                 settings_$vhash.push(chart_json_$vhash);
                 settings_$vhash.push(chart_columns_$vhash);
@@ -220,7 +217,7 @@
                     var initial_width_ratio;
                     if (custom_width){
                         initial_width_ratio = initial_width / PDF_BODY_WIDTH;
-                        settings_$vhash[4] = isPrint ? parseInt(initial_width / initial_width_ratio, 10) : custom_width;
+                        settings_$vhash[4] = isPrint ? PDF_BODY_WIDTH : custom_width;
                     }
                     if (custom_height){
                         settings_$vhash[5] = chart_type !== 'Table' && isPrint ? parseInt(initial_height / initial_width_ratio, 10) : custom_height;
