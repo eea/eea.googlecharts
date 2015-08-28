@@ -184,9 +184,6 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .googlechart_view {
     background: #FFFFFF;
 }
-.googlechart_view {
-    min-width: 800px;
-}
 
 #googlechart_view:after,
 .googlechart_view:after{
@@ -292,9 +289,11 @@ ul.googlechart_tabs li:first-of-type a:hover {
     clear: left;
 }
 
-#googlechart_view > div,
-.googlechart_view > div {
-    margin: 5px;
+/* 28278; removed margin from all charts since
+commit from fa1ddfa0 was meant to be enabled on dashboard-charts
+and not all charts */
+.dashboard-chart {
+    margin: 5px 0;
 }
 
 .googlechart_table_left #googlechart_view > div,
@@ -333,10 +332,6 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .embedded-dashboard,
 .embedded-filters {
     margin-top:0px !important;
-}
-
-.embedded-chart {
-    min-width:0px !important;
 }
 
 .embedded-side-filters {

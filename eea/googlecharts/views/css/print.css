@@ -1,10 +1,10 @@
 /* Print
 -------- */
 
+/* we don't need the border and shadow of the dashboards to be added in print */
 #googlechart_dashboard, .googlechart_dashboard {
-    box-shadow: none !important;
-    border: none !important;
-    page-break-inside: avoid !important;
+    box-shadow: none;
+    border: none;
 }
 
 .go-to-original-link {
@@ -19,6 +19,16 @@
 .googlechart_view {
     overflow: hidden;
 }
+
+#content .google-visualization-table-table {
+    margin: 0; /* override #content table margin settings from pdf.print.css */
+}
+
+.google-visualization-table-th.gradient {
+    white-space: pre-wrap;
+    background-image: none !important; /* wkhtmltopdf has issues with the css3 gradient as such we remove it */
+}
+
 .googledashboard-chart {
     float: none !important;
     page-break-inside: avoid;
