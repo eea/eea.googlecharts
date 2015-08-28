@@ -121,6 +121,7 @@
             window.EEAGoogleCharts.embed.hash = '$vhash';
             window.EEAGoogleCharts.embed.baseurl_$vhash = '${url}';
             window.EEAGoogleCharts.embed.chart_id_$vhash = '${chart_id}';
+            window.EEAGoogleCharts.embed.isPrint = ${isPrint};
             jQuery(document).trigger('googlecharts.embed');
             var qr_pos_$vhash = '${view/qr_position}';
             var qr_size_$vhash = '${view/qr_size}';
