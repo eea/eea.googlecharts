@@ -1,8 +1,8 @@
 Changelog
 =========
 
-13.9.dev0 - (unreleased)
-------------------------
+13.9 - (2015-09-04)
+-------------------
 * Bugfix: explore charts link now shows up for embeded charts when
   outputting a pdf just like it did for embedded dashboards
   [ichimdav refs #28278]
