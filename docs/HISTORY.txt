@@ -3,6 +3,9 @@ Changelog
 
 14.0.dev0 - (unreleased)
 ------------------------
+* Change: check if DavizEdit.Events exists before overriding it withing js files
+  in case DavizEdit isn't found and is constructed
+  [ichimdav refs #27220]
 
 13.9 - (2015-09-04)
 -------------------

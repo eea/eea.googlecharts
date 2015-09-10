@@ -2,9 +2,9 @@
 */
 if(window.DavizEdit === undefined){
   var DavizEdit = {'version': 'eea.googlecharts'};
-  DavizEdit.Events = {};
 }
 
+DavizEdit.Events = DavizEdit.Events || {};
 DavizEdit.Events.dashboard = {
   remove: 'google-dashboard-delete',
   removed: 'google-dashboard-deleted',
