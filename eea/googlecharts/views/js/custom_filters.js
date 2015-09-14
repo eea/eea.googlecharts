@@ -746,7 +746,7 @@ function addPreConfigFilters(options){
             }
         }
         else{
-            column_names_to_be_shown.push(key)
+            column_names_to_be_shown.push(key);
         }
     });
     settings.filters.reverse();
