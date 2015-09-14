@@ -527,7 +527,8 @@ function drawGoogleChart(options){
             chartViewDiv :  settings.chartViewDiv,
             columnFiltersObj : columnFiltersObj,
             filters : [],
-            updateHash : settings.updateHash
+            updateHash : settings.updateHash,
+            columnsToBeShown: settings.columnsToBeShown
         };
         patched_each(settings.chartFilters, function(key, value){
             if (key.indexOf('pre_config_') === 0){
