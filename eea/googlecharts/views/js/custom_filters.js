@@ -141,10 +141,12 @@ function addCustomFilter(options){
         }
     });
 
+    settings.callerFilter = filterFilter;
     var filterDashboard = new google.visualization.Dashboard(document.getElementById(filterChartDivId));
     filterDashboard.bind(filterFilter, filterChart);
 
     google.visualization.events.addListener(filterFilter, 'statechange', function(event){
+        settings.paramsForHandler.columnsToBeShown =  settings.callerFilter.columnsToBeShown;
         settings.customHandler(settings.paramsForHandler);
         updateFilterDivs();
     });
@@ -439,6 +441,7 @@ function applyColumnFilters(options){
                 }
             });
 
+            chart_columns_new.columnsToBeShown=options.columnsToBeShown;
             chart_json.view.columns = chart_json_view_columns;
             config.push(chart_id);
             config.push(chart_json);
@@ -640,6 +643,7 @@ function applyPreConfigFilters(options){
     var filtersConfNotToRemove = [];
     var filtersConfNotToRemoveTitles = [];
 
+    var columnsToBeShown = [];
     patched_each(options.columnFiltersObj, function(idx1, columnFilterObj){
         if (columnFilterObj.getOption("filterColumnLabel").indexOf("custom_helper_") === -1){
             filtersNotToRemove.push(columnFilterObj);
@@ -662,6 +666,14 @@ function applyPreConfigFilters(options){
                         }
                     });
                 });
+                if (newState.selectedValues.length > 0){
+                    for (var i = 0; i < newState.selectedValues.length; i++){
+                        if (jQuery.inArray(newState.selectedValues[i], columnsToBeShown) === -1){
+                            columnsToBeShown.push(newState.selectedValues[i]);
+                        }
+                    }
+                }
+
                 columnFilterObj.setState(newState);
                 columnFilterObj.draw();
                 objForTrigger = columnFilterObj;
@@ -686,6 +698,7 @@ function applyPreConfigFilters(options){
     patched_each(filtersConfNotToRemove, function(idx, filter){
         chart_columnFilters_old.push(filter);
     });
+    objForTrigger.columnsToBeShown = columnsToBeShown;
     google.visualization.events.trigger(objForTrigger, 'statechange');
 }
 
@@ -723,6 +736,19 @@ function addPreConfigFilters(options){
         updateHash : false
     };
     jQuery.extend(settings, options);
+    var column_names_to_be_shown = [];
+    patched_each(settings.availableColumns, function(key, column){
+        if (settings.columnsToBeShown){
+            for (var i = 0; i < settings.columnsToBeShown.length; i++){
+                if (column === settings.columnsToBeShown[i]){
+                    column_names_to_be_shown.push(key);
+                }
+            }
+        }
+        else{
+            column_names_to_be_shown.push(key)
+        }
+    });
     settings.filters.reverse();
     var preConfigFiltersObj = [];
 
@@ -771,6 +797,16 @@ function addPreConfigFilters(options){
                 if (pos === -1){
                     return;
                 }
+                has_othermatch = false;
+                patched_each(tmp_table, function(f_idx2, filterValue2){
+                    var filterStr2 = filterValue2[0].toString().replace(/[^A-Za-z0-9]/g, '_');
+                    if ((f_idx2 !== f_idx) && (key.indexOf(filterStr2) !== -1) && (filterStr.length < filterStr2.length)){
+                        has_othermatch = true;
+                    }
+                });
+                if (has_othermatch){
+                    return;
+                }
                 var tmp_title = key.replace("_"+filterStr, "");
                 var found_customHelperFilter = false;
                 var tmp_customHelperFilter = null;
@@ -803,7 +839,9 @@ function addPreConfigFilters(options){
                     if (jQuery.inArray(key, tmp_customHelperFilter.settings.defaults) === -1){
                         tmp_customHelperFilter.settings.defaults.push(key);
                         if (jQuery.inArray(filterValue, mainDefaults) === -1){
-                            mainDefaults.push(filterValue);
+                            if (jQuery.inArray(key, column_names_to_be_shown) !== -1){
+                                mainDefaults.push(filterValue);
+                            }
                         }
                     }
                 }

@@ -157,9 +157,34 @@ function drawChart(value, options){
     settings.merged_rows = tmp_columns_and_rows.all_rows;
     settings.available_columns = tmp_columns_and_rows.available_columns;
 
+    var new_columns = [];
+
+    var column_names_to_be_shown = [];
+    var i;
+    if (embedchart_columns.columnsToBeShown){
+        for (i = 0; i < embedchart_columns.columnsToBeShown.length; i++){
+            for (var j = 0; j < embedchart_columns.prepared.length; j++){
+                if (embedchart_columns.columnsToBeShown[i] === embedchart_columns.prepared[j].fullname){
+                    column_names_to_be_shown.push(embedchart_columns.prepared[j].name);
+                }
+            }
+        }
+        for (i = 0; i < columnsFromSettings.columns.length; i++){
+            if (jQuery.inArray(columnsFromSettings.columns[i], column_names_to_be_shown) !== -1){
+                new_columns.push(columnsFromSettings.columns[i]);
+            }
+            if (jQuery.inArray(columnsFromSettings.columns[i], columnsFromSettings.normalColumns) !== -1){
+                new_columns.push(columnsFromSettings.columns[i]);
+            }
+        }
+    }
+    else {
+        new_columns = columnsFromSettings.columns;
+    }
+
     settings_options = {
         originalDataTable : transformedTable,
-        columns : columnsFromSettings.columns,
+        columns : new_columns,
         sortBy : embedchart_sortBy,
         sortAsc : embedchart_sortAsc,
         preparedColumns : embedchart_columns.prepared,
@@ -190,7 +215,8 @@ function drawChart(value, options){
         columnTypes: transformedTable.properties,
         originalTable : settings.merged_rows,
         visibleColumns : columnsFromSettings.columns,
-        ChartNotes: embedchart_ChartNotes
+        ChartNotes: embedchart_ChartNotes,
+        columnsToBeShown: embedchart_columns.columnsToBeShown
     };
     drawGoogleChart(googlechart_params);
     jQuery(document).trigger('googlecharts.embed.ready', [settings.vhash]);

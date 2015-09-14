@@ -264,9 +264,33 @@ function drawChart(value, other_options){
     other_settings.merged_rows = tmp_columns_and_rows.all_rows;
     other_settings.available_columns = tmp_columns_and_rows.available_columns;
 
+    var new_columns = [];
+
+    var column_names_to_be_shown = [];
+    var i;
+    if (chart_columns.columnsToBeShown){
+        for (i = 0; i < chart_columns.columnsToBeShown.length; i++){
+            for (var j = 0; j < chart_columns.prepared.length; j++){
+                if (chart_columns.columnsToBeShown[i] === chart_columns.prepared[j].fullname){
+                    column_names_to_be_shown.push(chart_columns.prepared[j].name);
+                }
+            }
+        }
+        for (i = 0; i < columnsFromSettings.columns.length; i++){
+            if (jQuery.inArray(columnsFromSettings.columns[i], column_names_to_be_shown) !== -1){
+                new_columns.push(columnsFromSettings.columns[i]);
+            }
+            if (jQuery.inArray(columnsFromSettings.columns[i], columnsFromSettings.normalColumns) !== -1){
+                new_columns.push(columnsFromSettings.columns[i]);
+            }
+        }
+    }
+    else {
+        new_columns = columnsFromSettings.columns;
+    }
     options = {
         originalDataTable : transformedTable,
-        columns : columnsFromSettings.columns,
+        columns : new_columns,
         sortBy : chart_sortBy,
         sortAsc : chart_sortAsc,
         preparedColumns : chart_columns.prepared,
@@ -297,7 +321,8 @@ function drawChart(value, other_options){
         originalTable : other_settings.merged_rows,
         visibleColumns : columnsFromSettings.columns,
         updateHash : true,
-        ChartNotes : chart_ChartNotes
+        ChartNotes : chart_ChartNotes,
+        columnsToBeShown: chart_columns.columnsToBeShown
     };
     drawGoogleChart(googlechart_params);
 }

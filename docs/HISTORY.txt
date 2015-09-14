@@ -3,6 +3,9 @@ Changelog
 
 14.0.dev0 - (unreleased)
 ------------------------
+* Bugfix: Fixed pre-pivot filters when number of columns differs for values
+  of filter pre-pivot filter
+  [szabozo0 refs #28436]
 * Change: check if DavizEdit.Events exists before overriding it withing js files
   in case DavizEdit isn't found and is constructed
   [ichimdav refs #27220]
