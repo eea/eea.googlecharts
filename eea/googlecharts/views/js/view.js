@@ -749,14 +749,20 @@ var eea_draw = function(context){
         }
         value[4] = jQuery('#googlechart_table').width() - 20;
         var chart_options = value[1].options;
+        var legend = chart_options.legend;
         // #28453 do now show legend if it is set to none
-        if (chart_options.legend === "none") {
+        if (legend === "none") {
             return;
         }
-        if (jQuery(document).width() < 600) {
+        // #28505 set the legend to the top only if we have
+        // a small resolution and the legend is set to the
+        // right or left. If users sets it to bottom of inside
+        // it would give the same effect as sticking it to the
+        // top so we avoid giving surprises in those cases
+        // and leave the legend set to the initial value
+        if (jQuery(document).width() < 600 &&
+            (legend === "right" || legend === "left")) {
             chart_options.legend = 'top';
-        } else {
-            chart_options.legend = 'right';
         }
     });
     if (chart_index_to_use != -1){
