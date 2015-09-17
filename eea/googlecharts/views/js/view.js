@@ -599,8 +599,7 @@ function showEmbed(){
                     }
                 });
                 jQuery(".manual-settings-error").hide();
-
-                if (!jQuery(".embed-padding[value='manual'").is(":checked")) {
+                if (!jQuery(".embed-padding[value='manual']").is(":checked")) {
                     manual_settings.attr("disabled", true);
                 }
 
@@ -749,10 +748,15 @@ var eea_draw = function(context){
             chart_index_to_use = index;
         }
         value[4] = jQuery('#googlechart_table').width() - 20;
-        if( jQuery(document).width() < 600 ){
-            value[1].options.legend = 'top';
-        }else{
-            value[1].options.legend = 'right';
+        var chart_options = value[1].options;
+        // #28453 do now show legend if it is set to none
+        if (chart_options.legend === "none") {
+            return;
+        }
+        if (jQuery(document).width() < 600) {
+            chart_options.legend = 'top';
+        } else {
+            chart_options.legend = 'right';
         }
     });
     if (chart_index_to_use != -1){
