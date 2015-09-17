@@ -3,6 +3,8 @@ Changelog
 
 14.0.dev0 - (unreleased)
 ------------------------
+* Bugfix: Legend in daviz display even if set to "none"
+  [ichimdav refs #28453]
 * Bugfix: Fixed pre-pivot filters when number of columns differs for values
   of filter pre-pivot filter
   [szabozo0 refs #28436]
