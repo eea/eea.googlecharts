@@ -691,9 +691,14 @@ class Export(BrowserView):
                 data_to='png'
             )
         if kwargs.get('imageChart_url', '') != '':
-            img_con = urllib2.urlopen(kwargs.get('imageChart_url'))
-            img = img_con.read()
-            img_con.close()
+            try:
+                img_con = urllib2.urlopen(
+                    kwargs.get('imageChart_url'), timeout=10
+                )
+                img = img_con.read()
+                img_con.close()
+            except Exception:
+                img = None
 
         if not img:
             return _("ERROR: An error occured while exporting your image. "
@@ -721,7 +726,7 @@ class Export(BrowserView):
             shiftSecondImg = True
 
         if qrPosition != 'Disabled':
-            qr_con = urllib2.urlopen(kwargs.get('qr_url'))
+            qr_con = urllib2.urlopen(kwargs.get('qr_url'), timeout=10)
             qr_img = qr_con.read()
             qr_con.close()
             img = applyWatermark(img,
@@ -735,7 +740,7 @@ class Export(BrowserView):
 
         if wmPosition != 'Disabled':
             try:
-                wm_con = urllib2.urlopen(wmPath)
+                wm_con = urllib2.urlopen(wmPath, timeout=10)
                 wm_img = wm_con.read()
                 wm_con.close()
                 img = applyWatermark(img,
@@ -745,6 +750,8 @@ class Export(BrowserView):
                                 wmHorizontal + hShift,
                                 0.7)
             except ValueError, err:
+                logger.exception(err)
+            except Exception, err:
                 logger.exception(err)
 
         ctype = kwargs.get('type', 'image/png')
@@ -903,9 +910,14 @@ class SetThumb(BrowserView):
                 data_to='png'
             )
         if kwargs.get('imageChart_url', '') != '':
-            img_con = urllib2.urlopen(kwargs.get('imageChart_url'))
-            img = img_con.read()
-            img_con.close()
+            try:
+                img_con = urllib2.urlopen(
+                    kwargs.get('imageChart_url'), timeout=10
+                )
+                img = img_con.read()
+                img_con.close()
+            except Exception:
+                img = None
 
         if not img:
             return _("ERROR: An error occured while exporting your image. "
