@@ -44,6 +44,7 @@ setup(name=NAME,
           'eea.app.visualization > 9.3',
           'eea.icons',
           'collective.js.underscore',
+          'eventlet',
       ],
       extras_require={
           'test': [
