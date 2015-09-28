@@ -103,7 +103,7 @@ DavizInlineResizer.ChartResizer.prototype = {
             areaHeight: 0
         };
         jQuery.extend(settings, options);
-        self.context.html("");
+        //self.context.html("");
         var chart_settings = window['settings_' + self.hash];
         var other_options = window['other_options_' + self.hash];
         chart_settings[4] = settings.width;
@@ -125,7 +125,17 @@ DavizInlineResizer.ChartResizer.prototype = {
                 }
             }
         }
-        drawChart(chart_settings, other_options);
+        var view = self.context.find(".googlechart_view")
+        view.css('width', chart_settings[4]);
+        view.css('height', chart_settings[5]);
+        gl_charts[chart_settings[1].containerId].setOption('width', chart_settings[4]);
+        gl_charts[chart_settings[1].containerId].setOption('height', chart_settings[5]);
+        if (chart_settings[7].chartArea) {
+            gl_charts[chart_settings[1].containerId].setOption('chartArea', chart_settings[7].chartArea);
+        } else {
+            gl_charts[chart_settings[1].containerId].setOption('chartArea', undefined);
+        }
+        gl_charts[chart_settings[1].containerId].draw();
         self.setChartAreaSizes();
     },
 

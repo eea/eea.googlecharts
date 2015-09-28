@@ -218,7 +218,8 @@ function drawChart(value, options){
         ChartNotes: embedchart_ChartNotes,
         columnsToBeShown: embedchart_columns.columnsToBeShown
     };
-    drawGoogleChart(googlechart_params);
-    jQuery(document).trigger('googlecharts.embed.ready', [settings.vhash]);
 
+    var lc_chart = drawGoogleChart(googlechart_params);
+    jQuery(document).trigger('googlecharts.embed.ready', [settings.vhash]);
+    return lc_chart;
 }
