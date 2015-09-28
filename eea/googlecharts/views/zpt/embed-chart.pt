@@ -108,6 +108,11 @@
             if (!EEAGoogleCharts.embed){
                 window.EEAGoogleCharts.embed = {};
             }
+            if (this.gl_charts === undefined) {
+                // need this check because of the inline charts the custom_filters.js is not loaded
+                this.gl_charts = {}
+            }
+            gl_charts['googlechart_view_$vhash'] = null;
             var chart_columns_$vhash = ${chart/columns};
             var merged_rows_$vhash = ${chart/data};
             var available_columns_$vhash = ${chart/available_columns};
@@ -258,10 +263,10 @@
                 };
 
                 if(isPrint){
-                    drawChart(settings_$vhash, other_options_$vhash);
+                    gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
                 }else if(jQuery('#googlechart_dashboard_$vhash').is(':visible')){
                         if (isInline_$vhash !== 'True'){
-                            drawChart(settings_$vhash, other_options_$vhash);
+                            gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
                         }
                         else{
                             jQuery('#googlechart_dashboard_$vhash')
@@ -274,7 +279,7 @@
             });
             function hashchanged(){
                 if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
-                    drawChart(settings_$vhash, other_options_$vhash);
+                    gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
                 }
             };
             function resize_chart_$vhash(chart){
@@ -287,7 +292,14 @@
                             chart_json_$vhash.options.legend = 'right';
                             settings_$vhash[4] = width_$vhash;
                         }
-                        drawChart(settings_$vhash, other_options_$vhash);
+                        if (!gl_charts['googlechart_view_$vhash']) {
+                            gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
+                        } else {
+                            jQuery('#googlechart_view_$vhash').css('width', settings_$vhash[4]);
+                            gl_charts['googlechart_view_$vhash'].setOption('width', settings_$vhash[4]);
+                            gl_charts['googlechart_view_$vhash'].setOption('legend', chart_json_$vhash.options.legend);
+                            gl_charts['googlechart_view_$vhash'].draw();
+                        }
                     }
                 }
             }
