@@ -40,7 +40,9 @@ jQuery(window).scrollStopped(function(){
             if (jQuery(elem).hasClass('not_visible')){
                 jQuery(elem).removeClass('not_visible');
                 if (jQuery(elem).hasClass('isChart')){
-                    drawChart(jQuery(elem).data('settings'), jQuery(elem).data('other_options'));
+                    var $elem = jQuery(elem);
+                    var vhash = elem.id.split('_')[2];
+                    eval('gl_charts[\'googlechart_view_' + vhash + '\'] = drawChart(jQuery(elem).data(\'settings\'), jQuery(elem).data(\'other_options\')).chart;');
                 }
                 else{
                     drawDashboardEmbed(jQuery(elem).data('settings'));

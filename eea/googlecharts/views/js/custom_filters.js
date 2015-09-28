@@ -1,3 +1,8 @@
+// global variable to store a hash with all ChartWrapper objects as they are returned by the drawGoogleChart method
+// we use this to handle window resize without calling drawChart
+// instead ajusting the 'width' parameter and call the ChartWrapper's draw method
+var gl_charts = {};
+
 var chartsForPaletteReorder = ["LineChart",
                                 "ComboChart",
                                 "ImageChart",
@@ -504,7 +509,7 @@ function applyColumnFilters(options){
             config[7].colors = new_palette;
         }
     }*/
-    drawChart(config, other_settings);
+    gl_charts[config[1].containerId] = drawChart(config, other_settings).chart;
 }
 
 var defaults_columnfilter = [];

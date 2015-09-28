@@ -324,7 +324,7 @@ function drawChart(value, other_options){
         ChartNotes : chart_ChartNotes,
         columnsToBeShown: chart_columns.columnsToBeShown
     };
-    drawGoogleChart(googlechart_params);
+    return drawGoogleChart(googlechart_params);
 }
 
 function drawDashboard(value, other_options){
@@ -497,6 +497,10 @@ function showEmbed(){
     jQuery(".googlechart_embed_form").remove();
     var chartObj = jQuery("#googlechart_dashboard");
     var chartWidth  = chartObj.attr('chart_width');
+    if (chartWidth=='100%') {
+        //handle 100% width used for the window resize
+        chartWidth = jQuery('#googlechart_table').width();
+    }
     var chartHeight = chartObj.attr('chart_height');
     var iframeWidth = chartObj.width();
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
@@ -739,7 +743,7 @@ function showEmbed(){
     );
 }
 
-var eea_draw = function(context){
+var googleChartTabClick = function(context){
     current_chart_id = jQuery(context).attr("chart_id");
 
     var chart_index_to_use = -1;
@@ -747,7 +751,7 @@ var eea_draw = function(context){
         if (value[0] == current_chart_id){
             chart_index_to_use = index;
         }
-        value[4] = jQuery('#googlechart_table').width() - 20;
+        value[4] = '100%';
         var chart_options = value[1].options;
         var legend = chart_options.legend;
         // #28453 do now show legend if it is set to none
@@ -777,7 +781,7 @@ var eea_draw = function(context){
         };
 
         guessSeries(googlechart_config_array[chart_index_to_use]);
-        drawChart(googlechart_config_array[chart_index_to_use], chart_other_options);
+        gl_charts['googlechart_view'] = drawChart(googlechart_config_array[chart_index_to_use], chart_other_options).chart;
     }
     else {
         var config;
@@ -796,12 +800,6 @@ var eea_draw = function(context){
             GoogleChartsConfig: GoogleChartsConfig
         };
         drawDashboard(config, dashboard_other_options);
-    }
-};
-
-var googleChartTabClick = function(context){
-    if (jQuery(context).attr("chart_id") !== current_chart_id){
-        eea_draw(context);
     }
     return false;
 };
@@ -872,6 +870,8 @@ jQuery(document).ready(function($){
 
     jQuery("#daviz-view").attr("original_configs", JSON.stringify(googlechart_config_array));
 
+    gl_charts['googlechart_view'] = null;
+
     googleChartOnTabClick({
         api: api,
         tab: api.getTabs()[index],
@@ -879,9 +879,11 @@ jQuery(document).ready(function($){
     });
 
     jQuery(window).resize(_.debounce(function() {
-        var tab = jQuery('#daviz-view ul.chart-tabs a.current');
-        eea_draw(tab);
+        var new_width = jQuery('#googlechart_table').width() - 20;
+        jQuery('#googlechart_view').css('width', new_width);
+        gl_charts['googlechart_view'].setOption('width', new_width);
+        gl_charts['googlechart_view'].draw();
     }));
-    jQuery(window).trigger('resize');
+
     jQuery(window).trigger("hashchange");
 });
