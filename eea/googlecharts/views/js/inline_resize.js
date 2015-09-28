@@ -103,7 +103,6 @@ DavizInlineResizer.ChartResizer.prototype = {
             areaHeight: 0
         };
         jQuery.extend(settings, options);
-        //self.context.html("");
         var chart_settings = window['settings_' + self.hash];
         var other_options = window['other_options_' + self.hash];
         chart_settings[4] = settings.width;
