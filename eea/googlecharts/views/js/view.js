@@ -219,7 +219,7 @@ function drawChart(value, other_options){
             "</div>";
     }
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
-debugger;
+//debugger;
     jQuery("#googlechart_table").css("max-width",chart_width + 20);
     jQuery("#googlechart_view").attr("chart_id", chart_id);
     var chart_url = baseurl + "#tab-" + chart_id;
