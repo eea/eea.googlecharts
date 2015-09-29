@@ -219,6 +219,8 @@ function drawChart(value, other_options){
             "</div>";
     }
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
+debugger;
+    jQuery("#googlechart_table").css("max-width",chart_width + 20);
     jQuery("#googlechart_view").attr("chart_id", chart_id);
     var chart_url = baseurl + "#tab-" + chart_id;
 
@@ -383,6 +385,7 @@ function drawDashboard(value, other_options){
     }
 
     jQuery('#googlechart_dashboard').data('other_settings', other_settings);
+    jQuery(googlechart_table).css("max-width",value[4] + 20);
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
 
     var chart_url = baseurl + "#tab-" + settings.name.replace(".","-");
@@ -499,10 +502,10 @@ function showEmbed(){
     var chartWidth  = chartObj.attr('chart_width');
     if (chartWidth=='100%') {
         //handle 100% width used for the window resize
-        chartWidth = jQuery('#googlechart_table').width();
+        chartWidth = jQuery('#googlechart_table').width() - 20;
     }
     var chartHeight = chartObj.attr('chart_height');
-    var iframeWidth = chartObj.width();
+    var iframeWidth = jQuery('#googlechart_table').width();
     var iframeHeight = parseInt(chartObj.height(),10) + 30;
     var widthDiff = iframeWidth - chartWidth;
     var heightDiff = iframeHeight - chartHeight;
@@ -543,8 +546,8 @@ function showEmbed(){
                         '<div class="visualClear"><!-- &nbsp; --></div>' +
                         '<p class="manual-settings-error size-error">Please enter only positive integers!</p>' +
                         '<div class="chart-size-settings"><div class="chart-size">' +
-                        '<p><label for="manual-chart-width">Chart width: </label><input type="text" name="manual-chart-width" id="manual-chart-width" class="manual-chart-settings" value="' + chartObj.attr('chart_width') + '"/>px</p>' +
-                        '<p><label for="manual-chart-height">Chart height: </label><input type="text" name="manual-chart-height" id="manual-chart-height" class="manual-chart-settings" value="' + chartObj.attr('chart_height') + '"/>px</p></div>' +
+                        '<p><label for="manual-chart-width">Chart width: </label><input type="text" name="manual-chart-width" id="manual-chart-width" class="manual-chart-settings" value="' + chartWidth + '"/>px</p>' +
+                        '<p><label for="manual-chart-height">Chart height: </label><input type="text" name="manual-chart-height" id="manual-chart-height" class="manual-chart-settings" value="' + chartHeight + '"/>px</p></div>' +
                         '<div class="embed-misc-settings"><p title="Keep aspect ratio"><input type="checkbox" checked="checked" name="aspect-ratio" id="aspect-ratio"/>Keep aspect ratio</p>' +
                         '<p title="Also resize the parent iframe when resizing the chart"><input type="checkbox" checked="checked" name="resize-iframe" id="resize-iframe"/>Also resize iframe</p></div>' +
                         '<div class="visualClear"><!-- &nbsp; --></div></div></div>' +
@@ -691,7 +694,7 @@ function showEmbed(){
                     this.focus();
                     this.select();
                 });
-                jQuery(this).delegate(".googlechart_embed_form input", "change", function(){
+                jQuery(".googlechart_embed_form input").bind("change", function(){
                     if (jQuery(this).attr("filter_id") === 'all'){
                         jQuery(".googlechart_hide_filter").prop("checked", jQuery(this).prop("checked"));
                     }
@@ -751,7 +754,8 @@ var googleChartTabClick = function(context){
         if (value[0] == current_chart_id){
             chart_index_to_use = index;
         }
-        value[4] = '100%';
+//        value[4] = jQuery('#googlechart_table').width() - 20;
+//        value[4] = '100%';
         var chart_options = value[1].options;
         var legend = chart_options.legend;
         // #28453 do now show legend if it is set to none
