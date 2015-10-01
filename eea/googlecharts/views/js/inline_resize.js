@@ -124,7 +124,7 @@ DavizInlineResizer.ChartResizer.prototype = {
                 }
             }
         }
-        var view = self.context.find(".googlechart_view")
+        var view = self.context.find(".googlechart_view");
         view.css('width', chart_settings[4]);
         view.css('height', chart_settings[5]);
         gl_charts[chart_settings[1].containerId].setOption('width', chart_settings[4]);
