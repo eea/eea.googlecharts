@@ -220,8 +220,8 @@ function drawChart(value, other_options){
     }
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
     var resized_width = chart_width;
-    if ((gl_charts['googlechart_view']) && (gl_charts['googlechart_view'].getOption("resized_width"))){
-        resized_width = gl_charts['googlechart_view'].getOption("resized_width");
+    if ((gl_charts.googlechart_view) && (gl_charts.googlechart_view.getOption("resized_width"))){
+        resized_width = gl_charts.googlechart_view.getOption("resized_width");
     }
     jQuery("#googlechart_table").css("max-width",chart_width + 20);
     jQuery("#googlechart_view").attr("chart_id", chart_id);
@@ -788,7 +788,7 @@ var googleChartTabClick = function(context){
         };
 
         guessSeries(googlechart_config_array[chart_index_to_use]);
-        gl_charts['googlechart_view'] = drawChart(googlechart_config_array[chart_index_to_use], chart_other_options).chart;
+        gl_charts.googlechart_view = drawChart(googlechart_config_array[chart_index_to_use], chart_other_options).chart;
     }
     else {
         var config;
@@ -877,7 +877,7 @@ jQuery(document).ready(function($){
 
     jQuery("#daviz-view").attr("original_configs", JSON.stringify(googlechart_config_array));
 
-    gl_charts['googlechart_view'] = null;
+    gl_charts.googlechart_view = null;
 
     googleChartOnTabClick({
         api: api,
@@ -888,9 +888,9 @@ jQuery(document).ready(function($){
     jQuery(window).resize(_.debounce(function() {
         var new_width = jQuery('#googlechart_table').width() - 20;
         jQuery('#googlechart_view').css('width', new_width);
-        gl_charts['googlechart_view'].setOption('width', new_width);
-        gl_charts['googlechart_view'].setOption('resized_width', new_width);
-        gl_charts['googlechart_view'].draw();
+        gl_charts.googlechart_view.setOption('width', new_width);
+        gl_charts.googlechart_view.setOption('resized_width', new_width);
+        gl_charts.googlechart_view.draw();
     }));
 
     jQuery(window).trigger("hashchange");
