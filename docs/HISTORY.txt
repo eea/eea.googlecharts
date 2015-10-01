@@ -3,6 +3,8 @@ Changelog
 
 14.0.dev0 - (unreleased)
 ------------------------
+* Bugfix: Fixed embed string for charts with filters
+  [szabozo0 refs #29047]
 * Bugfix: Fixed window resize problems on daviz
   [chiridra refs #28297]
 * Bugfix: Legend in daviz does not display if positions set to "bottom"
