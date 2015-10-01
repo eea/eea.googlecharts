@@ -219,7 +219,10 @@ function drawChart(value, other_options){
             "</div>";
     }
     jQuery(googlechart_table).appendTo('#googlechart_dashboard');
-//debugger;
+    var resized_width = chart_width;
+    if ((gl_charts['googlechart_view']) && (gl_charts['googlechart_view'].getOption("resized_width"))){
+        resized_width = gl_charts['googlechart_view'].getOption("resized_width");
+    }
     jQuery("#googlechart_table").css("max-width",chart_width + 20);
     jQuery("#googlechart_view").attr("chart_id", chart_id);
     var chart_url = baseurl + "#tab-" + chart_id;
@@ -311,7 +314,7 @@ function drawChart(value, other_options){
         chartJson : chart_json,
         chartDataTable : tableForChart,
         chartFilters : chart_filters,
-        chartWidth : chart_width,
+        chartWidth : resized_width,
         chartHeight : chart_height,
         chartFilterPosition : chart_filterposition,
         chartOptions : chart_options,
@@ -886,6 +889,7 @@ jQuery(document).ready(function($){
         var new_width = jQuery('#googlechart_table').width() - 20;
         jQuery('#googlechart_view').css('width', new_width);
         gl_charts['googlechart_view'].setOption('width', new_width);
+        gl_charts['googlechart_view'].setOption('resized_width', new_width);
         gl_charts['googlechart_view'].draw();
     }));
 
