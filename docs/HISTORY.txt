@@ -1,8 +1,8 @@
 Changelog
 =========
 
-14.0.dev0 - (unreleased)
-------------------------
+14.0 - (2015-10-05)
+-------------------
 * Bugfix: Fixed embed string for charts with filters
   [szabozo0 refs #29047]
 * Bugfix: Fixed window resize problems on daviz
