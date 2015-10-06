@@ -4,6 +4,7 @@
     #googlechart_full > div > div {overflow:hidden ! important;}
 </style>
 <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
+<script type="text/javascript" src="++resource++jquery-migrate.js"></script>
 <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
