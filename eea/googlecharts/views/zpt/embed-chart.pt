@@ -20,6 +20,7 @@
         <meta property="og:url" tal:attributes="content string:${url}/embed-chart?chart=${chart_id}" />
         <meta property="og:title" tal:attributes="content string:${title}" />
         <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
+        <script type="text/javascript" src="++resource++jquery-migrate.js"></script>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <title tal:content="title"></title>
     </head>

@@ -3,6 +3,8 @@ Changelog
 
 14.1.dev0 - (unreleased)
 ------------------------
+* Bugfix: Fixed error message on embedded charts
+  [szabozo0 refs #28952"
 
 14.0 - (2015-10-05)
 -------------------
