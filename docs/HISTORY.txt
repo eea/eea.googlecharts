@@ -1,8 +1,11 @@
 Changelog
 =========
 
-14.1.dev0 - (unreleased)
+14.2.dev0 - (unreleased)
 ------------------------
+
+14.1 - (2015-10-22)
+-------------------
 * Bugfix: Fixed error message on embedded charts
   [szabozo0 refs #28952"
 
