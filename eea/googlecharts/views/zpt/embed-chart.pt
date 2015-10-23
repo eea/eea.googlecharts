@@ -4,7 +4,9 @@
                         chart_id chart/id;
                         chart_name chart/name;
                         title view/context/Title;
-                        url view/context/absolute_url">
+                        url view/context/absolute_url;
+                        context_state context/@@plone_context_state;
+                        wf_state context_state/workflow_state|string:;">
 <!DOCTYPE html>
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1');">
     <head>
@@ -24,7 +26,7 @@
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <title tal:content="title"></title>
     </head>
-    <body onhashchange="hashchanged();">
+    <body onhashchange="hashchanged();" tal:attributes="class string:wf-state-${wf_state}">
 
       <metal:chart use-macro="here/embed-chart/macros/chart"/>
     <div>
