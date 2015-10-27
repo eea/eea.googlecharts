@@ -137,6 +137,14 @@ a:visited, a:hover {
         width: 100% !important;
 }
 
+/* #29216 display draft image for charts that are not published */
+.wf-draft .googlechart_view > div > div > div {
+    background-image: url(/++resource++eea.googlecharts.images/draft.png);
+}
+.wf-draft svg {
+    opacity: 0.6;
+}
+
 @media print {
 
     .googlechart_view,

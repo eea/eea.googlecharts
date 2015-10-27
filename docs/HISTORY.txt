@@ -4,6 +4,8 @@ Changelog
 14.2.dev0 - (unreleased)
 ------------------------
 * Feature: add workflow state classes of context to body of embed-chart
+  which is used to add a draft watermark image for charts that are not
+  published
   [ichimdav refs #29216]
 
 14.1 - (2015-10-22)
