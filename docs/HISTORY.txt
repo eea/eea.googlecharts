@@ -3,6 +3,9 @@ Changelog
 
 14.3.dev0 - (unreleased)
 ------------------------
+* Bug fix: take into consideration the size set by resize functionality
+  when attempting to resize a chart as part of a resize event
+  [ichimdav refs #30518]
 
 14.2 - (2015-11-03)
 -------------------

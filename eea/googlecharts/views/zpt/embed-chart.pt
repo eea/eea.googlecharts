@@ -288,13 +288,11 @@
             function resize_chart_$vhash(chart){
                 if (chart.length && chart.is(':visible')){
                     if (settings_$vhash && other_options_$vhash){
-                        if ($(window).width() <= width_$vhash){
+                        if ($(window).width() <= settings_$vhash[4]){
                             chart_json_$vhash.options.legend = 'bottom';
                             settings_$vhash[4] = '98%';
-                        } else {
-                            chart_json_$vhash.options.legend = 'right';
-                            settings_$vhash[4] = width_$vhash;
                         }
+
                         if (!gl_charts['googlechart_view_$vhash']) {
                             gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
                         } else {
