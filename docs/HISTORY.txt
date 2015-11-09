@@ -1,6 +1,9 @@
 Changelog
 =========
 
+14.4.dev0 - (unreleased)
+------------------------
+
 14.3 - (2015-11-09)
 -------------------
 * Bug fix: take into consideration the size set by resize functionality
