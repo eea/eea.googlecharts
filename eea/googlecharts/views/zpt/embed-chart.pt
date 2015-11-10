@@ -289,8 +289,16 @@
                 if (chart.length && chart.is(':visible')){
                     if (settings_$vhash && other_options_$vhash){
                         if ($(window).width() <= settings_$vhash[4]){
+                            chart_json_$vhash.options.original_legend = settings_$vhash[1].options.legend;
+                            chart_json_$vhash.options.original_width = settings_$vhash[4];
                             chart_json_$vhash.options.legend = 'bottom';
-                            settings_$vhash[4] = '98%';
+                            chart_json_$vhash.options.width = '98%';
+                        }
+                        else {
+                            if (chart_json_$vhash.options.original_legend){
+                                chart_json_$vhash.options.legend = chart_json_$vhash.options.original_legend;
+                                chart_json_$vhash.options.width = chart_json_$vhash.options.original_width;
+                            }
                         }
 
                         if (!gl_charts['googlechart_view_$vhash']) {
