@@ -3,6 +3,9 @@ Changelog
 
 14.4.dev0 - (unreleased)
 ------------------------
+* Change: restore original width and position if width of window
+  is again larger than that of the googlechart
+  [ichimdav refs #30518]
 
 14.3 - (2015-11-09)
 -------------------
