@@ -3,6 +3,9 @@ Changelog
 
 14.4.dev0 - (unreleased)
 ------------------------
+* Change: fixed width of dashboard charts when pdf printing by setting
+  a width of 100%
+  [ichimdav refs #30473]
 * Change: restore original width and position if width of window
   is again larger than that of the googlechart
   [ichimdav refs #30518]
