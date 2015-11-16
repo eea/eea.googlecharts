@@ -128,7 +128,20 @@ function drawDashboardEmbed(options){
         rows : settings.merged_rows,
         columns : settings.available_columns,
         charts : settings.googlechart_config_array,
-        dashboardName: settings.dashboard_config.name
+        dashboardName: settings.dashboard_config.name,
+        chartReadyEvent: function() {
+            if (window.EEAGoogleCharts.embed && !window.EEAGoogleCharts.embed.isPrint) {
+                return;
+            }
+            // get only the text elements that are bold which should select only title texts
+            var $chart_titles = $("text").filter(function(idx, el) {
+                return el.getAttribute('font-weight') === "bold";
+            });
+            // 30473 move dashboard chart title to the left side of the chart when pdf printing
+            $chart_titles.each(function(idx, el) {
+                el.setAttribute('x', '10');
+            });
+        }
     };
 
     var other_settings = {

@@ -3,6 +3,11 @@ Changelog
 
 14.5.dev0 - (unreleased)
 ------------------------
+* Change: chart Title is now set to the left of the chart for pdf output
+  [ichimdav refs #30473
+* Change: pass chartReadyEvent to drawGoogleChart which allows us to hook into
+  this event with our own callback
+  [ichimdav refs #30473]
 * Feature: Enable html view in tooltip, e.g. fontawesome in daviz: chart, map
   [lucas refs #30315]
 

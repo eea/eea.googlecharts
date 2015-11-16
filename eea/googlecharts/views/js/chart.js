@@ -1008,7 +1008,7 @@ function drawSMCharts(smc_settings) {
             chartFilterPosition : '',
             chartOptions : adv_options,
             availableColumns : current_table_items.available_columns,
-            chartReadyEvent : function(){},
+            chartReadyEvent : settings.chartReadyEvent || function() {},
             sortFilter:'__disabled__',
             hideNotes:true,
             originalTable:settings.rows
@@ -1221,7 +1221,7 @@ function drawGoogleDashboard(options){
                 chartFilterPosition : '',
                 chartOptions : chartConfig[7],
                 availableColumns : transformedTable.available_columns,
-                chartReadyEvent : function(){},
+                chartReadyEvent : settings.chartReadyEvent || function() {},
                 sortFilter:'__disabled__',
                 hideNotes:true,
                 originalTable:settings.rows
@@ -1500,7 +1500,7 @@ function drawGoogleDashboard(options){
                 chartHeight: 200,
                 chartFilterPosition : '',
                 availableColumns : transformedTable.available_columns,
-                chartReadyEvent : function(){},
+                chartReadyEvent : settings.chartReadyEvent || function() {},
                 sortFilter : '__disabled__',
                 customFilterHandler : dashboardFilterChanged,
                 customFilterOptions : customFilterOptions,
