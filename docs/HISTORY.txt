@@ -3,6 +3,8 @@ Changelog
 
 14.5.dev0 - (unreleased)
 ------------------------
+* Feature: Enable html view in tooltip, e.g. fontawesome in daviz: chart, map
+  [lucas refs #30315]
 
 14.4 - (2015-11-16)
 -------------------
