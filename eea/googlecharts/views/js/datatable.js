@@ -1,5 +1,5 @@
 var allowedTypesForCharts = ['string', 'number', 'boolean', 'date', 'datetime', 'timeofday'];
-var allowedChartsForTooltips = ['BarChart', 'ColumnChart', 'LineChart', 'ComboChart', 'AreaChart', 'SteppedAreaChart', 'ScatterChart'];
+var allowedChartsForTooltips = ['BarChart', 'ColumnChart', 'LineChart', 'ComboChart', 'AreaChart', 'SteppedAreaChart', 'ScatterChart', 'GeoChart'];
 
 function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
     var unpivotBase = "";
@@ -591,7 +591,7 @@ function prepareForChart(options){
                                                     p: {'html': true}};
                 if (!settings.hideTooltips){
                     dataForChart.addColumn(customtooltip_column_options);
-                    columnsForChart.push({column:customtooltip_column_options.id, type:'customtooltip', template:jQuery('<textarea/>').html(customtooltip.tooltip).text()});
+                    columnsForChart.push({column:customtooltip_column_options.id, type:'customtooltip', template:customtooltip.tooltip});
                 }
                 hasTooltip = true;
             }
@@ -622,6 +622,7 @@ function prepareForChart(options){
                 patched_each(row, function(key, value){
                     tooltip_column = tooltip_column.split("{"+key+"}").join(value);
                 });
+                tooltip_column = jQuery('<textarea/>').html(tooltip_column).text();
                 newRow.push(tooltip_column);
                 return;
             }
