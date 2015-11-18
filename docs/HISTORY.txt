@@ -3,6 +3,8 @@ Changelog
 
 14.6.dev0 - (unreleased)
 ------------------------
+* Bugfix: Set X-Frame-Options to ALLOWALL for embed views
+  [szabozo0 refs #30790]
 
 14.5 - (2015-11-17)
 -------------------
