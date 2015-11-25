@@ -148,7 +148,9 @@
             var unpivotSettings_$vhash = $unpivotSettings;
             var isPrint = $isPrint;
             var ChartNotes_$vhash = $ChartNotes;
-
+            if (isPrint) {
+                chart_options_$vhash.legend = 'in';
+            }
             var googlechart_config_array_$vhash = [];
             var settings_$vhash = [];
             var other_options_$vhash = {};
@@ -291,7 +293,7 @@
                         if ($(window).width() <= settings_$vhash[4]){
                             chart_json_$vhash.options.original_legend = settings_$vhash[1].options.legend;
                             chart_json_$vhash.options.original_width = settings_$vhash[4];
-                            chart_json_$vhash.options.legend = 'bottom';
+                            chart_json_$vhash.options.legend = 'in';
                             chart_json_$vhash.options.width = '98%';
                         }
                         else {
