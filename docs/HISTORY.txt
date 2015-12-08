@@ -3,6 +3,9 @@ Changelog
 
 14.7.dev0 - (unreleased)
 ------------------------
+* Bugfix: fix array membership check within custom_filters.js for prepared 
+  filters
+  [ichimdav refs #31291]
 
 14.6 - (2015-11-18)
 -------------------
