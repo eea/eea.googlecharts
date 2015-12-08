@@ -1,6 +1,9 @@
 Changelog
 =========
 
+14.8.dev0 - (unreleased)
+------------------------
+
 14.7 - (2015-12-08)
 -------------------
 * Bugfix: fix array membership check within custom_filters.js for prepared 
