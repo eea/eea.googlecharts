@@ -379,7 +379,7 @@ function applyColumnFilters(options){
                 var columnFilterIdx = -1;
                 var shouldSkip;
                 patched_each(chart_columnFilters_old, function(idx, columnFilter_old){
-                    if (columnFilter_old.settings.defaults.indexOf(chart_column_old.name) !== -1){
+                    if (jQuery.inArray(chart_column_old.name, columnFilter_old.settings.defaults) !== -1){
                         if (usedFilterIdxs.indexOf(idx) === -1){
                             columnFilterIdx = idx;
                             usedFilterIdxs.push(idx);
@@ -630,7 +630,6 @@ function applyPreConfigFilters(options){
             chart_columns_old = conf[2];
         }
     });
-
     patched_each(chart_columns_old.prepared, function(idx, prepared){
         var shouldHide = true;
         patched_each(chart_columns_old.original, function(idx, original){

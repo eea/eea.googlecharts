@@ -776,7 +776,7 @@ var googleChartTabClick = function(context){
             chart_options.legend = 'top';
         }
     });
-    if (chart_index_to_use != -1){
+    if (chart_index_to_use !== -1){
         jQuery("#googlechart_filters").html('');
         jQuery("#googlechart_view").html('');
 
