@@ -224,7 +224,7 @@ function drawGoogleChart(options){
                 return;
             }
             // get only the text elements that are bold which should select only title texts
-            var $chart_titles = $("text").filter(function(idx, el) {
+            var $chart_titles = $("#" + this.chartViewDiv).find("text").filter(function(idx, el) {
                 return el.getAttribute('font-weight') === "bold";
             });
             // 30473 move dashboard chart title to the left side of the chart when pdf printing

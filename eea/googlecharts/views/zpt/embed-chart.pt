@@ -126,8 +126,10 @@
             var merged_rows_$vhash = ${chart/data};
             var available_columns_$vhash = ${chart/available_columns};
             var chart_json_$vhash = ${chart/config};
-            var width_$vhash = isPrint ? 650 : ${chart/chartWidth};
-            var height_$vhash = isPrint ? 400 : ${chart/chartHeight};
+            var width_$vhash = ${chart/chartWidth};
+            var height_$vhash = ${chart/chartHeight};
+            var width_$vhash = isPrint && width_$vhash > 650 ? 650 : width_$vhash;
+            var height_$vhash = isPrint && height_$vhash > 400 ? 400 : height_$vhash;
             var name_$vhash = '${chart_name}';
             var chart_options_$vhash = ${chart/options};
             var chart_filterposition_$vhash = ${chart/filterposition}
@@ -145,9 +147,6 @@
             var sortAsc_str_$vhash = '$sortAsc';
             var chart_columnFilters_$vhash = $columnFilters;
             var GoogleChartsConfig_$vhash = $GoogleChartsConfig;
-            GoogleChartsConfig_$vhash.chartWidth = 650;
-            GoogleChartsConfig_$vhash.width = 650;
-            GoogleChartsConfig_$vhash.height = 400;
             var isInline_$vhash = '$inline';
             var unpivotSettings_$vhash = $unpivotSettings;
             var ChartNotes_$vhash = $ChartNotes;
