@@ -776,7 +776,7 @@ var googleChartTabClick = function(context){
             chart_options.legend = 'top';
         }
     });
-    if (chart_index_to_use != -1){
+    if (chart_index_to_use !== -1){
         jQuery("#googlechart_filters").html('');
         jQuery("#googlechart_view").html('');
 
@@ -842,13 +842,15 @@ jQuery(document).ready(function($){
     //     }
     // }
     // end of workaround
-
     if (typeof(googlechart_config_array) == 'undefined'){
         return;
     }
-    patched_each(googlechart_config_array, function(key, config){
-        config[1].options.title = config[1].options.title + " — " + main_title;
-    });
+    var isPrint = window.EEAGoogleCharts.embed && window.EEAGoogleCharts.embed.isPrint;
+    if (!isPrint) {
+        patched_each(googlechart_config_array, function(key, config){
+            config[1].options.title = config[1].options.title + " — " + window.main_title;
+        });
+    }
 
     // Integrate google charts with daviz tabs
     jQuery('.googlecharts_container').hide();

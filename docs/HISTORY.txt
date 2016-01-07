@@ -3,6 +3,11 @@ Changelog
 
 14.8.dev0 - (unreleased)
 ------------------------
+* Change: remove chart title hack when pdf printing which added daviz title
+  with chart title
+  [ichimdav refs #30473]
+* Change: move chart titles to the left of the chart on printing
+  [ichimdav refs #30473]
 
 14.7 - (2015-12-08)
 -------------------

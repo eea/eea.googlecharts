@@ -195,7 +195,10 @@ function drawChart(value, options){
 
     var tableForChart = prepareForChart(settings_options);
 
-    embedchart_json.options.title = settings.name + " — " + settings.main_title;
+    var isPrint = window.EEAGoogleCharts.embed && window.EEAGoogleCharts.embed.isPrint;
+    if (!isPrint) {
+        embedchart_json.options.title = settings.name + " — " + settings.main_title;
+    }
 
     var googlechart_params = {
         chartDashboard : 'googlechart_dashboard_'+settings.vhash,
