@@ -1,8 +1,11 @@
 Changelog
 =========
 
-14.8.dev0 - (unreleased)
+14.9.dev0 - (unreleased)
 ------------------------
+
+14.8 - (2016-01-07)
+-------------------
 * Change: remove chart title hack when pdf printing which added daviz title
   with chart title
   [ichimdav refs #30473]
