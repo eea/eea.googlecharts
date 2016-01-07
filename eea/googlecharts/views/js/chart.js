@@ -219,7 +219,29 @@ function drawGoogleChart(options){
         chartFilterPosition : '',
         chartOptions : '',
         availableColumns : '',
-        chartReadyEvent : function(){},
+        chartReadyEvent: function() {
+            if (window.EEAGoogleCharts.embed && !window.EEAGoogleCharts.embed.isPrint) {
+                return;
+            }
+            // get only the text elements that are bold which should select only title texts
+            var $chart_titles = $("#" + this.chartViewDiv).find("text").filter(function(idx, el) {
+                return el.getAttribute('font-weight') === "bold";
+            });
+            // 30473 move dashboard chart title to the left side of the chart when pdf printing
+            $chart_titles.each(function(idx, el) {
+                if (el.getAttribute('PDF_MODIFIED')) {
+                    return;
+                }
+                el.setAttribute('x', '10');
+                el.setAttribute('y', window.parseInt(el.getAttribute('y')) - 5);
+                var next_el = $(el).next()[0];
+                if (next_el && next_el.tagName === "rect") {
+                    next_el.setAttribute('x', 10);
+                    next_el.setAttribute('width', 550);
+                }
+                el.setAttribute('PDF_MODIFIED', true);
+            });
+        },
         chartErrorEvent : function(){},
         sortFilter : '__disabled__',
         customFilterHandler : function(){},
@@ -567,6 +589,7 @@ function drawGoogleChart(options){
         return;
     }
     var conf_array = jQuery("#" + settings.chartDashboard).data('other_settings').googlechart_config_array;
+
     patched_each(conf_array, function(idx, conf){
         if (conf[0] === jQuery("#"+settings.chartViewDiv).attr("chart_id")){
             var chart_columnFilters_old = conf[14];
