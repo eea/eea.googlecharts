@@ -7,7 +7,11 @@ if (!window.EEAGoogleCharts) {
 if (!window.EEAGoogleCharts.common) {
     window.EEAGoogleCharts.common = {};
 }
-var common = window.EEAGoogleCharts.common;
+if (!window.EEAGoogleCharts.embed) {
+    window.EEAGoogleCharts.embed = {};
+}
+var commonModule = window.EEAGoogleCharts.common;
+var embedModule = window.EEAGoogleCharts.embed;
 
 function putImageDivInPosition(div_id, position, vhash){
     if (position === "Disabled"){
@@ -33,7 +37,7 @@ function putImageDivInPosition(div_id, position, vhash){
     }
 }
 
-common.insertBottomImages = function(settings, chart_url) {
+commonModule.insertBottomImages = function(settings, chart_url) {
     // check if cross-domain or not
     var chart_hash = settings.vhash;
     var is_cross_domain = false;
@@ -99,7 +103,7 @@ common.insertBottomImages = function(settings, chart_url) {
 
     // #22489 add Explore chart link when printing
     var explore_link, left_images;
-    if (window.EEAGoogleCharts.embed && window.EEAGoogleCharts.embed.isPrint) {
+    if (embedModule && embedModule.isPrint) {
         explore_link = $("<a />", {
             href: settings.baseurl,
             text:'Explore chart interactively',

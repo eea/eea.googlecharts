@@ -1,3 +1,9 @@
+if (!window.EEAGoogleCharts) {
+    window.EEAGoogleCharts = {};
+}
+
+var embedModule = window.EEAGoogleCharts.embed;
+
 var current_chart_id;
 var tableForDashboard;
 var allColumns;
@@ -845,8 +851,8 @@ jQuery(document).ready(function($){
     if (typeof(googlechart_config_array) == 'undefined'){
         return;
     }
-    var isPrint = window.EEAGoogleCharts.embed && window.EEAGoogleCharts.embed.isPrint;
-    if (!isPrint) {
+    var is_pdf_printing = embedModule && embedModule.isPrint;
+    if (!is_pdf_printing) {
         patched_each(googlechart_config_array, function(key, config){
             config[1].options.title = config[1].options.title + " — " + window.main_title;
         });
