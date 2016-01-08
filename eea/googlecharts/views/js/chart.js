@@ -1,3 +1,12 @@
+if (!window.EEAGoogleCharts) {
+    window.EEAGoogleCharts = {};
+}
+if (!window.EEAGoogleCharts.embed) {
+    window.EEAGoogleCharts.embed = {};
+}
+
+var embedModule = window.EEAGoogleCharts.embed;
+
 function get_notes_for_chart(ChartNotesList, chart_id){
   var notes = _.filter(ChartNotesList, function(note){
     return note.global || note.charts.indexOf(chart_id) !== -1;
@@ -220,7 +229,7 @@ function drawGoogleChart(options){
         chartOptions : '',
         availableColumns : '',
         chartReadyEvent: function() {
-            if (window.EEAGoogleCharts.embed && !window.EEAGoogleCharts.embed.isPrint) {
+            if (embedModule && !embedModule.isPrint) {
                 return;
             }
             // get only the text elements that are bold which should select only title texts

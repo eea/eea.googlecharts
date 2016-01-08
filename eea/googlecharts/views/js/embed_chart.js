@@ -15,6 +15,8 @@
  transformTable
  */
 var commonModule = window.EEAGoogleCharts.common;
+var embedModule = window.EEAGoogleCharts.embed;
+var is_pdf_printing = embedModule && embedModule.isPrint;
 
 function drawChart(value, options){
     var settings = {
@@ -195,8 +197,7 @@ function drawChart(value, options){
 
     var tableForChart = prepareForChart(settings_options);
 
-    var isPrint = window.EEAGoogleCharts.embed && window.EEAGoogleCharts.embed.isPrint;
-    if (!isPrint) {
+    if (!is_pdf_printing) {
         embedchart_json.options.title = settings.name + " — " + settings.main_title;
     }
 

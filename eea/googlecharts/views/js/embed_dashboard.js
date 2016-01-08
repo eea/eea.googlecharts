@@ -12,6 +12,8 @@
 
 /* module requirements */
 var commonModule = window.EEAGoogleCharts.common;
+var embedModule = window.EEAGoogleCharts.embed;
+var is_pdf_printing = embedModule && embedModule.isPrint;
 
 function drawDashboardEmbed(options){
   var settings = {
@@ -33,8 +35,7 @@ function drawDashboardEmbed(options){
 
     var query_params = getQueryParams();
 
-    var isPrint = window.EEAGoogleCharts.embed && window.EEAGoogleCharts.embed.isPrint;
-    if (!isPrint) {
+    if (!is_pdf_printing) {
         patched_each(settings.googlechart_config_array, function(key, config){
             config[1].options.title = config[1].options.title + " — " + settings.main_title;
         });
@@ -111,7 +112,7 @@ function drawDashboardEmbed(options){
     }
 
     /* #22489 reduce size of dashboards when pdf printing in order to avoid text shrinking */
-    if (window.EEAGoogleCharts.embed && window.EEAGoogleCharts.embed.isPrint) {
+    if (is_pdf_printing) {
         $.each(settings.dashboard_config.widgets, function(idx, el) {
             var dashboard = el.dashboard;
             // magic numbers found after playing with an assessment where the larger charts
