@@ -1,8 +1,8 @@
 Changelog
 =========
 
-14.9.dev0 - (unreleased)
-------------------------
+14.9 - (2016-01-19)
+-------------------
 * Bug fix: fixed missing check for embedModule within a daviz chart
   [ichimdav refs #50630]
 
