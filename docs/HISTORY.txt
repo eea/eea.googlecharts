@@ -3,6 +3,9 @@ Changelog
 
 15.0.dev0 - (unreleased)
 ------------------------
+* Bug fix: removed defaulttooltip values from sort by filter those
+  values were duplicating existing values
+  [ichimdav refs #67854]
 
 14.9 - (2016-01-19)
 -------------------

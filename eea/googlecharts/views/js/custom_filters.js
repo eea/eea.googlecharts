@@ -258,11 +258,18 @@ function addSortFilter(options){
     var colsnr = settings.filterDataTable.getNumberOfColumns();
     var cols_array = [[settings.filterTitle]];
     var sortFilterArray = {};
+    var column_label;
     for (var i = 0; i < colsnr; i++){
-        cols_array.push([settings.filterDataTable.getColumnLabel(i)]);
-        sortFilterArray[settings.filterDataTable.getColumnLabel(i)] = [i, false];
-        cols_array.push([settings.filterDataTable.getColumnLabel(i) + " (reversed)"]);
-        sortFilterArray[settings.filterDataTable.getColumnLabel(i) + " (reversed)"] = [i, true];
+        column_label = settings.filterDataTable.getColumnLabel(i);
+        //  #67854 do now show defaulttoltip sorts as it will
+        // duplicate the sort by filters
+        if (column_label.indexOf('defaulttooltip') !== -1) {
+            continue;
+        }
+        cols_array.push([column_label]);
+        sortFilterArray[column_label] = [i, false];
+        cols_array.push([column_label + " (reversed)"]);
+        sortFilterArray[column_label + " (reversed)"] = [i, true];
     }
 
     var paramsForHandler = {
