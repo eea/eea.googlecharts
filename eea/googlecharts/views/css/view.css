@@ -69,7 +69,7 @@
 
 #content ul.googlechart_tabs,
 ul.googlechart_tabs {
-    background: #2C8DA2;
+    background: #069;
     border-radius: 10px 10px 0px 0px;
     border: none;
     height: 37px;
@@ -137,6 +137,20 @@ ul.googlechart_tabs li:first-of-type a:hover {
 
 .google_buttons_bar {
     text-align: right;
+    margin-top:1em;
+}
+
+.google_buttons_bar .googlechart_button {
+    float:right;
+    text-align:center;
+}
+
+.google_buttons_bar .googlechart_button .export-action-title {
+    display: block;
+}
+
+.google_buttons_bar .btn {
+    border-radius:0;
 }
 
 #googlechart_dashboard,
@@ -156,10 +170,9 @@ ul.googlechart_tabs li:first-of-type a:hover {
 }
 
 #googlechart_filters > div,
-.googlechart_filters > div{
-    background: #F3F3F3;
+.googlechart_filters > div {
+    background: #f3f3f3;
     margin-bottom:1em;
-    border-radius: 5px;
     padding-bottom: 1em;
     min-height: 80px;
     text-align: center;
@@ -172,8 +185,8 @@ ul.googlechart_tabs li:first-of-type a:hover {
     color: black;
     padding: 5px 10px;
     font-size: 14px;
-    line-height: 1.6;
-    background-color: #E2E2E2;
+    background-color: #069;
+    color:#fff;
     max-height: 25px;
     overflow: hidden;
     margin-bottom: 1em;
@@ -268,7 +281,6 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .googlechart_table_bottom #googlechart_filters > div,
 .googlechart_table_bottom .googlechart_filters > div {
     float: left;
-    max-width: 300px;
     min-width: 200px;
     overflow: hidden;
     margin-right: 0.5em;
@@ -278,7 +290,6 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .googlechart_table_top #googlechart_filters > div,
 .googlechart_table_top .googlechart_filters > div {
     float: left;
-    max-width: 300px;
     min-width: 200px;
     overflow: hidden;
     margin-right: 0.5em;
@@ -371,8 +382,9 @@ and not all charts */
 #daviz-view ul.google-visualization-controls-categoryfilter-selected,
 .googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected {
     list-style-type: none !important;
-    margin: 0 !important;
-    max-width: 100% ! important;
+    margin: 10px auto!important;
+    max-width: 90% ! important;
+    display:block!important;
 }
 
 li.eea-moved-in-container{
@@ -383,7 +395,7 @@ li.eea-moved-in-container{
 .googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li {
     display: block;
     white-space: normal;
-    border:1px solid #E2E2E2 !important;
+    border:1px solid #e2e2e2 !important;
     background-color: white !important;
     padding-left: 7px !important;
 }
@@ -425,11 +437,45 @@ li.eea-moved-in-container{
     margin-right: 15px;
 }
 
-#googlechart_dashboard .googlechart_table_top div.googlechart_filter,
-.googlechart_dashboard .googlechart_table_top div.googlechart_filter,
-#googlechart_dashboard .googlechart_table_bottom div.googlechart_filter,
-.googlechart_dashboard .googlechart_table_bottom div.googlechart_filter {
-    width : 30%;
+@media screen and (max-width: 479px) {
+    #googlechart_dashboard .googlechart_table_top div.googlechart_filter,
+    .googlechart_dashboard .googlechart_table_top div.googlechart_filter,
+    #googlechart_dashboard .googlechart_table_bottom div.googlechart_filter,
+    .googlechart_dashboard .googlechart_table_bottom div.googlechart_filter {
+        width: 100%;
+        float: none;
+        margin: 0 auto 1em!important;
+    }
+}
+
+@media screen and (min-width: 480px) and (max-width: 627px) {
+    #googlechart_dashboard .googlechart_table_top div.googlechart_filter,
+    .googlechart_dashboard .googlechart_table_top div.googlechart_filter,
+    #googlechart_dashboard .googlechart_table_bottom div.googlechart_filter,
+    .googlechart_dashboard .googlechart_table_bottom div.googlechart_filter {
+        width: 48%;
+        min-width: 200px;
+    }
+}
+
+@media screen and (min-width: 628px) and (max-width: 767px) {
+    #googlechart_dashboard .googlechart_table_top div.googlechart_filter,
+    .googlechart_dashboard .googlechart_table_top div.googlechart_filter,
+    #googlechart_dashboard .googlechart_table_bottom div.googlechart_filter,
+    .googlechart_dashboard .googlechart_table_bottom div.googlechart_filter {
+        width: 32%;
+        min-width: 200px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    #googlechart_dashboard .googlechart_table_top div.googlechart_filter,
+    .googlechart_dashboard .googlechart_table_top div.googlechart_filter,
+    #googlechart_dashboard .googlechart_table_bottom div.googlechart_filter,
+    .googlechart_dashboard .googlechart_table_bottom div.googlechart_filter {
+        width: 24%;
+        min-width: 200px;
+    }
 }
 
 #googlechart_dashboard .googlechart_table_top div.googlechart_filter ul,
@@ -481,7 +527,7 @@ li.eea-moved-in-container{
 
 .google-visualization-controls-slider-thumb {
     border: 1px solid gray !important;
-    background-color: #E2E2E2 !important;
+    background-color: #e2e2e2 !important;
 }
 
 .google-visualization-controls-slider-horizontal {
