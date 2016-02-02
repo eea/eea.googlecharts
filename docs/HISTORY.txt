@@ -6,6 +6,8 @@ Changelog
 * Bug fix: removed defaulttooltip values from sort by filter those
   values were duplicating existing values
   [ichimdav refs #67854]
+* Task: Improve DaViz Filter design/display
+  [chiridra refs #31309]
 
 14.9 - (2016-01-19)
 -------------------

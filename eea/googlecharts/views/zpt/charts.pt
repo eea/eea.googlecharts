@@ -56,7 +56,7 @@
 <script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; qr_size = '${view/qr_size}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}'; var main_title='${view/get_maintitle}';">
 </script>
 <div class="googlecharts_container" i18n:domain="eea">
-<tal:block tal:define="charts view/get_charts; dashboards view/get_dashboards">
+<tal:block tal:define="charts view/get_charts; dashboards view/get_dashboards; isAnon context/@@plone_portal_state/anonymous;">
     <tal:block tal:repeat="chart charts">
         <script type="text/javascript"
             tal:define="dashboard python:view.get_dashboard_js(chart);sortFilter python:view.get_sortFilter(chart); hasPNG chart/hasPNG | string: false; row_filters python: chart.get('row_filters',{}); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart); unpivotsettings python:view.get_unpivotSettings(chart);"
@@ -69,28 +69,38 @@
     <div style="clear:both">
     </div>
 
-    <div class="google_buttons_bar">
-        <input id="googlechart_embed_button"
-               style="display:none;"
-               type="button"
-               value="embed"
-               i18n:attributes="value"
-               onClick="showEmbed();"
-               class="context btn" />
-        <input id="googlechart_export_button"
-               style="display:none;"
-               type="button"
-               value="export to png"
-               i18n:attributes="value"
-               onClick="exportToPng();"
-               class="context btn" />
-        <input id="googlechart_export_svg_button"
-               style="display:none;"
-               type="button"
-               value="export to svg"
-               i18n:attributes="value"
-               onClick="exportToSVG();"
-               class="context btn" />
+    <div class="google_buttons_bar" tal:attributes="class python:isAnon and 'google_buttons_bar' or 'google_buttons_bar google_buttons_bar_ex';">
+        <a id="googlechart_export_svg_button"
+           class="googlechart_button"
+           style="display:none;"
+           title="export to svg"
+           i18n:attributes="title"
+           href="javascript:void(0);"
+           onClick="exportToSVG();">
+           <span class="eea-icon eea-icon-3x eea-icon-image"></span>
+           <span class="export-action-title" i18n:translate="">SVG</span>
+        </a>
+        <a id="googlechart_export_button"
+           class="googlechart_button"
+           style="display:none;"
+           title="export to png"
+           i18n:attributes="title"
+           href="javascript:void(0);"
+           onClick="exportToPng();">
+           <span class="eea-icon eea-icon-3x eea-icon-download"></span>
+           <span class="export-action-title" i18n:translate="">PNG</span>
+        </a>
+        <a id="googlechart_embed_button"
+           class="googlechart_button"
+           style="display:none;"
+           title="embed"
+           i18n:attributes="title"
+           href="javascript:void(0);"
+           onClick="showEmbed();">
+           <span class="eea-icon eea-icon-3x eea-icon-code"></span>
+           <span class="export-action-title" i18n:translate="">Embed</span>
+        </a>
+        <div style="clear:both"></div>
     </div>
 
 
