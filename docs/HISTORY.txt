@@ -1,6 +1,9 @@
 Changelog
 =========
 
+15.1.dev0 - (unreleased)
+------------------------
+
 15.0 - (2016-02-03)
 -------------------
 * Bug fix: removed defaulttooltip values from sort by filter those
