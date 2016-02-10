@@ -3,6 +3,9 @@ Changelog
 
 15.1.dev0 - (unreleased)
 ------------------------
+* Changed: removed google_buttons_bar class change after the move of
+  the google_buttons_bar with the help of javascript
+  [ichimdav refs #69065]
 
 15.0 - (2016-02-03)
 -------------------

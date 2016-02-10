@@ -56,7 +56,7 @@
 <script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; qr_size = '${view/qr_size}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}'; var main_title='${view/get_maintitle}';">
 </script>
 <div class="googlecharts_container" i18n:domain="eea">
-<tal:block tal:define="charts view/get_charts; dashboards view/get_dashboards; isAnon context/@@plone_portal_state/anonymous;">
+<tal:block tal:define="charts view/get_charts; dashboards view/get_dashboards;">
     <tal:block tal:repeat="chart charts">
         <script type="text/javascript"
             tal:define="dashboard python:view.get_dashboard_js(chart);sortFilter python:view.get_sortFilter(chart); hasPNG chart/hasPNG | string: false; row_filters python: chart.get('row_filters',{}); sortBy python: chart.get('sortBy',''); sortAsc python: chart.get('sortAsc','asc'); columnFilters python: view.get_columnfilters_js(chart); unpivotsettings python:view.get_unpivotSettings(chart);"
@@ -69,7 +69,7 @@
     <div style="clear:both">
     </div>
 
-    <div class="google_buttons_bar" tal:attributes="class python:isAnon and 'google_buttons_bar' or 'google_buttons_bar google_buttons_bar_ex';">
+    <div class="google_buttons_bar">
         <a id="googlechart_export_svg_button"
            class="googlechart_button"
            style="display:none;"
