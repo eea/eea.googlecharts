@@ -9,6 +9,9 @@ Changelog
 * Change: removed google_buttons_bar class change after the move of
   the google_buttons_bar with the help of javascript
   [ichimdav refs #69065]
+* Bug fix: enabled custom tooltip for pie chart
+  [lucas refs #68200]
+
 
 15.0 - (2016-02-03)
 -------------------
