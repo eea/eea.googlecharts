@@ -3,7 +3,10 @@ Changelog
 
 15.1.dev0 - (unreleased)
 ------------------------
-* Changed: removed google_buttons_bar class change after the move of
+* Change: cleaned chart.js and view.css of styles or code that
+  was not needed anymore after ticket 31309
+  [ichimdav refs #69065]
+* Change: removed google_buttons_bar class change after the move of
   the google_buttons_bar with the help of javascript
   [ichimdav refs #69065]
 

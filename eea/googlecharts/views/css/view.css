@@ -438,50 +438,46 @@ li.eea-moved-in-container{
 }
 
 @media screen and (max-width: 479px) {
-    #googlechart_dashboard .googlechart_table_top div.googlechart_filter,
-    .googlechart_dashboard .googlechart_table_top div.googlechart_filter,
-    #googlechart_dashboard .googlechart_table_bottom div.googlechart_filter,
-    .googlechart_dashboard .googlechart_table_bottom div.googlechart_filter {
+    #googlechart_dashboard .googlechart_table_top .googlechart_filter,
+    .googlechart_dashboard .googlechart_table_top .googlechart_filter,
+    #googlechart_dashboard .googlechart_table_bottom .googlechart_filter,
+    .googlechart_dashboard .googlechart_table_bottom .googlechart_filter {
         width: 100%;
         float: none;
-        margin: 0 auto 1em!important;
     }
 }
 
 @media screen and (min-width: 480px) and (max-width: 627px) {
-    #googlechart_dashboard .googlechart_table_top div.googlechart_filter,
-    .googlechart_dashboard .googlechart_table_top div.googlechart_filter,
-    #googlechart_dashboard .googlechart_table_bottom div.googlechart_filter,
-    .googlechart_dashboard .googlechart_table_bottom div.googlechart_filter {
-        width: 48%;
-        min-width: 200px;
+    #googlechart_dashboard .googlechart_table_top .googlechart_filter,
+    .googlechart_dashboard .googlechart_table_top .googlechart_filter,
+    #googlechart_dashboard .googlechart_table_bottom .googlechart_filter,
+    .googlechart_dashboard .googlechart_table_bottom .googlechart_filter {
+        min-width: 48%;
     }
 }
 
 @media screen and (min-width: 628px) and (max-width: 767px) {
-    #googlechart_dashboard .googlechart_table_top div.googlechart_filter,
-    .googlechart_dashboard .googlechart_table_top div.googlechart_filter,
-    #googlechart_dashboard .googlechart_table_bottom div.googlechart_filter,
-    .googlechart_dashboard .googlechart_table_bottom div.googlechart_filter {
-        width: 32%;
-        min-width: 200px;
+    #googlechart_dashboard .googlechart_table_top .googlechart_filter,
+    .googlechart_dashboard .googlechart_table_top .googlechart_filter,
+    #googlechart_dashboard .googlechart_table_bottom .googlechart_filter,
+    .googlechart_dashboard .googlechart_table_bottom .googlechart_filter {
+        min-width: 32%;
     }
 }
 
 @media screen and (min-width: 768px) {
-    #googlechart_dashboard .googlechart_table_top div.googlechart_filter,
-    .googlechart_dashboard .googlechart_table_top div.googlechart_filter,
-    #googlechart_dashboard .googlechart_table_bottom div.googlechart_filter,
-    .googlechart_dashboard .googlechart_table_bottom div.googlechart_filter {
-        width: 24%;
-        min-width: 200px;
+    #googlechart_dashboard .googlechart_table_top .googlechart_filter,
+    .googlechart_dashboard .googlechart_table_top .googlechart_filter,
+    #googlechart_dashboard .googlechart_table_bottom .googlechart_filter,
+    .googlechart_dashboard .googlechart_table_bottom .googlechart_filter {
+        min-width: 24%;
     }
 }
 
-#googlechart_dashboard .googlechart_table_top div.googlechart_filter ul,
-.googlechart_dashboard .googlechart_table_top div.googlechart_filter ul,
-#googlechart_dashboard .googlechart_table_bottom div.googlechart_filter ul,
-.googlechart_dashboard .googlechart_table_bottom div.googlechart_filter ul {
+#googlechart_dashboard .googlechart_table_top .googlechart_filter ul,
+.googlechart_dashboard .googlechart_table_top .googlechart_filter ul,
+#googlechart_dashboard .googlechart_table_bottom .googlechart_filter ul,
+.googlechart_dashboard .googlechart_table_bottom .googlechart_filter ul {
     height: 100px;
     overflow: auto;
 }
@@ -494,14 +490,14 @@ li.eea-moved-in-container{
     float: left;
 }
 
-#googlechart_dashboard .googlechart_filters_side div.googlechart_filter li,
-.googlechart_dashboard .googlechart_filters_side div.googlechart_filter li{
+#googlechart_dashboard .googlechart_filters_side .googlechart_filter li,
+.googlechart_dashboard .googlechart_filters_side .googlechart_filter li{
     display:block;
     float: none;
 }
 
-#googlechart_dashboard div.googlechart_filter .charts-menu-button,
-.googlechart_dashboard div.googlechart_filter .charts-menu-button{
+#googlechart_dashboard .googlechart_filter .charts-menu-button,
+.googlechart_dashboard .googlechart_filter .charts-menu-button{
     vertical-align:top;
     margin-right:5px;
 }
