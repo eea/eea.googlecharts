@@ -186,7 +186,6 @@ function updateFilterDivs(){
         }
         var container = jQuery(filterUl).closest("div.googlechart_filter");
         var button = jQuery(container).find("div.charts-menu-button");
-        //jQuery(filterUl).width(jQuery(container).width() - jQuery(button).width() - 10);
     });
     patched_each(jQuery(".googlechart_filter"), function(idx, filter){
         filterWidth = jQuery(filter).width();
@@ -196,7 +195,6 @@ function updateFilterDivs(){
         if ((containerWidth !== 0) && ((containerWidth + containerLeft - filterWidth - filterLeft) < filterWidth)){
             if (!jQuery(filter).hasClass("eea-beautified")){
                 jQuery(filter).addClass("eea-beautified");
-                //jQuery(filter).after("<div style='clear:both'></div>");
             }
         }
     });
