@@ -1,5 +1,5 @@
 var allowedTypesForCharts = ['string', 'number', 'boolean', 'date', 'datetime', 'timeofday'];
-var allowedChartsForTooltips = ['BarChart', 'ColumnChart', 'LineChart', 'ComboChart', 'AreaChart', 'SteppedAreaChart', 'ScatterChart', 'GeoChart'];
+var allowedChartsForTooltips = ['PieChart', 'BarChart', 'ColumnChart', 'LineChart', 'ComboChart', 'AreaChart', 'SteppedAreaChart', 'ScatterChart', 'GeoChart'];
 
 function splitColumn(columnName, defaultvalue, defaulttype, unpivotSettings){
     var unpivotBase = "";
