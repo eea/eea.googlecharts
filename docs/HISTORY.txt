@@ -1,6 +1,9 @@
 Changelog
 =========
 
+15.2.dev0 - (unreleased)
+------------------------
+
 15.1 - (2016-02-15)
 -------------------
 * Change: cleaned chart.js and view.css of styles or code that
