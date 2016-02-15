@@ -1,8 +1,11 @@
 Changelog
 =========
 
-15.1.dev0 - (unreleased)
+15.2.dev0 - (unreleased)
 ------------------------
+
+15.1 - (2016-02-15)
+-------------------
 * Change: cleaned chart.js and view.css of styles or code that
   was not needed anymore after ticket 31309
   [ichimdav refs #69065]
@@ -11,7 +14,6 @@ Changelog
   [ichimdav refs #69065]
 * Bug fix: enabled custom tooltip for pie chart
   [lucas refs #68200]
-
 
 15.0 - (2016-02-03)
 -------------------
