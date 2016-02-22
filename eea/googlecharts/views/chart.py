@@ -784,8 +784,12 @@ class Export(BrowserView):
             charts = charts.split(",")
 
         thumbs_to_delete = self.context.objectIds()
-        if thumbs_to_delete:
-            self.context.manage_delObjects(thumbs_to_delete)
+        # 68199 remove images only if they are no longer
+        # referenced which happens only if you delete a chart
+        old_thumbs = list(set(thumbs_to_delete).difference(charts))
+
+        if old_thumbs:
+            self.context.manage_delObjects(old_thumbs)
             notify(InvalidateCacheEvent(self.context))
 
 
