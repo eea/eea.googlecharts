@@ -3,6 +3,10 @@ Changelog
 
 15.2.dev0 - (unreleased)
 ------------------------
+* Bugfix: cleanup_thumbs takes again into consideration the
+  chart ids that are found within the edit form when attempting
+  to delete old thumbnails
+  [ichimdav refs #68199]
 
 15.1 - (2016-02-15)
 -------------------
