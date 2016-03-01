@@ -1,8 +1,8 @@
 Changelog
 =========
 
-15.2.dev0 - (unreleased)
-------------------------
+15.2 - (2016-03-01)
+-------------------
 * Bugfix: cleanup_thumbs takes again into consideration the
   chart ids that are found within the edit form when attempting
   to delete old thumbnails
