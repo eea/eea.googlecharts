@@ -670,7 +670,11 @@ function prepareForChart(options){
             datatable : dataForChart,
             preparedColumns : settings.preparedColumns
         };
-        applyFormattersOnDataTable(formatterOptions);
+        // 69908 apply formatters on dataTable only if chartTypes is Table
+        // this avoids strange html tooltips on non Table charts
+        if (settings.chartType === "Table") {
+            applyFormattersOnDataTable(formatterOptions);
+        }
     }
     var tmpDataView = new google.visualization.DataView(dataForChart);
 
