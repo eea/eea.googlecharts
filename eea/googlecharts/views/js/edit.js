@@ -5817,6 +5817,16 @@ function addNewChart(){
         newColumns.prepared.push(newPrepared);
     });
 
+    var tmpNewColumnsPrepared = [];
+    for (var i = 0; i < available_columns_ordered.length; i++){
+        for (var j = 0; j < newColumns.prepared.length; j++){
+            if (newColumns.prepared[j].name === available_columns_ordered[i]) {
+                tmpNewColumnsPrepared.push(newColumns.prepared[j])
+            }
+        }
+    }
+    newColumns.prepared = tmpNewColumnsPrepared;
+
     var options = {
         id : newChartId,
         name : "New Chart",
