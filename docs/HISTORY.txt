@@ -8,6 +8,8 @@ Changelog
   which contained html and css markup upon the activation of suc
   formatters
   [ichimdav refs #69908]
+* Bugfix: Fixed order of column labels when labels are numbers
+  [szabozo0 refs #69360]
 
 15.2 - (2016-03-01)
 -------------------

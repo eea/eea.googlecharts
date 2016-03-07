@@ -88,6 +88,14 @@ class Edit(BrowserView):
         jsonStr.append(u'}')
         return u''.join(jsonStr)
 
+    def get_columns_ordered(self):
+        """ Columns
+        """
+        vocab = queryUtility(IVocabularyFactory,
+                             name="eea.daviz.vocabularies.FacetsVocabulary")
+        terms = [term.token for term in vocab(self.context)]
+        return json.dumps(terms)
+
     def get_rows(self):
         """ Rows
         """
