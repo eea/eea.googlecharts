@@ -5821,7 +5821,7 @@ function addNewChart(){
     for (var i = 0; i < available_columns_ordered.length; i++){
         for (var j = 0; j < newColumns.prepared.length; j++){
             if (newColumns.prepared[j].name === available_columns_ordered[i]) {
-                tmpNewColumnsPrepared.push(newColumns.prepared[j])
+                tmpNewColumnsPrepared.push(newColumns.prepared[j]);
             }
         }
     }
