@@ -3663,7 +3663,7 @@ function populateTableForPivot(){
         cols = [];
         patched_each(columnsForPivot,function(key, value){
             cols.push(key);
-        })
+        });
     }
     for (var i = 0; i < cols.length; i++){
         var value = columnsForPivot[cols[i]];
