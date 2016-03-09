@@ -151,6 +151,7 @@ function addCustomFilter(options){
     filterDashboard.bind(filterFilter, filterChart);
 
     google.visualization.events.addListener(filterFilter, 'statechange', function(event){
+        disableBaseHref();
         settings.paramsForHandler.columnsToBeShown =  settings.callerFilter.columnsToBeShown;
         settings.customHandler(settings.paramsForHandler);
         updateFilterDivs();
@@ -159,6 +160,7 @@ function addCustomFilter(options){
     google.visualization.events.addListener(filterDashboard, 'ready', function(event){
         settings.customReadyHandler(settings.paramsForHandler);
         updateFilterDivs();
+        enableBaseHref();
     });
 
 

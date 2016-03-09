@@ -898,6 +898,7 @@ jQuery(document).ready(function($){
         jQuery('#googlechart_view').css('width', new_width);
         gl_charts.googlechart_view.setOption('width', new_width);
         gl_charts.googlechart_view.setOption('resized_width', new_width);
+        disableBaseHref();
         gl_charts.googlechart_view.draw();
     }));
 

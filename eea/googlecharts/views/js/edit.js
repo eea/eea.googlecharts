@@ -3399,6 +3399,26 @@ function generateNewTable(sortOrder, isFirst){
     patched_each(transformedTable.available_columns,function(col_key, col){
         tmpSortOrder.push([col_key, "visible"]);
     });
+    if (typeof(sortOrder) === 'undefined'){
+        isDefault = true;
+        var i;
+        for (i = 0; i < tmpSortOrder.length; i++){
+            if (jQuery.inArray(tmpSortOrder[i][0], available_columns_ordered) === -1){
+                isDefault = false;
+            }
+        }
+        if (isDefault){
+            var newTmpSortOrder = [];
+            for (i = 0; i < available_columns_ordered.length; i++){
+                for (var j = 0; j < tmpSortOrder.length; j++){
+                    if (available_columns_ordered[i] === tmpSortOrder[j][0]){
+                        newTmpSortOrder.push(tmpSortOrder[j]);
+                    }
+                }
+            }
+            tmpSortOrder = newTmpSortOrder;
+        }
+    }
     sortOrder = typeof(sortOrder) === 'undefined' ? tmpSortOrder : sortOrder;
 
     var filterable_columns = [];
@@ -3632,7 +3652,21 @@ function checkVisiblePivotValueColumns(){
 function populateTableForPivot(){
     jQuery("#pivotConfigHeader").empty();
     jQuery("#pivotConfigDropZones").empty();
-    patched_each(columnsForPivot,function(key, value){
+    var defaultCols = true;
+    patched_each(columnsForPivot, function(key, value){
+        if (jQuery.inArray(key, available_columns_ordered) === -1){
+            defaultCols = false;
+        }
+    });
+    var cols = available_columns_ordered;
+    if (!defaultCols){
+        cols = [];
+        patched_each(columnsForPivot,function(key, value){
+            cols.push(key);
+        })
+    }
+    for (var i = 0; i < cols.length; i++){
+        var value = columnsForPivot[cols[i]];
         var th =
                 "<th class='columnheader' columnnr='"+value.nr+"'>"+
                 "<div class='draggable' columnnr='"+value.nr+"'>"+
@@ -3646,7 +3680,7 @@ function populateTableForPivot(){
                 "<div class='droppable' columnnr='"+value.nr+"'>Drop here pivoting column</div>"+
                 "</td>";
         jQuery(td).appendTo(jQuery("#pivotConfigDropZones"));
-    });
+    }
 
     jQuery(".pivotGooglechartTable .eea-icon").click(function(){
         var col_nr =  parseInt(jQuery(this).parent().attr("columnnr"), 10);

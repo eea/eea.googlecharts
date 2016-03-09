@@ -1,3 +1,22 @@
+var baseHref;
+var baseHrefCounter = 0;
+function disableBaseHref(){
+    if ($('base').attr('href') !== ""){
+        baseHref = $('base').attr('href');
+    }
+    $('base').attr('href', '');
+}
+
+function enableBaseHref(){
+    baseHrefCounter++;
+    setTimeout(function(){
+        baseHrefCounter--;
+        if (baseHrefCounter === 0){
+            $('base').attr('href', baseHref);
+        }
+    }, 2000);
+}
+
 if (!window.EEAGoogleCharts) {
     window.EEAGoogleCharts = {};
 }
@@ -207,6 +226,7 @@ function updateFilterDivs(){
                 jQuery("<br/>").insertAfter(labels.eq(0));
                 jQuery("<br/>").insertBefore(labels.eq(1));
                 labels.eq(1).css("float", "right");
+                labels.eq(0).css("float", "left");
             }
         });
     });
@@ -468,6 +488,7 @@ function drawGoogleChart(options){
             var filter = new google.visualization.ControlWrapper(filterSettings);
 
             google.visualization.events.addListener(filter, 'statechange', function(event){
+                disableBaseHref();
                 /* workaround for #19292 */
                 if (filter.getControlType() === "NumberRangeFilter"){
                     jQuery("#"+filter.getContainerId()).find("span.google-visualization-controls-rangefilter-thumblabel").eq(0).text(filter.getState().lowValue);
@@ -490,6 +511,7 @@ function drawGoogleChart(options){
                     .addClass("google-visualization-controls-rangefilter-thumblabel")
                     .text(filter.getState().highValue)
                     .insertAfter(slider);
+                enableBaseHref();
             });
             /* end of workaround */
 
@@ -511,21 +533,24 @@ function drawGoogleChart(options){
             settings.chartReadyEvent();
             updateFilterDivs();
             fixSVG("#"+settings.chartViewDiv);
+            enableBaseHref();
         });
 
         google.visualization.events.addListener(dashboard, 'error', function(event){
             jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartErrorEvent();
+            enableBaseHref();
         });
 
         jQuery(filtersArray).each(function(key,value){
             google.visualization.events.addListener(value, 'statechange', function(event){
+                disableBaseHref();
                 applyCustomFilters(customFilterParams);
             });
             updateFilterDivs();
         });
 
-
+        disableBaseHref();
         dashboard.draw(dataView);
     }
     else {
@@ -535,12 +560,15 @@ function drawGoogleChart(options){
             settings.chartReadyEvent();
             updateFilterDivs();
             fixSVG("#"+settings.chartViewDiv);
+            enableBaseHref();
         });
 
         google.visualization.events.addListener(chart, 'error', function(event){
             jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
             settings.chartErrorEvent();
+            enableBaseHref();
         });
+        disableBaseHref();
         chart.draw();
     }
 
