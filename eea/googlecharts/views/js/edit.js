@@ -7,6 +7,8 @@ var chartWrapper;
 var Templates = {};
 var ChartNotes = [];
 
+var NiceMessages = {};
+
 var defaultChart = {
            'chartType':'LineChart',
            "dataTable": [["column1", "column2"], ["A", 1], ["B", 2], ["C", 3], ["D", 2]],
@@ -1634,6 +1636,12 @@ function redrawEditorChart() {
         fixSVG("#google-visualization-charteditor-preview-div-chart");
     });
 
+    google.visualization.events.addListener(tmpwrapper, 'error', function(event){
+        if (jQuery("#google-visualization-charteditor-preview-div-chart").find("div[id^='google-visualization-errors']")){
+            jQuery("#google-visualization-charteditor-preview-div-chart").html(NiceMessages[chartEditor.getChartWrapper().getType()]);
+        }
+    });
+
     tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
 
     chartWrapper = tmpwrapper;
@@ -3178,6 +3186,7 @@ function openEditor(elementId) {
     });
 
     google.visualization.events.addListener(chartEditor, 'error', function(event){
+        jQuery(".googlechart_editor_loading").addClass("googlechart_editor_loaded");
         if (!shouldListenErrorEvent){
             shouldListenErrorEvent = true;
             return;
@@ -4636,7 +4645,57 @@ function fillEditorDialogWithDelay(){
     fillEditorDialog({});
 }
 
+function fetchNextMessage(){
+    var found = false;
+    jQuery.each(NiceMessages, function(key,value){
+        if ((!found) && (value === '')){
+            found = true;
+            var ChartEditor = new google.visualization.ChartEditor();
+            var data = new google.visualization.DataTable();
+            if (key === 'GeoChart'){
+                data.addColumn('number', 'First column');
+                data.addRows([[0]]);
+            }
+            else {
+                data.addColumn('string', 'First column');
+                data.addRows([['First string value']]);
+            }
+            var wrapper = new google.visualization.ChartWrapper({
+                'chartType':key,
+                'dataTable':data
+            });
+            ChartEditor.openDialog(wrapper, {});
+
+            NiceMessages[key] = jQuery("#google-visualization-charteditor-preview-div-chart").html()
+            ChartEditor.closeDialog();
+            ChartEditor = null;
+            fetchNextMessage();
+        }
+    });
+}
+
+function buildNiceMessages(){
+    var data = new google.visualization.DataTable();
+    var ChartEditor = new google.visualization.ChartEditor();
+    data.addColumn('string', 'First column');
+    data.addRows([['First string value']]);
+    var wrapper = new google.visualization.ChartWrapper({
+        'chartType':'TableChart',
+        'dataTable':data
+    });
+    ChartEditor.openDialog(wrapper, {});
+
+    var chartTypes = ChartEditor.getAllChartTypes();
+    for (var i = 0; i < chartTypes.length; i++){
+        NiceMessages[chartTypes[i]] = '';
+    }
+    ChartEditor.closeDialog();
+    ChartEditor = null;
+    fetchNextMessage();
+}
+
 openEditChart = function(id){
+    buildNiceMessages();
     backupColors = [];
     backupOptionColors = [];
     jQuery("html").append(charteditor_css);
