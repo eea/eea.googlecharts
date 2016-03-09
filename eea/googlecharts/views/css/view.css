@@ -126,10 +126,10 @@ ul.googlechart_tabs li:first-of-type a:hover {
     width: 130px;
 }
 
-#googlechart_dashboard .google-visualization-controls-slider-handle,
+/*#googlechart_dashboard .google-visualization-controls-slider-handle,
 .googlechart_dashboard .google-visualization-controls-slider-handle {
     width: 130px;
-}
+}*/
 
 .charts-inline-block input {
     width: 90%;
@@ -470,7 +470,7 @@ li.eea-moved-in-container{
     .googlechart_dashboard .googlechart_table_top .googlechart_filter,
     #googlechart_dashboard .googlechart_table_bottom .googlechart_filter,
     .googlechart_dashboard .googlechart_table_bottom .googlechart_filter {
-        min-width: 24%;
+        width: 32%;
     }
 }
 

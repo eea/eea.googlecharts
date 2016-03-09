@@ -10,6 +10,8 @@ Changelog
   [ichimdav refs #69908]
 * Bugfix: Fixed order of column labels when labels are numbers
   [szabozo0 refs #69360, #70147]
+* Bugfix: Fixed filters layout
+  [szabozo0 refs #69537]
 
 15.2 - (2016-03-01)
 -------------------
