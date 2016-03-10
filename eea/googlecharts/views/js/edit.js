@@ -5931,7 +5931,7 @@ function addNewChart(){
     var options = {
         id : newChartId,
         name : "New Chart",
-        config : JSON.stringify({'chartType':'Table','options': {'legend':'none'}}),
+        config : JSON.stringify({'chartType':'Table','options': {'legend':'none','useFirstColumnAsDomain':true}}),
         columns : JSON.stringify(newColumns),
         sortFilter : "__disabled__"
     };

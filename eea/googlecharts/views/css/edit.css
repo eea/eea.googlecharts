@@ -963,7 +963,7 @@ dl.portlet .dashboard-widget,
 }
 
 select[name=googlechart_filterposition] {
-    width: 100%;
+    width: 90%;
 }
 
 .google-visualization-charteditor-menu li {
