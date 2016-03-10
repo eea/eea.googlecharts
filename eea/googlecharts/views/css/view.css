@@ -169,9 +169,18 @@ ul.googlechart_tabs li:first-of-type a:hover {
     white-space:nowrap;
 }
 
+/*#googlechart_filters:nth-child(3), .googlechart_filters:nth-child(3){
+    float:right;
+}
+
+#googlechart_filters:nth-child(1), .googlechart_filters:nth-child(1){
+    float:left;
+}*/
+
 #googlechart_filters > div,
 .googlechart_filters > div {
-    background: #f3f3f3;
+    background: #fff;
+    border: 2px solid #069;
     margin-bottom:1em;
     padding-bottom: 1em;
     min-height: 80px;
@@ -222,7 +231,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
     min-width: 180px;
     max-width: 200px;
     overflow: hidden;
-    margin: 0 0px 15px;
+    margin: 0 0px 3px;
 }
 
 .figure-chart-live .googlechart_table_right #googlechart_filters > div,
@@ -254,7 +263,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
     min-width: 180px;
     max-width: 200px;
     overflow: hidden;
-    margin: 0 0px 15px 0;
+    margin: 0 0px 3px 0;
 }
 
 .figure-chart-live .googlechart_table_left #googlechart_filters > div,
@@ -462,6 +471,9 @@ li.eea-moved-in-container{
     #googlechart_dashboard .googlechart_table_bottom .googlechart_filter,
     .googlechart_dashboard .googlechart_table_bottom .googlechart_filter {
         min-width: 32%;
+        padding:0;
+        margin-right:3px;
+        margin-bottom:3px;
     }
 }
 
@@ -471,6 +483,9 @@ li.eea-moved-in-container{
     #googlechart_dashboard .googlechart_table_bottom .googlechart_filter,
     .googlechart_dashboard .googlechart_table_bottom .googlechart_filter {
         width: 32%;
+        padding:0;
+        margin-right:3px;
+        margin-bottom:3px;
     }
 }
 
@@ -478,6 +493,14 @@ li.eea-moved-in-container{
 .googlechart_dashboard .googlechart_table_top .googlechart_filter ul,
 #googlechart_dashboard .googlechart_table_bottom .googlechart_filter ul,
 .googlechart_dashboard .googlechart_table_bottom .googlechart_filter ul {
+    height: 100px;
+    overflow: auto;
+}
+
+#googlechart_dashboard .googlechart_table_left .googlechart_filter ul,
+.googlechart_dashboard .googlechart_table_left .googlechart_filter ul,
+#googlechart_dashboard .googlechart_table_right .googlechart_filter ul,
+.googlechart_dashboard .googlechart_table_right .googlechart_filter ul {
     height: 100px;
     overflow: auto;
 }

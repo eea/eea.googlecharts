@@ -14,6 +14,8 @@ Changelog
   [szabozo0 refs #69537]
 * Feature: Improved daviz help when data doesn't satisfy the chart type
   [szabozo0 refs #70029]
+* Feature: Improved filters layout
+  [szabozo0 refs #70278]
 
 15.2 - (2016-03-01)
 -------------------
