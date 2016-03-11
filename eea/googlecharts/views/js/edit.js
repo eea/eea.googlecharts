@@ -1338,6 +1338,9 @@ function moveIfFirst(){
             charteditor_dialog.removeClass("modal-dialog");
             charteditor_dialog.addClass("googlechart-editor");
             isFirstEdit = false;
+            if (jQuery(".google-visualization-charteditor-data-mismatch").length > 0){
+                jQuery(".google-visualization-charteditor-panel-navigation-cell:contains('Start')").click()
+            }
         }
         else{
             setTimeout(moveIfFirst, 500);
@@ -1637,7 +1640,7 @@ function redrawEditorChart() {
 
     google.visualization.events.addListener(tmpwrapper, 'error', function(event){
         if (jQuery("#google-visualization-charteditor-preview-div-chart").find("div[id^='google-visualization-errors']")){
-            jQuery("#google-visualization-charteditor-preview-div-chart").html(NiceMessages[chartEditor.getChartWrapper().getType()]);
+            jQuery("#google-visualization-charteditor-preview-div-chart").html(NiceMessages[chartEditor.getChartWrapper().getType()].split("Here's an example:").join(""));
         }
     });
 
@@ -3188,20 +3191,8 @@ function openEditor(elementId) {
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
         editedChartStatus = true;
-        setTimeout(function(){
-            redrawEditorChart();
-        },100);
         jQuery(".googlechart_editor_loading").addClass("googlechart_editor_loaded");
         jQuery(".googlechart_palette_loading").removeClass("googlechart_palette_loading");
-
-/*        jQuery(".googlechart_editor_loading").addClass("googlechart_editor_loaded");
-        if (!shouldListenErrorEvent){
-            shouldListenErrorEvent = true;
-            return;
-        }
-        var settings_str = chartEditor.getChartWrapper().toJSON();
-        jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
-        editedChartStatus = false;*/
     });
     moveIfFirst();
 

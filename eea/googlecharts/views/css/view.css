@@ -493,7 +493,7 @@ li.eea-moved-in-container{
 .googlechart_dashboard .googlechart_table_top .googlechart_filter ul,
 #googlechart_dashboard .googlechart_table_bottom .googlechart_filter ul,
 .googlechart_dashboard .googlechart_table_bottom .googlechart_filter ul {
-    height: 150px;
+    height: 100px;
     overflow: auto;
 }
 

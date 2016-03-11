@@ -1417,6 +1417,7 @@ li.googlechart > fieldset > div > a > span {
 }
 
 .googlechart {
+    height:355px;
     width:450px;
     float:left;
     margin-right:15px;
@@ -2301,4 +2302,12 @@ div.field[id*='multiples_settings'] {
 
 .multiples-preview-sm-header-item-rename{
     float:right;
+}
+
+.ex_text{
+    display:none;
+}
+
+#google-visualization-charteditor-thumbnail-imageradarchart {
+    display:none;
 }
