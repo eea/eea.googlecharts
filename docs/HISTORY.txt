@@ -1,8 +1,11 @@
 Changelog
 =========
 
-15.3.dev0 - (unreleased)
+15.4.dev0 - (unreleased)
 ------------------------
+
+15.3 - (2016-03-14)
+-------------------
 * Bugfix: formatters are now applied only for Table charts.
   This condition fixes the tooltips for other types of charts
   which contained html and css markup upon the activation of suc
