@@ -316,6 +316,9 @@ function updateCounters(){
         if (JSON.parse(elem.find(".googlechart_configjson").attr("value")).chartType === 'Table'){
             elem.find(".googlechart-sort-box").hide();
             elem.find(".googlechart-sort-box select").attr("selected_value", "__disabled__");
+            if (elem.find(".googlechart-sort-box-placeholder").length === 0){
+                jQuery("<div class='googlechart-sort-box placeholder'></div>").insertAfter(elem.find(".googlechart-notes-box"));
+            }
         }
         else{
             elem.find(".googlechart-sort-box").show();
@@ -1526,6 +1529,7 @@ function redrawEditorChart() {
                 if (series[idx - 1] !== undefined) {
                     delete opt.lineWidth;
                     delete opt.pointSize;
+                    delete opt.type;
                     jQuery.extend(true, series[idx - 1], opt);
                 } else {
                     series[idx - 1] = opt;
@@ -1539,7 +1543,9 @@ function redrawEditorChart() {
         }
     });
     patched_each(tmpwrapper_json.options.series || {}, function(key, value){
-        delete value.color;
+        if (value.color){
+            delete value.color;
+        }
     });
 
 //    jQuery.extend(true, series, tmpwrapper_json.options.series);

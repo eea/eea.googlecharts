@@ -1417,13 +1417,16 @@ li.googlechart > fieldset > div > a > span {
 }
 
 .googlechart {
-    height:355px;
     width:450px;
     float:left;
     margin-right:15px;
     min-height: 355px;
 }
 
+.googlechart-sort-box.placeholder{
+    height:18px;
+    background-color:white;
+}
 .googlechart_name {
     width: 150px !important;
 }
@@ -2061,7 +2064,7 @@ input[type=text].eea-googlechart-trendlines-config-value{
 }
 
 .settingsDiv{
-    width:150px;
+    width:310px;
     float:right;
 }
 
@@ -2310,4 +2313,12 @@ div.field[id*='multiples_settings'] {
 
 #google-visualization-charteditor-thumbnail-imageradarchart {
     display:none;
+}
+
+.sm-settings-table {
+    table-layout:fixed;
+    width:300px;
+}
+.sm-settings-table .sm-settings-table-label{
+    width:150px;
 }

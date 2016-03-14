@@ -808,11 +808,14 @@ input.googlechart-chart-size {
     background-color: #ccc;
     font-size:20px;
     width:30px;
-    height:20px;
-    padding:5px;
+    height:30px;
+    padding-top:4px;
 }
 
 .btn-multiples-sm-enlarge:hover{
     cursor: pointer;
 }
 
+.google-visualization-table {
+    border: 0!important;
+}
