@@ -1,6 +1,9 @@
 Changelog
 =========
 
+15.4.dev0 - (unreleased)
+------------------------
+
 15.3 - (2016-03-14)
 -------------------
 * Bugfix: formatters are now applied only for Table charts.
