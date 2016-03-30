@@ -2322,3 +2322,16 @@ div.field[id*='multiples_settings'] {
 .sm-settings-table .sm-settings-table-label{
     width:150px;
 }
+
+.removable-column-remove {
+    cursor:pointer;
+}
+
+.multiples-original-columns .draggable-column{
+    cursor:pointer;
+}
+
+.multiples-matrix-config-column-horizontal,
+.multiples-matrix-config-column-vertical{
+    z-index:1030;
+}
