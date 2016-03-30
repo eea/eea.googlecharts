@@ -291,8 +291,8 @@
                         if (!gl_charts['googlechart_view_$vhash']) {
                             gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
                         } else {
-                            jQuery('#googlechart_view_$vhash').css('width', settings_$vhash[4]);
-                            gl_charts['googlechart_view_$vhash'].setOption('width', settings_$vhash[4]);
+                            jQuery('#googlechart_view_$vhash').css('width', chart_json_$vhash.options.width);
+                            gl_charts['googlechart_view_$vhash'].setOption('width', chart_json_$vhash.options.width);
                             gl_charts['googlechart_view_$vhash'].setOption('legend', chart_json_$vhash.options.legend);
                             gl_charts['googlechart_view_$vhash'].draw();
                         }

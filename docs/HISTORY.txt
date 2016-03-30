@@ -16,6 +16,8 @@ Changelog
   [szabozo0 refs #70029]
 * Feature: Improved filters layout
   [szabozo0 refs #70278]
+* Bugfix: Fixed chart responsive size when embedded in indicator
+  [szabozo0 refs #69537]
 
 15.2 - (2016-03-01)
 -------------------
