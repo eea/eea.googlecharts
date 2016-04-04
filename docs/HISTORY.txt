@@ -3,6 +3,14 @@ Changelog
 
 15.4.dev0 - (unreleased)
 ------------------------
+* Bugfix: Fixed filters layout
+  [szabozo0 refs #69537]
+* Feature: Improved daviz help when data doesn't satisfy the chart type
+  [szabozo0 refs #70029]
+* Feature: Improved filters layout
+  [szabozo0 refs #70278]
+* Bugfix: Fixed chart responsive size when embedded in indicator
+  [szabozo0 refs #69537]
 
 15.3 - (2016-03-14)
 -------------------

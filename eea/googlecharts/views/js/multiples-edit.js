@@ -1,4 +1,8 @@
 jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
+    var current_widget = ".googlechart-widget-" + view;
+    if (jQuery(current_widget + " select:visible").length === 0){
+        return;
+    }
     function setDefaultsIfMissing(){
         var possible_matrix = true;
         if (jQuery(".multiples-matrix-item-overlay.selected").length > 0){
@@ -40,7 +44,6 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
         jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
     }
 
-    var current_widget = ".googlechart-widget-" + view;
     function updateDragAndDrops(){
         jQuery(".multiples-matrix-config-column-horizontal")
             .remove();
@@ -175,9 +178,16 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 .addClass("multiples-matrix-config")
                 .css("display","none")
                 .appendTo(".multiples-config");
+            var height = 0;
+            if (jQuery(".multiples-config").closest(".googlechart-widget-add").length === 0){
+                height = jQuery(".multiples-config").closest(".googlechart-widget-edit").height()-120;
+            }
+            else {
+                height = jQuery(".multiples-config").closest(".googlechart-widget-add").height()-120;
+            }
             jQuery("<div>")
                 .addClass("multiples-matrix")
-                .height(jQuery(".multiples-config").closest(".googlechart-widget-edit").height()-120)
+                .height(height)
                 .width(jQuery(".multiples-config").width() - jQuery(".multiples-base-preview").width() - 10)
                 .css("overflow", "scroll")
                 .appendTo(".multiples-config")
@@ -750,8 +760,8 @@ function redrawPreviewChart(base_chart, chartSettings){
             resize: function(){
                 jQuery(".settingsDiv .chartWidth").attr("value", jQuery(this).width());
                 jQuery(".settingsDiv .chartHeight").attr("value", jQuery(this).height());
-                jQuery("#multiples-resize").dialog("option", "minWidth", jQuery(this).width() + 200);
-                jQuery("#multiples-resize").dialog("option", "minHeight", jQuery(this).height() + 340);
+                jQuery("#multiples-resize").dialog("option", "minWidth", jQuery(this).width() + 400);
+                jQuery("#multiples-resize").dialog("option", "minHeight", jQuery(this).height() + 140);
             },
             stop: function(){
                 var prevWidth = chartSettings.width;
@@ -770,8 +780,8 @@ function redrawPreviewChart(base_chart, chartSettings){
                 jQuery(".settingsDiv .chartAreaLeft").attr("value", chartSettings.chartAreaLeft);
 
                 redrawPreviewChart(base_chart, chartSettings);
-                jQuery("#multiples-resize").dialog("option", "minWidth", chartSettings.width + 200);
-                jQuery("#multiples-resize").dialog("option", "minHeight", chartSettings.height + 340);
+                jQuery("#multiples-resize").dialog("option", "minWidth", chartSettings.width + 400);
+                jQuery("#multiples-resize").dialog("option", "minHeight", chartSettings.height + 140);
             }
         });
     var options_str = encodeURIComponent(JSON.stringify(chartSettings));
@@ -1206,44 +1216,54 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         var settingsDiv = jQuery("<div>")
             .addClass("settingsDiv")
             .appendTo(previewDiv);
-        settingsDiv.append("<label>Title</label>");
-        settingsDiv.append("<label class='help'>ex: {Y} - {X}</label>");
-        settingsDiv.append("<input class='chartsettings chartTitle' type='text'/>");
-        settingsDiv.append("<label>Area size</label>");
-        settingsDiv.append("<input class='chartsettings chartWidth' type='number'/>");
-        settingsDiv.append("<span>x</span>");
-        settingsDiv.append("<input class='chartsettings chartHeight' type='number'/>");
-        settingsDiv.append("<span>px</span>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-
-        settingsDiv.append("<label>Chart size</label>");
-        settingsDiv.append("<input class='chartsettings chartAreaWidth' type='number'/>");
-        settingsDiv.append("<span>x</span>");
-        settingsDiv.append("<input class='chartsettings chartAreaHeight' type='number'/>");
-        settingsDiv.append("<span>px</span>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-
-        settingsDiv.append("<label>Chart position</label>");
-        settingsDiv.append("<span>Left: </span>");
-        settingsDiv.append("<input class='chartsettings chartAreaLeft' type='number'/>");
-        settingsDiv.append("<span>px</span>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-        settingsDiv.append("<span>Top: </span>");
-        settingsDiv.append("<input class='chartsettings chartAreaTop' type='number'/>");
-        settingsDiv.append("<span>px</span>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-
-        settingsDiv.append("<label>Display legend</label>");
-        settingsDiv.append("<input class='chartsettings chartLegend' type='checkbox'/>");
-        settingsDiv.append("<div style='clear:both'> </div>");
+        settingsDiv.append("<table class='sm-settings-table'>"+
+        "<tr>"+
+            "<td class='sm-settings-table-label'><label>Title</label><label class='help'>ex: {Y} - {X}</label></td>"+
+            "<td><input class='chartsettings chartTitle' type='text'/></td>"+
+        "</tr>"+
+        "<tr>"+
+            "<td><label>Area size</label></td>"+
+            "<td><input class='chartsettings chartWidth' type='number'/><span>x</span><input class='chartsettings chartHeight' type='number'/><span>px</span></td>"+
+        "</tr>"+
+        "<tr>"+
+            "<td><label>Chart size</label></td>"+
+            "<td><input class='chartsettings chartAreaWidth' type='number'/><span>x</span><input class='chartsettings chartAreaHeight' type='number'/><span>px</span></td>"+
+        "</tr>"+
+        "<tr>"+
+            "<td>"+
+            "<label>Chart left position</label>"+
+            "</td>"+
+            "<td>"+
+            "<input class='chartsettings chartAreaLeft' type='number'/>"+
+            "<span>px</span>"+
+            "</td>"+
+        "</tr>"+
+        "<tr>"+
+            "<td>"+
+            "<label>Chart top position</label>"+
+            "</td>"+
+            "<td>"+
+            "<input class='chartsettings chartAreaTop' type='number'/>"+
+            "<span>px</span>"+
+            "</td>"+
+        "</tr>"+
+        "<tr>"+
+            "<td>"+
+            "<label>Display legend</label>"+
+            "</td>"+
+            "<td>"+
+            "<input class='chartsettings chartLegend' type='checkbox'/>"+
+            "</td>"+
+        "</tr>"+
+        "</table>")
 
         previewDiv.dialog({
             dialogClass: "googlechart-dialog googlechart-preview-dialog",
             modal: true,
-            width: chartSettings.width + 200,
-            height: chartSettings.height + 340,
-            minWidth: chartSettings.width + 200,
-            minHeight: chartSettings.height + 340,
+            width: chartSettings.width + 400,
+            height: chartSettings.height + 140,
+            minWidth: chartSettings.width + 400,
+            minHeight: chartSettings.height + 140,
             title: "Size adjustments",
             open: function(){
                 redrawPreviewChart(base_chart, chartSettings);
@@ -1379,6 +1399,9 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             top: multiples_settings.settings.chartAreaTop,
             left: multiples_settings.settings.chartAreaLeft
         };
+        if (base_chart_settings.row_filters === ""){
+            base_chart_settings.row_filters = "{}";
+        }
         var chartConfig = [
             base_chart_settings.id,
             JSON.parse(base_chart_settings.config),
