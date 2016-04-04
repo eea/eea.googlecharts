@@ -1,15 +1,8 @@
 Changelog
 =========
 
-15.3.dev0 - (unreleased)
+15.4.dev0 - (unreleased)
 ------------------------
-* Bugfix: formatters are now applied only for Table charts.
-  This condition fixes the tooltips for other types of charts
-  which contained html and css markup upon the activation of suc
-  formatters
-  [ichimdav refs #69908]
-* Bugfix: Fixed order of column labels when labels are numbers
-  [szabozo0 refs #69360, #70147]
 * Bugfix: Fixed filters layout
   [szabozo0 refs #69537]
 * Feature: Improved daviz help when data doesn't satisfy the chart type
@@ -18,6 +11,16 @@ Changelog
   [szabozo0 refs #70278]
 * Bugfix: Fixed chart responsive size when embedded in indicator
   [szabozo0 refs #69537]
+
+15.3 - (2016-03-14)
+-------------------
+* Bugfix: formatters are now applied only for Table charts.
+  This condition fixes the tooltips for other types of charts
+  which contained html and css markup upon the activation of suc
+  formatters
+  [ichimdav refs #69908]
+* Bugfix: Fixed order of column labels when labels are numbers
+  [szabozo0 refs #69360, #70147]
 
 15.2 - (2016-03-01)
 -------------------
