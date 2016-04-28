@@ -326,19 +326,9 @@ function drawGoogleChart(options){
     }
     var chartOptions = settings.chartJson.options;
     var dataTable = settings.chartDataTable;
-    var trendlines = {};
     var series_settings = {};
     series_settings[settings.chartId] = {};
     var series = series_settings[settings.chartId];
-
-    patched_each(chartOptions.trendlines || {}, function(name, trendline){
-        for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
-            if (dataTable.getColumnId(i) === name){
-                trendlines[i - 1] = trendline;
-            }
-        }
-    });
-    settings.chartJson.options.trendlines = trendlines;
 
     var series_counter = 0;
     settings.chartJson.options.series = settings.chartJson.options.series || {};
@@ -370,7 +360,6 @@ function drawGoogleChart(options){
         ax.format = ax.format.replace(/[^0-9.,#]/g, '');
     }
     /* end of removing duplicated suffixes */
-    settings.chartJson.view = {};
     var chart = new google.visualization.ChartWrapper(settings.chartJson);
 
     var filtersArray = [];

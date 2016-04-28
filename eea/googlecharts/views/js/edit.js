@@ -1484,30 +1484,18 @@ function resizeTableConfigurator(forced){
 
 function redrawEditorChart() {
     var tmpwrapper = chartEditor.getChartWrapper();
-    tmpwrapper.setView();
     var tmpwrapper_json = JSON.parse(tmpwrapper.toJSON());
     delete tmpwrapper_json.options.intervals;
     delete tmpwrapper_json.options.interval;
-    delete tmpwrapper_json.options.trendlines;
     delete tmpwrapper_json.options.colors;
     tmpwrapper.setOption("intervals", {});
     tmpwrapper.setOption("interval", {});
-    tmpwrapper.setOption("trendlines", {});
     var tmp_chart = jQuery("#googlechartid_tmp_chart");
     var tmp_chart_options = tmp_chart.find(".googlechart_options").attr("value");
     var chartOptions = JSON.parse(tmp_chart_options);
     var dataTable = tmpwrapper_json.dataTable;
-    var trendlines = {};
     var series = {};
 
-    patched_each(chartOptions.trendlines || {}, function(name, trendline){
-        patched_each(dataTable.cols, function(idx, col){
-            if (col.id === name){
-                trendlines[idx - 1] = trendline;
-            }
-        });
-    });
-    chartOptions.trendlines = trendlines;
     var def_opt = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
     delete def_opt.options.colors;
     patched_each(chartOptions.series || {}, function(name, opt){
@@ -1521,6 +1509,7 @@ function redrawEditorChart() {
                 if (series[idx - 1] !== undefined) {
                     delete opt.lineWidth;
                     delete opt.pointSize;
+                    delete opt.errorBars;
                     jQuery.extend(true, series[idx - 1], opt);
                 } else {
                     series[idx - 1] = opt;
@@ -1534,7 +1523,9 @@ function redrawEditorChart() {
         }
     });
     patched_each(tmpwrapper_json.options.series || {}, function(key, value){
-        delete value.color;
+        if (value){
+            delete value.color;
+        }
     });
 
 //    jQuery.extend(true, series, tmpwrapper_json.options.series);
@@ -2042,359 +2033,6 @@ function addPaletteConfig(){
     });
 }
 
-function addTrendlineConfig(){
-    var section = addEEACustomGooglechartEditorTab("trendlines", "Trendlines");
-    section.click(function(){
-        var panel = jQuery("#google-visualization-charteditor-trendlines-panel");
-        function addSection(section, name){
-            function addSelect(section, sectionname, title, name, values){
-                jQuery("<div>")
-                    .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                    .text(title)
-                    .appendTo(section);
-                jQuery("<select>")
-                    .addClass("eea-googlechart-trendlines-" + name)
-                    .addClass("eea-googlechart-trendlines-config-value")
-                    .addClass("eea-googlechart-" + sectionname)
-                    .addClass("eea-googlechart-select")
-                    .appendTo(section);
-                jQuery("<div>")
-                    .attr("style", "clear:both;")
-                    .appendTo(section);
-
-                patched_each(values, function(idx, value){
-                    jQuery("<option>")
-                        .attr("value", value)
-                        .text(value)
-                        .appendTo(".eea-googlechart-"+sectionname+".eea-googlechart-trendlines-" + name);
-                });
-            }
-            function addInput(section, sectionname, title, name){
-                jQuery("<div>")
-                    .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                    .text(title)
-                    .appendTo(section);
-                jQuery("<input type='text'>")
-                    .addClass("eea-googlechart-trendlines-" + name)
-                    .addClass("eea-googlechart-trendlines-config-value")
-                    .addClass("eea-googlechart-" + sectionname)
-                    .appendTo(section);
-
-                jQuery("<div>")
-                    .attr("style", "clear:both;")
-                    .appendTo(section);
-            }
-            function addColorField(section, sectionname, title, name){
-                jQuery("<div>")
-                    .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                    .text(title)
-                    .appendTo(section);
-                var colorcontainer = jQuery("<div>")
-                    .addClass("eea-googlechart-trendlines-" + name)
-                    .addClass("eea-googlechart-trendlines-config-value")
-                    .addClass("eea-googlechart-" + sectionname)
-                    .addClass("charts-inline-block")
-                    .attr("title","Automatic")
-                    .appendTo(section);
-                jQuery("<div>")
-                    .addClass("charts-flat-menu-button-indicator")
-                    .appendTo(colorcontainer);
-                jQuery("<div>")
-                    .addClass("eea-icon eea-icon-caret-down")
-                    .appendTo(colorcontainer);
-            }
-            function addCheckbox(section, sectionname, title, name){
-                jQuery("<div>")
-                    .addClass("google-visualization-charteditor-section-title charts-inline-block")
-                    .text(title)
-                    .appendTo(section);
-                jQuery("<input type='checkbox'>")
-                    .addClass("eea-googlechart-trendlines-" + name)
-                    .addClass("eea-googlechart-trendlines-config-value")
-                    .addClass("eea-googlechart-" + sectionname)
-                    .appendTo(section);
-
-                jQuery("<div>")
-                    .attr("style", "clear:both;")
-                    .appendTo(section);
-            }
-            var trendlinetypes = ["disabled", "linear", "exponential"];
-            var pixels = ["auto", "0px", "1px", "2px", "3px", "4px", "5px", "6px", "7px", "8px", "9px", "10px"];
-            var opacities = ["auto", "0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1"];
-
-            addSelect(section, name, "Trendline", "type", trendlinetypes);
-
-            var subsection = jQuery("<div>")
-                .addClass("eea-googlechart-" + name + "-settings")
-                .appendTo(section)
-                .hide();
-            addCheckbox(subsection, name, "Visible in legend", "visible");
-            addInput(subsection, name, "Label", "label");
-            addSelect(subsection, name, "Line thickness", "linewidth", pixels);
-            addSelect(subsection, name, "Fill opacity", "fillopacity", opacities);
-            addColorField(subsection, name, "Color", "color");
-        }
-        function setValuesForSection(name, trendline){
-            var type = trendline.type || 'disabled';
-            var visible = trendline.visibleInLegend;
-            if (visible === undefined){
-                visible = false;
-            }
-
-            var label = trendline.labelInLegend;
-            if (label === undefined){
-                label = "";
-            }
-            var linewidth = trendline.lineWidth;
-            if (linewidth === undefined){
-                linewidth = 'auto';
-            }
-            else {
-                linewidth = linewidth.toString() + "px";
-            }
-            var fillopacity = trendline.opacity;
-            if (fillopacity === undefined){
-                fillopacity = 'auto';
-            }
-
-            var color = trendline.color;
-            colorTitle = color;
-            if (colorTitle === undefined){
-                colorTitle = 'Automatic';
-                color = "#FFFFFF";
-            }
-
-            jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-type").attr("value", type);
-
-            if (visible){
-                jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-visible").attr("checked", "checked");
-            }
-            jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-label").attr("value", label);
-            jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-linewidth").attr("value", linewidth);
-            jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-fillopacity").attr("value", fillopacity);
-            jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-color")
-                .attr("title", colorTitle);
-            jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-color").find(".charts-flat-menu-button-indicator")
-                .css("background-color", color);
-        }
-        function getValuesForSection(name){
-            var type = jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-type").attr("value");
-            var visible = jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-visible:checked").attr("value");
-            var label = jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-label").attr("value");
-            var linewidth = jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-linewidth").attr("value");
-            var fillopacity = jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-fillopacity").attr("value");
-            var color = jQuery(".eea-googlechart-" + name + ".eea-googlechart-trendlines-color").attr("title");
-
-            var trendline = {};
-            if (type !== "disabled"){
-                trendline.type = type;
-                if (linewidth !== "auto"){
-                    trendline.lineWidth = parseInt(linewidth, 10);
-                }
-                if (fillopacity !== "auto"){
-                    trendline.opacity = parseFloat(fillopacity);
-                }
-                if (color !== "Automatic"){
-                    trendline.color = color;
-                }
-                if (label !== ''){
-                    trendline.labelInLegend = label;
-                }
-                if (visible === undefined){
-                    visible = false;
-                }
-                else{
-                    visible = true;
-                }
-                trendline.visibleInLegend = visible;
-            }
-
-            return trendline;
-        }
-
-        jQuery("<div>")
-            .addClass("google-visualization-charteditor-multi-section-title eea-googlechart-trendlines-column-title eea-googlechart-custom-column-title")
-            .text("Columns")
-            .appendTo(panel);
-
-        jQuery("<select>")
-            .addClass("google-visualization-charteditor-multi-section-chooser")
-            .addClass("eea-googlechart-trendlines-column-selector")
-            .appendTo(".eea-googlechart-trendlines-column-title")
-            .change(function(){
-                jQuery(".eea-googlechart-column-section")
-                    .removeClass("active");
-
-                jQuery(".eea-googlechart-column" + jQuery(this).attr("value"))
-                    .addClass("active");
-            });
-
-        var chartColumns_str = jQuery("#googlechartid_tmp_chart .googlechart_columns").val();
-
-        var chartColumns = {};
-        if (chartColumns_str === ""){
-            chartColumns.original = {};
-            chartColumns.prepared = {};
-        }
-        else{
-            chartColumns = JSON.parse(chartColumns_str);
-        }
-
-        var columns = [];
-        var isFirst = true;
-        patched_each(chartColumns.prepared, function(idx, prepared_column){
-            if ((prepared_column.status === 1) && (prepared_column.role !== 'old-data') && (prepared_column.role !== 'interval')){
-                if (isFirst){
-                    isFirst = false;
-                }
-                else{
-                    columns.push({"name":prepared_column.name, "label":prepared_column.fullname});
-                }
-            }
-        });
-        for (var i = 0; i < columns.length; i++){
-            jQuery("<option>")
-                .attr("value", columns[i].name)
-                .text(columns[i].label)
-                .appendTo(".eea-googlechart-trendlines-column-selector");
-
-            section = jQuery("<div>")
-                .addClass("google-visualization-charteditor-section")
-                .addClass("eea-googlechart-column-section")
-                .addClass("eea-googlechart-column" + columns[i].name)
-                .appendTo(panel);
-
-            addSection(section, columns[i].name);
-        }
-        jQuery(".eea-googlechart-trendlines-column-selector").trigger("change");
-
-        jQuery(".eea-googlechart-select").focus(function(){
-            jQuery(".eea-googlechart-trendlines-color.selected")
-                .removeClass("selected");
-            jQuery(".eea-googlechart-trendlines-colorpalette").remove();
-        });
-
-        jQuery(".eea-googlechart-trendlines-config-value").change(function(){
-            var tmp_chart_options = jQuery("#googlechartid_tmp_chart .googlechart_options");
-            var options = JSON.parse(tmp_chart_options.attr("value"));
-            delete options.trendlines;
-            options.trendlines = {};
-            for (var i = 0; i < columns.length; i++){
-                var trendline = getValuesForSection(columns[i].name);
-                if (trendline.type !== undefined){
-                    jQuery(".eea-googlechart-" + columns[i].name + "-settings")
-                        .show();
-                    options.trendlines[columns[i].name] = trendline;
-                }
-                else{
-                    jQuery(".eea-googlechart-" + columns[i].name + "-settings")
-                        .hide();
-                }
-            }
-            tmp_chart_options.attr("value", JSON.stringify(options));
-            redrawEditorChart();
-        });
-
-        jQuery(".eea-googlechart-trendlines-color").click(function(evt){
-            var colorcontainer = jQuery(this);
-            jQuery(".eea-googlechart-trendlines-colorpalette").remove();
-            var customdialog = jQuery(".googlecharts-customdialog");
-            var parentleft = customdialog.offset().left;
-            var parenttop = customdialog.offset().top;
-            var left = colorcontainer.offset().left;
-            var top = colorcontainer.offset().top;
-            jQuery(":focus").blur();
-            jQuery("<div>")
-                .addClass("eea-googlechart-trendlines-colorpalette")
-                .offset({top:top - parenttop + 28, left:left-parentleft})
-                .css("z-index", 99999)
-                .appendTo(".googlecharts-customdialog");
-            var grayscale = ["rgb(0, 0, 0)",
-                            "rgb(67, 67, 67)",
-                            "rgb(102, 102, 102)",
-                            "rgb(153, 153, 153)",
-                            "rgb(183, 183, 183)",
-                            "rgb(204, 204, 204)",
-                            "rgb(217, 217, 217)",
-                            "rgb(239, 239, 239)",
-                            "rgb(243, 243, 243)",
-                            "rgb(255, 255, 255)"];
-            for (var i = 0; i < 10; i++){
-                jQuery("<div>")
-                    .attr("title", grayscale[i])
-                    .css("background-color", grayscale[i])
-                    .addClass("eea-googlechart-trendlines-palette-color")
-                    .addClass("eea-googlechart-trendlines-palette-color-clickable")
-                    .appendTo(".eea-googlechart-trendlines-colorpalette");
-            }
-            jQuery("<div>")
-                .attr("style", "clear:both")
-                .css("margin-bottom", "3px")
-                .appendTo(".eea-googlechart-trendlines-colorpalette");
-            var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
-            var selectedPalette = chartPalettes[selectedPaletteId].colors;
-            var colorcount = 0;
-            for (i = 0; i < selectedPalette.length; i++){
-                jQuery("<div>")
-                    .attr("title", selectedPalette[i])
-                    .css("background-color", selectedPalette[i])
-                    .addClass("eea-googlechart-trendlines-palette-color")
-                    .addClass("eea-googlechart-trendlines-palette-color-clickable")
-                    .appendTo(".eea-googlechart-trendlines-colorpalette");
-                colorcount++;
-                if (colorcount === 10){
-                    colorcount = 0;
-                    jQuery("<div>")
-                        .attr("style", "clear:both")
-                        .appendTo(".eea-googlechart-trendlines-colorpalette");
-                }
-            }
-            jQuery("<div>")
-                .attr("style", "clear:both")
-                .css("margin-bottom", "3px")
-                .appendTo(".eea-googlechart-trendlines-colorpalette");
-
-            jQuery("<div>")
-                .attr("title", "Automatic")
-                .text("Automatic")
-                .addClass("eea-googlechart-trendlines-palette-color-auto")
-                .addClass("eea-googlechart-trendlines-palette-color-clickable")
-                .appendTo(".eea-googlechart-trendlines-colorpalette");
-
-            jQuery("<div>")
-                .attr("style", "clear:both")
-                .appendTo(".eea-googlechart-trendlines-colorpalette");
-            jQuery(".eea-googlechart-trendlines-palette-color-clickable").click(function(){
-                jQuery(".eea-googlechart-trendlines-color.selected").find(".charts-flat-menu-button-indicator")
-                    .css("background-color", jQuery(this).css("background-color"));
-                jQuery(".eea-googlechart-trendlines-color.selected")
-                    .attr("title", jQuery(this).attr("title"))
-                    .removeClass("selected");
-                jQuery(".eea-googlechart-trendlines-colorpalette").remove();
-                jQuery(".eea-googlechart-trendlines-config-value").eq(0).trigger("change");
-            });
-        });
-
-        jQuery(".google-visualization-charteditor-panel").click(function(evt){
-            if (jQuery(evt.target).closest(".eea-googlechart-trendlines-color").length === 0){
-                jQuery(".eea-googlechart-trendlines-colorpalette").remove();
-            }
-            jQuery(".eea-googlechart-trendlines-color.selected")
-                .removeClass("selected");
-            jQuery(evt.target).closest(".eea-googlechart-trendlines-color")
-                .addClass("selected");
-        });
-        var options = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value"));
-
-        patched_each(options.trendlines || {}, function(name, settings){
-            setValuesForSection(name, settings || {});
-        });
-
-        jQuery(".eea-googlechart-trendlines-config-value").eq(0).change();
-
-    });
-}
-
 function addIntervalConfig(){
     var section = addEEACustomGooglechartEditorTab("interval", "Intervals");
 
@@ -2814,7 +2452,6 @@ function openEditor(elementId) {
     if (wrapperString.length > 0){
         wrapperJSON = JSON.parse(wrapperString);
         chart = wrapperJSON;
-//        delete cleanChartOptions.series;
         jQuery.extend(true, chart.options, cleanChartOptions);
     }
     else{
@@ -3188,17 +2825,6 @@ function openEditor(elementId) {
     });
     moveIfFirst();
 
-    var shouldAddTrendlinesToEditor = true;
-    for (i = 0; i < tableForChart.getNumberOfColumns(); i++){
-        var type = tableForChart.getColumnType(i);
-        if ((type !== 'date') && (type !== 'number')){
-            shouldAddTrendlinesToEditor = false;
-        }
-        if ((type === 'date') && (i !== 0)){
-            shouldAddTrendlinesToEditor = false;
-        }
-    }
-
     try{
       addHelperDisplay(chartEditor);
     }
@@ -3207,13 +2833,9 @@ function openEditor(elementId) {
     }
     setTimeout(function(){
         jQuery("#custom-palette-configurator").remove();
-        jQuery("#custom-trendlines-configurator").remove();
         jQuery("#custom-interval-configurator").remove();
         chartEditor.openDialog(chartWrapper, {});
         addPaletteConfig();
-        if (shouldAddTrendlinesToEditor){
-            addTrendlineConfig();
-        }
         if (shouldAddIntervalsToEditor){
             addIntervalConfig();
         }
@@ -3808,13 +3430,15 @@ function chartEditorSave(id){
         }
     });
     patched_each(settings_json.options.series || {}, function(key, value){
-        delete value.lineDashStyle;
-        if (value.pointShape !== undefined){
-            delete value.pointShape.type;
-            delete value.pointShape.rotation;
-            delete value.pointShape.sides;
+        if (value){
+            delete value.lineDashStyle;
+            if (value.pointShape !== undefined){
+                delete value.pointShape.type;
+                delete value.pointShape.rotation;
+                delete value.pointShape.sides;
+            }
+            jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
         }
-        jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
     });
     patched_each(options_json.series || {}, function(key, value){
         if (!isNaN(key)){
@@ -6390,7 +6014,7 @@ function manageCustomSettings() {
 
 function overrideGooglePalette(){
     jQuery(document).delegate(".google-visualization-charteditor-settings-td .google-visualization-charteditor-panel-navigation-cell", "click", function(){
-        if (jQuery.inArray(jQuery(this).attr("id"), ["custom-interval-configurator", "custom-palette-configurator", "custom-trendlines-configurator"]) !== -1){
+        if (jQuery.inArray(jQuery(this).attr("id"), ["custom-interval-configurator", "custom-palette-configurator"]) !== -1){
             return;
         }
         backupColors = [];
@@ -6543,9 +6167,6 @@ function overrideGooglePalette(){
     jQuery(document).click(function(evt){
         if (jQuery(evt.target).closest(".eea-googlechart-intervals-color").length === 0){
             jQuery(".eea-googlechart-intervals-colorpalette").remove();
-        }
-        if (jQuery(evt.target).closest(".eea-googlechart-trendlines-color").length === 0){
-            jQuery(".eea-googlechart-trendlines-colorpalette").remove();
         }
     });
 }
