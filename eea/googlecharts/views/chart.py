@@ -1,28 +1,30 @@
 """ GoogleCharts View
 """
+import hashlib
 import json
 import logging
-from eventlet.green import urllib2
-import hashlib
-import lxml.etree
-import re
 from PIL import Image
 from cStringIO import StringIO
-from zope.component import queryAdapter, getMultiAdapter
-from zope.component import getUtility
-from zope.schema.interfaces import IVocabularyFactory
+from copy import deepcopy
+
+import lxml.etree
+import re
+
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
-from eea.app.visualization.zopera import IFolderish
+from eventlet.green import urllib2
+from zope.component import getUtility
+from zope.component import queryAdapter, getMultiAdapter
+from zope.component import queryUtility
+from zope.event import notify
+from zope.schema.interfaces import IVocabularyFactory
+from eea.app.visualization.controlpanel.interfaces import IDavizSettings
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.view import ViewForm
+from eea.app.visualization.zopera import IFolderish
 from eea.converter.interfaces import IConvert, IWatermark
-from eea.googlecharts.config import EEAMessageFactory as _
-from eea.app.visualization.controlpanel.interfaces import IDavizSettings
-from copy import deepcopy
-from zope.component import queryUtility
 from eea.googlecharts.cache import InvalidateCacheEvent
-from zope.event import notify
+from eea.googlecharts.config import EEAMessageFactory as _
 
 logger = logging.getLogger('eea.googlecharts')
 
@@ -202,8 +204,8 @@ class View(ViewForm):
         if options:
             options = json.loads(options)
             ca_options = options.get('chartArea', {})
-            ca_width = 0
-            ca_height = 0
+            ca_width = 0.0
+            ca_height = 0.0
             if ca_options:
                 if padding == 'fixed':
                     # get original dimensions of the chartArea and padding in %
@@ -236,9 +238,9 @@ class View(ViewForm):
 
             if ca_width + ca_height > 0:
                 if ca_height < 100:
-                    ca_height = 100
+                    ca_height = 100.0
                 if ca_width < 100:
-                    ca_width = 100
+                    ca_width = 100.0
 
                 # convert new dimensions in % for the required width/height
                 width = (100 * ca_width) / req_width
