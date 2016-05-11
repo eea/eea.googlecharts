@@ -93,9 +93,9 @@ def create_default_views(obj, evt):
 
     # Add chart
     query = {'charts': [chart], 'notes': []}
-    query = json.dumps(query)
+    str_query = json.dumps(query)
 
-    request.form['chartsconfig'] = query
+    request.form['chartsconfig'] = str_query
     submit_data = getMultiAdapter((obj, request),
                                     name=u'googlechart.submit_data')
     submit_data()
