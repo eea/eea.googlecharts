@@ -1,7 +1,7 @@
 Changelog
 =========
 
-15.4.dev0 - (unreleased)
+15.5.dev0 - (unreleased)
 ------------------------
 * Bugfix: Fixed filters layout
   [szabozo0 refs #69537]
@@ -11,6 +11,11 @@ Changelog
   [szabozo0 refs #70278]
 * Bugfix: Fixed chart responsive size when embedded in indicator
   [szabozo0 refs #69537]
+
+15.4 - (2016-05-19)
+-------------------
+* Bug fix: Fix pylint warnings
+  [ichim-david refs #71940]
 
 15.3 - (2016-03-14)
 -------------------

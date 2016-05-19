@@ -24,8 +24,8 @@ class Resizer(BrowserView):
         new_width = self.request.get("new_width", "")
         new_height = self.request.get("new_height", "")
 
-        if old_src == "" or old_width == "" or old_height == "" or \
-            new_src == "" or new_width == "" or new_height == "":
+        if "" in [old_src, old_width, old_height, new_src, new_width,
+                  new_height]:
             return "error"
         for field in self.context.schema.fields():
             value = field.getAccessor(self.context)()
@@ -39,7 +39,7 @@ class Resizer(BrowserView):
                         for iframe in iframes:
                             if iframe.get("width") == old_width and \
                                 iframe.get("height") == old_height and \
-                                iframe.get("src") == old_src:
+                                    iframe.get("src") == old_src:
                                 has_changes = True
                                 iframe.set("width", new_width)
                                 iframe.set("height", new_height)
