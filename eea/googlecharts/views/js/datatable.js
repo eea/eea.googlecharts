@@ -543,6 +543,7 @@ function prepareForChart(options){
             nextColName = settings.originalDataTable.available_columns[settings.columns[column_index + 1]];
         }
         var colType = settings.originalDataTable.properties[column];
+        var yearType = ((colType.columnType === 'year') || (colType.valueType === 'year'));
         var role = "data";
         if(colType === undefined){
             colType = 'string';
@@ -556,6 +557,9 @@ function prepareForChart(options){
         var isTooltip = false;
         patched_each(settings.preparedColumns, function(pc_idx, pc_column){
             if (pc_column.fullname === colName){
+                if (yearType){
+                    pc_column.yearType = true;
+                }
                 if (pc_column.hasOwnProperty("role")){
                     role = pc_column.role;
                     if (role === 'tooltip'){
@@ -675,11 +679,27 @@ function prepareForChart(options){
         if (settings.chartType === "Table") {
             applyFormattersOnDataTable(formatterOptions);
         }
+        // 72256 apply formatter for year column type
+        patched_each(settings.preparedColumns, function(tmp_idx, tmpcol){
+            if (tmpcol.yearType){
+                var yearformat = {};
+                yearformat.decimalSymbol = "";
+                yearformat.fractionDigits = "0";
+                yearformat.groupingSymbol = "";
+                yearformat.negativeParens = "";
+                if (tmpcol.formatters && tmpcol.formatters.hasOwnProperty("numberformatter")){
+                    yearformat.prefix = tmpcol.formatters.numberformatter.prefix;
+                    yearformat.suffix = tmpcol.formatters.numberformatter.suffix;
+                }
+                var numberformatter = new google.visualization.NumberFormat(yearformat);
+                numberformatter.format(formatterOptions.datatable, tmp_idx);
+            }
+        });
     }
     var tmpDataView = new google.visualization.DataView(dataForChart);
 
     if (settings.sortBy !== ""){
-        pos = jQuery.inArray(settings.sortBy, settings.columns);
+        var pos = jQuery.inArray(settings.sortBy, settings.columns);
         if (pos > -1){
             var tmp_sort = tmpDataView.getSortedRows(pos);
             if (!settings.sortAsc){

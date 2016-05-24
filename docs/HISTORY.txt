@@ -3,6 +3,8 @@ Changelog
 
 15.5.dev0 - (unreleased)
 ------------------------
+* Bug fix: Daviz datatype 'year:year' visualized as decimal
+  [lucas refs #72256]
 
 15.4 - (2016-05-19)
 -------------------
