@@ -7,6 +7,9 @@ Changelog
   [lucas refs #72256]
 * Bug fix: Daviz display issue: labels overlapping on bars
   [lucas refs #72346]
+* Bug fix: Daviz edit issue: labels overlapping on bars
+  [lucas refs #72346]
+
 
 15.4 - (2016-05-19)
 -------------------
