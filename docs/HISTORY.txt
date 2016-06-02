@@ -1,6 +1,9 @@
 Changelog
 =========
 
+15.7.dev0 - (unreleased)
+------------------------
+
 15.6 - (2016-06-02)
 -------------------
 * Bug fix: Fixed small multiples configuration page, allow more small
