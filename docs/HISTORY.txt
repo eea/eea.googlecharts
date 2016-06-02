@@ -1,6 +1,9 @@
 Changelog
 =========
 
+15.6.dev0 - (unreleased)
+------------------------
+
 15.5 - (2016-06-02)
 -------------------
 * Bug fix: Daviz datatype 'year:year' visualized as decimal
