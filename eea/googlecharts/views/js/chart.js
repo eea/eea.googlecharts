@@ -990,7 +990,7 @@ function drawSMCharts(smc_settings) {
         if ((!multiples_settings.matrix.enabled) && (!c_settings.enabled)){
             return;
         }
-        var delimiters = JSON.stringify(c_settings.possibleLabels);
+        var delimiters = JSON.stringify(c_settings.possibleLabels) + smc_settings.container.selector;
         var smc_container_id = settings.chartViewsDiv + '_' + getHashCode(delimiters);
         var smc_widget = jQuery('<div>', {
             'class': container_class,

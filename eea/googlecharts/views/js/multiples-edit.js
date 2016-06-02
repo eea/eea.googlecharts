@@ -175,9 +175,16 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 .addClass("multiples-matrix-config")
                 .css("display","none")
                 .appendTo(".multiples-config");
+            var widget_height = 0
+            if (jQuery(".multiples-config").closest(".googlechart-widget-edit").length === 0){
+                widget_height = jQuery(".multiples-config").closest(".googlechart-widget-add").height();
+            }
+            else{
+                widget_height = jQuery(".multiples-config").closest(".googlechart-widget-edit").height();
+            }
             jQuery("<div>")
                 .addClass("multiples-matrix")
-                .height(jQuery(".multiples-config").closest(".googlechart-widget-edit").height()-120)
+                .height(widget_height-120)
                 .width(jQuery(".multiples-config").width() - jQuery(".multiples-base-preview").width() - 10)
                 .css("overflow", "scroll")
                 .appendTo(".multiples-config")
@@ -191,6 +198,9 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=300&height=300")
                 .appendTo(".multiples-base-preview");
             jQuery.getJSON(absolute_url + "/googlechart.get_data", function (data){
+                if (jQuery(".multiples-config-title").length !== 0){
+                    return;
+                }
                 var chart_path = jQuery(current_widget + " select").attr("value").split("/");
                 var chart_id = chart_path[chart_path.length - 1];
                 var base_chart_settings;
@@ -1708,6 +1718,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             dashboard_filters: null,
             interactive: false
         };
+debugger
         drawSMCharts(smcharts_settings);
         if (!multiples_settings.matrix.enabled){
             var sortableArea = jQuery(".multiples-preview-sm-area");

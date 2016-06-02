@@ -3,6 +3,9 @@ Changelog
 
 15.6.dev0 - (unreleased)
 ------------------------
+* Bug fix: Fixed small multiples configuration page, allow more small
+  multiples with identical settings on the same dashboard
+  [szabozo0 refs #72986]
 
 15.5 - (2016-06-02)
 -------------------
