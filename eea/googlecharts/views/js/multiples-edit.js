@@ -1718,7 +1718,6 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             dashboard_filters: null,
             interactive: false
         };
-debugger
         drawSMCharts(smcharts_settings);
         if (!multiples_settings.matrix.enabled){
             var sortableArea = jQuery(".multiples-preview-sm-area");
