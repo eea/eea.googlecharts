@@ -61,7 +61,7 @@ function fixSVG(container){
         } else {
             return;
         }
-        if (url_val.indexOf("url(") === 0){
+        if (url_val.indexOf("url("+baseForSVG) < 0){
             url_val = url_val.replace("url(", "url("+baseForSVG);
             jQuery(elem).attr(elem_attr, url_val);
         }
@@ -842,7 +842,7 @@ function getSMMatrixHeaders(charts){
         if (chart.possibleLabels.horizontal !== undefined) {
             horizontaltype = chart.possibleLabels.horizontal.type;
             if (jQuery.inArray(chart.possibleLabels.horizontal.value, allHorizontals) === -1){
-                allHorizontals.push(chart.possibleLabels.horizontal.value); 
+                allHorizontals.push(chart.possibleLabels.horizontal.value);
             }
             if (jQuery.inArray(chart.possibleLabels.horizontal.value, horizontals) === -1){
                 hasVisible = false;
@@ -852,7 +852,7 @@ function getSMMatrixHeaders(charts){
                     }
                 }
                 if (hasVisible){
-                    horizontals.push(chart.possibleLabels.horizontal.value); 
+                    horizontals.push(chart.possibleLabels.horizontal.value);
                 }
             }
         }

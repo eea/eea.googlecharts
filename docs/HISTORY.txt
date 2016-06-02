@@ -1,7 +1,7 @@
 Changelog
 =========
 
-15.5.dev0 - (unreleased)
+15.6.dev0 - (unreleased)
 ------------------------
 * Bugfix: Fixed filters layout
   [szabozo0 refs #69537]
@@ -11,6 +11,15 @@ Changelog
   [szabozo0 refs #70278]
 * Bugfix: Fixed chart responsive size when embedded in indicator
   [szabozo0 refs #69537]
+
+15.5 - (2016-06-02)
+-------------------
+* Bug fix: Daviz datatype 'year:year' visualized as decimal
+  [lucas refs #72256]
+* Bug fix: Daviz display issue: labels overlapping on bars
+  [lucas refs #72346]
+* Bug fix: Daviz edit issue: labels overlapping on bars
+  [lucas refs #72346]
 
 15.4 - (2016-05-19)
 -------------------
