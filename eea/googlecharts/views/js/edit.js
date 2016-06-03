@@ -2812,6 +2812,8 @@ function openEditor(elementId) {
         },100);
         jQuery(".googlechart_editor_loading").addClass("googlechart_editor_loaded");
         jQuery(".googlechart_palette_loading").removeClass("googlechart_palette_loading");
+
+//        verificare json daca errorbar a fost adaugat, daca da, adauga 2 coloane cu rol
     });
 
     google.visualization.events.addListener(chartEditor, 'error', function(event){
