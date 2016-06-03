@@ -1,8 +1,11 @@
 Changelog
 =========
 
-15.6.dev0 - (unreleased)
+15.7.dev0 - (unreleased)
 ------------------------
+
+15.6 - (2016-06-02)
+-------------------
 * Bug fix: Fixed small multiples configuration page, allow more small
   multiples with identical settings on the same dashboard
   [szabozo0 refs #72986]
