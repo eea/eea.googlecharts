@@ -1048,6 +1048,30 @@ function drawSMCharts(smc_settings) {
                                                     c_settings.possibleLabels,
                                                     current_table,
                                                     smcustomlabels);
+        if (smc_chartJson.options.hAxis === undefined) {
+            smc_chartJson.options.hAxis = {};
+        }
+        smc_chartJson.options.hAxis.title = getChartTitle(multiples_settings.settings.xAxisTitle,
+                                                    c_settings.possibleLabels,
+                                                    current_table,
+                                                    smcustomlabels);
+        if (smc_chartJson.options.vAxes === undefined) {
+            smc_chartJson.options.vAxes = [];
+        }
+        if (smc_chartJson.options.vAxes[0] === undefined) {
+            smc_chartJson.options.vAxes.push({});
+        }
+        smc_chartJson.options.vAxes[0].title = getChartTitle(multiples_settings.settings.leftAxisTitle,
+                                                    c_settings.possibleLabels,
+                                                    current_table,
+                                                    smcustomlabels);
+        if (smc_chartJson.options.vAxes[1] === undefined) {
+            smc_chartJson.options.vAxes.push({});
+        }
+        smc_chartJson.options.vAxes[1].title = getChartTitle(multiples_settings.settings.rightAxisTitle,
+                                                    c_settings.possibleLabels,
+                                                    current_table,
+                                                    smcustomlabels);
         smc_chartJson.options.enableInteractivity = smc_settings.interactive;
         if (!multiples_settings.settings.displayLegend){
             smc_chartJson.options.legend = 'none';
