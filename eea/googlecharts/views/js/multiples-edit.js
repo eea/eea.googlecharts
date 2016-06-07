@@ -19,6 +19,9 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 chartAreaTop : 1,
                 chartAreaWidth : 98,
                 chartTitle : "",
+                xAxisTitle : "",
+                leftAxisTitle : "",
+                rightAxisTitle : "",
                 displayLegend : false,
                 height : 100,
                 width : 100
@@ -175,9 +178,16 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 .addClass("multiples-matrix-config")
                 .css("display","none")
                 .appendTo(".multiples-config");
+            var widget_height = 0
+            if (jQuery(".multiples-config").closest(".googlechart-widget-edit").length === 0){
+                widget_height = jQuery(".multiples-config").closest(".googlechart-widget-add").height();
+            }
+            else{
+                widget_height = jQuery(".multiples-config").closest(".googlechart-widget-edit").height();
+            }
             jQuery("<div>")
                 .addClass("multiples-matrix")
-                .height(jQuery(".multiples-config").closest(".googlechart-widget-edit").height()-120)
+                .height(widget_height-120)
                 .width(jQuery(".multiples-config").width() - jQuery(".multiples-base-preview").width() - 10)
                 .css("overflow", "scroll")
                 .appendTo(".multiples-config")
@@ -191,6 +201,9 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 .attr("src", absolute_url + "/chart-full?chart=" + chart_id + "&width=300&height=300")
                 .appendTo(".multiples-base-preview");
             jQuery.getJSON(absolute_url + "/googlechart.get_data", function (data){
+                if (jQuery(".multiples-config-title").length !== 0){
+                    return;
+                }
                 var chart_path = jQuery(current_widget + " select").attr("value").split("/");
                 var chart_id = chart_path[chart_path.length - 1];
                 var base_chart_settings;
@@ -1191,6 +1204,9 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             chartAreaLeft: 1,
             chartAreaTop: 1,
             chartTitle: "",
+            xAxisTitle: "",
+            leftAxisTitle: "",
+            rightAxisTitle: "",
             displayLegend : false
         };
         jQuery.extend(true, chartSettings, common_settings);
@@ -1208,7 +1224,20 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             .appendTo(previewDiv);
         settingsDiv.append("<label>Title</label>");
         settingsDiv.append("<label class='help'>ex: {Y} - {X}</label>");
-        settingsDiv.append("<input class='chartsettings chartTitle' type='text'/>");
+        settingsDiv.append("<input class='chartsettings chartTitle' type='text'/><br/>");
+
+        settingsDiv.append("<label>x-Axis Title</label>");
+        settingsDiv.append("<label class='help'>ex: {Y} - {X}</label>");
+        settingsDiv.append("<input class='chartsettings xAxisTitle' type='text'/><br/>");
+
+        settingsDiv.append("<label>left-Axis Title</label>");
+        settingsDiv.append("<label class='help'>ex: {Y} - {X}</label>");
+        settingsDiv.append("<input class='chartsettings leftAxisTitle' type='text'/><br/>");
+
+        settingsDiv.append("<label>right-Axis Title</label>");
+        settingsDiv.append("<label class='help'>ex: {Y} - {X}</label>");
+        settingsDiv.append("<input class='chartsettings rightAxisTitle' type='text'/><br/>");
+
         settingsDiv.append("<label>Area size</label>");
         settingsDiv.append("<input class='chartsettings chartWidth' type='number'/>");
         settingsDiv.append("<span>x</span>");
@@ -1255,6 +1284,9 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 jQuery(".settingsDiv .chartAreaTop").attr("value", chartSettings.chartAreaTop);
                 jQuery(".settingsDiv .chartAreaLeft").attr("value", chartSettings.chartAreaLeft);
                 jQuery(".settingsDiv .chartTitle").attr("value", chartSettings.chartTitle);
+                jQuery(".settingsDiv .xAxisTitle").attr("value", chartSettings.xAxisTitle);
+                jQuery(".settingsDiv .leftAxisTitle").attr("value", chartSettings.leftAxisTitle);
+                jQuery(".settingsDiv .rightAxisTitle").attr("value", chartSettings.rightAxisTitle);
                 if (chartSettings.displayLegend === true){
                     jQuery(".settingsDiv .chartLegend").attr("checked", "checked");
                 }
@@ -1275,6 +1307,9 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                     chartSettings.width = parseInt(jQuery(".settingsDiv .chartWidth").attr("value"), 10);
                     chartSettings.height = parseInt(jQuery(".settingsDiv .chartHeight").attr("value"), 10);
                     chartSettings.chartTitle = jQuery(".settingsDiv .chartTitle").attr("value");
+                    chartSettings.xAxisTitle = jQuery(".settingsDiv .xAxisTitle").attr("value");
+                    chartSettings.leftAxisTitle = jQuery(".settingsDiv .leftAxisTitle").attr("value");
+                    chartSettings.rightAxisTitle = jQuery(".settingsDiv .rightAxisTitle").attr("value");
                     chartSettings.displayLegend = false;
                     if (jQuery(".settingsDiv .chartLegend").attr("checked") === "checked"){
                         chartSettings.displayLegend = true;
@@ -1350,7 +1385,10 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         chartAreaHeight: 98,
         chartAreaLeft: 1,
         chartAreaTop: 1,
-        chartTitle: ""
+        chartTitle: "",
+        xAxisTitle: "",
+        leftAxisTitle: "",
+        rightAxisTitle: ""
     };
     jQuery.extend(settings, common_settings);
     jQuery.getJSON(absolute_url + "/googlechart.get_data", function (data){

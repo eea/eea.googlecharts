@@ -251,12 +251,28 @@ function checkReadyForSparklines(skipwrapper){
 
 function svgCleanup(svg) {
     svg = jQuery(svg);
-    svg.find('g[clip-path]').removeAttr('clip-path');
+    svg.attr("xmlns","http://www.w3.org/2000/svg");
+    var r_elems = svg.find("rect[fill^='url']");
+    var g_elems = svg.find("g[clip-path^='url']");
+    var elems = jQuery.merge(r_elems, g_elems);
 
-    jQuery(svg).find("[fill^='url']").each(function() {
-        var elem = jQuery(this);
-        var fill = '#' + elem.attr('fill').split('#')[1];
-        elem.attr('fill', fill);
+    patched_each(elems, function(idx, elem){
+        var fillVal = jQuery(elem).attr("fill");
+        var clip_path = jQuery(elem).attr("clip-path");
+        var elem_attr, url_val;
+        if (fillVal === undefined){
+            elem_attr = 'clip-path';
+            url_val = jQuery(elem).attr("clip-path");
+        } else if (clip_path === undefined) {
+            elem_attr = 'fill';
+            url_val = jQuery(elem).attr("fill");
+        } else {
+            return;
+        }
+        if (url_val.indexOf("url(") === 0){
+            url_val = 'url(#' + url_val.split('#')[1].split('"').join('');
+            jQuery(elem).attr(elem_attr, url_val);
+        }
     });
 
     container = jQuery('<div/>');
@@ -902,7 +918,7 @@ function saveThumb(value, useName){
                             var img_url;
                             img_url = jQuery(thumb_id).find("img").attr("src");
                             if (img_url === undefined){
-                                svg = jQuery('<div>').append(jQuery(thumb_id).find("svg").clone()).html();
+                                svg = jQuery(thumb_id).find("svg").parent().html();
                                 svg = svgCleanup(svg);
                             }
                             else {

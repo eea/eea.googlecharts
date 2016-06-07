@@ -1,8 +1,28 @@
 Changelog
 =========
 
-15.4.dev0 - (unreleased)
+15.7.dev0 - (unreleased)
 ------------------------
+* Feature: Added possibility to set the horizontal and vertical axis labels
+  [szabozo0 refs #72986]
+
+15.6 - (2016-06-02)
+-------------------
+* Bug fix: Fixed small multiples configuration page, allow more small
+  multiples with identical settings on the same dashboard
+  [szabozo0 refs #72986]
+
+15.5 - (2016-06-02)
+-------------------
+* Bug fix: Daviz datatype 'year:year' visualized as decimal
+  [lucas refs #72256]
+* Bug fix: Daviz display issue: labels overlapping on bars
+  [lucas refs #72346]
+* Bug fix: Daviz edit issue: labels overlapping on bars
+  [lucas refs #72346]
+
+15.4 - (2016-05-19)
+-------------------
 * Bug fix: Fix pylint warnings
   [ichim-david refs #71940]
 

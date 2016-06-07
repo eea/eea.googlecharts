@@ -61,7 +61,7 @@ function fixSVG(container){
         } else {
             return;
         }
-        if (url_val.indexOf("url(") === 0){
+        if (url_val.indexOf("url("+baseForSVG) < 0){
             url_val = url_val.replace("url(", "url("+baseForSVG);
             jQuery(elem).attr(elem_attr, url_val);
         }
@@ -831,7 +831,7 @@ function getSMMatrixHeaders(charts){
         if (chart.possibleLabels.horizontal !== undefined) {
             horizontaltype = chart.possibleLabels.horizontal.type;
             if (jQuery.inArray(chart.possibleLabels.horizontal.value, allHorizontals) === -1){
-                allHorizontals.push(chart.possibleLabels.horizontal.value); 
+                allHorizontals.push(chart.possibleLabels.horizontal.value);
             }
             if (jQuery.inArray(chart.possibleLabels.horizontal.value, horizontals) === -1){
                 hasVisible = false;
@@ -841,7 +841,7 @@ function getSMMatrixHeaders(charts){
                     }
                 }
                 if (hasVisible){
-                    horizontals.push(chart.possibleLabels.horizontal.value); 
+                    horizontals.push(chart.possibleLabels.horizontal.value);
                 }
             }
         }
@@ -979,7 +979,7 @@ function drawSMCharts(smc_settings) {
         if ((!multiples_settings.matrix.enabled) && (!c_settings.enabled)){
             return;
         }
-        var delimiters = JSON.stringify(c_settings.possibleLabels);
+        var delimiters = JSON.stringify(c_settings.possibleLabels) + smc_settings.container.selector;
         var smc_container_id = settings.chartViewsDiv + '_' + getHashCode(delimiters);
         var smc_widget = jQuery('<div>', {
             'class': container_class,
@@ -1034,6 +1034,30 @@ function drawSMCharts(smc_settings) {
         }
         var smc_chartJson = jQuery.extend(true, {}, chartConfig[1]);
         smc_chartJson.options.title = getChartTitle(multiples_settings.settings.chartTitle,
+                                                    c_settings.possibleLabels,
+                                                    current_table,
+                                                    smcustomlabels);
+        if (smc_chartJson.options.hAxis === undefined) {
+            smc_chartJson.options.hAxis = {};
+        }
+        smc_chartJson.options.hAxis.title = getChartTitle(multiples_settings.settings.xAxisTitle,
+                                                    c_settings.possibleLabels,
+                                                    current_table,
+                                                    smcustomlabels);
+        if (smc_chartJson.options.vAxes === undefined) {
+            smc_chartJson.options.vAxes = [];
+        }
+        if (smc_chartJson.options.vAxes[0] === undefined) {
+            smc_chartJson.options.vAxes.push({});
+        }
+        smc_chartJson.options.vAxes[0].title = getChartTitle(multiples_settings.settings.leftAxisTitle,
+                                                    c_settings.possibleLabels,
+                                                    current_table,
+                                                    smcustomlabels);
+        if (smc_chartJson.options.vAxes[1] === undefined) {
+            smc_chartJson.options.vAxes.push({});
+        }
+        smc_chartJson.options.vAxes[1].title = getChartTitle(multiples_settings.settings.rightAxisTitle,
                                                     c_settings.possibleLabels,
                                                     current_table,
                                                     smcustomlabels);

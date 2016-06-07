@@ -784,9 +784,9 @@ input.googlechart-chart-size {
     color: black !important;
     background-color: #ccc;
     font-size:20px;
-    width:30px;
-    height:20px;
-    padding:5px;
+    width:35px;
+    height:28px;
+    padding:3px;
 }
 
 .btn-multiples-sm-enlarge:hover{

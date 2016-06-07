@@ -87,6 +87,31 @@
             chart_options.title = getChartTitle(preview_options.chartTitle,
                                                 preview_possibleLabels,
                                                 transformedTable)
+
+            if (chart_options.hAxis === undefined) {
+                chart_options.hAxis = {};
+            }
+            chart_options.hAxis.title = getChartTitle(preview_options.xAxisTitle,
+                                                preview_possibleLabels,
+                                                transformedTable)
+
+            if (chart_options.vAxes === undefined) {
+                chart_options.vAxes = [];
+            }
+            if (chart_options.vAxes[0] === undefined) {
+                chart_options.vAxes.push({});
+            }
+            chart_options.vAxes[0].title = getChartTitle(preview_options.leftAxisTitle,
+                                                preview_possibleLabels,
+                                                transformedTable)
+
+            if (chart_options.vAxes[1] === undefined) {
+                chart_options.vAxes.push({});
+            }
+            chart_options.vAxes[1].title = getChartTitle(preview_options.rightAxisTitle,
+                                                preview_possibleLabels,
+                                                transformedTable)
+
             if (!preview_options.displayLegend){
                 chart_options.legend = 'none';
             }
