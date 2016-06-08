@@ -493,6 +493,25 @@ function applyFormattersOnDataTable(options){
     });
 }
 
+function getErrorbarsFromSeries(series){
+    var errorbars = {};
+    patched_each(series, function(key, settings){
+        if (!isNaN(key)){
+            return;
+        }
+        if (settings.errorBars !== undefined){
+            if (settings.errorBars.errorType !== 'none'){
+                errorbars[key] = {};
+                errorbars[key].type = settings.errorBars.errorType;
+                errorbars[key].value = settings.errorBars.magnitude;
+                if (errorbars[key].value === undefined){
+                    errorbars[key].value = 10;
+                }
+            }
+        }
+    });
+    return errorbars;
+}
 function prepareForChart(options){
     var settings = {
         originalDataTable : '',
@@ -506,10 +525,6 @@ function prepareForChart(options){
         focusTarget : 'datum',
         errorbars : undefined
     };
-    options.errorbars = {};
-    options.errorbars['b'] = {type:'percent', value:20}
-    options.errorbars['c'] = {type:'percent', value:10}
-    options.errorbars['d'] = {type:'constant', value:5}
     jQuery.extend(settings, options);
     if (jQuery.inArray(settings.chartType, allowedChartsForTooltips) === -1){
         settings.hideTooltips = true;
@@ -555,7 +570,6 @@ function prepareForChart(options){
                 shouldAddErrorbars = true;
             }
         }
-        shouldAddErrorbars = false;
         var checkNextCol = false;
         var nextColName;
         if (column_index < settings.columns.length - 1){

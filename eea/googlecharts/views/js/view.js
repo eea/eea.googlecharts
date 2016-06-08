@@ -310,6 +310,7 @@ function drawChart(value, other_options){
         focusTarget : chart_json.options.focusTarget
     };
 
+    options.errorbars = getErrorbarsFromSeries(chart_options.series);
     var tableForChart = prepareForChart(options);
 
     var googlechart_params = {

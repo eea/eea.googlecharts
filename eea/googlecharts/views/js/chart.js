@@ -1024,6 +1024,7 @@ function drawSMCharts(smc_settings) {
             focusTarget : chartConfig[1].options.focusTarget
         };
 
+        smc_options.errorbars = getErrorbarsFromSeries(chartConfig[7].series);
         var tableForChart = prepareForChart(smc_options);
 
         if (!chart_width) {
@@ -1269,6 +1270,7 @@ function drawGoogleDashboard(options){
                 focusTarget : chartConfig[1].options.focusTarget
             };
 
+            options.errorbars = getErrorbarsFromSeries(chartConfig[7].series);
             var tableForChart = prepareForChart(options);
 
             chart_width = chartConfig[4];

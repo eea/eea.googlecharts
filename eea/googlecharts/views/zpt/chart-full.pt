@@ -72,7 +72,7 @@
             chartType : chart_json.chartType,
             focusTarget : chart_json.options.focusTarget
         };
-
+        options.errorbars = getErrorbarsFromSeries(chart_options.series);
         var tableForChart = prepareForChart(options);
         chart_json.options.title = name;
         if (!preview_interactive){

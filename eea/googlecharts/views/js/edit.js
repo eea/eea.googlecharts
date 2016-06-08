@@ -878,6 +878,7 @@ function saveThumb(value, useName){
         preparedColumns: chart_columns.prepared,
         chartType : 'editor'
     };
+    options.errorbars = getErrorbarsFromSeries(chart_options.series);
     var tableForChart = prepareForChart(options);
 
     var thumb_id = "googlechart_thumb_zone";
@@ -1500,6 +1501,7 @@ function resizeTableConfigurator(forced){
 
 function redrawEditorChart() {
     var tmpwrapper = chartEditor.getChartWrapper();
+    tmpwrapper.setView();
     var tmpwrapper_json = JSON.parse(tmpwrapper.toJSON());
     delete tmpwrapper_json.options.intervals;
     delete tmpwrapper_json.options.interval;
@@ -1625,6 +1627,53 @@ function redrawEditorChart() {
     }
     options.chartType = 'editor';
 
+    var settings_str = chartEditor.getChartWrapper().toJSON();
+    var settings_json = JSON.parse(settings_str);
+    var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
+    var options_json = JSON.parse(options_str);
+    var tmp_dataTable = chartEditor.getChartWrapper().getDataTable();
+
+    var tmp_series = {};
+    var series_ids = [];
+    var isFirst = true;
+    for (var i = 0; i < tmp_dataTable.getNumberOfColumns(); i++){
+        if ((tmp_dataTable.getColumnRole(i) === "") || (tmp_dataTable.getColumnRole(i) === "data")){
+            if (!isFirst){
+                series_ids.push(tmp_dataTable.getColumnId(i));
+                tmp_series[tmp_dataTable.getColumnId(i)] = {};
+            }
+            isFirst = false;
+        }
+    }
+
+    patched_each(options_json.series || {}, function(key, value){
+        if (isNaN(key)){
+            jQuery.extend(true, tmp_series[key], value);
+        }
+    });
+    patched_each(settings_json.options.series || {}, function(key, value){
+        if (value){
+            delete value.lineDashStyle;
+            if (value.pointShape !== undefined){
+                delete value.pointShape.type;
+                delete value.pointShape.rotation;
+                delete value.pointShape.sides;
+            }
+            jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
+        }
+    });
+    patched_each(options_json.series || {}, function(key, value){
+        if (!isNaN(key)){
+            jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
+        }
+    });
+
+    patched_each(tmp_series || {}, function(key, value){
+        if (jQuery.isEmptyObject(value)){
+            delete tmp_series[key];
+        }
+    });
+    options.errorbars = getErrorbarsFromSeries(tmp_series);
     var tableForChart = prepareForChart(options);
 
     // workaround for charteditor issue #17629
@@ -3426,7 +3475,6 @@ function chartEditorSave(id){
     var settings_json = JSON.parse(settings_str);
     settings_json.paletteId = jQuery("#googlechart_palettes").attr("value");
     settings_json.dataTable = [];
-
     var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
     var options_json = JSON.parse(options_str);
     var tmp_series = {};
@@ -3472,6 +3520,17 @@ function chartEditorSave(id){
     options_json.series = tmp_series;
     delete settings_json.options.series;
     delete settings_json.options.colors;
+    var shouldRemove = false;
+    patched_each(settings_json.view.columns || {}, function(idx, value){
+        if (typeof(value) === 'object'){
+            if (value.calc === 'error'){
+                shouldRemove = true;
+            }
+        }
+    });
+    if (shouldRemove){
+        settings_json.view.columns = null;
+    }
     var selectedPalette = chartPalettes[settings_json.paletteId].colors;
     var newColors = [];
     jQuery(selectedPalette).each(function(idx, color){
