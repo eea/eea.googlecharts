@@ -326,19 +326,9 @@ function drawGoogleChart(options){
     }
     var chartOptions = settings.chartJson.options;
     var dataTable = settings.chartDataTable;
-    var trendlines = {};
     var series_settings = {};
     series_settings[settings.chartId] = {};
     var series = series_settings[settings.chartId];
-
-    patched_each(chartOptions.trendlines || {}, function(name, trendline){
-        for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
-            if (dataTable.getColumnId(i) === name){
-                trendlines[i - 1] = trendline;
-            }
-        }
-    });
-    settings.chartJson.options.trendlines = trendlines;
 
     var series_counter = 0;
     settings.chartJson.options.series = settings.chartJson.options.series || {};
@@ -370,7 +360,6 @@ function drawGoogleChart(options){
         ax.format = ax.format.replace(/[^0-9.,#]/g, '');
     }
     /* end of removing duplicated suffixes */
-    settings.chartJson.view = {};
     var chart = new google.visualization.ChartWrapper(settings.chartJson);
 
     var filtersArray = [];
@@ -1007,6 +996,7 @@ function drawSMCharts(smc_settings) {
             c_settings.filters = chart_row_filters;
         }
         smc_widget.attr('used_columns', JSON.stringify(c_settings.columns));
+        smc_widget.attr('series', JSON.stringify(c_settings.series));
         smc_widget.attr('filters', JSON.stringify(c_settings.filters));
         smc_widget.attr('possible_labels', JSON.stringify(c_settings.possibleLabels));
 
@@ -1035,6 +1025,7 @@ function drawSMCharts(smc_settings) {
             focusTarget : chartConfig[1].options.focusTarget
         };
 
+        smc_options.errorbars = getErrorbarsFromSeries(c_settings.series || {});
         var tableForChart = prepareForChart(smc_options);
 
         if (!chart_width) {
@@ -1280,6 +1271,7 @@ function drawGoogleDashboard(options){
                 focusTarget : chartConfig[1].options.focusTarget
             };
 
+            options.errorbars = getErrorbarsFromSeries(chartConfig[7].series);
             var tableForChart = prepareForChart(options);
 
             chart_width = chartConfig[4];
