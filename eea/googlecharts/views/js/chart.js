@@ -996,6 +996,7 @@ function drawSMCharts(smc_settings) {
             c_settings.filters = chart_row_filters;
         }
         smc_widget.attr('used_columns', JSON.stringify(c_settings.columns));
+        smc_widget.attr('series', JSON.stringify(c_settings.series));
         smc_widget.attr('filters', JSON.stringify(c_settings.filters));
         smc_widget.attr('possible_labels', JSON.stringify(c_settings.possibleLabels));
 
@@ -1024,7 +1025,7 @@ function drawSMCharts(smc_settings) {
             focusTarget : chartConfig[1].options.focusTarget
         };
 
-        smc_options.errorbars = getErrorbarsFromSeries(chartConfig[7].series);
+        smc_options.errorbars = getErrorbarsFromSeries(c_settings.series || {});
         var tableForChart = prepareForChart(smc_options);
 
         if (!chart_width) {

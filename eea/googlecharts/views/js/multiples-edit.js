@@ -504,6 +504,9 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             var columns = [];
                             var hasColumns = false;
                             var hasFilters = false;
+                            var original_series = JSON.parse(base_chart_settings.options).series || {};
+                            var sm_series = {};
+                            jQuery.extend(sm_series, original_series);
                             for (var k = 0; k < originalColumns.length; k++){
                                 columns.push(originalColumns[k]);
                                 if ((vertical_type === 'cols') && (originalColumns[k] === vertical_replaceable.substr(4))){
@@ -512,6 +515,10 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                                 }
                                 if ((horizontal_type === 'cols') && (originalColumns[k] === horizontal_replaceable.substr(4))){
                                     hasColumns = true;
+                                    if (columns[k] !== horizontal_replacements.cols[j]){
+                                        sm_series[horizontal_replacements.cols[j]] = sm_series[columns[k]];
+                                        delete sm_series[columns[k]];
+                                    }
                                     columns[k] = horizontal_replacements.cols[j];
                                 }
                             }
@@ -533,6 +540,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             if (hasFilters){
                                 smc_chart.filters = filters;
                             }
+                            smc_chart.series = sm_series;
                             smc_chart.enabled = true;
                             smc_charts.push(smc_chart);
                         }
@@ -656,7 +664,8 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                         all_multiples.push({
                             columns: JSON.parse(jQuery(item).parent().attr("used_columns")),
                             filters: JSON.parse(jQuery(item).parent().attr("filters")),
-                            possibleLabels: JSON.parse(jQuery(item).parent().attr("possible_labels"))
+                            possibleLabels: JSON.parse(jQuery(item).parent().attr("possible_labels")),
+                            series: JSON.parse(jQuery(item).parent().attr("series"))
                         });
                     });
 
@@ -858,6 +867,9 @@ function showSortDialog(options){
                         base_chart_settings = chart;
                     }
                 });
+                if (base_chart_settings.row_filters.length === 0){
+                    base_chart_settings.row_filters = "[]";
+                }
                 var columnsFromSettings = getColumnsFromSettings(JSON.parse(base_chart_settings.columns));
                 var options = {
                     originalTable : all_rows,
@@ -1417,6 +1429,9 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             top: multiples_settings.settings.chartAreaTop,
             left: multiples_settings.settings.chartAreaLeft
         };
+        if (base_chart_settings.row_filters.length === 0){
+            base_chart_settings.row_filters = "[]";
+        }
         var chartConfig = [
             base_chart_settings.id,
             JSON.parse(base_chart_settings.config),

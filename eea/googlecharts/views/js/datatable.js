@@ -877,7 +877,7 @@ patched_each = function(obj, callback, args){
             }
         }
     }
-        return obj;
+    return obj;
 };
 
 function guessSeries(chart){
