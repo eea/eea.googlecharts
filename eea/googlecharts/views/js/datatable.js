@@ -560,7 +560,7 @@ function prepareForChart(options){
         var shouldAddErrorbars = false;
         var isData = false;
         patched_each(settings.preparedColumns, function(pc_idx, pc){
-            if ((pc.name === column) && ((pc.role === 'data') || (pc.role === undefined))){
+            if ((pc.name === column) && ((pc.role === 'data') || (pc.role === undefined) || (pc.role === ''))){
                 isData = true;
             }
         });
