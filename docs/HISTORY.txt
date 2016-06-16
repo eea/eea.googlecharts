@@ -1,8 +1,8 @@
 Changelog
 =========
 
-15.7.dev0 - (unreleased)
-------------------------
+15.7 - (2016-06-16)
+-------------------
 * Bug fix: Fixed errorbars
   [szabozo0 refs #70732]
 * Feature: Added possibility to set the horizontal and vertical axis labels
