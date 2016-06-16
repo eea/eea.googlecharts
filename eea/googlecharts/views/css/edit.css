@@ -2145,7 +2145,10 @@ input[type=text].eea-googlechart-trendlines-config-value{
     padding:0 !important;
 }
 
-.chartsettings.chartTitle {
+.chartsettings.chartTitle,
+.chartsettings.xAxisTitle,
+.chartsettings.leftAxisTitle,
+.chartsettings.rightAxisTitle {
     width:150px;
 }
 

@@ -354,7 +354,9 @@ function applyColumnFilters(options){
             var chart_columnFilters_old = conf[14];
             var chart_columnFilters_new = [];
 
+            var chart_options_series = {};
 
+            var hasErrorbars = false;
             patched_each(options.columnFiltersObj, function(c_idx, columnFilterObj){
                 var chart_columnFilter_new = {};
                 chart_columnFilter_new.title = chart_columnFilters_old[c_idx].title;
@@ -362,8 +364,18 @@ function applyColumnFilters(options){
                 chart_columnFilter_new.allowempty = chart_columnFilters_old[c_idx].allowempty;
                 chart_columnFilter_new.settings = {};
                 var defaults_new = [];
+                var original_defaults = chart_columnFilters_old[c_idx].settings.defaults;
                 patched_each(columnFilterObj.getState().selectedValues, function(idx, default_new){
                     defaults_new.push(getColNameFromFriendly(default_new, options));
+                    patched_each(original_defaults, function(o_idx, original_default_value){
+                        if ((chart_options.series[original_default_value] !== undefined) &&
+                            (chart_options.series[original_default_value].errorBars !== undefined) &&
+                            (chart_options.series[original_default_value].errorBars.errorType !== "none")){
+                            hasErrorbars = true;
+                            chart_options_series[getColNameFromFriendly(default_new, options)] = chart_options.series[original_default_value];
+                            delete chart_options_series[getColNameFromFriendly(default_new, options)].color;
+                        }
+                    });
                 });
                 chart_columnFilter_new.settings.defaults = defaults_new;
                 chart_columnFilter_new.settings.selectables = [];
@@ -456,7 +468,12 @@ function applyColumnFilters(options){
             });
 
             chart_columns_new.columnsToBeShown=options.columnsToBeShown;
+            if (hasErrorbars){
+                chart_json_view_columns = null;
+                chart_options.series = chart_options_series;
+            }
             chart_json.view.columns = chart_json_view_columns;
+
             config.push(chart_id);
             config.push(chart_json);
             config.push(chart_columns_new);

@@ -326,19 +326,9 @@ function drawGoogleChart(options){
     }
     var chartOptions = settings.chartJson.options;
     var dataTable = settings.chartDataTable;
-    var trendlines = {};
     var series_settings = {};
     series_settings[settings.chartId] = {};
     var series = series_settings[settings.chartId];
-
-    patched_each(chartOptions.trendlines || {}, function(name, trendline){
-        for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
-            if (dataTable.getColumnId(i) === name){
-                trendlines[i - 1] = trendline;
-            }
-        }
-    });
-    settings.chartJson.options.trendlines = trendlines;
 
     var series_counter = 0;
     settings.chartJson.options.series = settings.chartJson.options.series || {};
@@ -370,7 +360,6 @@ function drawGoogleChart(options){
         ax.format = ax.format.replace(/[^0-9.,#]/g, '');
     }
     /* end of removing duplicated suffixes */
-    settings.chartJson.view = {};
     var chart = new google.visualization.ChartWrapper(settings.chartJson);
 
     var filtersArray = [];
@@ -990,7 +979,7 @@ function drawSMCharts(smc_settings) {
         if ((!multiples_settings.matrix.enabled) && (!c_settings.enabled)){
             return;
         }
-        var delimiters = JSON.stringify(c_settings.possibleLabels);
+        var delimiters = JSON.stringify(c_settings.possibleLabels) + smc_settings.container.selector;
         var smc_container_id = settings.chartViewsDiv + '_' + getHashCode(delimiters);
         var smc_widget = jQuery('<div>', {
             'class': container_class,
@@ -1007,6 +996,7 @@ function drawSMCharts(smc_settings) {
             c_settings.filters = chart_row_filters;
         }
         smc_widget.attr('used_columns', JSON.stringify(c_settings.columns));
+        smc_widget.attr('series', JSON.stringify(c_settings.series));
         smc_widget.attr('filters', JSON.stringify(c_settings.filters));
         smc_widget.attr('possible_labels', JSON.stringify(c_settings.possibleLabels));
 
@@ -1035,6 +1025,7 @@ function drawSMCharts(smc_settings) {
             focusTarget : chartConfig[1].options.focusTarget
         };
 
+        smc_options.errorbars = getErrorbarsFromSeries(c_settings.series || {});
         var tableForChart = prepareForChart(smc_options);
 
         if (!chart_width) {
@@ -1045,6 +1036,30 @@ function drawSMCharts(smc_settings) {
         }
         var smc_chartJson = jQuery.extend(true, {}, chartConfig[1]);
         smc_chartJson.options.title = getChartTitle(multiples_settings.settings.chartTitle,
+                                                    c_settings.possibleLabels,
+                                                    current_table,
+                                                    smcustomlabels);
+        if (smc_chartJson.options.hAxis === undefined) {
+            smc_chartJson.options.hAxis = {};
+        }
+        smc_chartJson.options.hAxis.title = getChartTitle(multiples_settings.settings.xAxisTitle,
+                                                    c_settings.possibleLabels,
+                                                    current_table,
+                                                    smcustomlabels);
+        if (smc_chartJson.options.vAxes === undefined) {
+            smc_chartJson.options.vAxes = [];
+        }
+        if (smc_chartJson.options.vAxes[0] === undefined) {
+            smc_chartJson.options.vAxes.push({});
+        }
+        smc_chartJson.options.vAxes[0].title = getChartTitle(multiples_settings.settings.leftAxisTitle,
+                                                    c_settings.possibleLabels,
+                                                    current_table,
+                                                    smcustomlabels);
+        if (smc_chartJson.options.vAxes[1] === undefined) {
+            smc_chartJson.options.vAxes.push({});
+        }
+        smc_chartJson.options.vAxes[1].title = getChartTitle(multiples_settings.settings.rightAxisTitle,
                                                     c_settings.possibleLabels,
                                                     current_table,
                                                     smcustomlabels);
@@ -1256,6 +1271,7 @@ function drawGoogleDashboard(options){
                 focusTarget : chartConfig[1].options.focusTarget
             };
 
+            options.errorbars = getErrorbarsFromSeries(chartConfig[7].series);
             var tableForChart = prepareForChart(options);
 
             chart_width = chartConfig[4];

@@ -493,6 +493,25 @@ function applyFormattersOnDataTable(options){
     });
 }
 
+function getErrorbarsFromSeries(series){
+    var errorbars = {};
+    patched_each(series, function(key, settings){
+        if (!isNaN(key)){
+            return;
+        }
+        if (settings.errorBars !== undefined){
+            if (settings.errorBars.errorType !== 'none'){
+                errorbars[key] = {};
+                errorbars[key].type = settings.errorBars.errorType;
+                errorbars[key].value = settings.errorBars.magnitude;
+                if (errorbars[key].value === undefined){
+                    errorbars[key].value = 10;
+                }
+            }
+        }
+    });
+    return errorbars;
+}
 function prepareForChart(options){
     var settings = {
         originalDataTable : '',
@@ -503,7 +522,8 @@ function prepareForChart(options){
         preparedColumns : '',
         enableEmptyRows : false,
         chartType : 'barchart',
-        focusTarget : 'datum'
+        focusTarget : 'datum',
+        errorbars : undefined
     };
     jQuery.extend(settings, options);
     if (jQuery.inArray(settings.chartType, allowedChartsForTooltips) === -1){
@@ -536,6 +556,20 @@ function prepareForChart(options){
     patched_each(settings.columns, function(column_index, column){
         var hasTooltip = false;
         var colName = settings.originalDataTable.available_columns[column];
+        var couldAddErrorbars = false;
+        var shouldAddErrorbars = false;
+        var isData = false;
+        patched_each(settings.preparedColumns, function(pc_idx, pc){
+            if ((pc.name === column) && ((pc.role === 'data') || (pc.role === undefined) || (pc.role === ''))){
+                isData = true;
+            }
+        });
+        if ((settings.originalDataTable.properties[column].columnType === 'number') && (isData)){
+            couldAddErrorbars = true;
+            if ((settings.errorbars !== undefined) && (settings.errorbars[column] !== undefined)){
+                shouldAddErrorbars = true;
+            }
+        }
         var checkNextCol = false;
         var nextColName;
         if (column_index < settings.columns.length - 1){
@@ -616,11 +650,39 @@ function prepareForChart(options){
                 }
             }
         }
+        if (shouldAddErrorbars){
+                var errorbar_min = {type:"number",
+                                    label:"eea_errorbar_min_for_" + colName,
+                                    id:"eea_errorbar_min_for_" + column,
+                                    role:"interval"};
+                var errorbar_max = {type:"number",
+                                    label:"eea_errorbar_max_for_" + colName,
+                                    id:"eea_errorbar_max_for_" + column,
+                                    role:"interval"};
+                dataForChart.addColumn(errorbar_min);
+                dataForChart.addColumn(errorbar_max);
+                columnsForChart.push({column:errorbar_min.id,type:'customerrorbar_min',parent:column});
+                columnsForChart.push({column:errorbar_max.id,type:'customerrorbar_max',parent:column});
+        }
         isFirstColumn = false;
     });
     jQuery(itemsToDisplay).each(function(row_index, row){
         var newRow = [];
         jQuery(columnsForChart).each(function(column_index, column_settings){
+            if (column_settings.type === 'customerrorbar_min'){
+                var error_base_value = row[column_settings.parent];
+                var error_type = settings.errorbars[column_settings.parent].type;
+                var error_value = settings.errorbars[column_settings.parent].value;
+                newRow.push(error_type === 'constant' ? error_base_value - error_value: error_base_value / 100 * (100 - error_value));
+                return;
+            }
+            if (column_settings.type === 'customerrorbar_max'){
+                var error_base_value = row[column_settings.parent];
+                var error_type = settings.errorbars[column_settings.parent].type;
+                var error_value = settings.errorbars[column_settings.parent].value;
+                newRow.push(error_type === 'constant' ? error_base_value + error_value: error_base_value / 100 * (100 + error_value));
+                return;
+            }
             if (column_settings.type === 'customtooltip'){
                 var tooltip_column = column_settings.template;
                 patched_each(row, function(key, value){
@@ -815,7 +877,7 @@ patched_each = function(obj, callback, args){
             }
         }
     }
-        return obj;
+    return obj;
 };
 
 function guessSeries(chart){

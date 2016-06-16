@@ -195,6 +195,7 @@ function drawChart(value, options){
         focusTarget : embedchart_json.options.focusTarget
     };
 
+    settings_options.errorbars = getErrorbarsFromSeries(embedchart_options.series);
     var tableForChart = prepareForChart(settings_options);
 
     if (!is_pdf_printing) {
