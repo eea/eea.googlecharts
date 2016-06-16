@@ -7,6 +7,14 @@ Changelog
   [szabozo0 refs #70732]
 * Feature: Added possibility to set the horizontal and vertical axis labels
   [szabozo0 refs #72986]
+* Bugfix: Fixed filters layout
+  [szabozo0 refs #69537]
+* Feature: Improved daviz help when data doesn't satisfy the chart type
+  [szabozo0 refs #70029]
+* Feature: Improved filters layout
+  [szabozo0 refs #70278]
+* Bugfix: Fixed chart responsive size when embedded in indicator
+  [szabozo0 refs #69537]
 
 15.6 - (2016-06-02)
 -------------------

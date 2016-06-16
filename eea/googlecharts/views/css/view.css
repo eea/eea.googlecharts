@@ -126,10 +126,10 @@ ul.googlechart_tabs li:first-of-type a:hover {
     width: 130px;
 }
 
-#googlechart_dashboard .google-visualization-controls-slider-handle,
+/*#googlechart_dashboard .google-visualization-controls-slider-handle,
 .googlechart_dashboard .google-visualization-controls-slider-handle {
     width: 130px;
-}
+}*/
 
 .charts-inline-block input {
     width: 90%;
@@ -169,9 +169,19 @@ ul.googlechart_tabs li:first-of-type a:hover {
     white-space:nowrap;
 }
 
+/*#googlechart_filters:nth-child(3), .googlechart_filters:nth-child(3){
+    float:right;
+}
+
+#googlechart_filters:nth-child(1), .googlechart_filters:nth-child(1){
+    float:left;
+}*/
+
 #googlechart_filters > div,
 .googlechart_filters > div {
-    background: #f3f3f3;
+    background: #fff;
+    box-shadow: 0 1px 5px -1px rgba(0,0,0,.5);
+    border-radius: 3px;
     margin-bottom:1em;
     padding-bottom: 1em;
     min-height: 80px;
@@ -222,7 +232,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
     min-width: 180px;
     max-width: 200px;
     overflow: hidden;
-    margin: 0 0px 15px;
+    margin: 0 1px 3px 1px;
 }
 
 .figure-chart-live .googlechart_table_right #googlechart_filters > div,
@@ -254,7 +264,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
     min-width: 180px;
     max-width: 200px;
     overflow: hidden;
-    margin: 0 0px 15px 0;
+    margin: 0 1px 3px 1px;
 }
 
 .figure-chart-live .googlechart_table_left #googlechart_filters > div,
@@ -462,6 +472,9 @@ li.eea-moved-in-container{
     #googlechart_dashboard .googlechart_table_bottom .googlechart_filter,
     .googlechart_dashboard .googlechart_table_bottom .googlechart_filter {
         min-width: 32%;
+        padding:0;
+        margin-right:3px;
+        margin-bottom:3px;
     }
 }
 
@@ -470,7 +483,10 @@ li.eea-moved-in-container{
     .googlechart_dashboard .googlechart_table_top .googlechart_filter,
     #googlechart_dashboard .googlechart_table_bottom .googlechart_filter,
     .googlechart_dashboard .googlechart_table_bottom .googlechart_filter {
-        min-width: 24%;
+        width: 32%;
+        padding:0;
+        margin-right:3px;
+        margin-bottom:3px;
     }
 }
 
@@ -479,6 +495,14 @@ li.eea-moved-in-container{
 #googlechart_dashboard .googlechart_table_bottom .googlechart_filter ul,
 .googlechart_dashboard .googlechart_table_bottom .googlechart_filter ul {
     height: 100px;
+    overflow: auto;
+}
+
+#googlechart_dashboard .googlechart_table_left .googlechart_filter ul,
+.googlechart_dashboard .googlechart_table_left .googlechart_filter ul,
+#googlechart_dashboard .googlechart_table_right .googlechart_filter ul,
+.googlechart_dashboard .googlechart_table_right .googlechart_filter ul {
+    height: 150px;
     overflow: auto;
 }
 
@@ -784,12 +808,18 @@ input.googlechart-chart-size {
     color: black !important;
     background-color: #ccc;
     font-size:20px;
-    width:35px;
+/*    width:35px;
     height:28px;
-    padding:3px;
+    padding:3px; BRANCH MASTER*/
+    width:30px;
+    height:30px;
+    padding-top:4px;
 }
 
 .btn-multiples-sm-enlarge:hover{
     cursor: pointer;
 }
 
+.google-visualization-table {
+    border: 0!important;
+}

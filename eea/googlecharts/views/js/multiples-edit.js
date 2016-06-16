@@ -1,4 +1,8 @@
 jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
+    var current_widget = ".googlechart-widget-" + view;
+    if (jQuery(current_widget + " select:visible").length === 0){
+        return;
+    }
     function setDefaultsIfMissing(){
         var possible_matrix = true;
         if (jQuery(".multiples-matrix-item-overlay.selected").length > 0){
@@ -43,7 +47,6 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
         jQuery(".add-edit-widget-dialog input.textType[name*='multiples_settings']").attr("value", JSON.stringify(tmp_settings));
     }
 
-    var current_widget = ".googlechart-widget-" + view;
     function updateDragAndDrops(){
         jQuery(".multiples-matrix-config-column-horizontal")
             .remove();
@@ -772,8 +775,8 @@ function redrawPreviewChart(base_chart, chartSettings){
             resize: function(){
                 jQuery(".settingsDiv .chartWidth").attr("value", jQuery(this).width());
                 jQuery(".settingsDiv .chartHeight").attr("value", jQuery(this).height());
-                jQuery("#multiples-resize").dialog("option", "minWidth", jQuery(this).width() + 200);
-                jQuery("#multiples-resize").dialog("option", "minHeight", jQuery(this).height() + 340);
+                jQuery("#multiples-resize").dialog("option", "minWidth", jQuery(this).width() + 400);
+                jQuery("#multiples-resize").dialog("option", "minHeight", jQuery(this).height() + 140);
             },
             stop: function(){
                 var prevWidth = chartSettings.width;
@@ -792,8 +795,8 @@ function redrawPreviewChart(base_chart, chartSettings){
                 jQuery(".settingsDiv .chartAreaLeft").attr("value", chartSettings.chartAreaLeft);
 
                 redrawPreviewChart(base_chart, chartSettings);
-                jQuery("#multiples-resize").dialog("option", "minWidth", chartSettings.width + 200);
-                jQuery("#multiples-resize").dialog("option", "minHeight", chartSettings.height + 340);
+                jQuery("#multiples-resize").dialog("option", "minWidth", chartSettings.width + 400);
+                jQuery("#multiples-resize").dialog("option", "minHeight", chartSettings.height + 140);
             }
         });
     var options_str = encodeURIComponent(JSON.stringify(chartSettings));
@@ -1234,6 +1237,7 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         var settingsDiv = jQuery("<div>")
             .addClass("settingsDiv")
             .appendTo(previewDiv);
+
         settingsDiv.append("<label>Title</label>");
         settingsDiv.append("<label class='help'>ex: {Y} - {X}</label>");
         settingsDiv.append("<input class='chartsettings chartTitle' type='text'/><br/>");
@@ -1281,10 +1285,10 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         previewDiv.dialog({
             dialogClass: "googlechart-dialog googlechart-preview-dialog",
             modal: true,
-            width: chartSettings.width + 200,
-            height: chartSettings.height + 340,
-            minWidth: chartSettings.width + 200,
-            minHeight: chartSettings.height + 340,
+            width: chartSettings.width + 400,
+            height: chartSettings.height + 140,
+            minWidth: chartSettings.width + 400,
+            minHeight: chartSettings.height + 140,
             title: "Size adjustments",
             open: function(){
                 redrawPreviewChart(base_chart, chartSettings);

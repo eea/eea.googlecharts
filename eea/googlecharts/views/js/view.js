@@ -229,7 +229,10 @@ function drawChart(value, other_options){
     if ((gl_charts.googlechart_view) && (gl_charts.googlechart_view.getOption("resized_width"))){
         resized_width = gl_charts.googlechart_view.getOption("resized_width");
     }
-    jQuery("#googlechart_table").css("max-width",chart_width + 20);
+    
+    if (chart_filterposition === 1 || chart_filterposition === 3) {
+        jQuery("#googlechart_table").css("max-width",chart_width + 218);
+    }
     jQuery("#googlechart_view").attr("chart_id", chart_id);
     var chart_url = baseurl + "#tab-" + chart_id;
 

@@ -7,6 +7,8 @@ var chartWrapper;
 var Templates = {};
 var ChartNotes = [];
 
+var NiceMessages = {};
+
 var defaultChart = {
            'chartType':'LineChart',
            "dataTable": [["column1", "column2"], ["A", 1], ["B", 2], ["C", 3], ["D", 2]],
@@ -330,6 +332,9 @@ function updateCounters(){
         if (JSON.parse(elem.find(".googlechart_configjson").attr("value")).chartType === 'Table'){
             elem.find(".googlechart-sort-box").hide();
             elem.find(".googlechart-sort-box select").attr("selected_value", "__disabled__");
+            if (elem.find(".googlechart-sort-box-placeholder").length === 0){
+                jQuery("<div class='googlechart-sort-box placeholder'></div>").insertAfter(elem.find(".googlechart-notes-box"));
+            }
         }
         else{
             elem.find(".googlechart-sort-box").show();
@@ -1353,6 +1358,9 @@ function moveIfFirst(){
             charteditor_dialog.removeClass("modal-dialog");
             charteditor_dialog.addClass("googlechart-editor");
             isFirstEdit = false;
+            if (jQuery(".google-visualization-charteditor-data-mismatch").length > 0){
+                jQuery(".google-visualization-charteditor-panel-navigation-cell:contains('Start')").click()
+            }
         }
         else{
             setTimeout(moveIfFirst, 500);
@@ -1528,6 +1536,10 @@ function redrawEditorChart() {
                     delete opt.lineWidth;
                     delete opt.pointSize;
                     delete opt.errorBars;
+/*
+                    delete opt.type;
+BRANCH DAVIZTRAINING
+*/
                     jQuery.extend(true, series[idx - 1], opt);
                 } else {
                     series[idx - 1] = opt;
@@ -1541,7 +1553,7 @@ function redrawEditorChart() {
         }
     });
     patched_each(tmpwrapper_json.options.series || {}, function(key, value){
-        if (value){
+        if ((value) && (value.color)){
             delete value.color;
         }
     });
@@ -1684,10 +1696,15 @@ function redrawEditorChart() {
 
     //chart.dataTable = tableForChart;
     tmpwrapper.setDataTable(tableForChart);
-
     google.visualization.events.addListener(tmpwrapper, 'ready', function(event){
         resizeTableConfigurator(false);
         fixSVG("#google-visualization-charteditor-preview-div-chart");
+    });
+
+    google.visualization.events.addListener(tmpwrapper, 'error', function(event){
+        if (jQuery("#google-visualization-charteditor-preview-div-chart").find("div[id^='google-visualization-errors']")){
+            jQuery("#google-visualization-charteditor-preview-div-chart").html(NiceMessages[chartEditor.getChartWrapper().getType()].split("Here's an example:").join(""));
+        }
     });
 
     tmpwrapper.draw(document.getElementById("google-visualization-charteditor-preview-div-chart"));
@@ -2864,7 +2881,6 @@ function openEditor(elementId) {
             handleClick("error");
             }
           });
-
     }
 
     google.visualization.events.addListener(chartEditor, 'ready', function(event){
@@ -2882,13 +2898,12 @@ function openEditor(elementId) {
     });
 
     google.visualization.events.addListener(chartEditor, 'error', function(event){
-        if (!shouldListenErrorEvent){
-            shouldListenErrorEvent = true;
-            return;
-        }
+        jQuery(".panel-container").show();
         var settings_str = chartEditor.getChartWrapper().toJSON();
         jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value",settings_str);
-        editedChartStatus = false;
+        editedChartStatus = true;
+        jQuery(".googlechart_editor_loading").addClass("googlechart_editor_loaded");
+        jQuery(".googlechart_palette_loading").removeClass("googlechart_palette_loading");
     });
     moveIfFirst();
 
@@ -4337,7 +4352,57 @@ function fillEditorDialogWithDelay(){
     fillEditorDialog({});
 }
 
+function fetchNextMessage(){
+    var found = false;
+    jQuery.each(NiceMessages, function(key,value){
+        if ((!found) && (value === '')){
+            found = true;
+            var ChartEditor = new google.visualization.ChartEditor();
+            var data = new google.visualization.DataTable();
+            if (key === 'GeoChart'){
+                data.addColumn('number', 'First column');
+                data.addRows([[0]]);
+            }
+            else {
+                data.addColumn('string', 'First column');
+                data.addRows([['First string value']]);
+            }
+            var wrapper = new google.visualization.ChartWrapper({
+                'chartType':key,
+                'dataTable':data
+            });
+            ChartEditor.openDialog(wrapper, {});
+
+            NiceMessages[key] = jQuery("#google-visualization-charteditor-preview-div-chart").html()
+            ChartEditor.closeDialog();
+            ChartEditor = null;
+            fetchNextMessage();
+        }
+    });
+}
+
+function buildNiceMessages(){
+    var data = new google.visualization.DataTable();
+    var ChartEditor = new google.visualization.ChartEditor();
+    data.addColumn('string', 'First column');
+    data.addRows([['First string value']]);
+    var wrapper = new google.visualization.ChartWrapper({
+        'chartType':'TableChart',
+        'dataTable':data
+    });
+    ChartEditor.openDialog(wrapper, {});
+
+    var chartTypes = ChartEditor.getAllChartTypes();
+    for (var i = 0; i < chartTypes.length; i++){
+        NiceMessages[chartTypes[i]] = '';
+    }
+    ChartEditor.closeDialog();
+    ChartEditor = null;
+    fetchNextMessage();
+}
+
 openEditChart = function(id){
+    buildNiceMessages();
     backupColors = [];
     backupOptionColors = [];
     jQuery("html").append(charteditor_css);
@@ -5565,7 +5630,7 @@ function addNewChart(){
     var options = {
         id : newChartId,
         name : "New Chart",
-        config : JSON.stringify({'chartType':'Table','options': {'legend':'none'}}),
+        config : JSON.stringify({'chartType':'Table','options': {'legend':'none','useFirstColumnAsDomain':true}}),
         columns : JSON.stringify(newColumns),
         sortFilter : "__disabled__"
     };

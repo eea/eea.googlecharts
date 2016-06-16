@@ -10,6 +10,7 @@
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1'); dummy2 python:request.RESPONSE.setHeader('X-Frame-Options', 'ALLOWALL');">
 <head>
     <link href="collective.js.jqueryui.custom.min.css" rel="stylesheet" type="text/css"/>
+    <link href="eea-icons.css" rel="stylesheet" type="text/css"/>
     <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
     <link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
     <link href="++resource++eea.googlecharts.embed.css" rel="stylesheet" type="text/css"/>
