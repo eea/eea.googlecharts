@@ -1241,61 +1241,64 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             .addClass("settingsDiv")
             .appendTo(previewDiv);
 
-        settingsDiv.append("<label>Title</label>");
-        settingsDiv.append("<label class='help'>ex: {Y} - {X}</label>");
-        settingsDiv.append("<input class='chartsettings chartTitle' type='text'/><br/>");
-
-        settingsDiv.append("<label>x-Axis Title</label>");
-        settingsDiv.append("<label class='help'>ex: {Y} - {X}</label>");
-        settingsDiv.append("<input class='chartsettings xAxisTitle' type='text'/><br/>");
-
-        settingsDiv.append("<label>left-Axis Title</label>");
-        settingsDiv.append("<label class='help'>ex: {Y} - {X}</label>");
-        settingsDiv.append("<input class='chartsettings leftAxisTitle' type='text'/><br/>");
-
-        settingsDiv.append("<label>right-Axis Title</label>");
-        settingsDiv.append("<label class='help'>ex: {Y} - {X}</label>");
-        settingsDiv.append("<input class='chartsettings rightAxisTitle' type='text'/><br/>");
-
-        settingsDiv.append("<label>Area size</label>");
-        settingsDiv.append("<input class='chartsettings chartWidth' type='number'/>");
-        settingsDiv.append("<span>x</span>");
-        settingsDiv.append("<input class='chartsettings chartHeight' type='number'/>");
-        settingsDiv.append("<span>px</span>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-
-        settingsDiv.append("<label>Chart size</label>");
-        settingsDiv.append("<input class='chartsettings chartAreaWidth' type='number'/>");
-        settingsDiv.append("<span>x</span>");
-        settingsDiv.append("<input class='chartsettings chartAreaHeight' type='number'/>");
-        settingsDiv.append("<span>px</span>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-
-        settingsDiv.append("<label>Chart position</label>");
-        settingsDiv.append("<span>Left: </span>");
-        settingsDiv.append("<input class='chartsettings chartAreaLeft' type='number'/>");
-        settingsDiv.append("<span>px</span>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-        settingsDiv.append("<span>Top: </span>");
-        settingsDiv.append("<input class='chartsettings chartAreaTop' type='number'/>");
-        settingsDiv.append("<span>px</span>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-
-        settingsDiv.append("<label>Display legend</label>");
-        settingsDiv.append("<input class='chartsettings chartLegend' type='checkbox'/>");
-        settingsDiv.append("<div style='clear:both'> </div>");
-
-        settingsDiv.append("<label>Disable zoom on view</label>");
-        settingsDiv.append("<input class='chartsettings hideZoomOnView' type='checkbox'/>");
-        settingsDiv.append("<div style='clear:both'> </div>");
+        settingsDiv.append("<table class='sm-settings-table'>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Title</label><label class='help'>ex: {Y} - {X}</label></td>"+
+                "<td><input class='chartsettings chartTitle' type='text'/></td>"+
+            "</tr>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Horizontal Axis Title</label><label class='help'>ex: {Y} - {X}</label></td>"+
+                "<td><input class='chartsettings xAxisTitle' type='text'/></td>"+
+            "</tr>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Left Axis Title</label><label class='help'>ex: {Y} - {X}</label></td>"+
+                "<td><input class='chartsettings leftAxisTitle' type='text'/></td>"+
+            "</tr>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Right Axis Title</label><label class='help'>ex: {Y} - {X}</label></td>"+
+                "<td><input class='chartsettings rightAxisTitle' type='text'/></td>"+
+            "</tr>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Area width</label></td>"+
+                "<td><input class='chartsettings chartWidth' type='text'/><span>px</span></td>"+
+            "</tr>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Area height</label></td>"+
+                "<td><input class='chartsettings chartHeight' type='text'/><span>px</span></td>"+
+            "</tr>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Chart width</label></td>"+
+                "<td><input class='chartsettings chartAreaWidth' type='text'/><span>px</span></td>"+
+            "</tr>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Chart height</label></td>"+
+                "<td><input class='chartsettings chartAreaHeight' type='text'/><span>px</span></td>"+
+            "</tr>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Chart left</label></td>"+
+                "<td><input class='chartsettings chartAreaLeft' type='text'/><span>px</span></td>"+
+            "</tr>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Chart top</label></td>"+
+                "<td><input class='chartsettings chartAreaTop' type='text'/><span>px</span></td>"+
+            "</tr>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Display legend</label></td>"+
+                "<td><input class='chartsettings chartLegend' type='checkbox'/></td>"+
+            "</tr>"+
+            "<tr>"+
+                "<td class='sm-settings-table-label'><label>Disable zoom on view</label></td>"+
+                "<td><input class='chartsettings hideZoomOnView' type='checkbox'/></td>"+
+            "</tr>"+
+        "</table>");
 
         previewDiv.dialog({
             dialogClass: "googlechart-dialog googlechart-preview-dialog",
             modal: true,
             width: chartSettings.width + 400,
-            height: chartSettings.height + 170,
+            height: chartSettings.height + 230,
             minWidth: chartSettings.width + 400,
-            minHeight: chartSettings.height + 140,
+            minHeight: chartSettings.height + 230,
             title: "Size adjustments",
             open: function(){
                 redrawPreviewChart(base_chart, chartSettings);
