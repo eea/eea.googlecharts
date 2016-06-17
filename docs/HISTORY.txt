@@ -1,8 +1,13 @@
 Changelog
 =========
 
-15.8.dev0 - (unreleased)
+15.9.dev0 - (unreleased)
 ------------------------
+* Bugfix: Fixed query string parsing
+  [chiridra refs #72263]
+
+15.8 - (2016-06-16)
+-------------------
 * Bugfix: Fixed filters layout
   [szabozo0 refs #69537]
 * Feature: Improved daviz help when data doesn't satisfy the chart type
