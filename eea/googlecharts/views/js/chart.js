@@ -763,6 +763,14 @@ function getChartTitle(title_placeholder, possibleLabels, transformedTable, cust
     return title_placeholder;
 }
 
+function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
+
 function openChartDialog(evt) {
     var ctl_parent = jQuery(this).parent().parent();
     var chart_div = ctl_parent.find('.sm-charts');
@@ -770,45 +778,65 @@ function openChartDialog(evt) {
     var smc_title = smc_chart.chart.getOption('title');
     var original_settings = chart_div.data('original_settings');
     var parent = ctl_parent.parent();
-    var original_chart_div = parent.find('#original_chart_div');
-    if (original_chart_div.length === 0) {
-        original_chart_div = jQuery('<div>', {
-            id: 'original_chart_div'
-        });
+    jQuery("#original_chart_div").dialog("close");
+    var original_chart_div = jQuery('<div>', {
+        id: 'original_chart_div'
+    });
     original_chart_div.css('height', original_settings.height);
     original_chart_div.css('width', original_settings.width);
+    original_chart_div.attr("parent_top", chart_div.offset().top);
+    original_chart_div.attr("parent_left", chart_div.offset().left);
     original_chart_div.appendTo(parent);
-    }
     original_chart_div.empty();
+
     original_chart_div.dialog({
+        original_chart: chart_div,
         width: 'auto',
         height: 'auto',
         title: smc_title,
         open: function ( event, ui ) {
             var new_chart = new google.visualization.ChartWrapper(smc_chart.chart.toJSON());
             new_chart.setContainerId('original_chart_div');
-            new_chart.setOption('height', original_settings.height);
-            new_chart.setOption('width', original_settings.width);
+            var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+            var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+            var dialog_position = { my: "center", at: "center", of: window };
+            var new_chart_width = original_settings.width;
+            var new_chart_height = original_settings.height;
+            if (inIframe()){
+                var parent_top = jQuery("#original_chart_div").attr("parent_top");
+                var parent_left = jQuery("#original_chart_div").attr("parent_left");
+
+                var new_chart_width = Math.min(w, original_settings.width) - 100;
+                var new_chart_height = Math.min(h, original_settings.height) - 100;
+
+                dialog_position = [(w - (new_chart_width + 50)) / 2, parseInt(parent_top)];
+
+                $(this).dialog( "option", "width", new_chart_width + 50);
+                $(this).dialog( "option", "height", new_chart_height + 50);
+            }
+
+            new_chart.setOption('height', new_chart_height);
+            new_chart.setOption('width', new_chart_width);
             var chartArea = {};
             if (original_settings.chartArea !== undefined){
                 if (original_settings.chartArea.top !== undefined){
-                    chartArea.top = chartAreaAttribute2px(original_settings.chartArea.top, original_settings.height);
+                    chartArea.top = chartAreaAttribute2px(original_settings.chartArea.top, new_chart_height);
                 }
                 if (original_settings.chartArea.left !== undefined){
-                    chartArea.left = chartAreaAttribute2px(original_settings.chartArea.left, original_settings.width);
+                    chartArea.left = chartAreaAttribute2px(original_settings.chartArea.left, new_chart_width);
                 }
                 if (original_settings.chartArea.height !== undefined){
-                    chartArea.height = chartAreaAttribute2px(original_settings.chartArea.height, original_settings.height);
+                    chartArea.height = chartAreaAttribute2px(original_settings.chartArea.height, new_chart_height);
                 }
                 if (original_settings.chartArea.width !== undefined){
-                    chartArea.width = chartAreaAttribute2px(original_settings.chartArea.width, original_settings.width);
+                    chartArea.width = chartAreaAttribute2px(original_settings.chartArea.width, new_chart_width);
                 }
             }
             new_chart.setOption('chartArea', chartArea);
             new_chart.setOption('legend', original_settings.misc.legend);
             new_chart.setOption('enableInteractivity', true);
             new_chart.draw();
-            $(this).dialog( "option", "position", { my: "center", at: "center", of: window });
+            $(this).dialog( "option", "position", dialog_position);
         },
         close: function( event, ui ) {
             jQuery(this).dialog( "destroy" );
@@ -1096,45 +1124,46 @@ function drawSMCharts(smc_settings) {
                 legend: chartConfig[1].options.legend
             }
         });
+        if (!multiples_settings.settings.hideZoomOnView){
+            // Make controls areas
+            var control_top = jQuery('<div>', {
+                'class': 'smc-controls smc-controls-top'
+            }).appendTo(smc_widget);
+            var control_bottom = jQuery('<div>', {
+                'class': 'smc-controls smc-controls-bottom'
+            }).appendTo(smc_widget);
 
-        // Make controls areas
-        var control_top = jQuery('<div>', {
-            'class': 'smc-controls smc-controls-top'
-        }).appendTo(smc_widget);
-        var control_bottom = jQuery('<div>', {
-            'class': 'smc-controls smc-controls-bottom'
-        }).appendTo(smc_widget);
-
-        if (smc_settings.controls) {
-            jQuery.each(smc_settings.controls, function(idx, val) {
-                var btn = jQuery('<div>')
-                    .attr('title', val.title);
-                var control = jQuery('<span>', {
-                    'class': 'smc-control eea-icon ' + val.icon + ' ' + val.position_x
+            if (smc_settings.controls) {
+                jQuery.each(smc_settings.controls, function(idx, val) {
+                    var btn = jQuery('<div>')
+                        .attr('title', val.title);
+                    var control = jQuery('<span>', {
+                        'class': 'smc-control eea-icon ' + val.icon + ' ' + val.position_x
+                    });
+                    control.appendTo(btn);
+                    if (val.btn_class !== undefined){
+                        btn.addClass(val.btn_class);
+                    }
+                    if (val.control_class !== undefined){
+                        control.addClass(val.control_class);
+                    }
+                    if (val.btn_width !== undefined){
+                        btn.width(val.btn_width);
+                    }
+                    if (val.btn_height !== undefined){
+                        btn.height(val.btn_height);
+                    }
+                    if (val.position_y === 'top') {
+                        btn.appendTo(control_top);
+                    } else {
+                        btn.appendTo(control_bottom);
+                    }
+                    jQuery.each(val.events, function(evt, callback){
+                        btn.on(evt, callback);
+                    });
                 });
-                control.appendTo(btn);
-                if (val.btn_class !== undefined){
-                    btn.addClass(val.btn_class);
-                }
-                if (val.control_class !== undefined){
-                    control.addClass(val.control_class);
-                }
-                if (val.btn_width !== undefined){
-                    btn.width(val.btn_width);
-                }
-                if (val.btn_height !== undefined){
-                    btn.height(val.btn_height);
-                }
-                if (val.position_y === 'top') {
-                    btn.appendTo(control_top);
-                } else {
-                    btn.appendTo(control_bottom);
-                }
-                jQuery.each(val.events, function(evt, callback){
-                    btn.on(evt, callback);
-                });
-            });
-            jQuery(smc_container).on('click', smc_settings.click_event);
+                jQuery(smc_container).on('click', smc_settings.click_event);
+            }
         }
 
     });

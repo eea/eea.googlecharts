@@ -27,6 +27,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 leftAxisTitle : "",
                 rightAxisTitle : "",
                 displayLegend : false,
+                hideZoomOnView : false,
                 height : 100,
                 width : 100
             };
@@ -556,6 +557,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                             chartAreaTop: 1,
                             chartAreaWidth: 65,
                             displayLegend: false,
+                            hideZoomOnView : false,
                             height: 67,
                             width: 67
                         },
@@ -1222,7 +1224,8 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
             xAxisTitle: "",
             leftAxisTitle: "",
             rightAxisTitle: "",
-            displayLegend : false
+            displayLegend : false,
+            hideZoomOnView : false
         };
         jQuery.extend(true, chartSettings, common_settings);
         var previewDiv = jQuery("<div>")
@@ -1282,11 +1285,15 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
         settingsDiv.append("<input class='chartsettings chartLegend' type='checkbox'/>");
         settingsDiv.append("<div style='clear:both'> </div>");
 
+        settingsDiv.append("<label>Disable zoom on view</label>");
+        settingsDiv.append("<input class='chartsettings hideZoomOnView' type='checkbox'/>");
+        settingsDiv.append("<div style='clear:both'> </div>");
+
         previewDiv.dialog({
             dialogClass: "googlechart-dialog googlechart-preview-dialog",
             modal: true,
             width: chartSettings.width + 400,
-            height: chartSettings.height + 140,
+            height: chartSettings.height + 170,
             minWidth: chartSettings.width + 400,
             minHeight: chartSettings.height + 140,
             title: "Size adjustments",
@@ -1305,6 +1312,9 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                 jQuery(".settingsDiv .rightAxisTitle").attr("value", chartSettings.rightAxisTitle);
                 if (chartSettings.displayLegend === true){
                     jQuery(".settingsDiv .chartLegend").attr("checked", "checked");
+                }
+                if (chartSettings.hideZoomOnView === true){
+                    jQuery(".settingsDiv .hideZoomOnView").attr("checked", "checked");
                 }
                 jQuery(".preview-controls .btn-success").bind("click", function(){
                     var widget = jQuery("#multiples_"+base_chart).data("widget");
@@ -1327,8 +1337,12 @@ jQuery(document).bind("multiplesEditPreviewReady", function(evt, base_chart, mul
                     chartSettings.leftAxisTitle = jQuery(".settingsDiv .leftAxisTitle").attr("value");
                     chartSettings.rightAxisTitle = jQuery(".settingsDiv .rightAxisTitle").attr("value");
                     chartSettings.displayLegend = false;
+                    chartSettings.hideZoomOnView = false;
                     if (jQuery(".settingsDiv .chartLegend").attr("checked") === "checked"){
                         chartSettings.displayLegend = true;
+                    }
+                    if (jQuery(".settingsDiv .hideZoomOnView").attr("checked") === "checked"){
+                        chartSettings.hideZoomOnView = true;
                     }
                     if (prevWidth === chartSettings.width && prevHeight === chartSettings.height){
                         chartSettings.chartAreaWidth = parseInt(jQuery(".settingsDiv .chartAreaWidth").attr("value"), 10);
