@@ -3,6 +3,8 @@ Changelog
 
 15.9.dev0 - (unreleased)
 ------------------------
+* Bugfix: Fixed query string parsing
+  [chiridra refs #72263]
 
 15.8 - (2016-06-16)
 -------------------
