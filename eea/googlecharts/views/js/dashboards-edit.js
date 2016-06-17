@@ -67,7 +67,7 @@ DavizEdit.GoogleDashboards.prototype = {
   close: function(){
     var self = this;
     self.active = null;
-    return self.reload(false);
+    return self.reload(true);
   },
 
   onReload: function(){
