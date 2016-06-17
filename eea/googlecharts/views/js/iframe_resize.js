@@ -61,6 +61,23 @@ DavizIframeResizer.ChartResizer.prototype = {
         this.lock.delay(1500).slideUp();
     },
 
+    parseQueryString: function(src){
+        var qs_full = src.split('?')[1];
+        var qs = qs_full;
+        var qs_filters = '';
+        if (qs_full.indexOf('#_filters=')>0) {
+            var qs_params = qs_full.split('#_filters=');
+            qs = qs_params[0];
+            qs_filters = qs_params[1];
+        }
+        var params = jQuery.deparam(qs);
+        var params_filters = null;
+        if (qs_filters.length>0) {
+            params_filters = JSON.parse(decodeURIComponent(qs_filters).split(";").join(","));
+        }
+        return [params, params_filters, qs_filters];
+    },
+
     updateMasks: function(sizes){
         var self = this;
         jQuery(".custom-overlay-mask.top")
@@ -86,7 +103,7 @@ DavizIframeResizer.ChartResizer.prototype = {
 
     resizeIframe: function(options){
         var self = this;
-        settings = {
+        var settings = {
             width: 0,
             height: 0,
             chartWidth: 0,
@@ -104,7 +121,10 @@ DavizIframeResizer.ChartResizer.prototype = {
         jQuery.extend(settings, options);
         self.context.width(settings.width);
         self.context.height(settings.height);
-        var params = jQuery.deparam(self.iframeNewSettings.src.split("?")[1]);
+        var params_data = self.parseQueryString(self.iframeNewSettings.src)
+        var params = params_data[0];
+        var params_filters = params_data[1];
+        var params_hash = params_data[2];
         if ((parseInt(params.chartWidth, 10) === settings.chartWidth) && (parseInt(params.chartHeight, 10) === settings.chartHeight)){
             delete params.padding;
             if (settings.areaWidth !== 0){
@@ -149,6 +169,9 @@ DavizIframeResizer.ChartResizer.prototype = {
             }
         }
         var new_src = self.iframeNewSettings.src.split("?")[0] + "?" + jQuery.param(params);
+        if (params_hash) {
+            new_src = new_src + '#_filters=' + params_hash;
+        }
         self.context.attr("src", new_src);
 
         var loopForSet = function(){
