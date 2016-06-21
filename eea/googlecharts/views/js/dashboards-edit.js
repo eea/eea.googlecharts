@@ -33,12 +33,7 @@ DavizEdit.GoogleDashboards.prototype = {
     // Events
     jQuery(document).unbind('.dashboards');
     jQuery(document).bind(DavizEdit.Events.charts.changed + ".dashboards", function(evt, data){
-      if (self.context.is(":visible")){
         self.reload(true);
-      }
-      else {
-        self.close();
-      }
     });
 
     jQuery(document).bind(DavizEdit.Events.dashboard.removed + ".dashboards", function(evt, data){
@@ -67,7 +62,7 @@ DavizEdit.GoogleDashboards.prototype = {
   close: function(){
     var self = this;
     self.active = null;
-    return self.reload(true);
+    return self.reload(false);
   },
 
   onReload: function(){
