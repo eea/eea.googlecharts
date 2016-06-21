@@ -1547,7 +1547,14 @@ function drawGoogleDashboard(options){
                 .width(value.dashboard.width)
                 .height(value.dashboard.height)
                 .data('dashboard', value.dashboard)
-                .load(dashboardLink + '@@' + value.wtype, {name: value.name, dashboard: settings.dashboardName});
+
+            var notesContainer =  jQuery("<div>")
+                .addClass('googlechart-notes')
+                .appendTo(widgetDiv);
+            var noteContainer = jQuery("<div>")
+                .addClass('googlecharts-note')
+                .appendTo(notesContainer);
+            noteContainer.load(dashboardLink + '@@' + value.wtype, {name: value.name, dashboard: settings.dashboardName});
 
                 widgetDiv.appendTo('#'+settings.chartViewsDiv);
         }
