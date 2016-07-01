@@ -1359,7 +1359,7 @@ function moveIfFirst(){
             charteditor_dialog.addClass("googlechart-editor");
             isFirstEdit = false;
             if (jQuery(".google-visualization-charteditor-data-mismatch").length > 0){
-                jQuery(".google-visualization-charteditor-panel-navigation-cell:contains('Start')").click()
+                jQuery(".google-visualization-charteditor-panel-navigation-cell:contains('Start')").click();
             }
         }
         else{
@@ -1648,7 +1648,7 @@ BRANCH DAVIZTRAINING
     var tmp_series = {};
     var series_ids = [];
     var isFirst = true;
-    for (var i = 0; i < tmp_dataTable.getNumberOfColumns(); i++){
+    for (i = 0; i < tmp_dataTable.getNumberOfColumns(); i++){
         if ((tmp_dataTable.getColumnRole(i) === "") || (tmp_dataTable.getColumnRole(i) === "data")){
             if (!isFirst){
                 series_ids.push(tmp_dataTable.getColumnId(i));
@@ -1689,7 +1689,7 @@ BRANCH DAVIZTRAINING
     var tableForChart = prepareForChart(options);
 
     // workaround for charteditor issue #17629
-    for (var i = 0; i < tableForChart.getNumberOfColumns(); i++){
+    for (i = 0; i < tableForChart.getNumberOfColumns(); i++){
         tableForChart.getColumnProperties(i);
     }
     // end of workaround
@@ -4373,7 +4373,7 @@ function fetchNextMessage(){
             });
             ChartEditor.openDialog(wrapper, {});
 
-            NiceMessages[key] = jQuery("#google-visualization-charteditor-preview-div-chart").html()
+            NiceMessages[key] = jQuery("#google-visualization-charteditor-preview-div-chart").html();
             ChartEditor.closeDialog();
             ChartEditor = null;
             fetchNextMessage();

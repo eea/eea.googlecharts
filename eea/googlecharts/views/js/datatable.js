@@ -669,17 +669,18 @@ function prepareForChart(options){
     jQuery(itemsToDisplay).each(function(row_index, row){
         var newRow = [];
         jQuery(columnsForChart).each(function(column_index, column_settings){
+            var error_base_value, error_type, error_value;
             if (column_settings.type === 'customerrorbar_min'){
-                var error_base_value = row[column_settings.parent];
-                var error_type = settings.errorbars[column_settings.parent].type;
-                var error_value = settings.errorbars[column_settings.parent].value;
+                error_base_value = row[column_settings.parent];
+                error_type = settings.errorbars[column_settings.parent].type;
+                error_value = settings.errorbars[column_settings.parent].value;
                 newRow.push(error_type === 'constant' ? error_base_value - error_value: error_base_value / 100 * (100 - error_value));
                 return;
             }
             if (column_settings.type === 'customerrorbar_max'){
-                var error_base_value = row[column_settings.parent];
-                var error_type = settings.errorbars[column_settings.parent].type;
-                var error_value = settings.errorbars[column_settings.parent].value;
+                error_base_value = row[column_settings.parent];
+                error_type = settings.errorbars[column_settings.parent].type;
+                error_value = settings.errorbars[column_settings.parent].value;
                 newRow.push(error_type === 'constant' ? error_base_value + error_value: error_base_value / 100 * (100 + error_value));
                 return;
             }
