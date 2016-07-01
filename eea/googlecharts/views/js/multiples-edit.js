@@ -182,7 +182,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 .addClass("multiples-matrix-config")
                 .css("display","none")
                 .appendTo(".multiples-config");
-            var widget_height = 0
+            var widget_height = 0;
             if (jQuery(".multiples-config").closest(".googlechart-widget-edit").length === 0){
                 widget_height = jQuery(".multiples-config").closest(".googlechart-widget-add").height();
             }

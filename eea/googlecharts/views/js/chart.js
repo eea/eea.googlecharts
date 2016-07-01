@@ -806,10 +806,10 @@ function openChartDialog(evt) {
                 var parent_top = jQuery("#original_chart_div").attr("parent_top");
                 var parent_left = jQuery("#original_chart_div").attr("parent_left");
 
-                var new_chart_width = Math.min(w, original_settings.width) - 100;
-                var new_chart_height = Math.min(h, original_settings.height) - 100;
+                new_chart_width = Math.min(w, original_settings.width) - 100;
+                new_chart_height = Math.min(h, original_settings.height) - 100;
 
-                dialog_position = [(w - (new_chart_width + 50)) / 2, parseInt(parent_top)];
+                dialog_position = [(w - (new_chart_width + 50)) / 2, parseInt(parent_top, 10)];
 
                 $(this).dialog( "option", "width", new_chart_width + 50);
                 $(this).dialog( "option", "height", new_chart_height + 50);
@@ -1546,7 +1546,7 @@ function drawGoogleDashboard(options){
                 .attr('title', value.title)
                 .width(value.dashboard.width)
                 .height(value.dashboard.height)
-                .data('dashboard', value.dashboard)
+                .data('dashboard', value.dashboard);
 
             var notesContainer =  jQuery("<div>")
                 .addClass('googlechart-notes')

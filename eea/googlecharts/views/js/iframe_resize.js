@@ -121,7 +121,7 @@ DavizIframeResizer.ChartResizer.prototype = {
         jQuery.extend(settings, options);
         self.context.width(settings.width);
         self.context.height(settings.height);
-        var params_data = self.parseQueryString(self.iframeNewSettings.src)
+        var params_data = self.parseQueryString(self.iframeNewSettings.src);
         var params = params_data[0];
         var params_filters = params_data[1];
         var params_hash = params_data[2];
