@@ -1,8 +1,8 @@
 Changelog
 =========
 
-15.9.dev0 - (unreleased)
-------------------------
+15.9 - (2016-07-07)
+-------------------
 * Bugfix: Fixed query string parsing
   [chiridra refs #72263]
 
