@@ -390,8 +390,6 @@ function drawDashboard(value, other_options){
                 "<div id='googlechart_filters' class='googlechart_filters'></div>"+
                 "<div id='googlechart_view' class='googlechart'></div>"+
                 "<div style='clear: both'></div>" +
-                "<div id='googlechart_wm' class='eea-googlechart-hidden-image'></div>" +
-                "<div style='clear: both'></div>" +
                 "<div id='googlechart_bottom_images'></div>"+
                 "<div style='clear: both'></div>" +
             "</div>";
@@ -838,6 +836,22 @@ var googleChartOnTabClick = function(settings){
     googleChartTabClick(tab);
 };
 
+var changeDashboardId = function(idx){
+    var divs = [
+        'googlechart_wm',
+        'googlechart_qr',
+        'googlechart_bottom_images',
+        'googlechart_view',
+        'googlechart_filters',
+        'googlechart_top_images',
+        'googlechart_table',
+        'googlechart_dashboard'
+        ]
+    for (var i = 0; i < divs.length; i++){
+        jQuery("#" + divs[i]).attr("id", divs[i] + "_" + idx);
+    }
+}
+
 jQuery(document).ready(function($){
     // workaround for firefox issue: http://taskman.eionet.europa.eu/issues/9941
     // Removed workaround as the issue has been already fixed. Details here:
@@ -856,12 +870,31 @@ jQuery(document).ready(function($){
         return;
     }
     var is_pdf_printing = embedModule && embedModule.isPrint;
+
+    // temporary workaround, apparently is_pdf_printing is not working
+    var rendering_pdf;
+    try{
+//        window.matchMedia('print').matches;
+        var url = window.location.href;
+        if (url.indexOf("pdf.body") > -1){
+            rendering_pdf = true;
+        }
+    }
+    catch(e){
+        rendering_pdf = false;
+    }
+
     if (!is_pdf_printing) {
         patched_each(googlechart_config_array, function(key, config){
             config[1].options.title = config[1].options.title + " — " + window.main_title;
         });
     }
 
+    if (rendering_pdf) {
+        patched_each(googlechart_config_array, function(key, config){
+            config[1].options.title = "";
+        });
+    }
     // Integrate google charts with daviz tabs
     jQuery('.googlecharts_container').hide();
     jQuery(document).bind('eea-daviz-tab-click', function(evt, settings){
@@ -891,11 +924,44 @@ jQuery(document).ready(function($){
 
     gl_charts.googlechart_view = null;
 
-    googleChartOnTabClick({
-        api: api,
-        tab: api.getTabs()[index],
-        index: index
-    });
+    if (!rendering_pdf){
+        googleChartOnTabClick({
+            api: api,
+            tab: api.getTabs()[index],
+            index: index
+        });
+    }
+    else {
+        jQuery(".chart-tabs").hide();
+        jQuery("<h2>")
+            .text("Charts")
+            .insertBefore("#googlechart_dashboard");
+        patched_each(api.getTabs(), function(idx, tab){
+            jQuery("<div>")
+                .addClass("nobreak")
+                .addClass("nobreak_for_chart_" + idx)
+                .insertAfter("#googlechart_dashboard");
+            googleChartOnTabClick({
+                api: api,
+                tab: api.getTabs()[idx],
+                index: idx,
+            });
+            var title = jQuery(tab).find("span").text();
+            changeDashboardId(idx);
+            jQuery("<h3>")
+                .text(title)
+                .appendTo(".nobreak_for_chart_" + idx);
+            jQuery("#googlechart_dashboard_" + idx).appendTo(".nobreak_for_chart_" + idx);
+            jQuery("<div>")
+                .attr("id", "googlechart_dashboard")
+                .insertAfter(".nobreak_for_chart_" + idx);
+        });
+        jQuery("<h2>")
+            .text("Data")
+            .insertAfter("#googlechart_dashboard");
+        jQuery(".smc-controls").hide()
+        jQuery("#googlechart_embed_button").hide();
+    }
 
     jQuery(window).resize(_.debounce(function() {
         var new_width = jQuery('#googlechart_table').width() - 20;
