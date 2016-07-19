@@ -1,6 +1,9 @@
 Changelog
 =========
 
+16.1.dev0 - (unreleased)
+------------------------
+
 16.0 - (2016-07-19)
 -------------------
 * Feature: Chart preview and size adjustments layout problems
