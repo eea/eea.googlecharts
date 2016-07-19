@@ -6041,7 +6041,6 @@ function init_googlecharts_edit(){
                         return;
                     }
                 }
-                debugger;
                 var width_ratio = elem.width() / chartObj.attr("widthPrevious");
                 var height_ratio = elem.height() / chartObj.attr("heightPrevious");
                 var chartAreaLeft = JSON.parse(chartObj.attr("chartArea")).left * width_ratio;
