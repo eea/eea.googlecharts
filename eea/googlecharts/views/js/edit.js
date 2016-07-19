@@ -1648,7 +1648,7 @@ BRANCH DAVIZTRAINING
     var tmp_series = {};
     var series_ids = [];
     var isFirst = true;
-    for (i = 0; i < tmp_dataTable.getNumberOfColumns(); i++){
+    for (var i = 0; i < tmp_dataTable.getNumberOfColumns(); i++){
         if ((tmp_dataTable.getColumnRole(i) === "") || (tmp_dataTable.getColumnRole(i) === "data")){
             if (!isFirst){
                 series_ids.push(tmp_dataTable.getColumnId(i));
@@ -1689,7 +1689,7 @@ BRANCH DAVIZTRAINING
     var tableForChart = prepareForChart(options);
 
     // workaround for charteditor issue #17629
-    for (i = 0; i < tableForChart.getNumberOfColumns(); i++){
+    for (var i = 0; i < tableForChart.getNumberOfColumns(); i++){
         tableForChart.getColumnProperties(i);
     }
     // end of workaround
@@ -5736,6 +5736,7 @@ function drawPreviewChart(chartObj, width, height){
         type:'post',
         data:query,
         success:function(data){
+            jQuery('#preview-iframe').dialog("option", "resizable", true);            
             var preview_container = jQuery('<div class="preview-container"></div>');
             jQuery('#preview-iframe').append(preview_container);
             preview_container.width(width);
@@ -5823,9 +5824,11 @@ function drawPreviewChart(chartObj, width, height){
                 chartObj.attr("hasChartArea", true);
                 drawPreviewChart(chartObj, width, height);
             });
+            if (jQuery('#googlechartarea-legend').attr('checked')) {
+                $('.chartArea').hide();
+            }
         }
     });
-
 }
 
 function init_googlecharts_edit(){
@@ -5990,14 +5993,23 @@ function init_googlecharts_edit(){
         var width = parseInt(chartObj.find(".googlechart_width").val(),10);
         var height = parseInt(chartObj.find(".googlechart_height").val(),10);
         jQuery( '#preview-iframe').remove();
-        previewDiv = jQuery("<div id='preview-iframe'></div>");
-        controlsDiv = jQuery("<div class='preview-controls'> </div>");
-        controlsDiv.append("<input class='chartsize chartWidth' type='number'/>");
-        controlsDiv.append("<span>x</span>");
-        controlsDiv.append("<input class='chartsize chartHeight' type='number'/>");
-        controlsDiv.append("<span>px</span>");
-        controlsDiv.append("<input value='Cancel' class='btn btn-inverse' type='button'/>");
-        controlsDiv.append("<input value='Save' class='btn btn-success' type='button'/>");
+        var previewDiv = jQuery("<div id='preview-iframe'></div>");
+        var controlsDiv = jQuery("<div class='preview-controls'> </div>");
+        var legendDiv = jQuery("<div class='legend-controls'> </div>");
+        legendDiv.append("<label for='googlechartarea-legend'>Show only legend</label> ");
+        legendDiv.append("<input id='googlechartarea-legend' name='googlechartarea-legend' type='checkbox' />");
+        controlsDiv.append(legendDiv);
+        var sizesDiv = jQuery("<div class='sizes-controls'> </div>");
+        sizesDiv.append("<input class='chartsize chartWidth' type='number'/>");
+        sizesDiv.append("<span>x</span>");
+        sizesDiv.append("<input class='chartsize chartHeight' type='number'/>");
+        sizesDiv.append("<span>px</span>");
+        var buttonsDiv = jQuery("<div class='buttons-controls'> </div>");
+        buttonsDiv.append("<input value='Cancel' class='btn btn-inverse' type='button'/>");
+        buttonsDiv.append("<input value='Save' class='btn btn-success' type='button'/>");
+        sizesDiv.append(buttonsDiv);
+        controlsDiv.append(sizesDiv);
+        controlsDiv.append("<div style='clear:both;'> </div>");
         previewDiv.append(controlsDiv);
         previewDiv.dialog({
             dialogClass: 'googlechart-dialog googlechart-preview-dialog',
@@ -6013,6 +6025,7 @@ function init_googlecharts_edit(){
                 jQuery(".preview-controls .chartHeight").attr("value", tmp_height);
             },
             resizeStop: function(){
+                jQuery(this).dialog("option", "resizable", false);
                 var elem = jQuery(this);
                 if (JSON.parse(chartObj.find(".googlechart_configjson").attr("value")).chartType === "ImageChart"){
                     if (elem.width() * elem.height() > 300000){
@@ -6028,6 +6041,7 @@ function init_googlecharts_edit(){
                         return;
                     }
                 }
+                debugger;
                 var width_ratio = elem.width() / chartObj.attr("widthPrevious");
                 var height_ratio = elem.height() / chartObj.attr("heightPrevious");
                 var chartAreaLeft = JSON.parse(chartObj.attr("chartArea")).left * width_ratio;
@@ -6059,10 +6073,13 @@ function init_googlecharts_edit(){
                     height: "61.8%"
                 };
                 jQuery.extend(chartAreaSettings, adv_options.chartArea);
-                chartAreaLeft = chartAreaAttribute2px(chartAreaSettings.left, width);
-                chartAreaTop = chartAreaAttribute2px(chartAreaSettings.top, height);
-                chartAreaWidth = chartAreaAttribute2px(chartAreaSettings.width, width);
-                chartAreaHeight = chartAreaAttribute2px(chartAreaSettings.height, height);
+                var chartAreaLeft = chartAreaAttribute2px(chartAreaSettings.left, width);
+                var chartAreaTop = chartAreaAttribute2px(chartAreaSettings.top, height);
+                var chartAreaWidth = chartAreaAttribute2px(chartAreaSettings.width, width);
+                var chartAreaHeight = chartAreaAttribute2px(chartAreaSettings.height, height);
+                if ((chartAreaLeft==0) && (chartAreaTop==0) && (chartAreaWidth==0)) {
+                    $('#googlechartarea-legend').prop('checked', true);
+                }
                 chartObj.attr("chartArea", JSON.stringify({left: chartAreaLeft, top:chartAreaTop, width:chartAreaWidth, height: chartAreaHeight}));
                 chartObj.attr("hasChartArea", true);
                 drawPreviewChart(chartObj,
@@ -6116,6 +6133,26 @@ function init_googlecharts_edit(){
                     }
                     jQuery("#preview-iframe").dialog("close");
                     markChartAsModified(chartObj.find(".googlechart_id").attr("value"));
+                });
+                jQuery("#googlechartarea-legend").click(function(){
+                    var chart_area = $('.chartArea');
+                    var chart_area_top = jQuery(".googlechartarea-top");
+                    var chart_area_left = jQuery(".googlechartarea-left");
+                    var chart_area_width = jQuery(".googlechartarea-width");
+                    var chart_area_height = jQuery(".googlechartarea-height");
+                    if($(this).attr('checked')) {
+                        chart_area_top.attr("value", '0');
+                        chart_area_left.attr("value", '0');
+                        chart_area_width.attr("value", '0');
+                        chart_area_height.attr("value",  jQuery(".preview-controls .chartHeight").attr("value"));
+                    } else {
+                        var preview_container = $('.preview-container');
+                        chart_area_top.attr("value", parseInt(preview_container.height()*19.1/100, 10));
+                        chart_area_left.attr("value", parseInt(preview_container.width()*19.1/100, 10));
+                        chart_area_width.attr("value", parseInt(preview_container.width()*61.8/100, 10));
+                        chart_area_height.attr("value", parseInt(preview_container.height()*61.8/100, 10));
+                    }
+                    jQuery('.googlechartarea-size').trigger("change");
                 });
                 var elem = jQuery(this);
                 jQuery(".preview-controls .chartWidth").attr("value", width);

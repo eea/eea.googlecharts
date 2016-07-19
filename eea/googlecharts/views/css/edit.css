@@ -1531,6 +1531,24 @@ li.googlechart > fieldset > div > a > span {
     text-align:center;
 }
 
+.googlechart-preview-dialog .preview-controls .chartsize.chartWidth,
+.googlechart-preview-dialog .preview-controls .chartsize.chartHeight {
+    width:50px;
+}
+
+.legend-controls {
+    float:left;
+    font-size:14px;
+    line-height:20px;
+}
+
+.buttons-controls {
+    float:right;
+    font-size:14px;
+    line-height:20px;
+    margin-bottom:9px;
+}
+
 .googlechart-preview-dialog .btn{
     float:right;
 }
