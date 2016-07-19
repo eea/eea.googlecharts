@@ -1,11 +1,14 @@
 Changelog
 =========
 
-16.0.dev0 - (unreleased)
+16.1.dev0 - (unreleased)
 ------------------------
+
+16.0 - (2016-07-19)
+-------------------
 * Feature: Chart preview and size adjustments layout problems
   [chiridra refs #73098]
-  
+
 15.9 - (2016-07-07)
 -------------------
 * Bugfix: Fixed query string parsing
