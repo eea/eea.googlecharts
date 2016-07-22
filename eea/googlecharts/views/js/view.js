@@ -871,26 +871,13 @@ jQuery(document).ready(function($){
     }
     var is_pdf_printing = embedModule && embedModule.isPrint;
 
-    // temporary workaround, apparently is_pdf_printing is not working
-    var rendering_pdf;
-    try{
-//        window.matchMedia('print').matches;
-        var url = window.location.href;
-        if (url.indexOf("pdf.body") > -1){
-            rendering_pdf = true;
-        }
-    }
-    catch(e){
-        rendering_pdf = false;
-    }
-
     if (!is_pdf_printing) {
         patched_each(googlechart_config_array, function(key, config){
             config[1].options.title = config[1].options.title + " — " + window.main_title;
         });
     }
 
-    if (rendering_pdf) {
+    if (is_pdf_printing) {
         patched_each(googlechart_config_array, function(key, config){
             config[1].options.title = "";
         });
@@ -924,7 +911,7 @@ jQuery(document).ready(function($){
 
     gl_charts.googlechart_view = null;
 
-    if (!rendering_pdf){
+    if (!is_pdf_printing){
         googleChartOnTabClick({
             api: api,
             tab: api.getTabs()[index],
