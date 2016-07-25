@@ -1,6 +1,6 @@
 /* View Google Charts
 */
-
+@media screen {
 .tab-charts span {
   background-image: url("../../++resource++eea.googlecharts.images/charts-icon.png");
   background-repeat: no-repeat;
@@ -822,4 +822,14 @@ input.googlechart-chart-size {
 
 .google-visualization-table {
     border: 0!important;
+}
+}
+
+@media print {
+    .smc-controls {
+        display:none;
+    }
+    #googlechart_embed_button {
+        display:none !important;
+    }
 }
