@@ -3,6 +3,9 @@ Changelog
 
 16.1.dev0 - (unreleased)
 ------------------------
+* Bugfix: fixed missing data on Combocharts after the addition
+  of errorbars functionality
+  [ichim-david refs #75041]
 
 16.0 - (2016-07-19)
 -------------------
