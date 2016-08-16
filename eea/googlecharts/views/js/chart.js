@@ -360,6 +360,10 @@ function drawGoogleChart(options){
         ax.format = ax.format.replace(/[^0-9.,#]/g, '');
     }
     /* end of removing duplicated suffixes */
+    // 75041 data-and-maps/daviz/estimated-global-level-production-and
+    // chart data is missing without clearing the view and having it empty
+    // as it was until 206f1ab removed the errorbars
+    settings.chartJson.view = {columns: null, rows: null};
     var chart = new google.visualization.ChartWrapper(settings.chartJson);
 
     var filtersArray = [];
