@@ -1,6 +1,9 @@
 Changelog
 =========
 
+16.2.dev0 - (unreleased)
+------------------------
+
 16.1 - (2016-08-17)
 -------------------
 * Bugfix: fixed missing data on Combocharts after the addition
