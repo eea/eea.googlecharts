@@ -846,6 +846,8 @@ dl.portlet .dashboard-widget,
     z-index:9999;
     position:absolute;
     cursor:pointer;
+    left: 352px;
+    top: 89px;
 }
 
 .googlechart_chart_config_scaleable_minimized #google-visualization-charteditor-preview-div-wrapper,
@@ -855,13 +857,18 @@ dl.portlet .dashboard-widget,
     -o-transform: scale(0.475); /* Opera */
     -moz-transform: scale(0.475); /* Firefox */
     -webkit-transform: scale(0.475); /* Safari and Chrome */
-    margin-left: -453px;
-    margin-top: 305px;
+    margin-left: -511px;
+    margin-top: 270px;
     border:3px solid #e4e4e4;
 }
 
 .googlechart_chart_config_scaleable_minimized .google-visualization-charteditor-preview-td{
     overflow:visible;
+}
+
+.googlechart_chart_config_scaleable_maximized .google-visualization-charteditor-preview-td{
+    left:290px;
+    top:23px;
 }
 
 .googlechart_table_config_scaleable_maximized.googlechart_table_config_scaleable {
@@ -1824,7 +1831,7 @@ div.googlechartarea-input {
     padding:5px;
     float:left;
     font-weight:bold;
-    width: 86%;
+    width: 80%;
 }
 
 .googlechart .eea-icon-plus-square-o:before,
@@ -2355,4 +2362,16 @@ div.field[id*='multiples_settings'] {
 .multiples-matrix-config-column-horizontal,
 .multiples-matrix-config-column-vertical{
     z-index:1030;
+}
+
+#google-visualization-charteditor-panel-navigate-div{
+    border-bottom:0 !important;
+}
+
+.google-visualization-charteditor-panel-title {
+    display:none;
+}
+
+.google-visualization-charteditor-dialog {
+    outline:none;
 }
