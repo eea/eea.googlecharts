@@ -3,6 +3,8 @@ Changelog
 
 16.2.dev0 - (unreleased)
 ------------------------
+* Bugfix: Fixed layout issues on Charteditor
+  [szabozo0 refs #74773]
 
 16.1 - (2016-08-17)
 -------------------

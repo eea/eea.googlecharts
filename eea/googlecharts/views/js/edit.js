@@ -1483,30 +1483,6 @@ function getValidatedLineDashStyle(value){
     }
 }
 
-function resizeTableConfigurator(forced){
-    if ((jQuery(".googlechart_table_config_scaleable_maximized").length > 0) || forced){
-        var fullwidth = jQuery(".googlecharts-customdialog").width();
-        var fullheight = jQuery(".googlecharts_columns_config").height();
-        var chart_preview = jQuery(".google-visualization-charteditor-preview-td");
-        var newTable = jQuery("#newTable");
-        var offset = jQuery(".googlechart_table_config_scaleable").offset();
-        var helper = jQuery(".googlechart_chart_config_info.hint");
-        var helperheight = helper.height() + parseFloat(helper.css("margin-top")) + parseFloat(helper.css("margin-bottom")) + parseFloat(helper.css("padding-top")) + parseFloat(helper.css("padding-bottom"));
-
-        var container_heightstr = 'height:'+(fullheight - helperheight - 50)+'px;width:'+(fullwidth-340)+'px;';
-        jQuery(".googlechart_table_config_scaleable").attr("style",container_heightstr);
-        var panel = jQuery(".panel-container");
-        jQuery(".googlechart_table_config_scaleable").offset({top:panel.offset().top + 5 + panel.height(), left: offset.left});
-
-        var accordion_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
-        var accordion_container_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
-        jQuery(".googlechart_accordion_table").attr("style",accordion_heightstr);
-        jQuery(".googlechart_accordion_container").attr("style",accordion_container_heightstr);
-        newTable.height(newTable.parent().height() - (newTable.offset().top - newTable.parent().offset().top) - 100);
-        grid.resizeCanvas();
-    }
-}
-
 function redrawEditorChart() {
     var tmpwrapper = chartEditor.getChartWrapper();
     tmpwrapper.setView();
@@ -2500,7 +2476,7 @@ resizeTableConfigurator = function(forced){
         var container_heightstr = 'height:'+(fullheight - helperheight - 50)+'px;width:'+(fullwidth-340)+'px;';
         jQuery(".googlechart_table_config_scaleable").attr("style",container_heightstr);
         var panel = jQuery(".panel-container");
-        jQuery(".googlechart_table_config_scaleable").offset({top:panel.offset().top + 5 + panel.height(), left: offset.left});
+        jQuery(".googlechart_table_config_scaleable").offset({top:panel.offset().top + 5 + panel.height(), left: panel.offset().left});
 
         var accordion_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
         var accordion_container_heightstr = 'height:'+(fullheight-helperheight)+'px;width:'+(fullwidth-340)+'px;';
@@ -4625,8 +4601,6 @@ openEditChart = function(id){
         jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_hover");
         jQuery(".googlechart_maximize_table_config").removeClass("googlechart_config_hover");
         jQuery("<div>")
-            .css("left", chart_pos.left)
-            .css("top", chart_pos.top)
             .width(jQuery("#google-visualization-charteditor-preview-div-wrapper").width())
             .height(jQuery("#google-visualization-charteditor-preview-div-wrapper").height())
             .addClass("googlechart_minimized_chart_clickable")
