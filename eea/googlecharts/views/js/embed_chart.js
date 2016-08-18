@@ -32,7 +32,9 @@ function drawChart(value, options){
         wm_path : '',
         vhash : '',
         name : '',
-        isInline : 'False'
+        isInline : 'False',
+        skipprefix: false,
+        skiptitle: false
     };
 
     jQuery.extend(settings, options);
@@ -201,7 +203,15 @@ function drawChart(value, options){
     if (!is_pdf_printing) {
         embedchart_json.options.title = settings.name + " — " + settings.main_title;
     }
-
+    if (settings.skiptitle) {
+        embedchart_json.options.title = settings.main_title;
+    }
+    if (settings.skipprefix) {
+        embedchart_json.options.title = settings.name;
+    }
+    if ((settings.skipprefix) && (settings.skiptitle)){
+        embedchart_json.options.title = "";
+    }
     var googlechart_params = {
         chartDashboard : 'googlechart_dashboard_'+settings.vhash,
         chartViewDiv : 'googlechart_view_'+settings.vhash,

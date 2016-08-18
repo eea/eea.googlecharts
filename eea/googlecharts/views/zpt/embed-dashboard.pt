@@ -67,6 +67,8 @@
         var iframe_wm_settings_$vhash = ${view/wm_iframe_settings};
         var main_title_$vhash = '${view/get_maintitle}';
         var isInline_$vhash = '$inline';
+        var skipPrefix_$vhash = ${view/skipPrefix};
+        var skipTitle_$vhash = ${view/skipTitle};
         EEAGoogleCharts =  window.EEAGoogleCharts || {};
         EEAGoogleCharts.embed = EEAGoogleCharts.embed || {};
         window.EEAGoogleCharts.embed.isPrint = $isPrint;
@@ -107,7 +109,9 @@
                 merged_rows : merged_rows_$vhash,
                 available_columns : available_columns_$vhash,
                 vhash : '$vhash',
-                isInline : isInline_$vhash
+                isInline : isInline_$vhash,
+                skipprefix: skipPrefix_$vhash,
+                skiptitle: skipTitle_$vhash
             };
             if (isPrint || isInline_$vhash !== 'True'){
                 drawDashboardEmbed(settings_$vhash);
