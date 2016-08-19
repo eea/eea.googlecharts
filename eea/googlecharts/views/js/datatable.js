@@ -495,21 +495,23 @@ function applyFormattersOnDataTable(options){
 
 function getErrorbarsFromSeries(series){
     var errorbars = {};
-    patched_each(series, function(key, settings){
-        if (!isNaN(key)){
-            return;
-        }
-        if (settings.errorBars !== undefined){
-            if (settings.errorBars.errorType !== 'none'){
-                errorbars[key] = {};
-                errorbars[key].type = settings.errorBars.errorType;
-                errorbars[key].value = settings.errorBars.magnitude;
-                if (errorbars[key].value === undefined){
-                    errorbars[key].value = 10;
+    if (series !== undefined){
+        patched_each(series, function(key, settings){
+            if (!isNaN(key)){
+                return;
+            }
+            if (settings.errorBars !== undefined){
+                if (settings.errorBars.errorType !== 'none'){
+                    errorbars[key] = {};
+                    errorbars[key].type = settings.errorBars.errorType;
+                    errorbars[key].value = settings.errorBars.magnitude;
+                    if (errorbars[key].value === undefined){
+                        errorbars[key].value = 10;
+                    }
                 }
             }
-        }
-    });
+        });
+    }
     return errorbars;
 }
 function prepareForChart(options){
