@@ -33,8 +33,8 @@ function drawChart(value, options){
         vhash : '',
         name : '',
         isInline : 'False',
-        skipprefix: false,
-        skiptitle: false
+        skipDavizTitle: false,
+        skipChartTitle: false
     };
 
     jQuery.extend(settings, options);
@@ -203,13 +203,13 @@ function drawChart(value, options){
     if (!is_pdf_printing) {
         embedchart_json.options.title = settings.name + " — " + settings.main_title;
     }
-    if (settings.skiptitle) {
+    if (settings.skipChartTitle) {
         embedchart_json.options.title = settings.main_title;
     }
-    if (settings.skipprefix) {
+    if (settings.skipDavizTitle) {
         embedchart_json.options.title = settings.name;
     }
-    if ((settings.skipprefix) && (settings.skiptitle)){
+    if ((settings.skipDavizTitle) && (settings.skipChartTitle)){
         embedchart_json.options.title = "";
     }
     var googlechart_params = {

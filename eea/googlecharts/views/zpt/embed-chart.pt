@@ -128,8 +128,8 @@
             var chart_json_$vhash = ${chart/config};
             var width_$vhash = ${chart/chartWidth};
             var height_$vhash = ${chart/chartHeight};
-            var skipPrefix_$vhash = ${chart/skipPrefix};
-            var skipTitle_$vhash = ${chart/skipTitle};
+            var skipDavizTitle_$vhash = ${chart/skipDavizTitle};
+            var skipChartTitle_$vhash = ${chart/skipChartTitle};
             var width_$vhash = isPrint && width_$vhash > 650 ? 650 : width_$vhash;
             var height_$vhash = isPrint && height_$vhash > 400 ? 400 : height_$vhash;
             var name_$vhash = '${chart_name}';
@@ -253,8 +253,8 @@
                     vhash: '$vhash',
                     name: name_$vhash,
                     isInline: isInline_$vhash,
-                    skipprefix: skipPrefix_$vhash,
-                    skiptitle: skipTitle_$vhash
+                    skipDavizTitle: skipDavizTitle_$vhash,
+                    skipChartTitle: skipChartTitle_$vhash
                 };
 
                 if(isPrint){

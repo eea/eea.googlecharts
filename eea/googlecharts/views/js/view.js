@@ -550,8 +550,8 @@ function showEmbed(){
                         '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>' +
                         '<div class="embed-settings">' +
                         '<h4>Title format</h4>' +
-                        '<p title="Include Daviz title (prefix)"><input type="checkbox" checked="checked" name="embed-include-title-prefix" id="embed-include-title-prefix"/>Include Daviz title (prefix)</p>' +
-                        '<p title="Include Chart title"><input type="checkbox" checked="checked" name="embed-include-title" id="embed-include-title"/>Include Chart title</p>'+
+                        '<p title="Include Daviz title"><input type="checkbox" checked="checked" name="embed-include-daviz-title" id="embed-include-daviz-title"/>Include Daviz title</p>' +
+                        '<p title="Include Chart title"><input type="checkbox" checked="checked" name="embed-include-chart-title" id="embed-include-chart-title"/>Include Chart title</p>'+
                         '<div class="visualClear"><!-- &nbsp; --></div>' +
                         '<h4>Chart size</h4>' +
                         '<div id="manual-chart-size">' +
@@ -746,11 +746,11 @@ function showEmbed(){
                         iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+
                             "&customStyle=.googlechart_view{margin-left:0px%3B}";
                     }
-                    if (jQuery("#embed-include-title-prefix").attr("checked") !== 'checked'){
-                        iframeSrc += "&skipprefix=true";
+                    if (jQuery("#embed-include-daviz-title").attr("checked") !== 'checked'){
+                        iframeSrc += "&skipdaviztitle=true";
                     }
-                    if (jQuery("#embed-include-title").attr("checked") !== 'checked'){
-                        iframeSrc += "&skiptitle=true";
+                    if (jQuery("#embed-include-chart-title").attr("checked") !== 'checked'){
+                        iframeSrc += "&skipcharttitle=true";
                     }
                     if (jQuery(".googlechart_embed_ignore_filters").attr("checked") === 'checked'){
                         iframeSrc += "#_filters=" + query_params;
