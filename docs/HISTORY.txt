@@ -1,8 +1,11 @@
 Changelog
 =========
 
-16.2.dev0 - (unreleased)
+16.3.dev0 - (unreleased)
 ------------------------
+
+16.2 - (2016-08-29)
+-------------------
 * Bugfix: Fixed layout issues on Charteditor
   [szabozo0 refs #74773]
 
