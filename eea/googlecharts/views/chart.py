@@ -167,10 +167,14 @@ class View(ViewForm):
         return json.dumps(dict(terms))
 
     def skipDavizTitle(self):
+        """ Return if should skip the daviz title
+        """
         skipDavizTitle = self.request.get("skipdaviztitle", 'false')
         return skipDavizTitle
 
     def skipChartTitle(self):
+        """ Return if should skip the chart title
+        """
         skipChartTitle = self.request.get("skipcharttitle", 'false')
         return skipChartTitle
 

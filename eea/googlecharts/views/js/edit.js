@@ -1665,8 +1665,8 @@ BRANCH DAVIZTRAINING
     var tableForChart = prepareForChart(options);
 
     // workaround for charteditor issue #17629
-    for (var i = 0; i < tableForChart.getNumberOfColumns(); i++){
-        tableForChart.getColumnProperties(i);
+    for (var col_nr = 0; col_nr < tableForChart.getNumberOfColumns(); col_nr++){
+        tableForChart.getColumnProperties(col_nr);
     }
     // end of workaround
 
@@ -6050,7 +6050,7 @@ function init_googlecharts_edit(){
                 var chartAreaTop = chartAreaAttribute2px(chartAreaSettings.top, height);
                 var chartAreaWidth = chartAreaAttribute2px(chartAreaSettings.width, width);
                 var chartAreaHeight = chartAreaAttribute2px(chartAreaSettings.height, height);
-                if ((chartAreaLeft==0) && (chartAreaTop==0) && (chartAreaWidth==0)) {
+                if ((chartAreaLeft === 0) && (chartAreaTop === 0) && (chartAreaWidth === 0)) {
                     $('#googlechartarea-legend').prop('checked', true);
                 }
                 chartObj.attr("chartArea", JSON.stringify({left: chartAreaLeft, top:chartAreaTop, width:chartAreaWidth, height: chartAreaHeight}));
