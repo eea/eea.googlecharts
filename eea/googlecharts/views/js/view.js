@@ -857,11 +857,11 @@ var changeDashboardId = function(idx){
         'googlechart_top_images',
         'googlechart_table',
         'googlechart_dashboard'
-        ]
+        ];
     for (var i = 0; i < divs.length; i++){
         jQuery("#" + divs[i]).attr("id", divs[i] + "_" + idx);
     }
-}
+};
 
 jQuery(document).ready(function($){
     // workaround for firefox issue: http://taskman.eionet.europa.eu/issues/9941
@@ -942,7 +942,7 @@ jQuery(document).ready(function($){
             googleChartOnTabClick({
                 api: api,
                 tab: api.getTabs()[idx],
-                index: idx,
+                index: idx
             });
             var title = jQuery(tab).find("span").text();
             changeDashboardId(idx);
@@ -957,7 +957,7 @@ jQuery(document).ready(function($){
         jQuery("<h2>")
             .text("Data")
             .insertAfter("#googlechart_dashboard");
-        jQuery(".smc-controls").hide()
+        jQuery(".smc-controls").hide();
         jQuery("#googlechart_embed_button").hide();
     }
 
