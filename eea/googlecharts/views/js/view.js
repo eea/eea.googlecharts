@@ -549,6 +549,10 @@ function showEmbed(){
                         '</div>'+
                         '<textarea class="iframeCode" style="width:96%" rows="7">' + iframeCode + '</textarea>' +
                         '<div class="embed-settings">' +
+                        '<h4>Title format</h4>' +
+                        '<p title="Include Daviz title"><input type="checkbox" checked="checked" name="embed-include-daviz-title" id="embed-include-daviz-title"/>Include Daviz title</p>' +
+                        '<p title="Include Chart title"><input type="checkbox" checked="checked" name="embed-include-chart-title" id="embed-include-chart-title"/>Include Chart title</p>'+
+                        '<div class="visualClear"><!-- &nbsp; --></div>' +
                         '<h4>Chart size</h4>' +
                         '<div id="manual-chart-size">' +
                         '<p>Drag slider to adjust chart size:</p>' +
@@ -559,6 +563,7 @@ function showEmbed(){
                         '<div class="chart-size-settings"><div class="chart-size">' +
                         '<p><label for="manual-chart-width">Chart width: </label><input type="text" name="manual-chart-width" id="manual-chart-width" class="manual-chart-settings" value="' + chartWidth + '"/>px</p>' +
                         '<p><label for="manual-chart-height">Chart height: </label><input type="text" name="manual-chart-height" id="manual-chart-height" class="manual-chart-settings" value="' + chartHeight + '"/>px</p></div>' +
+                        '<div class="visualClear"><!-- &nbsp; --></div>' +
                         '<div class="embed-misc-settings"><p title="Keep aspect ratio"><input type="checkbox" checked="checked" name="aspect-ratio" id="aspect-ratio"/>Keep aspect ratio</p>' +
                         '<p title="Also resize the parent iframe when resizing the chart"><input type="checkbox" checked="checked" name="resize-iframe" id="resize-iframe"/>Also resize iframe</p></div>' +
                         '<div class="visualClear"><!-- &nbsp; --></div></div></div>' +
@@ -740,6 +745,12 @@ function showEmbed(){
                     else{
                         iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+
                             "&customStyle=.googlechart_view{margin-left:0px%3B}";
+                    }
+                    if (jQuery("#embed-include-daviz-title").attr("checked") !== 'checked'){
+                        iframeSrc += "&skipdaviztitle=true";
+                    }
+                    if (jQuery("#embed-include-chart-title").attr("checked") !== 'checked'){
+                        iframeSrc += "&skipcharttitle=true";
                     }
                     if (jQuery(".googlechart_embed_ignore_filters").attr("checked") === 'checked'){
                         iframeSrc += "#_filters=" + query_params;

@@ -28,16 +28,33 @@ function drawDashboardEmbed(options){
         wm_pos : '',
         wm_path : '',
         vhash : '',
-        isInline : 'False'
+        isInline : 'False',
+        skipDavizTitle: false,
+        skipChartTitle: false
     };
 
     jQuery.extend(settings, options);
 
     var query_params = getQueryParams();
 
-    if (!is_pdf_printing) {
+    if ((!is_pdf_printing) && (!settings.skipDavizTitle) && (!settings.skipChartTitle)) {
         patched_each(settings.googlechart_config_array, function(key, config){
             config[1].options.title = config[1].options.title + " — " + settings.main_title;
+        });
+    }
+    if (settings.skipChartTitle){
+        patched_each(settings.googlechart_config_array, function(key, config){
+            config[1].options.title = settings.main_title;
+        });
+    }
+    if (settings.skipDavizTitle){
+        patched_each(settings.googlechart_config_array, function(key, config){
+            config[1].options.title = config[1].options.title;
+        });
+    }
+    if ((settings.skipDavizTitle) && (settings.skipChartTitle)){
+        patched_each(settings.googlechart_config_array, function(key, config){
+            config[1].options.title = "";
         });
     }
 

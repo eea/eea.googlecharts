@@ -833,3 +833,8 @@ input.googlechart-chart-size {
         display:none !important;
     }
 }
+
+#manual-chart-width,
+#manual-chart-height{
+    width:40px;
+}
