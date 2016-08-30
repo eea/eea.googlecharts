@@ -166,6 +166,14 @@ class View(ViewForm):
         terms = [[term.token, term.title] for term in vocab(self.context)]
         return json.dumps(dict(terms))
 
+    def skipDavizTitle(self):
+        skipDavizTitle = self.request.get("skipdaviztitle", 'false')
+        return skipDavizTitle
+
+    def skipChartTitle(self):
+        skipChartTitle = self.request.get("skipcharttitle", 'false')
+        return skipChartTitle
+
     def get_rows(self):
         """ Rows
         """
@@ -277,9 +285,13 @@ class View(ViewForm):
 
         chartWidth = self.request.get("chartWidth", chart_settings["width"])
         chartHeight = self.request.get("chartHeight", chart_settings["height"])
+        skipDavizTitle = self.request.get("skipdaviztitle", 'false')
+        skipChartTitle = self.request.get("skipcharttitle", 'false')
 
         chart_settings['chartWidth'] = chartWidth
         chart_settings['chartHeight'] = chartHeight
+        chart_settings['skipDavizTitle'] = skipDavizTitle
+        chart_settings['skipChartTitle'] = skipChartTitle
 
         padding = self.request.get("padding", "fixed")
         if not self.isInline():
