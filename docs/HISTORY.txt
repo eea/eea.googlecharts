@@ -1,6 +1,10 @@
 Changelog
 =========
 
+
+16.4 - (unreleased)
+-------------------
+
 16.3 - (2016-08-30)
 -------------------
 * Feature: Added options to hide and configure chart title on view
