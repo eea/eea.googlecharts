@@ -4,6 +4,9 @@ Changelog
 
 16.4 - (unreleased)
 -------------------
+* Bug fix: get_named_data should return the default if config
+  is not found
+  [ichim-david refs #75899]
 
 16.3 - (2016-08-30)
 -------------------

@@ -125,7 +125,7 @@ class View(ViewForm):
 
         config = view.get(config_name, None)
         if config is None:
-            return
+            return default
 
         if key:
             return config.get(key, default)
