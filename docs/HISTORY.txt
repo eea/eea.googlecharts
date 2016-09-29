@@ -3,6 +3,8 @@ Changelog
 
 16.5.dev0 - (unreleased)
 ------------------------
+* Bug fix: missing resize button for dashboard
+  [catalin refs #75528]
 
 16.4 - (2016-09-13)
 -------------------
