@@ -737,7 +737,8 @@ jQuery(document).ready(function($){
         }
     }
     var iframe_embedded_charts = jQuery("iframe[src*='embed-chart?chart=']");
-    if (iframe_embedded_charts.length === 0){
+    var iframe_embedded_dashboards = jQuery("iframe[src*='embed-dashboard?dashboard=']");
+    if (iframe_embedded_charts.length === 0 && iframe_embedded_dashboards.length === 0){
         return;
     }
     var action = jQuery("base").attr("href").split("@@")[0] + "/@@googlechart.check_permission";
