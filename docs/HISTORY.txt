@@ -1,6 +1,9 @@
 Changelog
 =========
 
+16.6.dev0 - (unreleased)
+------------------------
+
 16.5 - (2016-10-03)
 -------------------
 * Bug fix: missing resize button for dashboard
