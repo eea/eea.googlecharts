@@ -3,6 +3,8 @@ Changelog
 
 16.6.dev0 - (unreleased)
 ------------------------
+* Feature: allow embeding charts without specifying a chart id
+  [tiberich #78724]
 
 16.5 - (2016-10-03)
 -------------------
@@ -130,7 +132,7 @@ Changelog
 
 14.7 - (2015-12-08)
 -------------------
-* Bugfix: fix array membership check within custom_filters.js for prepared 
+* Bugfix: fix array membership check within custom_filters.js for prepared
   filters
   [ichimdav refs #31291]
 

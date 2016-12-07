@@ -275,13 +275,20 @@ class View(ViewForm):
     def get_chart(self):
         """ Get chart
         """
-        chart_id = self.request['chart']
+        chart_id = self.request.get('chart')
         charts = self.get_charts()
         chart_settings = {}
         for chart in charts:
             if chart['id'] == chart_id:
                 chart_settings = chart
                 chart_settings['chart_id'] = chart_id
+
+        # on empty chart id or wrong chart id, return first chart
+        if not chart_settings:
+            chart = charts[0]
+            chart_settings = chart
+            chart_settings['chart_id'] = chart['id']
+            self.request.set('chart', chart['id'])  # it is used in template
 
         if chart_settings:
             chart_settings['data'] = self.get_rows()
