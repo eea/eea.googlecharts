@@ -17,7 +17,7 @@ class SubPageForm(BaseForm):
         super(SubPageForm, self).__init__(context, request)
         self._dashboards = {}
         self._dashboard = {}
-        self.prefix = self.request.form.get('dashboard', '')
+        self.prefix = self.request.form.get('dashboard', 'dashboard-01')
         self.widget_name = self.request.form.get('name', '')
 
     @property

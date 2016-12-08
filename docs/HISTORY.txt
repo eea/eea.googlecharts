@@ -3,6 +3,11 @@ Changelog
 
 16.6.dev0 - (unreleased)
 ------------------------
+* Bug fix: fix dashboard inline validation when adding a new dashboard
+  [ichim-david refs #75388]
+* Bug fix: fix dashboard edit when there are no chart filters
+  [ichim-david refs #75388]
+
 * Feature: allow embeding charts without specifying a chart id
   [tiberich #78724]
 
