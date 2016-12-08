@@ -1129,10 +1129,10 @@ DavizEdit.GoogleDashboardFilters.prototype = {
   draw: function(data){
     var self = this;
     var dfilter = [];
-    if (data.filters.length > 0){
+    if (data.filters && data.filters.length > 0){
         dfilter = jQuery("#"+data.filters[0].column+".dashboard-filter");
     }
-    if ((data.filters.length === 1) && (dfilter.length !== 0)){
+    if ((data.filters && data.filters.length === 1) && (dfilter.length !== 0)){
         // if modified
         patched_each(self.settings.filters, function (ssfkey, ssfval){
             if (ssfval.column === data.filters[0].column){
