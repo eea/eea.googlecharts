@@ -1,6 +1,9 @@
 Changelog
 =========
 
+16.7.dev0 - (unreleased)
+------------------------
+
 16.6 - (2016-12-19)
 -------------------
 * Bug fix: fix dashboard inline validation when adding a new dashboard
