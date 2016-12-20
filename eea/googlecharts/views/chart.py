@@ -861,10 +861,13 @@ class SavePNGChart(Export):
             # the files are identical in which case we no longer need to perform
             # any svg and image generation
             pattern = re.compile(r'_ABSTRACT_RENDERER_ID_\d+')
-            svg_data_match = pattern.search(svg_data).group()
-            svg_field_data_matched = pattern.sub(svg_data_match, svg_field_data)
-            if svg_data == svg_field_data_matched:
-                return _("Success")
+            # 79908 check if we have a result for pattern search
+            pattern_match = pattern.search(svg_data)
+            if pattern_match:
+                svg_data_match = pattern_match.group()
+                svg_field_data_matched = pattern.sub(svg_data_match, svg_field_data)
+                if svg_data == svg_field_data_matched:
+                    return _("Success")
         # create image from the current svg
         img = super(SavePNGChart, self).__call__()
         if not img:
