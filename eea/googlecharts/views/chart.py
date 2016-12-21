@@ -685,6 +685,7 @@ def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
     op.close()
     return img
 
+
 class Export(BrowserView):
     """ Export chart to png
     """
@@ -870,7 +871,11 @@ class SavePNGChart(Export):
                     return _("Success")
         # create image from the current svg
         img = super(SavePNGChart, self).__call__()
-        if not img:
+        # 79908 check if img return has PNG within the string
+        # as img can contain ERROR message in case of an error
+        # which means the image will contain a string instead of actual
+        # image data
+        if not img or img and 'PNG' not in img:
             return _("ERROR: An error occured while exporting your image. "
                      "Please try again later.")
         new_file = False
@@ -933,7 +938,7 @@ class SetThumb(BrowserView):
         kwargs.update(form)
 
         filename = kwargs.get('filename', 'cover.png')
-
+        img = None
         convert = getUtility(IConvert)
         if kwargs.get('svg', '') != '':
             img = convert(
@@ -955,7 +960,6 @@ class SetThumb(BrowserView):
             return _("ERROR: An error occured while exporting your image. "
                      "Please try again later.")
 
-
         if filename not in self.context.objectIds():
             filename = self.context.invokeFactory('Image', id=filename)
         obj = self.context._getOb(filename)
@@ -964,6 +968,7 @@ class SetThumb(BrowserView):
         self.context.getOrdering().moveObjectsToTop(ids=[obj.getId()])
         notify(InvalidateCacheEvent(obj))
         return _("Success")
+
 
 class DashboardView(ViewForm):
     """ Google dashboard view
@@ -999,6 +1004,7 @@ class DashboardView(ViewForm):
         mutator = queryAdapter(self.context, IVisualizationConfig)
         view = dict(mutator.view('googlechart.googledashboard', {}))
         return json.dumps(view)
+
 
 class DashboardsView(ViewForm):
     """ Google dashboards view
