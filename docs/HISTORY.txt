@@ -1,8 +1,8 @@
 Changelog
 =========
 
-16.7.dev0 - (unreleased)
-------------------------
+16.7 - (2016-12-28)
+-------------------
 * Bug fix: fixed issue where saving a png out of the chart contained
   string data instead of actual image data
   [ichim-david refs #79908]
