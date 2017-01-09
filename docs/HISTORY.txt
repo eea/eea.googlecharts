@@ -3,6 +3,8 @@ Changelog
 
 16.8.dev0 - (unreleased)
 ------------------------
+* Bug fix: fixed pylint warnings
+  [alecghica refs #80219]
 
 16.7 - (2016-12-28)
 -------------------

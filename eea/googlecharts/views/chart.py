@@ -866,7 +866,8 @@ class SavePNGChart(Export):
             pattern_match = pattern.search(svg_data)
             if pattern_match:
                 svg_data_match = pattern_match.group()
-                svg_field_data_matched = pattern.sub(svg_data_match, svg_field_data)
+                svg_field_data_matched = pattern.sub(svg_data_match,
+                                                     svg_field_data)
                 if svg_data == svg_field_data_matched:
                     return _("Success")
         # create image from the current svg
