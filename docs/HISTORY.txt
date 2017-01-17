@@ -1,8 +1,11 @@
 Changelog
 =========
 
-16.8.dev0 - (unreleased)
+16.9.dev0 - (unreleased)
 ------------------------
+
+16.8 - (2017-01-17)
+-------------------
 * Bug fix: fixed pylint warnings
   [alecghica refs #80219]
 
