@@ -3,6 +3,8 @@ Changelog
 
 16.9.dev0 - (unreleased)
 ------------------------
+* Bug fix: Add extra_require for zope2 only deployments
+  [avoinea]
 
 16.8 - (2017-01-17)
 -------------------
