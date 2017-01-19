@@ -15,7 +15,7 @@
   display: none;
 }
 
-/* #22489 remove float from dashboard charts when printing */
+
 .googlechart_view {
     overflow: hidden;
 }
@@ -29,7 +29,8 @@
     background-image: none !important; /* wkhtmltopdf has issues with the css3 gradient as such we remove it */
 }
 
-.googledashboard-chart {
+/* #22489 remove float from dashboard charts when printing */
+.googledashboard-chart.maximized_chart {
     float: none !important;
     page-break-inside: avoid;
     height: inherit !important;
