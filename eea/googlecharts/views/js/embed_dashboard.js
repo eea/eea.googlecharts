@@ -129,16 +129,28 @@ function drawDashboardEmbed(options){
     }
 
     /* #22489 reduce size of dashboards when pdf printing in order to avoid text shrinking */
+    var content_width = $(document).width();
+    var dashboard_width = 0;
+    /* #79934 check if dashboard should be resized as an embedded dashboard might contain small charts */
     if (is_pdf_printing) {
         $.each(settings.dashboard_config.widgets, function(idx, el) {
             var dashboard = el.dashboard;
+            var dashboard_width = dashboard.width;
+            if (!dashboard.hidden && typeof dashboard_width !== "number") { 
+                dashboard_width += window.parseInt(dashboard.width);
+            }
+        });
+    }
+    var dashboard_charts_bigger_than_content =  content_width < dashboard_width;
+    $.each(settings.dashboard_config.widgets, function(idx, el) {
+        var dashboard = el.dashboard;
+        if (dashboard_charts_bigger_than_content) { 
             // magic numbers found after playing with an assessment where the larger charts
             // are set to the maximum 650
             dashboard.width =  "100%";
             dashboard.height = 295;
-        });
-
-    }
+        }
+    });
 
     var googledashboard_params = {
         chartsDashboard : 'googlechart_dashboard_'+chart_hash,
