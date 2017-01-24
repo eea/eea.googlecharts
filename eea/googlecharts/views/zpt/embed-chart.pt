@@ -30,7 +30,6 @@
         <title tal:content="title"></title>
     </head>
     <body onhashchange="hashchanged();" tal:attributes="class python:draft_class + ' isPrint' if isPrint else draft_class">
-
       <metal:chart use-macro="here/embed-chart/macros/chart"/>
     <div>
         <!--? Data Sources -->
@@ -107,8 +106,7 @@
             columnFilters python: view.get_columnfilters_js(chart);
             ChartNotes python: view.get_all_notes_json();
             GoogleChartsConfig view/get_chart_json;
-            unpivotSettings python:view.get_unpivotSettings(chart);
-            isPrint python:1 if ('pdf.' in request['URL0']) else 0;"
+            unpivotSettings python:view.get_unpivotSettings(chart);"
         tal:content="structure string:
             var EEAGoogleCharts = window.EEAGoogleCharts || {};
             if (!EEAGoogleCharts.embed){

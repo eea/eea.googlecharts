@@ -29,7 +29,7 @@
     background-image: none !important; /* wkhtmltopdf has issues with the css3 gradient as such we remove it */
 }
 
-.googledashboard-chart {
+.googledashboard-chart.maximized_chart {
     float: none !important;
     page-break-inside: avoid;
     height: inherit !important;
@@ -42,7 +42,7 @@
     padding-bottom: .5em;
 }
 .googlechart_bottom_images a {
-    padding-top: 1.5em;
+    padding-top: 0.5em;
     display: block;
 }
 
