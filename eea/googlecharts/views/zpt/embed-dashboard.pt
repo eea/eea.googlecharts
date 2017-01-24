@@ -29,7 +29,7 @@
     <style type="text/css" tal:content="view/get_customstyle">
     </style>
 </head>
-<body onhashchange="hashchanged();">
+<body onhashchange="hashchanged();" tal:attributes="class python:'isPrint' if isPrint else ''">
     <metal:chart use-macro="here/embed-dashboard/macros/dashboard"/>
     <metal:share metal:use-macro="context/@@embed-chart/share"></metal:share>
 

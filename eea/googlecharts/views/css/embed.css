@@ -84,6 +84,12 @@ a:visited, a:hover {
     float: left;
     font-size: 12px;
 }
+
+.isPrint .googlechart-share-box {
+    display: none;
+}
+
+
 .googlechart-share {
     padding: 0 0.5em;
     display: block;
@@ -153,6 +159,13 @@ a:visited, a:hover {
     }
     .googlechart_view > div {
         margin: 0;
+    }
+    
+    .googlechart_right_image {
+        float: right;
+    }
+    .googlechart_left_image {
+        float: left;
     }
 
 }

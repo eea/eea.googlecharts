@@ -6,7 +6,10 @@
                         title view/context/Title;
                         url view/context/absolute_url;
                         context_state context/@@plone_context_state;
-                        wf_state context_state/workflow_state|string:;">
+                        wf_state context_state/workflow_state|string:;
+                        draft_class python:'wf-draft' if wf_state and wf_state != 'published' else '';
+                        referer_url python:request.get_header('referer');
+                        isPrint python:1 if 'pdf.' in referer_url else 0;">
 <!DOCTYPE html>
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1'); dummy2 python:request.RESPONSE.setHeader('X-Frame-Options', 'ALLOWALL');">
     <head>
@@ -26,7 +29,7 @@
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <title tal:content="title"></title>
     </head>
-    <body onhashchange="hashchanged();" tal:attributes="class python:'wf-draft' if wf_state and wf_state != 'published' else ''">
+    <body onhashchange="hashchanged();" tal:attributes="class python:draft_class + ' isPrint' if isPrint else draft_class">
 
       <metal:chart use-macro="here/embed-chart/macros/chart"/>
     <div>
