@@ -45,5 +45,6 @@
 .googlechart_bottom_images img {
     float: none;
     width: inherit;
+    margin-top: -2px;
 }
 
