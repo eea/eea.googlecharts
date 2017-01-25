@@ -3,6 +3,13 @@ Changelog
 
 17.0.dev0 - (unreleased)
 ------------------------
+* Change: no longer enlarge dashboard charts to be one per line
+  when pdf printing if the charts together can fit the document
+  width
+  [ichim-david refs #79934] 
+* Bug fix: isPrint condition now checks the referer link for
+  pdf being present instead of the request url
+  [ichim-david refs #79934] 
 
 16.9 - (2017-01-17)
 -------------------
