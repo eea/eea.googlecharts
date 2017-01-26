@@ -3,7 +3,7 @@
                         title view/context/Title;
                         embed_dashboard python:view.get_dashboard_embed();
                         chart_id embed_dashboard/name;
-                        referer_url python:request.get_header('referer');
+                        referer_url python:request.get_header('referer') or request['URL0'];
                         isPrint python:1 if 'pdf.' in referer_url else 0;
                         url view/context/absolute_url">
 

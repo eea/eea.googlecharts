@@ -8,7 +8,7 @@
                         context_state context/@@plone_context_state;
                         wf_state context_state/workflow_state|string:;
                         draft_class python:'wf-draft' if wf_state and wf_state != 'published' else '';
-                        referer_url python:request.get_header('referer');
+                        referer_url python:request.get_header('referer') or request['URL0'];
                         isPrint python:1 if 'pdf.' in referer_url else 0;">
 <!DOCTYPE html>
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge,chrome=1'); dummy2 python:request.RESPONSE.setHeader('X-Frame-Options', 'ALLOWALL');">
