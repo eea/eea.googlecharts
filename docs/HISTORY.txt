@@ -1,8 +1,8 @@
 Changelog
 =========
 
-17.0.dev0 - (unreleased)
-------------------------
+17.0 - (2017-01-30)
+-------------------
 * Change: no longer enlarge dashboard charts to be one per line
   when pdf printing if the charts together can fit the document
   width
