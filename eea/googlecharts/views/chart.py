@@ -477,7 +477,7 @@ class View(ViewForm):
                 'tabname': 'tab-%s' % name.replace('.', '-'),
             }
             qr_url = '%s?cht=qr&chld=H|0&chs=%sx%s&chl=%s%s%s' \
-                % ("http://chart.apis.google.com/chart",
+                % ("https://chart.apis.google.com/chart",
                     self.qr_size(),
                     self.qr_size(),
                     self.context.absolute_url(),
@@ -840,7 +840,7 @@ class SavePNGChart(Export):
         if qr_size == '0':
             qr_size = '70'
         qr_url = (
-            u"http://chart.apis.google.com"
+            u"https://chart.apis.google.com"
             "/chart?cht=qr&chld=H|0&chs=%sx%s&chl=%s" % (
                 qr_size, qr_size, urllib2.quote(chart_url)))
         self.request.form['qr_url'] = qr_url

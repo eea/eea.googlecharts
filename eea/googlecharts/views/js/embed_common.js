@@ -79,7 +79,7 @@ commonModule.insertBottomImages = function(settings, chart_url) {
 
     putImageDivInPosition("googlechart_qr_" + chart_hash, settings.qr_pos, chart_hash);
 
-    var qr_img_url = "http://chart.apis.google.com/chart?cht=qr&chld=H|0&chs="+settings.qr_size+"x"+settings.qr_size+"&chl=" + encodeURIComponent(chart_url);
+    var qr_img_url = "https://chart.apis.google.com/chart?cht=qr&chld=H|0&chs="+settings.qr_size+"x"+settings.qr_size+"&chl=" + encodeURIComponent(chart_url);
     var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
 
     if (settings.qr_pos !== "Disabled"){

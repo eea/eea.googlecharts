@@ -3,6 +3,8 @@ Changelog
 
 17.1.dev0 - (unreleased)
 ------------------------
+* Bug fix: Get QR code over https
+  [avoinea refs #82562]
 
 17.0 - (2017-01-30)
 -------------------
