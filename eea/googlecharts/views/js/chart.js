@@ -260,11 +260,12 @@ function drawGoogleChart(options){
                     return;
                 }
                 el.setAttribute('x', '10');
-                el.setAttribute('y', window.parseInt(el.getAttribute('y')) - 5);
+                // el.setAttribute('y', window.parseInt(el.getAttribute('y')) - 5);
+                el.setAttribute('width', 650);
                 var next_el = $(el).next()[0];
                 if (next_el && next_el.tagName === "rect") {
                     next_el.setAttribute('x', 10);
-                    next_el.setAttribute('width', 550);
+                    next_el.setAttribute('width', 650);
                 }
                 el.setAttribute('PDF_MODIFIED', true);
             });
