@@ -131,8 +131,8 @@
             var height_$vhash = ${chart/chartHeight};
             var skipDavizTitle_$vhash = ${chart/skipDavizTitle};
             var skipChartTitle_$vhash = ${chart/skipChartTitle};
-            var width_$vhash = isPrint && width_$vhash > 650 ? 650 : width_$vhash;
-            var height_$vhash = isPrint && height_$vhash > 400 ? 400 : height_$vhash;
+            var ratio = width_$vhash / 777;
+            var width_$vhash = isPrint && width_$vhash > 777 ? Math.floor(width_$vhash / ratio) : width_$vhash;
             var name_$vhash = '${chart_name}';
             var chart_options_$vhash = ${chart/options};
             var chart_filterposition_$vhash = ${chart/filterposition}
@@ -227,10 +227,6 @@
                     var initial_height = settings_$vhash[5];
                     var initial_width_ratio;
                     var chart_area_width;
-                    if (isPrint) {
-                        chart_area_width = settings_$vhash[7].chartArea.width;
-                        settings_$vhash[7].chartArea.width = window.parseInt(chart_area_width) > 70 ? '70%' : chart_area_width;
-                    }
 
                 }
                 settings_$vhash.push(unpivotSettings_$vhash);

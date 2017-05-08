@@ -2,13 +2,13 @@
 
 /* GLOBALS come from:
 
-    view.js:
-    drawGoogleDashboard
-    getQueryParams
+ view.js:
+ drawGoogleDashboard
+ getQueryParams
 
-    datatable.js
-    patched_each
-*/
+ datatable.js
+ patched_each
+ */
 
 /* module requirements */
 var commonModule = window.EEAGoogleCharts.common;
@@ -16,7 +16,7 @@ var embedModule = window.EEAGoogleCharts.embed;
 var is_pdf_printing = embedModule && embedModule.isPrint;
 
 function drawDashboardEmbed(options){
-  var settings = {
+    var settings = {
         merged_rows : '',
         available_columns : '',
         googlechart_config_array : [],
@@ -75,24 +75,24 @@ function drawDashboardEmbed(options){
     if ((settings.dashboard_config.chartsBox !== undefined) && (settings.dashboard_config.chartsBox.order === 0)){
         googlechart_table = ""+
             "<div id='googlechart_table_" + chart_hash + "' class='googlechart_table googlechart_table_bottom googlechart_dashboard_table'>"+
-                "<div class='googlechart_top_images' id='googlechart_top_images_" + chart_hash + "'></div>"+
-                "<div style='clear: both'></div>" +
-                "<div id='googlechart_view_" + chart_hash + "' class='googlechart'></div>"+
-                "<div id='googlechart_filters_" + chart_hash + "' class='googlechart_filters'></div>"+
-                "<div style='clear: both'></div>" +
-                "<div class='googlechart_bottom_images' id='googlechart_bottom_images_" + chart_hash + "'></div>"+
-                "<div style='clear: both'></div>" +
+            "<div class='googlechart_top_images' id='googlechart_top_images_" + chart_hash + "'></div>"+
+            "<div style='clear: both'></div>" +
+            "<div id='googlechart_view_" + chart_hash + "' class='googlechart'></div>"+
+            "<div id='googlechart_filters_" + chart_hash + "' class='googlechart_filters'></div>"+
+            "<div style='clear: both'></div>" +
+            "<div class='googlechart_bottom_images' id='googlechart_bottom_images_" + chart_hash + "'></div>"+
+            "<div style='clear: both'></div>" +
             "</div>";
     }else{
         googlechart_table = ""+
             "<div id='googlechart_table_" + chart_hash + "' class='googlechart_table googlechart_table_top googlechart_dashboard_table'>"+
-                "<div class='googlechart_top_images' id='googlechart_top_images_" + chart_hash + "'></div>"+
-                "<div style='clear: both'></div>" +
-                "<div id='googlechart_filters_" + chart_hash + "' class='googlechart_filters'></div>"+
-                "<div id='googlechart_view_" + chart_hash + "' class='googlechart'></div>"+
-                "<div style='clear: both'></div>" +
-                "<div class='googlechart_bottom_images' id='googlechart_bottom_images_" + chart_hash + "'></div>"+
-                "<div style='clear: both'></div>" +
+            "<div class='googlechart_top_images' id='googlechart_top_images_" + chart_hash + "'></div>"+
+            "<div style='clear: both'></div>" +
+            "<div id='googlechart_filters_" + chart_hash + "' class='googlechart_filters'></div>"+
+            "<div id='googlechart_view_" + chart_hash + "' class='googlechart'></div>"+
+            "<div style='clear: both'></div>" +
+            "<div class='googlechart_bottom_images' id='googlechart_bottom_images_" + chart_hash + "'></div>"+
+            "<div style='clear: both'></div>" +
             "</div>";
     }
 
@@ -130,20 +130,17 @@ function drawDashboardEmbed(options){
     }
 
     /* #22489 reduce size of dashboards when pdf printing in order to avoid text shrinking */
-    var content_width = $(document).width();
-    // var content_width = 777;
+    var content_width = 760;
     var dashboard_width = 0;
     /* #79934 check if dashboard should be resized as an embedded dashboard might contain small charts */
     if (is_pdf_printing) {
         var dashboard_area_width = window.parseInt(settings.dashboard_config.chartsBox.width, 10);
+        var dashboard_area_width = dashboard_area_width <= 100 ? 975 : dashboard_area_width;
         var widgets_length = settings.dashboard_config.widgets.length - 1;
         var count;
         var obj = {};
         $.each(settings.dashboard_config.widgets, function(idx, el) {
-            if (idx === 0 && el.name.indexOf('title') !== -1) {
-                return;
-            }
-
+            var result;
             var dashboard = el.dashboard;
             var dashboardwidth = window.parseInt(dashboard.width);
             if (!dashboard.hidden) {
@@ -173,13 +170,11 @@ function drawDashboardEmbed(options){
 
         $.each(settings.dashboard_config.widgets, function(idx, el) {
             var dashboard = el.dashboard;
-            if (idx === 0 && el.name.indexOf('title') !== -1) {
-                return;
-            }
             var count = idx;
             var dashboard_width = obj[count] || 0;
             var dashboard_charts_bigger_than_content =  content_width < dashboard_width;
             if (dashboard_charts_bigger_than_content) {
+                // dashboard.width  = content_width;
                 var ratio = dashboard_width / content_width;
                 dashboard.width = Math.round(dashboard.width / ratio);
             }
