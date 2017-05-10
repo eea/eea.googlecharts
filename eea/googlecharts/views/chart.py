@@ -3,12 +3,12 @@
 import hashlib
 import json
 import logging
-from PIL import Image
+import re
 from cStringIO import StringIO
 from copy import deepcopy
+from PIL import Image
 
 import lxml.etree
-import re
 
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView

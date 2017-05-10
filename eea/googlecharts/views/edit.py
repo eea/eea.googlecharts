@@ -3,10 +3,9 @@
 import json
 import logging
 import urllib2
+from Products.Five import BrowserView
 from zope.event import notify
 from zope.formlib.form import Fields
-from Products.Five import BrowserView
-
 from zope.component import queryAdapter, queryUtility, getMultiAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from zope.container.interfaces import INameChooser

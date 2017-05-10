@@ -1,8 +1,8 @@
 """ Widgets meta directives
 """
 from zope.interface import Interface, implements
-from eea.googlecharts.widgets.interfaces import IWidgetsInfo
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+from eea.googlecharts.widgets.interfaces import IWidgetsInfo
 from Products.Five.browser.metaconfigure import page
 
 
