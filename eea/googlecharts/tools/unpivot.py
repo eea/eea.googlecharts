@@ -61,4 +61,3 @@ if __name__ == '__main__':
         datawriter = csv.writer(datafile, delimiter=',')
         datawriter.writerows(unpivoted)
         datafile.close()
-
