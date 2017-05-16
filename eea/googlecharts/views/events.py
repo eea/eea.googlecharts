@@ -3,10 +3,10 @@
 import logging
 import json
 from zope.component import queryUtility, queryAdapter, getMultiAdapter
+from zope.schema.interfaces import IVocabularyFactory
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.interfaces import IDavizSettings
 from eea.app.visualization.views.events import facet_deleted
-from zope.schema.interfaces import IVocabularyFactory
 logger = logging.getLogger('eea.googlecharts')
 
 def googlechart_facet_deleted(obj, evt):
