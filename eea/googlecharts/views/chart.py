@@ -307,8 +307,7 @@ class View(ViewForm):
         padding = self.request.get("padding", "fixed")
         if not self.isInline():
             return self.get_chart_settings(chart_settings, padding)
-        else:
-            return chart_settings
+        return chart_settings
 
     def get_chart_json(self):
         """Chart as JSON

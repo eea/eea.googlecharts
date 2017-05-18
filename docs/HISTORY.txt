@@ -3,6 +3,8 @@ Changelog
 
 17.4.dev0 - (unreleased)
 ------------------------
+* Change: fixed PyLint warnings and errors
+  [valipod refs #84949]
 
 17.3 - (2017-05-15)
 -------------------

@@ -36,7 +36,7 @@ def create_default_views(obj, evt):
     columns = vocab(obj)
 
     # If the table is empty, do nothing
-    if not len(columns):
+    if not columns:
         return
 
     mutator.add_view('googlechart.googlecharts', order=0)
