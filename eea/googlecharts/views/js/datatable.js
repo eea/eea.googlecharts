@@ -763,6 +763,7 @@ function prepareForChart(options){
     }
     var tmpDataView = new google.visualization.DataView(dataForChart);
 
+    var sgrid = window.grid;
     if (settings.sortBy !== ""){
         var pos = jQuery.inArray(settings.sortBy, settings.columns);
         if (pos > -1){
@@ -771,6 +772,16 @@ function prepareForChart(options){
                 tmp_sort.reverse();
             }
             tmpDataView.setRows(tmp_sort);
+        }
+        else {
+            if (sgrid) {
+                var items = sgrid.getData().getItems();
+                var sorted_items = [];
+                for (var i = 0, l = items.length; i < l; i++) {
+                    sorted_items.push(items[i].id);
+                }
+                tmpDataView.setRows(sorted_items);
+            }
         }
     }
 

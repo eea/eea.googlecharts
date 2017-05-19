@@ -3,6 +3,10 @@ Changelog
 
 17.4.dev0 - (unreleased)
 ------------------------
+* Change: allow for sorting to affect table data even when
+  the column is hidden. Before this change you needed to show the column
+  sort a-z or z-a and then hide it again
+  [ichim-david refs #83352]
 * Change: fixed PyLint warnings and errors
   [valipod refs #84949]
 
