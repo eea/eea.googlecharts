@@ -1,8 +1,8 @@
 Changelog
 =========
 
-17.4.dev0 - (unreleased)
-------------------------
+17.4 - (2017-05-22)
+-------------------
 * Change: allow for sorting to affect table data even when
   the column is hidden. Before this change you needed to show the column
   sort a-z or z-a and then hide it again
