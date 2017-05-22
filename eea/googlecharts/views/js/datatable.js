@@ -782,6 +782,70 @@ function prepareForChart(options){
                 }
                 tmpDataView.setRows(sorted_items);
             }
+            else {
+                var sortBy = settings.sortBy;
+                var sortOrder = settings.sortAsc;
+                var vals = [];
+                var objs = {};
+                $(itemsToDisplay).each(function(row_index, row){
+                    var value = row[sortBy];
+                    if (objs[value]) {
+                        objs[value].push(row_index)
+                    }
+                    else {
+                        objs[value] = [row_index];
+                    }
+                    vals.push(row[sortBy]);
+                });
+                var compare = function compare(a, b) {
+                  if (a < b) {
+                    return -1;
+                  }
+                  if (a > b) {
+                    return 1;
+                  }
+                  // a must be equal to b
+                  return 0;
+                }
+
+                vals.sort(compare);
+                if (!sortOrder) {
+                    vals.reverse();
+                }
+                // vals.sort(function(a, b){
+                //   return sortOrder ? a - b : b - a;
+                // });
+
+                var sorted_items = [];
+                var value;
+                var obj_val;
+                var added_values = [];
+                var first_value;
+                for (var i = 0, l = vals.length; i < l; i++) {
+                    value = vals[i];
+                    obj_val = objs[value];
+                    if (obj_val.length === 1) {
+                        sorted_items.push(obj_val[0]);
+                    }
+                    else {
+                        first_value = value;
+                        if (added_values.indexOf(first_value) === -1) {
+                            if (!sortOrder) {
+                                for (var j = 0, jl = obj_val.length - 1; jl >= j; jl--) {
+                                    sorted_items.push(obj_val[jl]);
+                                }
+                            }
+                            else {
+                                for (var j = 0, jl = obj_val.length - 1; j <= jl; j++) {
+                                    sorted_items.push(obj_val[j]);
+                                }
+                            }
+                            added_values.push(first_value);
+                        }
+                    }
+                }
+                tmpDataView.setRows(sorted_items);
+            }
         }
     }
 
