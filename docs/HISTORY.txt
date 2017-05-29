@@ -1,8 +1,8 @@
 Changelog
 =========
 
-17.5.dev0 - (unreleased)
-------------------------
+17.5 - (2017-05-29)
+-------------------
 * Change: sorting is now kept also on view page when the column is hidden
   In previous egg only the edit page had the values changed
   [ichim-david refs #83352]
