@@ -3,7 +3,7 @@
 import logging
 import transaction
 from zope.component.interface import interfaceToName
-from Products.CMFCore.utils import getToolByName
+from eea.app.visualization.zopera import getToolByName
 from eea.app.visualization.interfaces import IVisualizationEnabled
 logger = logging.getLogger('eea.googlecharts')
 

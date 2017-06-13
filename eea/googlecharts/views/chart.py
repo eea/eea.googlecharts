@@ -10,7 +10,6 @@ from PIL import Image
 
 import lxml.etree
 
-from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 from eventlet.green import urllib2
 from zope.component import getUtility
@@ -22,6 +21,7 @@ from eea.app.visualization.controlpanel.interfaces import IDavizSettings
 from eea.app.visualization.interfaces import IVisualizationConfig
 from eea.app.visualization.views.view import ViewForm
 from eea.app.visualization.zopera import IFolderish
+from eea.app.visualization.zopera import getToolByName
 from eea.converter.interfaces import IConvert, IWatermark
 from eea.googlecharts.cache import InvalidateCacheEvent
 from eea.googlecharts.config import EEAMessageFactory as _
