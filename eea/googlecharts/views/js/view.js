@@ -238,7 +238,7 @@ function drawChart(value, other_options){
 
     putImageDivInPosition("googlechart_qr", qr_pos);
 
-    var qr_img_url = "https://chart.apis.google.com/chart?cht=qr&chld=H|0&chs="+qr_size+"x"+qr_size+"&chl=" + encodeURIComponent(chart_url);
+    var qr_img_url = "https://chart.apis.google.com/chart?cht=qr&chld=H%7C0&chs="+qr_size+"x"+qr_size+"&chl=" + encodeURIComponent(chart_url);
     var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
     jQuery('#qr_url').attr('value', qr_img_url);
     if (qr_pos !== "Disabled"){
@@ -403,7 +403,7 @@ function drawDashboard(value, other_options){
 
     putImageDivInPosition("googlechart_qr", qr_pos);
 
-    var qr_img_url = "https://chart.apis.google.com/chart?cht=qr&chld=H|0&chs="+qr_size+"x"+qr_size+"&chl=" + encodeURIComponent(chart_url);
+    var qr_img_url = "https://chart.apis.google.com/chart?cht=qr&chld=H%7C0&chs="+qr_size+"x"+qr_size+"&chl=" + encodeURIComponent(chart_url);
     var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
     if (qr_pos !== "Disabled"){
         jQuery(googlechart_qr).appendTo("#googlechart_qr");

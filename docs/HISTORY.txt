@@ -3,6 +3,8 @@ Changelog
 
 17.6.dev0 - (unreleased)
 ------------------------
+* Bug fix W3C compliance modifications
+  [valipod refs #86295]
 
 17.5 - (2017-05-29)
 -------------------

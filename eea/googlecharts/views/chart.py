@@ -475,8 +475,9 @@ class View(ViewForm):
                 'css': 'googlechart_class_%s' % chartType,
                 'tabname': 'tab-%s' % name.replace('.', '-'),
             }
-            qr_url = '%s?cht=qr&chld=H|0&chs=%sx%s&chl=%s%s%s' \
+            qr_url = '%s?cht=qr&chld=H%sC0&chs=%sx%s&chl=%s%s%s' \
                 % ("https://chart.apis.google.com/chart",
+                    "%7",
                     self.qr_size(),
                     self.qr_size(),
                     self.context.absolute_url(),
@@ -840,8 +841,8 @@ class SavePNGChart(Export):
             qr_size = '70'
         qr_url = (
             u"https://chart.apis.google.com"
-            "/chart?cht=qr&chld=H|0&chs=%sx%s&chl=%s" % (
-                qr_size, qr_size, urllib2.quote(chart_url)))
+            "/chart?cht=qr&chld=H%sC0&chs=%sx%s&chl=%s" % (
+                "%7", qr_size, qr_size, urllib2.quote(chart_url)))
         self.request.form['qr_url'] = qr_url
         svg_data = kwargs.get('svg', '')
         if not svg_data:

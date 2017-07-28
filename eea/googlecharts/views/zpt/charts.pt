@@ -7,12 +7,14 @@
                 <div class="googlechart_top_images_noscript">
                     <div class="left" style="float:left">
                         <tal:block tal:repeat="img tab/extra_images">
-                            <img tal:condition="python: img['position']=='Top' and img['alignment']=='Left'" tal:attributes="src img/img"/>
+                            <img tal:condition="python: img['position']=='Top' and img['alignment']=='Left'"
+                                 tal:attributes="src img/img" alt="Googlechart QR" />
                         </tal:block>
                     </div>
                     <div class="right" style="float:right">
                         <tal:block tal:repeat="img tab/extra_images">
-                            <img tal:condition="python: img['position']=='Top' and img['alignment']=='Right'" tal:attributes="src img/img"/>
+                            <img tal:condition="python: img['position']=='Top' and img['alignment']=='Right'"
+                                 tal:attributes="src img/img" alt="Googlechart QR"/>
                         </tal:block>
                     </div>
                 </div>
@@ -25,12 +27,14 @@
                 <div class="googlechart_bottom_images_noscript">
                     <div class="left" style="float:left">
                         <tal:block tal:repeat="img tab/extra_images">
-                            <img tal:condition="python: img['position']=='Bottom' and img['alignment']=='Left'" tal:attributes="src img/img"/>
+                            <img tal:condition="python: img['position']=='Bottom' and img['alignment']=='Left'"
+                                 tal:attributes="src img/img" alt="Googlechart QR" />
                         </tal:block>
                     </div>
                     <div class="right" style="float:right">
                         <tal:block tal:repeat="img tab/extra_images">
-                            <img tal:condition="python: img['position']=='Bottom' and img['alignment']=='Right'" tal:attributes="src img/img"/>
+                            <img tal:condition="python: img['position']=='Bottom' and img['alignment']=='Right'"
+                                 tal:attributes="src img/img" alt="Googlechart QR" />
                         </tal:block>
                     </div>
                 </div>
