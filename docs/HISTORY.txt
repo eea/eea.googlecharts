@@ -5,6 +5,8 @@ Changelog
 ------------------------
 * Bug fix W3C compliance modifications
   [valipod refs #86295]
+* Change: Removed explore interactive link from chart footer
+  [zoltan_andras refs #82714]
 
 17.5 - (2017-05-29)
 -------------------
