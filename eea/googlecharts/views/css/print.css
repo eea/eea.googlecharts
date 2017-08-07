@@ -53,3 +53,6 @@
     margin-top: 3px;
 }
 
+.portaltype-fiche.section-airs .googlechart_bottom_images {
+    display: none;
+}
