@@ -42,7 +42,7 @@
                                         has_many python: has_provenances > 1 or has_provenances >= 1 and indicator;
                                         outerhtmltag python:'ul' if has_many else 'div';
                                         htmltag python: 'li' if has_many else 'span class=googlechart-provenance-definition'">
-                    <p class="googlechart-datasource" tal:condition="python: has_provenances or indicator"><strong>Data sources:</strong></p>
+                    <p class="googlechart-datasource" tal:condition="python: has_provenances or indicator"><strong i18n:translate="">Data sources:</strong></p>
                     <p tal:replace="structure string:<$outerhtmltag id='googlechart-provenance-definitions'>"></p>
                         <tal:provenance repeat="provenance provenances">
                             <li tal:replace="structure string:<$htmltag>"></li>
@@ -65,7 +65,7 @@
                         <!--? Indicator -->
                         <li tal:condition="indicator">
                             <tal:block tal:define="codes python:indicator.get_codes()">
-                            <span>EEA &ndash; </span>
+                            <span i18n:translate="">EEA &ndash; </span>
                             <a tal:attributes="href indicator/absolute_url; title indicator/Title"
                                     tal:content="python:'Indicator ' + codes[-1] if codes else 'Indicator'" target="_blank">content</a>
                             </tal:block>
@@ -335,22 +335,20 @@
             <div class="pull-right">
                 <!--? Save -->
                 <div class="pull-left googlechart-downloads">
-                    <a href="#" class="open-dialog" data-dialog="#download-dialog"><span  class="sprite sprite-save"></span>Save</a>
+                    <a href="#" class="open-dialog" data-dialog="#download-dialog" i18n:translate=""><span  class="sprite sprite-save" i18n:name="icon"></span>Save</a>
                     <div class="googlecharts-embed-dialog" id="download-dialog">
-                        <p><strong>Original Data</strong></p>
-                        <a tal:attributes="href string:${url}/download.csv">CSV</a>
-                        <a tal:attributes="href string:${url}/download.tsv">TSV</a>
-                        <p><strong>Image formats</strong></p>
-                        <a tal:attributes="href string:${chart_id}.png/at_download/file" target="_top">PNG</a>
-                        <a tal:attributes="href string:${chart_id}.svg/at_download/file" target="_top">SVG</a>
+                        <p><strong i18n:translate="">Original Data</strong></p>
+                        <a tal:attributes="href string:${url}/download.csv" i18n:translate="">CSV</a>
+                        <a tal:attributes="href string:${url}/download.tsv" i18n:translate="">TSV</a>
+                        <p><strong i18n:translate="">Image formats</strong></p>
+                        <a tal:attributes="href string:${chart_id}.png/at_download/file" target="_top" i18n:translate="">PNG</a>
+                        <a tal:attributes="href string:${chart_id}.svg/at_download/file" target="_top" i18n:translate="">SVG</a>
 
-                        <p><strong>Formats suitable for machine-to-machine communication</strong></p>
-                        <a tal:attributes="href string:${url}/download.json" target="_top">JSON</a>
-                        <a tal:attributes="href string:${url}/download.exhibit" target="_top">Exhibit JSON</a>
-                        <a tal:attributes="href string:${url}/download.xml" target="_top">XML</a>
-                        <a tal:attributes="href string:${url}/download.schema.xml" target="_top">
-                            XML with Schema
-                        </a>
+                        <p><strong i18n:translate="">Formats suitable for machine-to-machine communication</strong></p>
+                        <a tal:attributes="href string:${url}/download.json" target="_top" i18n:translate="">JSON</a>
+                        <a tal:attributes="href string:${url}/download.exhibit" target="_top" i18n:translate="">Exhibit JSON</a>
+                        <a tal:attributes="href string:${url}/download.xml" target="_top" i18n:translate="">XML</a>
+                        <a tal:attributes="href string:${url}/download.schema.xml" target="_top" i18n:translate="">XML with Schema</a>
                     </div>
                 </div>
                 <!--? /Save -->
@@ -359,21 +357,21 @@
                 <div class="pull-left">
                     <a class="go-to-original-link"
                             tal:attributes="href url"
-                            i18n:translate="" target="_top"><span class="sprite sprite-explore"></span>Explore</a>
+                            i18n:translate="" target="_top" i18n:translate=""><span class="sprite sprite-explore" i18n:name="icon"></span>Explore</a>
                 </div>
                 <!--? /Explore Data -->
 
                 <!--? Share -->
                 <div class="pull-left">
-                    <a href="#" class="open-dialog" data-dialog="#share-dialog"><span  class="sprite sprite-share"></span>Share</a>
+                    <a href="#" class="open-dialog" data-dialog="#share-dialog" i18n:translate=""><span  class="sprite sprite-share" i18n:name="icon"></span>Share</a>
                     <div class="googlecharts-embed-dialog" id="share-dialog">
-                        <p><strong>Embed code:</strong></p>
+                        <p><strong i18n:translate="">Embed code:</strong></p>
                         <textarea class="share-dialog-text" cols="69" rows="5"> </textarea>
-                        <p><strong>Share:</strong></p>
+                        <p><strong i18n:translate="">Share:</strong></p>
                         <div class="googlechart googlechart-social">
-                            <a href="https://twitter.com/intent/tweet?url=" class="share-button share-button-twitter" target="_blank">Twitter</a>
-                            <a href="https://www.facebook.com/sharer/sharer.php?u=" class="share-button share-button-facebook" target="_blank">Facebook</a>
-                            <a href="https://plus.google.com/share?url=" class="share-button share-button-gplus" target="_blank">Google Plus</a>
+                            <a href="https://twitter.com/intent/tweet?url=" class="share-button share-button-twitter" target="_blank" i18n:translate="">Twitter</a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=" class="share-button share-button-facebook" target="_blank" i18n:translate="">Facebook</a>
+                            <a href="https://plus.google.com/share?url=" class="share-button share-button-gplus" target="_blank" i18n:translate="">Google Plus</a>
 
                         </div>
                     </div>
@@ -382,7 +380,7 @@
 
                 <!--? Enlarge -->
                 <div class="pull-left">
-                    <a href="#" class="googlechart-enlarge" target="_top"><span  class="sprite sprite-enlarge"></span>Enlarge</a>
+                    <a href="#" class="googlechart-enlarge" target="_top" i18n:translate=""><span  class="sprite sprite-enlarge" i18n:name="icon"></span>Enlarge</a>
                 </div>
                 <!--? Enlarge -->
 

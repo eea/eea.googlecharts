@@ -135,7 +135,7 @@ function drawDashboardEmbed(options){
     /* #79934 check if dashboard should be resized as an embedded dashboard might contain small charts */
     if (is_pdf_printing) {
         var dashboard_area_width = window.parseInt(settings.dashboard_config.chartsBox.width, 10);
-        var dashboard_area_width = dashboard_area_width <= 100 ? 975 : dashboard_area_width;
+        dashboard_area_width = dashboard_area_width <= 100 ? 975 : dashboard_area_width;
         var widgets_length = settings.dashboard_config.widgets.length - 1;
         var count;
         var obj = {};
