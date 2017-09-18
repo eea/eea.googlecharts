@@ -1,12 +1,8 @@
 =================
 EEA Google Charts
 =================
-.. image:: http://ci.eionet.europa.eu/job/eea.googlecharts-www/badge/icon
-  :target: http://ci.eionet.europa.eu/job/eea.googlecharts-www/lastBuild
-.. image:: http://ci.eionet.europa.eu/job/eea.googlecharts-plone4/badge/icon
-  :target: http://ci.eionet.europa.eu/job/eea.googlecharts-plone4/lastBuild
-.. image:: http://ci.eionet.europa.eu/job/eea.googlecharts-zope/badge/icon
-  :target: http://ci.eionet.europa.eu/job/eea.googlecharts-zope/lastBuild
+.. image:: http://ci.eionet.europa.eu/job/eea/job/eea.googlecharts/job/master/badge/icon
+  :target: http://ci.eionet.europa.eu/job/eea/job/eea.googlecharts/job/master/display/redirect
 
 `EEA Google Charts`_ provides `Google Charts`_ framework integration for
 `eea.app.visualization`_. See `eea.daviz`_ package for more details.
@@ -58,7 +54,7 @@ Live demos
 
 * `Basic tutorials <http://www.youtube.com/playlist?list=PLVPSQz7ahsByeq8nVKC7TT9apArEXBrV0>`_
 * `Advanced tutorials <http://www.youtube.com/playlist?list=PLVPSQz7ahsBxbe8pwzFWLQuvDSP9JFn8I>`_
-* `Daviz showroom <http://daviz.eionet.europa.eu>`_
+* `Daviz showroom <https://www.eea.europa.eu/data-and-maps/daviz>`_
 * `Google charts demos <http://code.google.com/apis/chart/>`_
 
 
