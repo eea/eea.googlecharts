@@ -5,8 +5,6 @@
   <include package="z3c.autoinclude" file="meta.zcml" />
   <includeDependencies package="." />
 
-  <include file="documentation.zcml" />
-
   <include package=".browser" />
   <include package=".cache" />
   <include package=".events" />
