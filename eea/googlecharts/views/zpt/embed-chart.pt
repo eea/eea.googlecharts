@@ -357,7 +357,7 @@
                 <div class="pull-left">
                     <a class="go-to-original-link"
                             tal:attributes="href url"
-                            i18n:translate="" target="_top" i18n:translate=""><span class="sprite sprite-explore" i18n:name="icon"></span>Explore</a>
+                            i18n:translate="" target="_top"><span class="sprite sprite-explore" i18n:name="icon"></span>Explore</a>
                 </div>
                 <!--? /Explore Data -->
 
