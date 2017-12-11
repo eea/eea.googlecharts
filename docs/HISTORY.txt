@@ -3,6 +3,8 @@ Changelog
 
 17.8.dev0 - (unreleased)
 ------------------------
+* Change: Replace eeacms/zptlint with eeacms/plone-test:4 zptlint
+  [avoinea refs #90415]
 
 17.7 - (2017-11-07)
 -------------------
@@ -51,10 +53,10 @@ Changelog
 * Change: no longer enlarge dashboard charts to be one per line
   when pdf printing if the charts together can fit the document
   width
-  [ichim-david refs #79934] 
+  [ichim-david refs #79934]
 * Bug fix: isPrint condition now checks the referer link for
   pdf being present instead of the request url
-  [ichim-david refs #79934] 
+  [ichim-david refs #79934]
 
 16.9 - (2017-01-17)
 -------------------
