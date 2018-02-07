@@ -746,13 +746,13 @@ function showEmbed(){
                         iframeSrc = baseurl+"/embed-dashboard?dashboard=" + chartObj.attr('dashboard_id')+
                             "&customStyle=.googlechart_view{margin-left:0px%3B}";
                     }
-                    if (jQuery("#embed-include-daviz-title").attr("checked") !== 'checked'){
+                    if (jQuery("#embed-include-daviz-title").prop("checked") !== 'checked'){
                         iframeSrc += "&skipdaviztitle=true";
                     }
-                    if (jQuery("#embed-include-chart-title").attr("checked") !== 'checked'){
+                    if (jQuery("#embed-include-chart-title").prop("checked") !== 'checked'){
                         iframeSrc += "&skipcharttitle=true";
                     }
-                    if (jQuery(".googlechart_embed_ignore_filters").attr("checked") === 'checked'){
+                    if (jQuery(".googlechart_embed_ignore_filters").prop("checked") === 'checked'){
                         iframeSrc += "#_filters=" + query_params;
                         jQuery(".googlechart_hide_filters").show();
                     }
