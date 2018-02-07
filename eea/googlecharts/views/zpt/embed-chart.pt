@@ -122,50 +122,49 @@
             window.EEAGoogleCharts.embed.chart_id_$vhash = '${chart_id}';
             window.EEAGoogleCharts.embed.isPrint = ${isPrint};
             var isPrint = $isPrint;
-            jQuery(document).ready(function($) {
-                jQuery(document).trigger('googlecharts.embed');
-                var chart_columns_$vhash = ${chart/columns};
-                var merged_rows_$vhash = ${chart/data};
-                var available_columns_$vhash = ${chart/available_columns};
-                var chart_json_$vhash = ${chart/config};
-                var width_$vhash = ${chart/chartWidth};
-                var height_$vhash = ${chart/chartHeight};
-                var skipDavizTitle_$vhash = ${chart/skipDavizTitle};
-                var skipChartTitle_$vhash = ${chart/skipChartTitle};
-                var ratio = width_$vhash / 750;
-                var width_$vhash = isPrint && width_$vhash > 750 ? Math.floor(width_$vhash / ratio) : width_$vhash;
-                var name_$vhash = '${chart_name}';
-                var chart_options_$vhash = ${chart/options};
-                var chart_filterposition_$vhash = ${chart/filterposition}
-                var chart_filters_$vhash = ${chart/filters};
-                var qr_pos_$vhash = '${view/qr_position}';
-                var qr_size_$vhash = '${view/qr_size}';
-                var wm_pos_$vhash = '${view/wm_position}';
-                var wm_path_$vhash = '${view/wm_path}';
-                var iframe_qr_settings_$vhash = ${view/qr_iframe_settings};
-                var iframe_wm_settings_$vhash = ${view/wm_iframe_settings};
-                var main_title_$vhash = '${view/get_maintitle}';
-                var sortFilter_$vhash = '${sortFilter}';
-                var row_filters_str_$vhash = '$row_filters';
-                var sortBy_$vhash = '$sortBy';
-                var sortAsc_str_$vhash = '$sortAsc';
-                var chart_columnFilters_$vhash = $columnFilters;
-                var GoogleChartsConfig_$vhash = $GoogleChartsConfig;
-                var isInline_$vhash = '$inline';
-                var unpivotSettings_$vhash = $unpivotSettings;
-                var ChartNotes_$vhash = $ChartNotes;
-                var googlechart_config_array_$vhash = [];
-                var settings_$vhash = [];
-                var other_options_$vhash = {};
-                var resizableCharts = ['LineChart',
-                    'ComboChart',
-                    'AreaChart',
-                    'SteppedAreaChart',
-                    'ColumnChart',
-                    'BarChart',
-                    'ScatterChart',
-                    'BubbleChart',
-                    'PieChart'];
+            jQuery(document).trigger('googlecharts.embed');
+            var chart_columns_$vhash = ${chart/columns};
+            var merged_rows_$vhash = ${chart/data};
+            var available_columns_$vhash = ${chart/available_columns};
+            var chart_json_$vhash = ${chart/config};
+            var width_$vhash = ${chart/chartWidth};
+            var height_$vhash = ${chart/chartHeight};
+            var skipDavizTitle_$vhash = ${chart/skipDavizTitle};
+            var skipChartTitle_$vhash = ${chart/skipChartTitle};
+            var ratio = width_$vhash / 750;
+            var width_$vhash = isPrint && width_$vhash > 750 ? Math.floor(width_$vhash / ratio) : width_$vhash;
+            var name_$vhash = '${chart_name}';
+            var chart_options_$vhash = ${chart/options};
+            var chart_filterposition_$vhash = ${chart/filterposition}
+            var chart_filters_$vhash = ${chart/filters};
+            var qr_pos_$vhash = '${view/qr_position}';
+            var qr_size_$vhash = '${view/qr_size}';
+            var wm_pos_$vhash = '${view/wm_position}';
+            var wm_path_$vhash = '${view/wm_path}';
+            var iframe_qr_settings_$vhash = ${view/qr_iframe_settings};
+            var iframe_wm_settings_$vhash = ${view/wm_iframe_settings};
+            var main_title_$vhash = '${view/get_maintitle}';
+            var sortFilter_$vhash = '${sortFilter}';
+            var row_filters_str_$vhash = '$row_filters';
+            var sortBy_$vhash = '$sortBy';
+            var sortAsc_str_$vhash = '$sortAsc';
+            var chart_columnFilters_$vhash = $columnFilters;
+            var GoogleChartsConfig_$vhash = $GoogleChartsConfig;
+            var isInline_$vhash = '$inline';
+            var unpivotSettings_$vhash = $unpivotSettings;
+            var ChartNotes_$vhash = $ChartNotes;
+            var googlechart_config_array_$vhash = [];
+            var settings_$vhash = [];
+            var other_options_$vhash = {};
+            var resizableCharts = ['LineChart',
+                'ComboChart',
+                'AreaChart',
+                'SteppedAreaChart',
+                'ColumnChart',
+                'BarChart',
+                'ScatterChart',
+                'BubbleChart',
+                'PieChart'];
 
                 function getIframeSizes(){
 
@@ -325,7 +324,6 @@
                         }
                     }
                 }
-            });
             ">
     </script>
 
