@@ -122,7 +122,6 @@
             window.EEAGoogleCharts.embed.chart_id_$vhash = '${chart_id}';
             window.EEAGoogleCharts.embed.isPrint = ${isPrint};
             var isPrint = $isPrint;
-            jQuery(document).trigger('googlecharts.embed');
             var chart_columns_$vhash = ${chart/columns};
             var merged_rows_$vhash = ${chart/data};
             var available_columns_$vhash = ${chart/available_columns};
@@ -165,7 +164,6 @@
                 'ScatterChart',
                 'BubbleChart',
                 'PieChart'];
-
                 function getIframeSizes(){
 
                     var settings = {
@@ -196,6 +194,7 @@
                     }
                     return settings;
                 }
+		jQuery(function($){
                 google.setOnLoadCallback(function(){
                     var chart_type = chart_json_$vhash.chartType;
                     settings_$vhash.push(GoogleChartsConfig_$vhash[0].id);
@@ -292,6 +291,9 @@
                                     .data('other_options', other_options_$vhash);
                             }
                     }
+
+		    jQuery(document).trigger('googlecharts.embed');
+		});
                 });
                 function hashchanged(){
                     if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
