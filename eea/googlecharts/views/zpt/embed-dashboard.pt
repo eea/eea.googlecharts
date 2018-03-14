@@ -94,38 +94,42 @@
         tal:content="structure string:
         var dashboard_config_$vhash = ${dashboard};
         var settings_$vhash = {}
-        google.setOnLoadCallback(function(){
-            var isPrint = $isPrint;
-            settings_$vhash = {
-                googlechart_config_array : googlechart_config_array_$vhash,
-                main_title : main_title_$vhash,
-                dashboard_config : dashboard_config_$vhash,
-                baseurl : baseurl_$vhash,
-                qr_pos : qr_pos_$vhash,
-                qr_size : qr_size_$vhash,
-                wm_pos : wm_pos_$vhash,
-                wm_path : wm_path_$vhash,
-                iframe_qr_settings: iframe_qr_settings_$vhash,
-                iframe_wm_settings: iframe_wm_settings_$vhash,
-                merged_rows : merged_rows_$vhash,
-                available_columns : available_columns_$vhash,
-                vhash : '$vhash',
-                isInline : isInline_$vhash,
-                skipDavizTitle: skipDavizTitle_$vhash,
-                skipChartTitle: skipChartTitle_$vhash
-            };
-            if (isPrint || isInline_$vhash !== 'True'){
-                drawDashboardEmbed(settings_$vhash);
-            }
-            else{
-                jQuery('#googlechart_dashboard_$vhash')
-                    .addClass('not_visible')
-                    .attr('google_hash', '$vhash')
-                    .data('settings', settings_$vhash)
-            }
-            if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
-            }
+        jQuery(function($){
+            google.setOnLoadCallback(function(){
+                var isPrint = $isPrint;
+                settings_$vhash = {
+                    googlechart_config_array : googlechart_config_array_$vhash,
+                    main_title : main_title_$vhash,
+                    dashboard_config : dashboard_config_$vhash,
+                    baseurl : baseurl_$vhash,
+                    qr_pos : qr_pos_$vhash,
+                    qr_size : qr_size_$vhash,
+                    wm_pos : wm_pos_$vhash,
+                    wm_path : wm_path_$vhash,
+                    iframe_qr_settings: iframe_qr_settings_$vhash,
+                    iframe_wm_settings: iframe_wm_settings_$vhash,
+                    merged_rows : merged_rows_$vhash,
+                    available_columns : available_columns_$vhash,
+                    vhash : '$vhash',
+                    isInline : isInline_$vhash,
+                    skipDavizTitle: skipDavizTitle_$vhash,
+                    skipChartTitle: skipChartTitle_$vhash
+                };
+                if (isPrint || isInline_$vhash !== 'True'){
+                    drawDashboardEmbed(settings_$vhash);
+                }
+                else{
+                    jQuery('#googlechart_dashboard_$vhash')
+                        .addClass('not_visible')
+                        .attr('google_hash', '$vhash')
+                        .data('settings', settings_$vhash)
+                }
+                if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
+
+                }
+            });
         });
+
         function hashchanged(){
             if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
                 drawDashboardEmbed(settings_$vhash);

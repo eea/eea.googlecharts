@@ -1,8 +1,14 @@
 Changelog
 =========
 
-17.8.dev0 - (unreleased)
-------------------------
+17.9 - (2018-03-14)
+-------------------
+* Change: reference navigation.userAgent instead of jQuery browser
+  as this functionality is deprecated
+  [ichim-david refs #91577]
+
+17.8 - (2017-12-12)
+-------------------
 * Change: Replace eeacms/zptlint with eeacms/plone-test:4 zptlint
   [avoinea refs #90415]
 

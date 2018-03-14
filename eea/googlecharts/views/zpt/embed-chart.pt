@@ -122,7 +122,6 @@
             window.EEAGoogleCharts.embed.chart_id_$vhash = '${chart_id}';
             window.EEAGoogleCharts.embed.isPrint = ${isPrint};
             var isPrint = $isPrint;
-            jQuery(document).trigger('googlecharts.embed');
             var chart_columns_$vhash = ${chart/columns};
             var merged_rows_$vhash = ${chart/data};
             var available_columns_$vhash = ${chart/available_columns};
@@ -165,165 +164,168 @@
                 'ScatterChart',
                 'BubbleChart',
                 'PieChart'];
+                function getIframeSizes(){
 
-            function getIframeSizes(){
-
-                var settings = {
-                    chart:{
-                        top:0,
-                        left:0,
-                        width:0,
-                        height:0
-                    },
-                    chartArea:{
-                        top:'19.1%',
-                        left:'19.1%',
-                        width:'61.8%',
-                        height:'61.8%'
-                    },
-                }
-                var iframe_chart = jQuery('.googlechart_view');
-                settings.chart.top = iframe_chart.position().top;
-                settings.chart.left = iframe_chart.position().left;
-                settings.chart.width = iframe_chart.width();
-                settings.chart.height = iframe_chart.height();
-                if (settings_$vhash[7].chartArea !== undefined){
-                    settings.chartArea = settings_$vhash[7].chartArea;
-                }
-                if (resizableCharts.indexOf(settings_$vhash[1].chartType) === -1){
-                    settings.chartArea.width = 0;
-                    settings.chartArea.height = 0;
-                }
-                return settings;
-            }
-            google.setOnLoadCallback(function(){
-                var chart_type = chart_json_$vhash.chartType;
-                settings_$vhash.push(GoogleChartsConfig_$vhash[0].id);
-                settings_$vhash.push(chart_json_$vhash);
-                settings_$vhash.push(chart_columns_$vhash);
-                settings_$vhash.push(chart_filters_$vhash);
-                settings_$vhash.push(width_$vhash);
-                settings_$vhash.push(height_$vhash);
-                settings_$vhash.push(chart_filterposition_$vhash);
-                settings_$vhash.push(chart_options_$vhash);
-                settings_$vhash.push(null);
-                settings_$vhash.push(sortFilter_$vhash);
-                settings_$vhash.push(null);
-                settings_$vhash.push(row_filters_str_$vhash);
-                settings_$vhash.push(sortBy_$vhash);
-                settings_$vhash.push(sortAsc_str_$vhash);
-                settings_$vhash.push(chart_columnFilters_$vhash);
-                if (isInline_$vhash === 'True'){
-                    var tmp_view_id = '#googlechart_dashboard_$vhash';
-                    var tmp_chart_id = GoogleChartsConfig_$vhash[0].id;
-                    var custom_settings = jQuery(tmp_view_id).closest('dd').find('.chart-custom-settings');
-                    custom_width = custom_settings.attr('chart_width');
-                    custom_height = custom_settings.attr('chart_height');
-                    custom_chartAreaWidth = custom_settings.attr('chart_chartAreaWidth');
-                    custom_chartAreaHeight = custom_settings.attr('chart_chartAreaHeight');
-                    custom_chartAreaTop = custom_settings.attr('chart_chartAreaTop');
-                    custom_chartAreaLeft = custom_settings.attr('chart_chartAreaLeft');
-                    var initial_width = settings_$vhash[4];
-                    var initial_height = settings_$vhash[5];
-                    var initial_width_ratio;
-                    var chart_area_width;
-                    // 83520 resize chartarea width when printing
-                    if(settings_$vhash[7].chartArea && isPrint) {
-                        var ratio = 960 / 750;
-                        settings_$vhash[7].chartArea.width = Math.round(parseInt(settings_$vhash[7].chartArea.width, 10) / ratio) + 5 + '%';
-                        settings_$vhash[7].chartArea.heigth = Math.round(parseInt(settings_$vhash[7].chartArea.height, 10) / ratio) + 5 + '%';
+                    var settings = {
+                        chart:{
+                            top:0,
+                            left:0,
+                            width:0,
+                            height:0
+                        },
+                        chartArea:{
+                            top:'19.1%',
+                            left:'19.1%',
+                            width:'61.8%',
+                            height:'61.8%'
+                        },
                     }
-
-                    if (custom_width){
-                        settings_$vhash[4] = custom_width;
+                    var iframe_chart = jQuery('.googlechart_view');
+                    settings.chart.top = iframe_chart.position().top;
+                    settings.chart.left = iframe_chart.position().left;
+                    settings.chart.width = iframe_chart.width();
+                    settings.chart.height = iframe_chart.height();
+                    if (settings_$vhash[7].chartArea !== undefined){
+                        settings.chartArea = settings_$vhash[7].chartArea;
                     }
-                    if (custom_height){
-                        settings_$vhash[5] = custom_height;
+                    if (resizableCharts.indexOf(settings_$vhash[1].chartType) === -1){
+                        settings.chartArea.width = 0;
+                        settings.chartArea.height = 0;
                     }
-                    if (custom_chartAreaWidth){
-                        var tmp_chartArea = {};
-                        tmp_chartArea = {
-                            width: custom_chartAreaWidth,
-                            height: custom_chartAreaHeight,
-                            top: custom_chartAreaTop,
-                            left: custom_chartAreaLeft
+                    return settings;
+                }
+		jQuery(function($){
+                google.setOnLoadCallback(function(){
+                    var chart_type = chart_json_$vhash.chartType;
+                    settings_$vhash.push(GoogleChartsConfig_$vhash[0].id);
+                    settings_$vhash.push(chart_json_$vhash);
+                    settings_$vhash.push(chart_columns_$vhash);
+                    settings_$vhash.push(chart_filters_$vhash);
+                    settings_$vhash.push(width_$vhash);
+                    settings_$vhash.push(height_$vhash);
+                    settings_$vhash.push(chart_filterposition_$vhash);
+                    settings_$vhash.push(chart_options_$vhash);
+                    settings_$vhash.push(null);
+                    settings_$vhash.push(sortFilter_$vhash);
+                    settings_$vhash.push(null);
+                    settings_$vhash.push(row_filters_str_$vhash);
+                    settings_$vhash.push(sortBy_$vhash);
+                    settings_$vhash.push(sortAsc_str_$vhash);
+                    settings_$vhash.push(chart_columnFilters_$vhash);
+                    if (isInline_$vhash === 'True'){
+                        var tmp_view_id = '#googlechart_dashboard_$vhash';
+                        var tmp_chart_id = GoogleChartsConfig_$vhash[0].id;
+                        var custom_settings = jQuery(tmp_view_id).closest('dd').find('.chart-custom-settings');
+                        custom_width = custom_settings.attr('chart_width');
+                        custom_height = custom_settings.attr('chart_height');
+                        custom_chartAreaWidth = custom_settings.attr('chart_chartAreaWidth');
+                        custom_chartAreaHeight = custom_settings.attr('chart_chartAreaHeight');
+                        custom_chartAreaTop = custom_settings.attr('chart_chartAreaTop');
+                        custom_chartAreaLeft = custom_settings.attr('chart_chartAreaLeft');
+                        var initial_width = settings_$vhash[4];
+                        var initial_height = settings_$vhash[5];
+                        var initial_width_ratio;
+                        var chart_area_width;
+                        // 83520 resize chartarea width when printing
+                        if(settings_$vhash[7].chartArea && isPrint) {
+                            var ratio = 960 / 750;
+                            settings_$vhash[7].chartArea.width = Math.round(parseInt(settings_$vhash[7].chartArea.width, 10) / ratio) + 5 + '%';
+                            settings_$vhash[7].chartArea.heigth = Math.round(parseInt(settings_$vhash[7].chartArea.height, 10) / ratio) + 5 + '%';
                         }
-                        settings_$vhash[7].chartArea = tmp_chartArea;
+
+                        if (custom_width){
+                            settings_$vhash[4] = custom_width;
+                        }
+                        if (custom_height){
+                            settings_$vhash[5] = custom_height;
+                        }
+                        if (custom_chartAreaWidth){
+                            var tmp_chartArea = {};
+                            tmp_chartArea = {
+                                width: custom_chartAreaWidth,
+                                height: custom_chartAreaHeight,
+                                top: custom_chartAreaTop,
+                                left: custom_chartAreaLeft
+                            }
+                            settings_$vhash[7].chartArea = tmp_chartArea;
+                        }
+
                     }
 
-                }
+                    settings_$vhash.push(unpivotSettings_$vhash);
+                    settings_$vhash.push(ChartNotes_$vhash);
+                    guessSeries(settings_$vhash);
+                    googlechart_config_array_$vhash.push(settings_$vhash);
 
-                settings_$vhash.push(unpivotSettings_$vhash);
-                settings_$vhash.push(ChartNotes_$vhash);
-                guessSeries(settings_$vhash);
-                googlechart_config_array_$vhash.push(settings_$vhash);
+                    other_options_$vhash = {
+                        merged_rows: merged_rows_$vhash,
+                        available_columns: available_columns_$vhash,
+                        googlechart_config_array: googlechart_config_array_$vhash,
+                        GoogleChartsConfig: GoogleChartsConfig_$vhash,
+                        main_title: main_title_$vhash,
+                        baseurl: window.EEAGoogleCharts.embed.baseurl_$vhash,
+                        qr_pos: qr_pos_$vhash,
+                        qr_size: qr_size_$vhash,
+                        wm_pos: wm_pos_$vhash,
+                        wm_path: wm_path_$vhash,
+                        iframe_qr_settings: iframe_qr_settings_$vhash,
+                        iframe_wm_settings: iframe_wm_settings_$vhash,
+                        vhash: '$vhash',
+                        name: name_$vhash,
+                        isInline: isInline_$vhash,
+                        skipDavizTitle: skipDavizTitle_$vhash,
+                        skipChartTitle: skipChartTitle_$vhash
+                    };
 
-                other_options_$vhash = {
-                    merged_rows: merged_rows_$vhash,
-                    available_columns: available_columns_$vhash,
-                    googlechart_config_array: googlechart_config_array_$vhash,
-                    GoogleChartsConfig: GoogleChartsConfig_$vhash,
-                    main_title: main_title_$vhash,
-                    baseurl: window.EEAGoogleCharts.embed.baseurl_$vhash,
-                    qr_pos: qr_pos_$vhash,
-                    qr_size: qr_size_$vhash,
-                    wm_pos: wm_pos_$vhash,
-                    wm_path: wm_path_$vhash,
-                    iframe_qr_settings: iframe_qr_settings_$vhash,
-                    iframe_wm_settings: iframe_wm_settings_$vhash,
-                    vhash: '$vhash',
-                    name: name_$vhash,
-                    isInline: isInline_$vhash,
-                    skipDavizTitle: skipDavizTitle_$vhash,
-                    skipChartTitle: skipChartTitle_$vhash
+                    if(isPrint){
+                        gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
+                    }else if(jQuery('#googlechart_dashboard_$vhash').is(':visible')){
+                            if (isInline_$vhash !== 'True'){
+                                gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
+                            }
+                            else{
+                                jQuery('#googlechart_dashboard_$vhash')
+                                    .addClass('not_visible')
+                                    .attr('google_hash', '$vhash')
+                                    .data('settings', settings_$vhash)
+                                    .data('other_options', other_options_$vhash);
+                            }
+                    }
+
+		    jQuery(document).trigger('googlecharts.embed');
+		});
+                });
+                function hashchanged(){
+                    if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
+                        gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
+                    }
                 };
+                function resize_chart_$vhash(chart){
+                    if (chart.length && chart.is(':visible')){
+                        if (settings_$vhash && other_options_$vhash){
+                            if ($(window).width() <= settings_$vhash[4]){
+                                chart_json_$vhash.options.original_legend = settings_$vhash[1].options.legend;
+                                chart_json_$vhash.options.original_width = settings_$vhash[4];
+                                chart_json_$vhash.options.width = '98%';
+                            }
+                            else {
+                                if (chart_json_$vhash.options.original_legend){
+                                    chart_json_$vhash.options.legend = chart_json_$vhash.options.original_legend;
+                                    chart_json_$vhash.options.width = chart_json_$vhash.options.original_width;
+                                }
+                            }
 
-                if(isPrint){
-                    gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
-                }else if(jQuery('#googlechart_dashboard_$vhash').is(':visible')){
-                        if (isInline_$vhash !== 'True'){
-                            gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
-                        }
-                        else{
-                            jQuery('#googlechart_dashboard_$vhash')
-                                .addClass('not_visible')
-                                .attr('google_hash', '$vhash')
-                                .data('settings', settings_$vhash)
-                                .data('other_options', other_options_$vhash);
-                        }
-                }
-            });
-            function hashchanged(){
-                if (jQuery('#googlechart_dashboard_$vhash').is(':visible')){
-                    gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
-                }
-            };
-            function resize_chart_$vhash(chart){
-                if (chart.length && chart.is(':visible')){
-                    if (settings_$vhash && other_options_$vhash){
-                        if ($(window).width() <= settings_$vhash[4]){
-                            chart_json_$vhash.options.original_legend = settings_$vhash[1].options.legend;
-                            chart_json_$vhash.options.original_width = settings_$vhash[4];
-                            chart_json_$vhash.options.width = '98%';
-                        }
-                        else {
-                            if (chart_json_$vhash.options.original_legend){
-                                chart_json_$vhash.options.legend = chart_json_$vhash.options.original_legend;
-                                chart_json_$vhash.options.width = chart_json_$vhash.options.original_width;
+                            if (!gl_charts['googlechart_view_$vhash']) {
+                                gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
+                            } else {
+                                jQuery('#googlechart_view_$vhash').css('width', chart_json_$vhash.options.width);
+                                gl_charts['googlechart_view_$vhash'].setOption('width', chart_json_$vhash.options.width);
+                                gl_charts['googlechart_view_$vhash'].setOption('legend', chart_json_$vhash.options.legend);
+                                gl_charts['googlechart_view_$vhash'].draw();
                             }
                         }
-
-                        if (!gl_charts['googlechart_view_$vhash']) {
-                            gl_charts['googlechart_view_$vhash'] = drawChart(settings_$vhash, other_options_$vhash).chart;
-                        } else {
-                            jQuery('#googlechart_view_$vhash').css('width', chart_json_$vhash.options.width);
-                            gl_charts['googlechart_view_$vhash'].setOption('width', chart_json_$vhash.options.width);
-                            gl_charts['googlechart_view_$vhash'].setOption('legend', chart_json_$vhash.options.legend);
-                            gl_charts['googlechart_view_$vhash'].draw();
-                        }
                     }
                 }
-            }
             ">
     </script>
 

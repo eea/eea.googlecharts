@@ -34,7 +34,7 @@ function get_notes_for_chart(ChartNotesList, chart_id){
 }
 
 function fixSVG(container){
-    if (jQuery.browser.mozilla || jQuery.browser.msie){
+    if (window.navigator.userAgent.indexOf('Mozilla') !== -1 || window.navigator.userAgent.indexOf('MSIE') !== -1) {
         return;
     }
     var base = jQuery("base").attr("href");
