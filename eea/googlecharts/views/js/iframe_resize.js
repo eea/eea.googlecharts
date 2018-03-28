@@ -1,3 +1,5 @@
+// external dependencies:
+// jQuery, jqueryui: resizable, dialog, draggable
 function chartAreaAttribute2px(value, size){
     var pixels = 0;
     if (typeof(value) === "string"){
