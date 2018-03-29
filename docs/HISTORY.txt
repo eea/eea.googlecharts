@@ -1,7 +1,7 @@
 Changelog
 =========
 
-18.0 - (unreleased)
+18.0 - (2018-03-29)
 -------------------
 * Change: Added condition to exclude dashboards from resizing
   [petchesi-iulian refs #94175]
