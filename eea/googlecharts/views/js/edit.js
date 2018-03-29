@@ -426,9 +426,9 @@ function addFilter(id, column, filtertype, columnName, defaults, filter_settings
 function initializeChartTinyMCE(form){
     var textarea = jQuery('textarea', form).addClass('mce_editable');
     var name = textarea.attr('id');
+    var $form = jQuery(form);
 
-    form = jQuery('.daviz-view-form');
-    var action = form.length ? form.attr('action') : '';
+    var action = $form.length ? $form.attr('action') : '';
     action = action.split('@@')[0] + '@@tinymce-jsonconfiguration';
 
     jQuery.getJSON(action, {field: name}, function(data){
