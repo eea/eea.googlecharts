@@ -3,6 +3,8 @@ Changelog
 
 18.0 - (unreleased)
 -------------------
+* Change: Added condition to exclude dashboards from resizing
+  [petchesi-iulian refs #94175]
 * Change: initializeChartTinyMCE now uses the passed form instead of hardcoding
   the form
 * Change: document the external js requirements of iframe_resize.js
