@@ -1,7 +1,7 @@
 Changelog
 =========
 
-18.1 - (unreleased)
+18.1 - (2018-04-20)
 -------------------
 * Bug fix: undid change done in previous egg release to
   initializeChartTinyMCE while clarifying that passed parameter is not
