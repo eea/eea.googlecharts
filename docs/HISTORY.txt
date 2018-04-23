@@ -1,6 +1,13 @@
 Changelog
 =========
 
+18.1 - (2018-04-20)
+-------------------
+* Bug fix: undid change done in previous egg release to
+  initializeChartTinyMCE while clarifying that passed parameter is not
+  the form
+  [ichim-david refs #94434]
+
 18.0 - (2018-03-29)
 -------------------
 * Change: Added condition to exclude dashboards from resizing

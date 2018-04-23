@@ -1,8 +1,12 @@
 =================
 EEA Google Charts
 =================
-.. image:: http://ci.eionet.europa.eu/job/eea/job/eea.googlecharts/job/master/badge/icon
-  :target: http://ci.eionet.europa.eu/job/eea/job/eea.googlecharts/job/master/display/redirect
+.. image:: https://ci.eionet.europa.eu/buildStatus/icon?job=eea/eea.googlecharts/develop
+  :target: https://ci.eionet.europa.eu/job/eea/job/eea.googlecharts/job/develop/display/redirect
+  :alt: develop
+.. image:: https://ci.eionet.europa.eu/buildStatus/icon?job=eea/eea.googlecharts/master
+  :target: https://ci.eionet.europa.eu/job/eea/job/eea.googlecharts/job/master/display/redirect
+  :alt: master
 
 `EEA Google Charts`_ provides `Google Charts`_ framework integration for
 `eea.app.visualization`_. See `eea.daviz`_ package for more details.
