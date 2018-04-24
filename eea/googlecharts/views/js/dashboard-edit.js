@@ -871,7 +871,7 @@ DavizEdit.GoogleDashboardWidget.prototype = {
           {
             text: "Cancel",
             click: function(){
-              form.remove();
+              form.find('.formlibInlineValidation').remove();
               form.dialog("close");
             }
           },
