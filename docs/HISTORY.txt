@@ -1,6 +1,9 @@
 Changelog
 =========
 
+18.2-dev0 - (unreleased)
+---------------------
+
 18.2 - (unreleased)
 -------------------
 * Bug fix: avoid error when adding a new chart and we have a column
@@ -1168,4 +1171,3 @@ Changelog
 ------------------
 * Initial release
   [szabozo0]
-
