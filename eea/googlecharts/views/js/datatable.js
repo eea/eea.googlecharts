@@ -303,13 +303,16 @@ function transformTable(options){
             additionalColumns[pivotColumn] = defaultPivotColumnValue;
 
             tmp_available_columns[pivotColumn] = pivotColumnLabel;
-            pivotTable.properties[pivotColumn] = {
-                valueType : unpivotedTable.properties[settings.valueColumn].valueType,
+            var unpivotedValue = unpivotedTable.properties[settings.valueColumn];
+            if (unpivotedValue) {
+                pivotTable.properties[pivotColumn] = {
+                    valueType : unpivotedValue.valueType,
 //                order : unpivotedTable.properties[settings.valueColumn].order,
-                order : -1,
-                columnType : unpivotedTable.properties[settings.valueColumn].columnType,
-                label : pivotColumnLabel
-            };
+                    order : -1,
+                    columnType : unpivotedValue.columnType,
+                    label : pivotColumnLabel
+                };
+            }
 
             jQuery(pivotTable.items).each(function(pivot_row_index, pivot_row){
                 var foundRow = true;
@@ -337,11 +340,13 @@ function transformTable(options){
     var pivotColumnIds = [];
     var maxOrder = -1;
     patched_each(pivotTable.properties, function(key, property){
-        if (property.order === -1){
-            pivotColumnIds.push(key);
-        }
-        else {
-            maxOrder = Math.max(maxOrder, property.order);
+        if (property) {
+            if (property.order === -1){
+                pivotColumnIds.push(key);
+            }
+            else {
+                maxOrder = Math.max(maxOrder, property.order);
+            }
         }
     });
     patched_each(pivotColumnIds.sort(), function(idx, columnId){
@@ -558,6 +563,7 @@ function prepareForChart(options){
     patched_each(settings.columns, function(column_index, column){
         var hasTooltip = false;
         var colName = settings.originalDataTable.available_columns[column];
+        var propColName = settings.originalDataTable.properties[column];
         var couldAddErrorbars = false;
         var shouldAddErrorbars = false;
         var isData = false;
@@ -566,7 +572,7 @@ function prepareForChart(options){
                 isData = true;
             }
         });
-        if ((settings.originalDataTable.properties[column].columnType === 'number') && (isData)){
+        if (( propColName && propColName.columnType === 'number') && (isData)){
             couldAddErrorbars = true;
             if ((settings.errorbars !== undefined) && (settings.errorbars[column] !== undefined)){
                 shouldAddErrorbars = true;
@@ -578,9 +584,7 @@ function prepareForChart(options){
             checkNextCol = true;
             nextColName = settings.originalDataTable.available_columns[settings.columns[column_index + 1]];
         }
-        var colType = settings.originalDataTable.properties[column];
-        var yearType = ((colType.columnType === 'year') || (colType.valueType === 'year'));
-        var role = "data";
+        var colType = propColName;
         if(colType === undefined){
             colType = 'string';
         }else{
@@ -589,6 +593,8 @@ function prepareForChart(options){
                 colType = "string";
             }
         }
+        var yearType = ((colType.columnType === 'year') || (colType.valueType === 'year'));
+        var role = "data";
         var customtooltip;
         var isTooltip = false;
         patched_each(settings.preparedColumns, function(pc_idx, pc_column){
@@ -697,6 +703,15 @@ function prepareForChart(options){
             }
             var column = column_settings.column;
             var newColumn = row[column];
+            // 94182 avoid js error when column data is missing and we attempt to
+            // create a new chart
+            if (!newColumn) {
+                newRow.push(newColumn);
+                if (window.console) {
+                    console.log('column name is missing: ', column);
+                }
+                return;
+            }
 
             var colType = settings.originalDataTable.properties[column];
 
