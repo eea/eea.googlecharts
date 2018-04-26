@@ -62,6 +62,7 @@ class Add(Charts):
                 existing.add(widget.get('name'))
         return existing
 
+
 class Edit(Charts):
     """ Vocabulary to be used within edit form
     """
@@ -73,6 +74,14 @@ class Edit(Charts):
         request = getattr(context, 'REQUEST', None)
         form = getattr(request, 'form', {})
         name = form.get('name', '')
+        if not name:
+            # 94182 edit form has name info as such
+            # {dashboard-01.name':
+            # u'googlechart.googlecharts/chartsconfig/charts/
+            # googlechartid_chart_12', 'fname': u'dashboard-01.name'}
+            name = form.get(form.get('fname', {}))
+            if name:
+                name = name.split('/')[-1]
 
         accessor = queryAdapter(context, IVisualizationConfig)
         charts = accessor.view('googlechart.googlecharts', {})

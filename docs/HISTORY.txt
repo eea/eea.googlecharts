@@ -2,10 +2,10 @@ Changelog
 =========
 
 18.2-dev0 - (unreleased)
----------------------
-
-18.2 - (unreleased)
--------------------
+------------------------
+* Bug fix: avoid inline validation error when editing a dashboard
+  chart in daviz-edit.html
+  [ichim-david refs #94182]
 * Bug fix: avoid error when adding a new chart and we have a column
   data missing
   [ichim-david refs #94182]
