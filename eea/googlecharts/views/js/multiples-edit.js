@@ -1,6 +1,7 @@
 jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
     var current_widget = ".googlechart-widget-" + view;
-    if (jQuery(current_widget + " select:visible").length === 0){
+    var absolute_url = jQuery(".multiples-config").attr("absolute_url");
+    if (jQuery(current_widget + " select:visible").length === 0 || !absolute_url){
         return;
     }
     function setDefaultsIfMissing(){

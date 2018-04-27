@@ -7,6 +7,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 from zope.schema.vocabulary import SimpleTerm
 from eea.app.visualization.interfaces import IVisualizationConfig
 
+
 class Charts(object):
     """ Charts vocabulary
     """
@@ -36,6 +37,7 @@ class Charts(object):
             items.append(SimpleTerm(name, path, title))
         return SimpleVocabulary(items)
 
+
 class Add(Charts):
     """ Vocabulary to be used within add form
     """
@@ -61,6 +63,7 @@ class Add(Charts):
                 #remove the "multiples_" prefix from name
                 existing.add(widget.get('name')[10:])
         return existing
+
 
 class Edit(Charts):
     """ Vocabulary to be used within edit form
