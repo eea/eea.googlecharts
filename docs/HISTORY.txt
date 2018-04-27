@@ -1,6 +1,9 @@
 Changelog
 =========
 
+18.3-dev0 - (unreleased)
+---------------------
+
 18.2 - (2018-04-26)
 ------------------------
 * Bug fix: avoid inline validation error when editing a dashboard
