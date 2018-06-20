@@ -12,7 +12,7 @@ EEA Google Charts
 `eea.app.visualization`_. See `eea.daviz`_ package for more details.
 
 
-.. image:: http://eea.github.com/_images/eea.daviz.layers.svg
+.. image:: https://eea.github.io/_images/eea.daviz.layers.svg
 
 
 .. contents::
@@ -50,7 +50,7 @@ Dependencies
 3. `eea.app.visualization`_
 
 
-.. image:: http://eea.github.com/_images/eea.daviz.dependencies.svg
+.. image:: https://eea.github.io/_images/eea.daviz.dependencies.svg
 
 
 Live demos
@@ -89,9 +89,9 @@ Funding
 
 EEA_ - European Environment Agency (EU)
 
-.. _EEA: http://www.eea.europa.eu/
-.. _`eea.daviz`: http://eea.github.com/docs/eea.daviz
-.. _`eea.app.visualization`: http://eea.github.com/docs/eea.app.visualization
-.. _`eea.converter`: http://eea.github.com/docs/eea.converter
+.. _EEA: https://www.eea.europa.eu/
+.. _`eea.daviz`: https://eea.github.io/docs/eea.daviz
+.. _`eea.app.visualization`: https://eea.github.io/docs/eea.app.visualization
+.. _`eea.converter`: https://eea.github.io/docs/eea.converter
 .. _`Google Charts`: http://code.google.com/apis/chart
-.. _`EEA Google Charts`: http://eea.github.com/docs/eea.googlecharts
+.. _`EEA Google Charts`: https://eea.github.io/docs/eea.googlecharts

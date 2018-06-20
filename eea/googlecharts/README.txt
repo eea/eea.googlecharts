@@ -27,7 +27,7 @@ Authors
 
   EEA_ - European Environment Agency (EU)
 
-.. _EEA: http://www.eea.europa.eu/
-.. _`EEA Google Charts`: http://eea.github.com/docs/eea.googlecharts
-.. _`eea.app.visualization`: http://eea.github.com/docs/eea.app.visualization
-.. _`eea.daviz`: http://eea.github.com/docs/eea.daviz
+.. _EEA: https://www.eea.europa.eu/
+.. _`EEA Google Charts`: https://eea.github.io/docs/eea.googlecharts
+.. _`eea.app.visualization`: https://eea.github.io/docs/eea.app.visualization
+.. _`eea.daviz`: https://eea.github.io/docs/eea.daviz

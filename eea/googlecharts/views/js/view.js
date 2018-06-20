@@ -864,7 +864,7 @@ var changeDashboardId = function(idx){
 };
 
 jQuery(document).ready(function($){
-    // workaround for firefox issue: http://taskman.eionet.europa.eu/issues/9941
+    // workaround for firefox issue: https://taskman.eionet.europa.eu/issues/9941
     // Removed workaround as the issue has been already fixed. Details here:
     // https://code.google.com/p/google-visualization-api-issues/issues/detail?id=598
     // if (jQuery.browser.mozilla){

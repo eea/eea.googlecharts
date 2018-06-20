@@ -907,7 +907,7 @@ function getColumnsFromSettings(columnSettings){
     return settings;
 }
 
-/* patched jQuery.each function from jQuery v 1.9.1, required for http://taskman.eionet.europa.eu/issues/20002
+/* patched jQuery.each function from jQuery v 1.9.1, required for https://taskman.eionet.europa.eu/issues/20002
    to be removed after upgrading to jQuery 1.9.1
 */
 patched_each = function(obj, callback, args){
