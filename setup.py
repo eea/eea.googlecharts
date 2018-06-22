@@ -12,7 +12,7 @@ setup(name=NAME,
       description="Configurator for GoogleCharts",
       long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
-      # http://pypi.python.org/pypi?%3Aaction=list_classifiers
+      # https://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
           "Framework :: Zope2",
           "Framework :: Plone",
@@ -29,7 +29,7 @@ setup(name=NAME,
       keywords='EEA google chart Add-ons Plone Zope',
       author='European Environment Agency: IDM2 A-Team',
       author_email='eea-edw-a-team-alerts@googlegroups.com',
-      download_url="http://pypi.python.org/pypi/eea.googlecharts",
+      download_url="https://pypi.python.org/pypi/eea.googlecharts",
       url='https://github.com/collective/eea.googlecharts',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),

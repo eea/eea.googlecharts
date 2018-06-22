@@ -1,6 +1,11 @@
 Changelog
 =========
 
+18.3 - (2018-06-20)
+---------------------
+* Change: updated URLs pointing to eea.europa.eu with https://
+  [alecghica refs #95849]
+
 18.2 - (2018-04-26)
 ------------------------
 * Bug fix: avoid inline validation error when editing a dashboard
@@ -831,7 +836,7 @@ Changelog
 * Feature: Added loading spinner on charts while rendering
   [szabozo0 refs #14676]
 * Change: small layout fixes, padding issues for logo and QR code.
-  [demarant http://taskman.eionet.europa.eu/issues/14910]
+  [demarant https://taskman.eionet.europa.eu/issues/14910]
 
 7.6 - (2013-07-08)
 ------------------
