@@ -1,7 +1,7 @@
 Changelog
 =========
 
-18.4-dev0 - (unreleased)
+18.4 - (2018-07-24)
 ---------------------
 * Bug fix: The old logic handled 0 values as missing values, when
   type of the column is text
