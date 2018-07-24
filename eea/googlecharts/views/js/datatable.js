@@ -705,10 +705,11 @@ function prepareForChart(options){
             var newColumn = row[column];
             // 94182 avoid js error when column data is missing and we attempt to
             // create a new chart
-            if (!newColumn) {
+
+            if ((!newColumn) && (newColumn !== 0)) {
                 newRow.push(newColumn);
                 if (window.console) {
-                    console.log('column name is missing: ', column);
+                    console.log('Value for', column, 'is missing');
                 }
                 return;
             }
