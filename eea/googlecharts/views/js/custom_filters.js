@@ -77,7 +77,7 @@ function addCustomFilter(options){
     var defaults = [];
     if (settings.customPrefix.substr(0,18) === "pre_config_filter_"){
         defaults = [];
-        patched_each(settings.defaultValues, function(idx, value){
+        jQuery.each(settings.defaultValues, function(idx, value){
             defaults.push(value[0]);
         });
         updateHashForColumnFilter("pre_config_"+settings.customPrefix.substr(18), defaults, settings.updateHash, "#"+settings.filtersDiv);
@@ -85,7 +85,7 @@ function addCustomFilter(options){
 
     if (settings.customPrefix.substr(0,13) === "columnfilter_"){
         defaults = [];
-        patched_each(settings.defaultValues, function(idx, value){
+        jQuery.each(settings.defaultValues, function(idx, value){
             defaults.push(value);
         });
         updateHashForColumnFilter("columnfilter_"+settings.customPrefix.substr(13), defaults, settings.updateHash, "#"+settings.filtersDiv);
@@ -224,7 +224,7 @@ function applySortOnChart(options){
         shortSortBy = sortBy.substr(0, sortBy.length - 11);
         sortBy_ext = "_reversed";
     }
-    patched_each(options.availableColumns, function(key, value){
+    jQuery.each(options.availableColumns, function(key, value){
         if (value === shortSortBy){
             sortBy_name = key + sortBy_ext;
         }
@@ -309,7 +309,7 @@ function addSortFilter(options){
 
 function getColNameFromFriendly(friendlyname, options){
     var colName = "";
-    patched_each(options.columnFriendlyNames, function(key,value){
+    jQuery.each(options.columnFriendlyNames, function(key,value){
         if (value === friendlyname){
             colName = key;
         }
@@ -319,7 +319,7 @@ function getColNameFromFriendly(friendlyname, options){
 
 function applyColumnFilters(options){
 /*    var skipColorReorder = false;
-    patched_each(jQuery("#"+options.filtersDiv).find("div"), function(idx, div){
+    jQuery.each(jQuery("#"+options.filtersDiv).find("div"), function(idx, div){
         if ((jQuery(div).attr("id") === undefined) || (jQuery(div).attr("id") === '')){
             return;
         }
@@ -333,7 +333,7 @@ function applyColumnFilters(options){
 
     var original_config;
     var conf_array = jQuery("#" + options.dashboardDiv).data('other_settings').googlechart_config_array;
-    patched_each(conf_array, function(idx, conf){
+    jQuery.each(conf_array, function(idx, conf){
         if (conf[0] === jQuery("#"+options.chartViewDiv).attr("chart_id")){
             original_config = conf;
             var chart_id = conf[0];
@@ -357,7 +357,7 @@ function applyColumnFilters(options){
             var chart_options_series = {};
 
             var hasErrorbars = false;
-            patched_each(options.columnFiltersObj, function(c_idx, columnFilterObj){
+            jQuery.each(options.columnFiltersObj, function(c_idx, columnFilterObj){
                 var chart_columnFilter_new = {};
                 chart_columnFilter_new.title = chart_columnFilters_old[c_idx].title;
                 chart_columnFilter_new.type = chart_columnFilters_old[c_idx].type;
@@ -365,9 +365,9 @@ function applyColumnFilters(options){
                 chart_columnFilter_new.settings = {};
                 var defaults_new = [];
                 var original_defaults = chart_columnFilters_old[c_idx].settings.defaults;
-                patched_each(columnFilterObj.getState().selectedValues, function(idx, default_new){
+                jQuery.each(columnFilterObj.getState().selectedValues, function(idx, default_new){
                     defaults_new.push(getColNameFromFriendly(default_new, options));
-                    patched_each(original_defaults, function(o_idx, original_default_value){
+                    jQuery.each(original_defaults, function(o_idx, original_default_value){
                         if ((chart_options.series[original_default_value] !== undefined) &&
                             (chart_options.series[original_default_value].errorBars !== undefined) &&
                             (chart_options.series[original_default_value].errorBars.errorType !== "none")){
@@ -379,7 +379,7 @@ function applyColumnFilters(options){
                 });
                 chart_columnFilter_new.settings.defaults = defaults_new;
                 chart_columnFilter_new.settings.selectables = [];
-                patched_each(chart_columnFilters_old[c_idx].settings.selectables, function(co_idx, columnFilter_old){
+                jQuery.each(chart_columnFilters_old[c_idx].settings.selectables, function(co_idx, columnFilter_old){
                     chart_columnFilter_new.settings.selectables.push(columnFilter_old);
                 });
                 chart_columnFilters_new.push(chart_columnFilter_new);
@@ -389,17 +389,17 @@ function applyColumnFilters(options){
             var chart_columns_new = {};
             chart_columns_new.original = [];
             chart_columns_new.prepared = [];
-            patched_each(chart_columns_old.original, function(idx, chart_column_old){
+            jQuery.each(chart_columns_old.original, function(idx, chart_column_old){
                 var chart_column_new = {};
                 chart_column_new.name = chart_column_old.name;
                 chart_column_new.status = chart_column_old.status;
                 chart_columns_new.original.push(chart_column_new);
             });
             var usedFilterIdxs = [];
-            patched_each(chart_columns_old.prepared, function(idx, chart_column_old){
+            jQuery.each(chart_columns_old.prepared, function(idx, chart_column_old){
                 var columnFilterIdx = -1;
                 var shouldSkip;
-                patched_each(chart_columnFilters_old, function(idx, columnFilter_old){
+                jQuery.each(chart_columnFilters_old, function(idx, columnFilter_old){
                     if (jQuery.inArray(chart_column_old.name, columnFilter_old.settings.defaults) !== -1){
                         if (usedFilterIdxs.indexOf(idx) === -1){
                             columnFilterIdx = idx;
@@ -422,10 +422,10 @@ function applyColumnFilters(options){
                     }
                 }
                 else {
-                    patched_each(chart_columnFilters_new[columnFilterIdx].settings.defaults.sort(), function(idx, default_col_new){
+                    jQuery.each(chart_columnFilters_new[columnFilterIdx].settings.defaults.sort(), function(idx, default_col_new){
                         var chart_column_new = {};
                         chart_column_new.name = default_col_new;
-                        patched_each(chart_columns_old.prepared, function(idx, tmpcol){
+                        jQuery.each(chart_columns_old.prepared, function(idx, tmpcol){
                             if (tmpcol.name === chart_column_new.name){
                                 chart_column_new = jQuery.extend(true, {}, tmpcol);
                             }
@@ -441,8 +441,8 @@ function applyColumnFilters(options){
                 }
             });
             var chart_columns_new_prepared = [];
-            patched_each(chart_columns_old.prepared, function(idx1, chart_column_old){
-                patched_each(chart_columns_new.prepared, function(idx2, chart_column_new){
+            jQuery.each(chart_columns_old.prepared, function(idx1, chart_column_old){
+                jQuery.each(chart_columns_new.prepared, function(idx2, chart_column_new){
                     if (chart_column_old.name === chart_column_new.name){
                         chart_columns_new_prepared.push(chart_column_new);
                     }
@@ -450,9 +450,9 @@ function applyColumnFilters(options){
             });
             chart_columns_new.prepared = chart_columns_new_prepared;
             var chart_filters_new = {};
-            patched_each(chart_filters_old,function(key,value){
+            jQuery.each(chart_filters_old,function(key,value){
                 var columnFilterIdx = -1;
-                patched_each(chart_columnFilters_old, function(idx, columnFilter_old){
+                jQuery.each(chart_columnFilters_old, function(idx, columnFilter_old){
                     if (columnFilter_old.settings.defaults.indexOf(key) !== -1){
                         columnFilterIdx = idx;
                     }
@@ -461,7 +461,7 @@ function applyColumnFilters(options){
                     chart_filters_new[key] = value;
                 }
                 else{
-                    patched_each(chart_columnFilters_new[columnFilterIdx].settings.defaults, function(idx, default_col_new){
+                    jQuery.each(chart_columnFilters_new[columnFilterIdx].settings.defaults, function(idx, default_col_new){
                         chart_filters_new[default_col_new] = value;
                     });
                 }
@@ -499,7 +499,7 @@ function applyColumnFilters(options){
             var original_palette = {};
             var column_nr = 0;
             var color_nr = 0;
-            patched_each(original_config[2].prepared, function(idx, column){
+            jQuery.each(original_config[2].prepared, function(idx, column){
                 if (column.status === 1){
                     if (column_nr !== 0){
                         if (options.columnTypes[column.name].valueType === 'number'){
@@ -513,8 +513,8 @@ function applyColumnFilters(options){
                     column_nr++;
                 }
             });
-            patched_each(original_config[14], function(idx, column_filter){
-                patched_each(column_filter.settings.selectables, function(idx, column){
+            jQuery.each(original_config[14], function(idx, column_filter){
+                jQuery.each(column_filter.settings.selectables, function(idx, column){
                     if ((options.columnTypes[column].valueType === 'number') && (typeof(original_palette[column]) === 'undefined')){
                         original_palette[column] = original_config[1].options.colors[color_nr];
                         color_nr++;
@@ -526,7 +526,7 @@ function applyColumnFilters(options){
             });
 
             var new_palette = [];
-            patched_each(config[2].prepared, function(idx, column){
+            jQuery.each(config[2].prepared, function(idx, column){
                 if ((column.status === 1) && (typeof(original_palette[column.name]) !== 'undefined')){
                     new_palette.push(original_palette[column.name]);
                 }
@@ -550,7 +550,7 @@ function updateColumnFiltersFromHash(options){
             return;
         }
         var columnLabel = default_columnfilter.title.replace(/[^A-Za-z0-9]/g, '_');
-        patched_each(options.columnFiltersObj, function(idx, filter){
+        jQuery.each(options.columnFiltersObj, function(idx, filter){
             var filterLabel = filter.getOption("filterColumnLabel").replace(/[^A-Za-z0-9]/g, '_');
             if (filterLabel === columnLabel){
                 filter.setState({"selectedValues":default_columnfilter.defaults});
@@ -580,7 +580,7 @@ function addColumnFilters(options){
         var hash = window.location.hash.split("_filters=")[0];
         var query_params = getQueryParams("#"+settings.filtersDiv);
 
-        patched_each(query_params.columnFilters, function(key, defaults){
+        jQuery.each(query_params.columnFilters, function(key, defaults){
             if (key.substr(0,13) === 'columnfilter_'){
                 var default_columnfilter = {};
                 default_columnfilter.title = key.substr(13);
@@ -591,7 +591,7 @@ function addColumnFilters(options){
     }
 
 
-    patched_each(settings.columnFilters.reverse(), function(idx, columnFilter){
+    jQuery.each(settings.columnFilters.reverse(), function(idx, columnFilter){
         var paramsForHandler = {
             dashboardDiv : settings.dashboardDiv,
             chartViewDiv : settings.chartViewDiv,
@@ -604,10 +604,10 @@ function addColumnFilters(options){
         };
         var values = [[columnFilter.title]];
         var defaultValues = [];
-        patched_each(columnFilter.settings.defaults, function(idx, defaultcol){
+        jQuery.each(columnFilter.settings.defaults, function(idx, defaultcol){
             defaultValues.push(settings.columns[defaultcol]);
         });
-        patched_each(columnFilter.settings.selectables, function(idx, selectable){
+        jQuery.each(columnFilter.settings.selectables, function(idx, selectable){
             values.push([settings.columns[selectable]]);
         });
         var options2 = {
@@ -638,7 +638,7 @@ function applyPreConfigFilters(options){
     var selectedValues = [];
     var objForTrigger;
     var allowMultiple;
-    patched_each(options.preConfigFiltersObj, function(idx, columnFilterObj){
+    jQuery.each(options.preConfigFiltersObj, function(idx, columnFilterObj){
         if (columnFilterObj.getOption("filterColumnLabel") === filterTitle){
             selectedValues = columnFilterObj.getState().selectedValues;
             allowMultiple = columnFilterObj.getOption("ui.allowMultiple");
@@ -650,15 +650,15 @@ function applyPreConfigFilters(options){
     var chart_columnFilters_old;
     var chart_columns_old;
     var conf_array = jQuery("#" + options.dashboardDiv).data('other_settings').googlechart_config_array;
-    patched_each(conf_array, function(idx, conf){
+    jQuery.each(conf_array, function(idx, conf){
         if (conf[0] === jQuery("#"+options.chartViewDiv).attr("chart_id")){
             chart_columnFilters_old = conf[14];
             chart_columns_old = conf[2];
         }
     });
-    patched_each(chart_columns_old.prepared, function(idx, prepared){
+    jQuery.each(chart_columns_old.prepared, function(idx, prepared){
         var shouldHide = true;
-        patched_each(chart_columns_old.original, function(idx, original){
+        jQuery.each(chart_columns_old.original, function(idx, original){
             if (original.name === prepared.name){
                 shouldHide = false;
             }
@@ -674,22 +674,22 @@ function applyPreConfigFilters(options){
     var filtersConfNotToRemoveTitles = [];
 
     var columnsToBeShown = [];
-    patched_each(options.columnFiltersObj, function(idx1, columnFilterObj){
+    jQuery.each(options.columnFiltersObj, function(idx1, columnFilterObj){
         if (columnFilterObj.getOption("filterColumnLabel").indexOf("custom_helper_") === -1){
             filtersNotToRemove.push(columnFilterObj);
             filtersNotToRemoveTitles.push(columnFilterObj.getOption("filterColumnLabel"));
-            patched_each(chart_columnFilters_old, function (idx3, oldFilter){
+            jQuery.each(chart_columnFilters_old, function (idx3, oldFilter){
                 if ((oldFilter.title === columnFilterObj.getOption("filterColumnLabel")) && (jQuery.inArray(oldFilter.title, filtersConfNotToRemoveTitles) === -1)){
                     filtersConfNotToRemove.push(oldFilter);
                     filtersConfNotToRemoveTitles.push(oldFilter.title);
                 }
             });
         }
-        patched_each(options.thisCustomHelperFilters, function(idx2, helperFilter){
+        jQuery.each(options.thisCustomHelperFilters, function(idx2, helperFilter){
             if (columnFilterObj.getOption("filterColumnLabel") === helperFilter.title){
                 var newState = {"selectedValues":[]};
-                patched_each(selectedValues, function(idx3, selectedValue){
-                    patched_each(helperFilter.settings.selectables, function(idx4, selectable){
+                jQuery.each(selectedValues, function(idx3, selectedValue){
+                    jQuery.each(helperFilter.settings.selectables, function(idx4, selectable){
                         selectedValueStr = selectedValue.toString().replace(/[^A-Za-z0-9]/g, '_');
                         if (selectable.replace("_"+selectedValueStr, "") === helperFilter.title.replace("custom_helper_", "")){
                             newState.selectedValues.push(options.availableColumns[selectable]);
@@ -711,7 +711,7 @@ function applyPreConfigFilters(options){
                     filtersNotToRemove.push(columnFilterObj);
                     filtersNotToRemoveTitles.push(helperFilter.title);
                 }
-                patched_each(chart_columnFilters_old, function (idx3, oldFilter){
+                jQuery.each(chart_columnFilters_old, function (idx3, oldFilter){
                     if ((oldFilter.title === helperFilter.title) && (jQuery.inArray(oldFilter.title, filtersConfNotToRemoveTitles) === -1)){
                         filtersConfNotToRemove.push(oldFilter);
                         filtersConfNotToRemoveTitles.push(oldFilter.title);
@@ -721,11 +721,11 @@ function applyPreConfigFilters(options){
         });
     });
     options.columnFiltersObj.splice(0, options.columnFiltersObj.length);
-    patched_each(filtersNotToRemove, function(idx, filter){
+    jQuery.each(filtersNotToRemove, function(idx, filter){
         options.columnFiltersObj.push(filter);
     });
     chart_columnFilters_old.splice(0, chart_columnFilters_old.length);
-    patched_each(filtersConfNotToRemove, function(idx, filter){
+    jQuery.each(filtersConfNotToRemove, function(idx, filter){
         chart_columnFilters_old.push(filter);
     });
     objForTrigger.columnsToBeShown = columnsToBeShown;
@@ -744,7 +744,7 @@ function updatePreConfigFiltersFromHash(options){
             return;
         }
         var columnLabel = default_preconfig.title.replace(/[^A-Za-z0-9]/g, '_');
-        patched_each(options.preConfigFiltersObj, function(idx, filter){
+        jQuery.each(options.preConfigFiltersObj, function(idx, filter){
             var filterLabel = filter.getOption("filterColumnLabel").replace(/[^A-Za-z0-9]/g, '_');
             if (filterLabel === columnLabel){
                 filter.setState({"selectedValues":default_preconfig.defaults});
@@ -767,7 +767,7 @@ function addPreConfigFilters(options){
     };
     jQuery.extend(settings, options);
     var column_names_to_be_shown = [];
-    patched_each(settings.availableColumns, function(key, column){
+    jQuery.each(settings.availableColumns, function(key, column){
         if (settings.columnsToBeShown){
             for (var i = 0; i < settings.columnsToBeShown.length; i++){
                 if (column === settings.columnsToBeShown[i]){
@@ -789,7 +789,7 @@ function addPreConfigFilters(options){
         isFirstPreConfigFilters = false;
         var hash = window.location.hash.split("_filters=")[0];
         var query_params = getQueryParams(settings.filtersDiv);
-        patched_each(query_params.columnFilters, function(key, defaults){
+        jQuery.each(query_params.columnFilters, function(key, defaults){
             if (key.substr(0,11) === 'pre_config_'){
                 var default_preconfig = {};
                 default_preconfig.title = key.substr(11);
@@ -798,7 +798,7 @@ function addPreConfigFilters(options){
             }
         });
     }
-    patched_each(settings.filters, function(idx, filter){
+    jQuery.each(settings.filters, function(idx, filter){
         var allThisCustomHelperFilters = [];
         var mainDefaults = [];
         var customTitle = settings.originalTable.properties[filter.filterTitle].label;
@@ -808,17 +808,17 @@ function addPreConfigFilters(options){
         var tmp_table = [];
         tmp_table.push([customTitle]);
         var tmp_items = [];
-        patched_each(settings.originalTable.items, function(idx, value){
+        jQuery.each(settings.originalTable.items, function(idx, value){
             if (jQuery.inArray(value[filter.filterTitle], tmp_items) === -1){
                 tmp_items.push(value[filter.filterTitle]);
             }
         });
         tmp_items = tmp_items.sort();
-        patched_each(tmp_items, function(idx, value){
+        jQuery.each(tmp_items, function(idx, value){
             tmp_table.push([value]);
         });
-        patched_each(settings.availableColumns, function(key, availableColumn){
-            patched_each(tmp_table, function(f_idx, filterValue){
+        jQuery.each(settings.availableColumns, function(key, availableColumn){
+            jQuery.each(tmp_table, function(f_idx, filterValue){
                 var filterStr = filterValue[0].toString().replace(/[^A-Za-z0-9]/g, '_');
                 if (f_idx === 0){
                     return;
@@ -828,7 +828,7 @@ function addPreConfigFilters(options){
                     return;
                 }
                 has_othermatch = false;
-                patched_each(tmp_table, function(f_idx2, filterValue2){
+                jQuery.each(tmp_table, function(f_idx2, filterValue2){
                     var filterStr2 = filterValue2[0].toString().replace(/[^A-Za-z0-9]/g, '_');
                     if ((f_idx2 !== f_idx) && (key.indexOf(filterStr2) !== -1) && (filterStr.length < filterStr2.length)){
                         has_othermatch = true;
@@ -840,7 +840,7 @@ function addPreConfigFilters(options){
                 var tmp_title = key.replace("_"+filterStr, "");
                 var found_customHelperFilter = false;
                 var tmp_customHelperFilter = null;
-                patched_each(customHelperFilters, function(h_idx, customHelperFilter){
+                jQuery.each(customHelperFilters, function(h_idx, customHelperFilter){
                     if (customHelperFilter.title === 'custom_helper_' + tmp_title){
                         tmp_customHelperFilter = customHelperFilter;
                     }
@@ -894,7 +894,7 @@ function addPreConfigFilters(options){
         }
 
         var thisCustomHelperFilters = [];
-        patched_each(allThisCustomHelperFilters, function (all_idx, customHelperFilter){
+        jQuery.each(allThisCustomHelperFilters, function (all_idx, customHelperFilter){
             if (customHelperFilter.settings.defaults.length > 0){
                 thisCustomHelperFilters.push(customHelperFilter);
             }
@@ -933,7 +933,7 @@ function addPreConfigFilters(options){
         }
         preConfigFiltersObj.push(addCustomFilter(options2));
     });
-    patched_each(customHelperFilters, function (chf_idx, customHelperFilter){
+    jQuery.each(customHelperFilters, function (chf_idx, customHelperFilter){
         if (customHelperFilter.settings.defaults.length > 0){
             availableCustomHelperFilters.push(customHelperFilter);
             allCustomHelperFiltersTitle.push(customHelperFilter.title);

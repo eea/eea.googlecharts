@@ -258,7 +258,7 @@ function svgCleanup(svg) {
     var g_elems = svg.find("g[clip-path^='url']");
     var elems = jQuery.merge(r_elems, g_elems);
 
-    patched_each(elems, function(idx, elem){
+    jQuery.each(elems, function(idx, elem){
         var fillVal = jQuery(elem).attr("fill");
         var clip_path = jQuery(elem).attr("clip-path");
         var elem_attr, url_val;
@@ -301,7 +301,7 @@ function updateSortOptions(id){
         default_option.attr("selected", "selected");
     }
     default_option.appendTo(body);
-    patched_each(values, function(idx, value){
+    jQuery.each(values, function(idx, value){
         if (value.status !== 0){
             var option = jQuery("<option></option>");
             if (selected === value.name){
@@ -467,7 +467,7 @@ reloadChartNotes = function(id){
     var notes = _.sortBy(get_notes_for_chart(id), function(note){
       return note.order[id];
     });
-    patched_each(notes, function(index, note){
+    jQuery.each(notes, function(index, note){
 
       noteTemplate = Templates.noteTemplate({data: {
         note: note,
@@ -651,7 +651,7 @@ function reloadColumnFilters(id){
 
     var columnfilters = context.data('columnfilters') || [];
 
-    patched_each(columnfilters, function(index, columnfilter){
+    jQuery.each(columnfilters, function(index, columnfilter){
         var li = jQuery('<li>').text(columnfilter.title).appendTo(ul);
         li.data('columnfilter', columnfilter);
 
@@ -664,7 +664,7 @@ function reloadColumnFilters(id){
             .click(function(){
                 var cols = [];
                 var chartcolumns = JSON.parse(jQuery("#googlechartid_" + id).find(".googlechart_columns").attr("value")).prepared;
-                patched_each(chartcolumns, function(index, column){
+                jQuery.each(chartcolumns, function(index, column){
                     var col = {};
                     col.name = column.name;
                     col.friendlyname = column.fullname;
@@ -746,7 +746,7 @@ function reloadColumnFilters(id){
                             modified_columnfilter.settings = {};
                             modified_columnfilter.settings.defaults = [];
                             modified_columnfilter.settings.selectables = [];
-                            patched_each(columnfilter_data, function(index, row){
+                            jQuery.each(columnfilter_data, function(index, row){
                                 if (row.defaultcol){
                                     modified_columnfilter.settings.defaults.push(row.colid);
                                 }
@@ -755,7 +755,7 @@ function reloadColumnFilters(id){
                                 }
                             });
                             var columnfilter_titles = [];
-                            patched_each(context.data('columnfilters'), function(index, cfilter){
+                            jQuery.each(context.data('columnfilters'), function(index, cfilter){
                                 columnfilter_titles.push(cfilter.title);
                             });
 
@@ -967,7 +967,7 @@ function saveThumb(value, useName){
                                     var saved_charts = jQuery("#googlecharts_list").children("[data-persisted='true']");
                                     if (available_charts.length === saved_charts.length) {
                                         var charts_assets = [];
-                                        patched_each(available_charts, function(idx, val) {
+                                        jQuery.each(available_charts, function(idx, val) {
                                             var chartconfig_input = jQuery(val).find(".googlechart_configjson");
                                             var chart_id_input = jQuery(val).find(".googlechart_id");
                                             if (chartconfig_input && chart_id_input) {
@@ -1323,7 +1323,7 @@ function addChart(options){
     else{
         chartColumns = JSON.parse(settings.columns);
     }
-    patched_each(settings.filters,function(key,value){
+    jQuery.each(settings.filters,function(key,value){
         var filter_settings = value.settings;
         if (filter_settings === undefined){
             filter_settings = {};
@@ -1383,12 +1383,12 @@ var backupColors = [];
 var backupOptionColors = [];
 function updateEditorColors(){
     var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button-indicator");
-    patched_each(colorcontainers, function(idx, container){
+    jQuery.each(colorcontainers, function(idx, container){
         jQuery(container).css("background-color", backupColors[idx]);
     });
 
     var coloroptions = jQuery(".google-visualization-charteditor-select-series-color");
-    patched_each(coloroptions, function(idx, option){
+    jQuery.each(coloroptions, function(idx, option){
         jQuery(option).css("background-color", backupOptionColors[idx]);
     });
 
@@ -1396,18 +1396,18 @@ function updateEditorColors(){
 
 function saveEditorColors(){
     var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button-indicator");
-    patched_each(colorcontainers, function(idx, container){
+    jQuery.each(colorcontainers, function(idx, container){
         backupColors.push(jQuery(container).css("background-color"));
     });
     var coloroptions = jQuery(".google-visualization-charteditor-select-series-color");
-    patched_each(coloroptions, function(idx, option){
+    jQuery.each(coloroptions, function(idx, option){
         backupOptionColors.push(jQuery(option).css("background-color"));
     });
 }
 
 function removeAutomaticColor(root,tree, path){
     if ((tree instanceof Object) || (tree instanceof Array)){
-        patched_each(tree, function(key, subtree){
+        jQuery.each(tree, function(key, subtree){
             path.push(key);
             if ((key === "color") && (subtree === "eea-automatic-color")){
                 delete tree[key];
@@ -1464,7 +1464,7 @@ function getValidatedLineDashStyle(value){
     try {
         var values = value.split(',');
         var int_values = [];
-        patched_each(values, function(idx, val){
+        jQuery.each(values, function(idx, val){
             if(isNaN(val)) {
                 throw "Please enter only numeric positive integers separated by , (comma)";
             }
@@ -1499,8 +1499,8 @@ function redrawEditorChart() {
 
     var def_opt = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
     delete def_opt.options.colors;
-    patched_each(chartOptions.series || {}, function(name, opt){
-        patched_each(dataTable.cols, function(idx, col){
+    jQuery.each(chartOptions.series || {}, function(name, opt){
+        jQuery.each(dataTable.cols, function(idx, col){
             if (def_opt.options.series !== undefined) {
                 if (def_opt.options.series[idx] !== undefined) {
                     series[idx] = def_opt.options.series[idx];
@@ -1522,12 +1522,12 @@ BRANCH DAVIZTRAINING
             }
         });
     });
-    patched_each(series, function(key, value){
+    jQuery.each(series, function(key, value){
         if (chartOptions.series[key] !== undefined){
             value.color = chartOptions.series[key].color;
         }
     });
-    patched_each(tmpwrapper_json.options.series || {}, function(key, value){
+    jQuery.each(tmpwrapper_json.options.series || {}, function(key, value){
         if ((value) && (value.color)){
             delete value.color;
         }
@@ -1537,7 +1537,7 @@ BRANCH DAVIZTRAINING
     jQuery.extend(true, chartOptions.series,  series);
     jQuery.extend(true, tmpwrapper_json.options, chartOptions);
     removeAutomaticColor(tmpwrapper_json, tmpwrapper_json, []);
-    patched_each(tmpwrapper_json.options, function(key, value){
+    jQuery.each(tmpwrapper_json.options, function(key, value){
         tmpwrapper.setOption(key,value);
     });
 
@@ -1633,12 +1633,12 @@ BRANCH DAVIZTRAINING
         }
     }
 
-    patched_each(options_json.series || {}, function(key, value){
+    jQuery.each(options_json.series || {}, function(key, value){
         if (isNaN(key)){
             jQuery.extend(true, tmp_series[key], value);
         }
     });
-    patched_each(settings_json.options.series || {}, function(key, value){
+    jQuery.each(settings_json.options.series || {}, function(key, value){
         if (value){
             delete value.lineDashStyle;
             if (value.pointShape !== undefined){
@@ -1649,13 +1649,13 @@ BRANCH DAVIZTRAINING
             jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
         }
     });
-    patched_each(options_json.series || {}, function(key, value){
+    jQuery.each(options_json.series || {}, function(key, value){
         if (!isNaN(key)){
             jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
         }
     });
 
-    patched_each(tmp_series || {}, function(key, value){
+    jQuery.each(tmp_series || {}, function(key, value){
         if (jQuery.isEmptyObject(value)){
             delete tmp_series[key];
         }
@@ -1696,7 +1696,7 @@ function setCustomSetting(series, opt, key, value) {
     var s_columns = JSON.parse($("#googlechartid_tmp_chart .googlechart_columns").attr("value"));
     var prep_columns = s_columns.prepared;
     var col_id;
-    patched_each(prep_columns, function(idx, col) {
+    jQuery.each(prep_columns, function(idx, col) {
         if (col.fullname === series) {
             col_id = col.name;
         }
@@ -1732,7 +1732,7 @@ function updateCustomSettings() {
     var prep_columns = s_columns.prepared;
     var col_id;
     var disable_custom = false;
-    patched_each(prep_columns, function(idx, col) {
+    jQuery.each(prep_columns, function(idx, col) {
         if (col.fullname === line_caption) {
             col_id = col.name;
         }
@@ -1863,7 +1863,7 @@ function addCustomSettings() {
             .addClass("charts-select charts-inline-block")
             .appendTo(p_shape_style_float_end);
 
-        patched_each(shapes, function (i, item) {
+        jQuery.each(shapes, function (i, item) {
             p_shape.append($('<option>', {
                 "value": item,
                 "text" : item
@@ -2071,7 +2071,7 @@ function addPaletteConfig(){
                 .attr("style", "clear:both;")
                 .appendTo(section);
 
-            patched_each(chartPalettes, function(key, value){
+            jQuery.each(chartPalettes, function(key, value){
                 jQuery("<option>")
                     .attr("value", key)
                     .text(value.name)
@@ -2111,7 +2111,7 @@ function addIntervalConfig(){
                         .attr("style", "clear:both;")
                         .appendTo(section);
 
-                    patched_each(values, function(idx, value){
+                    jQuery.each(values, function(idx, value){
                         jQuery("<option>")
                             .attr("value", value)
                             .text(value)
@@ -2303,7 +2303,7 @@ function addIntervalConfig(){
             }
 
             var intervalColumns = [];
-            patched_each(chartColumns.prepared, function(idx, prepared_column){
+            jQuery.each(chartColumns.prepared, function(idx, prepared_column){
                 if ((prepared_column.role === 'interval') && (prepared_column.status === 1)){
                     intervalColumns.push({"name":prepared_column.name, "label":prepared_column.fullname});
                 }
@@ -2454,7 +2454,7 @@ function addIntervalConfig(){
             var options = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value"));
             setValuesForSection("global", options.intervals || {});
 
-            patched_each(options.interval || {}, function(name, settings){
+            jQuery.each(options.interval || {}, function(name, settings){
                 setValuesForSection(name, settings || {});
             });
 
@@ -2541,7 +2541,7 @@ function openEditor(elementId) {
     var shouldAddIntervalsToEditor = false;
     var chartColumnsForEditor = {};
     jQuery.extend(true, chartColumnsForEditor, chartColumns);
-    patched_each(chartColumnsForEditor.prepared, function(idx, prepared_column){
+    jQuery.each(chartColumnsForEditor.prepared, function(idx, prepared_column){
         if (prepared_column.role === 'old-data'){
             prepared_column.status = 0;
         }
@@ -2629,8 +2629,8 @@ function openEditor(elementId) {
     chart.options.allowHtml = true;
     chart.options.series = chart.options.series || [];
 
-    patched_each(cleanChartOptions.series || {}, function(name, opt){
-        patched_each(cols, function(idx, col){
+    jQuery.each(cleanChartOptions.series || {}, function(name, opt){
+        jQuery.each(cols, function(idx, col){
             if (col === name){
                 if (chart.options.series[idx - 1] !== undefined) {
                     jQuery.extend(true, chart.options.series[idx - 1], opt);
@@ -2903,7 +2903,7 @@ function openEditor(elementId) {
 function generateSortedColumns() {
     var sortedColumns = [];
     var columns_tmp = jQuery("#newColumns").find("th");
-    patched_each(columns_tmp, function(idx, value){
+    jQuery.each(columns_tmp, function(idx, value){
         var columnName = jQuery(value).attr("column_id");
         var columnVisible = jQuery(value).attr("column_visible");
         sortedColumns.push([columnName, columnVisible]);
@@ -2960,8 +2960,8 @@ function generateNewTableForChart(){
     }
     prevColumnsSettings = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value"));
     if(isOK){
-        patched_each(columnsSettings.prepared, function(idx, newColumn){
-            patched_each(prevColumnsSettings.prepared, function(idx, prevColumn){
+        jQuery.each(columnsSettings.prepared, function(idx, newColumn){
+            jQuery.each(prevColumnsSettings.prepared, function(idx, prevColumn){
                 if (((newColumn.name === prevColumn.name) || (newColumn.name.indexOf(prevColumn.name+"_") === 0)) && (prevColumn.hasOwnProperty("formatters"))){
                     newColumn.formatters = prevColumn.formatters;
                 }
@@ -2991,7 +2991,7 @@ function buildPivotsTree(parent, columns, level){
     if (pivotPreviewStructure.length < level){
         pivotPreviewStructure.push([]);
     }
-    patched_each(columns, function(key, value){
+    jQuery.each(columns, function(key, value){
         var tmp_node = buildPivotsTree(key, value, level + 1);
         node.nodes.push(tmp_node);
         node.nodesCount += tmp_node.nodesCount;
@@ -3008,7 +3008,7 @@ function populatePivotPreviewTable(columns){
     pivotPreviewStructure = [];
     var countedPivots = buildPivotsTree("root", columns, 1);
     var table_obj = jQuery("<table>");
-    patched_each(pivotPreviewStructure, function(row_nr, row){
+    jQuery.each(pivotPreviewStructure, function(row_nr, row){
         if (row_nr === 0){
             return;
         }
@@ -3017,7 +3017,7 @@ function populatePivotPreviewTable(columns){
                         .appendTo(table_obj);
         var head_col = jQuery("<td>").appendTo(row_obj);
         jQuery("#pivots").find(".pivotedColumn").first().appendTo(head_col);
-        patched_each(row,function(col_nr, col){
+        jQuery.each(row,function(col_nr, col){
             jQuery("<td>")
                 .attr("colspan", col.nodesCount)
                 .text(col.node)
@@ -3033,7 +3033,7 @@ function generateNewTable(sortOrder, isFirst){
     var normalColumns = [];
     var pivotColumns = [];
     var valueColumn = '';
-    patched_each(columns, function(idx, value){
+    jQuery.each(columns, function(idx, value){
         var columnType = jQuery(value).find("select").attr("value");
         var columnName = jQuery(value).attr("column_id");
         switch(columnType){
@@ -3075,7 +3075,7 @@ function generateNewTable(sortOrder, isFirst){
 
     var transformedTable = transformTable(options);
     var tmpSortOrder = [];
-    patched_each(transformedTable.available_columns,function(col_key, col){
+    jQuery.each(transformedTable.available_columns,function(col_key, col){
         tmpSortOrder.push([col_key, "visible"]);
     });
     if (typeof(sortOrder) === 'undefined'){
@@ -3101,7 +3101,7 @@ function generateNewTable(sortOrder, isFirst){
     sortOrder = typeof(sortOrder) === 'undefined' ? tmpSortOrder : sortOrder;
 
     var filterable_columns = [];
-    patched_each(transformedTable.properties, function(column, properties){
+    jQuery.each(transformedTable.properties, function(column, properties){
         filterable_columns.push(column);
     });
     if (!isFirst){
@@ -3132,7 +3132,7 @@ var pivotDroppedColumn = -1;
 var pivotTmpDroppedColumn = -1;
 
 function updateStatus(){
-    patched_each(columnsForPivot,function(key, value){
+    jQuery.each(columnsForPivot,function(key, value){
         if (value.nr === parseInt(pivotDroppedColumn, 10)){
             value.status = 1;
         }
@@ -3222,7 +3222,7 @@ function updateWithStatus(){
     jQuery("#pivots").remove();
     jQuery(".pivotsPreviewTable").remove();
     var pivotsHtml = "<div id='pivots'>";
-    patched_each(columnsForPivot,function(key, value){
+    jQuery.each(columnsForPivot,function(key, value){
         var originalColumn = jQuery("#originalColumns").find("[column_id='"+key+"']").find("select");
         if (value.status === 1){
             valueColumn = value.nr;
@@ -3296,7 +3296,7 @@ function removePivot(event, nr){
     event.preventDefault();
     var hasPivot = false;
     var valueColumn = -1;
-    patched_each(columnsForPivot,function(key, value){
+    jQuery.each(columnsForPivot,function(key, value){
         if (value.nr === nr){
             value.status = 0;
         }
@@ -3312,7 +3312,7 @@ function removePivot(event, nr){
     }
     updateWithStatus();
     var pivotLevels = generateNewTable();
-    patched_each(pivotLevels, function(key, value){
+    jQuery.each(pivotLevels, function(key, value){
         jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
     });
 
@@ -3320,7 +3320,7 @@ function removePivot(event, nr){
 
 function checkVisiblePivotValueColumns(){
     var visibleColumns = 0;
-    patched_each(columnsForPivot,function(key, value){
+    jQuery.each(columnsForPivot,function(key, value){
         if (value.status === 0){
             visibleColumns++;
         }
@@ -3332,7 +3332,7 @@ function populateTableForPivot(){
     jQuery("#pivotConfigHeader").empty();
     jQuery("#pivotConfigDropZones").empty();
     var defaultCols = true;
-    patched_each(columnsForPivot, function(key, value){
+    jQuery.each(columnsForPivot, function(key, value){
         if (jQuery.inArray(key, available_columns_ordered) === -1){
             defaultCols = false;
         }
@@ -3340,7 +3340,7 @@ function populateTableForPivot(){
     var cols = available_columns_ordered;
     if (!defaultCols){
         cols = [];
-        patched_each(columnsForPivot,function(key, value){
+        jQuery.each(columnsForPivot,function(key, value){
             cols.push(key);
         });
     }
@@ -3364,7 +3364,7 @@ function populateTableForPivot(){
     jQuery(".pivotGooglechartTable .eea-icon").click(function(){
         var col_nr =  parseInt(jQuery(this).parent().attr("columnnr"), 10);
         var column;
-        patched_each(columnsForPivot,function(key, value){
+        jQuery.each(columnsForPivot,function(key, value){
             if (value.nr === col_nr){
                 column = value;
             }
@@ -3382,7 +3382,7 @@ function populateTableForPivot(){
         }
         updateWithStatus();
         var pivotLevels = generateNewTable();
-        patched_each(pivotLevels, function(key, value){
+        jQuery.each(pivotLevels, function(key, value){
             jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
         });
     });
@@ -3433,7 +3433,7 @@ function chartEditorSave(id){
                 preparedColumn.status = 1;
             }
             preparedColumn.fullname = this.name;
-            patched_each(tmpPreparedColumns, function(idx, tmpPreparedColumn){
+            jQuery.each(tmpPreparedColumns, function(idx, tmpPreparedColumn){
                 if (tmpPreparedColumn.fullname === preparedColumn.fullname){
                     if (tmpPreparedColumn.hasOwnProperty("formatters")){
                         preparedColumn.formatters = JSON.parse(JSON.stringify(tmpPreparedColumn.formatters));
@@ -3480,12 +3480,12 @@ function chartEditorSave(id){
         }
     }
 
-    patched_each(options_json.series || {}, function(key, value){
+    jQuery.each(options_json.series || {}, function(key, value){
         if (isNaN(key)){
             jQuery.extend(true, tmp_series[key], value);
         }
     });
-    patched_each(settings_json.options.series || {}, function(key, value){
+    jQuery.each(settings_json.options.series || {}, function(key, value){
         if (value){
             delete value.lineDashStyle;
             if (value.pointShape !== undefined){
@@ -3496,13 +3496,13 @@ function chartEditorSave(id){
             jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
         }
     });
-    patched_each(options_json.series || {}, function(key, value){
+    jQuery.each(options_json.series || {}, function(key, value){
         if (!isNaN(key)){
             jQuery.extend(true, tmp_series[series_ids[parseInt(key, 10)]], value);
         }
     });
 
-    patched_each(tmp_series || {}, function(key, value){
+    jQuery.each(tmp_series || {}, function(key, value){
         if (jQuery.isEmptyObject(value)){
             delete tmp_series[key];
         }
@@ -3511,7 +3511,7 @@ function chartEditorSave(id){
     delete settings_json.options.series;
     delete settings_json.options.colors;
     var shouldRemove = false;
-    patched_each(settings_json.view.columns || {}, function(idx, value){
+    jQuery.each(settings_json.view.columns || {}, function(idx, value){
         if (typeof(value) === 'object'){
             if (value.calc === 'error'){
                 shouldRemove = true;
@@ -3548,7 +3548,7 @@ function chartEditorSave(id){
     }
     function removeRedundant(tree, path){
         if ((tree instanceof Object) && !(tree instanceof Array)){
-            patched_each(tree, function(key, subtree){
+            jQuery.each(tree, function(key, subtree){
                 path.push(key);
                 removeRedundant(subtree, path);
                 path.pop();
@@ -3624,8 +3624,8 @@ function updateMatrixChartScrolls(){
 
 function redrawMatrixCharts(data, matrixColumns, matrixRows, chartType){
     jQuery(".matrixChart_container").remove();
-    patched_each(matrixRows, function(idx, rowValue){
-        patched_each(matrixColumns, function(idx, colValue){
+    jQuery.each(matrixRows, function(idx, rowValue){
+        jQuery.each(matrixColumns, function(idx, colValue){
             if ((chartType === 'ScatterChart') && (rowValue === colValue)){
                 return false;
             }
@@ -3689,7 +3689,7 @@ function columnsMatrixChart(chartType){
     var normalColumns = [];
     var pivotColumns = [];
     var valueColumn = '';
-    patched_each(columns, function(idx, value){
+    jQuery.each(columns, function(idx, value){
         var columnType = jQuery(value).find("select").attr("value");
         var columnName = jQuery(value).attr("column_id");
         switch(columnType){
@@ -3746,7 +3746,7 @@ function columnsMatrixChart(chartType){
 
     var unAllowedTypes = ['number', 'boolean', 'timeofday'];
 
-    patched_each(columns_tmp, function(idx, value){
+    jQuery.each(columns_tmp, function(idx, value){
         var columnName = value.id;
         if ((grid_columnsHiddenById[value.id]) || (columnName === 'options')){
             return;
@@ -3892,7 +3892,7 @@ function columnsMatrixChart(chartType){
                     jQuery("#matrixChart_type_selector").find("select").remove();
                 }
                 else{
-                    patched_each(availableChartsForMatrix, function(key,value){
+                    jQuery.each(availableChartsForMatrix, function(key,value){
                         var tmp_option = "<option value='" + key + "'" + ((tmp_chart_type===key)?'selected="selected"':'') +">" + value + "</option>";
                         jQuery("#matrixChart_type_selector").find("select").append(tmp_option);
                     });
@@ -3902,7 +3902,7 @@ function columnsMatrixChart(chartType){
                     redrawMatrixCharts(data, matrixColumns, matrixRows, jQuery("#matrixChart_type_selector").find("select").attr("value"));
                 });
 
-                patched_each(matrixRows, function(idx, rowValue){
+                jQuery.each(matrixRows, function(idx, rowValue){
                     var matrixChartScrollDiv = "<div class='matrixChartScrollItem verticalScrollItem' "+
                                                 "style='width:"+(matrixChartSize-2)+"px;"+
                                                        "height:"+(matrixChartSize-2)+"px'"+
@@ -3917,7 +3917,7 @@ function columnsMatrixChart(chartType){
                                             "</div>";
                     jQuery("#matrixChartverticalscroll").append(matrixChartScrollDiv);
                 });
-                patched_each(matrixColumns, function(idx, colValue){
+                jQuery.each(matrixColumns, function(idx, colValue){
                     var matrixChartScrollDiv = "<div class='matrixChartScrollItem horizontalScrollItem' "+
                                                 "style='width:"+(matrixChartSize-2)+"px;"+
                                                        "height:"+(matrixChartSize-2)+"px"+
@@ -4117,7 +4117,7 @@ function fillEditorDialog(options){
     }
     var columnCount = 0;
     if (!options.skippalette){
-        patched_each(chartPalettes, function(paletteId, paletteSettings){
+        jQuery.each(chartPalettes, function(paletteId, paletteSettings){
             if (tmp_paletteId === ""){
                 tmp_paletteId = paletteId;
             }
@@ -4134,7 +4134,7 @@ function fillEditorDialog(options){
     var tmp_cols_and_rows = getAvailable_columns_and_rows(jQuery("#googlechartid_"+id).data("unpivotsettings"), available_columns, all_rows);
 
     jQuery("#originalColumns").empty();
-    patched_each(tmp_cols_and_rows.available_columns, function(column_key,column_name){
+    jQuery.each(tmp_cols_and_rows.available_columns, function(column_key,column_name){
         var originalStatus = 0;
         jQuery(columnsSettings.original).each(function(idx, original){
             if (original.name === column_key){
@@ -4171,9 +4171,9 @@ function fillEditorDialog(options){
     });
 
 //    jQuery("#originalTable").empty();
-    patched_each(tmp_cols_and_rows.all_rows.items, function(row_index,row){
+    jQuery.each(tmp_cols_and_rows.all_rows.items, function(row_index,row){
         var tableRow = "<tr>";
-        patched_each(tmp_cols_and_rows.available_columns, function(column_key,column_name){
+        jQuery.each(tmp_cols_and_rows.available_columns, function(column_key,column_name){
             tableRow += "<td>" + row[column_key] + "</td>";
         });
         tableRow += "</tr>";
@@ -4206,7 +4206,7 @@ function fillEditorDialog(options){
                 }
                 updateWithStatus();
                 var pivotLevels = generateNewTable();
-                patched_each(pivotLevels, function(key, value){
+                jQuery.each(pivotLevels, function(key, value){
                     jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
                 });
                 pivotDragStatus = 0;
@@ -4224,7 +4224,7 @@ function fillEditorDialog(options){
     });
     updateWithStatus();
 
-    patched_each(pivotLevels, function(key, value){
+    jQuery.each(pivotLevels, function(key, value){
         jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
     });
 
@@ -4267,7 +4267,7 @@ function fillEditorDialog(options){
     });
     jQuery(".unpivot-settings").empty();
     jQuery(".unpivot-pivotedcolumns").empty();
-    patched_each(available_columns, function(idx, value){
+    jQuery.each(available_columns, function(idx, value){
         jQuery("<option>")
             .attr("value", value)
             .text(value)
@@ -4304,7 +4304,7 @@ function fillEditorDialog(options){
             .annotator()
             .annotator("addPlugin", "EEAGoogleChartsUnpivotAnnotation");
 
-        patched_each(unpivotsettings.settings, function(idx, settings){
+        jQuery.each(unpivotsettings.settings, function(idx, settings){
             var annotation = {};
             var value = {};
             value.colType = settings.colType;
@@ -4657,7 +4657,7 @@ openEditChart = function(id){
         var unpivotSettings = {};
         unpivotSettings.columnName = jQuery(".unpivot-pivotedcolumns").attr("value");
         unpivotSettings.settings = [];
-        patched_each(annotations, function(idx, annotation){
+        jQuery.each(annotations, function(idx, annotation){
             var settings = {};
             settings.start = annotation.ranges[0].startOffset;
             settings.end = annotation.ranges[0].endOffset;
@@ -4669,7 +4669,7 @@ openEditChart = function(id){
             }
             settings.valType = json_annotation.valType;
             var shouldAdd = true;
-            patched_each(unpivotSettings.settings, function(idx, up_settings){
+            jQuery.each(unpivotSettings.settings, function(idx, up_settings){
                 if (up_settings.colName === settings.colName){
                     shouldAdd = false;
                 }
@@ -4683,7 +4683,7 @@ openEditChart = function(id){
         try{
             newtablesettings = getAvailable_columns_and_rows(unpivotSettings, available_columns, all_rows);
 
-            patched_each(newtablesettings.available_columns, function(key,value){
+            jQuery.each(newtablesettings.available_columns, function(key,value){
                 newColumnsSettings.original.push({name:key, status:1});
                 newColumnsSettings.prepared.push({name:key, status:1, fullname:value});
             });
@@ -4714,7 +4714,7 @@ openEditChart = function(id){
         fillEditorDialog({skippalette:true});
         updateWithStatus();
         var pivotLevels = generateNewTable();
-        patched_each(pivotLevels, function(key, value){
+        jQuery.each(pivotLevels, function(key, value){
             jQuery(populatePivotPreviewTable(value)).appendTo(".pivotsPreviewTable");
         });
     });
@@ -4724,7 +4724,7 @@ openEditChart = function(id){
         jQuery("#googlechartid_tmp_chart").data("unpivotsettings", unpivotSettings);
         var newtablesettings = getAvailable_columns_and_rows(jQuery("#googlechartid_tmp_chart").data("unpivotsettings"), available_columns, all_rows);
         var newColumnsSettings = {original:[],prepared:[]};
-        patched_each(newtablesettings.available_columns, function(key,value){
+        jQuery.each(newtablesettings.available_columns, function(key,value){
             newColumnsSettings.original.push({name:key, status:1});
             newColumnsSettings.prepared.push({name:key, status:1, fullname:value});
         });
@@ -5026,7 +5026,7 @@ function openAddEditChartFilterDialog(id, type, filter_settings){
         jQuery(".googlecharts_filter_columns", addfilterdialog).append(column);
         jQuery(".googlecharts_filter_columns", addfilterdialog).attr("disabled","disabled");
     }
-    patched_each(available_filter_types,function(key,value){
+    jQuery.each(available_filter_types,function(key,value){
         var column = jQuery('<option></option>');
         column.attr("value", key);
         column.text(value);
@@ -5153,7 +5153,7 @@ function openAddEditChartFilterDialog(id, type, filter_settings){
                         filter_settings = {};
                     }
                     if ((selectedFilter === "2") || (selectedFilter === "3")){
-                        patched_each(defaultfilter_data, function(idx, value){
+                        jQuery.each(defaultfilter_data, function(idx, value){
                             if (value.defaultval){
                                 defaults.push(value.value);
                             }
@@ -5212,7 +5212,7 @@ function openAddChartColumnFilterDialog(id){
 
     var chartcolumns = JSON.parse(jQuery("#googlechartid_" + id).find(".googlechart_columns").attr("value")).prepared;
     var cols = [];
-    patched_each(chartcolumns,function(index, column){
+    jQuery.each(chartcolumns,function(index, column){
         var col = {};
         col.name = column.name;
         col.friendlyname = column.fullname;
@@ -5248,7 +5248,7 @@ function openAddChartColumnFilterDialog(id){
                 columnfilter.settings = {};
                 columnfilter.settings.defaults = [];
                 columnfilter.settings.selectables = [];
-                patched_each(columnfilter_data, function(index, row){
+                jQuery.each(columnfilter_data, function(index, row){
                     if (row.defaultcol){
                         columnfilter.settings.defaults.push(row.colid);
                     }
@@ -5258,7 +5258,7 @@ function openAddChartColumnFilterDialog(id){
                 });
 
                 var columnfilter_titles = [];
-                patched_each(context.data('columnfilters'), function(index, cfilter){
+                jQuery.each(context.data('columnfilters'), function(index, cfilter){
                     columnfilter_titles.push(cfilter.title);
                 });
 
@@ -5377,7 +5377,7 @@ function getChartOptions(chart_id){
 
 function getNextChartName(chartName){
   var max_id = 0;
-    patched_each(jQuery(".googlechart_id"), function(){
+    jQuery.each(jQuery(".googlechart_id"), function(){
         this_id = jQuery(this).attr("value");
         if (this_id.substr(0,chartName.length) === chartName){
             chartId = this_id.substr(chartName.length);
@@ -5577,7 +5577,7 @@ function addNewChart(){
     var newColumns = {};
     newColumns.original = [];
     newColumns.prepared = [];
-    patched_each(getAvailable_columns_and_rows({}, available_columns, all_rows).available_columns,function(key,value){
+    jQuery.each(getAvailable_columns_and_rows({}, available_columns, all_rows).available_columns,function(key,value){
         var newOriginal = {};
         newOriginal.name = key;
         newOriginal.status = 1;
@@ -6178,7 +6178,7 @@ function overrideGooglePalette(){
         jQuery.extend(true, cleanChartOptions, chartOptions);
         delete cleanChartOptions.series;
         jQuery.extend(true, tmpwrapper_json.options, cleanChartOptions);
-        patched_each(tmpwrapper_json.options, function(key, value){
+        jQuery.each(tmpwrapper_json.options, function(key, value){
             tmpwrapper.setOption(key,value);
         });
 
@@ -6197,7 +6197,7 @@ function overrideGooglePalette(){
         var automatic;
         jQuery(".jfk-colormenu:visible .jfk-palette-cell").show();
         jQuery(".jfk-colormenu:visible .charts-menuitem").hide();
-        patched_each(jQuery(".jfk-colormenu:visible .jfk-palette"), function(idx, palette){
+        jQuery.each(jQuery(".jfk-colormenu:visible .jfk-palette"), function(idx, palette){
             if (jQuery(palette).find("td").eq(0).attr("aria-label") === "black"){
                 grayscale = palette;
                 jQuery(palette).show();
@@ -6224,7 +6224,7 @@ function overrideGooglePalette(){
         jQuery(automatic).find("td").eq(0).show();
         jQuery(automatic).find("td").eq(0).find(".jfk-palette-colorswatch").html("<div class='googlechart-palette-cell-replacement automatic' style='background-color:white;'>Automatic</div>");
         jQuery(automatic).find("td").eq(0).find(".jfk-palette-colorswatch").css("width","auto").css("height","auto");
-        patched_each(selectedPalette, function(idx, color){
+        jQuery.each(selectedPalette, function(idx, color){
             if (idx < 60){
                 jQuery(custompalette).find(".jfk-palette-colorswatch").eq(idx).html("<div class='googlechart-palette-cell-replacement' style='background-color:"+color+"' title='"+color+"'></div>");
             }
@@ -6250,14 +6250,14 @@ function overrideGooglePalette(){
         }
 
         var colorcontainers = jQuery(".google-visualization-charteditor-color .charts-flat-menu-button");
-        patched_each(colorcontainers, function(idx, container){
+        jQuery.each(colorcontainers, function(idx, container){
             if (jQuery(container).hasClass("charts-flat-menu-button-focused")){
                 backupColors[idx] = new_rgb_color;
             }
         });
 
         var coloroptions = jQuery(".google-visualization-charteditor-select-series-color");
-        patched_each(coloroptions, function(idx, option){
+        jQuery.each(coloroptions, function(idx, option){
             if (jQuery(option).css("background-color") === old_rgb_color){
                 backupOptionColors[idx] = new_rgb_color;
             }
@@ -6269,7 +6269,7 @@ function overrideGooglePalette(){
 
         function parseTree(tree, path){
             if ((tree instanceof Object) && !(tree instanceof Array)){
-                patched_each(tree, function(key, subtree){
+                jQuery.each(tree, function(key, subtree){
                     path.push(key);
                     parseTree(subtree, path);
                     path.pop();

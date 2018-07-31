@@ -1,4 +1,4 @@
-/* global drawGoogleDashboard, getQueryParams, patched_each, $, jQuery */
+/* global drawGoogleDashboard, getQueryParams, jQuery.each, $, jQuery */
 
 /* GLOBALS come from:
 
@@ -7,7 +7,7 @@
  getQueryParams
 
  datatable.js
- patched_each
+ jQuery.each
  */
 
 /* module requirements */
@@ -39,22 +39,22 @@ function drawDashboardEmbed(options){
 
     var is_pdf_printing = embedModule && embedModule.isPrint;
     if ((!is_pdf_printing) && (!settings.skipDavizTitle) && (!settings.skipChartTitle)) {
-        patched_each(settings.googlechart_config_array, function(key, config){
+        jQuery.each(settings.googlechart_config_array, function(key, config){
             config[1].options.title = config[1].options.title + " — " + settings.main_title;
         });
     }
     if (settings.skipChartTitle){
-        patched_each(settings.googlechart_config_array, function(key, config){
+        jQuery.each(settings.googlechart_config_array, function(key, config){
             config[1].options.title = settings.main_title;
         });
     }
     if (settings.skipDavizTitle){
-        patched_each(settings.googlechart_config_array, function(key, config){
+        jQuery.each(settings.googlechart_config_array, function(key, config){
             config[1].options.title = config[1].options.title;
         });
     }
     if ((settings.skipDavizTitle) && (settings.skipChartTitle)){
-        patched_each(settings.googlechart_config_array, function(key, config){
+        jQuery.each(settings.googlechart_config_array, function(key, config){
             config[1].options.title = "";
         });
     }
@@ -122,7 +122,7 @@ function drawDashboardEmbed(options){
     //}
 
     if (query_params.rowFilters !== undefined){
-        patched_each(settings.dashboard_config.filters, function(idx, value){
+        jQuery.each(settings.dashboard_config.filters, function(idx, value){
             if (query_params.rowFilters[value.column] !== undefined){
                 value.defaults = JSON.stringify(query_params.rowFilters[value.column]);
             }
