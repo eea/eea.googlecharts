@@ -1,6 +1,11 @@
 Changelog
 =========
 
+18.6 - (2018-07-31)
+-------------------
+* Bug fix: Fix Cannot read property 'length' of undefined
+  [avoinea refs #97360]
+
 18.5 - (2018-07-31)
 -------------------
 * Cleanup: Remove deprecated patch for jQuery.each
