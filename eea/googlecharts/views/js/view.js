@@ -21,7 +21,7 @@ function svgCleanup(svg) {
     var g_elems = svg.find("g[clip-path^='url']");
     var elems = jQuery.merge(r_elems, g_elems);
 
-    patched_each(elems, function(idx, elem){
+    jQuery.each(elems, function(idx, elem){
         var fillVal = jQuery(elem).attr("fill");
         var clip_path = jQuery(elem).attr("clip-path");
         var elem_attr, url_val;
@@ -134,7 +134,7 @@ function drawChart(value, other_options){
     var chart_columns = value[2];
     var chart_filters = value[3];
     if (query_params.rowFilters !== undefined){
-        patched_each(chart_filters, function(key, value){
+        jQuery.each(chart_filters, function(key, value){
             if (query_params.rowFilters[key] !== undefined){
                 value.defaults = query_params.rowFilters[key];
             }
@@ -437,7 +437,7 @@ function drawDashboard(value, other_options){
 
     var dashboard_filters = settings.filters;
     if (query_params.rowFilters !== undefined){
-        patched_each(dashboard_filters, function(idx, value){
+        jQuery.each(dashboard_filters, function(idx, value){
             if (query_params.rowFilters[value.column] !== undefined){
                 value.defaults = JSON.stringify(query_params.rowFilters[value.column]);
             }
@@ -602,7 +602,7 @@ function showEmbed(){
                     jQuery(".googlechart_ignore_filters").hide();
                 }
                 else{
-                    patched_each(jQuery(".googlechart_filter"), function(idx, filter){
+                    jQuery.each(jQuery(".googlechart_filter"), function(idx, filter){
                         var filter_id = jQuery(filter).attr("id");
                         var filter_label = jQuery(filter).find(".google-visualization-controls-label").text();
                         jQuery("<tr><td>"+filter_label+"</td><td><input class='googlechart_hide_filter' type='checkbox' checked='checked' filter_id='"+filter_id+"'/></td></tr>").appendTo(".googlechart_hide_filters table");
@@ -716,7 +716,7 @@ function showEmbed(){
                     }
 
                     var hide_filters = [];
-                    patched_each(jQuery(".googlechart_hide_filter"), function(idx, filter){
+                    jQuery.each(jQuery(".googlechart_hide_filter"), function(idx, filter){
                         if (jQuery(filter).attr("filter_id") !== 'all'){
                             if (!jQuery(filter).prop("checked")){
                                 hide_filters.push(jQuery(filter).attr("filter_id"));
@@ -883,13 +883,13 @@ jQuery(document).ready(function($){
     var is_pdf_printing = embedModule && embedModule.isPrint;
 
     if (!is_pdf_printing) {
-        patched_each(googlechart_config_array, function(key, config){
+        jQuery.each(googlechart_config_array, function(key, config){
             config[1].options.title = config[1].options.title + " — " + window.main_title;
         });
     }
 
     if (is_pdf_printing) {
-        patched_each(googlechart_config_array, function(key, config){
+        jQuery.each(googlechart_config_array, function(key, config){
             config[1].options.title = "";
         });
     }
@@ -911,7 +911,7 @@ jQuery(document).ready(function($){
     }
     hash = hash.split("_filters=")[0];
     var index = 0;
-    patched_each(api.getTabs(), function(idx, tab){
+    jQuery.each(api.getTabs(), function(idx, tab){
         if(jQuery(tab).attr('href') == hash){
             index = idx;
             return false;
@@ -934,7 +934,7 @@ jQuery(document).ready(function($){
         jQuery("<h2>")
             .text("Charts")
             .insertBefore("#googlechart_dashboard");
-        patched_each(api.getTabs(), function(idx, tab){
+        jQuery.each(api.getTabs(), function(idx, tab){
             jQuery("<div>")
                 .addClass("nobreak")
                 .addClass("nobreak_for_chart_" + idx)

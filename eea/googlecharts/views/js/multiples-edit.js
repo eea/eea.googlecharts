@@ -234,7 +234,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
 
                 var allCols = [];
 
-                patched_each(transformedTable.properties,function(col_id, col_opt){
+                jQuery.each(transformedTable.properties,function(col_id, col_opt){
                     allCols.push({id:col_id, type:col_opt.columnType});
                 });
                 allCols.sort(function(a, b){
@@ -253,7 +253,7 @@ jQuery(document).bind("multiplesConfigEditorReady", function(evt, view){
                 }
                 var base_filters = JSON.parse(base_chart_settings.row_filters);
                 var allFilteredCols = [];
-                patched_each(base_filters, function(col_id, filter_opt){
+                jQuery.each(base_filters, function(col_id, filter_opt){
                     if ((filter_opt.type === 'visible') && (filter_opt.values.length === 1)){
                         var filter_options = [];
 

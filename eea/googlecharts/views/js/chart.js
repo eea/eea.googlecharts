@@ -48,7 +48,7 @@ function fixSVG(container){
     var g_elems = jQuery(container).find("g[clip-path^='url']");
     var elems = jQuery.merge(r_elems, g_elems);
 
-    patched_each(elems, function(idx, elem){
+    jQuery.each(elems, function(idx, elem){
         var fillVal = jQuery(elem).attr("fill");
         var clip_path = jQuery(elem).attr("clip-path");
         var elem_attr, url_val;
@@ -108,7 +108,7 @@ function updateHashForRowFilter(availableColumns, filter, type, updateHash){
         var columnLabel = filter.getOptions().filterColumnLabel;
         var columnName = '';
         var values = [];
-        patched_each(availableColumns, function(key, value){
+        jQuery.each(availableColumns, function(key, value){
             if (value === columnLabel){
                 columnName = key;
             }
@@ -145,7 +145,7 @@ function updateHashForRowFilter(availableColumns, filter, type, updateHash){
 }
 
 function updateFilterDivs(){
-    patched_each(jQuery("div.googlechart_filter"), function(idx, filter){
+    jQuery.each(jQuery("div.googlechart_filter"), function(idx, filter){
         var filterId = jQuery(filter).attr("id");
         var filterName = filterId.substr(20);
         var filterType = "rowFilter";
@@ -186,7 +186,7 @@ function updateFilterDivs(){
         filterInfo.filterNameForHiddenParams = tmp_filterId;
         jQuery(filter).attr("filterInfo", JSON.stringify(filterInfo));
     });
-    patched_each(jQuery("li.charts-container-horizontal"), function(idx, filterValue){
+    jQuery.each(jQuery("li.charts-container-horizontal"), function(idx, filterValue){
         if (jQuery(filterValue).closest(".googlechart_filters").hasClass("googlechart_filters_side")){
             return;
         }
@@ -196,7 +196,7 @@ function updateFilterDivs(){
             jQuery(filterValue).find(".charts-inline-block").appendTo(jQuery(filterValue).find(".eea-filter-value-container"));
         }
     });
-    patched_each(jQuery("ul.google-visualization-controls-categoryfilter-selected:visible"), function(idx, filterUl){
+    jQuery.each(jQuery("ul.google-visualization-controls-categoryfilter-selected:visible"), function(idx, filterUl){
         if (jQuery(filterUl).closest(".googlechart_filters").length === 0){
             return;
         }
@@ -206,7 +206,7 @@ function updateFilterDivs(){
         var container = jQuery(filterUl).closest("div.googlechart_filter");
         var button = jQuery(container).find("div.charts-menu-button");
     });
-    patched_each(jQuery(".googlechart_filter"), function(idx, filter){
+    jQuery.each(jQuery(".googlechart_filter"), function(idx, filter){
         filterWidth = jQuery(filter).width();
         filterLeft = jQuery(filter).offset().left;
         containerWidth = jQuery(filter).closest(".googlechart_filters").width();
@@ -218,8 +218,8 @@ function updateFilterDivs(){
         }
     });
     var containers = [".googlechart_table_left", ".googlechart_table_right"];
-    patched_each(containers, function(idx, container){
-        patched_each(jQuery(container).find(".google-visualization-controls-rangefilter"), function(idx, filter){
+    jQuery.each(containers, function(idx, container){
+        jQuery.each(jQuery(container).find(".google-visualization-controls-rangefilter"), function(idx, filter){
             labels = jQuery(filter).find(".google-visualization-controls-rangefilter-thumblabel");
             if (!jQuery(filter).hasClass("eea-beautified")){
                 jQuery(filter).addClass("eea-beautified");
@@ -313,7 +313,7 @@ function drawGoogleChart(options){
     settings.chartJson.options.series = settings.chartJson.options.series || {};
     jQuery.extend(true, settings.chartJson.options.series, settings.chartOptions.series);
     function series_loop(i){
-        patched_each(settings.chartOptions.series || {}, function(name, opt){
+        jQuery.each(settings.chartOptions.series || {}, function(name, opt){
             if (dataTable.getColumnId(i) === name){
                 series[series_counter-1] = opt;
             }
@@ -329,7 +329,7 @@ function drawGoogleChart(options){
     jQuery.extend(true, settings.chartJson.options.series, series);
 
     /* remove duplicated suffixes */
-    patched_each(settings.chartJson.options.vAxes || {}, function(axid, ax){
+    jQuery.each(settings.chartJson.options.vAxes || {}, function(axid, ax){
         if (ax.format !== undefined){
             ax.format = ax.format.replace(/[^0-9.,#]/g, '');
         }
@@ -355,10 +355,10 @@ function drawGoogleChart(options){
         var hasPivotedFilter = false;
         var pivotedFilterType;
         var originalTableProps = [];
-        patched_each(settings.originalTable.properties, function(key, value){
+        jQuery.each(settings.originalTable.properties, function(key, value){
             originalTableProps.push(key);
         });
-        patched_each(settings.chartFilters, function(key, value){
+        jQuery.each(settings.chartFilters, function(key, value){
             if (key.indexOf('pre_config_') === 0){
                 hasPreConfig = true;
             }
@@ -370,13 +370,13 @@ function drawGoogleChart(options){
             }
         });
         if (hasPreConfig && hasPivotedFilter){
-            patched_each(settings.availableColumns, function(key, value){
+            jQuery.each(settings.availableColumns, function(key, value){
                 if (jQuery.inArray(key, originalTableProps) === -1){
                     settings.chartFilters[key] = pivotedFilterType;
                 }
             });
         }
-        patched_each(settings.chartFilters, function(key, value){
+        jQuery.each(settings.chartFilters, function(key, value){
             if (key.indexOf('pre_config_') === 0){
                 return;
             }
@@ -559,7 +559,7 @@ function drawGoogleChart(options){
             updateHash : settings.updateHash,
             columnsToBeShown: settings.columnsToBeShown
         };
-        patched_each(settings.chartFilters, function(key, value){
+        jQuery.each(settings.chartFilters, function(key, value){
             if (key.indexOf('pre_config_') === 0){
                 var pre_config_option = {
                     filterTitle : key.substr(11),
@@ -597,37 +597,37 @@ function drawGoogleChart(options){
     }
     var conf_array = jQuery("#" + settings.chartDashboard).data('other_settings').googlechart_config_array;
 
-    patched_each(conf_array, function(idx, conf){
+    jQuery.each(conf_array, function(idx, conf){
         if (conf[0] === jQuery("#"+settings.chartViewDiv).attr("chart_id")){
             var chart_columnFilters_old = conf[14];
             // remove all custom column filters from original
             var columnFiltersToKeep = [];
-            patched_each(chart_columnFilters_old, function(idx2, columnFilter){
+            jQuery.each(chart_columnFilters_old, function(idx2, columnFilter){
                 if (columnFilter.title.indexOf('custom_helper_') !== 0){
                     columnFiltersToKeep.push(columnFilter);
                 }
             });
             chart_columnFilters_old.splice(0, chart_columnFilters_old.length);
-            patched_each(columnFiltersToKeep, function(idx2, columnFilter){
+            jQuery.each(columnFiltersToKeep, function(idx2, columnFilter){
                 chart_columnFilters_old.push(columnFilter);
             });
 
             // remove all custom column filters from settings
             columnFiltersToKeep = [];
-            patched_each(settings.columnFilters, function(idx2, columnFilter){
+            jQuery.each(settings.columnFilters, function(idx2, columnFilter){
                 if (columnFilter.title.indexOf('custom_helper_') !== 0){
                     columnFiltersToKeep.push(columnFilter);
                 }
             });
             settings.columnFilters.splice(0, settings.columnFilters.length);
-            patched_each(columnFiltersToKeep, function(idx2, columnFilter){
+            jQuery.each(columnFiltersToKeep, function(idx2, columnFilter){
                 settings.columnFilters.push(columnFilter);
             });
 
             // update custom column filters for original and for settings
-            patched_each(customColumnFilters, function(idx2, customFilter){
+            jQuery.each(customColumnFilters, function(idx2, customFilter){
                 var shouldAdd = true;
-                patched_each(chart_columnFilters_old, function(idx3, columnFilter){
+                jQuery.each(chart_columnFilters_old, function(idx3, columnFilter){
                     if (columnFilter.title === customFilter.title){
                         shouldAdd = false;
                     }
@@ -637,9 +637,9 @@ function drawGoogleChart(options){
                 }
             });
 
-            patched_each(settings.columnFilters, function(idx2, columnFilter){
+            jQuery.each(settings.columnFilters, function(idx2, columnFilter){
                 var shouldAdd = true;
-                patched_each(chart_columnFilters_old, function(idx3, tmpFilter){
+                jQuery.each(chart_columnFilters_old, function(idx3, tmpFilter){
                     if (columnFilter.title === tmpFilter.title){
                         shouldAdd = false;
                     }
@@ -652,12 +652,12 @@ function drawGoogleChart(options){
     });
 
     if (settings.columnFilters.length > 0){
-        patched_each(settings.columnFilters, function(idx1, columnFilter1){
+        jQuery.each(settings.columnFilters, function(idx1, columnFilter1){
             var shouldHide = false;
             if (columnFilter1.title.indexOf("custom_helper_") === -1){
-                patched_each(settings.columnFilters, function(idx2, columnFilter2){
+                jQuery.each(settings.columnFilters, function(idx2, columnFilter2){
                     if (columnFilter1.title !== columnFilter2.title){
-                        patched_each(columnFilter1.settings.selectables, function(idx3, column){
+                        jQuery.each(columnFilter1.settings.selectables, function(idx3, column){
                             if (jQuery.inArray(column, columnFilter2.settings.selectables) !== -1){
                                 shouldHide = true;
                             }
@@ -686,7 +686,7 @@ function drawGoogleChart(options){
             .addClass('googlechart-notes')
             .width(settings.chartWidth);
 
-        patched_each(settings.notes, function(index, note){
+        jQuery.each(settings.notes, function(index, note){
             jQuery('<div>')
                 .addClass('googlecharts-note')
                 .html(note.text)
@@ -1196,7 +1196,7 @@ function drawGoogleDashboard(options){
     dashboardLink = dashboardLink !== undefined ? dashboardLink + '/' : '';
 
     var dashboard_filters = {};
-    patched_each(settings.filters, function(key, value){
+    jQuery.each(settings.filters, function(key, value){
         var def_str = value.defaults;
         if ((def_str === undefined) || (def_str === "")){
             def_str = "[]";
@@ -1212,7 +1212,7 @@ function drawGoogleDashboard(options){
         dashboard_filters[value.column] = {"type":value.type, defaults:defaults, settings:filter_settings};
     });
     // Dashboard charts
-    patched_each(settings.chartsSettings, function(key, value){
+    jQuery.each(settings.chartsSettings, function(key, value){
         var chartConfig;
         var chart_unpivotsettings;
         var chartContainerId;
@@ -1554,7 +1554,7 @@ function drawGoogleDashboard(options){
                 .prependTo('#'+settings.chartViewsDiv);
 
             var normalColumns = [];
-            patched_each(settings.columns, function(key,value){
+            jQuery.each(settings.columns, function(key,value){
                 normalColumns.push(key);
             });
             options = {
@@ -1601,7 +1601,7 @@ function drawGoogleDashboard(options){
                 updateHash : settings.updateHash
             };
             var tmp_chart = drawGoogleChart(chart_options);
-            patched_each(tmp_chart.filters, function(idx, filter){
+            jQuery.each(tmp_chart.filters, function(idx, filter){
                 dashboardFilters.push(filter);
             });
     }
