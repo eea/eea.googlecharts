@@ -42,7 +42,7 @@ function drawChart(value, options){
     var embedchart_id = value[0];
     var embedchart_json = value[1];
     var embedchart_columns = value[2];
-    var embedchart_filters = value[3];
+    var embedchart_filters = value[3] || [];
     var embedchart_width = value[4];
     var embedchart_height = value[5];
     var embedchart_filterposition = value[6];
