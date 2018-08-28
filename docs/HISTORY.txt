@@ -1,7 +1,7 @@
 Changelog
 =========
 
-18.7-dev0 - (unreleased)
+18.7 - (2018-08-28)
 ---------------------
 * Bug fix: Fix Daviz PNG export
 [avoinea refs #97843]
