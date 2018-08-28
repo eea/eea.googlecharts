@@ -112,7 +112,7 @@
         <div style="clear:both"></div>
     </div>
 
-    <form id="export" action='@@googlechart.export' method="POST">
+    <form id="export" method="POST" tal:attributes="action string:${context/absolute_url}/@@googlechart.export">
         <input type="hidden" id="svg" name="svg"/>
         <input type="hidden" id="imageChart_url" name="imageChart_url"/>
         <input type="hidden" id="export_fmt" name="export_fmt"/>
