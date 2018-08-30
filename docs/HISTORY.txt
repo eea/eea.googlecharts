@@ -1,6 +1,9 @@
 Changelog
 =========
 
+18.9-dev0 - (unreleased)
+---------------------
+
 18.8 - (2018-08-30)
 ---------------------
 * Change: Fix chart size within PDF
