@@ -130,8 +130,8 @@
             var height_$vhash = ${chart/chartHeight};
             var skipDavizTitle_$vhash = ${chart/skipDavizTitle};
             var skipChartTitle_$vhash = ${chart/skipChartTitle};
-            var ratio = width_$vhash / 750;
-            var width_$vhash = isPrint && width_$vhash > 750 ? Math.floor(width_$vhash / ratio) : width_$vhash;
+            var ratio = width_$vhash / 650;
+            var width_$vhash = isPrint && width_$vhash > 650 ? Math.floor(width_$vhash / ratio) : width_$vhash;
             var name_$vhash = '${chart_name}';
             var chart_options_$vhash = ${chart/options};
             var chart_filterposition_$vhash = ${chart/filterposition}
@@ -228,7 +228,7 @@
                         var chart_area_width;
                         // 83520 resize chartarea width when printing
                         if(settings_$vhash[7].chartArea && isPrint) {
-                            var ratio = 960 / 750;
+                            var ratio = 960 / 650;
                             settings_$vhash[7].chartArea.width = Math.round(parseInt(settings_$vhash[7].chartArea.width, 10) / ratio) + 5 + '%';
                             settings_$vhash[7].chartArea.heigth = Math.round(parseInt(settings_$vhash[7].chartArea.height, 10) / ratio) + 5 + '%';
                         }

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+18.8 - (2018-08-30)
+---------------------
+* Change: Fix chart size within PDF
+  [avoinea refs #97586]
+
 18.7 - (2018-08-28)
 ---------------------
 * Bug fix: Fix Daviz PNG export
