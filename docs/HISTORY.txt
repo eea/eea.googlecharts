@@ -1,7 +1,7 @@
 Changelog
 =========
 
-18.8-dev0 - (unreleased)
+18.8 - (2018-08-30)
 ---------------------
 * Change: Fix chart size within PDF
   [avoinea refs #97586]
