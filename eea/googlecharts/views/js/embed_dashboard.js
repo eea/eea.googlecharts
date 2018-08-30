@@ -130,7 +130,7 @@ function drawDashboardEmbed(options){
     }
 
     /* #22489 reduce size of dashboards when pdf printing in order to avoid text shrinking */
-    var content_width = 750;
+    var content_width = 650;
     var dashboard_width = 0;
     /* #79934 check if dashboard should be resized as an embedded dashboard might contain small charts */
     if (is_pdf_printing) {
