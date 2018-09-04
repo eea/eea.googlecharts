@@ -1,6 +1,11 @@
 Changelog
 =========
 
+18.9 - (2018-09-04)
+---------------------
+* Bugfix: Fixed year format in tooltips
+  [szabozo0 refs #98069]
+
 18.8 - (2018-08-30)
 ---------------------
 * Change: Fix chart size within PDF
