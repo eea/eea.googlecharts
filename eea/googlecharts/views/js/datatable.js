@@ -593,7 +593,7 @@ function prepareForChart(options){
                 colType = "string";
             }
         }
-        var yearType = ((colType.columnType === 'year') || (colType.valueType === 'year'));
+        var yearType = ((settings.originalDataTable.properties[column].columnType === 'year') || (settings.originalDataTable.properties[column].valueType === 'year'));
         var role = "data";
         var customtooltip;
         var isTooltip = false;
