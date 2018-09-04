@@ -1,6 +1,9 @@
 Changelog
 =========
 
+19.0-dev0 - (unreleased)
+---------------------
+
 18.9 - (2018-09-04)
 ---------------------
 * Bugfix: Fixed year format in tooltips
