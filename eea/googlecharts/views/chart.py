@@ -899,26 +899,34 @@ class SavePNGChart(Export):
                 workflows = wftool.getWorkflowsFor(svg_obj)
                 workflow = workflows[0]
                 transitions = workflow.transitions
-                available_transitions = [transitions[i['id']] for i in
-                                    wftool.getTransitionsFor(svg_obj)]
 
-                to_do = [k for k in available_transitions
-                         if k.new_state_id == 'published']
+                # publish
+                for transition in wftool.getTransitionsFor(svg_obj):
+                    tid = transition.get('id')
+                    tob = transitions.get(tid)
+                    if not tob:
+                        continue
 
-                self.request.form['_no_emails_'] = True
-                for item in to_do:
-                    workflow.doActionFor(svg_obj, item.id)
+                    if tob.new_state_id != 'published':
+                        continue
+
+                    self.request.form['_no_emails_'] = True
+                    workflow.doActionFor(svg_obj, tid)
                     break
+
                 # then make it public draft
-                available_transitions = [transitions[i['id']] for i in
-                                        wftool.getTransitionsFor(svg_obj)]
+                for transition in wftool.getTransitionsFor(svg_obj):
+                    tid = transition.get('id')
+                    tob = transitions.get(tid)
+                    if not tob:
+                        continue
 
-                to_do = [k for k in available_transitions
-                         if k.new_state_id == 'visible']
+                    if tob.new_state_id != 'visible':
+                        continue
 
-                for item in to_do:
-                    workflow.doActionFor(svg_obj, item.id)
+                    workflow.doActionFor(svg_obj, tid)
                     break
+
                 svg_obj.reindexObject()
         if not new_svg:
             notify(InvalidateCacheEvent(svg_obj))
