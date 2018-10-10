@@ -1,6 +1,9 @@
 Changelog
 =========
 
+19.1-dev0 - (unreleased)
+---------------------
+
 19.0 - (2018-10-10)
 ---------------------
 * Bug fix: Fixed KeyError: 'invalidateall'
