@@ -3,6 +3,8 @@ Changelog
 
 19.0-dev0 - (unreleased)
 ---------------------
+* Bug fix: Fixed KeyError: 'invalidateall'
+  [avoinea refs #99303]
 
 18.9 - (2018-09-04)
 ---------------------
