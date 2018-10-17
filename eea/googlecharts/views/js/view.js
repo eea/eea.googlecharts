@@ -2,6 +2,9 @@ if (!window.EEAGoogleCharts) {
     window.EEAGoogleCharts = {};
 }
 
+// Matomo support
+var _paq = _paq || [];
+
 var embedModule = window.EEAGoogleCharts.embed;
 
 var current_chart_id;
@@ -62,6 +65,7 @@ function exportToPng(){
         jQuery("#imageChart_url").attr("value", img_url);
     }
 
+    _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
     form.submit();
 }
 
@@ -74,6 +78,7 @@ function exportToSVG(){
         jQuery("#export_fmt").attr("value", "svg");
     }
 
+    _paq.push(['trackEvent', 'Downloads', "svg", "Data Visualization", 1]);
     form.submit();
 }
 
@@ -229,7 +234,7 @@ function drawChart(value, other_options){
     if ((gl_charts.googlechart_view) && (gl_charts.googlechart_view.getOption("resized_width"))){
         resized_width = gl_charts.googlechart_view.getOption("resized_width");
     }
-    
+
     if (chart_filterposition === 1 || chart_filterposition === 3) {
         jQuery("#googlechart_table").css("max-width",chart_width + 218);
     }
