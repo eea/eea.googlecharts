@@ -1,6 +1,11 @@
 Changelog
 =========
 
+19.1 - (2018-10-17)
+---------------------
+* Feature: Added support for Matomo downloads
+  [avoinea refs #98864]
+
 19.0 - (2018-10-10)
 ---------------------
 * Bug fix: Fixed KeyError: 'invalidateall'
