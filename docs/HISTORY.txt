@@ -1,6 +1,9 @@
 Changelog
 =========
 
+19.2-dev0 - (unreleased)
+---------------------
+
 19.1 - (2018-10-17)
 ---------------------
 * Feature: Added support for Matomo downloads
