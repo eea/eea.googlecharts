@@ -1,6 +1,11 @@
 Changelog
 =========
 
+19.2 - (2019-01-28)
+---------------------
+* Jenkins: Add sonarqube step
+  [avoinea refs #101552]
+
 19.1 - (2018-10-17)
 ---------------------
 * Feature: Added support for Matomo downloads
