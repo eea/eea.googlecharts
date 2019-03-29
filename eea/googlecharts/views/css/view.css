@@ -838,3 +838,8 @@ input.googlechart-chart-size {
 #manual-chart-height{
     width:40px;
 }
+
+.motionChartWarning{
+    font-size:18px;
+    line-height:1.2;
+}
