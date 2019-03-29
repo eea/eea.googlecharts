@@ -536,7 +536,7 @@ function drawGoogleChart(options){
             jQuery('<div class="portalMessage warningMessage motionChartWarning"><div><b>SECURITY ALERT:</b> Flash is no longer maintained by Adobe and for security reasons modern and secure browsers do not support it anylonger. Therefore this page may not display correctly.</div><br/>' +
                     '<div>You may try to reload this page with older browsers like IE11 which still supports Flash.</div><br/>' +
                     '<div>Thanks for your understanding.</div>' +
-                '</div>').appendTo("#"+settings.chartViewDiv)
+                '</div>').appendTo("#"+settings.chartViewDiv);
         }
         google.visualization.events.addListener(chart, 'ready', function(event){
             jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
