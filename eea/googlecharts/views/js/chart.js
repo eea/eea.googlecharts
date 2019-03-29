@@ -494,6 +494,9 @@ function drawGoogleChart(options){
     var dataView = new google.visualization.DataView(settings.chartDataTable);
 
     var customFilterParams;
+
+    var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+
     if (filtersArray.length > 0){
         var dashboard = new google.visualization.Dashboard(
             document.getElementById(settings.chartDashboard));
@@ -527,8 +530,17 @@ function drawGoogleChart(options){
     }
     else {
         chart.setDataTable(dataView);
+        var isMotionChart = (settings.chartJson.chartType === 'MotionChart');
+        if ((!isIE11) && (isMotionChart)){
+            jQuery("#"+settings.chartViewDiv).empty();
+            jQuery('<div class="portalMessage warningMessage motionChartWarning"><div><b>SECURITY ALERT:</b> Flash is no longer maintained by Adobe and for security reasons modern and secure browsers do not support it anylonger. Therefore this page may not display correctly.</div><br/>' +
+                    '<div>You may try to reload this page with older browsers like IE11 which still supports Flash.</div><br/>' +
+                    '<div>Thanks for your understanding.</div>' +
+                '</div>').appendTo("#"+settings.chartViewDiv);
+        }
         google.visualization.events.addListener(chart, 'ready', function(event){
             jQuery("#"+settings.chartViewDiv).find(".googlechart_loading_img").remove();
+            jQuery("#"+settings.chartViewDiv).find(".motionChartWarning").remove();
             settings.chartReadyEvent();
             updateFilterDivs();
             fixSVG("#"+settings.chartViewDiv);
