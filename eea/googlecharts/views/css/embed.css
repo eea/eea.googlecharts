@@ -57,6 +57,7 @@ a:visited, a:hover {
 }
 .googlechart_dashboard .googlechart-notes, .googlechart-datasources-info {
     color: #666;
+    font: normal 80% Verdana, Arial, Helvetica, sans-serif;
     line-height: 1.25em;
     background: #eee;
     padding: 0.5em 1em 1em 1em;
