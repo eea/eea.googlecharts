@@ -50,6 +50,7 @@ function svgCleanup(svg) {
 
 function exportToPng(){
     var form = jQuery("#export");
+    var note = jQuery('.googlecharts-note').text();
 
     if (jQuery("#googlechart_view img").attr("src") === undefined){
         var svg = jQuery('<div>').append(jQuery("#googlechart_view").find("svg").clone()).html();
@@ -64,6 +65,7 @@ function exportToPng(){
         img_url = "http://"+img_url.substr(img_url.indexOf("chart.googleapis.com"));
         jQuery("#imageChart_url").attr("value", img_url);
     }
+    jQuery("#image_note").attr("value", note);
 
     _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
     form.submit();
