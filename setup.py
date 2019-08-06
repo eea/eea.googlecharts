@@ -44,6 +44,7 @@ setup(name=NAME,
           'eea.icons',
           'collective.js.underscore',
           'eventlet',
+          'chardet',
       ],
       extras_require={
           'test': [

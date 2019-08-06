@@ -1,15 +1,14 @@
 """ GoogleCharts View
 """
+import lxml.etree
 import hashlib
 import json
 import logging
 import re
 from cStringIO import StringIO
 from copy import deepcopy
-from PIL import Image
-
-import lxml.etree
-
+from PIL import Image, ImageDraw, ImageFont
+from chardet import detect
 from Products.Five.browser import BrowserView
 from eventlet.green import urllib2
 from zope.component import getUtility
@@ -683,7 +682,77 @@ def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
     pilImg.save(op, 'png')
     img = op.getvalue()
     op.close()
+    return (img, pilWM.size)
+
+
+def applyText(img, text, first_img_size, second_img_size, fpath, fsize, opacity):
+    """ Apply text over image between 2 images
+    """
+    if fpath == '':
+        font = ImageFont.load_default()
+    else:
+        font_file_path = fpath
+        font = ImageFont.truetype(font_file_path, size=fsize, encoding="unic")
+    line_height = font.getsize('hg')[1]
+    text_color = (51, 51, 51)
+    pilImg = Image.open(StringIO(img))
+    image_size = pilImg.size
+    draw = ImageDraw.Draw(pilImg)
+
+    newt = [ch for ch in text if detect(ch)['encoding'] == 'ascii']
+    text = "".join(newt)
+
+    cutoff = image_size[0] - second_img_size[0] - first_img_size[0] - 10
+    if (first_img_size[1] > second_img_size[1]):
+        y = image_size[1] - first_img_size[1]
+    else:
+        y = image_size[1] - second_img_size[1]
+    x = first_img_size[0] + 10
+
+    lines = get_lines(text, cutoff, font)
+    for line in lines:
+        draw.text((x, y), line, fill=text_color, font=font, opacity=opacity)
+        y = y + line_height
+
+    op = StringIO()
+    pilImg.save(op, 'png')
+    img = op.getvalue()
+    op.close()
     return img
+
+
+def text_wrap(text, font, max_width):
+    lines = []
+    if font.getsize(text)[0] <= max_width:
+        lines.append(text)
+    else:
+        words = text.split(' ')
+        i = 0
+        # append every word to a line while its width is shorter than image width
+        while i < len(words):
+            line = ''
+            while i < len(words) and font.getsize(line + words[i])[0] <= max_width:
+                line = line + words[i] + " "
+                i += 1
+            if not line:
+                line = words[i]
+                i += 1
+            lines.append(line)
+    return lines
+
+
+def get_lines(text, max_width, font):
+    lines = text_wrap(text, font, max_width)
+    return lines
+
+# def increase_image_width(img, width_to_increase):
+#     pilImg = Image.open(StringIO(img))
+#     pilImg = pilImg.resize((pilImg.size[0] + width_to_increase, pilImg.size[1]))
+#     op = StringIO()
+#     pilImg.save(op, 'png')
+#     img = op.getvalue()
+#     op.close()
+#     return img
 
 
 class Export(BrowserView):
@@ -745,6 +814,10 @@ class Export(BrowserView):
                     'googlechart.watermark_vertical_space_for_png_export', 0))
         wmHorizontal = int(sp.get(
                     'googlechart.watermark_horizontal_space_for_png_export', 0))
+        fPath = sp.get(
+                    'googlechart.png_text_font_path', '')
+        fSize = int(sp.get(
+                    'googlechart.png_text_font_size', 12))
 
         shiftSecondImg = False
         hShift = 0
@@ -755,12 +828,14 @@ class Export(BrowserView):
             qr_con = urllib2.urlopen(kwargs.get('qr_url'), timeout=10)
             qr_img = qr_con.read()
             qr_con.close()
-            img = applyWatermark(img,
-                                qr_img,
-                                qrPosition,
-                                qrVertical,
-                                qrHorizontal,
-                                0.7)
+            mark = applyWatermark(img,
+                                 qr_img,
+                                 qrPosition,
+                                 qrVertical,
+                                 qrHorizontal,
+                                 0.7)
+            img = mark[0]
+            qrDetails = mark[1]
             if shiftSecondImg:
                 hShift = Image.open(StringIO(qr_img)).size[0] + qrHorizontal
 
@@ -769,16 +844,35 @@ class Export(BrowserView):
                 wm_con = urllib2.urlopen(wmPath, timeout=10)
                 wm_img = wm_con.read()
                 wm_con.close()
-                img = applyWatermark(img,
-                                wm_img,
-                                wmPosition,
-                                wmVertical,
-                                wmHorizontal + hShift,
-                                0.7)
+                mark = applyWatermark(img,
+                                 wm_img,
+                                 wmPosition,
+                                 wmVertical,
+                                 wmHorizontal + hShift,
+                                 0.7)
+                img = mark[0]
+                wmDetails = mark[1]
             except ValueError, err:
                 logger.exception(err)
             except Exception, err:
                 logger.exception(err)
+
+        image_note = kwargs.get('image_note', 'placeholdertext')
+        if True:
+            try:
+                img = applyText(img,
+                                image_note,
+                                qrDetails,
+                                wmDetails,
+                                fPath,
+                                fSize,
+                                1)
+            except ValueError, err:
+                logger.exception(err)
+            except Exception, err:
+                logger.exception(err)
+
+        # img = increase_image_width(img, 10)
 
         ctype = kwargs.get('type', 'image/png')
 

@@ -3,9 +3,13 @@ Changelog
 
 19.4-dev0 - (unreleased)
 ---------------------
+* Change: Added chart note at png export
+  [iulianpetchesi refs #107671]
 * Change: googlechart-notes now use a border left with pixel values when charts
   are embedded in order to have same width as datasources
   [ichim-david refs #106884]
+* Bug fix: added chardet as a dependency
+  [alecghica refs #107671]
 
 19.3 - (2019-03-29)
 ---------------------
