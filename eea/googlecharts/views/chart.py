@@ -1,6 +1,6 @@
 """ GoogleCharts View
 """
-import chardet
+import lxml.etree
 import hashlib
 import json
 import logging
@@ -8,9 +8,7 @@ import re
 from cStringIO import StringIO
 from copy import deepcopy
 from PIL import Image, ImageDraw, ImageFont
-
-import lxml.etree
-
+from chardet import detect
 from Products.Five.browser import BrowserView
 from eventlet.green import urllib2
 from zope.component import getUtility
@@ -701,7 +699,7 @@ def applyText(img, text, first_img_size, second_img_size, fpath, fsize, opacity)
     image_size = pilImg.size
     draw = ImageDraw.Draw(pilImg)
 
-    newt = [ch for ch in text if chardet.detect(ch)['encoding'] == 'ascii']
+    newt = [ch for ch in text if detect(ch)['encoding'] == 'ascii']
     text = "".join(newt)
 
     cutoff = image_size[0] - second_img_size[0] - first_img_size[0] - 10
