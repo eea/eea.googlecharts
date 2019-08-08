@@ -2,7 +2,7 @@ Changelog
 =========
 
 19.4-dev0 - (unreleased)
----------------------
+--------------------------
 * Change: Added chart note at png export
   [iulianpetchesi refs #107671]
 * Change: googlechart-notes now use a border left with pixel values when charts
@@ -12,35 +12,35 @@ Changelog
   [alecghica refs #107671]
 
 19.3 - (2019-03-29)
----------------------
+--------------------------
 
 19.2 - (2019-01-28)
----------------------
+--------------------------
 * Jenkins: Add sonarqube step
   [avoinea refs #101552]
 
 19.1 - (2018-10-17)
----------------------
+--------------------------
 * Feature: Added support for Matomo downloads
   [avoinea refs #98864]
 
 19.0 - (2018-10-10)
----------------------
+--------------------------
 * Bug fix: Fixed KeyError: 'invalidateall'
   [avoinea refs #99303]
 
 18.9 - (2018-09-04)
----------------------
+--------------------------
 * Bugfix: Fixed year format in tooltips
   [szabozo0 refs #98069]
 
 18.8 - (2018-08-30)
----------------------
+--------------------------
 * Change: Fix chart size within PDF
   [avoinea refs #97586]
 
 18.7 - (2018-08-28)
----------------------
+--------------------------
 * Bug fix: Fix Daviz PNG export
 [avoinea refs #97843]
 
@@ -55,13 +55,13 @@ Changelog
   [avoinea refs #97360]
 
 18.4 - (2018-07-24)
----------------------
+--------------------------
 * Bug fix: The old logic handled 0 values as missing values, when
   type of the column is text
   [szabozo0 refs #97349]
 
 18.3 - (2018-06-20)
----------------------
+--------------------------
 * Change: updated URLs pointing to eea.europa.eu with https://
   [alecghica refs #95849]
 
