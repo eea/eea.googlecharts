@@ -1,7 +1,7 @@
 Changelog
 =========
 
-19.4-dev0 - (unreleased)
+19.4 - (2019-08-08)
 --------------------------
 * Change: Added chart note at png export
   [iulianpetchesi refs #107671]
