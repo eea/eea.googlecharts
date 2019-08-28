@@ -483,7 +483,7 @@ class DashboardsEdit(ChartsEdit):
     def json(self, **kwargs):
         """ Return config JSON
         """
-        return json.dumps(dict(self.dashboards), ensure_ascii=False)
+        return json.dumps(dict(self.dashboards))
 
     def chooseName(self, title, existing=None):
         """ Choose unique name for dashboard
