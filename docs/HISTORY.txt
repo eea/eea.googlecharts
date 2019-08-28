@@ -3,6 +3,8 @@ Changelog
 
 19.4 - (2019-08-08)
 --------------------------
+* Bug fix: Fixed UnicodeDecodeError within edit dashboards
+  [avoinea refs #108777]
 
 19.3 - (2019-03-29)
 --------------------------
