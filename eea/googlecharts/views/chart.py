@@ -7,8 +7,7 @@ import logging
 import re
 from cStringIO import StringIO
 from copy import deepcopy
-from PIL import Image, ImageDraw, ImageFont
-from chardet import detect
+from PIL import Image
 from Products.Five.browser import BrowserView
 from eventlet.green import urllib2
 from zope.component import getUtility

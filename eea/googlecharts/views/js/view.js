@@ -67,7 +67,7 @@ function exportToPng(){
 
     if (window.daviz_datasource_exists || window.daviz_note_exists) {
         var timer = setInterval(function() {
-            var lengths = []
+            var lengths = [];
 
             if (window.daviz_datasource_exists) {
                 lengths.push(jQuery("#image_datasources").attr('value').length);
@@ -90,7 +90,7 @@ function exportToPng(){
                     form.submit();
                 }
             }
-        }, 300)
+        }, 300);
     }
     else {
         _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
@@ -109,7 +109,7 @@ function exportToSVG(){
 
     if (window.daviz_datasource_exists || window.daviz_note_exists) {
         var timer = setInterval(function() {
-            var lengths = []
+            var lengths = [];
 
             if (window.daviz_datasource_exists) {
                 lengths.push(jQuery("#image_datasources").attr('value').length);
@@ -132,7 +132,7 @@ function exportToSVG(){
                     form.submit();
                 }
             }
-        }, 300)
+        }, 300);
     }
     else {
         _paq.push(['trackEvent', 'Downloads', "svg", "Data Visualization", 1]);
@@ -1041,7 +1041,7 @@ jQuery(document).ready(function($){
     var node = document.getElementsByClassName('callout')[0];
     var style = Object({
         'width': '100%',
-        'height': '100%',
+        'height': '100%'
         })
     if (node != null) {
         window.daviz_note_exists = true;
@@ -1054,8 +1054,8 @@ jQuery(document).ready(function($){
                 // for debugging
                 // $('#content-core')[0].appendChild(img);
             })
-            .catch(function (error) {
-                console.error('oops, something went wrong!', error);
+            .catch(function (err) {
+                console.error('oops, something went wrong!', err);
             });
     }
     else {
@@ -1072,7 +1072,7 @@ jQuery(document).ready(function($){
         'background': '#eee',
         'padding-left': '1em',
         'borderLeft': '1em solid #ccc',
-        'display': 'block !important',
+        'display': 'block !important'
         // 'font': 'normal 80% Verdana, Arial, Helvetica, sans-serif',
         })
     var heading = $(clone).children('h3');
@@ -1093,8 +1093,8 @@ jQuery(document).ready(function($){
                 // for debugging
                 // $('#content-core')[0].appendChild(img);
             })
-            .catch(function (error) {
-                console.error('oops, something went wrong!', error);
+            .catch(function (err) {
+                console.error('oops, something went wrong!', err);
             });
     }
     else {
