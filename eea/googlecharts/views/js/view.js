@@ -1052,7 +1052,7 @@ jQuery(document).ready(function($){
                 jQuery("#image_note").attr("value", dataUrl);
 
                 // for debugging
-                $('#content-core')[0].appendChild(img);
+                // $('#content-core')[0].appendChild(img);
             })
             .catch(function (error) {
                 console.error('oops, something went wrong!', error);
@@ -1063,34 +1063,35 @@ jQuery(document).ready(function($){
     }
 
     node = document.getElementsByClassName('visualization-info')[0];
-    var backup_node = node;
+    var clone = node.cloneNode(true);
+    $('#content')[0].appendChild(clone);
+
     style = Object({
         'color': '#666',
         'lineHeight': '1.25em',
         'background': '#eee',
         'padding-left': '1em',
         'borderLeft': '1em solid #ccc',
-        'display': 'block',
+        'display': 'block !important',
         // 'font': 'normal 80% Verdana, Arial, Helvetica, sans-serif',
         })
-    var heading = $(node).children('h3');
-    var width = $(node).css('width');
-    $(node).css('width', $('.callout').css('width'));
-    $(node).children('h3').replaceWith( "<strong>" + heading.text() + ":</strong>" );
+    var heading = $(clone).children('h3');
+    var width = $(clone).css('width');
+    $(clone).css('width', $('.callout').css('width'));
+    $(clone).children('h3').replaceWith( "<strong>" + heading.text() + ":</strong>" );
 
-    if (node != null) {
+    if (clone != null) {
         window.daviz_datasource_exists = true;
-        domtoimage.toPng(node, {style: style})
+        domtoimage.toPng(clone, {style: style})
             .then(function (dataUrl) {
                 var img = new Image();
                 img.src = dataUrl;
                 jQuery("#image_datasources").attr("value", dataUrl);
 
-                $(node).children('strong').replaceWith(heading);
-                $(node).css('width', width);
+                $('#content')[0].removeChild(clone);
 
                 // for debugging
-                $('#content-core')[0].appendChild(img);
+                // $('#content-core')[0].appendChild(img);
             })
             .catch(function (error) {
                 console.error('oops, something went wrong!', error);
