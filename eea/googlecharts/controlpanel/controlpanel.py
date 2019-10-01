@@ -119,21 +119,12 @@ class GooglechartsSection(object):
             required=False,
             default=0,
             ),
-        schema.TextLine(
-            __name__='googlechart.png_text_font_path',
-            description=_(u"""Path of the font found on the filesystem
-                            (for PNG Export)"""),
-            title=_(u'Font path'),
-            default=_(u"/plone/instance/src/eea.googlecharts/eea/googlecharts"
-                      u"/views/fonts/OpenSans-Regular.ttf"),
-            required=False),
         schema.Int(
-            __name__='googlechart.png_text_font_size',
-            title=_(u'Font size of image note'),
-            description=_(u"""Size of the font used for the note
-                            (for PNG Export)"""),
+            __name__='googlechart.note_png_export_offset',
+            title=_(u'Size of the offset at png export'),
+            description=_(u"""Size of the offset at png export"""),
             required=False,
-            default=12,
+            default=100,
             ),
     )
 

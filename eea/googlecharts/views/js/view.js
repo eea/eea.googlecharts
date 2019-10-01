@@ -50,7 +50,6 @@ function svgCleanup(svg) {
 
 function exportToPng(){
     var form = jQuery("#export");
-    var note = jQuery('.googlecharts-note').text();
 
     if (jQuery("#googlechart_view img").attr("src") === undefined){
         var svg = jQuery('<div>').append(jQuery("#googlechart_view").find("svg").clone()).html();
@@ -65,10 +64,38 @@ function exportToPng(){
         img_url = "http://"+img_url.substr(img_url.indexOf("chart.googleapis.com"));
         jQuery("#imageChart_url").attr("value", img_url);
     }
-    jQuery("#image_note").attr("value", note);
 
-    _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
-    form.submit();
+    if (window.daviz_datasource_exists || window.daviz_note_exists) {
+        var timer = setInterval(function() {
+            var lengths = []
+
+            if (window.daviz_datasource_exists) {
+                lengths.push(jQuery("#image_datasources").attr('value').length);
+            }
+            if (window.daviz_note_exists) {
+                lengths.push(jQuery("#image_note").attr('value').length);
+            }
+
+            if (lengths.length === 2) {
+                if (Math.min.apply(Math, lengths) > 0) {
+                    clearInterval(timer);
+                    _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
+                    form.submit();
+                }
+            }
+            else {
+                if (Math.max.apply(Math, lengths) > 0) {
+                    clearInterval(timer);
+                    _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
+                    form.submit();
+                }
+            }
+        }, 300)
+    }
+    else {
+        _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
+        form.submit();
+    }
 }
 
 function exportToSVG(){
@@ -80,8 +107,37 @@ function exportToSVG(){
         jQuery("#export_fmt").attr("value", "svg");
     }
 
-    _paq.push(['trackEvent', 'Downloads', "svg", "Data Visualization", 1]);
-    form.submit();
+    if (window.daviz_datasource_exists || window.daviz_note_exists) {
+        var timer = setInterval(function() {
+            var lengths = []
+
+            if (window.daviz_datasource_exists) {
+                lengths.push(jQuery("#image_datasources").attr('value').length);
+            }
+            if (window.daviz_note_exists) {
+                lengths.push(jQuery("#image_note").attr('value').length);
+            }
+
+            if (lengths.length === 2) {
+                if (Math.min.apply(Math, lengths) > 0) {
+                    clearInterval(timer);
+                    _paq.push(['trackEvent', 'Downloads', "svg", "Data Visualization", 1]);
+                    form.submit();
+                }
+            }
+            else {
+                if (Math.max.apply(Math, lengths) > 0) {
+                    clearInterval(timer);
+                    _paq.push(['trackEvent', 'Downloads', "svg", "Data Visualization", 1]);
+                    form.submit();
+                }
+            }
+        }, 300)
+    }
+    else {
+        _paq.push(['trackEvent', 'Downloads', "svg", "Data Visualization", 1]);
+        form.submit();
+    }
 }
 
 function checkSVG(){
@@ -980,4 +1036,67 @@ jQuery(document).ready(function($){
     }));
 
     jQuery(window).trigger("hashchange");
+
+    // convert the chart note into image at page load
+    var node = document.getElementsByClassName('callout')[0];
+    var style = Object({
+        'width': '100%',
+        'height': '100%',
+        })
+    if (node != null) {
+        window.daviz_note_exists = true;
+        domtoimage.toPng(node, {style: style})
+            .then(function (dataUrl) {
+                var img = new Image();
+                img.src = dataUrl;
+                jQuery("#image_note").attr("value", dataUrl);
+
+                // for debugging
+                $('#content-core')[0].appendChild(img);
+            })
+            .catch(function (error) {
+                console.error('oops, something went wrong!', error);
+            });
+    }
+    else {
+        window.daviz_note_exists = false;
+    }
+
+    node = document.getElementsByClassName('visualization-info')[0];
+    var backup_node = node;
+    style = Object({
+        'color': '#666',
+        'lineHeight': '1.25em',
+        'background': '#eee',
+        'padding-left': '1em',
+        'borderLeft': '1em solid #ccc',
+        'display': 'block',
+        // 'font': 'normal 80% Verdana, Arial, Helvetica, sans-serif',
+        })
+    var heading = $(node).children('h3');
+    var width = $(node).css('width');
+    $(node).css('width', $('.callout').css('width'));
+    $(node).children('h3').replaceWith( "<strong>" + heading.text() + ":</strong>" );
+
+    if (node != null) {
+        window.daviz_datasource_exists = true;
+        domtoimage.toPng(node, {style: style})
+            .then(function (dataUrl) {
+                var img = new Image();
+                img.src = dataUrl;
+                jQuery("#image_datasources").attr("value", dataUrl);
+
+                $(node).children('strong').replaceWith(heading);
+                $(node).css('width', width);
+
+                // for debugging
+                $('#content-core')[0].appendChild(img);
+            })
+            .catch(function (error) {
+                console.error('oops, something went wrong!', error);
+            });
+    }
+    else {
+        window.daviz_datasource_exists = false;
+    }
 });
