@@ -1,3 +1,4 @@
+/*jslint es5:true */
 if (!window.EEAGoogleCharts) {
     window.EEAGoogleCharts = {};
 }
