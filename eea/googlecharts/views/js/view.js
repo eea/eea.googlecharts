@@ -1042,8 +1042,8 @@ jQuery(document).ready(function($){
     var style = Object({
         'width': '100%',
         'height': '100%'
-        })
-    if (node != null) {
+        });
+    if (node !== undefined) {
         window.daviz_note_exists = true;
         domtoimage.toPng(node, {style: style})
             .then(function (dataUrl) {
@@ -1055,7 +1055,7 @@ jQuery(document).ready(function($){
                 // $('#content-core')[0].appendChild(img);
             })
             .catch(function (err) {
-                console.error('oops, something went wrong!', err);
+                console.error("oops, something went wrong!", err);
             });
     }
     else {
@@ -1074,13 +1074,13 @@ jQuery(document).ready(function($){
         'borderLeft': '1em solid #ccc',
         'display': 'block !important'
         // 'font': 'normal 80% Verdana, Arial, Helvetica, sans-serif',
-        })
+        });
     var heading = $(clone).children('h3');
     var width = $(clone).css('width');
     $(clone).css('width', $('.callout').css('width'));
     $(clone).children('h3').replaceWith( "<strong>" + heading.text() + ":</strong>" );
 
-    if (clone != null) {
+    if (clone !== undefined) {
         window.daviz_datasource_exists = true;
         domtoimage.toPng(clone, {style: style})
             .then(function (dataUrl) {
@@ -1094,7 +1094,7 @@ jQuery(document).ready(function($){
                 // $('#content-core')[0].appendChild(img);
             })
             .catch(function (err) {
-                console.error('oops, something went wrong!', err);
+                console.error("oops, something went wrong!", err);
             });
     }
     else {
