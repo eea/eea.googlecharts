@@ -151,5 +151,32 @@ var chartPalettes = {"default":{"name":"Company Default Palette",
                                 },
                     "rainbow":{"name":"Rainbow",
                                 "colors":getRainbow([[255,0,0],[0,255,0],[0,0,255],[255,0,0]],50)
+                                },
+                    "eniseis":{"name":"ENI SEIS",
+                                "colors":
+                                    [
+                                    "#002c56",  // Prussian Blue
+                                    "#00b050",  // Jade
+                                    "#00b0f0",  // Cerulean
+                                    "#2e75b6",  // Astral
+                                    "#333f50",  // Oxford Blue
+                                    "#385723",  // Woodland
+                                    "#6c8ba2",  // Bermuda Gray
+                                    "#70ad47",  // Apple
+                                    "#747e2a",  // Crete
+                                    "#8497b0",  // Bali Hai
+                                    "#9cc9c8",  // Shadow Green
+                                    "#a9d18e",  // Pine Glade
+                                    "#ac003e",  // Shiraz
+                                    "#afbc21",  // Key Lime Pie
+                                    "#b4cb4c",  // Turmeric
+                                    "#c5e0b4",  // Sprout
+                                    "#d9d9d9",  // Alto
+                                    "#deebf7",  // Link Water
+                                    "#ed7d31",  // Jaffa
+                                    "#ffc000",  // Amber
+                                    "#ffd966",  // Dandelion
+                                    "#ffe699"   // Cream Brulee
+                                    ]
                                 }
                     };
