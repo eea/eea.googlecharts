@@ -1,6 +1,9 @@
 Changelog
 =========
 
+19.6-dev0 - (unreleased)
+---------------------------
+
 19.5 - (2019-08-10)
 --------------------------
 * Feature: Add color palette for ENI SEIS.
