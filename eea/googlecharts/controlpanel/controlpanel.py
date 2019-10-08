@@ -119,6 +119,13 @@ class GooglechartsSection(object):
             required=False,
             default=0,
             ),
+        schema.Int(
+            __name__='googlechart.note_png_export_offset',
+            title=_(u'Size of the offset at png export'),
+            description=_(u"""Size of the offset at png export"""),
+            required=False,
+            default=100,
+            ),
     )
 
 GooglechartsSectionFactory = GooglechartsSection()

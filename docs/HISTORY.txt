@@ -1,6 +1,18 @@
 Changelog
 =========
 
+19.5 - (2019-08-10)
+--------------------------
+* Feature: Add color palette for ENI SEIS.
+  [GhitaB refs #108504]
+* Change: Added chart note at png export
+  [iulianpetchesi refs #107671]
+* Change: googlechart-notes now use a border left with pixel values when charts
+  are embedded in order to have same width as datasources
+  [ichim-david refs #106884]
+* Bug fix: added chardet as a dependency
+  [alecghica refs #107671]
+
 19.4 - (2019-08-08)
 --------------------------
 * Bug fix: Fixed UnicodeDecodeError within edit dashboards

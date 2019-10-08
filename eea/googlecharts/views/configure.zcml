@@ -304,6 +304,11 @@
   />
 
   <browser:resource
+    name="eea.googlecharts.dom_to_image.js"
+    file="./js/dom-to-image.min.js"
+  />
+
+  <browser:resource
     name="eea.googlecharts.edit.css"
     file="./css/edit.css"
    />

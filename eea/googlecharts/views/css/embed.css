@@ -57,12 +57,12 @@ a:visited, a:hover {
 }
 .googlechart_dashboard .googlechart-notes, .googlechart-datasources-info {
     color: #666;
+    font: normal 80% Verdana, Arial, Helvetica, sans-serif;
     line-height: 1.25em;
     background: #eee;
     padding: 0.5em 1em 1em 1em;
-    border-left: 1em solid #ccc;
+    border-left: 10px solid #ccc;
     clear: both;
-    font: normal 80% Verdana, Arial, Helvetica, sans-serif;
     margin: 0 0 1em 0;
     box-sizing: border-box;
     -webkit-box-sizing: border-box;

@@ -1,5 +1,6 @@
 """ GoogleCharts View
 """
+import lxml.etree
 import hashlib
 import json
 import logging
@@ -7,9 +8,6 @@ import re
 from cStringIO import StringIO
 from copy import deepcopy
 from PIL import Image
-
-import lxml.etree
-
 from Products.Five.browser import BrowserView
 from eventlet.green import urllib2
 from zope.component import getUtility
@@ -685,6 +683,37 @@ def applyWatermark(img, wm, position, verticalSpace, horizontalSpace, opacity):
     op.close()
     return img
 
+def merge_images(images, extra_offset):
+    images = map(Image.open, [StringIO(image) for image in images])
+    widths, heights = zip(*(i.size for i in images))
+
+    max_width = max(widths)
+    total_height = sum(heights) + extra_offset
+    color = (255, 255, 255)
+
+    new_im = Image.new('RGB', (max_width, total_height))
+    offset_image = Image.new('RGB', (max_width, extra_offset), color)
+
+    y_offset = 0
+    for im in images:
+        # check if image width is lower than chart width
+        if im.size[0] < new_im.size[0]:
+            # fill the remaining space with white color
+            temp_img = Image.new('RGB', (max_width, im.size[1]), color)
+            temp_img.paste(im, (0, 0))
+            temp_img.paste(color, (im.size[0], 0, temp_img.size[0], temp_img.size[1]))
+            im = temp_img
+        new_im.paste(im, (0, y_offset))
+        y_offset += im.size[1]
+    new_im.paste(offset_image, (0, y_offset))
+
+    op = StringIO()
+
+    new_im.save(op, 'png')
+    img = op.getvalue()
+    op.close()
+    return img
+
 
 class Export(BrowserView):
     """ Export chart to png
@@ -707,7 +736,42 @@ class Export(BrowserView):
         filename = kwargs.get('filename', 'export')
         img = None
 
+        # get note image data in base64
+        image_note_url = kwargs.get('image_note', None)
+        if image_note_url:
+            # decode base64
+            image_note_data = re.sub('^data:image/.+;base64,', '',
+                                image_note_url).decode('base64')
+        else:
+            image_note_data = None
+
+        # get datasources image data in base64
+        datasources_url = kwargs.get('image_datasources', None)
+        if datasources_url:
+            # decode base64
+            datasources_data = re.sub('^data:image/.+;base64,', '',
+                                datasources_url).decode('base64')
+        else:
+            datasources_data = None
+
         if kwargs.get('export_fmt') == 'svg' and svg != '':
+            if datasources_data or image_note_data:
+                converted_svg = convert(
+                    data=svg,
+                    data_from='svg',
+                    data_to='png'
+                )
+                # add note and data sources to svg export
+                merged_svg = merge_images([image
+                  for image in [converted_svg, image_note_data, datasources_data]
+                  if image is not None
+                ], 0)
+
+                svg = convert(
+                    data=merged_svg,
+                    data_from='png',
+                    data_to='svg'
+                )
             return self.export_svg(svg, filename)
 
         if svg != '':
@@ -745,6 +809,13 @@ class Export(BrowserView):
                     'googlechart.watermark_vertical_space_for_png_export', 0))
         wmHorizontal = int(sp.get(
                     'googlechart.watermark_horizontal_space_for_png_export', 0))
+        extra_offset = sp.get('googlechart.note_png_export_offset', 100)
+
+        # Add note and data sources images
+        img = merge_images([image
+          for image in [img, image_note_data, datasources_data]
+          if image is not None
+        ], extra_offset)
 
         shiftSecondImg = False
         hShift = 0
@@ -756,11 +827,11 @@ class Export(BrowserView):
             qr_img = qr_con.read()
             qr_con.close()
             img = applyWatermark(img,
-                                qr_img,
-                                qrPosition,
-                                qrVertical,
-                                qrHorizontal,
-                                0.7)
+                                 qr_img,
+                                 qrPosition,
+                                 qrVertical,
+                                 qrHorizontal,
+                                 0.7)
             if shiftSecondImg:
                 hShift = Image.open(StringIO(qr_img)).size[0] + qrHorizontal
 
@@ -770,11 +841,11 @@ class Export(BrowserView):
                 wm_img = wm_con.read()
                 wm_con.close()
                 img = applyWatermark(img,
-                                wm_img,
-                                wmPosition,
-                                wmVertical,
-                                wmHorizontal + hShift,
-                                0.7)
+                                 wm_img,
+                                 wmPosition,
+                                 wmVertical,
+                                 wmHorizontal + hShift,
+                                 0.7)
             except ValueError, err:
                 logger.exception(err)
             except Exception, err:
