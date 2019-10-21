@@ -350,9 +350,10 @@ class View(ViewForm):
 
                 if chart_type == '.svg':
                     svg_str = img.get_data()
-                    svg_obj = lxml.etree.fromstring(svg_str)
-                    svg_obj.set("xmlns", "http://www.w3.org/2000/svg")
-                    svg_str = lxml.etree.tostring(svg_obj)
+                    if 'xmlns' not in svg_str:
+                        svg_obj = lxml.etree.fromstring(svg_str)
+                        svg_obj.set("xmlns", "http://www.w3.org/2000/svg")
+                        svg_str = lxml.etree.tostring(svg_obj)
                     self.request.response.setHeader('content-type',
                                                     'image/svg+xml')
                     return svg_str

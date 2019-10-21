@@ -1,6 +1,11 @@
 Changelog
 =========
 
+19.6 - (2019-10-11)
+---------------------------
+* Bug fix: Fixed embed-chart.svg: duplicate attr xmlns
+  [avoinea refs #109515]
+
 19.5 - (2019-08-10)
 --------------------------
 * Feature: Add color palette for ENI SEIS.
