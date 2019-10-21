@@ -1,6 +1,9 @@
 Changelog
 =========
 
+19.7-dev0 - (unreleased)
+---------------------------
+
 19.6 - (2019-10-11)
 ---------------------------
 * Bug fix: Fixed embed-chart.svg: duplicate attr xmlns
