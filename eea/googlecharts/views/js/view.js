@@ -1027,7 +1027,7 @@ jQuery(document).ready(function($){
 
     jQuery(window).resize(_.debounce(function() {
         if (!jQuery('#googlechart_view').parent('.googlechart_dashboard_table')[0]) {
-            var new_width = jQuery('#googlechart_table').width() - 20;
+            var new_width = jQuery('#googlechart_table').width();
             jQuery('#googlechart_view').css('width', new_width);
             gl_charts.googlechart_view.setOption('width', new_width);
             gl_charts.googlechart_view.setOption('resized_width', new_width);

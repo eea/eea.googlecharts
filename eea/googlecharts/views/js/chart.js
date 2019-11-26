@@ -695,8 +695,7 @@ function drawGoogleChart(options){
     // Notes
     if (!settings.hideNotes){
         var notes = jQuery('<div>')
-            .addClass('googlechart-notes')
-            .width(settings.chartWidth);
+            .addClass('googlechart-notes');
 
         jQuery.each(settings.notes, function(index, note){
             jQuery('<div>')
