@@ -843,17 +843,18 @@ var googleChartTabClick = function(context){
         }
 //        value[4] = jQuery('#googlechart_table').width() - 20;
 //        value[4] = '100%';
-        var chart_options = value[1].options;
-        var legend = chart_options.legend;
-        // #28453 do now show legend if it is set to none
-        if (legend === "none") {
-            return;
-        }
 
         // #108735 draw with content area width on first draw in case the
         // parent area is larger than the given static chart width
         if (jQuery('#daviz-view').width() > value[4]) {
             value[4] = jQuery("#content-core").width();
+        }
+
+        var chart_options = value[1].options;
+        var legend = chart_options.legend;
+        // #28453 do now show legend if it is set to none
+        if (legend === "none") {
+            return;
         }
 
         // #28505 set the legend to the top only if we have

@@ -2,6 +2,7 @@
 <head>
 <style type="text/css">
     #googlechart_full > div > div {overflow:hidden ! important;}
+    #googlechart_full > div > div > table {line-height: 1.5em;}
 </style>
 <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
 <script type="text/javascript" src="++resource++jquery-migrate.js"></script>
