@@ -1,6 +1,13 @@
 Changelog
 =========
 
+19.7 - (2019-11-27)
+---------------------------
+* Change: Notes are no longer resized, charts are now drawn with content area
+  width if the parent area is larger than the given static chart width, fixed
+  urls in templates and increased table width
+  [iulianpetchesi refs #108735]
+
 19.6 - (2019-10-11)
 ---------------------------
 * Bug fix: Fixed embed-chart.svg: duplicate attr xmlns

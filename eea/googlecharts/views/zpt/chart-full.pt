@@ -2,6 +2,7 @@
 <head>
 <style type="text/css">
     #googlechart_full > div > div {overflow:hidden ! important;}
+    #googlechart_full > div > div > table {line-height: 1.5em;}
 </style>
 <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
 <script type="text/javascript" src="++resource++jquery-migrate.js"></script>
@@ -9,7 +10,10 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
-<script type="text/javascript" src="++resource++jquery-ui.min.js"></script>
+  <tal:jqueryui tal:define="eea_jqueryui exists:here/collective.js.jqueryui.custom.min.eea.js">
+    <script type="text/javascript" tal:condition="python: not eea_jqueryui" tal:attributes="src string:${context/portal_url}/++resource++jquery-ui.min.js"></script>
+    <script type="text/javascript" tal:condition="python:eea_jqueryui" tal:attributes="src string:${context/portal_url}/collective.js.jqueryui.custom.min.eea.js"></script>
+  </tal:jqueryui>
 
 <script type="text/javascript">
     google.load('visualization', '1.0', {packages: ['controls']});

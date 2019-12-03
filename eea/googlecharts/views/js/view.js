@@ -836,18 +836,27 @@ var googleChartTabClick = function(context){
     current_chart_id = jQuery(context).attr("chart_id");
 
     var chart_index_to_use = -1;
+    // first draw is here
     jQuery(googlechart_config_array).each(function(index, value){
         if (value[0] == current_chart_id){
             chart_index_to_use = index;
         }
 //        value[4] = jQuery('#googlechart_table').width() - 20;
 //        value[4] = '100%';
+
+        // #108735 draw with content area width on first draw in case the
+        // parent area is larger than the given static chart width
+        if (jQuery('#daviz-view').width() > value[4]) {
+            value[4] = jQuery("#content-core").width();
+        }
+
         var chart_options = value[1].options;
         var legend = chart_options.legend;
         // #28453 do now show legend if it is set to none
         if (legend === "none") {
             return;
         }
+
         // #28505 set the legend to the top only if we have
         // a small resolution and the legend is set to the
         // right or left. If users sets it to bottom of inside
@@ -1027,7 +1036,8 @@ jQuery(document).ready(function($){
 
     jQuery(window).resize(_.debounce(function() {
         if (!jQuery('#googlechart_view').parent('.googlechart_dashboard_table')[0]) {
-            var new_width = jQuery('#googlechart_table').width() - 20;
+            // resize is here
+            var new_width = jQuery('#googlechart_table').width();
             jQuery('#googlechart_view').css('width', new_width);
             gl_charts.googlechart_view.setOption('width', new_width);
             gl_charts.googlechart_view.setOption('resized_width', new_width);

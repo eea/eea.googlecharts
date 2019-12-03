@@ -656,7 +656,7 @@ input.googlechart-chart-size {
 .googlechart_dashboard .googlechart-notes {
     font: 12px Verdana, Arial, Helvetica, sans-serif;
     line-height: 1.5em;
-    width: 100% !important; /* notes shouldn't span beyond chart border */
+    width: 100%; /* notes shouldn't span beyond chart border */
 }
 
 /* #18491 normalize font size of googlechart-notes when it contains a paragraph */
