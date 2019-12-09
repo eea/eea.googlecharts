@@ -325,11 +325,11 @@ function updateSortOptions(id){
 function updateCounters(){
     jQuery(".googlechart").each(function(){
         var elem = jQuery(this);
-        updateSortOptions(elem.find(".googlechart_id").attr("value"));
+        updateSortOptions(elem.find(".googlechart_id").prop("value"));
         var columnFiltersNr = elem.find(".googlechart-columnfilters-box").find("li").length;
         var notesNr = elem.find(".googlechart-notes-box").find("li").length;
         var filtersNr = elem.find(".googlechart_filters_list").find("li").length;
-        if (JSON.parse(elem.find(".googlechart_configjson").attr("value")).chartType === 'Table'){
+        if (JSON.parse(elem.find(".googlechart_configjson").prop("value")).chartType === 'Table'){
             elem.find(".googlechart-sort-box").hide();
             elem.find(".googlechart-sort-box select").attr("selected_value", "__disabled__");
             if (elem.find(".googlechart-sort-box-placeholder").length === 0){
@@ -346,7 +346,7 @@ function updateCounters(){
 }
 
 function checkSVG(id){
-    var tmp_config_str = jQuery("#googlechartid_"+id).find(".googlechart_configjson").attr("value");
+    var tmp_config_str = jQuery("#googlechartid_"+id).find(".googlechart_configjson").prop("value");
     var tmp_config = JSON.parse(tmp_config_str);
     var chart_thumb_id = jQuery("#googlechart_thumb_id_"+id);
     var chart_thumb_text = jQuery("#googlechart_thumb_text_"+id);
@@ -663,7 +663,7 @@ function reloadColumnFilters(id){
             .prependTo(li)
             .click(function(){
                 var cols = [];
-                var chartcolumns = JSON.parse(jQuery("#googlechartid_" + id).find(".googlechart_columns").attr("value")).prepared;
+                var chartcolumns = JSON.parse(jQuery("#googlechartid_" + id).find(".googlechart_columns").prop("value")).prepared;
                 jQuery.each(chartcolumns, function(index, column){
                     var col = {};
                     col.name = column.name;
@@ -971,8 +971,8 @@ function saveThumb(value, useName){
                                             var chartconfig_input = jQuery(val).find(".googlechart_configjson");
                                             var chart_id_input = jQuery(val).find(".googlechart_id");
                                             if (chartconfig_input && chart_id_input) {
-                                                var chart_config = JSON.parse(chartconfig_input.attr("value"));
-                                                var chart_id = chart_id_input.attr("value");
+                                                var chart_config = JSON.parse(chartconfig_input.prop("value"));
+                                                var chart_id = chart_id_input.prop("value");
                                                 charts_assets.push(chart_id+'.png');
                                                 if (chart_config.chartType !== 'ImageChart') {
                                                     charts_assets.push(chart_id+'.svg');
@@ -1006,7 +1006,7 @@ function saveThumb(value, useName){
 
 function drawChart(elementId, readyEvent){
     readyEvent(elementId);
-    var chartConfig = JSON.parse(jQuery("#googlechartid_"+elementId).find(".googlechart_configjson").attr("value"));
+    var chartConfig = JSON.parse(jQuery("#googlechartid_"+elementId).find(".googlechart_configjson").prop("value"));
     var chartType = chartConfig.chartType.toLowerCase();
     var chartClass = "googlechart-preview-"+chartType;
     if (chartType === "linechart"){
@@ -1050,7 +1050,7 @@ function openAdvancedOptions(id){
         "</div>";
 
     var chartObj = jQuery("#googlechartid_"+id);
-    var options = chartObj.find(".googlechart_options").attr("value");
+    var options = chartObj.find(".googlechart_options").prop("value");
 
     jQuery(".googlecharts_advancedoptions_dialog").remove();
 
@@ -1207,7 +1207,7 @@ function addChart(options){
     });
     googlechart.find('.googlechart-sort-box select').attr("selected_value",settings.sortFilter);
     googlechart.find('.googlechart-sort-box select').change(function(){
-        googlechart.find('.googlechart-sort-box select').attr('selected_value', googlechart.find('.googlechart-sort-box select').attr('value'));
+        googlechart.find('.googlechart-sort-box select').attr('selected_value', googlechart.find('.googlechart-sort-box select').prop('value'));
         markChartAsModified(settings.id);
     });
 //    updateSortOptions(settings.id);
@@ -1492,12 +1492,12 @@ function redrawEditorChart() {
     tmpwrapper.setOption("intervals", {});
     tmpwrapper.setOption("interval", {});
     var tmp_chart = jQuery("#googlechartid_tmp_chart");
-    var tmp_chart_options = tmp_chart.find(".googlechart_options").attr("value");
+    var tmp_chart_options = tmp_chart.find(".googlechart_options").prop("value");
     var chartOptions = JSON.parse(tmp_chart_options);
     var dataTable = tmpwrapper_json.dataTable;
     var series = {};
 
-    var def_opt = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
+    var def_opt = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").prop("value"));
     delete def_opt.options.colors;
     jQuery.each(chartOptions.series || {}, function(name, opt){
         jQuery.each(dataTable.cols, function(idx, col){
@@ -1541,13 +1541,13 @@ BRANCH DAVIZTRAINING
         tmpwrapper.setOption(key,value);
     });
 
-    var row_filters_str = jQuery(".googlechart_row_filters", tmp_chart).attr('value');
+    var row_filters_str = jQuery(".googlechart_row_filters", tmp_chart).prop('value');
     var row_filters = {};
     if (row_filters_str.length > 0){
         row_filters = JSON.parse(row_filters_str);
     }
-    var sortBy = jQuery(".googlechart_sortBy", tmp_chart).attr('value');
-    var sortAsc_str = jQuery(".googlechart_sortAsc", tmp_chart).attr('value');
+    var sortBy = jQuery(".googlechart_sortBy", tmp_chart).prop('value');
+    var sortAsc_str = jQuery(".googlechart_sortAsc", tmp_chart).prop('value');
     var sortAsc = true;
     if (sortAsc_str === 'desc'){
         sortAsc = false;
@@ -1616,7 +1616,7 @@ BRANCH DAVIZTRAINING
 
     var settings_str = chartEditor.getChartWrapper().toJSON();
     var settings_json = JSON.parse(settings_str);
-    var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
+    var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").prop("value");
     var options_json = JSON.parse(options_str);
     var tmp_dataTable = chartEditor.getChartWrapper().getDataTable();
 
@@ -1690,10 +1690,10 @@ BRANCH DAVIZTRAINING
 }
 
 function setCustomSetting(series, opt, key, value) {
-    var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").attr("value");
+    var options_str = jQuery("#googlechartid_tmp_chart .googlechart_options").prop("value");
     var options_json = JSON.parse(options_str);
-    var configJSON = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
-    var s_columns = JSON.parse($("#googlechartid_tmp_chart .googlechart_columns").attr("value"));
+    var configJSON = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").prop("value"));
+    var s_columns = JSON.parse($("#googlechartid_tmp_chart .googlechart_columns").prop("value"));
     var prep_columns = s_columns.prepared;
     var col_id;
     jQuery.each(prep_columns, function(idx, col) {
@@ -1724,11 +1724,11 @@ function setCustomSetting(series, opt, key, value) {
 }
 
 function updateCustomSettings() {
-    var configJSON = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").attr("value"));
-    var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+    var configJSON = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_configjson").prop("value"));
+    var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").prop("value"));
     var div_sel = jQuery("#google-visualization-charteditor-series-select-div");
     var line_caption = div_sel.find('.charts-flat-menu-button-caption').text();
-    var s_columns = JSON.parse($("#googlechartid_tmp_chart .googlechart_columns").attr("value"));
+    var s_columns = JSON.parse($("#googlechartid_tmp_chart .googlechart_columns").prop("value"));
     var prep_columns = s_columns.prepared;
     var col_id;
     var disable_custom = false;
@@ -1762,12 +1762,12 @@ function updateCustomSettings() {
             setCustomSetting(line_caption, "pointShape", "sides", '');
         }
         jQuery("#point-sides-input").attr("disabled", true);
-        if (jQuery("#point-shape").attr("value") !== "") {
+        if (jQuery("#point-shape").prop("value") !== "") {
             jQuery("#point-shape").attr("value", "");
             setCustomSetting(line_caption, "pointShape", "type", '');
         }
         jQuery("#point-shape").attr("disabled", true);
-        if (jQuery("#point-rotation").attr("value") !== "") {
+        if (jQuery("#point-rotation").prop("value") !== "") {
             jQuery("#point-rotation").attr("value", "");
             setCustomSetting(line_caption, "pointShape", "rotation", '');
         }
@@ -1956,7 +1956,7 @@ function addCustomSettings() {
 }
 
 function updatePalette(skipColorsAttr) {
-    var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
+    var selectedPaletteId = jQuery("#googlechart_palettes").prop("value");
 
     jQuery(".googlechart_preview_color").remove();
     var selectedPalette = chartPalettes[selectedPaletteId].colors;
@@ -1970,7 +1970,7 @@ function updatePalette(skipColorsAttr) {
     jQuery(clear).appendTo("#googlechart_preview_palette_editor");
 
     var tmp_chart_options = jQuery("#googlechartid_tmp_chart .googlechart_options");
-    var options_str = tmp_chart_options.attr("value");
+    var options_str = tmp_chart_options.prop("value");
     var options_json = JSON.parse(options_str);
 
     var newColors = [];
@@ -1982,7 +1982,7 @@ function updatePalette(skipColorsAttr) {
     }
     var options_str2 = JSON.stringify(options_json);
 
-    var tmp_chart_configjson = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value"));
+    var tmp_chart_configjson = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").prop("value"));
     delete tmp_chart_configjson.options.colors;
     jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value", JSON.stringify(tmp_chart_configjson));
 
@@ -2062,7 +2062,7 @@ function addPaletteConfig(){
                 .addClass("eea-googlechart-colorpalettes-config-value")
                 .addClass("eea-googlechart-select")
                 .change(function(){
-                    jQuery("#googlechart_palettes").attr("value", jQuery(this).attr("value"));
+                    jQuery("#googlechart_palettes").attr("value", jQuery(this).prop("value"));
                     updatePalette(false);
                 })
                 .appendTo(section);
@@ -2080,8 +2080,8 @@ function addPaletteConfig(){
             jQuery("<div>")
                 .attr("id", "googlechart_preview_palette_editor")
                 .appendTo(section);
-            jQuery(".eea-googlechart-colorpalettes-config-value").attr("value", jQuery("#googlechart_palettes").attr("value"));
-            if (JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value")).chartType !== "PieChart"){
+            jQuery(".eea-googlechart-colorpalettes-config-value").attr("value", jQuery("#googlechart_palettes").prop("value"));
+            if (JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").prop("value")).chartType !== "PieChart"){
                 updatePalette(false);
             }
             else {
@@ -2219,13 +2219,13 @@ function addIntervalConfig(){
                     .css("background-color", color);
             }
             function getValuesForSection(name){
-                var style = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-style").attr("value");
-                var linewidth = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-linewidth").attr("value");
-                var barwidth = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-barwidth").attr("value");
-                var pointsize = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-pointsize").attr("value");
-                var boxwidth = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-boxwidth").attr("value");
-                var fillopacity = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-fillopacity").attr("value");
-                var curvetype = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-curvetype").attr("value");
+                var style = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-style").prop("value");
+                var linewidth = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-linewidth").prop("value");
+                var barwidth = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-barwidth").prop("value");
+                var pointsize = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-pointsize").prop("value");
+                var boxwidth = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-boxwidth").prop("value");
+                var fillopacity = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-fillopacity").prop("value");
+                var curvetype = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-curvetype").prop("value");
                 var color = jQuery(".eea-googlechart-" + name + ".eea-googlechart-intervals-color").attr("title");
                 var interval = {};
                 if (style !== "auto"){
@@ -6193,7 +6193,7 @@ function overrideGooglePalette(){
     });
     jQuery(document).delegate(".google-visualization-charteditor-color", "click", function(){
         saveEditorColors();
-        var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
+        var selectedPaletteId = jQuery("#googlechart_palettes").prop("value");
         var selectedPalette = chartPalettes[selectedPaletteId].colors;
         var grayscale;
         var custompalette;
@@ -6266,7 +6266,7 @@ function overrideGooglePalette(){
             }
         });
 
-        var currentConfig = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").attr("value"));
+        var currentConfig = JSON.parse(jQuery("#googlechartid_tmp_chart .googlechart_configjson").prop("value"));
         var tmpwrapper = chartEditor.getChartWrapper();
         var extraConfig = {};
 
@@ -6296,12 +6296,12 @@ function overrideGooglePalette(){
             }
         }
         parseTree(currentConfig, []);
-        var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+        var chartOptions = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").prop("value"));
         removeAutomaticColor(chartOptions, chartOptions, []);
         jQuery.extend(true, chartOptions, extraConfig.options);
         if (tmpwrapper.getChartType() === "PieChart"){
 
-            var selectedPaletteId = jQuery("#googlechart_palettes").attr("value");
+            var selectedPaletteId = jQuery("#googlechart_palettes").prop("value");
 
             var selectedPalette = chartPalettes[selectedPaletteId].colors;
 
@@ -6315,7 +6315,7 @@ function overrideGooglePalette(){
                 }
             }
         }
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value", JSON.stringify(chartOptions));
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_options").prop("value", JSON.stringify(chartOptions));
         redrawEditorChart();
     });
     jQuery(document).click(function(evt){
