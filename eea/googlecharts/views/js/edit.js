@@ -3949,7 +3949,7 @@ function columnsMatrixChart(chartType){
                 if (matrixChart_zone_size_height < height){
                     jQuery('.matrixChart_dialog').dialog('option','height', 'auto');
                 }
-                jQuery(".matrixChart_dialog").delegate(".matrixChart_overlay","hover",function(){
+                jQuery(".matrixChart_dialog").delegate(".matrixChart_overlay","mouseenter",function(){
                     var elem = jQuery(this);
                     var col_nr = elem.attr("col_nr");
                     var row_nr = elem.attr("row_nr");
@@ -4607,7 +4607,7 @@ openEditChart = function(id){
             .appendTo(".googlechart_chart_config_scaleable_minimized");
         resizeTableConfigurator(true);
     });
-    editcolumnsdialog.delegate(".googlechart_maximize_chart_config", "hover", function(){
+    editcolumnsdialog.delegate(".googlechart_maximize_chart_config", "mouseenter", function(){
         if (jQuery(".googlechart_chart_config_scaleable_maximized").length === 0){
             jQuery(".googlechart_maximize_chart_config").addClass("googlechart_config_hover");
         }
@@ -4617,7 +4617,7 @@ openEditChart = function(id){
             jQuery(".googlechart_maximize_chart_config").removeClass("googlechart_config_hover");
         }
     });
-    editcolumnsdialog.delegate(".googlechart_maximize_table_config", "hover", function(){
+    editcolumnsdialog.delegate(".googlechart_maximize_table_config", "mouseenter", function(){
         if (jQuery(".googlechart_table_config_scaleable_maximized").length === 0){
             jQuery(".googlechart_maximize_table_config").addClass("googlechart_config_hover");
         }
@@ -6136,9 +6136,12 @@ function init_googlecharts_edit(){
             }
         });
     });
-    googlecharts_list.delegate("a.preview_button", "hover", function(){
+    googlecharts_list.delegate("a.preview_button", "mouseenter", function(){
         previewChartObj = jQuery(this).closest('.googlechart');
         var chartObj = previewChartObj;
+        if (chartObj.attr("preview_href")) {
+            return;
+        }
         var width = chartObj.find(".googlechart_width").val();
         var height = chartObj.find(".googlechart_height").val();
         var name = chartObj.find(".googlechart_name").attr("value");
