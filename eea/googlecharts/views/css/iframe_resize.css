@@ -142,3 +142,8 @@ input.googlechart-iframe-size {
   text-align: center;
   font-weight: bold;
 }
+
+/* #111011 remove min-width from resized iframes since it interferes with iframe width*/
+.iframe_resized {
+    min-width: initial;
+}
