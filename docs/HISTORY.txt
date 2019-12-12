@@ -1,7 +1,7 @@
 Changelog
 =========
 
-19.8-dev0 - (unreleased)
+19.8 - (2019-12-12)
 ---------------------------
 * Bug fix: Made it so that xpath returns results from the current element
   instead of whole document and removed width/height iframe resize check
