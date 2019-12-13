@@ -35,15 +35,14 @@ class Resizer(BrowserView):
                 new_value = ""
                 for element in html:
                     if isinstance(element, lxml.html.HtmlElement):
-                        iframes = element.xpath("//iframe")
+                        iframes = element.xpath(".//iframe")
                         for iframe in iframes:
-                            if iframe.get("width") == old_width and \
-                                iframe.get("height") == old_height and \
-                                    iframe.get("src") == old_src:
+                            if iframe.get("src") == old_src:
                                 has_changes = True
                                 iframe.set("width", new_width)
                                 iframe.set("height", new_height)
                                 iframe.set("src", new_src)
+                                iframe.set("class", "iframe_resized")
                         new_value += lxml.html.tostring(
                             element, encoding='utf-8')
                     else:
