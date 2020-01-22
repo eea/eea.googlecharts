@@ -1,7 +1,7 @@
 Changelog
 =========
 
-19.9-dev0 - (unreleased)
+19.9 - (2020-01-22)
 ---------------------------
 
 * Bug fix: Fix charts legends in dashboards.
