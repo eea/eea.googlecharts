@@ -158,7 +158,7 @@
                   unpivotsettings python:view.get_unpivotSettings(chart);"
       style="margin: 0; overflow: hidden;">
     <script type="text/javascript" tal:content="
-        string:var chart_columns = ${chart/columns};
+        structure string:var chart_columns = ${chart/columns};
         var merged_rows = ${chart/data};
         var available_columns = ${chart/available_columns};
         var chart_json = ${chart/json};
