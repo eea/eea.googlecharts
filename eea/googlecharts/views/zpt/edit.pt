@@ -1,6 +1,6 @@
 <div id="googlecharts_config" tal:define="ajax_baseurl string:${view/context/absolute_url}"
      i18n:domain="eea">
-    <script type="text/javascript" tal:content="string:ajax_baseurl = '${ajax_baseurl}';available_columns = ${view/get_columns};all_rows = ${view/get_allrows};available_columns_ordered = ${view/get_columns_ordered}">
+    <script type="text/javascript" tal:content="structure string:ajax_baseurl = '${ajax_baseurl}';available_columns = ${view/get_columns};all_rows = ${view/get_allrows};available_columns_ordered = ${view/get_columns_ordered}">
     </script>
 
     <div class="eea-tutorial" style="float:left; display:block; margin-left:0px; margin-top:10px; margin-bottom:20px;font-size:16px;" tutorial="edit chart" message="Configure google charts or"></div>

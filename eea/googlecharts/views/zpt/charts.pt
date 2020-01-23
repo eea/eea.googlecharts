@@ -57,7 +57,7 @@
     var dashboards_config_array = [];
 "></script>
 
-<script type="text/javascript" tal:content="string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; qr_size = '${view/qr_size}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}'; var main_title='${view/get_maintitle}';">
+<script type="text/javascript" tal:content="structure string:available_columns = ${view/get_columns};merged_rows = ${view/get_rows}; baseurl = '${view/context/absolute_url}'; qr_pos = '${view/qr_position}'; qr_size = '${view/qr_size}'; wm_pos = '${view/wm_position}'; wm_path = '${view/wm_path}'; var main_title='${view/get_maintitle}';">
 </script>
 <div class="googlecharts_container" i18n:domain="eea">
 <tal:block tal:define="charts view/get_charts; dashboards view/get_dashboards;">

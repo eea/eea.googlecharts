@@ -59,7 +59,7 @@
         var googlechart_config_array_$vhash = [];">
     </script>
 
-    <script type="text/javascript" tal:content="string:
+    <script type="text/javascript" tal:content="structure string:
         var available_columns_$vhash = ${view/get_columns};
         var merged_rows_$vhash = ${view/get_rows};
         var baseurl_$vhash = '${view/context/absolute_url}';
