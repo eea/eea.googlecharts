@@ -3,6 +3,8 @@ Changelog
 
 19.9-dev0 - (unreleased)
 ---------------------------
+* Change: removed the Google Plus reference
+  [alecghica]
 
 19.8 - (2019-12-12)
 ---------------------------
