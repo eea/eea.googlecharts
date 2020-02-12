@@ -1,6 +1,9 @@
 Changelog
 =========
 
+20.0-dev0 - (unreleased)
+---------------------------
+
 19.9 - (2020-01-22)
 ---------------------------
 * Change: removed the Google Plus reference
