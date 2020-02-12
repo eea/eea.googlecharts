@@ -1,6 +1,14 @@
 Changelog
 =========
 
+19.9 - (2020-01-22)
+---------------------------
+* Change: removed the Google Plus reference
+  [alecghica]
+
+* Bug fix: Fix charts legends in dashboards.
+  [GhitaB refs #113335]
+
 19.8 - (2019-12-12)
 ---------------------------
 * Bug fix: Made it so that xpath returns results from the current element

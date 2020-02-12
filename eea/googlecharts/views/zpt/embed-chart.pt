@@ -376,8 +376,6 @@
                         <div class="googlechart googlechart-social">
                             <a href="https://twitter.com/intent/tweet?url=" class="share-button share-button-twitter" target="_blank" i18n:translate="">Twitter</a>
                             <a href="https://www.facebook.com/sharer/sharer.php?u=" class="share-button share-button-facebook" target="_blank" i18n:translate="">Facebook</a>
-                            <a href="https://plus.google.com/share?url=" class="share-button share-button-gplus" target="_blank" i18n:translate="">Google Plus</a>
-
                         </div>
                     </div>
                 </div>
