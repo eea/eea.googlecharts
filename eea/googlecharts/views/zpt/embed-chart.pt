@@ -6,6 +6,8 @@
                         title view/context/Title;
                         url view/context/absolute_url;
                         context_state context/@@plone_context_state;
+                        eea_jqueryui exists:here/collective.js.jqueryui.custom.min.eea.js;
+                        portal_url context/@@plone_portal_state/portal_url;
                         wf_state context_state/workflow_state|string:;
                         draft_class python:'wf-draft' if wf_state and wf_state != 'published' else '';
                         referer_url python:request.get_header('referer') or request['URL0'];
@@ -13,19 +15,19 @@
 <!DOCTYPE html>
 <html tal:condition="not:inline" tal:define="dummy python:request.RESPONSE.setHeader('X-UA-Compatible', 'IE=edge'); dummy2 python:request.RESPONSE.setHeader('X-Frame-Options', 'ALLOWALL');">
     <head>
-        <link href="collective.js.jqueryui.custom.min.css" rel="stylesheet" type="text/css"/>
-        <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
-        <link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
-        <link href="++resource++eea.googlecharts.embed.css" rel="stylesheet" type="text/css"/>
-        <link tal:attributes="href string:${context/portal_url}/embed_custom.css" rel="stylesheet" type="text/css" tal:condition="exists:context/embed_custom.css"/>
+        <link tal:define="eea_prefix python: '.eea' if eea_jqueryui else ''" tal:attributes="href string:${portal_url}/collective.js.jqueryui.custom.min${eea_prefix}.css" rel="stylesheet" type="text/css"/>
+        <link tal:attributes="href string:${portal_url}/++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
+        <link tal:attributes="href string:${portal_url}/++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
+        <link tal:attributes="href string:${portal_url}/++resource++eea.googlecharts.embed.css" rel="stylesheet" type="text/css"/>
+        <link tal:attributes="href string:${portal_url}/embed_custom.css" rel="stylesheet" type="text/css" tal:condition="exists:context/embed_custom.css"/>
         <style type="text/css" tal:content="view/get_customstyle">
         </style>
         <meta property="og:type"   content="article" />
         <meta property="og:image" tal:attributes="content string:${url}/${chart_id}.png/download" />
         <meta property="og:url" tal:attributes="content string:${url}/embed-chart?chart=${chart_id}" />
         <meta property="og:title" tal:attributes="content string:${title}" />
-        <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
-        <script type="text/javascript" src="++resource++jquery-migrate.js"></script>
+        <script type="text/javascript" tal:attributes="src string:${portal_url}/${view/jquery_src}"></script>
+        <script type="text/javascript" tal:define="resource_prefix python: '++resource++' if not eea_jqueryui else ''" tal:attributes="src string:${portal_url}/${resource_prefix}jquery-migrate.js"></script>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <title tal:content="title"></title>
     </head>
@@ -41,11 +43,12 @@
                                         has_provenances python:len(provenances);
                                         has_many python: has_provenances > 1 or has_provenances >= 1 and indicator;
                                         outerhtmltag python:'ul' if has_many else 'div';
-                                        htmltag python: 'li' if has_many else 'span class=googlechart-provenance-definition'">
+                                        htmltag python: 'li' if has_many else 'div';
+                                        htmltag_class python: '' if htmltag == 'li' else 'googlechart-provenance-definition'">
                     <p class="googlechart-datasource" tal:condition="python: has_provenances or indicator"><strong i18n:translate="">Data sources:</strong></p>
                     <p tal:replace="structure string:<$outerhtmltag id='googlechart-provenance-definitions'>"></p>
                         <tal:provenance repeat="provenance provenances">
-                            <li tal:replace="structure string:<$htmltag>"></li>
+                            <li tal:replace="structure string:<$htmltag class='$htmltag_class'>"></li>
                                 <tal:owner
                                         define="owner provenance/owner | python:{}; owner_url owner/url | nothing"
                                         condition="owner_url" >
@@ -78,17 +81,15 @@
         </tal:data>
         <!--? /Data Sources -->
     </div>
-      <tal:jqueryui tal:define="eea_jqueryui exists:here/collective.js.jqueryui.custom.min.eea.js; portal_url context/@@plone_portal_state/portal_url">
         <script type="text/javascript" tal:condition="python: not eea_jqueryui" tal:attributes="src string:${portal_url}/++resource++jquery-ui.min.js"></script>
         <script type="text/javascript" tal:condition="python:eea_jqueryui" tal:attributes="src string:${portal_url}/collective.js.jqueryui.custom.min.eea.js"></script>
-      </tal:jqueryui>
-        <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
-        <script type="text/javascript" src="++resource++json2.js"></script>
-        <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
-        <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
-        <script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
-        <script type="text/javascript" src="++resource++eea.googlecharts.embed_chart.js"></script>
-        <script type="text/javascript" src="++resource++eea.googlecharts.custom_filters.js"></script>
+        <script type="text/javascript" tal:attributes="src string:${portal_url}/++resource++collective.js.underscore/underscore.min.js"></script>
+        <script type="text/javascript" tal:attributes="src string:${portal_url}/++resource++json2.js"></script>
+        <script type="text/javascript" tal:attributes="src string:${portal_url}/++resource++eea.googlecharts.chart.js"></script>
+        <script type="text/javascript" tal:attributes="src string:${portal_url}/++resource++eea.googlecharts.datatable.js"></script>
+        <script type="text/javascript" tal:attributes="src string:${portal_url}/++resource++eea.googlecharts.embed_common.js"></script>
+        <script type="text/javascript" tal:attributes="src string:${portal_url}/++resource++eea.googlecharts.embed_chart.js"></script>
+        <script type="text/javascript" tal:attributes="src string:${portal_url}/++resource++eea.googlecharts.custom_filters.js"></script>
     </body>
 </html>
 
