@@ -431,7 +431,6 @@ DavizIframeResizer.ChartResizer.prototype = {
             .addClass("googlechart-chartiframe-resizable")
             .width(sizes.iframeWidth)
             .height(sizes.iframeHeight)
-            .offset({left:sizes.iframeLeft, top:sizes.iframeTop})
             .resizable({
                 stop: function(){
                     self.shouldUpdate = true;
@@ -446,7 +445,8 @@ DavizIframeResizer.ChartResizer.prototype = {
                         .attr("value", jQuery(this).height());
                 }
             })
-            .appendTo("body");
+            .appendTo("body")
+            .offset({left:sizes.iframeLeft, top:sizes.iframeTop});
         jQuery("<div>")
              .addClass("googlechart-chartiframe-header")
             .appendTo(".googlechart-chartiframe-resizable");
@@ -499,7 +499,6 @@ DavizIframeResizer.ChartResizer.prototype = {
                 .addClass("googlechart-chart-resizable")
                 .width(sizes.chart.width)
                 .height(sizes.chart.height)
-                .offset({left:sizes.chart.left, top:sizes.chart.top})
                 .resizable({
                     stop: function(){
                         self.shouldUpdate = true;
@@ -514,7 +513,8 @@ DavizIframeResizer.ChartResizer.prototype = {
                             .attr("value", jQuery(this).height());
                     }
                 })
-                .appendTo(".googlechart-chartiframe-resizable");
+                .appendTo(".googlechart-chartiframe-resizable")
+                .offset({left:sizes.chart.left, top:sizes.chart.top});
 
 
             jQuery("<span>chart size: </span>")
