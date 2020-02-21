@@ -56,14 +56,14 @@ function exportToPng(){
         var svg = jQuery('<div>').append(jQuery("#googlechart_view").find("svg").clone()).html();
         var clean_svg = svgCleanup(svg);
 
-        jQuery("#svg").attr("value",clean_svg);
-        jQuery("#imageChart_url").attr("value", '');
-        jQuery("#export_fmt").attr("value", "png");
+        jQuery("#svg").prop("value",clean_svg);
+        jQuery("#imageChart_url").prop("value", '');
+        jQuery("#export_fmt").prop("value", "png");
     }
     else {
         var img_url = jQuery("#googlechart_view img").attr("src");
         img_url = "http://"+img_url.substr(img_url.indexOf("chart.googleapis.com"));
-        jQuery("#imageChart_url").attr("value", img_url);
+        jQuery("#imageChart_url").prop("value", img_url);
     }
 
     if (window.daviz_datasource_exists || window.daviz_note_exists) {
@@ -71,10 +71,10 @@ function exportToPng(){
             var lengths = [];
 
             if (window.daviz_datasource_exists) {
-                lengths.push(jQuery("#image_datasources").attr('value').length);
+                lengths.push(jQuery("#image_datasources").prop('value').length);
             }
             if (window.daviz_note_exists) {
-                lengths.push(jQuery("#image_note").attr('value').length);
+                lengths.push(jQuery("#image_note").prop('value').length);
             }
 
             if (lengths.length === 2) {
@@ -104,8 +104,8 @@ function exportToSVG(){
     if (jQuery("#googlechart_view img").attr("src") === undefined){
         var svg = jQuery('<div>').append(jQuery("#googlechart_view").find("svg").clone()).html();
         var clean_svg = svgCleanup(svg);
-        jQuery("#svg").attr("value",clean_svg);
-        jQuery("#export_fmt").attr("value", "svg");
+        jQuery("#svg").prop("value",clean_svg);
+        jQuery("#export_fmt").prop("value", "svg");
     }
 
     if (window.daviz_datasource_exists || window.daviz_note_exists) {
@@ -113,10 +113,10 @@ function exportToSVG(){
             var lengths = [];
 
             if (window.daviz_datasource_exists) {
-                lengths.push(jQuery("#image_datasources").attr('value').length);
+                lengths.push(jQuery("#image_datasources").prop('value').length);
             }
             if (window.daviz_note_exists) {
-                lengths.push(jQuery("#image_note").attr('value').length);
+                lengths.push(jQuery("#image_note").prop('value').length);
             }
 
             if (lengths.length === 2) {
@@ -229,8 +229,8 @@ function drawChart(value, other_options){
     var chart_unpivotSettings = value[15];
     var chart_ChartNotes = value[16];
 
-    jQuery("#filename").attr("value",chart_json.options.title);
-    jQuery("#type").attr("value","image/png");
+    jQuery("#filename").prop("value",chart_json.options.title);
+    jQuery("#type").prop("value","image/png");
 
     jQuery("#googlechart_export_button").hide();
     jQuery("#googlechart_export_svg_button").hide();
@@ -304,7 +304,7 @@ function drawChart(value, other_options){
 
     var qr_img_url = "https://chart.apis.google.com/chart?cht=qr&chld=H%7C0&chs="+qr_size+"x"+qr_size+"&chl=" + encodeURIComponent(chart_url);
     var googlechart_qr = "<img alt='QR code' src='" + qr_img_url + "'/>";
-    jQuery('#qr_url').attr('value', qr_img_url);
+    jQuery('#qr_url').prop('value', qr_img_url);
     if (qr_pos !== "Disabled"){
         jQuery(googlechart_qr).appendTo("#googlechart_qr");
         jQuery("#googlechart_qr").removeClass("eea-googlechart-hidden-image");
@@ -526,16 +526,16 @@ function drawDashboard(value, other_options){
 
 function maintainAspectRatio(elem, aspectRatio) {
     elem = jQuery(elem);
-    var value = parseInt(elem.attr("value"), 10);
+    var value = parseInt(elem.prop("value"), 10);
     var new_value;
 
     if (elem.attr("id") === "manual-chart-width") {
         new_value = Math.round(value / aspectRatio);
-        jQuery("#manual-chart-height").attr("value", new_value);
+        jQuery("#manual-chart-height").prop("value", new_value);
         return [value, new_value];
     } else {
         new_value = Math.round(value * aspectRatio);
-        jQuery("#manual-chart-width").attr("value", new_value);
+        jQuery("#manual-chart-width").prop("value", new_value);
         $("#chart-size-slider").slider( "value", new_value);
         return [new_value, value];
     }
@@ -560,7 +560,7 @@ function getManualPaddings(){
     jQuery(".manual-padding-settings").each(function() {
         var value = jQuery(this).val();
         if (!jQuery.isNumeric(value) || !isPositiveInteger(value)) {
-            jQuery(this).attr("value", 0);
+            jQuery(this).prop("value", 0);
             error.show();
         }
         paddings.push(jQuery(this).val());
@@ -675,13 +675,13 @@ function showEmbed(){
                 var manual_settings = jQuery(".manual-padding-settings");
                 var padding_settings = jQuery("#padding-settings");
                 var aspectRatio = chartWidth / chartHeight;
-                padding_settings.attr("value", "");
+                padding_settings.prop("value", "");
                 jQuery("#chart-size-slider").slider({
                     min: 100,
                     max: 1000,
                     value: chartObj.attr('chart_width'),
                     slide: function( event, ui ) {
-                        jQuery('#manual-chart-width').attr("value", ui.value);
+                        jQuery('#manual-chart-width').prop("value", ui.value);
                         jQuery('#manual-chart-width').trigger("change", [true]);
                     }
                 });
@@ -694,18 +694,18 @@ function showEmbed(){
                     jQuery('.padding-error').hide();
                     if (this.value === 'manual') {
                         manual_settings.attr("disabled", false);
-                        padding_settings.attr("value", getManualPaddings());
+                        padding_settings.prop("value", getManualPaddings());
                     } else if (this.value === 'auto') {
                         manual_settings.attr("disabled", true);
-                        padding_settings.attr("value", this.value);
+                        padding_settings.prop("value", this.value);
                     } else {
                         manual_settings.attr("disabled", true);
-                        padding_settings.attr("value", "fixed");
+                        padding_settings.prop("value", "fixed");
                     }
                 });
 
                 jQuery(this).delegate(".manual-padding-settings", "change", function() {
-                    padding_settings.attr("value", getManualPaddings());
+                    padding_settings.prop("value", getManualPaddings());
                 });
 
                 jQuery(this).delegate(".manual-chart-settings", "change", function(e, keepAspectRatio) {
@@ -717,7 +717,7 @@ function showEmbed(){
                         default_val = chartObj.attr('chart_width');
 
                         if (!validateSize(value)) {
-                            jQuery(this).attr("value", default_val);
+                            jQuery(this).prop("value", default_val);
                             jQuery('.size-error').show();
                         }
                         value = parseInt(jQuery(this).val(), 10);
@@ -730,7 +730,7 @@ function showEmbed(){
                         default_val = chartObj.attr('chart_height');
 
                         if (!validateSize(value)) {
-                            jQuery(this).attr("value", default_val);
+                            jQuery(this).prop("value", default_val);
                             jQuery('.size-error').show();
                         }
                         value = parseInt(jQuery(this).val(), 10);
@@ -752,8 +752,8 @@ function showEmbed(){
                 jQuery(this).delegate("#default-size", "click", function(evt) {
                     evt.preventDefault();
                     jQuery("#chart-size-slider").slider( "value", chartWidth);
-                    jQuery("#manual-chart-width").attr("value", chartWidth);
-                    jQuery("#manual-chart-height").attr("value", chartHeight);
+                    jQuery("#manual-chart-width").prop("value", chartWidth);
+                    jQuery("#manual-chart-height").prop("value", chartHeight);
                     iframeWidth = chartObj.width();
                     iframeHeight = parseInt(chartObj.height(),10) + 30;
                     jQuery("#manual-chart-width").trigger("change");
@@ -1060,7 +1060,7 @@ jQuery(document).ready(function($){
             .then(function (dataUrl) {
                 var img = new Image();
                 img.src = dataUrl;
-                jQuery("#image_note").attr("value", dataUrl);
+                jQuery("#image_note").prop("value", dataUrl);
 
                 // for debugging
                 // $('#content-core')[0].appendChild(img);
@@ -1097,7 +1097,7 @@ jQuery(document).ready(function($){
             .then(function (dataUrl) {
                 var img = new Image();
                 img.src = dataUrl;
-                jQuery("#image_datasources").attr("value", dataUrl);
+                jQuery("#image_datasources").prop("value", dataUrl);
 
                 $('#content')[0].removeChild(clone);
 
