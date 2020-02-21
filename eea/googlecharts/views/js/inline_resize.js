@@ -264,7 +264,6 @@ DavizInlineResizer.ChartResizer.prototype = {
             .addClass("googlechart-fullchart-resizable")
             .width(sizes.chartWidth)
             .height(sizes.chartHeight)
-            .offset({left:sizes.chartLeft, top:sizes.chartTop})
             .resizable({
                 stop: function(){
                     jQuery(".googlechart-fullchart-width")
@@ -277,7 +276,8 @@ DavizInlineResizer.ChartResizer.prototype = {
                         .attr("value", jQuery(this).height());
                 }
             })
-            .appendTo("body");
+            .appendTo("body")
+            .offset({left:sizes.chartLeft, top:sizes.chartTop});
         jQuery("<div>")
             .addClass("googlechart-fullchart-header")
             .appendTo(".googlechart-fullchart-resizable");

@@ -2340,9 +2340,9 @@ function addIntervalConfig(){
                 jQuery(":focus").blur();
                 jQuery("<div>")
                     .addClass("eea-googlechart-intervals-colorpalette")
-                    .offset({top:top - parenttop + 28, left:left-parentleft})
                     .css("z-index", 99999)
-                    .appendTo(".googlecharts-customdialog");
+                    .appendTo(".googlecharts-customdialog")
+                    .offset({top:top - parenttop + 28, left:left-parentleft});
                 var grayscale = ["rgb(0, 0, 0)",
                                 "rgb(67, 67, 67)",
                                 "rgb(102, 102, 102)",
