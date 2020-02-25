@@ -358,7 +358,7 @@ function checkSVG(id){
     else{
         chart_thumb_id.hide();
         chart_thumb_text.hide();
-        chart_thumb_id.attr("checked",false);
+        chart_thumb_id.prop("checked",false);
         return false;
     }
 }
@@ -369,12 +369,12 @@ function checkSVG_withThumb(id){
         hasThumb = false;
         jQuery(charts).each(function(index, value){
             var chartObj = jQuery("#"+value);
-            if (chartObj.find(".googlechart_thumb_checkbox").attr("checked")){
+            if (chartObj.find(".googlechart_thumb_checkbox").prop("checked")){
                 hasThumb = true;
             }
         });
         if (!hasThumb){
-            jQuery("#googlechart_thumb_id_"+id).attr("checked",true);
+            jQuery("#googlechart_thumb_id_"+id).prop("checked",true);
         }
     }
 }
@@ -1113,10 +1113,10 @@ function markChartAsThumb(id){
     jQuery(".googlechart_thumb_checkbox").each(function(){
         var checkObj = jQuery(this);
         if (checkObj.attr("id") !== "googlechart_thumb_id_"+id){
-            checkObj.attr("checked",false);
+            checkObj.prop("checked",false);
         }
         else {
-            checkObj.attr("checked",true);
+            checkObj.prop("checked",true);
         }
     });
     markChartAsModified(id);
@@ -5345,7 +5345,7 @@ function getChartOptions(chart_id){
     chart.height = chartObj.find(".googlechart_height").prop("value");
     chart.filterposition = chartObj.find("[name='googlechart_filterposition']").val();
     chart.options = chartObj.find(".googlechart_options").prop("value");
-    chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").attr("checked");
+    chart.isThumb = chartObj.find(".googlechart_thumb_checkbox").prop("checked");
     chart.dashboard = jQuery.data(chartObj[0], 'dashboard');
     chart.hidden = chartObj.find(".googlechart_hide_chart_icon").hasClass("eea-icon-eye-slash");
     chart.sortFilter = chartObj.find(".googlechart-sort-box select").prop("value");
@@ -5797,7 +5797,7 @@ function drawPreviewChart(chartObj, width, height){
                 chartObj.attr("hasChartArea", true);
                 drawPreviewChart(chartObj, width, height);
             });
-            if (jQuery('#googlechartarea-legend').attr('checked')) {
+            if (jQuery('#googlechartarea-legend').prop('checked')) {
                 $('.chartArea').hide();
             }
         }
@@ -6112,7 +6112,7 @@ function init_googlecharts_edit(){
                     var chart_area_left = jQuery(".googlechartarea-left");
                     var chart_area_width = jQuery(".googlechartarea-width");
                     var chart_area_height = jQuery(".googlechartarea-height");
-                    if($(this).attr('checked')) {
+                    if($(this).prop('checked')) {
                         chart_area_top.prop("value", '0');
                         chart_area_left.prop("value", '0');
                         chart_area_width.prop("value", '0');
@@ -6440,7 +6440,7 @@ DavizEdit.CustomDialog.prototype = {
         var closeBtn = jQuery("<button>")
                             .attr("title", "close")
                             .attr("role", "button")
-                            .addClass("ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close")
+                            .addClass("ui-button ui-widget ui-state-default ui-corner-all ui-dialog-titlebar-close")
                             .hover(
                                 function(){
                                     jQuery(this)
