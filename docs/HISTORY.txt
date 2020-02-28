@@ -3,6 +3,8 @@ Changelog
 
 20.0-dev0 - (unreleased)
 ---------------------------
+* Change: modified chart view and edit js to work with jquery 3.4.1
+ [ichim-david refs #105112]
 
 19.9 - (2020-01-22)
 ---------------------------
