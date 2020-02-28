@@ -1,8 +1,24 @@
 Changelog
 =========
 
-19.8-dev0 - (unreleased)
+20.0-dev0 - (unreleased)
 ---------------------------
+
+19.9 - (2020-01-22)
+---------------------------
+* Change: removed the Google Plus reference
+  [alecghica]
+
+* Bug fix: Fix charts legends in dashboards.
+  [GhitaB refs #113335]
+
+19.8 - (2019-12-12)
+---------------------------
+* Bug fix: Made it so that xpath returns results from the current element
+  instead of whole document and removed width/height iframe resize check
+  Removed min-width from resized iframes since it interferes with the iframe
+  dimensions in the resize tool
+  [iulianpetchesi refs #111011]
 
 19.7 - (2019-11-27)
 ---------------------------
