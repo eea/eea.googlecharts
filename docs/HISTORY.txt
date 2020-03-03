@@ -1,7 +1,7 @@
 Changelog
 =========
 
-20.0-dev0 - (unreleased)
+20.0 - (2020-03-03)
 ---------------------------
 * Change: rollback addition of notes when exporting charts to svg as the
   conversion to png will destroy the svg information and converting back will
