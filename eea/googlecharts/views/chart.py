@@ -756,23 +756,6 @@ class Export(BrowserView):
             datasources_data = None
 
         if kwargs.get('export_fmt') == 'svg' and svg != '':
-            if datasources_data or image_note_data:
-                converted_svg = convert(
-                    data=svg,
-                    data_from='svg',
-                    data_to='png'
-                )
-                # add note and data sources to svg export
-                merged_svg = merge_images([image
-                  for image in [converted_svg, image_note_data, datasources_data]
-                  if image is not None
-                ], 0)
-
-                svg = convert(
-                    data=merged_svg,
-                    data_from='png',
-                    data_to='svg'
-                )
             return self.export_svg(svg, filename)
 
         if svg != '':

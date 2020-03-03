@@ -1,6 +1,16 @@
 Changelog
 =========
 
+20.0 - (2020-03-03)
+---------------------------
+* Change: modified chart view and edit js to work with jquery 3.4.1
+  [ichim-david refs #105112]
+* Change: rollback addition of notes when exporting charts to svg as the
+  conversion to png will destroy the svg information and converting back will
+  not bring the svg data. This rollbacks the feature added in #107671 for svg
+  export preserving the feature for png export.
+  [ichim-david refs #114650]
+
 19.9 - (2020-01-22)
 ---------------------------
 * Change: removed the Google Plus reference
