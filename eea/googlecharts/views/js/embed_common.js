@@ -118,7 +118,7 @@ commonModule.insertBottomImages = function(settings, chart_url) {
 
 jQuery(function($){
     var doc = $(document);
-    doc.bind('googlecharts.embed.ready', function(ev, data) {
+    doc.on('googlecharts.embed.ready', function(ev, data) {
         var $embed_dialog = $('.googlecharts-embed-dialog');
         if ($embed_dialog.length) {
             $embed_dialog.dialog({ autoOpen: false, width: '80%'});

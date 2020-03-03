@@ -234,16 +234,16 @@ DavizInlineResizer.ChartResizer.prototype = {
         }
 
         jQuery(".googlechart-chartarea-width")
-            .attr("value", chartAreaWidth);
+            .prop("value", chartAreaWidth);
 
         jQuery(".googlechart-chartarea-height")
-            .attr("value", chartAreaHeight);
+            .prop("value", chartAreaHeight);
 
         jQuery(".googlechart-chartarea-left")
-            .attr("value", chartAreaLeft);
+            .prop("value", chartAreaLeft);
 
         jQuery(".googlechart-chartarea-top")
-            .attr("value", chartAreaTop);
+            .prop("value", chartAreaTop);
 
         jQuery(".googlechart-chartarea-resizable")
             .width(chartAreaWidth)
@@ -264,7 +264,6 @@ DavizInlineResizer.ChartResizer.prototype = {
             .addClass("googlechart-fullchart-resizable")
             .width(sizes.chartWidth)
             .height(sizes.chartHeight)
-            .offset({left:sizes.chartLeft, top:sizes.chartTop})
             .resizable({
                 stop: function(){
                     jQuery(".googlechart-fullchart-width")
@@ -272,12 +271,13 @@ DavizInlineResizer.ChartResizer.prototype = {
                 },
                 resize: function(){
                     jQuery(".googlechart-fullchart-width")
-                        .attr("value", jQuery(this).width());
+                        .prop("value", jQuery(this).width());
                     jQuery(".googlechart-fullchart-height")
-                        .attr("value", jQuery(this).height());
+                        .prop("value", jQuery(this).height());
                 }
             })
-            .appendTo("body");
+            .appendTo("body")
+            .offset({left:sizes.chartLeft, top:sizes.chartTop});
         jQuery("<div>")
             .addClass("googlechart-fullchart-header")
             .appendTo(".googlechart-fullchart-resizable");
@@ -299,7 +299,7 @@ DavizInlineResizer.ChartResizer.prototype = {
         jQuery("<input>")
             .addClass("googlechart-fullchart-width googlechart-chart-size")
             .attr("type", "number")
-            .attr("value", sizes.chartWidth)
+            .prop("value", sizes.chartWidth)
             .appendTo(".googlechart-fullchart-header");
 
         jQuery("<span>x</span>")
@@ -308,7 +308,7 @@ DavizInlineResizer.ChartResizer.prototype = {
         jQuery("<input>")
             .addClass("googlechart-fullchart-height googlechart-chart-size")
             .attr("type", "number")
-            .attr("value", sizes.chartHeight)
+            .prop("value", sizes.chartHeight)
             .appendTo(".googlechart-fullchart-header");
 
         jQuery("<span>px</span>")
@@ -334,9 +334,9 @@ DavizInlineResizer.ChartResizer.prototype = {
                     containment:".googlechart-fullchart-resizable",
                     resize: function(){
                         jQuery(".googlechart-chartarea-width")
-                            .attr("value", jQuery(this).width());
+                            .prop("value", jQuery(this).width());
                         jQuery(".googlechart-chartarea-height")
-                            .attr("value", jQuery(this).height());
+                            .prop("value", jQuery(this).height());
                     },
                     stop: function(){
                         jQuery(".googlechart-chartarea-width")
@@ -350,9 +350,9 @@ DavizInlineResizer.ChartResizer.prototype = {
                                 .parent()
                                 .offset();
                         jQuery(".googlechart-chartarea-left")
-                            .attr("value", jQuery(this).offset().left - parentOffset.left);
+                            .prop("value", jQuery(this).offset().left - parentOffset.left);
                         jQuery(".googlechart-chartarea-top")
-                            .attr("value", jQuery(this).offset().top - parentOffset.top);
+                            .prop("value", jQuery(this).offset().top - parentOffset.top);
                     },
                     stop: function(){
                         jQuery(".googlechart-chartarea-left")
@@ -426,8 +426,8 @@ DavizInlineResizer.ChartResizer.prototype = {
         }
 
         jQuery(".googlechart-chart-size").change(function(){
-            var width = parseInt(jQuery(".googlechart-fullchart-width").attr("value"),0);
-            var height = parseInt(jQuery(".googlechart-fullchart-height").attr("value"),0);
+            var width = parseInt(jQuery(".googlechart-fullchart-width").prop("value"),0);
+            var height = parseInt(jQuery(".googlechart-fullchart-height").prop("value"),0);
 
             var areaWidth = 0;
             var areaHeight = 0;
@@ -435,10 +435,10 @@ DavizInlineResizer.ChartResizer.prototype = {
             var areaTop = 0;
 
             if (self.chartAreaConfigurable){
-                areaWidth = parseInt(jQuery(".googlechart-chartarea-width").attr("value"),0);
-                areaHeight = parseInt(jQuery(".googlechart-chartarea-height").attr("value"),0);
-                areaLeft = parseInt(jQuery(".googlechart-chartarea-left").attr("value"),0);
-                areaTop = parseInt(jQuery(".googlechart-chartarea-top").attr("value"),0);
+                areaWidth = parseInt(jQuery(".googlechart-chartarea-width").prop("value"),0);
+                areaHeight = parseInt(jQuery(".googlechart-chartarea-height").prop("value"),0);
+                areaLeft = parseInt(jQuery(".googlechart-chartarea-left").prop("value"),0);
+                areaTop = parseInt(jQuery(".googlechart-chartarea-top").prop("value"),0);
             }
 
             if ((jQuery(this).hasClass("googlechart-fullchart-width")) ||

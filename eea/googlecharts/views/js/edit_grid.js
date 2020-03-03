@@ -103,8 +103,8 @@ function menuOnCommandHandler(e, args){
     if (command == "sortasc") {
         grid_sort_columnId = column.id;
         grid_sort_asc = true;
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value", column.id);
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value", "asc");
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").prop("value", column.id);
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").prop("value", "asc");
         sortById(column.field, true);
         grid_data_view.refresh();
         grid.updateRowCount();
@@ -114,8 +114,8 @@ function menuOnCommandHandler(e, args){
     if (command == "sortdesc") {
         grid_sort_columnId = column.id;
         grid_sort_asc = false;
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value", column.id);
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value", "desc");
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").prop("value", column.id);
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").prop("value", "desc");
         sortById(column.field, false);
         grid_data_view.refresh();
         grid.updateRowCount();
@@ -124,8 +124,8 @@ function menuOnCommandHandler(e, args){
     }
     if (command == "origord") {
         grid_sort_columnId = "";
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value", "");
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value", "asc");
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").prop("value", "");
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").prop("value", "asc");
         sortById("id", true);
         grid_data_view.refresh();
         grid.updateRowCount();
@@ -178,7 +178,7 @@ function menuOnCommandHandler(e, args){
     }
     if (command == "resetFilters"){
         grid_filters = {};
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value","{}");
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").prop("value","{}");
 
         grid_data_view.refresh();
         grid.updateRowCount();
@@ -186,9 +186,9 @@ function menuOnCommandHandler(e, args){
         grid.render();
     }
     if (command == 'enableEmptyRows'){
-        var options = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+        var options = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").prop("value"));
         options.enableEmptyRows = !options.enableEmptyRows;
-        jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value",JSON.stringify(options));
+        jQuery("#googlechartid_tmp_chart").find(".googlechart_options").prop("value",JSON.stringify(options));
     }
     updateColumnHeaders();
 }
@@ -278,7 +278,7 @@ function enableGridFilters(){
 
             grid_filters[filter_grid_colId].values = filter_grid_filters.slice();
 
-            jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value", JSON.stringify(grid_filters));
+            jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").prop("value", JSON.stringify(grid_filters));
             grid_data_view.refresh();
             grid.updateRowCount();
             grid.invalidateAllRows();
@@ -369,7 +369,7 @@ function enableGridFilters(){
         var colNr = self.grid.getColumnIndex(colId);
         var filter_element = jQuery(".slick-header-menuitem").find("span:contains(-filter-)");
         if (filter_element.length === 0){
-            var options = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").attr("value"));
+            var options = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_options").prop("value"));
             var icon = jQuery(".slick-header-menuitem:contains('Enable empty rows')").find(".slick-header-menuicon");
             icon.removeClass("slick-menu-enabled");
             if (options.enableEmptyRows){
@@ -889,7 +889,7 @@ function setUpPatternFormatterForm(form){
 }
 
 function applyFormatters(button, enabled){
-    var properties = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value"));
+    var properties = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").prop("value"));
     var columnFriendlyName = jQuery(".slick-header-column-active").attr("title");
     var columnProperty = {};
     jQuery.each(properties.prepared, function(idx, property){
@@ -903,20 +903,20 @@ function applyFormatters(button, enabled){
 
     if (jQuery(button).parent().hasClass("arrowformatter")){
         columnProperty.formatters.arrowformatter = {};
-        columnProperty.formatters.arrowformatter.base = jQuery(".slick-menu-arrowformatter-base").attr("value");
+        columnProperty.formatters.arrowformatter.base = jQuery(".slick-menu-arrowformatter-base").prop("value");
         columnProperty.formatters.arrowformatter.enabled = enabled;
     }
 
     if (jQuery(button).parent().hasClass("barformatter")){
         columnProperty.formatters.barformatter = {};
-        columnProperty.formatters.barformatter.base = jQuery(".slick-menu-barformatter-base").attr("value");
-        columnProperty.formatters.barformatter.colornegative = jQuery(".slick-menu-barformatter-colornegative").attr("value");
-        columnProperty.formatters.barformatter.colorpositive = jQuery(".slick-menu-barformatter-colorpositive").attr("value");
-        columnProperty.formatters.barformatter.zeroline = jQuery(".slick-menu-barformatter-zeroline").attr("value")==="true"?true:false;
-        columnProperty.formatters.barformatter.min = jQuery(".slick-menu-barformatter-min").attr("value");
-        columnProperty.formatters.barformatter.max = jQuery(".slick-menu-barformatter-max").attr("value");
-        columnProperty.formatters.barformatter.showvalue = jQuery(".slick-menu-barformatter-showvalue").attr("value")==="true"?true:false;
-        columnProperty.formatters.barformatter.width = jQuery(".slick-menu-barformatter-width").attr("value");
+        columnProperty.formatters.barformatter.base = jQuery(".slick-menu-barformatter-base").prop("value");
+        columnProperty.formatters.barformatter.colornegative = jQuery(".slick-menu-barformatter-colornegative").prop("value");
+        columnProperty.formatters.barformatter.colorpositive = jQuery(".slick-menu-barformatter-colorpositive").prop("value");
+        columnProperty.formatters.barformatter.zeroline = jQuery(".slick-menu-barformatter-zeroline").prop("value")==="true"?true:false;
+        columnProperty.formatters.barformatter.min = jQuery(".slick-menu-barformatter-min").prop("value");
+        columnProperty.formatters.barformatter.max = jQuery(".slick-menu-barformatter-max").prop("value");
+        columnProperty.formatters.barformatter.showvalue = jQuery(".slick-menu-barformatter-showvalue").prop("value")==="true"?true:false;
+        columnProperty.formatters.barformatter.width = jQuery(".slick-menu-barformatter-width").prop("value");
         columnProperty.formatters.barformatter.enabled = enabled;
     }
 
@@ -938,38 +938,38 @@ function applyFormatters(button, enabled){
 
     if (jQuery(button).parent().hasClass("dateformatter")){
         columnProperty.formatters.dateformatter = {};
-        columnProperty.formatters.dateformatter.usepattern = jQuery(".slick-menu-dateformatter-type").attr("value")==='yes'?true:false;
-        columnProperty.formatters.dateformatter.formattype = jQuery(".slick-menu-dateformatter-formattype").attr("value");
-        columnProperty.formatters.dateformatter.pattern = jQuery(".slick-menu-dateformatter-pattern").attr("value");
+        columnProperty.formatters.dateformatter.usepattern = jQuery(".slick-menu-dateformatter-type").prop("value")==='yes'?true:false;
+        columnProperty.formatters.dateformatter.formattype = jQuery(".slick-menu-dateformatter-formattype").prop("value");
+        columnProperty.formatters.dateformatter.pattern = jQuery(".slick-menu-dateformatter-pattern").prop("value");
         columnProperty.formatters.dateformatter.enabled = enabled;
     }
 
     if (jQuery(button).parent().hasClass("numberformatter")){
         columnProperty.formatters.numberformatter = {};
-        columnProperty.formatters.numberformatter.usepattern = jQuery(".slick-menu-numberformatter-type").attr("value")==='yes'?true:false;
-        columnProperty.formatters.numberformatter.decimalsymbol = jQuery(".slick-menu-numberformatter-decimalsymbol").attr("value");
-        columnProperty.formatters.numberformatter.fractiondigits = jQuery(".slick-menu-numberformatter-fractiondigits").attr("value");
-        columnProperty.formatters.numberformatter.groupingsymbol = jQuery(".slick-menu-numberformatter-groupingsymbol").attr("value");
-        columnProperty.formatters.numberformatter.negativecolor = jQuery(".slick-menu-numberformatter-negativecolor").attr("value");
-        columnProperty.formatters.numberformatter.negativeparens = jQuery(".slick-menu-numberformatter-negativeparens").attr("value");
-        columnProperty.formatters.numberformatter.prefix = jQuery(".slick-menu-numberformatter-prefix").attr("value");
-        columnProperty.formatters.numberformatter.suffix = jQuery(".slick-menu-numberformatter-suffix").attr("value");
-        columnProperty.formatters.numberformatter.pattern = jQuery(".slick-menu-numberformatter-pattern").attr("value");
+        columnProperty.formatters.numberformatter.usepattern = jQuery(".slick-menu-numberformatter-type").prop("value")==='yes'?true:false;
+        columnProperty.formatters.numberformatter.decimalsymbol = jQuery(".slick-menu-numberformatter-decimalsymbol").prop("value");
+        columnProperty.formatters.numberformatter.fractiondigits = jQuery(".slick-menu-numberformatter-fractiondigits").prop("value");
+        columnProperty.formatters.numberformatter.groupingsymbol = jQuery(".slick-menu-numberformatter-groupingsymbol").prop("value");
+        columnProperty.formatters.numberformatter.negativecolor = jQuery(".slick-menu-numberformatter-negativecolor").prop("value");
+        columnProperty.formatters.numberformatter.negativeparens = jQuery(".slick-menu-numberformatter-negativeparens").prop("value");
+        columnProperty.formatters.numberformatter.prefix = jQuery(".slick-menu-numberformatter-prefix").prop("value");
+        columnProperty.formatters.numberformatter.suffix = jQuery(".slick-menu-numberformatter-suffix").prop("value");
+        columnProperty.formatters.numberformatter.pattern = jQuery(".slick-menu-numberformatter-pattern").prop("value");
 
         columnProperty.formatters.numberformatter.enabled = enabled;
     }
 
     if (jQuery(button).parent().hasClass("patternformatter")){
         columnProperty.formatters.patternformatter = {};
-        columnProperty.formatters.patternformatter.pattern = jQuery(".slick-menu-patternformatter-pattern").attr("value");
+        columnProperty.formatters.patternformatter.pattern = jQuery(".slick-menu-patternformatter-pattern").prop("value");
         columnProperty.formatters.patternformatter.enabled = enabled;
     }
-    jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value", JSON.stringify(properties));
+    jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").prop("value", JSON.stringify(properties));
     generateNewTableForChart();
 }
 
 function loadFormatters(colFullName){
-    var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
+    var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").prop("value")).prepared;
     var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
     var colType = "text";
     jQuery.each(columnProps, function(key, columnProp){
@@ -1008,21 +1008,21 @@ function loadFormatters(colFullName){
                     if (formatter.enabled){
                         jQuery(".slick-menu-arrowformat").addClass('slick-format-menu-enabled');
                     }
-                    jQuery(".slick-menu-arrowformatter-base").attr("value", formatter.base);
+                    jQuery(".slick-menu-arrowformatter-base").prop("value", formatter.base);
                 }
                 if (col.formatters.hasOwnProperty("barformatter")){
                     formatter = col.formatters.barformatter;
                     if (formatter.enabled){
                         jQuery(".slick-menu-barformat").addClass('slick-format-menu-enabled');
                     }
-                    jQuery(".slick-menu-barformatter-base").attr("value", formatter.base);
-                    jQuery(".slick-menu-barformatter-colornegative").attr("value", formatter.colornegative);
-                    jQuery(".slick-menu-barformatter-colorpositive").attr("value", formatter.colorpositive);
-                    jQuery(".slick-menu-barformatter-zeroline").attr("value", (formatter.zeroline?"true":"false"));
-                    jQuery(".slick-menu-barformatter-min").attr("value", formatter.min);
-                    jQuery(".slick-menu-barformatter-max").attr("value", formatter.max);
-                    jQuery(".slick-menu-barformatter-showvalue").attr("value", (formatter.showvalue?"true":"false"));
-                    jQuery(".slick-menu-barformatter-width").attr("value", formatter.width);
+                    jQuery(".slick-menu-barformatter-base").prop("value", formatter.base);
+                    jQuery(".slick-menu-barformatter-colornegative").prop("value", formatter.colornegative);
+                    jQuery(".slick-menu-barformatter-colorpositive").prop("value", formatter.colorpositive);
+                    jQuery(".slick-menu-barformatter-zeroline").prop("value", (formatter.zeroline?"true":"false"));
+                    jQuery(".slick-menu-barformatter-min").prop("value", formatter.min);
+                    jQuery(".slick-menu-barformatter-max").prop("value", formatter.max);
+                    jQuery(".slick-menu-barformatter-showvalue").prop("value", (formatter.showvalue?"true":"false"));
+                    jQuery(".slick-menu-barformatter-width").prop("value", formatter.width);
                 }
                 if (col.formatters.hasOwnProperty("colorformatter")){
                     formatter = col.formatters.colorformatter;
@@ -1049,9 +1049,9 @@ function loadFormatters(colFullName){
                     if (formatter.enabled){
                         jQuery(".slick-menu-dateformat").addClass('slick-format-menu-enabled');
                     }
-                    jQuery(".slick-menu-dateformatter-type").attr("value", (formatter.usepattern?"yes":"no"));
-                    jQuery(".slick-menu-dateformatter-formattype").attr("value", formatter.formattype);
-                    jQuery(".slick-menu-dateformatter-pattern").attr("value", formatter.pattern);
+                    jQuery(".slick-menu-dateformatter-type").prop("value", (formatter.usepattern?"yes":"no"));
+                    jQuery(".slick-menu-dateformatter-formattype").prop("value", formatter.formattype);
+                    jQuery(".slick-menu-dateformatter-pattern").prop("value", formatter.pattern);
                     if (formatter.usepattern){
                         jQuery(".slick-menu-dateformatter-pattern-label").show();
                         jQuery(".slick-menu-dateformatter-pattern").show();
@@ -1065,19 +1065,19 @@ function loadFormatters(colFullName){
                         jQuery(".slick-menu-numberformat").addClass('slick-format-menu-enabled');
                     }
 
-                    jQuery(".slick-menu-numberformatter-type").attr("value", (formatter.usepattern?"yes":"no"));
-                    jQuery(".slick-menu-numberformatter-decimalsymbol").attr("value", formatter.decimalsymbol);
-                    jQuery(".slick-menu-numberformatter-fractiondigits").attr("value", formatter.fractiondigits);
-                    jQuery(".slick-menu-numberformatter-groupingsymbol").attr("value", formatter.groupingsymbol);
-                    jQuery(".slick-menu-numberformatter-negativecolor").attr("value", formatter.negativecolor);
+                    jQuery(".slick-menu-numberformatter-type").prop("value", (formatter.usepattern?"yes":"no"));
+                    jQuery(".slick-menu-numberformatter-decimalsymbol").prop("value", formatter.decimalsymbol);
+                    jQuery(".slick-menu-numberformatter-fractiondigits").prop("value", formatter.fractiondigits);
+                    jQuery(".slick-menu-numberformatter-groupingsymbol").prop("value", formatter.groupingsymbol);
+                    jQuery(".slick-menu-numberformatter-negativecolor").prop("value", formatter.negativecolor);
                     if (formatter.negativecolor.indexOf("#") === 0){
                         jQuery('.slick-formatter-colorpreview').css('background-color', formatter.negativecolor);
                     }
 
-                    jQuery(".slick-menu-numberformatter-negativeparens").attr("value", formatter.negativeparens);
-                    jQuery(".slick-menu-numberformatter-prefix").attr("value", formatter.prefix);
-                    jQuery(".slick-menu-numberformatter-suffix").attr("value", formatter.suffix);
-                    jQuery(".slick-menu-numberformatter-pattern").attr("value", formatter.pattern);
+                    jQuery(".slick-menu-numberformatter-negativeparens").prop("value", formatter.negativeparens);
+                    jQuery(".slick-menu-numberformatter-prefix").prop("value", formatter.prefix);
+                    jQuery(".slick-menu-numberformatter-suffix").prop("value", formatter.suffix);
+                    jQuery(".slick-menu-numberformatter-pattern").prop("value", formatter.pattern);
 
                     if (formatter.usepattern){
                         jQuery(".slick-menu-numberformatter-pattern-label").show();
@@ -1110,7 +1110,7 @@ function loadFormatters(colFullName){
                         jQuery(".slick-menu-patternformat").addClass('slick-format-menu-enabled');
                     }
 
-                    jQuery(".slick-menu-patternformatter-pattern").attr("value", formatter.pattern);
+                    jQuery(".slick-menu-patternformatter-pattern").prop("value", formatter.pattern);
                 }
             }
         }
@@ -1208,7 +1208,7 @@ function enableGridFormatters(){
 }
 
 function applyCustomTooltip(button, enabled){
-    var properties = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value"));
+    var properties = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").prop("value"));
     var columnFriendlyName = jQuery(".slick-header-column-active").attr("title");
     var columnProperty = {};
     jQuery.each(properties.prepared, function(idx, property){
@@ -1217,15 +1217,15 @@ function applyCustomTooltip(button, enabled){
         }
     });
 
-    columnProperty.customTooltip = {tooltip: jQuery("#customtooltip_field").attr("value"),
+    columnProperty.customTooltip = {tooltip: jQuery("#customtooltip_field").prop("value"),
                                     enabled: enabled};
 
-    jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value", JSON.stringify(properties));
+    jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").prop("value", JSON.stringify(properties));
     generateNewTableForChart();
 }
 
 function loadCustomTooltip(colFullName){
-    var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
+    var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").prop("value")).prepared;
     var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
 
     jQuery(".slick-customtooltip-title").removeClass("slick-customtooltip-menu-enabled");
@@ -1236,7 +1236,7 @@ function loadCustomTooltip(colFullName){
                 if (customTooltip.enabled){
                     jQuery(".slick-customtooltip-title").addClass("slick-customtooltip-menu-enabled");
                 }
-                jQuery("#customtooltip_field").attr("value", customTooltip.tooltip);
+                jQuery("#customtooltip_field").prop("value", customTooltip.tooltip);
             }
         }
     });
@@ -1319,7 +1319,7 @@ function enableGridCustomTooltip(){
                 return;
             }
             jQuery("<option>")
-                    .attr("value", jQuery(name).text())
+                    .prop("value", jQuery(name).text())
                     .text(jQuery(name).text())
                     .appendTo(jQuery(".columns-for-tooltip"));
         });
@@ -1348,9 +1348,9 @@ function enableGridCustomTooltip(){
         var tmp_title = jQuery(this).parent().attr("title");
         loadCustomTooltip(tmp_title);
         jQuery(".slick-menu-insert-customtooltip").bind("click", function(){
-            var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
+            var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").prop("value")).prepared;
             var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
-            var colFullName = jQuery(".columns-for-tooltip").attr("value");
+            var colFullName = jQuery(".columns-for-tooltip").prop("value");
             var colName = "";
             jQuery.each(prepared, function(idx, col){
                 if (col.fullname === colFullName){
@@ -1370,7 +1370,7 @@ function enableGridCustomTooltip(){
 }
 
 function loadRoles(colFullName){
-    var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value")).prepared;
+    var prepared = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").prop("value")).prepared;
     var columnProps = JSON.parse(jQuery("#googlechartid_tmp_chart").attr("columnproperties"));
     var colType = "text";
     jQuery.each(columnProps, function(key, columnProp){
@@ -1404,13 +1404,13 @@ function loadRoles(colFullName){
 }
 
 function saveRoles(colFullName){
-    var columns = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value"));
+    var columns = JSON.parse(jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").prop("value"));
     jQuery.each(columns.prepared, function(idx, col){
         if (col.fullname === colFullName){
             col.role = jQuery(".slick-role-menu-enabled").attr("role");
         }
     });
-    jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").attr("value", JSON.stringify(columns));
+    jQuery("#googlechartid_tmp_chart").find(".googlechart_columns").prop("value", JSON.stringify(columns));
     generateNewTableForChart();
 }
 
@@ -1565,15 +1565,15 @@ function drawGrid(divId, data, data_colnames, filterable_columns){
     grid_colIds = {};
     grid_columnsHiddenById = {};
 
-    var tmp_filters = jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").attr("value");
+    var tmp_filters = jQuery("#googlechartid_tmp_chart").find(".googlechart_row_filters").prop("value");
     grid_filters = {};
     if (tmp_filters.length > 0){
         grid_filters = JSON.parse(tmp_filters);
     }
 
-    grid_sort_columnId = jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").attr("value");
+    grid_sort_columnId = jQuery("#googlechartid_tmp_chart").find(".googlechart_sortBy").prop("value");
 
-    var tmp_sortAsc = jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").attr("value");
+    var tmp_sortAsc = jQuery("#googlechartid_tmp_chart").find(".googlechart_sortAsc").prop("value");
     grid_sort_asc = true;
     if (tmp_sortAsc === 'desc'){
         grid_sort_asc = false;
