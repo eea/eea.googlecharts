@@ -740,9 +740,14 @@ class Export(BrowserView):
         # get note image data in base64
         image_note_url = kwargs.get('image_note', None)
         if image_note_url:
-            # decode base64
-            image_note_data = re.sub('^data:image/.+;base64,', '',
-                                image_note_url).decode('base64')
+            # 115104 avoid merge error in case image_note contains only
+            # data:,
+            if len(image_note_url) > 6:
+                # decode base64
+                image_note_data = re.sub('^data:image/.+;base64,', '',
+                                    image_note_url).decode('base64')
+            else:
+                image_note_data = None
         else:
             image_note_data = None
 
@@ -807,17 +812,21 @@ class Export(BrowserView):
             shiftSecondImg = True
 
         if qrPosition != 'Disabled':
-            qr_con = urllib2.urlopen(kwargs.get('qr_url'), timeout=10)
-            qr_img = qr_con.read()
-            qr_con.close()
-            img = applyWatermark(img,
-                                 qr_img,
-                                 qrPosition,
-                                 qrVertical,
-                                 qrHorizontal,
-                                 0.7)
-            if shiftSecondImg:
-                hShift = Image.open(StringIO(qr_img)).size[0] + qrHorizontal
+            try:
+                print kwargs.get('qr_url')
+                qr_con = urllib2.urlopen(kwargs.get('qr_url'), timeout=10)
+                qr_img = qr_con.read()
+                qr_con.close()
+                img = applyWatermark(img,
+                                     qr_img,
+                                     qrPosition,
+                                     qrVertical,
+                                     qrHorizontal,
+                                     0.7)
+                if shiftSecondImg:
+                    hShift = Image.open(StringIO(qr_img)).size[0] + qrHorizontal
+            except Exception, err:
+                logger.exception(err)
 
         if wmPosition != 'Disabled':
             try:
