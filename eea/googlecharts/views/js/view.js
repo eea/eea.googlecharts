@@ -900,6 +900,68 @@ var googleChartTabClick = function(context){
         };
         drawDashboard(config, dashboard_other_options);
     }
+
+    // #115104 make a png out of notes and sources when clicking on tabs
+    window.daviz_note_exists = true;
+    // call toPng with a delay as calling toPng on a chart with filters
+    // gives an empty image even if notes is in view, maybe due to library bug
+    window.setTimeout(function(){
+        var node = document.getElementsByClassName('googlechart-notes')[0];
+        if (node !== undefined) {
+            domtoimage.toPng(node)
+                .then(function (dataUrl) {
+                    console.log(dataUrl);
+                    var img = new Image();
+                    img.src = dataUrl;
+                    jQuery("#image_note").prop("value", dataUrl);
+
+                    // for debugging
+                    // $('#content-core')[0].appendChild(img);
+                })
+                .catch(function (err) {
+                    console.error("oops, something went wrong!", err);
+                });
+
+        }
+        else {
+            window.daviz_note_exists = false;
+        }
+
+    }, 1000);
+
+    var node = document.getElementsByClassName('visualization-info')[0];
+    var clone = node.cloneNode(true);
+    clone.classList += ' googlechart-notes';
+    $('#content')[0].appendChild(clone);
+    var $clone = $(clone);
+    $clone.wrapInner("<p class='callout'></p>");
+    var $heading = $clone.find('h3');
+    var width = $clone.css('width');
+    $clone.css('width', $('.callout').css('width'));
+    $heading.replaceWith( "<strong>" + $heading.text() + ":<br /></strong>" );
+
+
+    if (clone !== undefined) {
+        window.daviz_datasource_exists = true;
+        domtoimage.toPng(clone)
+            .then(function (dataUrl) {
+                var img = new Image();
+                img.src = dataUrl;
+                jQuery("#image_datasources").prop("value", dataUrl);
+
+                $('#content')[0].removeChild(clone);
+
+                // for debugging
+                // $('#content-core')[0].appendChild(img);
+            })
+            .catch(function (err) {
+                console.error("oops, something went wrong!", err);
+            });
+    }
+    else {
+        window.daviz_datasource_exists = false;
+    }
+
     return false;
 };
 
@@ -1048,67 +1110,4 @@ jQuery(document).ready(function($){
 
     jQuery(window).trigger("hashchange");
 
-    // convert the chart note into image at page load
-    var node = document.getElementsByClassName('callout')[0];
-    var style = Object({
-        'width': '100%',
-        'height': '100%'
-        });
-    if (node !== undefined) {
-        window.daviz_note_exists = true;
-        domtoimage.toPng(node, {style: style})
-            .then(function (dataUrl) {
-                var img = new Image();
-                img.src = dataUrl;
-                jQuery("#image_note").prop("value", dataUrl);
-
-                // for debugging
-                // $('#content-core')[0].appendChild(img);
-            })
-            .catch(function (err) {
-                console.error("oops, something went wrong!", err);
-            });
-    }
-    else {
-        window.daviz_note_exists = false;
-    }
-
-    node = document.getElementsByClassName('visualization-info')[0];
-    var clone = node.cloneNode(true);
-    $('#content')[0].appendChild(clone);
-
-    style = Object({
-        'color': '#666',
-        'lineHeight': '1.25em',
-        'background': '#eee',
-        'padding-left': '1em',
-        'borderLeft': '1em solid #ccc',
-        'display': 'block !important'
-        // 'font': 'normal 80% Verdana, Arial, Helvetica, sans-serif',
-        });
-    var heading = $(clone).children('h3');
-    var width = $(clone).css('width');
-    $(clone).css('width', $('.callout').css('width'));
-    $(clone).children('h3').replaceWith( "<strong>" + heading.text() + ":</strong>" );
-
-    if (clone !== undefined) {
-        window.daviz_datasource_exists = true;
-        domtoimage.toPng(clone, {style: style})
-            .then(function (dataUrl) {
-                var img = new Image();
-                img.src = dataUrl;
-                jQuery("#image_datasources").prop("value", dataUrl);
-
-                $('#content')[0].removeChild(clone);
-
-                // for debugging
-                // $('#content-core')[0].appendChild(img);
-            })
-            .catch(function (err) {
-                console.error("oops, something went wrong!", err);
-            });
-    }
-    else {
-        window.daviz_datasource_exists = false;
-    }
 });

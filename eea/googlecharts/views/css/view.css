@@ -662,6 +662,7 @@ input.googlechart-chart-size {
 /* #18491 normalize font size of googlechart-notes when it contains a paragraph */
 #content .googlechart-notes p {
     font-size: 100%;
+    margin-bottom: 0;
 }
 
 .manual-chart-settings, .manual-padding-settings {
