@@ -352,6 +352,9 @@ function applyColumnFilters(options){
             var chart_sortAsc = conf[13];
 
             var chart_columnFilters_old = conf[14];
+
+            var chart_unpivotSettings = conf[15];
+            var chart_ChartNotes = conf[16];
             var chart_columnFilters_new = [];
 
             var chart_options_series = {};
@@ -489,6 +492,8 @@ function applyColumnFilters(options){
             config.push(chart_sortBy);
             config.push(chart_sortAsc);
             config.push(chart_columnFilters_new);
+            config.push(chart_unpivotSettings);
+            config.push(chart_ChartNotes);
         }
     });
 

@@ -1,6 +1,18 @@
 Changelog
 =========
 
+20.1 - (2020-03-13)
+---------------------------
+* Bug fix: save notes and datasource per chart when clicking on the chart tabs
+  not only once from the first chart on dom ready
+  [ichim-david refs #115104]
+* Change: use callout style for datasource like notes use
+  [ichim-david refs #115104]
+* Bug fix: avoid export error in case notes export as an empty image as in some
+  situations when charts have filters the domtoimage library will export an
+  empty images
+  [ichim-david refs #115104]
+
 20.0 - (2020-03-03)
 ---------------------------
 * Change: modified chart view and edit js to work with jquery 3.4.1
