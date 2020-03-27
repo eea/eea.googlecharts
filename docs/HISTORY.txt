@@ -1,6 +1,12 @@
 Changelog
 =========
 
+20.2 - (2020-03-27)
+---------------------------
+* Change: load google charts api from loader.js instead of gsapi in order to
+  avoid a strange bug where FF doesn't trigger the setOnLoadCallback from google
+  [ichim-david refs #116244]
+
 20.1 - (2020-03-13)
 ---------------------------
 * Bug fix: save notes and datasource per chart when clicking on the chart tabs
