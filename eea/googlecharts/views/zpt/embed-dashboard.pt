@@ -29,7 +29,7 @@
 
   <script type="text/javascript" tal:attributes="src string:${portal_url}/${view/jquery_src}"></script>
   <script type="text/javascript" tal:define="resource_prefix python: '++resource++' if not eea_jqueryui else ''" tal:attributes="src string:${portal_url}/${resource_prefix}jquery-migrate.js"></script>
-  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
 
 </head>
 <body onhashchange="hashchanged();" tal:attributes="class python:'isPrint' if isPrint else ''">
