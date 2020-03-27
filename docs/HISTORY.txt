@@ -1,7 +1,7 @@
 Changelog
 =========
 
-20.2-dev0 - (unreleased)
+20.2 - (2020-03-27)
 ---------------------------
 * Change: load google charts api from loader.js instead of gsapi in order to
   avoid a strange bug where FF doesn't trigger the setOnLoadCallback from google
