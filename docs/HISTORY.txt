@@ -1,6 +1,9 @@
 Changelog
 =========
 
+20.4-dev0 - (unreleased)
+---------------------------
+
 20.3 - (2020-04-01)
 ---------------------------
 * Bug fix: avoid chart export error for browsers that don't have native Promise
