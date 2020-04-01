@@ -1,7 +1,7 @@
 Changelog
 =========
 
-20.3-dev0 - (unreleased)
+20.3 - (2020-04-01)
 ---------------------------
 * Bug fix: avoid chart export error for browsers that don't have native Promise
   in which case we export the chart image without the notes. This is especially
