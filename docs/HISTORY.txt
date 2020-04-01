@@ -1,6 +1,14 @@
 Changelog
 =========
 
+20.3 - (2020-04-01)
+---------------------------
+* Bug fix: avoid chart export error for browsers that don't have native Promise
+  in which case we export the chart image without the notes. This is especially
+  for Internet Explorer which can't use the domtoimage library even with a
+  Promise polyfill due to insuficient svg support
+  [ichim-david refs #116186]
+
 20.2 - (2020-03-27)
 ---------------------------
 * Change: load google charts api from loader.js instead of gsapi in order to
