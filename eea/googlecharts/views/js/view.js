@@ -907,7 +907,7 @@ var googleChartTabClick = function(context){
     // gives an empty image even if notes is in view, maybe due to library bug
     window.setTimeout(function(){
         var node = document.getElementsByClassName('googlechart-notes')[0];
-        if (node !== undefined) {
+        if (node !== undefined && window.Promise) {
             domtoimage.toPng(node)
                 .then(function (dataUrl) {
                     console.log(dataUrl);
@@ -920,6 +920,7 @@ var googleChartTabClick = function(context){
                 })
                 .catch(function (err) {
                     console.error("oops, something went wrong!", err);
+                    window.daviz_note_exists = false;
                 });
 
         }
@@ -941,7 +942,7 @@ var googleChartTabClick = function(context){
     $heading.replaceWith( "<strong>" + $heading.text() + ":<br /></strong>" );
 
 
-    if (clone !== undefined) {
+    if (clone !== undefined && window.Promise) {
         window.daviz_datasource_exists = true;
         domtoimage.toPng(clone)
             .then(function (dataUrl) {
@@ -956,6 +957,7 @@ var googleChartTabClick = function(context){
             })
             .catch(function (err) {
                 console.error("oops, something went wrong!", err);
+                window.daviz_datasource_exists = false;
             });
     }
     else {
