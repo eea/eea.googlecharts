@@ -822,7 +822,7 @@ class Export(BrowserView):
                                      qrPosition,
                                      qrVertical,
                                      qrHorizontal,
-                                     0.7)
+                                     1)
                 if shiftSecondImg:
                     hShift = Image.open(StringIO(qr_img)).size[0] + qrHorizontal
             except Exception, err:
@@ -838,7 +838,7 @@ class Export(BrowserView):
                                  wmPosition,
                                  wmVertical,
                                  wmHorizontal + hShift,
-                                 0.7)
+                                 1)
             except ValueError, err:
                 logger.exception(err)
             except Exception, err:
