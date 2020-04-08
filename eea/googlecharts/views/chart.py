@@ -795,9 +795,9 @@ class Export(BrowserView):
         wmPosition = sp.get(
                     'googlechart.watermark_position', 'Disabled')
         wmVertical = int(sp.get(
-                    'googlechart.watermark_vertical_space_for_png_export', 0))
+                    'googlechart.watermark_vertical_space_for_png_export', 25))
         wmHorizontal = int(sp.get(
-                    'googlechart.watermark_horizontal_space_for_png_export', 0))
+                    'googlechart.watermark_horizontal_space_for_png_export', 5))
         extra_offset = sp.get('googlechart.note_png_export_offset', 100)
 
         # Add note and data sources images
