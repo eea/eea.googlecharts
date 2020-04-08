@@ -1,7 +1,7 @@
 Changelog
 =========
 
-20.4-dev0 - (unreleased)
+20.4 - (2020-04-08)
 ---------------------------
 * Bug fix: qrcode and watermark images are exported without a transparent
   background
