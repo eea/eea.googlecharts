@@ -5,7 +5,7 @@ from eea.googlecharts.config import EEAMessageFactory as _
 from zope.interface import implements
 from zope.formlib.form import FormFields
 from zope import schema
-from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
+fRom zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
 class GooglechartsSection(object):
     """ Googlecharts Settings Section
