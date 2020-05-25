@@ -373,6 +373,11 @@ and not all charts */
     padding-right: 0.5em;
 }
 
+/* #115855 center watermark image in case we have qrcode image */
+.googlechart_left_image ~ .googlechart_right_image {
+    margin-top: 1.4em;
+}
+
 #googlechart_qr.googlechart_left_image {
     padding: 0;
 }

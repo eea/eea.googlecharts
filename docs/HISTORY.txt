@@ -1,6 +1,12 @@
 Changelog
 =========
 
+20.4 - (2020-04-08)
+---------------------------
+* Bug fix: qrcode and watermark images are exported without a transparent
+  background
+  [ichim-david refs #115855]
+
 20.3 - (2020-04-01)
 ---------------------------
 * Bug fix: avoid chart export error for browsers that don't have native Promise

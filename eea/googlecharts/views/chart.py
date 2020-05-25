@@ -795,9 +795,9 @@ class Export(BrowserView):
         wmPosition = sp.get(
                     'googlechart.watermark_position', 'Disabled')
         wmVertical = int(sp.get(
-                    'googlechart.watermark_vertical_space_for_png_export', 0))
+                    'googlechart.watermark_vertical_space_for_png_export', 25))
         wmHorizontal = int(sp.get(
-                    'googlechart.watermark_horizontal_space_for_png_export', 0))
+                    'googlechart.watermark_horizontal_space_for_png_export', 5))
         extra_offset = sp.get('googlechart.note_png_export_offset', 100)
 
         # Add note and data sources images
@@ -822,7 +822,7 @@ class Export(BrowserView):
                                      qrPosition,
                                      qrVertical,
                                      qrHorizontal,
-                                     0.7)
+                                     1)
                 if shiftSecondImg:
                     hShift = Image.open(StringIO(qr_img)).size[0] + qrHorizontal
             except Exception, err:
@@ -838,7 +838,7 @@ class Export(BrowserView):
                                  wmPosition,
                                  wmVertical,
                                  wmHorizontal + hShift,
-                                 0.7)
+                                 1)
             except ValueError, err:
                 logger.exception(err)
             except Exception, err:
