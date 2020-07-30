@@ -85,7 +85,7 @@ function drawChart(value, options){
                 "<div class='googlechart_top_images' id='googlechart_top_images_"+settings.vhash+"'></div>"+
                 "<div style='clear: both'></div>" +
                 "<div id='googlechart_filters_"+settings.vhash+"' class='googlechart_filters'></div>"+
-                "<div id='googlechart_view_"+settings.vhash+"' class='googlechart embedded-chart'></div>"+
+                "<div id='googlechart_view_"+settings.vhash+"' class='googlechart embedded-chart '></div>"+
                 "<div style='clear: both'></div>" +
                 "<div class='googlechart_bottom_images' id='googlechart_bottom_images_"+settings.vhash+"'></div>"+
                 "<div style='clear: both'></div>" +
@@ -234,6 +234,7 @@ function drawChart(value, options){
         columnsToBeShown: embedchart_columns.columnsToBeShown
     };
 
+    jQuery(document).trigger('googlecharts.embed.pending', [settings.vhash]);
     var lc_chart = drawGoogleChart(googlechart_params);
     jQuery(document).trigger('googlecharts.embed.ready', [settings.vhash]);
     return lc_chart;
