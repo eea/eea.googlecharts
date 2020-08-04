@@ -1,7 +1,7 @@
 Changelog
 =========
 
-20.5-dev0 - (unreleased)
+20.5 - (2020-08-04)
 ---------------------------
 * Feature: trigger googlecharts.embed.pending event on body in order to allow
   other javascript to modify the chart markup before it's being drawn by
