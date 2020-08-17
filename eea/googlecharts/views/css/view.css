@@ -116,9 +116,10 @@ ul.googlechart_tabs li:first-of-type a:hover {
 /* Google Charts view */
 #googlechart_dashboard,
 .googlechart_dashboard {
-    box-shadow: 0px 2px 2px #ccc;
+    box-shadow: 0 2px 2px #ccc;
     background: #FFFFFF;
     border-top: 1px solid #eee;
+    oveflow: auto;
 }
 
 #googlechart_dashboard .google-visualization-controls-slider-horizontal,
@@ -327,12 +328,13 @@ and not all charts */
     margin: 0px;
 }
 
-#googlechart_view > div > div,
-#googlechart_view > div > div > div,
-.googlechart_view > div > div,
-.googlechart_view > div > div > div{
-    overflow: hidden ! important;
-}
+/* 119540 show scrollbars when needed by commenting this rule */
+/*#googlechart_view > div > div,*/
+/*#googlechart_view > div > div > div,*/
+/*.googlechart_view > div > div,*/
+/*.googlechart_view > div > div > div{*/
+/*    overflow: hidden ! important;*/
+/*}*/
 
 .googlechart_dashboard_table #googlechart_filters,
 .googlechart_dashboard_table .googlechart_filters {
