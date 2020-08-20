@@ -52,25 +52,31 @@ jQuery(window).scrollStopped(function(){
         }
     });
 });
-jQuery(document).ready(function(){
-    var charts = jQuery('.embedded-dashboard');
-
-    jQuery(window).resize(_.debounce(function() {
-        jQuery.each(charts, function(idx, elem){
-            var $elem = jQuery(elem);
-            var vhash = elem.id.split('_')[2];
-            var resize_chart_func = window['resize_chart_' + vhash];
-            if (resize_chart_func && $.isFunction(resize_chart_func)) {
-                resize_chart_func($elem);
-            }
-        });
-    }));
-    charts.bind('eea.embed.loaded', function(){
-        jQuery(window).trigger('resize');
-    });
-
-    jQuery('.embedded-daviz-visualization ul.formTabs a').click(function(){
-        jQuery("#fieldset-"+jQuery(this).attr("id").substr(15) + ' .embedded-dashboard').trigger('eea.embed.loaded');
-    });
-});
+// #119540 disable chart resize on window resize
+// jQuery(document).ready(function(){
+//     var charts = jQuery('.embedded-dashboard');
+//
+//     jQuery(window).resize(_.debounce(function(ev, data) {
+//       var elems = data ? [data['obj']] : charts;
+//         jQuery.each(elems, function(idx, elem){
+//             var $elem = jQuery(elem);
+//             var vhash = elem.id.split('_')[2];
+//             var resize_chart_func = window['resize_chart_' + vhash];
+//             if (resize_chart_func && $.isFunction(resize_chart_func)) {
+//                 resize_chart_func($elem);
+//             }
+//         });
+//     }));
+//     charts.bind('eea.embed.loaded', function(ev){
+//       jQuery(window).trigger('resize', {obj: ev.target});
+//     });
+//
+//     jQuery('.embedded-daviz-visualization ul.formTabs a').click(function(){
+//       var $elem = jQuery("#fieldset-"+jQuery(this).attr("id").substr(15) + ' .embedded-dashboard');
+//       var $chart = $elem.find('.googlechart_view');
+//       if (!$chart.length || $elem.width() > $chart.width()){
+//         $elem.trigger('eea.embed.loaded');
+//       }
+//     });
+// });
 </script>
