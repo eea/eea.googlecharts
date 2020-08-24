@@ -1,6 +1,6 @@
 /* View Google Charts
 */
-@media screen {
+/*@media screen {*/
 .tab-charts span {
   background-image: url("../../++resource++eea.googlecharts.images/charts-icon.png");
   background-repeat: no-repeat;
@@ -116,9 +116,10 @@ ul.googlechart_tabs li:first-of-type a:hover {
 /* Google Charts view */
 #googlechart_dashboard,
 .googlechart_dashboard {
-    box-shadow: 0px 2px 2px #ccc;
+    box-shadow: 0 2px 2px #ccc;
     background: #FFFFFF;
     border-top: 1px solid #eee;
+    overflow: auto;
 }
 
 #googlechart_dashboard .google-visualization-controls-slider-horizontal,
@@ -158,12 +159,6 @@ ul.googlechart_tabs li:first-of-type a:hover {
     margin-top: 1em;
 }
 
-#googlechart_export_button {
-}
-
-#googlechart_export_svg_button {
-}
-
 #googlechart_filters,
 .googlechart_filters {
     white-space:nowrap;
@@ -192,7 +187,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
 .googlechart_filters label {
     display: block;
     font-weight: normal;
-    color: black;
+    /*color: black;*/
     padding: 5px 10px;
     font-size: 14px;
     background-color: #069;
@@ -310,6 +305,12 @@ ul.googlechart_tabs li:first-of-type a:hover {
     clear: left;
 }
 
+.mini-header .googlechart_dashboard_table .googlechart_view,
+.mini-header .googlechart_table_top #googlechart_view,
+.mini-header .googlechart_table_top .googlechart_view {
+    margin: 0 auto;
+}
+
 /* 28278; removed margin from all charts since
 commit from fa1ddfa0 was meant to be enabled on dashboard-charts
 and not all charts */
@@ -327,11 +328,15 @@ and not all charts */
     margin: 0px;
 }
 
-#googlechart_view > div > div,
-#googlechart_view > div > div > div,
-.googlechart_view > div > div,
-.googlechart_view > div > div > div{
-    overflow: hidden ! important;
+/* 119540 show scrollbars when needed by commenting this rule */
+/*#googlechart_view > div > div,*/
+/*#googlechart_view > div > div > div,*/
+/*.googlechart_view > div > div,*/
+/*.googlechart_view > div > div > div{*/
+/*    overflow: hidden ! important;*/
+/*}*/
+.googlechart_table {
+    overflow: auto;
 }
 
 .googlechart_dashboard_table #googlechart_filters,
@@ -344,8 +349,8 @@ and not all charts */
 .googlechart_dashboard_table #googlechart_view,
 .googlechart_dashboard_table .googlechart_view {
     clear: none;
-    min-width: 0px;
-    float: left;
+    min-width: 0;
+    /*float: left;*/
     width: 100%;
     height: auto;
 }
@@ -415,13 +420,13 @@ li.eea-moved-in-container{
     padding-left: 7px !important;
 }
 
-#daviz-view ul.google-visualization-controls-categoryfilter-selected li div
+#daviz-view ul.google-visualization-controls-categoryfilter-selected li div,
 .googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li div {
 
     display: inline;
 }
 
-#daviz-view ul.google-visualization-controls-categoryfilter-selected li div.charts-link-button-disabled
+#daviz-view ul.google-visualization-controls-categoryfilter-selected li div.charts-link-button-disabled,
 .googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected li div.charts-link-button-disabled {
     display: none;
 }
@@ -533,7 +538,7 @@ li.eea-moved-in-container{
 
 #googlechart_dashboard .google-visualization-controls-categoryfilter>.charts-inline-block>.charts-menu-button,
 .googlechart_dashboard .google-visualization-controls-categoryfilter>.charts-inline-block>.charts-menu-button {
-    margin-top:0px;
+    margin-top:0;
 }
 
 .eea-filter-value-container {
@@ -665,7 +670,7 @@ input.googlechart-chart-size {
 }
 
 /* #18491 normalize font size of googlechart-notes when it contains a paragraph */
-#content .googlechart-notes p {
+.googlechart-notes p {
     font-size: 100%;
     margin-bottom: 0;
 }
@@ -757,10 +762,6 @@ input.googlechart-chart-size {
     position: relative;
 }
 
-.smc-widget:hover {
-    /*border: 1px solid #ccc;*/
-}
-
 .smc-widget .smc-control {
     display:none;
     border:1px solid #eee;
@@ -829,6 +830,18 @@ input.googlechart-chart-size {
 .google-visualization-table {
     border: 0!important;
 }
+
+/* #119540 make smaller scrollbars for webkit browsers */
+.google-visualization-table > div {
+    scrollbar-width: thin;
+}
+.google-visualization-table > div::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+    background-color: #f3f3f3;
+}
+.google-visualization-table > div::-webkit-scrollbar-thumb {
+    background-color: #CCC;
 }
 
 @media print {
