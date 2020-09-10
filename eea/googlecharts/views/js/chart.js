@@ -1617,3 +1617,28 @@ function drawGoogleDashboard(options){
             });
     }
 }
+
+async function waitForGoogleInit() {
+    return new Promise(async (resolve, reject) => {
+
+      test_google = async(cnt) => {
+        if (cnt === 0) {
+            reject(new Error('Error loading Google Visualization'));
+        }
+        else{
+            const initialized = (google && google.visualization && google.visualization.DataTable);
+
+            if (!initialized){
+                setTimeout(() => test_google(cnt - 1), 100);
+            }
+            else {
+                console.log("Google Visualization initialized");
+                resolve(true);
+            }
+        }
+      }
+      test_google(10);
+    });
+
+    await checkGoogleVisualization(1000);
+}
