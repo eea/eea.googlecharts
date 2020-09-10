@@ -69,7 +69,7 @@
 
 #content ul.googlechart_tabs,
 ul.googlechart_tabs {
-    background: #069;
+    background: #274357;
     border-radius: 10px 10px 0px 0px;
     border: none;
     height: 37px;
@@ -190,7 +190,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
     /*color: black;*/
     padding: 5px 10px;
     font-size: 14px;
-    background-color: #069;
+    background-color: #274357;
     color:#fff;
     max-height: 25px;
     overflow: hidden;
