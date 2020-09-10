@@ -199,7 +199,8 @@
                     return settings;
                 }
 		jQuery(function($){
-                google.setOnLoadCallback(function(){
+                google.setOnLoadCallback(async function(){
+                    await waitForGoogleInit();
                     var chart_type = chart_json_$vhash.chartType;
                     settings_$vhash.push(GoogleChartsConfig_$vhash[0].id);
                     settings_$vhash.push(chart_json_$vhash);

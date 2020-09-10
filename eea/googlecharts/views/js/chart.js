@@ -1637,8 +1637,6 @@ async function waitForGoogleInit() {
             }
         }
       }
-      test_google(10);
+      test_google(100);
     });
-
-    await checkGoogleVisualization(1000);
 }
