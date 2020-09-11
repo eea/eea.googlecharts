@@ -1,7 +1,7 @@
 <link href="++resource++eea.googlecharts.view.css" rel="stylesheet" type="text/css"/>
 <link href="++resource++eea.googlecharts.print.css" rel="stylesheet" type="text/css" media="print"/>
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="++resource++json2.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.embed_common.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>

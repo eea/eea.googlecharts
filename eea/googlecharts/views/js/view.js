@@ -1000,7 +1000,8 @@ var changeDashboardId = function(idx){
     }
 };
 
-jQuery(document).ready(async function($){
+jQuery(function($){
+  google.setOnLoadCallback(function(){
     // workaround for firefox issue: https://taskman.eionet.europa.eu/issues/9941
     // Removed workaround as the issue has been already fixed. Details here:
     // https://code.google.com/p/google-visualization-api-issues/issues/detail?id=598
@@ -1014,7 +1015,6 @@ jQuery(document).ready(async function($){
     //     }
     // }
     // end of workaround
-    await waitForGoogleInit();
 
     if (typeof(googlechart_config_array) == 'undefined'){
         return;
@@ -1113,5 +1113,5 @@ jQuery(document).ready(async function($){
     }));
 
     jQuery(window).trigger("hashchange");
-
+  });
 });

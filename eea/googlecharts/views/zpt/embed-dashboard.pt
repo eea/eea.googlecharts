@@ -99,8 +99,7 @@
         var dashboard_config_$vhash = ${dashboard};
         var settings_$vhash = {}
         jQuery(function($){
-            google.setOnLoadCallback(async function(){
-                await waitForGoogleInit();
+            google.setOnLoadCallback(function(){
                 var isPrint = $isPrint;
                 settings_$vhash = {
                     googlechart_config_array : googlechart_config_array_$vhash,
