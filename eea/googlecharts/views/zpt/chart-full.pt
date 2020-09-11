@@ -20,7 +20,6 @@
 
     jQuery(function($){
       google.setOnLoadCallback(function(){
-        await waitForGoogleInit();
         var row_filters = {};
         var sortAsc = 'asc';
         if (row_filters_str.length > 0){
