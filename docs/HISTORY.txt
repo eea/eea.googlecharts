@@ -3,6 +3,9 @@ Changelog
 
 20.6-dev0 - (unreleased)
 ---------------------------
+* Bug fix: Load charts api from loader.js instead of gsapi in all cases;
+  Use google.setOnLoadCallback instead of jQuery(document).ready
+  [szabozo0 120846]
 
 20.5 - (2020-08-04)
 ---------------------------
