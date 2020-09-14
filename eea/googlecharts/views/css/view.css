@@ -145,6 +145,9 @@ ul.googlechart_tabs li:first-of-type a:hover {
     float:right;
     text-align:center;
 }
+.mini-header .google_buttons_bar .googlechart_button {
+    color: #274357;
+}
 
 .google_buttons_bar .googlechart_button .export-action-title {
     display: block;
