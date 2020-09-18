@@ -73,10 +73,11 @@ jQuery(document).ready(function(){
 
     jQuery('.embedded-daviz-visualization ul.formTabs a').click(function(){
       var $elem = jQuery("#fieldset-"+jQuery(this).attr("id").substr(15) + ' .embedded-dashboard');
-      var $chart = $elem.find('.googlechart_view');
-      if (!$chart.length || $elem.width() > $chart.width()){
-        $elem.trigger('eea.embed.loaded');
-      }
+      $elem.trigger('eea.embed.loaded');
+      // var $chart = $elem.find('.googlechart_view');
+      // if (!$chart.length || $elem.width() > $chart.width()){
+      //   $elem.trigger('eea.embed.loaded');
+      // }
     });
 });
 </script>
