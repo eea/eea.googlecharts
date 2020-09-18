@@ -69,7 +69,7 @@
 
 #content ul.googlechart_tabs,
 ul.googlechart_tabs {
-    background: #069;
+    background: #274357;
     border-radius: 10px 10px 0px 0px;
     border: none;
     height: 37px;
@@ -145,6 +145,9 @@ ul.googlechart_tabs li:first-of-type a:hover {
     float:right;
     text-align:center;
 }
+.mini-header .google_buttons_bar .googlechart_button {
+    color: #274357;
+}
 
 .google_buttons_bar .googlechart_button .export-action-title {
     display: block;
@@ -162,6 +165,12 @@ ul.googlechart_tabs li:first-of-type a:hover {
 #googlechart_filters,
 .googlechart_filters {
     white-space:nowrap;
+    display: flex;
+    padding: 1rem 0;
+}
+
+.mini-header #googlechart_filters, .mini-header .googlechart_filters {
+    justify-content: center;
 }
 
 /*#googlechart_filters:nth-child(3), .googlechart_filters:nth-child(3){
@@ -190,7 +199,7 @@ ul.googlechart_tabs li:first-of-type a:hover {
     /*color: black;*/
     padding: 5px 10px;
     font-size: 14px;
-    background-color: #069;
+    background-color: #274357;
     color:#fff;
     max-height: 25px;
     overflow: hidden;
@@ -403,7 +412,7 @@ and not all charts */
 .googlechart_dashboard ul.google-visualization-controls-categoryfilter-selected {
     list-style-type: none !important;
     margin: 10px auto!important;
-    max-width: 90% ! important;
+    max-width: 100% ! important;
     display:block!important;
 }
 
@@ -504,7 +513,6 @@ li.eea-moved-in-container{
 .googlechart_dashboard .googlechart_table_top .googlechart_filter ul,
 #googlechart_dashboard .googlechart_table_bottom .googlechart_filter ul,
 .googlechart_dashboard .googlechart_table_bottom .googlechart_filter ul {
-    height: 100px;
     overflow: auto;
 }
 
@@ -520,8 +528,10 @@ li.eea-moved-in-container{
 .googlechart_dashboard div.googlechart_filter li{
     display: inline;
     margin:0 5px 2px 0;
-    padding:0px;
+    padding: 0.25rem 0.6rem 0.25rem 0;
     float: left;
+    line-height: 1;
+    font-size: 100%;
 }
 
 #googlechart_dashboard .googlechart_filters_side .googlechart_filter li,

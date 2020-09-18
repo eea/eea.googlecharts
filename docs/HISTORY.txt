@@ -1,6 +1,14 @@
 Changelog
 =========
 
+20.6 - (2020-09-18)
+---------------------------
+* Change: re-enabled resizing of charts when window is resized
+  until every automatic resize is rechecked
+  [ichim-david refs #120397]
+* Change: style tweaks to the daviz tab colors
+  [ichim-david refs #120397]
+
 20.5 - (2020-08-04)
 ---------------------------
 * Change: disabled resizing of charts when window is resized
