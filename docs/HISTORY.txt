@@ -1,7 +1,7 @@
 Changelog
 =========
 
-20.6-dev0 - (unreleased)
+20.6 - (2020-09-18)
 ---------------------------
 * Change: re-enabled resizing of charts when window is resized
   until every automatic resize is rechecked
