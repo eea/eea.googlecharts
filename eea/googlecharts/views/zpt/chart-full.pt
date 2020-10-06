@@ -7,7 +7,7 @@
 <script type="text/javascript" tal:attributes="src view/jquery_src"></script>
 <script type="text/javascript" src="++resource++jquery-migrate.js"></script>
 <script type="text/javascript" src="++resource++collective.js.underscore/underscore.min.js"></script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.chart.js"></script>
 <script type="text/javascript" src="++resource++eea.googlecharts.datatable.js"></script>
   <tal:jqueryui tal:define="eea_jqueryui exists:here/collective.js.jqueryui.custom.min.eea.js; portal_url context/@@plone_portal_state/portal_url">
@@ -18,7 +18,8 @@
 <script type="text/javascript">
     google.load('visualization', '1.0', {packages: ['controls']});
 
-    jQuery(document).ready(function($){
+    jQuery(function($){
+      google.setOnLoadCallback(function(){
         var row_filters = {};
         var sortAsc = 'asc';
         if (row_filters_str.length > 0){
@@ -137,6 +138,7 @@
         };
 
         drawGoogleChart(googlechart_params);
+      });
     });
     function exportToPng(){
         var svgobj = jQuery("#googlechart_full").find("iframe").contents().find("#chart");

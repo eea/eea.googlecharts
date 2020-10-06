@@ -1,6 +1,12 @@
 Changelog
 =========
 
+20.7 - (2020-10-06)
+---------------------------
+* Bug fix: Load charts api from loader.js instead of gsapi in all cases;
+  Use google.setOnLoadCallback instead of jQuery(document).ready
+  [szabozo0 120846]
+
 20.6 - (2020-09-18)
 ---------------------------
 * Change: re-enabled resizing of charts when window is resized

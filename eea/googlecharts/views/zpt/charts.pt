@@ -43,7 +43,7 @@
     </div>
 </tal:tabs>
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <tal:comment condition="nothing">
 <!-- XXX Use GoogleChartsConfig instead of googlechart_config_array -->
