@@ -1,6 +1,9 @@
 Changelog
 =========
 
+20.8-dev0 - (unreleased)
+---------------------------
+
 20.7 - (2020-10-06)
 ---------------------------
 * Bug fix: Load charts api from loader.js instead of gsapi in all cases;
