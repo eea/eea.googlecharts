@@ -138,7 +138,7 @@ function drawChart(value, options){
     commonModule.insertBottomImages(settings, chart_url);
 
     var row_filters = {};
-    if (embedchart_row_filters_str.length > 0){
+    if (embedchart_row_filters_str && embedchart_row_filters_str.length > 0){
         row_filters = JSON.parse(embedchart_row_filters_str);
     }
 

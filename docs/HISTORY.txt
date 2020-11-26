@@ -1,6 +1,11 @@
 Changelog
 =========
 
+20.8 - (2020-11-26)
+---------------------------
+* Bug fix: avoid crash of chart embedding in case there are no filters data
+  [ichim-david refs #120397]
+
 20.7 - (2020-10-06)
 ---------------------------
 * Bug fix: Load charts api from loader.js instead of gsapi in all cases;
