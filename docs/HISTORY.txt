@@ -1,6 +1,9 @@
 Changelog
 =========
 
+20.9-dev0 - (unreleased)
+---------------------------
+
 20.8 - (2020-11-26)
 ---------------------------
 * Bug fix: avoid crash of chart embedding in case there are no filters data
