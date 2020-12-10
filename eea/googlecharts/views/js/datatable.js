@@ -708,16 +708,14 @@ function prepareForChart(options){
             var newColumn = row[column];
             // 94182 avoid js error when column data is missing and we attempt to
             // create a new chart
-
+          var colType = settings.originalDataTable.properties[column];
             if ((!newColumn) && (newColumn !== 0)) {
-                newRow.push(newColumn);
-                if (window.console) {
-                    console.log('Value for', column, 'is missing');
-                }
+                // #125298 push undefined instead of the empty "" column value
+                // when it's numeric it breaks to have ""
+                newRow.push(undefined);
                 return;
             }
 
-            var colType = settings.originalDataTable.properties[column];
 
             if(colType === undefined){
                 colType = 'string';
@@ -750,7 +748,12 @@ function prepareForChart(options){
                 }
             }
         });
-        dataForChart.addRow(newRow);
+        try {
+            dataForChart.addRow(newRow);
+        }
+        catch (e) {
+            console.error(e);
+        }
     });
 
     if (settings.preparedColumns !== ''){
