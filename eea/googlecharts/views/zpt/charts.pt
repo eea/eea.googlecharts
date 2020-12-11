@@ -50,7 +50,7 @@
 </tal:comment>
 
 <script type="text/javascript" tal:define="GoogleChartsConfig view/get_charts_json; ChartNotes view/get_all_notes_json" tal:content="structure string:
-    google.load('visualization', '1.0', {packages: ['controls']});
+    google.load('visualization', '49', {packages: ['controls']});
     var googlechart_config_array = [];
     var GoogleChartsConfig = $GoogleChartsConfig;
     var ChartNotes = $ChartNotes;
