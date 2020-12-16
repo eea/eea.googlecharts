@@ -3,6 +3,11 @@ Changelog
 
 20.9-dev0 - (unreleased)
 ---------------------------
+* Change: googlechart-notes are now with overflow hidden and with
+  white background otherwise when we export to pdf we get transparent
+  black background from dom-to-image js library that exports as image
+  the notes and visualization info
+  [ichim-david refs #125298]
 * Change: export notes only when clicking on export to png since the
   notes are exported only on the png export. This is an expensive action
   since the domtoimage library loads every font face found in stylesheets

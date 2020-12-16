@@ -50,12 +50,14 @@ function svgCleanup(svg) {
 }
 
 function exportToPng(){
+    var $icon = $("#googlechart_export_button").find(".eea-icon");
+    $icon.addClass("animated eea-icon-anim-flash");
     var form = jQuery("#export");
     var view = jQuery("#googlechart_view");
     var chart_id = view.attr('chart_id');
     var form_qr_url = form.find('#qr_url');
     var form_qr_url_chart_id = form_qr_url.attr('chart_id');
-    var same_chart = form_qr_url_chart_id === chart_id ? true : false;
+    var same_chart = form_qr_url_chart_id === chart_id;
     var content = $("#content")[0];
     var visualization_defer = $.Deferred();
     var notes_defer = $.Deferred();
@@ -140,11 +142,15 @@ function exportToPng(){
 
     $.when(visualization_defer, notes_defer).done(function(){
         _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
-        form.submit();
+        var $form = form || jQuery("#export");
+        $form.submit();
+        $icon.removeClass("animated eea-icon-anim-flash");
     });
 }
 
 function exportToSVG(){
+    var $icon = $("#googlechart_googlechart_export_svg_button").find(".eea-icon");
+    $icon.addClass("animated eea-icon-anim-flash");
     var form = jQuery("#export");
     if (jQuery("#googlechart_view img").attr("src") === undefined){
         var svg = jQuery('<div>').append(jQuery("#googlechart_view").find("svg").clone()).html();
@@ -155,6 +161,7 @@ function exportToSVG(){
 
     _paq.push(['trackEvent', 'Downloads', "svg", "Data Visualization", 1]);
     form.submit();
+    $icon.removeClass("animated eea-icon-anim-flash");
 }
 
 function checkSVG(){
