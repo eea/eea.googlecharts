@@ -109,7 +109,7 @@ function exportToPng(){
     var image_datasources_value = image_datasources.prop('value');
     write_form_data = !image_datasources_value || image_datasources_value && !same_chart;
     if (node && write_form_data && window.Promise) {
-        clone = node.cloneNode(true)
+        clone = node.cloneNode(true);
         clone.classList += ' googlechart-notes';
         content.appendChild(clone);
         var $clone = $(clone);
