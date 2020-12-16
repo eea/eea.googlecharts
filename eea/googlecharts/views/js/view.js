@@ -52,6 +52,10 @@ function svgCleanup(svg) {
 function exportToPng(){
     var form = jQuery("#export");
     var view = jQuery("#googlechart_view");
+    var chart_id = view.attr('chart_id');
+    var form_qr_url = form.find('#qr_url');
+    var form_qr_url_chart_id = form_qr_url.attr('chart_id');
+    var same_chart = form_qr_url_chart_id === chart_id ? true : false;
     var content = $("#content")[0];
     var visualization_defer = $.Deferred();
     var notes_defer = $.Deferred();
@@ -70,16 +74,16 @@ function exportToPng(){
         jQuery("#imageChart_url").prop("value", img_url);
     }
 
-    // #115104 make a png out of notes and sources when clicking on tabs
-    // call toPng with a delay as calling toPng on a chart with filters
-    // gives an empty image even if notes is in view, maybe due to library bug
-    var nodes = view.find('.googlechart-notes'),
+    // #125298 export notes only when clicking on exportToPng
+    var nodes = jQuery('.googlechart-notes'),
         node = nodes[0];
     var image_note = form.find("#image_note");
-    if (node !== undefined && !image_note.prop('value') && window.Promise) {
+    var image_note_value = image_note.prop('value');
+    var write_form_data = !image_note_value || image_note_value && !same_chart;
+    if (node && write_form_data && window.Promise) {
         domtoimage.toPng(node)
             .then(function (dataUrl) {
-                console.log(dataUrl);
+                form_qr_url.attr('chart_id', chart_id);
                 image_note.prop("value", dataUrl);
                 // for debugging
                 // var img = new Image();
@@ -100,7 +104,9 @@ function exportToPng(){
     node = document.getElementsByClassName('visualization-info')[0];
     var clone;
     var image_datasources = form.find("#image_datasources");
-    if (node !== undefined && !image_datasources.prop('value') && window.Promise) {
+    var image_datasources_value = image_datasources.prop('value');
+    write_form_data = !image_datasources_value || image_datasources_value && !same_chart;
+    if (node && write_form_data && window.Promise) {
         clone = node.cloneNode(true)
         clone.classList += ' googlechart-notes';
         content.appendChild(clone);
@@ -114,6 +120,7 @@ function exportToPng(){
         domtoimage.toPng(clone)
             .then(function (dataUrl) {
                 image_datasources.prop("value", dataUrl);
+                form_qr_url.attr('chart_id', chart_id);
                 content.removeChild(clone);
                 // for debugging
                 // var img = new Image();
