@@ -1,6 +1,23 @@
 Changelog
 =========
 
+20.9 - (2020-12-16)
+---------------------------
+* Change: googlechart-notes are now with overflow hidden and with
+  white background otherwise when we export to pdf we get transparent
+  black background from dom-to-image js library that exports as image
+  the notes and visualization info
+  [ichim-david refs #125298]
+* Change: export notes only when clicking on export to png since the
+  notes are exported only on the png export. This is an expensive action
+  since the domtoimage library loads every font face found in stylesheets
+  [ichim-david refs #125298]
+* Change: pin visualization version to 49 from 1.0 in order to avoid warnings
+  that it tries to load version 1 and 49
+  [ichim-david refs #125298]
+* Bug fix: avoid crash of charts when we have numeric fields and they are empty
+  [ichim-david refs #125298]
+
 20.8 - (2020-11-26)
 ---------------------------
 * Bug fix: avoid crash of chart embedding in case there are no filters data

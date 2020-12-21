@@ -670,9 +670,12 @@ input.googlechart-chart-size {
 
 .googlechart-notes {
     clear:both;
+    /* 125298 avoid transparent black backgrounds when exporting to png */
+    background-color: #FFF;
+    overflow: hidden;
 }
 
-/* #18491 embeded charts notes should have the same font size as original charts */
+/* #18491 embedded charts notes should have the same font size as original charts */
 .googlechart_dashboard .googlechart-notes {
     font: 12px Verdana, Arial, Helvetica, sans-serif;
     line-height: 1.5em;

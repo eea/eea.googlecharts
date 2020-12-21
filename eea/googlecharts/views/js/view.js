@@ -50,10 +50,21 @@ function svgCleanup(svg) {
 }
 
 function exportToPng(){
+    var $icon = $("#googlechart_export_button").find(".eea-icon");
+    $icon.addClass("animated eea-icon-anim-flash");
     var form = jQuery("#export");
+    var view = jQuery("#googlechart_view");
+    var chart_id = view.attr('chart_id');
+    var form_qr_url = form.find('#qr_url');
+    var form_qr_url_chart_id = form_qr_url.attr('chart_id');
+    var same_chart = form_qr_url_chart_id === chart_id;
+    var content = $("#content")[0];
+    var visualization_defer = $.Deferred();
+    var notes_defer = $.Deferred();
 
-    if (jQuery("#googlechart_view img").attr("src") === undefined){
-        var svg = jQuery('<div>').append(jQuery("#googlechart_view").find("svg").clone()).html();
+    var img_url = view.find("img").attr("src");
+    if (!img_url){
+        var svg = jQuery('<div>').append(view.find("svg").clone()).html();
         var clean_svg = svgCleanup(svg);
 
         jQuery("#svg").prop("value",clean_svg);
@@ -61,45 +72,85 @@ function exportToPng(){
         jQuery("#export_fmt").prop("value", "png");
     }
     else {
-        var img_url = jQuery("#googlechart_view img").attr("src");
         img_url = "http://"+img_url.substr(img_url.indexOf("chart.googleapis.com"));
         jQuery("#imageChart_url").prop("value", img_url);
     }
 
-    if (window.daviz_datasource_exists || window.daviz_note_exists) {
-        var timer = setInterval(function() {
-            var lengths = [];
-
-            if (window.daviz_datasource_exists) {
-                lengths.push(jQuery("#image_datasources").prop('value').length);
-            }
-            if (window.daviz_note_exists) {
-                lengths.push(jQuery("#image_note").prop('value').length);
-            }
-
-            if (lengths.length === 2) {
-                if (Math.min.apply(Math, lengths) > 0) {
-                    clearInterval(timer);
-                    _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
-                    form.submit();
-                }
-            }
-            else {
-                if (Math.max.apply(Math, lengths) > 0) {
-                    clearInterval(timer);
-                    _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
-                    form.submit();
-                }
-            }
-        }, 300);
+    // #125298 export notes only when clicking on exportToPng
+    var nodes = jQuery('.googlechart-notes'),
+        node = nodes[0];
+    var image_note = form.find("#image_note");
+    var image_note_value = image_note.prop('value');
+    var write_form_data = !image_note_value || image_note_value && !same_chart;
+    if (node && write_form_data && window.Promise) {
+        domtoimage.toPng(node)
+            .then(function (dataUrl) {
+                form_qr_url.attr('chart_id', chart_id);
+                image_note.prop("value", dataUrl);
+                // for debugging
+                // var img = new Image();
+                // img.src = dataUrl;
+                // $('#content-core')[0].appendChild(img);
+            })
+            .catch(function (err) {
+                console.error("oops, something went wrong!", err);
+            })
+            .finally(function(){
+                notes_defer.resolve();
+            });
     }
     else {
-        _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
-        form.submit();
+        notes_defer.resolve();
     }
+
+    node = document.getElementsByClassName('visualization-info')[0];
+    var clone;
+    var image_datasources = form.find("#image_datasources");
+    var image_datasources_value = image_datasources.prop('value');
+    write_form_data = !image_datasources_value || image_datasources_value && !same_chart;
+    if (node && write_form_data && window.Promise) {
+        clone = node.cloneNode(true);
+        clone.classList += ' googlechart-notes';
+        content.appendChild(clone);
+        var $clone = $(clone);
+        $clone.wrapInner("<p class='callout'></p>");
+        var $heading = $clone.find('h3');
+        var width = $clone.css('width');
+        $clone.css('width', $('.callout').css('width'));
+        $heading.replaceWith("<strong>" + $heading.text() + ":<br /></strong>");
+
+        domtoimage.toPng(clone)
+            .then(function (dataUrl) {
+                image_datasources.prop("value", dataUrl);
+                form_qr_url.attr('chart_id', chart_id);
+                content.removeChild(clone);
+                // for debugging
+                // var img = new Image();
+                // img.src = dataUrl;
+                // $('#content-core')[0].appendChild(img);
+            })
+            .catch(function (err) {
+                console.error("oops, something went wrong!", err);
+            })
+            .finally(function(){
+                visualization_defer.resolve();
+            });
+    }
+    else {
+        visualization_defer.resolve();
+    }
+
+    $.when(visualization_defer, notes_defer).done(function(){
+        _paq.push(['trackEvent', 'Downloads', "png", "Data Visualization", 1]);
+        var $form = form || jQuery("#export");
+        $form.submit();
+        $icon.removeClass("animated eea-icon-anim-flash");
+    });
 }
 
 function exportToSVG(){
+    var $icon = $("#googlechart_googlechart_export_svg_button").find(".eea-icon");
+    $icon.addClass("animated eea-icon-anim-flash");
     var form = jQuery("#export");
     if (jQuery("#googlechart_view img").attr("src") === undefined){
         var svg = jQuery('<div>').append(jQuery("#googlechart_view").find("svg").clone()).html();
@@ -108,37 +159,9 @@ function exportToSVG(){
         jQuery("#export_fmt").prop("value", "svg");
     }
 
-    if (window.daviz_datasource_exists || window.daviz_note_exists) {
-        var timer = setInterval(function() {
-            var lengths = [];
-
-            if (window.daviz_datasource_exists) {
-                lengths.push(jQuery("#image_datasources").prop('value').length);
-            }
-            if (window.daviz_note_exists) {
-                lengths.push(jQuery("#image_note").prop('value').length);
-            }
-
-            if (lengths.length === 2) {
-                if (Math.min.apply(Math, lengths) > 0) {
-                    clearInterval(timer);
-                    _paq.push(['trackEvent', 'Downloads', "svg", "Data Visualization", 1]);
-                    form.submit();
-                }
-            }
-            else {
-                if (Math.max.apply(Math, lengths) > 0) {
-                    clearInterval(timer);
-                    _paq.push(['trackEvent', 'Downloads', "svg", "Data Visualization", 1]);
-                    form.submit();
-                }
-            }
-        }, 300);
-    }
-    else {
-        _paq.push(['trackEvent', 'Downloads', "svg", "Data Visualization", 1]);
-        form.submit();
-    }
+    _paq.push(['trackEvent', 'Downloads', "svg", "Data Visualization", 1]);
+    form.submit();
+    $icon.removeClass("animated eea-icon-anim-flash");
 }
 
 function checkSVG(){
@@ -901,68 +924,6 @@ var googleChartTabClick = function(context){
         drawDashboard(config, dashboard_other_options);
     }
 
-    // #115104 make a png out of notes and sources when clicking on tabs
-    window.daviz_note_exists = true;
-    // call toPng with a delay as calling toPng on a chart with filters
-    // gives an empty image even if notes is in view, maybe due to library bug
-    window.setTimeout(function(){
-        var node = document.getElementsByClassName('googlechart-notes')[0];
-        if (node !== undefined && window.Promise) {
-            domtoimage.toPng(node)
-                .then(function (dataUrl) {
-                    console.log(dataUrl);
-                    var img = new Image();
-                    img.src = dataUrl;
-                    jQuery("#image_note").prop("value", dataUrl);
-
-                    // for debugging
-                    // $('#content-core')[0].appendChild(img);
-                })
-                .catch(function (err) {
-                    console.error("oops, something went wrong!", err);
-                    window.daviz_note_exists = false;
-                });
-
-        }
-        else {
-            window.daviz_note_exists = false;
-        }
-
-    }, 1000);
-
-    var node = document.getElementsByClassName('visualization-info')[0];
-    var clone = node.cloneNode(true);
-    clone.classList += ' googlechart-notes';
-    $('#content')[0].appendChild(clone);
-    var $clone = $(clone);
-    $clone.wrapInner("<p class='callout'></p>");
-    var $heading = $clone.find('h3');
-    var width = $clone.css('width');
-    $clone.css('width', $('.callout').css('width'));
-    $heading.replaceWith( "<strong>" + $heading.text() + ":<br /></strong>" );
-
-
-    if (clone !== undefined && window.Promise) {
-        window.daviz_datasource_exists = true;
-        domtoimage.toPng(clone)
-            .then(function (dataUrl) {
-                var img = new Image();
-                img.src = dataUrl;
-                jQuery("#image_datasources").prop("value", dataUrl);
-
-                $('#content')[0].removeChild(clone);
-
-                // for debugging
-                // $('#content-core')[0].appendChild(img);
-            })
-            .catch(function (err) {
-                console.error("oops, something went wrong!", err);
-                window.daviz_datasource_exists = false;
-            });
-    }
-    else {
-        window.daviz_datasource_exists = false;
-    }
 
     return false;
 };

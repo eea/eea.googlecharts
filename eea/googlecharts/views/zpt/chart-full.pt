@@ -16,8 +16,7 @@
   </tal:jqueryui>
 
 <script type="text/javascript">
-    google.load('visualization', '1.0', {packages: ['controls']});
-
+    google.load('visualization', '49', {packages: ['controls']});
     jQuery(function($){
       google.setOnLoadCallback(function(){
         var row_filters = {};
