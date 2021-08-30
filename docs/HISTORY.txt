@@ -1,6 +1,11 @@
 Changelog
 =========
 
+21.0 - (2021-08-30)
+---------------------------
+* Bug fix: Fixed SVG charts generator on Edit Visualization Save
+  [avoinea refs #123746]
+
 20.9 - (2020-12-16)
 ---------------------------
 * Change: googlechart-notes are now with overflow hidden and with
