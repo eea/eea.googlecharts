@@ -3,6 +3,8 @@ Changelog
 
 21.0-dev0 - (unreleased)
 ---------------------------
+* Bug fix: Fixed SVG charts generator on Edit Visualization Save
+  [avoinea refs #123746]
 
 20.9 - (2020-12-16)
 ---------------------------

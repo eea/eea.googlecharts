@@ -998,7 +998,7 @@ select[name=googlechart_filterposition] {
 }
 
 .googlechart_thumb_zone {
-    display:none;
+    visibility: hidden;
 }
 
 .slick-header-menu {
