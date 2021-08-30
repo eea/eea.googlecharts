@@ -1,6 +1,9 @@
 Changelog
 =========
 
+21.1-dev0 - (unreleased)
+---------------------------
+
 21.0 - (2021-08-30)
 ---------------------------
 * Bug fix: Fixed SVG charts generator on Edit Visualization Save
